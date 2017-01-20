@@ -1161,16 +1161,22 @@ def dialog_save_file(filetypes=()):
 
 class OptionMenu:
 	
-	def __init__(self,parent_obj,items=(1,2,3,4,5),side='left',anchor='center'):
+	def __init__(self,parent_obj,items=(1,2,3,4,5),side='left',anchor='center',command=None):
 		self.parent_obj = parent_obj
 		self.items = items
+		self.command = command
 		self.choice = None
 		self.index = 0
 		self.var = tk.StringVar(self.parent_obj.widget)
-		self.widget = tk.OptionMenu(self.parent_obj.widget,self.var,*self.items,command=self._get)
+		self.widget = tk.OptionMenu(self.parent_obj.widget,self.var,*self.items,command=self.trigger)
 		self.widget.pack(side=side,anchor=anchor)
 		self.default_set()
 		
+	def trigger(self,*args):
+		self._get()
+		if self.command:
+			self.command()
+	
 	def default_set(self):
 		if len(self.items) > 0:
 			self.var.set(self.items[0])
