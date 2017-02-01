@@ -83,6 +83,8 @@ class Root:
 	def update(self):
 		self.widget.update()
 
+
+
 # Привязать горячие клавиши или кнопки мыши к действию
 def create_binding(widget,bindings,action): # widget, list, function
 	bindings_type = get_obj_type(bindings,Verbal=True,IgnoreErrors=True)
@@ -108,10 +110,10 @@ def confirm_quit(widget,Verbose=False):
 	else:
 		_quit()
 
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 class WidgetShared:
 	
-	def focus(object):
+	def focus(object,*args):
 		object.widget.focus()
 
 	def insert(object,text,pos):
@@ -157,9 +159,10 @@ class WidgetShared:
 
 class Top:
 
-	def __init__(self,parent_obj,Maximize=False,DestroyRoot=False):
+	def __init__(self,parent_obj,Maximize=False,DestroyRoot=False,AutoCenter=True):
 		self.type = 'Toplevel'
 		self.parent_obj = parent_obj
+		self.AutoCenter = AutoCenter
 		self.count = 0
 		# Lock = True - блокировать дальнейшее выполнение программы до попытки закрытия виджета. Lock = False позволяет создать одновременно несколько виджетов на экране. Они будут работать, однако, виджет с Lock = False будет закрыт при закрытии виджета с Lock = True. Кроме того, если ни один из виджетов не имеет Lock = True, то они все будут показаны и тут же закрыты.
 		self.Lock = True
@@ -180,7 +183,9 @@ class Top:
 	def show(self,Lock=True):
 		self.count += 1
 		self.widget.deiconify()
-		self.center()
+		# Changing geometry at a wrong time may prevent frames from autoresizing after 'pack_forget'
+		if self.AutoCenter:
+			self.center()
 		self.Lock = Lock
 		if self.Lock:
 			self.tk_trigger = tk.BooleanVar()
@@ -204,7 +209,7 @@ class Top:
 			y = height/2 - size[1]/2
 			self.widget.geometry("%dx%d+%d+%d" % (size + (x, y)))
 			
-	def focus(self):
+	def focus(self,*args):
 		self.widget.focus_set()
 
 
@@ -695,10 +700,10 @@ class TextBox:
 			log.append('TextBox.cursor',lev_warn,'Cannot return a cursor position!') # todo: mes
 		return self._pos
 		
-	def focus_set(self):
+	def focus_set(self,*args):
 		self.focus()
 	
-	def focus(self):
+	def focus(self,*args):
 		self.widget.focus_set()
 		
 	def zzz(self):
@@ -708,7 +713,7 @@ class TextBox:
 		
 class Entry:
 	
-	def __init__(self,parent_obj,Composite=False,side=None,ipadx=None,ipady=None,fill=None,width=None):
+	def __init__(self,parent_obj,Composite=False,side=None,ipadx=None,ipady=None,fill=None,width=None,expand=None):
 		self.type = 'Entry'
 		self.Composite = Composite
 		self.state = 'normal' # 'disabled' - отключить редактирование
@@ -716,7 +721,7 @@ class Entry:
 		self.parent_obj = parent_obj
 		self.widget = tk.Entry(self.parent_obj.widget,font='Sans 11',width=width) #globs['var']['menu_font']
 		create_binding(widget=self.widget,bindings='<Control-a>',action=self.select_all)
-		self.widget.pack(side=side,ipadx=ipadx,ipady=ipady,fill=fill)
+		self.widget.pack(side=side,ipadx=ipadx,ipady=ipady,fill=fill,expand=expand)
 		if not self.Composite:
 			# Тип родительского виджета может быть любым
 			if not hasattr(self.parent_obj,'close_button'):
@@ -729,7 +734,9 @@ class Entry:
 		WidgetShared.set_state(self,ReadOnly=ReadOnly)
 	
 	def custom_bindings(self):
-		if not self.Composite:
+		if self.Composite:
+			self.clear_text()
+		else:
 			create_binding(widget=self.widget,bindings=['<Return>','<KP_Enter>'],action=self.close)
 			create_binding(widget=self.widget,bindings='<Escape>',action=self.parent_obj.close)
 
@@ -861,7 +868,10 @@ class Button:
 		return button_image
 	
 	def click(self,*args):
-		self.action()
+		if len(args) > 0:
+			self.action(args)
+		else:
+			self.action()
 	
 	def active(self):
 		if not self.Status:
@@ -1895,7 +1905,7 @@ class CheckBox:
 	def close(self):
 		self.parent_obj.close()
 		
-	def focus(self):
+	def focus(self,*args):
 		self.widget.focus_set()
 		
 	def enable(self):
