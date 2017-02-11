@@ -802,14 +802,11 @@ class Entry:
 
 class Frame:
 	
-	def __init__(self,parent_obj,expand=1,fill='both',side=None):
+	def __init__(self,parent_obj,expand=1,fill='both',side=None,padx=None,pady=None,ipadx=None,ipady=None):
 		self.type = 'Frame'
 		self.parent_obj = parent_obj
 		self.widget = tk.Frame(self.parent_obj.widget)
-		if side:
-			self.widget.pack(expand=expand,fill=fill,side=side)
-		else:
-			self.widget.pack(expand=expand,fill=fill)
+		self.widget.pack(expand=expand,fill=fill,side=side,padx=padx,pady=pady,ipadx=ipadx,ipady=ipady)
 			
 	def title(self,text=None):
 		if text:
@@ -1838,7 +1835,7 @@ class WaitBox:
 
 class Label:
 	
-	def __init__(self,parent_obj,text='Text:',font='Sans 11',side=None,fill=None,expand=False): # 'Top' and 'Root' (the last only with 'wait_window()')
+	def __init__(self,parent_obj,text='Text:',font='Sans 11',side=None,fill=None,expand=False,ipadx=None,ipady=None): # 'Top' and 'Root' (the last only with 'wait_window()')
 		self.type = 'Label'
 		self.parent_obj = parent_obj
 		self.side = side
@@ -1846,6 +1843,8 @@ class Label:
 		self.expand = expand
 		self._text = text
 		self._font = font
+		self.ipadx = ipadx
+		self.ipady = ipady
 		self.gui()
 		self.close()
 		
@@ -1853,7 +1852,7 @@ class Label:
 		self.widget = tk.Label(self.parent_obj.widget)
 		self.text()
 		self.font()
-		self.widget.pack(side=self.side,fill=self.fill,expand=self.expand)
+		self.widget.pack(side=self.side,fill=self.fill,expand=self.expand,ipadx=self.ipadx,ipady=self.ipady)
 		
 	def text(self,arg=None):
 		if arg:

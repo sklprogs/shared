@@ -18,6 +18,8 @@ import difflib
 import sqlite3
 from constants import *
 
+
+
 # todo: Timing class functions sometimes shows inadequate results
 def timer(func_title,func,args=None): # Use tuple to pass multiple arguments
 	start_time = time.time()
@@ -309,8 +311,8 @@ else:
 
 				
 				
-				
-class Dic:
+# todo: Do we really need this?				
+class TextDic:
 	
 	def __init__(self,file,Silent=False,Sortable=False):
 		self.file = file
@@ -326,14 +328,14 @@ class Dic:
 				old = self.lines()
 				self._list = list(set(self.list()))
 				new = self._lines = len(self._list)
-				log.append('Dic._delete_duplicates',lev_info,globs['mes'].entries_deleted % (old-new,old,new))
+				log.append('TextDic._delete_duplicates',lev_info,globs['mes'].entries_deleted % (old-new,old,new))
 				self.text = '\n'.join(self._list)
 				self._split() # Update original and translation
 				self.sort() # After using set(), the original order was lost
 			else:
-				Message(func='Dic._delete_duplicates',type=lev_warn,message=globs['mes'].non_sortable % self.file,Silent=self.Silent)
+				Message(func='TextDic._delete_duplicates',type=lev_warn,message=globs['mes'].non_sortable % self.file,Silent=self.Silent)
 		else:
-			log.append('Dic._delete_duplicates',lev_warn,globs['mes'].canceled)
+			log.append('TextDic._delete_duplicates',lev_warn,globs['mes'].canceled)
 
 	# We can use this as an updater, even without relying on Success
 	def _join(self):
@@ -344,7 +346,7 @@ class Dic:
 				self._list.append(self.orig[i]+'\t'+self.transl[i])
 			self.text = '\n'.join(self._list)
 		else:
-			Message(func='Dic._join',type=lev_warn,message=globs['mes'].wrong_input2,Silent=False)
+			Message(func='TextDic._join',type=lev_warn,message=globs['mes'].wrong_input2,Silent=False)
 
 	# We can use this to check integrity and/or update original and translation lists
 	def _split(self):
@@ -361,7 +363,7 @@ class Dic:
 				else:
 					self.Success = False
 					# i+1: Count from 1
-					Message(func='Dic._split',type=lev_warn,message=globs['mes'].incorrect_line % (self.file,i+1,self._list[i]),Silent=self.Silent)
+					Message(func='TextDic._split',type=lev_warn,message=globs['mes'].incorrect_line % (self.file,i+1,self._list[i]),Silent=self.Silent)
 		else:
 			self.Success = False
 			
@@ -374,9 +376,9 @@ class Dic:
 				self.transl.append(translation)
 				self._join()
 			else:
-				Message(func='Dic.append',type=lev_warn,message=globs['mes'].empty_input,Silent=self.Silent)
+				Message(func='TextDic.append',type=lev_warn,message=globs['mes'].empty_input,Silent=self.Silent)
 		else:
-			log.append('Dic.append',lev_warn,globs['mes'].canceled)
+			log.append('TextDic.append',lev_warn,globs['mes'].canceled)
 	
 	# todo: fix: an entry which is only one in a dictionary is not deleted
 	def delete_entry(self,entry_no): # Count from 1
@@ -387,9 +389,9 @@ class Dic:
 				del self.transl[entry_no]
 				self._join()
 			else:
-				Message(func='Dic.delete_entry',type=lev_err,message=globs['mes'].condition_failed % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
+				Message(func='TextDic.delete_entry',type=lev_err,message=globs['mes'].condition_failed % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
 		else:
-			log.append('Dic.append',lev_warn,globs['mes'].canceled)
+			log.append('TextDic.append',lev_warn,globs['mes'].canceled)
 			
 	# todo: Add checking orig and transl (where needed) for a wrapper function
 	def edit_entry(self,entry_no,orig,transl): # Count from 1
@@ -400,9 +402,9 @@ class Dic:
 				self.transl[entry_no] = transl
 				self._join()
 			else:
-				Message(func='Dic.delete_entry',type=lev_err,message=globs['mes'].condition_failed % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
+				Message(func='TextDic.delete_entry',type=lev_err,message=globs['mes'].condition_failed % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
 		else:
-			log.append('Dic.append',lev_warn,globs['mes'].canceled)
+			log.append('TextDic.append',lev_warn,globs['mes'].canceled)
 	
 	def get(self):
 		if not self.text:
@@ -441,9 +443,9 @@ class Dic:
 					self._list[i] = self.orig[i] + '\t' + self.transl[i]
 				self.text = '\n'.join(self._list)
 			else:
-				Message(func='Dic.sort',type=lev_warn,message=globs['mes'].non_sortable % self.file,Silent=self.Silent)
+				Message(func='TextDic.sort',type=lev_warn,message=globs['mes'].non_sortable % self.file,Silent=self.Silent)
 		else:
-			log.append('Dic.sort',lev_warn,globs['mes'].canceled)
+			log.append('TextDic.sort',lev_warn,globs['mes'].canceled)
 	
 	def tail(self):
 		tail_text = ''
@@ -458,16 +460,16 @@ class Dic:
 				tail_text += str(i+1) + ':' + '"' + self.list()[i] + '"\n'
 				i += 1
 		else:
-			log.append('Dic.tail',lev_warn,globs['mes'].canceled)
+			log.append('TextDic.tail',lev_warn,globs['mes'].canceled)
 		return tail_text
 	
 	def write(self):
 		if self.Success:
 			WriteTextFile(self.file,self.get(),Silent=self.Silent,AskRewrite=False).write()
 		else:
-			log.append('Dic.write',lev_warn,globs['mes'].canceled)
-	
-	
+			log.append('TextDic.write',lev_warn,globs['mes'].canceled)
+
+
 
 class ReadTextFile:
 	
@@ -2911,6 +2913,43 @@ class Objects:
 			from prettytable import PrettyTable
 			self._pretty_table = PrettyTable
 		return self._pretty_table
+
+
+
+class MessagePool:
+	
+	def __init__(self,max_size=5):
+		self.max_size = max_size
+		self.pool = []
+		
+	def free(self):
+		if len(self.pool) == self.max_size:
+			self.delete_first()
+	
+	def add(self,message):
+		if message:
+			self.free()
+			self.pool.append(message)
+		else:
+			log.append('MessagePool.add',lev_warn,globs['mes'].empty_input)
+			
+	def delete_first(self):
+		if len(self.pool) > 0:
+			del self.pool[0]
+		else:
+			log.append('MessagePool.delete_first',lev_warn,'The pool is empty!') # todo: mes
+	
+	def delete_last(self):
+		if len(self.pool) > 0:
+			del self.pool[-1]
+		else:
+			log.append('MessagePool.delete_last',lev_warn,'The pool is empty!') # todo: mes
+			
+	def clear(self):
+		self.pool = []
+		
+	def get(self):
+		return List(lst1=self.pool).space_items()
 
 
 
