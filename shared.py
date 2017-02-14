@@ -594,12 +594,6 @@ class Text:
 				if self.text[-1].isalpha() and self.text[-1].isupper() and self.text[-2].isalpha() and self.text[-2].isupper():
 					return self.text[-2:]
 	
-	def normalize(self):
-		lst = self.text.strip().split(' ')
-		for i in range(len(lst)):
-			lst[i] = Decline(word=lst[i],Auto=True).normal()
-		return ' '.join(lst)
-	
 	def reset(self,text):
 		self.text = text
 		
@@ -1939,7 +1933,8 @@ class Words: # Requires Search, Text, hdbs
 			if self.empty() or self.stone(): # Probably dangerous. See 'matches()' before modifying.
 				result = ''
 			else:
-				result = Decline(word=self.np_low()).normal()
+				h_decline = Decline(text=self.np_low(),Auto=False).normal()
+				result = h_decline.get()
 				if result:
 					result = result.replace('ё','е')
 				else:
@@ -2821,7 +2816,7 @@ class OCR:
 
 
 
-''' NOTE:
+''' NOTE ABOUT PYMORPHY2:
 	1) Input must be stripped of punctuation, otherwise, the program fails
 	2) Output keeps unstripped spaces to the left, however, spaces to the right fail the program
 	3) Input can have any register. The output is lower-case
@@ -2829,65 +2824,77 @@ class OCR:
 '''
 class Decline:
 	
-	def __init__(self,word='',number='sing',case='nomn',Auto=False):
-		self.Auto = Auto
-		self._word = word
-		if not self._word: # Always return a string even if we have None at input
-			self._word = ''
+	def __init__(self,text='',number='',case='',Auto=True):
+		if text:
+			self.reset(text=text,number=number,case=case,Auto=Auto)
+		else:
+			self.Auto = Auto
+			self._orig = ''
+			self._number = 'sing'
+			self._case = 'nomn'
+			self._list = []
+		
+	# todo: 1) Restore punctuation 2) Optional leading/trailing spaces
+	def reset(self,text,number='',case='',Auto=True):
+		self._orig = text
 		self._number = number
-		self._case = case
-		self.before()
-		
-	def before(self):
+		self._case = case # 'nomn', 'gent', 'datv', 'accs', 'ablt', 'loct'
+		self.Auto = Auto
 		if self.Auto:
-			self._word = Text(text=self._word).delete_punctuation().rstrip()
-		
-	def after(self,result):
+			result = Text(text=self._orig).delete_punctuation()
+		else:
+			result = self._orig
+		self._list = result.split(' ')
+		return self # Returning 'self' allows to call 'get' in the same line, e.g. Decline(text='текст').normal().get()
+	
+	def get(self):
+		result = ' '.join(self._list)
 		if self.Auto:
-			if not result:
-				result = ''
 			result = result.replace('ё','е')
 		return result
 		
 	def decline(self):
-		# Inflecting '', None, digits and Latin words *only* fails
-		try:
-			result = h_obj.morph().parse(self._word)[0].inflect({self._number,self._case}).word
-		except AttributeError:
-			result = self._word
-		return self.after(result)
-	
+		for i in range(len(self._list)):
+			# Inflecting '', None, digits and Latin words *only* fails
+			#log.append('Decline.decline',lev_debug,'Decline "%s" in "%s" number and "%s" case' % (str(self._list[i]),str(self.number()),str(self.case()))) # todo: mes
+			try:
+				self._list[i] = h_obj.morph().parse(self._list[i])[0].inflect({self.number(),self.case()}).word
+			except AttributeError:
+				self._list[i] = self._list[i]
+		return self
+		
 	# If input is a phrase, 'normal' each word of it
 	def normal(self):
-		return self.after(h_obj.morph().parse(self._word)[0].normal_form)
+		for i in range(len(self._list)):
+			self._list[i] = h_obj.morph().parse(self._list[i])[0].normal_form
+		return self
 		
-	# Returns 'sing', 'plur' or None
 	def number(self):
-		return h_obj.morph().parse(self._word)[0].tag.number
+		if not self._number:
+			self._number = 'sing'
+			if self._list: # Needed by 'max'
+				tmp = []
+				for i in range(len(self._list)):
+					if self._list[i]:
+						tmp.append(h_obj.morph().parse(self._list[i])[0].tag.number) # Returns 'sing', 'plur' or None
+				if tmp and max(tmp,key=tmp.count) == 'plur':
+					self._number = 'plur'
+			log.append('Decline.number',lev_debug,str(self._number))
+		return self._number
 		
-	def nominative(self):
-		self._case = 'nomn'
-		return self.decline()
-		
-	def genetive(self):
-		self._case = 'gent'
-		return self.decline()
-		
-	def dative(self):
-		self._case = 'datv'
-		return self.decline()
-		
-	def accusative(self):
-		self._case = 'accs'
-		return self.decline()
-		
-	def ablative(self):
-		self._case = 'ablt'
-		return self.decline()
-		
-	def locative(self):
-		self._case = 'loct'
-		return self.decline()
+	def case(self):
+		if not self._case:
+			self._case = 'nomn'
+			if self._list: # Needed by 'max'
+				tmp = []
+				for i in range(len(self._list)):
+					if self._list[i]:
+						tmp.append(h_obj.morph().parse(self._list[i])[0].tag.case)
+				result = max(tmp,key=tmp.count)
+				if result:
+					self._case = result
+			log.append('Decline.case',lev_debug,str(self._case))
+		return self._case
 
 
 
