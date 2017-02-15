@@ -1538,7 +1538,7 @@ class ParallelTexts: # Requires Search
 		if path:
 			self.obj.icon(path)
 		else:
-			self.obj.icon(globs['bin_dir'] + h_os.sep() + 'resources' + h_os.sep() + 'icon_64x64_cpt.gif')
+			self.obj.icon('.' + h_os.sep() + 'resources' + h_os.sep() + 'icon_64x64_cpt.gif')
 
 
 
@@ -1837,7 +1837,7 @@ class WaitBox:
 
 class Label:
 	
-	def __init__(self,parent_obj,text='Text:',font='Sans 11',side=None,fill=None,expand=False,ipadx=None,ipady=None): # 'Top' and 'Root' (the last only with 'wait_window()')
+	def __init__(self,parent_obj,text='Text:',font='Sans 11',side=None,fill=None,expand=False,ipadx=None,ipady=None,image=None): # 'Top' and 'Root' (the last only with 'wait_window()')
 		self.type = 'Label'
 		self.parent_obj = parent_obj
 		self.side = side
@@ -1847,11 +1847,12 @@ class Label:
 		self._font = font
 		self.ipadx = ipadx
 		self.ipady = ipady
+		self.image = image
 		self.gui()
 		self.close()
 		
 	def gui(self):
-		self.widget = tk.Label(self.parent_obj.widget)
+		self.widget = tk.Label(self.parent_obj.widget,image=self.image)
 		self.text()
 		self.font()
 		self.widget.pack(side=self.side,fill=self.fill,expand=self.expand,ipadx=self.ipadx,ipady=self.ipady)
