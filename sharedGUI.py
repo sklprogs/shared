@@ -2,14 +2,27 @@
 #coding=UTF-8
 
 import tkinter as tk
+import tkinter.messagebox as tkmes
 import tkinter.filedialog as dialog
 import mes_ru as mes
 import sys, os
 
-from constants import *
-globs['var'].update({'icon_main':'/usr/local/bin/icon_64x64_main.gif'})
-from shared import log, Message, WriteTextFile, Text, h_os, Search, Words, timer
-#log = Log(Use=True,Write=True,Print=True,Short=False,file='/tmp/log')
+import constants
+import shared
+
+h_os = constants.h_os
+globs = constants.globs
+globs['mes'] = constants.mes_ru
+lev_crit = constants.lev_crit
+lev_debug = constants.lev_debug
+lev_debug_err = constants.lev_debug_err
+lev_err = constants.lev_err
+lev_info = constants.lev_info
+lev_ques = constants.lev_ques
+lev_warn = constants.lev_warn
+
+from shared import Search, Text, timer, Words, log
+
 
 if h_os.sys() == 'win':
 	import win32gui, win32con, ctypes
@@ -155,7 +168,8 @@ class WidgetShared:
 		if object.type == 'Toplevel' or object.type == 'Root':
 			if file and os.path.exists(file):
 				object.widget.tk.call('wm','iconphoto',object.widget._w,tk.PhotoImage(master=object.widget,file=file))
-			
+
+
 
 class Top:
 
@@ -1658,27 +1672,22 @@ class SymbolMap:
 
 
 # Window behavior is not uniform through different platforms or even through different Windows versions, so we bypass Tkinter's commands here
-class Geometry: # Requires h_os
+class Geometry: # Requires h_os, h_widgets
 	
-	def __init__(self,h_root=None,parent_obj=None,title=None,hwnd=None):
-		self.h_root = h_root
+	def __init__(self,parent_obj=None,title=None,hwnd=None):
 		self.parent_obj = parent_obj
 		self._title = title
 		self._hwnd = hwnd
 		self._geom = None
 
 	def update(self):
-		if self.h_root:
-			self.h_root.widget.update_idletasks()
-			return True
-		else:
-			Message(func='Geometry.update',type=lev_err,message=globs['mes'].wrong_input2)
+		self.h_widgets.root().widget.update_idletasks()
 	
 	def save(self):
 		if self.parent_obj:
-			if self.update():
-				self._geom = self.parent_obj.widget.geometry()
-				log.append('Geometry.save',lev_info,'Saved geometry: %s' % self._geom) # todo: mes
+			self.update()
+			self._geom = self.parent_obj.widget.geometry()
+			log.append('Geometry.save',lev_info,'Saved geometry: %s' % self._geom) # todo: mes
 		else:
 			Message(func='Geometry.save',type=lev_err,message=globs['mes'].wrong_input2)
 		
@@ -1921,13 +1930,213 @@ class CheckBox:
 		
 	def toggle(self,*args):
 		self.widget.toggle()
+		
+		
+		
+class Message:
+	
+	def __init__(self,func='MAIN',type=lev_warn,message='Message',Silent=False):
+		self.Success = True
+		self.Yes = False
+		self.func = func
+		self.message = message
+		self.type = type
+		self.Silent = Silent
+		if not self.func or not self.message:
+			self.Success = False
+			log.append('Message.__init__',lev_err,globs['mes'].not_enough_input_data)
+		if self.type == lev_info:
+			self.info()
+		elif self.type == lev_warn:
+			self.warning()
+		elif self.type == lev_err:
+			self.error()
+		elif self.type == lev_ques:
+			self.question()
+		else:
+			log.append('Message.__init__',lev_err,globs['mes'].unknown_mode % (str(self.type),lev_info + ', ' + lev_warn + ', ' + lev_err + ', ' + lev_ques))
+			
+	def error(self):
+		if self.Success:
+			if not self.Silent:
+				tkmes.showerror(self.func+':',self.message) # globs['mes'].err_head
+			log.append(self.func,lev_err,self.message)
+		else:
+			log.append('Message.error',lev_err,globs['mes'].canceled)
+			
+	def info(self):
+		if self.Success:
+			if not self.Silent:
+				tkmes.showinfo(self.func+':',self.message) # globs['mes'].inf_head
+			log.append(self.func,lev_info,self.message)
+		else:
+			log.append('Message.info',lev_info,globs['mes'].canceled)
+	
+	def question(self):
+		if self.Success:
+			self.Yes = tkmes.askokcancel(self.func+':',self.message) # globs['mes'].ques_head
+			log.append(self.func,lev_ques,self.message)
+		else:
+			log.append('Message.question',lev_ques,globs['mes'].canceled)
+	
+	def warning(self):
+		if self.Success:
+			if not self.Silent:
+				tkmes.showwarning(self.func+':',self.message) # globs['mes'].warn_head
+			log.append(self.func,lev_warn,self.message)
+		else:
+			log.append('Message.warning',lev_warn,globs['mes'].canceled)
 
 
+
+# Not using tkinter.messagebox because it blocks main GUI (even if we specify a non-root parent)
+class MessageBuilder: # Requires 'constants'
+	
+	def __init__(self,parent_obj,type,Single=True,YesNo=False): # Most often: 'root'
+		self.Yes = False
+		self.YesNo = YesNo
+		self.Single = Single
+		self.type = type
+		self.paths()
+		self.parent_obj = parent_obj
+		self.obj = Top(parent_obj=self.parent_obj)
+		self.widget = self.obj.widget
+		self.frames()
+		self.picture()
+		self.txt = TextBox(parent_obj=self.top_right,Composite=True)
+		self.buttons()
+		Geometry(parent_obj=self.obj).set('400x300')
+		self.close()
+		
+	def paths(self):
+		if self.type == lev_warn:
+			self.path = '.' + h_os.sep() + 'resources' + h_os.sep() + 'warning.gif'
+		elif self.type == lev_info:
+			self.path = '.' + h_os.sep() + 'resources' + h_os.sep() + 'info.gif'
+		elif self.type == lev_ques:
+			self.path = '.' + h_os.sep() + 'resources' + h_os.sep() + 'question.gif'
+		elif self.type == lev_err:
+			self.path = '.' + h_os.sep() + 'resources' + h_os.sep() + 'error.gif'
+		else:
+			log.append('MessageBuilder.paths',lev_err,globs['mes'].unknown_mode % (str(self.path),', '.join([lev_warn,lev_err,lev_ques,lev_info])))
+		
+	def frames(self):
+		frame = Frame(parent_obj=self.obj,expand=1)
+		top = Frame(parent_obj=frame,expand=1,side='top')
+		bottom = Frame(parent_obj=frame,expand=0,side='bottom')
+		self.top_left = Frame(parent_obj=top,expand=0,side='left')
+		self.top_right = Frame(parent_obj=top,expand=1,side='right')
+		self.bottom_left = Frame(parent_obj=bottom,expand=1,side='left')
+		self.bottom_right = Frame(parent_obj=bottom,expand=1,side='right')
+		
+	def buttons(self):
+		if self.YesNo or self.type == lev_ques:
+			YesName = 'Yes'
+			NoName = 'No'
+		else:
+			YesName = 'OK'
+			NoName = 'Cancel'
+		if self.Single and self.type != lev_ques:
+			Button(parent_obj=self.bottom_left,action=self.close_yes,hint='Accept and close',text=YesName,TakeFocus=1,side='right') # todo: mes
+		else:
+			Button(parent_obj=self.bottom_left,action=self.close_no,hint='Reject and close',text=NoName,side='left') # todo: mes
+			Button(parent_obj=self.bottom_right,action=self.close_yes,hint='Accept and close',text=YesName,TakeFocus=1,side='right') # todo: mes
+		
+	def title(self,text=None):
+		if text:
+			text += ':'
+		else:
+			text = 'Title:' # todo: mes
+		self.obj.title(text=text)
+		
+	def update(self,text='Message'):
+		# Otherwise, updating text will not work
+		self.txt.read_only(ReadOnly=False)
+		self.txt.clear_text()
+		self.txt.insert(text=text)
+		self.txt.read_only(ReadOnly=True)
+	
+	def reset(self,text='Message',title='Title:'):
+		self.update(text=text)
+		self.title(text=title)
+		return self
+	
+	def show(self,*args):
+		self.obj.show()
+	
+	def close(self,*args):
+		self.obj.close()
+		
+	def close_yes(self,*args):
+		self.Yes = True
+		self.close()
+		
+	def close_no(self,*args):
+		self.Yes = False
+		self.close()
+		
+	def picture(self,*args):
+		if os.path.exists(self.path):
+			# We need to assign self.variable to Label, otherwise, it gets destroyed
+			self.label = Label(parent_obj=self.top_left,image=tk.PhotoImage(file=self.path))
+		else:
+			log.append('MessageBuilder.picture',lev_warn,'Picture "%s" was not found!' % self.path) # todo: mes
+
+
+
+class Clipboard: # Requires 'h_widgets'
+	
+	def __init__(self,Silent=False):
+		self.Silent = Silent
+	
+	def copy(self,text,CopyEmpty=True):
+		text = str(text)
+		if text or CopyEmpty:
+			try:
+				h_widgets.root().widget.clipboard_clear()
+				h_widgets.root().widget.clipboard_append(text)
+			except tk.TclError:
+				# todo: Show a window to manually copy from
+				Message(func='Clipboard.copy',type=lev_err,message=globs['mes'].clipboard_failure,Silent=self.Silent)
+				
+	def paste(self):
+		text = ''
+		try:
+			text = h_widgets.root().widget.clipboard_get()
+		except tk.TclError:
+			Message(func='Clipboard.copy',type=lev_err,message=globs['mes'].clipboard_paste_failure,Silent=self.Silent)
+		# Further actions: strip, delete double line breaks
+		return text
+
+
+
+class Widgets:
+	
+	def __init__(self):
+		self._root = None
+		
+	def root(self,Close=True):
+		if not self._root:
+			self._root = Root()
+			if Close:
+				self._root.close()
+		return self._root
+	
+	def start(self):
+		self.root()
+		self._root.close()
+		
+	def end(self):
+		self.root().kill()
+		self._root.run()
+
+
+
+h_widgets = Widgets()
 
 if __name__ == '__main__':
-	h_root = Root()
-	h_root.close()
-	h_top = Top(h_root,Maximize=True)
+	h_widgets.start()
+	h_top = Top(h_widgets.root(),Maximize=True)
 	text = '''Something funny with this guy
 	I am glad he is not my test
 	Glad is so angry'''
@@ -1937,5 +2146,6 @@ if __name__ == '__main__':
 	h_txt.insert(text)
 	h_txt.widget.focus_set()
 	h_txt.show()
-	h_root.destroy()
-	h_root.run()
+	# Checking import
+	log.append('sharedGUI.__main__',lev_info,'Bye-bye!')
+	h_widgets.end()

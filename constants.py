@@ -8,9 +8,39 @@ version = '1.0'
 email = 'skl.progs@gmail.com'
 
 import re
+import os, sys
 import mes_ru
 import mes_en
 from configparser import SafeConfigParser
+
+
+
+class OSSpecific:
+	
+	def __init__(self):
+		self._sys = ''
+		self._sep = ''
+		self.sys()
+		self.sep()
+	
+	def sys(self):
+		if not self._sys:
+			self._sys = 'unknown'
+			sys_plat = sys.platform
+			if 'win' in sys_plat:
+				self._sys = 'win'
+			elif 'lin' in sys_plat:
+				self._sys = 'lin'
+			elif 'mac' in sys_plat:
+				self._sys = 'mac'
+		return self._sys
+	
+	def sep(self):
+		if not self._sep:
+			self._sep = os.path.sep
+		return self._sep
+
+
 
 config_parser = SafeConfigParser()
 
@@ -63,3 +93,5 @@ The above copyright notice and this permission notice shall be included in all c
  
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
+
+h_os = OSSpecific()

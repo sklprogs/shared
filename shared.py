@@ -9,14 +9,17 @@ import shutil
 import subprocess
 import sys
 import time
-import tkinter as tk
-import tkinter.messagebox as tkmes
 import webbrowser
-# import urllib does not in Python 3, importing must be as follows:
+# 'import urllib' does not work in Python 3, importing must be as follows:
 import urllib.request, urllib.parse
 import difflib
 import sqlite3
 from constants import *
+
+
+def Message(func='MAIN',type=lev_warn,message='Message',Silent=False):
+	import sharedGUI
+	sharedGUI.Message(func=func,type=type,message=message,Silent=Silent)
 
 
 
@@ -42,33 +45,6 @@ def rewrite(dest,AskRewrite=True):
 	return Confirmed
 	
 
-
-class OSSpecific:
-	
-	def __init__(self):
-		self._sys = ''
-		self._sep = ''
-		self.sys()
-		self.sep()
-	
-	def sys(self):
-		if not self._sys:
-			self._sys = 'unknown'
-			sys_plat = sys.platform
-			if 'win' in sys_plat:
-				self._sys = 'win'
-			elif 'lin' in sys_plat:
-				self._sys = 'lin'
-			elif 'mac' in sys_plat:
-				self._sys = 'mac'
-		return self._sys
-	
-	def sep(self):
-		if not self._sep:
-			self._sep = os.path.sep
-		return self._sep
-
-h_os = OSSpecific()		
 
 if h_os.sys() == 'win':
 	#http://mail.python.org/pipermail/python-win32/2012-July/012493.html
@@ -1242,89 +1218,6 @@ class ReadBinary:
 		if not self.obj:
 			self.load()
 		return self.obj
-
-
-
-class Message:
-	
-	def __init__(self,func='MAIN',type=lev_warn,message='Message',Silent=False):
-		self.Success = True
-		self.Yes = False
-		self.func = func
-		self.message = message
-		self.type = type
-		self.Silent = Silent
-		if not self.func or not self.message:
-			self.Success = False
-			log.append('Message.__init__',lev_err,globs['mes'].not_enough_input_data)
-		if self.type == lev_info:
-			self.info()
-		elif self.type == lev_warn:
-			self.warning()
-		elif self.type == lev_err:
-			self.error()
-		elif self.type == lev_ques:
-			self.question()
-		else:
-			log.append('Message.__init__',lev_err,globs['mes'].unknown_mode % (str(self.type),lev_info + ', ' + lev_warn + ', ' + lev_err + ', ' + lev_ques))
-			
-	def error(self):
-		if self.Success:
-			if not self.Silent:
-				tkmes.showerror(self.func+':',self.message) # globs['mes'].err_head
-			log.append(self.func,lev_err,self.message)
-		else:
-			log.append('Message.error',lev_err,globs['mes'].canceled)
-			
-	def info(self):
-		if self.Success:
-			if not self.Silent:
-				tkmes.showinfo(self.func+':',self.message) # globs['mes'].inf_head
-			log.append(self.func,lev_info,self.message)
-		else:
-			log.append('Message.info',lev_info,globs['mes'].canceled)
-	
-	def question(self):
-		if self.Success:
-			self.Yes = tkmes.askokcancel(self.func+':',self.message) # globs['mes'].ques_head
-			log.append(self.func,lev_ques,self.message)
-		else:
-			log.append('Message.question',lev_ques,globs['mes'].canceled)
-	
-	def warning(self):
-		if self.Success:
-			if not self.Silent:
-				tkmes.showwarning(self.func+':',self.message) # globs['mes'].warn_head
-			log.append(self.func,lev_warn,self.message)
-		else:
-			log.append('Message.warning',lev_warn,globs['mes'].canceled)
-
-
-
-class Clipboard:
-	
-	def __init__(self,root_obj,Silent=False):
-		self.h_root = root_obj
-		self.Silent = Silent
-	
-	def copy(self,text,CopyEmpty=True):
-		text = str(text)
-		if text or CopyEmpty:
-			try:
-				self.h_root.widget.clipboard_clear()
-				self.h_root.widget.clipboard_append(text)
-			except tk.TclError:
-				# todo: Show a window to manually copy from
-				Message(func='Clipboard.copy',type=lev_err,message=globs['mes'].clipboard_failure,Silent=self.Silent)
-				
-	def paste(self):
-		text = ''
-		try:
-			text = self.h_root.widget.clipboard_get()
-		except tk.TclError:
-			Message(func='Clipboard.copy',type=lev_err,message=globs['mes'].clipboard_paste_failure,Silent=self.Silent)
-		# Further actions: strip, delete double line breaks
-		return text
 
 
 
@@ -3139,3 +3032,6 @@ class MessagePool:
 
 
 h_obj = Objects()
+
+if __name__ == '__main__':
+	Message(func='shared.__main__',type=lev_info,message='Все прошло удачно!')
