@@ -2,7 +2,6 @@
 #coding=UTF-8
 
 import tkinter as tk
-import tkinter.messagebox as tkmes
 import tkinter.filedialog as dialog
 import mes_ru as mes
 import sys, os
@@ -1959,7 +1958,7 @@ class Message:
 	def error(self):
 		if self.Success:
 			if not self.Silent:
-				tkmes.showerror(self.func+':',self.message) # globs['mes'].err_head
+				h_widgets.error().reset(title=self.func+':',text=self.message).show()
 			log.append(self.func,lev_err,self.message)
 		else:
 			log.append('Message.error',lev_err,globs['mes'].canceled)
@@ -1967,14 +1966,15 @@ class Message:
 	def info(self):
 		if self.Success:
 			if not self.Silent:
-				tkmes.showinfo(self.func+':',self.message) # globs['mes'].inf_head
+				h_widgets.info().reset(title=self.func+':',text=self.message).show()
 			log.append(self.func,lev_info,self.message)
 		else:
 			log.append('Message.info',lev_info,globs['mes'].canceled)
 	
 	def question(self):
 		if self.Success:
-			self.Yes = tkmes.askokcancel(self.func+':',self.message) # globs['mes'].ques_head
+			h_widgets.question().reset(title=self.func+':',text=self.message).show()
+			self.Yes = h_widgets._question.Yes
 			log.append(self.func,lev_ques,self.message)
 		else:
 			log.append('Message.question',lev_ques,globs['mes'].canceled)
@@ -1982,7 +1982,7 @@ class Message:
 	def warning(self):
 		if self.Success:
 			if not self.Silent:
-				tkmes.showwarning(self.func+':',self.message) # globs['mes'].warn_head
+				h_widgets.warning().reset(title=self.func+':',text=self.message).show()
 			log.append(self.func,lev_warn,self.message)
 		else:
 			log.append('Message.warning',lev_warn,globs['mes'].canceled)
@@ -2005,8 +2005,12 @@ class MessageBuilder: # Requires 'constants'
 		self.picture()
 		self.txt = TextBox(parent_obj=self.top_right,Composite=True)
 		self.buttons()
+		self.bindings()
 		Geometry(parent_obj=self.obj).set('400x300')
 		self.close()
+		
+	def bindings(self):
+		create_binding(widget=self.widget,bindings=['<Control-q>','<Control-w>','<Escape>'],action=self.close_no)
 		
 	def paths(self):
 		if self.type == lev_warn:
@@ -2113,7 +2117,7 @@ class Clipboard: # Requires 'h_widgets'
 class Widgets:
 	
 	def __init__(self):
-		self._root = None
+		self._root = self._warning = self._error = self._question = self._info = None
 		
 	def root(self,Close=True):
 		if not self._root:
@@ -2129,6 +2133,26 @@ class Widgets:
 	def end(self):
 		self.root().kill()
 		self._root.run()
+		
+	def warning(self):
+		if not self._warning:
+			self._warning = MessageBuilder(parent_obj=Top(parent_obj=self.root()),type=lev_warn)
+		return self._warning
+		
+	def error(self):
+		if not self._error:
+			self._error = MessageBuilder(parent_obj=Top(parent_obj=self.root()),type=lev_err)
+		return self._error
+		
+	def question(self):
+		if not self._question:
+			self._question = MessageBuilder(parent_obj=Top(parent_obj=self.root()),type=lev_ques)
+		return self._question
+		
+	def info(self):
+		if not self._info:
+			self._info = MessageBuilder(parent_obj=Top(parent_obj=self.root()),type=lev_info)
+		return self._info
 
 
 
