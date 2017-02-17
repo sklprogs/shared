@@ -1015,52 +1015,70 @@ class ToolTip(ToolTipBase):
 class ListBox:
 	
 	# todo: configure a font
-	# todo: self.gui()
 	# todo: SelectFirst is enabled, however, after pressing Save button nothing happens
-	# todo: bind Escape
 	# todo: Top
-	def __init__(self,parent_obj,Multiple=False,lst=[],title='Title:',icon=None,SelectionCloses=True,SelectFirst=True,Composite=False,SingleClick=True,user_function=None):
-		# (1) Initializing variables
+	def __init__(self,parent_obj,Multiple=False,lst=[],title='Title:',icon=None,SelectionCloses=True,SelectFirst=True,Composite=False,SingleClick=True,user_function=None,side=None,Scrollbar=True,expand=1,fill='both'):
 		self.parent_obj = parent_obj
-		self.scrollbar = tk.Scrollbar(self.parent_obj.widget)
-		self.scrollbar.pack(side=tk.RIGHT,fill=tk.Y)
 		self.Multiple = Multiple
 		self.SelectFirst = SelectFirst
 		self.Composite = Composite
 		self.SelectionCloses = SelectionCloses
 		self.SingleClick = SingleClick
+		self.Scrollbar = Scrollbar
+		self.expand = expand
+		self._fill = fill
+		self.side = side
+		self.lst = list(lst)
+		self._title = title
+		self._icon = icon
 		# A user-defined function that is run when pressing Up/Down arrow keys and LMB. There is a problem binding it externally, so we bind it here.
 		self.user_function = user_function
 		self._index = 0
 		self.state = 'normal'
-		# (2) Creating the widget
+		self.gui()
+		
+	def bindings(self):
+		if self.user_function:
+			create_binding(self.widget,'<<ListboxSelect>>',self.user_function) # Binding just to '<Button-1>' does not work. We do not need binding Return/space/etc. because the function will be called each time the selection is changed. However, we still need to bind Up/Down.
+		elif self.SelectionCloses:
+			# todo: test <KP_Enter> in Windows
+			create_binding(self.widget,['<Return>','<KP_Enter>','<Double-Button-1>'],self.close)
+			if self.SingleClick and not self.Multiple:
+				create_binding(self.widget,'<Button-1>',self.close)
+		if not self.Multiple:
+			create_binding(self.widget,'<Up>',self.move_up)
+			create_binding(self.widget,'<Down>',self.move_down)
+		if not self.Composite: # todo: test
+			create_binding(self.widget,['<Escape>','<Control-q>','<Control-w>'],self.close)
+		
+	def gui(self):
+		self._scroll()
 		if self.Multiple:
 			self.widget = tk.Listbox(self.parent_obj.widget,exportselection=0,selectmode=tk.MULTIPLE)
 		else:
 			self.widget = tk.Listbox(self.parent_obj.widget,exportselection=0,selectmode=tk.SINGLE)
-		self.reset(lst=lst,title=title,icon=icon,SelectFirst=self.SelectFirst)
-		self.widget.pack(expand=1,fill='both')
+		self.reset(lst=self.lst,title=self._title,icon=self._icon,SelectFirst=self.SelectFirst)
+		self.widget.pack(expand=self.expand,fill=self._fill,side=self.side)
 		self._resize()
-		self.scrollbar.config(command=self.widget.yview)
-		self.widget.config(yscrollcommand=self.scrollbar.set)
+		self._scroll_config()
 		self.widget.focus_set()
-		# (3) Setting bindings
-		# todo: test <KP_Enter> in Windows
-		if self.user_function:
-			create_binding(self.widget,'<<ListboxSelect>>',self.user_function) # Binding just to '<Button-1>' does not work. We do not need binding Return/space/etc. because the function will be called each time the selection is changed. However, we still need to bind Up/Down.
-		elif self.SelectionCloses:
-			create_binding(self.widget,['<Return>','<KP_Enter>','<Double-Button-1>'],self.close)
-			if self.SingleClick and not self.Multiple:
-				create_binding(self.widget,'<Button-1>',self.close)
+		self.bindings()
 		if not self.Composite:
 			# Тип родительского виджета может быть любым
 			if not hasattr(self.parent_obj,'close_button'):
 				self.parent_obj.close_button = Button(self.parent_obj,text=globs['mes'].btn_x,hint=globs['mes'].btn_x,action=self.close,expand=0,side='bottom')
 			WidgetShared.custom_buttons(self)
-		if not self.Multiple:
-			create_binding(self.widget,'<Up>',self.move_up)
-			create_binding(self.widget,'<Down>',self.move_down)
-		
+
+	def _scroll(self):
+		if self.Scrollbar:
+			self.scrollbar = tk.Scrollbar(self.parent_obj.widget)
+			self.scrollbar.pack(side=tk.RIGHT,fill=tk.Y)
+			
+	def _scroll_config(self):
+		if self.Scrollbar:
+			self.scrollbar.config(command=self.widget.yview)
+			self.widget.config(yscrollcommand=self.scrollbar.set)
+	
 	def _resize(self):
 		# Autofit to contents
 		self.widget.config(width=0)
@@ -1078,9 +1096,8 @@ class ListBox:
 	def reset(self,lst=[],title=None,icon=None,SelectFirst=True):
 		self.SelectFirst = SelectFirst
 		self.clear()
-		self.lst = list(lst)
-		self.icon(path=icon)
-		self.title(text=title)
+		self.icon(path=self._icon)
+		self.title(text=self._title)
 		self.fill()
 		self._resize()
 		self._index = 0
@@ -2082,7 +2099,8 @@ class MessageBuilder: # Requires 'constants'
 	def picture(self,*args):
 		if os.path.exists(self.path):
 			# We need to assign self.variable to Label, otherwise, it gets destroyed
-			self.label = Label(parent_obj=self.top_left,image=tk.PhotoImage(file=self.path))
+			# Without explicitly indicating 'master', we get "image pyimage1 doesn't exist"
+			self.label = Label(parent_obj=self.top_left,image=tk.PhotoImage(master=self.top_left.widget,file=self.path))
 		else:
 			log.append('MessageBuilder.picture',lev_warn,'Picture "%s" was not found!' % self.path) # todo: mes
 
@@ -2098,7 +2116,7 @@ class Clipboard: # Requires 'h_widgets'
 		if text or CopyEmpty:
 			try:
 				h_widgets.root().widget.clipboard_clear()
-				h_widgets.root().widget.clipboard_append(text)
+				h_widgets._root.widget.clipboard_append(text)
 			except tk.TclError:
 				# todo: Show a window to manually copy from
 				Message(func='Clipboard.copy',type=lev_err,message=globs['mes'].clipboard_failure,Silent=self.Silent)
@@ -2117,7 +2135,8 @@ class Clipboard: # Requires 'h_widgets'
 class Widgets:
 	
 	def __init__(self):
-		self._root = self._warning = self._error = self._question = self._info = None
+		self._root = self._warning = self._error = self._question = self._info = self._edit_clip = None
+		self._lst = []
 		
 	def root(self,Close=True):
 		if not self._root:
@@ -2131,28 +2150,52 @@ class Widgets:
 		self._root.close()
 		
 	def end(self):
+		self.close_all()
 		self.root().kill()
 		self._root.run()
 		
 	def warning(self):
 		if not self._warning:
-			self._warning = MessageBuilder(parent_obj=Top(parent_obj=self.root()),type=lev_warn)
+			self._warning = MessageBuilder(parent_obj=self.root(),type=lev_warn)
+			self._lst.append(self._warning)
 		return self._warning
 		
 	def error(self):
 		if not self._error:
-			self._error = MessageBuilder(parent_obj=Top(parent_obj=self.root()),type=lev_err)
+			self._error = MessageBuilder(parent_obj=self.root(),type=lev_err)
+			self._lst.append(self._error)
 		return self._error
 		
 	def question(self):
 		if not self._question:
-			self._question = MessageBuilder(parent_obj=Top(parent_obj=self.root()),type=lev_ques)
+			self._question = MessageBuilder(parent_obj=self.root(),type=lev_ques)
+			self._lst.append(self._question)
 		return self._question
-		
+	
 	def info(self):
 		if not self._info:
-			self._info = MessageBuilder(parent_obj=Top(parent_obj=self.root()),type=lev_info)
+			self._info = MessageBuilder(parent_obj=self.root(),type=lev_info)
+			self._lst.append(self._info)
 		return self._info
+		
+	def close_all(self):
+		log.append('Widgets.close_all',lev_info,'Closing %d widgets...' % len(self._lst)) # todo: mes
+		for i in range(len(self._lst)):
+			if hasattr(self._lst[i],'close'):
+				self._lst[i].close()
+			else:
+				Message(func='Widgets.close_all',type=lev_err,message='Widget "%s" does not have a "close" action!' % type(self._lst[i]))
+				
+	def edit_clip(self):
+		if not self._edit_clip:
+			h_top = Top(parent_obj=self.root(),Maximize=False)
+			self._edit_clip = TextBox(parent_obj=h_top)
+			self._edit_clip.title(text=globs['mes'].correct_clipboard)
+			self._edit_clip.focus()
+			self._lst.append(self._edit_clip)
+			Geometry(parent_obj=h_top).set('400x300')
+		return self._edit_clip
+	
 
 
 
