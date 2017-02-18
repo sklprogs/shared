@@ -1463,6 +1463,7 @@ class Diff:
 			self.file = self.wda_html
 			self._header = globs['mes'].title_diff
 			self.h_write = self.h_wda_write
+		return self
 			
 	def diff(self):
 		self.text1 = self.text1.split(' ')
@@ -1478,12 +1479,18 @@ class Diff:
 		self._diff = self._diff.replace('<title></title>',self._header) + '\n'
 		
 	def compare(self):
-		self.diff()
-		self.header()
-		self.h_write.write(self._diff)
-		if self.h_write.Success:
-			# Cannot reuse the class instance because the temporary file might be missing
-			Launch(target=self.file).default()
+		if self.text1 and self.text2:
+			if self.text1 == self.text2:
+				Message(func='Diff.compare',type=lev_info,message='Texts are identical!') # todo: mes
+			else:
+				self.diff()
+				self.header()
+				self.h_write.write(self._diff)
+				if self.h_write.Success:
+					# Cannot reuse the class instance because the temporary file might be missing
+					Launch(target=self.file).default()
+		else:
+			Message(func='Diff.compare',type=lev_warn,message=globs['mes'].empty_input)
 
 
 

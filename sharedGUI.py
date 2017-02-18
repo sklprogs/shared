@@ -110,17 +110,6 @@ def create_binding(widget,bindings,action): # widget, list, function
 				Message(func='create_binding',type=lev_err,message=globs['mes'].wrong_keybinding % bindings[i])
 	else:
 		Message(func='create_binding',type=lev_err,message=globs['mes'].unknown_mode % (str(bindings_type),'%s, %s' % (globs['mes'].type_str,globs['mes'].type_lst)))
-			
-def confirm_quit(widget,Verbose=False):
-	def _quit():
-		log.append('_quit',lev_info,globs['mes'].goodbye)
-		widget.destroy()
-		sys.exit()
-	if Verbose:
-		if Message(func='confirm_quit',type=lev_ques,message=globs['mes'].close_window).Yes:
-			_quit()
-	else:
-		_quit()
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 class WidgetShared:
@@ -172,7 +161,7 @@ class WidgetShared:
 
 class Top:
 
-	def __init__(self,parent_obj,Maximize=False,DestroyRoot=False,AutoCenter=True):
+	def __init__(self,parent_obj,Maximize=False,AutoCenter=True):
 		self.type = 'Toplevel'
 		self.parent_obj = parent_obj
 		self.AutoCenter = AutoCenter
@@ -180,10 +169,7 @@ class Top:
 		# Lock = True - блокировать дальнейшее выполнение программы до попытки закрытия виджета. Lock = False позволяет создать одновременно несколько виджетов на экране. Они будут работать, однако, виджет с Lock = False будет закрыт при закрытии виджета с Lock = True. Кроме того, если ни один из виджетов не имеет Lock = True, то они все будут показаны и тут же закрыты.
 		self.Lock = True
 		self.widget = tk.Toplevel(self.parent_obj.widget)
-		if DestroyRoot:
-			self.widget.protocol("WM_DELETE_WINDOW",lambda:confirm_quit(self.parent_obj))
-		else:
-			self.widget.protocol("WM_DELETE_WINDOW",self.close)
+		self.widget.protocol("WM_DELETE_WINDOW",self.close)
 		if Maximize:
 			Geometry(parent_obj=self).maximize()
 		self.tk_trigger = tk.BooleanVar()
@@ -555,11 +541,20 @@ class TextBox:
 				create_binding(widget=self.widget,bindings=['<Escape>'],action=self.close)
 		create_binding(widget=self.widget,bindings='<Control-a>',action=self.select_all)
 	
+	def _get(self):
+		try:
+			return self.widget.get('1.0','end')
+		except tk._tkinter.TclError:
+			# Do not use GUI
+			log.append('TextBox._get',lev_warn,'The parent has already been destroyed.') # todo: mes
+	
 	def get(self,Strip=True):
-		if Strip:
-			return self.widget.get('1.0','end').strip()
-		else:
-			return self.widget.get('1.0','end').strip('\n')
+		result = self._get()
+		if result:
+			if Strip:
+				return result.strip()
+			else:
+				return result.strip('\n')
 
 	def insert(self,text='text',pos='1.0',MoveTop=True):
 		WidgetShared.insert(self,text=text,pos=pos)
@@ -631,7 +626,11 @@ class TextBox:
 			log.append('TextBox.mark_remove',lev_err,globs['mes'].element_not_found % (mark_name,str(self.marks)))
 			
 	def clear_text(self):
-		self.widget.delete('1.0','end')
+		try:
+			self.widget.delete('1.0','end')
+		except tk._tkinter.TclError:
+			# Do not use GUI
+			log.append('TextBox.clear_text',lev_warn,'The parent has already been destroyed.') # todo: mes
 		
 	def clear_tags(self):
 		i = len(self.tags) - 1
@@ -760,11 +759,20 @@ class Entry:
 		self.Save = True
 		self.parent_obj.close()
 	
+	def _get(self):
+		try:
+			return self.widget.get()
+		except tk._tkinter.TclError:
+			# Do not use GUI
+			log.append('Entry.clear_text',lev_warn,'The parent has already been destroyed.') # todo: mes
+			
 	def get(self,Strip=False):
-		if Strip:
-			return self.widget.get().strip()
-		else:
-			return self.widget.get().strip('\n')
+		result = self._get()
+		if result:
+			if Strip:
+				return result.strip()
+			else:
+				return result.strip('\n')
 
 	def insert(self,text='text',pos=0):
 		WidgetShared.insert(self,text=text,pos=pos)
@@ -775,7 +783,11 @@ class Entry:
 		return 'break'
 
 	def clear_text(self):
-		self.widget.delete(0,'end')
+		try:
+			self.widget.delete(0,'end')
+		except tk._tkinter.TclError:
+			# Do not use GUI
+			log.append('Entry.clear_text',lev_warn,'The parent has already been destroyed.') # todo: mes
 		
 	# GoTo работает только в tk.Text и оставлено для совместимости с ним (как и SpecialReturn)
 	def update(self,title='Title:',text='',SelectAll=True,ReadOnly=False,CursorPos=0,icon='',GoTo='',SpecialReturn=False):
@@ -1013,29 +1025,26 @@ class ToolTip(ToolTipBase):
 
 
 class ListBox:
-	
+	# todo: fix: Cannot cancel by Escape
 	# todo: configure a font
 	# todo: SelectFirst is enabled, however, after pressing Save button nothing happens
-	# todo: Top
 	def __init__(self,parent_obj,Multiple=False,lst=[],title='Title:',icon=None,SelectionCloses=True,SelectFirst=True,Composite=False,SingleClick=True,user_function=None,side=None,Scrollbar=True,expand=1,fill='both'):
 		self.parent_obj = parent_obj
 		self.Multiple = Multiple
-		self.SelectFirst = SelectFirst
-		self.Composite = Composite
-		self.SelectionCloses = SelectionCloses
-		self.SingleClick = SingleClick
-		self.Scrollbar = Scrollbar
 		self.expand = expand
+		self.Composite = Composite
+		self.Scrollbar = Scrollbar
 		self._fill = fill
 		self.side = side
-		self.lst = list(lst)
-		self._title = title
-		self._icon = icon
 		# A user-defined function that is run when pressing Up/Down arrow keys and LMB. There is a problem binding it externally, so we bind it here.
 		self.user_function = user_function
 		self._index = 0
 		self.state = 'normal'
+		self.SelectionCloses = SelectionCloses
+		self.SingleClick = SingleClick
+		self._icon = icon
 		self.gui()
+		self.reset(lst=lst,title=title,SelectFirst=SelectFirst)
 		
 	def bindings(self):
 		if self.user_function:
@@ -1057,10 +1066,10 @@ class ListBox:
 			self.widget = tk.Listbox(self.parent_obj.widget,exportselection=0,selectmode=tk.MULTIPLE)
 		else:
 			self.widget = tk.Listbox(self.parent_obj.widget,exportselection=0,selectmode=tk.SINGLE)
-		self.reset(lst=self.lst,title=self._title,icon=self._icon,SelectFirst=self.SelectFirst)
 		self.widget.pack(expand=self.expand,fill=self._fill,side=self.side)
 		self._resize()
 		self._scroll_config()
+		self.icon(path=self._icon)
 		self.widget.focus_set()
 		self.bindings()
 		if not self.Composite:
@@ -1093,10 +1102,11 @@ class ListBox:
 	def clear_selection(self):
 		self.widget.selection_clear(0,tk.END)
 	
-	def reset(self,lst=[],title=None,icon=None,SelectFirst=True):
+	def reset(self,lst=[],title=None,SelectFirst=True):
 		self.SelectFirst = SelectFirst
+		self._title = title
 		self.clear()
-		self.icon(path=self._icon)
+		self.lst = list(lst)
 		self.title(text=self._title)
 		self.fill()
 		self._resize()
@@ -2108,26 +2118,47 @@ class MessageBuilder: # Requires 'constants'
 
 class Clipboard: # Requires 'h_widgets'
 	
-	def __init__(self,Silent=False):
+	# We need to explicitly set the root object, otherwise, Tk hangs when launched from another module
+	def __init__(self,root_obj,Silent=False):
 		self.Silent = Silent
+		self.root_obj = root_obj
 	
 	def copy(self,text,CopyEmpty=True):
-		text = str(text)
 		if text or CopyEmpty:
+			text = str(text)
+			self.root_obj.widget.clipboard_clear()
+			self.root_obj.widget.clipboard_append(text)
 			try:
-				h_widgets.root().widget.clipboard_clear()
-				h_widgets._root.widget.clipboard_append(text)
+				self.root_obj.widget.clipboard_clear()
+				self.root_obj.widget.clipboard_append(text)
 			except tk.TclError:
 				# todo: Show a window to manually copy from
-				Message(func='Clipboard.copy',type=lev_err,message=globs['mes'].clipboard_failure,Silent=self.Silent)
+				#Message(func='Clipboard.copy',type=lev_err,message=globs['mes'].clipboard_failure,Silent=self.Silent)
+				log.append('Clipboard.copy',lev_err,globs['mes'].clipboard_failure)
+			except tk._tkinter.TclError:
+				# Do not use GUI
+				log.append('Clipboard.copy',lev_warn,'The parent has already been destroyed.') # todo: mes
+			except:
+				log.append('Clipboard.copy',lev_err,'Unknown error has occurred.') # todo: mes
+			log.append('Clipoard.copy',lev_debug,text)
+		else:
+			log.append('Clipboard.copy',lev_warn,globs['mes'].empty_input)
 				
 	def paste(self):
 		text = ''
 		try:
-			text = h_widgets.root().widget.clipboard_get()
+			text = str(self.root_obj.widget.clipboard_get())
 		except tk.TclError:
-			Message(func='Clipboard.copy',type=lev_err,message=globs['mes'].clipboard_paste_failure,Silent=self.Silent)
+			#Message(func='Clipboard.paste',type=lev_err,message=globs['mes'].clipboard_paste_failure,Silent=self.Silent)
+			log.append('Clipboard.paste',lev_err,globs['mes'].clipboard_paste_failure)
+		except tk._tkinter.TclError:
+			# Do not use GUI
+			log.append('Clipboard.paste',lev_warn,'The parent has already been destroyed.') # todo: mes
+		except:
+			log.append('Clipboard.paste',lev_err,'Unknown error has occurred.') # todo: mes
 		# Further actions: strip, delete double line breaks
+		log.append('Clipoard.paste',lev_debug,text)
+		#Message(func='Clipboard.paste',type=lev_warn,message='Just kidding')
 		return text
 
 
@@ -2135,7 +2166,7 @@ class Clipboard: # Requires 'h_widgets'
 class Widgets:
 	
 	def __init__(self):
-		self._root = self._warning = self._error = self._question = self._info = self._edit_clip = None
+		self._root = self._warning = self._error = self._question = self._info = self._edit_clip = self._waitbox = self._txt = self._entry = self._clipboard = None
 		self._lst = []
 		
 	def root(self,Close=True):
@@ -2150,8 +2181,9 @@ class Widgets:
 		self._root.close()
 		
 	def end(self):
-		self.close_all()
+		h_widgets.destroy_all()
 		self.root().kill()
+		#sys.exit() # cur
 		self._root.run()
 		
 	def warning(self):
@@ -2178,13 +2210,27 @@ class Widgets:
 			self._lst.append(self._info)
 		return self._info
 		
+	# Use this to close all enlisted widgets. If you plan to quit, this can be skipped.
 	def close_all(self):
 		log.append('Widgets.close_all',lev_info,'Closing %d widgets...' % len(self._lst)) # todo: mes
 		for i in range(len(self._lst)):
 			if hasattr(self._lst[i],'close'):
 				self._lst[i].close()
 			else:
-				Message(func='Widgets.close_all',type=lev_err,message='Widget "%s" does not have a "close" action!' % type(self._lst[i]))
+				log.append('Widgets.close_all',lev_err,'Widget "%s" does not have a "close" action!' % type(self._lst[i]))
+				
+	def destroy_all(self):
+		log.append('Widgets.destroy_all',lev_info,'Destroy %d' % len(self._lst)) # todo: mes
+		for i in range(len(self._lst)):
+			if hasattr(self._lst[i],'widget'):
+				self._lst[i].widget.destroy()
+			else:
+				log.append('Widgets.destroy_all',lev_err,'Object "%s" does not have a "widget" attribute!' % type(self._lst[i]))
+				
+	def clipboard(self):
+		if not self._clipboard:
+			self._clipboard = Clipboard(root_obj=self.root())
+		return self._clipboard
 				
 	def edit_clip(self):
 		if not self._edit_clip:
@@ -2195,6 +2241,26 @@ class Widgets:
 			self._lst.append(self._edit_clip)
 			Geometry(parent_obj=h_top).set('400x300')
 		return self._edit_clip
+		
+	def txt(self):
+		if not self._txt:
+			h_top = Top(parent_obj=self.root(),Maximize=True)
+			self._txt = TextBox(parent_obj=h_top)
+			self._lst.append(self._txt)
+		return self._txt
+		
+	def entry(self):
+		if not self._entry:
+			h_top = Top(parent_obj=self.root())
+			self._entry = Entry(parent_obj=h_top)
+			self._lst.append(self._entry)
+		return self._entry
+	
+	def waitbox(self):
+		if not self._waitbox:
+			self._waitbox = WaitBox(parent_obj=self.root())
+			self._lst.append(self._waitbox)
+		return self._waitbox
 	
 
 
