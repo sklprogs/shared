@@ -161,23 +161,31 @@ class WidgetShared:
 
 class Top:
 
-	def __init__(self,parent_obj,Maximize=False,AutoCenter=True):
+	# todo: del 'trigger_obj'
+	def __init__(self,parent_obj,Maximize=False,AutoCenter=True,trigger_obj=None):
 		self.type = 'Toplevel'
+		# Lock = True - блокировать дальнейшее выполнение программы до попытки закрытия виджета. Lock = False позволяет создать одновременно несколько виджетов на экране. Они будут работать, однако, виджет с Lock = False будет закрыт при закрытии виджета с Lock = True. Кроме того, если ни один из виджетов не имеет Lock = True, то они все будут показаны и тут же закрыты.
+		self.Lock = False
 		self.parent_obj = parent_obj
 		self.AutoCenter = AutoCenter
+		self.trigger_obj = trigger_obj
 		self.count = 0
-		# Lock = True - блокировать дальнейшее выполнение программы до попытки закрытия виджета. Lock = False позволяет создать одновременно несколько виджетов на экране. Они будут работать, однако, виджет с Lock = False будет закрыт при закрытии виджета с Lock = True. Кроме того, если ни один из виджетов не имеет Lock = True, то они все будут показаны и тут же закрыты.
-		self.Lock = True
 		self.widget = tk.Toplevel(self.parent_obj.widget)
 		self.widget.protocol("WM_DELETE_WINDOW",self.close)
 		if Maximize:
 			Geometry(parent_obj=self).maximize()
-		self.tk_trigger = tk.BooleanVar()
+		if self.trigger_obj:
+			self.trigger_obj.add(self)
+		else:
+			self.tk_trigger = tk.BooleanVar()
 	
 	def close(self,*args):
 		self.widget.withdraw()
 		if self.Lock:
-			self.tk_trigger.set(True)
+			if self.trigger_obj:
+				self.trigger_obj.on_close()
+			else:
+				self.tk_trigger.set(True)
 	
 	def show(self,Lock=True):
 		self.count += 1
@@ -187,8 +195,11 @@ class Top:
 			self.center()
 		self.Lock = Lock
 		if self.Lock:
-			self.tk_trigger = tk.BooleanVar()
-			self.widget.wait_variable(self.tk_trigger)
+			if self.trigger_obj:
+				self.trigger_obj.on_show()
+			else:
+				self.tk_trigger = tk.BooleanVar()
+				self.widget.wait_variable(self.tk_trigger)
 	
 	def title(self,text='Title:'):
 		WidgetShared.title(self,text=text)
@@ -1707,7 +1718,7 @@ class Geometry: # Requires h_os, h_widgets
 		self._geom = None
 
 	def update(self):
-		self.h_widgets.root().widget.update_idletasks()
+		h_widgets.root().widget.update_idletasks()
 	
 	def save(self):
 		if self.parent_obj:
@@ -2024,6 +2035,7 @@ class MessageBuilder: # Requires 'constants'
 		self.YesNo = YesNo
 		self.Single = Single
 		self.type = type
+		self.Lock = False
 		self.paths()
 		self.parent_obj = parent_obj
 		self.obj = Top(parent_obj=self.parent_obj)
@@ -2038,6 +2050,7 @@ class MessageBuilder: # Requires 'constants'
 		
 	def bindings(self):
 		create_binding(widget=self.widget,bindings=['<Control-q>','<Control-w>','<Escape>'],action=self.close_no)
+		self.widget.protocol("WM_DELETE_WINDOW",self.close)
 		
 	def paths(self):
 		if self.type == lev_warn:
@@ -2092,11 +2105,13 @@ class MessageBuilder: # Requires 'constants'
 		self.title(text=title)
 		return self
 	
-	def show(self,*args):
+	def show(self,Lock=False,*args):
 		self.obj.show()
 	
 	def close(self,*args):
 		self.obj.close()
+		# todo: fix tkinter's wait_variable problem; this partly helps
+		#self.obj.widget.destroy()
 		
 	def close_yes(self,*args):
 		self.Yes = True
@@ -2119,9 +2134,10 @@ class MessageBuilder: # Requires 'constants'
 class Clipboard: # Requires 'h_widgets'
 	
 	# We need to explicitly set the root object, otherwise, Tk hangs when launched from another module
-	def __init__(self,root_obj,Silent=False):
+	def __init__(self,root_obj,Silent=False,trigger_obj=None):
 		self.Silent = Silent
 		self.root_obj = root_obj
+		self.trigger_obj = trigger_obj
 	
 	def copy(self,text,CopyEmpty=True):
 		if text or CopyEmpty:
@@ -2133,13 +2149,12 @@ class Clipboard: # Requires 'h_widgets'
 				self.root_obj.widget.clipboard_append(text)
 			except tk.TclError:
 				# todo: Show a window to manually copy from
-				#Message(func='Clipboard.copy',type=lev_err,message=globs['mes'].clipboard_failure,Silent=self.Silent)
-				log.append('Clipboard.copy',lev_err,globs['mes'].clipboard_failure)
+				Message(func='Clipboard.copy',type=lev_err,message=globs['mes'].clipboard_failure,Silent=self.Silent)
 			except tk._tkinter.TclError:
 				# Do not use GUI
 				log.append('Clipboard.copy',lev_warn,'The parent has already been destroyed.') # todo: mes
 			except:
-				log.append('Clipboard.copy',lev_err,'Unknown error has occurred.') # todo: mes
+				log.append('Clipboard.copy',lev_err,'An unknown error has occurred.') # todo: mes
 			log.append('Clipoard.copy',lev_debug,text)
 		else:
 			log.append('Clipboard.copy',lev_warn,globs['mes'].empty_input)
@@ -2149,16 +2164,14 @@ class Clipboard: # Requires 'h_widgets'
 		try:
 			text = str(self.root_obj.widget.clipboard_get())
 		except tk.TclError:
-			#Message(func='Clipboard.paste',type=lev_err,message=globs['mes'].clipboard_paste_failure,Silent=self.Silent)
-			log.append('Clipboard.paste',lev_err,globs['mes'].clipboard_paste_failure)
+			Message(func='Clipboard.paste',type=lev_err,message=globs['mes'].clipboard_paste_failure,Silent=self.Silent)
 		except tk._tkinter.TclError:
 			# Do not use GUI
 			log.append('Clipboard.paste',lev_warn,'The parent has already been destroyed.') # todo: mes
 		except:
-			log.append('Clipboard.paste',lev_err,'Unknown error has occurred.') # todo: mes
+			log.append('Clipboard.paste',lev_err,'An unknown error has occurred.') # todo: mes
 		# Further actions: strip, delete double line breaks
 		log.append('Clipoard.paste',lev_debug,text)
-		#Message(func='Clipboard.paste',type=lev_warn,message='Just kidding')
 		return text
 
 
@@ -2181,11 +2194,14 @@ class Widgets:
 		self._root.close()
 		
 	def end(self):
-		h_widgets.destroy_all()
+		self.close_all()
 		self.root().kill()
-		#sys.exit() # cur
 		self._root.run()
 		
+	def add(self,obj):
+		log.append('Widgets.add',lev_info,'Add %s' % type(obj)) # todo: mes
+		self._lst.append(obj)
+	
 	def warning(self):
 		if not self._warning:
 			self._warning = MessageBuilder(parent_obj=self.root(),type=lev_warn)
@@ -2210,22 +2226,13 @@ class Widgets:
 			self._lst.append(self._info)
 		return self._info
 		
-	# Use this to close all enlisted widgets. If you plan to quit, this can be skipped.
 	def close_all(self):
-		log.append('Widgets.close_all',lev_info,'Closing %d widgets...' % len(self._lst)) # todo: mes
+		log.append('Widgets.close_all',lev_info,'Close %d widgets' % len(self._lst)) # todo: mes
 		for i in range(len(self._lst)):
 			if hasattr(self._lst[i],'close'):
 				self._lst[i].close()
 			else:
 				log.append('Widgets.close_all',lev_err,'Widget "%s" does not have a "close" action!' % type(self._lst[i]))
-				
-	def destroy_all(self):
-		log.append('Widgets.destroy_all',lev_info,'Destroy %d' % len(self._lst)) # todo: mes
-		for i in range(len(self._lst)):
-			if hasattr(self._lst[i],'widget'):
-				self._lst[i].widget.destroy()
-			else:
-				log.append('Widgets.destroy_all',lev_err,'Object "%s" does not have a "widget" attribute!' % type(self._lst[i]))
 				
 	def clipboard(self):
 		if not self._clipboard:
@@ -2261,7 +2268,6 @@ class Widgets:
 			self._waitbox = WaitBox(parent_obj=self.root())
 			self._lst.append(self._waitbox)
 		return self._waitbox
-	
 
 
 
@@ -2269,16 +2275,15 @@ h_widgets = Widgets()
 
 if __name__ == '__main__':
 	h_widgets.start()
-	h_top = Top(h_widgets.root(),Maximize=True)
 	text = '''Something funny with this guy
 	I am glad he is not my test
 	Glad is so angry'''
 	h_words = Words(text)
+	h_top = Top(parent_obj=h_widgets.root())
 	h_txt = TextBox(parent_obj=h_top,h_words=h_words)
 	h_txt.title(text='My text is:')
 	h_txt.insert(text)
 	h_txt.widget.focus_set()
+	Geometry(parent_obj=h_top).set('500x350')
 	h_txt.show()
-	# Checking import
-	log.append('sharedGUI.__main__',lev_info,'Bye-bye!')
 	h_widgets.end()

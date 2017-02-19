@@ -1233,7 +1233,7 @@ class Directory:
 	def __init__(self,path,dest='',Silent=False):
 		self.Success = True
 		self.Silent = Silent
-		if dir:
+		if path:
 			self.dir = Path(path).path # Removes trailing slashes if necessary
 		else:
 			self.dir = ''
@@ -1716,9 +1716,12 @@ class Grep:
 
 
 
+# cur
+
+
 class Words: # Requires Search, Text
 	
-	def __init__(self,text,orig_cyr=False,db_path=':memory:'):
+	def __init__(self,text,OrigCyr=False,db_path=':memory:'):
 		log.append('Words.__init__',lev_info,'Create minimal Words database') # todo: mes
 		self.Success = True
 		self.Locked = False
@@ -1727,7 +1730,7 @@ class Words: # Requires Search, Text
 			self.Create = True
 		else:
 			self.Create = False
-		self.orig_cyr = orig_cyr
+		self.OrigCyr = OrigCyr
 		self._p = self._text_p = self._text_np = self._text_np_low = self._text_norm = self._len = self._text_orig_np = None
 		# This is MUCH faster than using old symbol-per-symbol algorithm for finding words. We must, however, drop double space cases.
 		self._text = self._text_orig = Text(text=text,Auto=True).text
@@ -2037,11 +2040,11 @@ class Words: # Requires Search, Text
 					3) The word has Latin characters in the predominantly Russian text # todo: implement
 					4) The word has digits
 				'''
-				if self.orig_cyr and self.lat():
+				if self.OrigCyr and self.lat():
 					result = 2 # This is done to cheat 'CompareStones' which needs stone == 1. Other functions must use 'if self.stone():'
 				elif self.cyr() and self.lat() or self.greek() or self.digit():
 					result = 1
-				elif self.orig_cyr and self.lat():
+				elif self.OrigCyr and self.lat():
 					result = 1
 				self.dbc.execute('update WORDS set STONE=? where NO=?',(result,self._no,))
 			return result
@@ -2686,42 +2689,42 @@ class Search:
 
 
 
-# Compare stones (2 different DBs) and leave only useful ones
+# Compare stones (2 different tables) and leave only useful ones
 class CompareStones:
 	
-	def __init__(self,hw_i=None,hw_c=None):
+	def __init__(self,w1,w2): # 'Words' objects
 		self.Success = True
-		self.hw_i = hw_i
-		self.hw_c = hw_c
-		self._diff_i = []
-		self._diff_c = []
-		if self.hw_i and self.hw_c:
+		self.w1 = w1
+		self.w2 = w2
+		self._diff1 = []
+		self._diff2 = []
+		if self.w1 and self.w2:
 			self.fill()
 			if not self.check():
 				self.diff()
-				self.unmark_i()
-				self.unmark_c()
-				self.mark_i()
-				self.mark_c()
+				self.unmark1()
+				self.unmark2()
+				self.mark1()
+				self.mark2()
 		else:
 			log.append('CompareStones.__init__',lev_warn,globs['mes'].wrong_input2)
 			self.Success = False
 			
 	def check(self):
 		if self.Success:
-			self.hw_i.db.execute('select STONE from WORDS order by STONE desc;')
-			self.hw_c.db.execute('select STONE from WORDS order by STONE desc;')
-			result_i = self.hw_i.fetchone()
-			result_c = self.hw_c.fetchone()
-			#log.append('CompareStones.check',lev_debug,str(result_i))
-			#log.append('CompareStones.check',lev_debug,str(result_c))
+			self.w1.db.execute('select STONE from %s order by STONE desc;' % self.w1.table)
+			self.w2.db.execute('select STONE from %s order by STONE desc;' % self.w2.table)
+			result1 = self.w1.fetchone()
+			result2 = self.w2.fetchone()
+			#log.append('CompareStones.check',lev_debug,str(result1))
+			#log.append('CompareStones.check',lev_debug,str(result2))
 			''' Stone value:
 				0: not a stone
 				1: a stone (as found by Words)
 				2: a forced stone
 				3: marked as analysed (>=1) by CompareStones
 			'''
-			if str(result_i).isdigit() and result_i >= 3 and str(result_c).isdigit() and result_c >= 3:
+			if str(result1).isdigit() and result1 >= 3 and str(result2).isdigit() and result2 >= 3:
 				log.append('CompareStones.check',lev_info,globs['mes'].action_not_required)
 				return True
 			else:
@@ -2731,97 +2734,97 @@ class CompareStones:
 	
 	def fill(self):
 		if self.Success:
-			for i in range(self.hw_i.len()):
-				self.hw_i.change_no(no=i)
-				self.hw_i.np()
-				self.hw_i.stone()
-			for i in range(self.hw_c.len()):
-				self.hw_c.change_no(no=i)
-				self.hw_c.np()
-				self.hw_c.stone()
+			for i in range(self.w1.len()):
+				self.w1.change_no(no=i)
+				self.w1.np()
+				self.w1.stone()
+			for i in range(self.w2.len()):
+				self.w2.change_no(no=i)
+				self.w2.np()
+				self.w2.stone()
 		else:
 			log.append('CompareStones.fill',lev_warn,globs['mes'].canceled)
 
-	def stones_i(self):
+	def stones1(self):
 		if self.Success:
-			self.hw_i.db.execute('select NP from WORDS where STONE=? order by NO',(1,))
-			return self.hw_i.fetchall()
+			self.w1.db.execute('select NP from %s where STONE=? order by NO' % self.w1.table,(1,))
+			return self.w1.fetchall()
 		else:
-			log.append('CompareStones.stones_i',lev_warn,globs['mes'].canceled)
+			log.append('CompareStones.stones1',lev_warn,globs['mes'].canceled)
 			
-	def stones_c(self):
+	def stones2(self):
 		if self.Success:
-			self.hw_c.db.execute('select NP from WORDS where STONE=? order by NO',(1,))
-			return self.hw_c.fetchall()
+			self.w2.db.execute('select NP from %s where STONE=? order by NO' % self.w2.table,(1,))
+			return self.w2.fetchall()
 		else:
-			log.append('CompareStones.stones_c',lev_warn,globs['mes'].canceled)
+			log.append('CompareStones.stones2',lev_warn,globs['mes'].canceled)
 	
-	def diff_i(self): # Loop-safe
+	def diff1(self): # Loop-safe
 		if self.Success:
-			if not self._diff_i:
+			if not self._diff1:
 				self.diff()
-			return self._diff_i
+			return self._diff1
 		else:
-			log.append('CompareStones.diff_i',lev_warn,globs['mes'].canceled)
+			log.append('CompareStones.diff1',lev_warn,globs['mes'].canceled)
 			
-	def diff_c(self): # Loop-safe
+	def diff2(self): # Loop-safe
 		if self.Success:
-			if not self._diff_c:
+			if not self._diff2:
 				self.diff()
-			return self._diff_c
+			return self._diff2
 		else:
-			log.append('CompareStones.diff_c',lev_warn,globs['mes'].canceled)
+			log.append('CompareStones.diff2',lev_warn,globs['mes'].canceled)
 	
-	def unmark_i(self):
+	def unmark1(self):
 		if self.Success:
-			for i in range(len(self.diff_i())):
+			for i in range(len(self.diff1())):
 				# limit 1: compile SQLite with the SQLITE_ENABLE_UPDATE_DELETE_LIMIT option, which is not enabled by default.
-				self.hw_i.db.execute('select NO from WORDS where STONE=? and NP=? order by NO',(1,self._diff_i[i],))
-				first = self.hw_i.fetchone()
+				self.w1.db.execute('select NO from %s where STONE=? and NP=? order by NO' % self.w1.table,(1,self._diff1[i],))
+				first = self.w1.fetchone()
 				if first or first == 0:
-					self.hw_i.db.execute('update WORDS set STONE=? where NO=?',(0,first,))
+					self.w1.db.execute('update %s set STONE=? where NO=?' % self.w1.table,(0,first,))
 		else:
-			log.append('CompareStones.unmark_i',lev_warn,globs['mes'].canceled)
+			log.append('CompareStones.unmark1',lev_warn,globs['mes'].canceled)
 			
-	def unmark_c(self):
+	def unmark2(self):
 		if self.Success:
-			for i in range(len(self.diff_c())):
+			for i in range(len(self.diff2())):
 				# limit 1: compile SQLite with the SQLITE_ENABLE_UPDATE_DELETE_LIMIT option, which is not enabled by default.
-				self.hw_c.db.execute('select NO from WORDS where STONE=? and NP=? order by NO',(1,self._diff_c[i],))
-				first = self.hw_c.fetchone()
+				self.w2.db.execute('select NO from %s where STONE=? and NP=? order by NO' % self.w2.table,(1,self._diff2[i],))
+				first = self.w2.fetchone()
 				if first or first == 0:
-					self.hw_c.db.execute('update WORDS set STONE=? where NO=?',(0,first,))
+					self.w2.db.execute('update %s set STONE=? where NO=?' % self.w2.table,(0,first,))
 		else:
-			log.append('CompareStones.unmark_c',lev_warn,globs['mes'].canceled)
+			log.append('CompareStones.unmark2',lev_warn,globs['mes'].canceled)
 			
-	def mark_i(self):
+	def mark1(self):
 		if self.Success:
-			self.hw_i.db.execute('select NO from WORDS where STONE >= 1')
-			result = self.hw_i.fetchall()
+			self.w1.db.execute('select NO from %s where STONE >= 1' % self.w1.table)
+			result = self.w1.fetchall()
 			if result:
 				for i in range(len(result)):
-					self.hw_i.change_no(result[i])
-					self.hw_i.db.execute('update WORDS set STONE=? where NO=?',(3,result[i],))
+					self.w1.change_no(result[i])
+					self.w1.db.execute('update %s set STONE=? where NO=?' % self.w1.table,(3,result[i],))
 		else:
-			log.append('CompareStones.mark_i',lev_warn,globs['mes'].canceled)
+			log.append('CompareStones.mark1',lev_warn,globs['mes'].canceled)
 			
-	def mark_c(self):
+	def mark2(self):
 		if self.Success:
-			self.hw_c.db.execute('select NO from WORDS where STONE >= 1')
-			result = self.hw_c.fetchall()
+			self.w2.db.execute('select NO from %s where STONE >= 1' % self.w2.table)
+			result = self.w2.fetchall()
 			if result:
 				for i in range(len(result)):
-					self.hw_c.change_no(result[i])
-					self.hw_c.db.execute('update WORDS set STONE=? where NO=?',(3,result[i],))
+					self.w2.change_no(result[i])
+					self.w2.db.execute('update %s set STONE=? where NO=?' % self.w2.table,(3,result[i],))
 		else:
-			log.append('CompareStones.mark_c',lev_warn,globs['mes'].canceled)
+			log.append('CompareStones.mark2',lev_warn,globs['mes'].canceled)
 	
 	def diff(self):
 		if self.Success:
-			_stones_i = self.stones_i()
-			_stones_c = self.stones_c()
-			self._diff_i = List(lst1=_stones_i,lst2=_stones_c).diff()
-			self._diff_c = List(lst1=_stones_c,lst2=_stones_i).diff()
+			_stones1 = self.stones1()
+			_stones2 = self.stones2()
+			self._diff1 = List(lst1=_stones1,lst2=_stones2).diff()
+			self._diff2 = List(lst1=_stones2,lst2=_stones1).diff()
 		else:
 			log.append('CompareStones.diff',lev_warn,globs['mes'].canceled)
 
