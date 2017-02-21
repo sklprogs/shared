@@ -118,14 +118,17 @@ class WidgetShared:
 		object.widget.focus()
 
 	def insert(object,text,pos):
-		if object.type == 'TextBox' or object.type == 'Entry':
-			try:
-				object.widget.insert(pos,text)
-			except tk.TclError:
+		if text:
+			if object.type == 'TextBox' or object.type == 'Entry':
 				try:
-					object.widget.insert(pos,globs['mes'].insert_failure)
+					object.widget.insert(pos,text)
 				except tk.TclError:
-					Message(func='WidgetShared.insert',type=lev_err,message=globs['mes'].insert_failure)
+					try:
+						object.widget.insert(pos,globs['mes'].insert_failure)
+					except tk.TclError:
+						Message(func='WidgetShared.insert',type=lev_err,message=globs['mes'].insert_failure)
+		else:
+			log.append('WidgetShared.insert',lev_warn,globs['mes'].empty_input)
 
 	def font(object,font='Sans 11'): # font_style, globs['var']['menu_font']
 		if object.type == 'TextBox' or object.type == 'Entry':
@@ -2260,6 +2263,7 @@ class Widgets:
 		if not self._entry:
 			h_top = Top(parent_obj=self.root())
 			self._entry = Entry(parent_obj=h_top)
+			self._entry.focus()
 			self._lst.append(self._entry)
 		return self._entry
 	

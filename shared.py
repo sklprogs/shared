@@ -18,9 +18,10 @@ from constants import *
 
 
 def Message(func='MAIN',type=lev_warn,message='Message',Silent=False):
-	import sharedGUI
-	sharedGUI.Message(func=func,type=type,message=message,Silent=Silent)
-
+	# todo: fix
+	#import sharedGUI
+	#sharedGUI.Message(func=func,type=type,message=message,Silent=Silent)
+	log.append(func,type,message)
 
 
 # todo: Timing class functions sometimes shows inadequate results
@@ -523,6 +524,19 @@ class ReadTextFile:
 		else:
 			log.append('ReadTextFile.load',lev_warn,globs['mes'].canceled)
 		return self._text
+
+
+
+class Digits:
+	
+	def __init__(self,val):
+		self.val = val
+		
+	def debug(self,func_title,var_title):
+		if str(self.val).isdigit():
+			return True
+		else:
+			Message(func=func_title,type=lev_err,message='Wrong value of "%s": "%s"!' % (var_title,str(self.val))) # todo: mes
 
 
 
@@ -1250,7 +1264,7 @@ class Directory:
 		self._rel_dirs = []
 		if not os.path.isdir(self.dir):
 			self.Success = False
-			Message(func='Directory.__init__',type=lev_warn,message=globs['mes'].wrong_input2,Silent=self.Silent)
+			Message(func='Directory.__init__',type=lev_warn,message=globs['mes'].wrong_input3 % self.dir,Silent=self.Silent)
 			
 	def delete(self):
 		if self.Success:
@@ -1716,31 +1730,38 @@ class Grep:
 
 
 
-# cur
-
-
 class Words: # Requires Search, Text
 	
-	def __init__(self,text,OrigCyr=False,db_path=':memory:'):
-		log.append('Words.__init__',lev_info,'Create minimal Words database') # todo: mes
+	def __init__(self,text,connector,cursor,table,OrigCyr=True):
 		self.Success = True
-		self.Locked = False
-		self._db_path = db_path
-		if self._db_path == ':memory:' or not os.path.exists(self._db_path):
-			self.Create = True
-		else:
-			self.Create = False
 		self.OrigCyr = OrigCyr
-		self._p = self._text_p = self._text_np = self._text_np_low = self._text_norm = self._len = self._text_orig_np = None
-		# This is MUCH faster than using old symbol-per-symbol algorithm for finding words. We must, however, drop double space cases.
-		self._text = self._text_orig = Text(text=text,Auto=True).text
-		self.create()
-		self.split()
-		self._line_breaks = []
-		self._line_breaks_np = []
-		self._list_norm = []
-		self.change_no()
+		if text and connector and cursor and table:
+			log.append('Words.__init__',lev_info,'Create minimal Words database') # todo: mes
+			self.db = connector
+			self.dbc = cursor
+			self.table = table
+			self.valid_name()
+			self._p = self._text_p = self._text_np = self._text_np_low = self._text_norm = self._text_orig_np = None
+			# This is MUCH faster than using old symbol-per-symbol algorithm for finding words. We must, however, drop double space cases.
+			# todo: create a separate table for original text, text without punctuation, etc.
+			self._text = self._text_orig = Text(text=text,Auto=True).text
+			self.create()
+			self.split()
+			self._line_breaks = []
+			self._line_breaks_np = []
+			self._list_norm = []
+			self.change_no()
+		else:
+			self.Success = False
+			log.append('Words.__init__',lev_warn,globs['mes'].canceled)
 		
+	def valid_name(self):
+		if self.Success:
+			self.table = self.table.replace('sqlite_','').replace('.txt','')
+			self.table = '"' + Text(text=self.table).alphanum() + '"'
+		else:
+			log.append('Words.valid_name',lev_warn,globs['mes'].canceled)
+	
 	def line_breaks(self):
 		if self.Success:
 			if not self._line_breaks:
@@ -1777,18 +1798,6 @@ class Words: # Requires Search, Text
 		if self.Success:
 			if not self._text_np:
 				self._text_np = Text(text=self.text_orig_np(),Auto=False).delete_line_breaks()
-				if self.Create:
-					# Line breaks and multiple spaces are considered to be deleted
-					lst = self._text_np.split(' ')
-					cur_len = 0
-					for i in range(len(lst)):
-						if i > 0:
-							cur_len += 2
-						f_sym_np = cur_len
-						cur_len = l_sym_np = f_sym_np + len(lst[i]) - 1
-						self.dbc.execute('update WORDS set NP=? where NO=?',(lst[i],i,))
-						self.dbc.execute('update WORDS set F_SYM_NP=? where NO=?',(f_sym_np,i,))
-						self.dbc.execute('update WORDS set L_SYM_NP=? where NO=?',(l_sym_np,i,))
 			return self._text_np
 		else:
 			log.append('Words.text_np',lev_warn,globs['mes'].canceled)
@@ -1800,76 +1809,63 @@ class Words: # Requires Search, Text
 				self._text_np_low = self.text_np().lower()
 				lst = self._text_np_low.split(' ')
 				for i in range(len(lst)):
-					self.dbc.execute('update WORDS set NP_LOW=? where NO=?',(lst[i],i,))
+					self.dbc.execute('update %s set NP_LOW=? where NO=?' % self.table,(lst[i],i,))
 			return self._text_np_low
 		else:
 			log.append('Words.text_np_low',lev_warn,globs['mes'].canceled)
 	
 	def split(self):
 		if self.Success:
-			if self.Create:
-				lst = self.text_p().split(' ')
-				cur_len = 0
-				for i in range(len(lst)):
+			if not self.len():
+				lst_p = self.text_p().split(' ')
+				lst_np = self.text_np().split(' ')
+				assert len(lst_p) == len(lst_np)
+				cur_len_p = cur_len_np = 0
+				for i in range(len(lst_p)):
 					# 28 columns for now
 					if i > 0:
-						cur_len += 2
-					f_sym_p = cur_len
-					cur_len = l_sym_p = f_sym_p + len(lst[i]) - 1
-					self.db.execute('insert into WORDS values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(i,-1,-1,lst[i],-1,-1,-1,f_sym_p,l_sym_p,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,))
+						cur_len_p += 2
+						cur_len_np += 2
+					f_sym_p = cur_len_p
+					f_sym_np = cur_len_np
+					cur_len_p = l_sym_p = f_sym_p + len(lst_p[i]) - 1
+					cur_len_np = l_sym_np = f_sym_np + len(lst_np[i]) - 1
+					self.db.execute('insert into %s values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)' % self.table,(i,-1,-1,lst_p[i],lst_np[i],-1,-1,f_sym_p,l_sym_p,f_sym_np,l_sym_np,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,))
 		else:
 			log.append('Words.split',lev_warn,globs['mes'].canceled)
 	
 	def create(self):
 		if self.Success:
-			self.open()
-			# Other possible columns: P_LOW, P_UP, NP_UP
-			''' Use integers instead of booleans:
-				-2: Not applicable here # todo: test with preceding essential values
-				-1: Not assigned yet
-				 0: False
-				 1: True
-			'''
-			if self.Create:
-				if self._db_path == ':memory:':
-					self.db.executescript('drop table if exists WORDS;')
-				self.db.execute('create table if not exists WORDS (NO integer,NO_ESS integer,SENT_NO integer,P text,NP text,NP_LOW text,NORMAL text,F_SYM_P integer,L_SYM_P integer,F_SYM_NP integer,L_SYM_NP integer,F_SYM_NORM integer,L_SYM_NORM integer,CYR integer,LAT integer,GREEK integer,SPEC integer,DIGIT integer,EMPTY integer,STONE integer,TK_P_F text,TK_P_L text,TK_NP_F text,TK_NP_L text,TK_NORM_F text,TK_NORM_L text,STONE_NO integer,SPELL_RU integer)') # todo: commas before ')'?
-				self.db.execute('create index if not exists NO on WORDS(NO);')
+			try:
+				log.append('Claims.create',lev_info,'Connect to table %s' % self.table)
+				# 28 columns for now
+				# Other possible columns: P_LOW, P_UP, NP_UP
+				''' Use integers instead of booleans:
+					-2: Not applicable here # todo: test with preceding essential values
+					-1: Not assigned yet
+					 0: False
+					 1: True
+				'''
+				self.db.execute('create table if not exists %s (NO integer,NO_ESS integer,SENT_NO integer,P text,NP text,NP_LOW text,NORMAL text,F_SYM_P integer,L_SYM_P integer,F_SYM_NP integer,L_SYM_NP integer,F_SYM_NORM integer,L_SYM_NORM integer,CYR integer,LAT integer,GREEK integer,SPEC integer,DIGIT integer,EMPTY integer,STONE integer,TK_P_F text,TK_P_L text,TK_NP_F text,TK_NP_L text,TK_NORM_F text,TK_NORM_L text,STONE_NO integer,SPELL_RU integer)' % self.table) # todo: commas before ')'?
+				self.db.execute('create index if not exists NO on %s(NO);' % self.table)
+			except sqlite3.OperationalError:
+				self.Success = False
+				Message(func='Words.create',type=lev_warn,message='Failed to create table "%s"!' % self.table)
 		else:
 			log.append('Words.create',lev_warn,globs['mes'].canceled)
 			
-	def open(self):
-		if self.Success:
-			if not self.Locked:
-				log.append('Words.open',lev_info,'Open "%s"' % self._db_path) # todo: mes
-				self.db = sqlite3.connect(self._db_path)
-				self.dbc = self.db.cursor()
-				self.Locked = True
-		else:
-			log.append('Words.open',lev_warn,globs['mes'].canceled)
-			
-	def close(self):
-		if self.Success:
-			if self.Locked:
-				log.append('Words.close',lev_info,'Close "%s"' % self._db_path) # todo: mes
-				self.db.close()
-				self.Locked = False
-		else:
-			log.append('Words.close',lev_warn,globs['mes'].canceled)
-			
-				
+	# todo: we probably need commit only after filling the entire DB
 	def save(self):
 		if self.Success:
-			if self.Locked:
-				log.append('Words.save',lev_info,'Write %s' % self._db_path) # todo: mes
-				self.db.commit()
+			log.append('Words.save',lev_info,'Write table %s' % self.table) # todo: mes
+			self.db.commit()
 		else:
 			log.append('Words.save',lev_warn,globs['mes'].canceled)
 		
 	def p(self):
 		if self.Success:
 			if not self._p: # This function may be called for 6+ times per each row, so we remember '_p'.
-				self.dbc.execute('select P from WORDS where NO=?',(self._no,))
+				self.dbc.execute('select P from %s where NO=?' % self.table,(self._no,))
 				self._p = self.fetchone()
 			return self._p
 		else:
@@ -1878,7 +1874,7 @@ class Words: # Requires Search, Text
 	def np(self):
 		if self.Success:
 			self.text_np()
-			self.dbc.execute('select NP from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select NP from %s where NO=?' % self.table,(self._no,))
 			return self.fetchone()
 		else:
 			log.append('Words.np',lev_warn,globs['mes'].canceled)
@@ -1886,14 +1882,14 @@ class Words: # Requires Search, Text
 	def np_low(self):
 		if self.Success:
 			self.text_np_low()
-			self.dbc.execute('select NP_LOW from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select NP_LOW from %s where NO=?' % self.table,(self._no,))
 			return self.fetchone()
 		else:
 			log.append('Words.np_low',lev_warn,globs['mes'].canceled)
 		
 	def normal(self):
 		if self.Success:
-			self.dbc.execute('select NORMAL from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select NORMAL from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == '-1':
 				if self.empty() or self.stone(): # Probably dangerous. See 'matches()' before modifying.
@@ -1904,14 +1900,14 @@ class Words: # Requires Search, Text
 						result = result.replace('ё','е')
 					else:
 						result = self.np_low()
-				self.dbc.execute('update WORDS set NORMAL=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set NORMAL=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.normal',lev_warn,globs['mes'].canceled)
 	
 	def cyr(self):
 		if self.Success:
-			self.dbc.execute('select CYR from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select CYR from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == -1:
 				result = 0
@@ -1919,14 +1915,14 @@ class Words: # Requires Search, Text
 					if sym in self._p:
 						result = 1
 						break
-				self.dbc.execute('update WORDS set CYR=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set CYR=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.cyr',lev_warn,globs['mes'].canceled)
 		
 	def lat(self):
 		if self.Success:
-			self.dbc.execute('select LAT from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select LAT from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == -1:
 				result = 0
@@ -1934,14 +1930,14 @@ class Words: # Requires Search, Text
 					if sym in self._p:
 						result = 1
 						break
-				self.dbc.execute('update WORDS set LAT=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set LAT=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.lat',lev_warn,globs['mes'].canceled)
 		
 	def greek(self):
 		if self.Success:
-			self.dbc.execute('select GREEK from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select GREEK from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == -1:
 				result = 0
@@ -1949,14 +1945,14 @@ class Words: # Requires Search, Text
 					if sym in self._p:
 						result = 1
 						break
-				self.dbc.execute('update WORDS set GREEK=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set GREEK=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.greek',lev_warn,globs['mes'].canceled)
 		
 	def spec(self):
 		if self.Success:
-			self.dbc.execute('select SPEC from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select SPEC from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == -1:
 				result = 0
@@ -1964,7 +1960,7 @@ class Words: # Requires Search, Text
 					if sym in self._p:
 						result = 1
 						break
-				self.dbc.execute('update WORDS set SPEC=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set SPEC=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.spec',lev_warn,globs['mes'].canceled)
@@ -1979,14 +1975,14 @@ class Words: # Requires Search, Text
 	
 	def print(self,arg_str=None,Short=True): # arg_str='NO,NORMAL,SENT_NO'
 		if self.Success:
-			# self.dbc.execute('select * from WORDS')
+			# self.dbc.execute('select * from %s' % self.table)
 			# print(self.dbc.fetchall())
 			if arg_str:
-				self.dbc.execute('select %s from WORDS' % arg_str) # Dangerous
+				self.dbc.execute('select %s from %s' % (arg_str,self.table)) # Dangerous
 				col_names = arg_str.split(',')
 			else:
-				self.dbc.execute('select * from WORDS')
-				col_names = [cn[0] for cn in self.db.description]
+				self.dbc.execute('select * from %s' % self.table)
+				col_names = [cn[0] for cn in self.dbc.description]
 			if Short:
 				col_names = self.shorten_names(col_names)
 			rows = self.dbc.fetchall()
@@ -1999,7 +1995,7 @@ class Words: # Requires Search, Text
 		
 	def empty(self):
 		if self.Success:
-			self.dbc.execute('select EMPTY from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select EMPTY from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == -1:
 				result = 1
@@ -2008,14 +2004,14 @@ class Words: # Requires Search, Text
 					if sym.isalpha():
 						result = 0
 						break
-				self.dbc.execute('update WORDS set EMPTY=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set EMPTY=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.empty',lev_warn,globs['mes'].canceled)
 		
 	def digit(self):
 		if self.Success:
-			self.dbc.execute('select DIGIT from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select DIGIT from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == -1:
 				result = 0
@@ -2023,14 +2019,14 @@ class Words: # Requires Search, Text
 					if sym.isdigit():
 						result = 1
 						break
-				self.dbc.execute('update WORDS set DIGIT=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set DIGIT=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.digit',lev_warn,globs['mes'].canceled)
 		
 	def stone(self):
 		if self.Success:
-			self.dbc.execute('select STONE from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select STONE from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == -1:
 				result = 0
@@ -2046,14 +2042,14 @@ class Words: # Requires Search, Text
 					result = 1
 				elif self.OrigCyr and self.lat():
 					result = 1
-				self.dbc.execute('update WORDS set STONE=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set STONE=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.stone',lev_warn,globs['mes'].canceled)
 	
 	def no_ess(self):
 		if self.Success:
-			self.dbc.execute('select NO_ESS from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select NO_ESS from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == -1:
 				old = self._no
@@ -2062,33 +2058,24 @@ class Words: # Requires Search, Text
 					self.empty()
 					self.stone()
 				self.change_no(no=old)
-				self.dbc.execute('select * from WORDS where NO <= ? and (EMPTY = 1 or STONE = 1 or STONE = -2)',(self._no,))
+				self.dbc.execute('select * from %s where NO <= ? and (EMPTY = 1 or STONE = 1 or STONE = -2)' % self.table,(self._no,))
 				result = self.fetchall()
 				if result:
 					result = self._no - len(result)
 				else:
 					result = self._no
-				self.dbc.execute('update WORDS set NO_ESS=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set NO_ESS=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.no_ess',lev_warn,globs['mes'].canceled)
 		
 	def len(self): # Running 'range(self.len())' does not re-run 'len'
 		if self.Success:
-			if not self._len:
-				''' # Only 1 row per a word; otherwise, use 
-				self._len = self.dbc.execute('select NO from WORDS order by NO desc;')
-				self._len = self.fetchone()
-				if self._len:
-					self._len += 1
-				else:
-					self._len += 0
-				'''
-				self.dbc.execute('select Count(*) from WORDS')
-				self._len = self.fetchone()
-				if not self._len:
-					self._len = 0
-			return self._len
+			self.dbc.execute('select Count(*) from %s' % self.table)
+			result = self.fetchone()
+			if not result:
+				result = 0
+			return result
 		else:
 			log.append('Words.len',lev_warn,globs['mes'].canceled)
 			
@@ -2100,7 +2087,7 @@ class Words: # Requires Search, Text
 					h_words.f_sym_norm()
 					h_words.l_sym_norm()
 			'''
-			self.dbc.execute('select F_SYM_NORM from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select F_SYM_NORM from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == -1:
 				tmp = self.normal()
@@ -2121,7 +2108,7 @@ class Words: # Requires Search, Text
 					self.change_no(no=old)
 				else:
 					result = 0
-				self.dbc.execute('update WORDS set F_SYM_NORM=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set F_SYM_NORM=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.f_sym_norm',lev_warn,globs['mes'].canceled)
@@ -2134,7 +2121,7 @@ class Words: # Requires Search, Text
 					h_words.f_sym_norm()
 					h_words.l_sym_norm()
 			'''
-			self.dbc.execute('select L_SYM_NORM from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select L_SYM_NORM from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == -1:
 				tmp = self.normal()
@@ -2149,7 +2136,7 @@ class Words: # Requires Search, Text
 						result = -2
 				else:
 					result = pos + len(tmp) - 1
-				self.dbc.execute('update WORDS set L_SYM_NORM=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set L_SYM_NORM=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.l_sym_norm',lev_warn,globs['mes'].canceled)
@@ -2157,7 +2144,7 @@ class Words: # Requires Search, Text
 	def f_sym_np(self):
 		if self.Success:
 			self.text_np()
-			self.dbc.execute('select F_SYM_NP from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select F_SYM_NP from %s where NO=?' % self.table,(self._no,))
 			return self.fetchone()
 		else:
 			log.append('Words.f_sym_np',lev_warn,globs['mes'].canceled)
@@ -2165,7 +2152,7 @@ class Words: # Requires Search, Text
 	def l_sym_np(self):
 		if self.Success:
 			self.text_np()
-			self.dbc.execute('select L_SYM_NP from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select L_SYM_NP from %s where NO=?' % self.table,(self._no,))
 			return self.fetchone()
 		else:
 			log.append('Words.l_sym_np',lev_warn,globs['mes'].canceled)
@@ -2186,25 +2173,25 @@ class Words: # Requires Search, Text
 			
 	def f_sym_p(self):
 		if self.Success:
-			self.dbc.execute('select F_SYM_P from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select F_SYM_P from %s where NO=?' % self.table,(self._no,))
 			return self.fetchone()
 		else:
 			log.append('Words.f_sym_p',lev_warn,globs['mes'].canceled)
 		
 	def l_sym_p(self):
 		if self.Success:
-			self.dbc.execute('select L_SYM_P from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select L_SYM_P from %s where NO=?' % self.table,(self._no,))
 			return self.fetchone()
 		else:
 			log.append('Words.l_sym_p',lev_warn,globs['mes'].canceled)
 	
 	def sent_no(self):
 		if self.Success:
-			self.dbc.execute('select SENT_NO from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select SENT_NO from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == -1:
 				result = self.get_sent_no(self.f_sym_p())
-				self.dbc.execute('update WORDS set SENT_NO=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set SENT_NO=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.sent_no',lev_warn,globs['mes'].canceled)
@@ -2249,12 +2236,14 @@ class Words: # Requires Search, Text
 			
 	def tk_p_f(self):
 		if self.Success:
-			self.dbc.execute('select TK_P_F from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select TK_P_F from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == '-1':
 				sents_len = self.sents_p_len()
 				entire_len = self.f_sym_p()
-				if str(sents_len).isdigit() and str(entire_len).isdigit():
+				par1 = Digits(sents_len).debug(func_title='Words.tk_p_f',var_title='sents_len')
+				par2 = Digits(entire_len).debug(func_title='Words.tk_p_f',var_title='entire_len')
+				if par1 and par2:
 					if self.sent_no() == 0:
 						excess = entire_len - sents_len
 					else:
@@ -2262,20 +2251,21 @@ class Words: # Requires Search, Text
 					result = str(self.sent_no()+1) + '.' + str(excess) # Uneven
 				else:
 					result = '1.0'
-					Message(func='Words.tk_p_f',type=lev_err,message=globs['mes'].wrong_input2)
-				self.dbc.execute('update WORDS set TK_P_F=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set TK_P_F=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.tk_p_f',lev_warn,globs['mes'].canceled)
 		
 	def tk_p_l(self):
 		if self.Success:
-			self.dbc.execute('select TK_P_L from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select TK_P_L from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == '-1':
 				sents_len = self.sents_p_len()
 				entire_len = self.l_sym_p()
-				if str(sents_len).isdigit() and str(entire_len).isdigit():
+				par1 = Digits(sents_len).debug(func_title='Words.tk_p_l',var_title='sents_len')
+				par2 = Digits(entire_len).debug(func_title='Words.tk_p_l',var_title='entire_len')
+				if par1 and par2:
 					if self.sent_no() == 0:
 						excess = entire_len - sents_len
 					else:
@@ -2283,8 +2273,7 @@ class Words: # Requires Search, Text
 					result = str(self.sent_no()+1) + '.' + str(excess+1) # Even
 				else:
 					result = '1.0'
-					Message(func='Words.tk_p_l',type=lev_err,message=globs['mes'].wrong_input2)
-				self.dbc.execute('update WORDS set TK_P_L=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set TK_P_L=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.tk_p_l',lev_warn,globs['mes'].canceled)
@@ -2294,12 +2283,14 @@ class Words: # Requires Search, Text
 			''' # Do the following first:
 				h_words.text_np()
 			'''
-			self.dbc.execute('select TK_NP_F from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select TK_NP_F from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == '-1':
 				sents_len = self.sents_np_len()
 				entire_len = self.f_sym_np()
-				if str(sents_len).isdigit() and str(entire_len).isdigit():
+				par1 = Digits(sents_len).debug(func_title='Words.tk_np_f',var_title='sents_len')
+				par2 = Digits(entire_len).debug(func_title='Words.tk_np_f',var_title='entire_len')
+				if par1 and par2:
 					if self.sent_no() == 0:
 						excess = entire_len - sents_len
 					else:
@@ -2307,8 +2298,7 @@ class Words: # Requires Search, Text
 					result = str(self.sent_no()+1) + '.' + str(excess) # Uneven
 				else:
 					result = '1.0'
-					Message(func='Words.tk_np_f',type=lev_err,message=globs['mes'].wrong_input2)
-				self.dbc.execute('update WORDS set TK_NP_F=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set TK_NP_F=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.tk_np_f',lev_warn,globs['mes'].canceled)
@@ -2318,12 +2308,14 @@ class Words: # Requires Search, Text
 			''' # Do the following first:
 				h_words.text_np()
 			'''
-			self.dbc.execute('select TK_NP_L from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select TK_NP_L from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == '-1':
 				sents_len = self.sents_np_len()
 				entire_len = self.l_sym_np()
-				if str(sents_len).isdigit() and str(entire_len).isdigit():
+				par1 = Digits(sents_len).debug(func_title='Words.tk_np_l',var_title='sents_len')
+				par2 = Digits(entire_len).debug(func_title='Words.tk_np_l',var_title='entire_len')
+				if par1 and par2:
 					if self.sent_no() == 0:
 						excess = entire_len - sents_len
 					else:
@@ -2331,8 +2323,7 @@ class Words: # Requires Search, Text
 					result = str(self.sent_no()+1) + '.' + str(excess+1) # Even
 				else:
 					result = '1.0'
-					Message(func='Words.tk_np_l',type=lev_err,message=globs['mes'].wrong_input2)
-				self.dbc.execute('update WORDS set TK_NP_L=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set TK_NP_L=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.tk_np_l',lev_warn,globs['mes'].canceled)
@@ -2345,12 +2336,14 @@ class Words: # Requires Search, Text
 					h_words.f_sym_norm()
 					h_words.l_sym_norm()
 			'''
-			self.dbc.execute('select TK_NORM_F from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select TK_NORM_F from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == '-1':
 				sents_len = self.sents_p_len()
 				entire_len = self.f_sym_norm()
-				if str(sents_len).isdigit() and str(entire_len).isdigit():
+				par1 = Digits(sents_len).debug(func_title='Words.tk_norm_f',var_title='sents_len')
+				par2 = Digits(entire_len).debug(func_title='Words.tk_norm_f',var_title='entire_len')
+				if par1 and par2:
 					if self.sent_no() == 0:
 						excess = entire_len - sents_len
 					else:
@@ -2358,8 +2351,7 @@ class Words: # Requires Search, Text
 					result = str(self.sent_no()+1) + '.' + str(excess) # Uneven
 				else:
 					result = '1.0'
-					Message(func='Words.tk_norm_f',type=lev_err,message=globs['mes'].wrong_input2)
-				self.dbc.execute('update WORDS set TK_NORM_F=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set TK_NORM_F=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.tk_norm_f',lev_warn,globs['mes'].canceled)
@@ -2372,12 +2364,14 @@ class Words: # Requires Search, Text
 					h_words.f_sym_norm()
 					h_words.l_sym_norm()
 			'''
-			self.dbc.execute('select TK_NORM_L from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select TK_NORM_L from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == '-1':
 				sents_len = self.sents_p_len()
 				entire_len = self.l_sym_norm()
-				if str(sents_len).isdigit() and str(entire_len).isdigit():
+				par1 = Digits(sents_len).debug(func_title='Words.tk_norm_l',var_title='sents_len')
+				par2 = Digits(entire_len).debug(func_title='Words.tk_norm_l',var_title='entire_len')
+				if par1 and par2:
 					if self.sent_no() == 0:
 						excess = entire_len - sents_len
 					else:
@@ -2385,8 +2379,7 @@ class Words: # Requires Search, Text
 					result = str(self.sent_no()+1) + '.' + str(excess+1) # Even
 				else:
 					result = '1.0'
-					Message(func='Words.tk_norm_l',type=lev_err,message=globs['mes'].wrong_input2)
-				self.dbc.execute('update WORDS set TK_NORM_L=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set TK_NORM_L=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.tk_norm_l',lev_warn,globs['mes'].canceled)
@@ -2394,7 +2387,7 @@ class Words: # Requires Search, Text
 	def get_p_no(self,pos=0):
 		if self.Success:
 			# 'L_SYM_P + 1 = ?' allows to select the word by the space following it
-			self.dbc.execute('select NO from WORDS where F_SYM_P <= ? and L_SYM_P >= ? or L_SYM_P + 1 = ?',(pos,pos,pos))
+			self.dbc.execute('select NO from %s where F_SYM_P <= ? and L_SYM_P >= ? or L_SYM_P + 1 = ?' % self.table,(pos,pos,pos))
 			return self.fetchone()
 		else:
 			log.append('Words.get_p_no',lev_warn,globs['mes'].canceled)
@@ -2405,7 +2398,7 @@ class Words: # Requires Search, Text
 				h_words.text_np()
 			'''
 			# 'L_SYM_NP + 1 = ?' allows to select the word by the space following it
-			self.dbc.execute('select NO from WORDS where F_SYM_NP <= ? and L_SYM_NP >= ? or L_SYM_NP + 1 = ?',(pos,pos,pos))
+			self.dbc.execute('select NO from %s where F_SYM_NP <= ? and L_SYM_NP >= ? or L_SYM_NP + 1 = ?' % self.table,(pos,pos,pos))
 			return self.fetchone()
 		else:
 			log.append('Words.get_np_no',lev_warn,globs['mes'].canceled)
@@ -2419,7 +2412,7 @@ class Words: # Requires Search, Text
 					h_words.l_sym_norm()
 			'''
 			# 'L_SYM_NORM + 1 = ?' allows to select the word by the space following it
-			self.dbc.execute('select NO from WORDS where F_SYM_NORM <= ? and L_SYM_NORM >= ? or L_SYM_NORM + 1 = ?',(pos,pos,pos))
+			self.dbc.execute('select NO from %s where F_SYM_NORM <= ? and L_SYM_NORM >= ? or L_SYM_NORM + 1 = ?' % self.table,(pos,pos,pos))
 			return self.fetchone()
 		else:
 			log.append('Words.get_norm_no',lev_warn,globs['mes'].canceled)
@@ -2432,7 +2425,7 @@ class Words: # Requires Search, Text
 					h_words.f_sym_norm()
 					h_words.l_sym_norm()
 			'''
-			self.dbc.execute('select NO from WORDS where F_SYM_NORM >= ? and L_SYM_NORM <= ?',(pos1,pos2))
+			self.dbc.execute('select NO from %s where F_SYM_NORM >= ? and L_SYM_NORM <= ?' % self.table,(pos1,pos2))
 			return self.fetchall()
 		else:
 			log.append('Words.get_norm_nos',lev_warn,globs['mes'].canceled)
@@ -2468,7 +2461,7 @@ class Words: # Requires Search, Text
 					self.stone()
 					self.normal()
 				self.change_no(no=old)
-				self.dbc.execute('select NORMAL from WORDS where EMPTY=? and STONE=? order by NO',('0','0',))
+				self.dbc.execute('select NORMAL from %s where EMPTY=? and STONE=? order by NO' % self.table,('0','0',))
 				self._list_norm = self.fetchall()
 				if self._list_norm:
 					self._text_norm = ' '.join(self._list_norm)
@@ -2513,7 +2506,7 @@ class Words: # Requires Search, Text
 	# Get the number of the closest word which is a stone
 	def stone_no(self):
 		if self.Success:
-			self.dbc.execute('select STONE_NO from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select STONE_NO from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == -1:
 				next_stone = self.next_stone()
@@ -2528,7 +2521,7 @@ class Words: # Requires Search, Text
 					result = prev_stone
 				else:
 					result = next_stone
-				self.dbc.execute('update WORDS set STONE_NO=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set STONE_NO=? where NO=?' % self.table,(result,self._no,))
 			return result
 		else:
 			log.append('Words.stone_no',lev_warn,globs['mes'].canceled)
@@ -2540,7 +2533,7 @@ class Words: # Requires Search, Text
 	'''
 	def spellcheck_ru(self):
 		if self.Success:
-			self.dbc.execute('select SPELL_RU from WORDS where NO=?',(self._no,))
+			self.dbc.execute('select SPELL_RU from %s where NO=?' % self.table,(self._no,))
 			result = self.fetchone()
 			if result == -1:
 				word = self.np_low() # Or 'self.np' for speed
@@ -2551,12 +2544,13 @@ class Words: # Requires Search, Text
 						result = 0
 				else:
 					result = -2
-				self.dbc.execute('update WORDS set SPELL_RU=? where NO=?',(result,self._no,))
+				self.dbc.execute('update %s set SPELL_RU=? where NO=?' % self.table,(result,self._no,))
 		else:
 			log.append('Words.spellcheck_ru',lev_warn,globs['mes'].canceled)
 			
 	def complete(self):
 		if self.Success:
+			self.text_np()
 			old = self._no
 			for i in range(self.len()):
 				self.change_no(no=i)
