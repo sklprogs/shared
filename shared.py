@@ -1817,6 +1817,7 @@ class Words: # Requires Search, Text
 	def split(self):
 		if self.Success:
 			if not self.len():
+				log.append('Words.split',lev_info,'Insert initial values') # todo: mes
 				lst_p = self.text_p().split(' ')
 				lst_np = self.text_np().split(' ')
 				assert len(lst_p) == len(lst_np)
@@ -1830,7 +1831,7 @@ class Words: # Requires Search, Text
 					f_sym_np = cur_len_np
 					cur_len_p = l_sym_p = f_sym_p + len(lst_p[i]) - 1
 					cur_len_np = l_sym_np = f_sym_np + len(lst_np[i]) - 1
-					self.db.execute('insert into %s values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)' % self.table,(i,-1,-1,lst_p[i],lst_np[i],-1,-1,f_sym_p,l_sym_p,f_sym_np,l_sym_np,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,))
+					self.dbc.execute('insert into %s values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)' % self.table,(i,-1,-1,lst_p[i],lst_np[i],-1,-1,f_sym_p,l_sym_p,f_sym_np,l_sym_np,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,))
 		else:
 			log.append('Words.split',lev_warn,globs['mes'].canceled)
 	
@@ -1858,7 +1859,10 @@ class Words: # Requires Search, Text
 	def save(self):
 		if self.Success:
 			log.append('Words.save',lev_info,'Write table %s' % self.table) # todo: mes
-			self.db.commit()
+			try:
+				self.db.commit()
+			except sqlite3.OperationalError:
+				Message(func='Words.save',type=lev_err,message='Unable to write "%s"!' % self.table) # todo: mes
 		else:
 			log.append('Words.save',lev_warn,globs['mes'].canceled)
 		
@@ -2693,8 +2697,8 @@ class CompareStones:
 		self._diff1 = []
 		self._diff2 = []
 		if self.w1 and self.w2:
-			self.fill()
 			if not self.check():
+				self.fill()
 				self.diff()
 				self.unmark1()
 				self.unmark2()
@@ -2706,12 +2710,12 @@ class CompareStones:
 			
 	def check(self):
 		if self.Success:
-			self.w1.db.execute('select STONE from %s order by STONE desc;' % self.w1.table)
-			self.w2.db.execute('select STONE from %s order by STONE desc;' % self.w2.table)
+			self.w1.dbc.execute('select STONE from %s order by STONE desc;' % self.w1.table)
+			self.w2.dbc.execute('select STONE from %s order by STONE desc;' % self.w2.table)
 			result1 = self.w1.fetchone()
 			result2 = self.w2.fetchone()
-			#log.append('CompareStones.check',lev_debug,str(result1))
-			#log.append('CompareStones.check',lev_debug,str(result2))
+			log.append('CompareStones.check',lev_debug,str(result1))
+			log.append('CompareStones.check',lev_debug,str(result2))
 			''' Stone value:
 				0: not a stone
 				1: a stone (as found by Words)
@@ -2728,27 +2732,30 @@ class CompareStones:
 	
 	def fill(self):
 		if self.Success:
+			log.append('CompareStones.fill',lev_info,'Calculate stones')
 			for i in range(self.w1.len()):
 				self.w1.change_no(no=i)
-				self.w1.np()
+				# This is not required when all NPs are pre-calculated
+				#self.w1.np()
 				self.w1.stone()
 			for i in range(self.w2.len()):
 				self.w2.change_no(no=i)
-				self.w2.np()
+				# This is not required when all NPs are pre-calculated
+				#self.w2.np()
 				self.w2.stone()
 		else:
 			log.append('CompareStones.fill',lev_warn,globs['mes'].canceled)
 
 	def stones1(self):
 		if self.Success:
-			self.w1.db.execute('select NP from %s where STONE=? order by NO' % self.w1.table,(1,))
+			self.w1.dbc.execute('select NP from %s where STONE=? order by NO' % self.w1.table,(1,))
 			return self.w1.fetchall()
 		else:
 			log.append('CompareStones.stones1',lev_warn,globs['mes'].canceled)
 			
 	def stones2(self):
 		if self.Success:
-			self.w2.db.execute('select NP from %s where STONE=? order by NO' % self.w2.table,(1,))
+			self.w2.dbc.execute('select NP from %s where STONE=? order by NO' % self.w2.table,(1,))
 			return self.w2.fetchall()
 		else:
 			log.append('CompareStones.stones2',lev_warn,globs['mes'].canceled)
@@ -2773,10 +2780,10 @@ class CompareStones:
 		if self.Success:
 			for i in range(len(self.diff1())):
 				# limit 1: compile SQLite with the SQLITE_ENABLE_UPDATE_DELETE_LIMIT option, which is not enabled by default.
-				self.w1.db.execute('select NO from %s where STONE=? and NP=? order by NO' % self.w1.table,(1,self._diff1[i],))
+				self.w1.dbc.execute('select NO from %s where STONE=? and NP=? order by NO' % self.w1.table,(1,self._diff1[i],))
 				first = self.w1.fetchone()
 				if first or first == 0:
-					self.w1.db.execute('update %s set STONE=? where NO=?' % self.w1.table,(0,first,))
+					self.w1.dbc.execute('update %s set STONE=? where NO=?' % self.w1.table,(0,first,))
 		else:
 			log.append('CompareStones.unmark1',lev_warn,globs['mes'].canceled)
 			
@@ -2784,32 +2791,32 @@ class CompareStones:
 		if self.Success:
 			for i in range(len(self.diff2())):
 				# limit 1: compile SQLite with the SQLITE_ENABLE_UPDATE_DELETE_LIMIT option, which is not enabled by default.
-				self.w2.db.execute('select NO from %s where STONE=? and NP=? order by NO' % self.w2.table,(1,self._diff2[i],))
+				self.w2.dbc.execute('select NO from %s where STONE=? and NP=? order by NO' % self.w2.table,(1,self._diff2[i],))
 				first = self.w2.fetchone()
 				if first or first == 0:
-					self.w2.db.execute('update %s set STONE=? where NO=?' % self.w2.table,(0,first,))
+					self.w2.dbc.execute('update %s set STONE=? where NO=?' % self.w2.table,(0,first,))
 		else:
 			log.append('CompareStones.unmark2',lev_warn,globs['mes'].canceled)
 			
 	def mark1(self):
 		if self.Success:
-			self.w1.db.execute('select NO from %s where STONE >= 1' % self.w1.table)
+			self.w1.dbc.execute('select NO from %s where STONE >= 1' % self.w1.table)
 			result = self.w1.fetchall()
 			if result:
 				for i in range(len(result)):
 					self.w1.change_no(result[i])
-					self.w1.db.execute('update %s set STONE=? where NO=?' % self.w1.table,(3,result[i],))
+					self.w1.dbc.execute('update %s set STONE=? where NO=?' % self.w1.table,(3,result[i],))
 		else:
 			log.append('CompareStones.mark1',lev_warn,globs['mes'].canceled)
 			
 	def mark2(self):
 		if self.Success:
-			self.w2.db.execute('select NO from %s where STONE >= 1' % self.w2.table)
+			self.w2.dbc.execute('select NO from %s where STONE >= 1' % self.w2.table)
 			result = self.w2.fetchall()
 			if result:
 				for i in range(len(result)):
 					self.w2.change_no(result[i])
-					self.w2.db.execute('update %s set STONE=? where NO=?' % self.w2.table,(3,result[i],))
+					self.w2.dbc.execute('update %s set STONE=? where NO=?' % self.w2.table,(3,result[i],))
 		else:
 			log.append('CompareStones.mark2',lev_warn,globs['mes'].canceled)
 	

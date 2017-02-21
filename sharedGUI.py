@@ -1389,6 +1389,7 @@ class ParallelTexts: # Requires Search
 		self.close()
 		
 	def reset(self,h_words1,h_words2,h_words3=None,h_words4=None):
+		log.append('ParallelTexts.reset',lev_info,'Reset widget') # todo: del when optimized
 		self.h_words1 = h_words1
 		self.h_words2 = h_words2
 		self.h_words3 = h_words3
