@@ -1201,6 +1201,166 @@ class WriteBinary:
 
 
 
+# todo: fix: Reading 'largest_dic' failes without this class
+class Dic:
+	
+	def __init__(self,file,Silent=False,Sortable=False):
+		self.file = file
+		self.Silent = Silent
+		self.Sortable = Sortable
+		self.h_read = ReadTextFile(self.file,Silent=self.Silent)
+		self.reset()
+		
+	# This is might be needed only for those dictionaries that already may contain duplicates (dictionaries with newly added entries do not have duplicates due to new algorithms)
+	def _delete_duplicates(self):
+		if self.Success:
+			if self.Sortable:
+				old = self.lines()
+				self._list = list(set(self.list()))
+				new = self._lines = len(self._list)
+				log.append('Dic._delete_duplicates',lev_info,globs['mes'].entries_deleted % (old-new,old,new))
+				self.text = '\n'.join(self._list)
+				self._split() # Update original and translation
+				self.sort() # After using set(), the original order was lost
+			else:
+				Message(func='Dic._delete_duplicates',type=lev_warn,message=globs['mes'].non_sortable % self.file,Silent=self.Silent)
+		else:
+			log.append('Dic._delete_duplicates',lev_warn,globs['mes'].canceled)
+
+	# We can use this as an updater, even without relying on Success
+	def _join(self):
+		if len(self.orig) == len(self.transl):
+			self._lines = len(self.orig)
+			self._list = []
+			for i in range(self._lines):
+				self._list.append(self.orig[i]+'\t'+self.transl[i])
+			self.text = '\n'.join(self._list)
+		else:
+			Message(func='Dic._join',type=lev_warn,message=globs['mes'].wrong_input2,Silent=False)
+
+	# We can use this to check integrity and/or update original and translation lists
+	def _split(self):
+		if self.get():
+			self.Success = True
+			self.orig = []
+			self.transl = []
+			# Building lists takes ~0.1 longer without temporary variables (now self._split() takes ~0.256)
+			for i in range(self._lines):
+				tmp_lst = self._list[i].split('\t')
+				if len(tmp_lst) == 2:
+					self.orig.append(tmp_lst[0])
+					self.transl.append(tmp_lst[1])
+				else:
+					self.Success = False
+					# i+1: Count from 1
+					Message(func='Dic._split',type=lev_warn,message=globs['mes'].incorrect_line % (self.file,i+1,self._list[i]),Silent=self.Silent)
+		else:
+			self.Success = False
+			
+	# todo: write a dictionary in an append mode after appending to memory
+	# todo: skip repetitions
+	def append(self,original,translation):
+		if self.Success:
+			if original and translation:
+				self.orig.append(original)
+				self.transl.append(translation)
+				self._join()
+			else:
+				Message(func='Dic.append',type=lev_warn,message=globs['mes'].empty_input,Silent=self.Silent)
+		else:
+			log.append('Dic.append',lev_warn,globs['mes'].canceled)
+	
+	# todo: fix: an entry which is only one in a dictionary is not deleted
+	def delete_entry(self,entry_no): # Count from 1
+		if self.Success:
+			entry_no -= 1
+			if entry_no >= 0 and entry_no < self.lines():
+				del self.orig[entry_no]
+				del self.transl[entry_no]
+				self._join()
+			else:
+				Message(func='Dic.delete_entry',type=lev_err,message=globs['mes'].condition_failed % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
+		else:
+			log.append('Dic.append',lev_warn,globs['mes'].canceled)
+			
+	# todo: Add checking orig and transl (where needed) for a wrapper function
+	def edit_entry(self,entry_no,orig,transl): # Count from 1
+		if self.Success:
+			entry_no -= 1
+			if entry_no >= 0 and entry_no < self.lines():
+				self.orig[entry_no] = orig
+				self.transl[entry_no] = transl
+				self._join()
+			else:
+				Message(func='Dic.delete_entry',type=lev_err,message=globs['mes'].condition_failed % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
+		else:
+			log.append('Dic.append',lev_warn,globs['mes'].canceled)
+	
+	def get(self):
+		if not self.text:
+			self.text = self.h_read.load()
+		return self.text
+		
+	def lines(self):
+		if self._lines == 0:
+			self._lines = len(self.list())
+		return self._lines
+
+	def list(self):
+		if not self._list:
+			self._list = self.get().splitlines()
+		return self._list
+	
+	def reset(self):
+		self.text = self.h_read.load()
+		self.orig = []
+		self.transl = []
+		self._list = self.get().splitlines()
+		self._lines = len(self._list)
+		self._split()
+	
+	# Sort a dictionary with the longest lines going first
+	def sort(self):
+		if self.Success:
+			if self.Sortable:
+				tmp_list = []
+				for i in range(len(self._list)):
+					tmp_list += [[len(self.orig[i]),self.orig[i],self.transl[i]]]
+				tmp_list.sort(key=lambda x: x[0],reverse=True)
+				for i in range(len(self._list)):
+					self.orig[i] = tmp_list[i][1]
+					self.transl[i] = tmp_list[i][2]
+					self._list[i] = self.orig[i] + '\t' + self.transl[i]
+				self.text = '\n'.join(self._list)
+			else:
+				Message(func='Dic.sort',type=lev_warn,message=globs['mes'].non_sortable % self.file,Silent=self.Silent)
+		else:
+			log.append('Dic.sort',lev_warn,globs['mes'].canceled)
+	
+	def tail(self):
+		tail_text = ''
+		if self.Success:
+			tail_len = globs['int']['tail_len']
+			if tail_len > self.lines():
+				tail_len = self.lines()
+			i = self.lines() - tail_len
+			# We count from 1, therefore it is < and not <=
+			while i < self.lines():
+				# i+1 by the same reason
+				tail_text += str(i+1) + ':' + '"' + self.list()[i] + '"\n'
+				i += 1
+		else:
+			log.append('Dic.tail',lev_warn,globs['mes'].canceled)
+		return tail_text
+	
+	def write(self):
+		if self.Success:
+			WriteTextFile(self.file,self.get(),Silent=self.Silent,AskRewrite=False).write()
+		else:
+			log.append('Dic.write',lev_warn,globs['mes'].canceled)
+
+
+
 class ReadBinary:
 	
 	def __init__(self,file,Silent=False):

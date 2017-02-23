@@ -1390,6 +1390,8 @@ class ParallelTexts: # Requires Search
 		
 	def reset(self,h_words1,h_words2,h_words3=None,h_words4=None):
 		log.append('ParallelTexts.reset',lev_info,'Reset widget') # todo: del when optimized
+		widgets.waitbox().reset(func_title='ParallelTexts.reset',message='Reset widget')
+		widgets._waitbox.show()
 		self.h_words1 = h_words1
 		self.h_words2 = h_words2
 		self.h_words3 = h_words3
@@ -1426,6 +1428,8 @@ class ParallelTexts: # Requires Search
 		self.txt1.focus()
 		self.init_cursor_pos()
 		self.select1()
+		# todo: del when optimized
+		widgets._waitbox.close()
 		
 	# Set the cursor to the start of the text
 	def init_cursor_pos(self):
@@ -1713,7 +1717,7 @@ class SymbolMap:
 
 
 # Window behavior is not uniform through different platforms or even through different Windows versions, so we bypass Tkinter's commands here
-class Geometry: # Requires h_os, h_widgets
+class Geometry: # Requires h_os, widgets
 	
 	def __init__(self,parent_obj=None,title=None,hwnd=None):
 		self.parent_obj = parent_obj
@@ -1722,7 +1726,7 @@ class Geometry: # Requires h_os, h_widgets
 		self._geom = None
 
 	def update(self):
-		h_widgets.root().widget.update_idletasks()
+		widgets.root().widget.update_idletasks()
 	
 	def save(self):
 		if self.parent_obj:
@@ -2000,7 +2004,7 @@ class Message:
 	def error(self):
 		if self.Success:
 			if not self.Silent:
-				h_widgets.error().reset(title=self.func+':',text=self.message).show()
+				widgets.error().reset(title=self.func+':',text=self.message).show()
 			log.append(self.func,lev_err,self.message)
 		else:
 			log.append('Message.error',lev_err,globs['mes'].canceled)
@@ -2008,15 +2012,15 @@ class Message:
 	def info(self):
 		if self.Success:
 			if not self.Silent:
-				h_widgets.info().reset(title=self.func+':',text=self.message).show()
+				widgets.info().reset(title=self.func+':',text=self.message).show()
 			log.append(self.func,lev_info,self.message)
 		else:
 			log.append('Message.info',lev_info,globs['mes'].canceled)
 	
 	def question(self):
 		if self.Success:
-			h_widgets.question().reset(title=self.func+':',text=self.message).show()
-			self.Yes = h_widgets._question.Yes
+			widgets.question().reset(title=self.func+':',text=self.message).show()
+			self.Yes = widgets._question.Yes
 			log.append(self.func,lev_ques,self.message)
 		else:
 			log.append('Message.question',lev_ques,globs['mes'].canceled)
@@ -2024,7 +2028,7 @@ class Message:
 	def warning(self):
 		if self.Success:
 			if not self.Silent:
-				h_widgets.warning().reset(title=self.func+':',text=self.message).show()
+				widgets.warning().reset(title=self.func+':',text=self.message).show()
 			log.append(self.func,lev_warn,self.message)
 		else:
 			log.append('Message.warning',lev_warn,globs['mes'].canceled)
@@ -2135,7 +2139,7 @@ class MessageBuilder: # Requires 'constants'
 
 
 
-class Clipboard: # Requires 'h_widgets'
+class Clipboard: # Requires 'widgets'
 	
 	# We need to explicitly set the root object, otherwise, Tk hangs when launched from another module
 	def __init__(self,root_obj,Silent=False,trigger_obj=None):
@@ -2257,6 +2261,7 @@ class Widgets:
 		if not self._txt:
 			h_top = Top(parent_obj=self.root(),Maximize=True)
 			self._txt = TextBox(parent_obj=h_top)
+			self._txt.focus()
 			self._lst.append(self._txt)
 		return self._txt
 		
@@ -2276,19 +2281,19 @@ class Widgets:
 
 
 
-h_widgets = Widgets()
+widgets = Widgets()
 
 if __name__ == '__main__':
-	h_widgets.start()
+	widgets.start()
 	text = '''Something funny with this guy
 	I am glad he is not my test
 	Glad is so angry'''
 	h_words = Words(text)
-	h_top = Top(parent_obj=h_widgets.root())
+	h_top = Top(parent_obj=widgets.root())
 	h_txt = TextBox(parent_obj=h_top,h_words=h_words)
 	h_txt.title(text='My text is:')
 	h_txt.insert(text)
 	h_txt.widget.focus_set()
 	Geometry(parent_obj=h_top).set('500x350')
 	h_txt.show()
-	h_widgets.end()
+	widgets.end()
