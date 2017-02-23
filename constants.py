@@ -58,9 +58,13 @@ lev_ques = 'QUESTION'
 lev_warn = 'WARNING'
 
 ru_alphabet = '№АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЫЪЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщыъьэюя'
+ru_alphabet_low = 'аеиоубявгдёжзйклмнпрстфхцчшщыъьэю№' # Some vowels are put at the start for the faster search
 lat_alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+lat_alphabet_low = 'abcdefghijklmnopqrstuvwxyz'
 greek_alphabet = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω'
+greek_alphabet_low = 'αβγδεζηθικλμνξοπρστυφχψω'
 other_alphabet = 'ÀÁÂÆÇÈÉÊÑÒÓÔÖŒÙÚÛÜàáâæßçèéêñòóôöœùúûü'
+other_alphabet_low = 'àáâæßçèéêñòóôöœùúûü'
 digits = '0123456789'
 
 SectionBooleans = 'Boolean'
