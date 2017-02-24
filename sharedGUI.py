@@ -239,18 +239,19 @@ class SearchBox:
 		self.h_entry.close()
 		self.h_sel = Selection(self.obj)
 
-	def reset_logic(self,h_words=None,Strict=False): # Strict: case-sensitive, with punctuation
+	def reset_logic(self,words=None,Strict=False): # Strict: case-sensitive, with punctuation
 		self.Success = True
 		self._prev_loop = self._next_loop = self._search = self._pos1 = self._pos2 = self._text = None
 		self.i = 0
-		self.h_words = h_words
+		self.words = words
 		self.Strict = Strict
-		if self.h_words:
+		if self.words:
+			self.words.sent_nos() # cur
 			if self.Strict: # Do not get text from the widget - it's not packed yet
-				self._text = self.h_words._text
+				self._text = self.words._text_p
 			else:
-				self._text = self.h_words.text_np_low()
-			self.h_sel.reset_logic(h_words=self.h_words)
+				self._text = self.words._text_n
+			self.h_sel.reset_logic(words=self.words)
 			self.h_search = Search(text=self._text)
 		else:
 			self.Success = False
@@ -271,11 +272,11 @@ class SearchBox:
 			self.Success = False
 			log.append('SearchBox.reset_data',lev_warn,globs['mes'].canceled)
 			
-	def reset(self,mode='data',h_words=None,Strict=False):
+	def reset(self,mode='data',words=None,Strict=False):
 		if mode == 'data':
 			self.reset_data()
 		else:
-			self.reset_logic(h_words=h_words,Strict=Strict)
+			self.reset_logic(words=words,Strict=Strict)
 		
 	def loop(self):
 		if self.Success:
@@ -305,36 +306,21 @@ class SearchBox:
 
 	def select(self):
 		if self.Success:
-			if self.Strict:
-				result = self.h_words.get_p_no(self.pos1())
-			else:
-				result = self.h_words.get_np_no(self.pos1()) # todo: get_norm_no
+			result = self.words.no_by_pos(pos=self.pos1())
 			if result is None:
-				_pos1tk = '1.0'
+				_pos1tk = _pos2tk = '1.0'
 				log.append('SearchBox.select',lev_err,globs['mes'].wrong_input2)
 			else:
-				self.h_words.change_no(no=result)
-				_pos1tk = self.h_words.tk_p_f()
-			if self.Strict:
-				result = self.h_words.get_p_no(self.pos2())
-			else:
-				result = self.h_words.get_np_no(self.pos2())
-			if result is None:
-				_pos2tk = '1.0'
-				log.append('SearchBox.select',lev_err,globs['mes'].wrong_input2)
-			else:
-				self.h_words.change_no(no=result)
-				_pos2tk = self.h_words.tk_p_l()
-			self.h_sel.reset(pos1tk=_pos1tk,pos2tk=_pos2tk,background='cyan')
+				_pos1tk = self.words.words[result].tf()
+				_pos2tk = self.words.words[result].tl()
+			self.h_sel.reset(pos1tk=_pos1tk,pos2tk=_pos2tk,background='green')
 			self.h_sel.set()
-			self.obj.widget.see(_pos1tk) # todo: select either 'see' or 'autoscroll'
-			#self.obj.autoscroll(_pos1tk)
 		else:
 			log.append('SearchBox.select',lev_warn,globs['mes'].canceled)
 
 	def search(self):
 		if self.Success:
-			if self.h_words and not self._search:
+			if self.words and not self._search:
 				self.h_entry.focus()
 				self.h_entry.select_all()
 				self.h_entry.show()
@@ -405,66 +391,9 @@ class SearchBox:
 
 
 
-class Spelling:
-	
-	def __init__(self,obj,lang='ru',h_words=None):
-		self.supported_langs = ('ru')
-		self.obj = obj
-		self.reset(lang=lang,h_words=h_words)
-	
-	def reset(self,lang='ru',h_words=None):
-		self.Success = True
-		self.h_words = h_words
-		self.lang = lang
-		if not self.lang in self.supported_langs:
-			Message(func='Spelling.reset',type=lev_err,message=globs['mes'].unknown_lang_id % str(self.lang))
-			self.lang = 'ru'
-		if not self.h_words:
-			self.Success = False
-			log.append('Spelling.reset',lev_warn,globs['mes'].canceled)
-			
-	def check(self):
-		if self.Success:
-			for i in range(self.h_words.len()):
-				self.h_words.change_no(no=i)
-				self.h_words.spellcheck_ru()
-		else:
-			log.append('Spelling.check',lev_warn,globs['mes'].canceled)
-		
-	def select(self):
-		if self.Success:
-			if self.lang == 'ru':
-				self.h_words.db.execute('select NO from WORDS where SPELL_RU=?',(0,))
-			else:
-				pass # todo
-			result = self.h_words.fetchall()
-			if result:
-				for i in range(len(result)):
-					self.h_words.change_no(no=result[i])
-					pos1tk = self.h_words.tk_p_f()
-					pos2tk = self.h_words.tk_p_l()
-					if pos1tk and pos2tk:
-						self.obj.tag_add(tag_name='spell',pos1tk=pos1tk,pos2tk=pos2tk,DeletePrevious=False)
-					else:
-						log.append('Spelling.select',lev_err,globs['mes'].wrong_input2)
-				self.obj.tag_config(tag_name='spell',background='red')
-			else:
-				log.append('Spelling.select',lev_info,'Spelling seems to be correct for the language "%s".' % self.lang) # todo: mes
-		else:
-			log.append('Spelling.select',lev_warn,globs['mes'].canceled)
-			
-	def run(self):
-		if self.Success:
-			timer(func_title='Spelling.check',func=self.check)
-			self.select()
-		else:
-			log.append('Spelling.run',lev_warn,globs['mes'].canceled)
-
-
-
 class TextBox:
 	
-	def __init__(self,parent_obj,Composite=False,expand=1,side=None,fill='both',h_words=None,font='Serif 14',HorizontalScrollbar=False):
+	def __init__(self,parent_obj,Composite=False,expand=1,side=None,fill='both',words=None,font='Serif 14',HorizontalScrollbar=False,Spelling=False):
 		self.type = 'TextBox'
 		self.Composite = Composite
 		self.HorizontalScrollbar = HorizontalScrollbar
@@ -479,7 +408,7 @@ class TextBox:
 		self.side = side
 		self.fill = fill
 		self.gui()
-		self.reset_logic(h_words=h_words)
+		self.reset_logic(words=words,Spelling=Spelling)
 		
 	def _gui_txt(self):
 		if self.parent_obj.type == 'Toplevel' or self.parent_obj.type == 'Root':
@@ -513,15 +442,17 @@ class TextBox:
 		WidgetShared.custom_buttons(self)
 		self.custom_bindings()
 		
-	def reset(self,mode='data',h_words=None):
+	def reset(self,mode='data',words=None,Spelling=False):
 		if mode == 'data':
 			self.reset_data()
 		else:
-			self.reset_logic(h_words=h_words)
+			self.reset_logic(words=words,Spelling=Spelling)
 	
-	def reset_logic(self,h_words=None):
-		self.h_words = h_words
-		self.search_box.reset_logic(h_words=self.h_words)
+	def reset_logic(self,words=None,Spelling=False):
+		self.words = words
+		self.Spelling = Spelling
+		self.search_box.reset_logic(words=self.words)
+		self.spelling()
 	
 	# Delete text, tags, marks
 	def reset_data(self,*args):
@@ -731,6 +662,27 @@ class TextBox:
 	
 	def focus(self,*args):
 		self.widget.focus_set()
+		
+	def spelling(self):
+		if self.Spelling:
+			if self.words:
+				self.words.sent_nos() # cur
+				result = []
+				for i in range(self.words.len()):
+					if not self.words.words[i].spell_ru():
+						result.append(i)
+				if result:
+					self.clear_tags()
+					for i in range(len(result)):
+						no = self.words._no = result[i]
+						pos1tk = self.words.words[no].tf()
+						pos2tk = self.words.words[no].tl()
+						self.tag_add(tag_name='spell',pos1tk=pos1tk,pos2tk=pos2tk,DeletePrevious=False)
+					self.tag_config(tag_name='spell',background='red')
+				else:
+					log.append('TextBox.spelling',lev_info,'Spelling seems to be correct.') # todo: mes
+			else:
+				Message(func='TextBox.spelling',type=lev_warn,message=globs['mes'].not_enough_input_data,Silent=True)
 		
 	def zzz(self):
 		pass
@@ -1283,19 +1235,19 @@ def action(*args):
 '''
 class Selection: # Selecting words only
 	
-	def __init__(self,h_widget,h_words=None):
+	def __init__(self,h_widget,words=None):
 		self.h_widget = h_widget
-		self.reset_logic(h_words=h_words)
+		self.reset_logic(words=words)
 		self.reset_data()
 		
-	def reset(self,mode='data',h_words=None,pos1tk=None,pos2tk=None,background=None,foreground=None,tag='tag'):
+	def reset(self,mode='data',words=None,pos1tk=None,pos2tk=None,background=None,foreground=None,tag='tag'):
 		if mode == 'data':
 			self.reset_data(pos1tk=pos1tk,pos2tk=pos2tk,background=background,foreground=foreground,tag=tag)
 		else:
-			self.reset_logic(h_words=h_words)
+			self.reset_logic(words=words)
 	
-	def reset_logic(self,h_words):
-		self.h_words = h_words
+	def reset_logic(self,words):
+		self.words = words
 		
 	def reset_data(self,pos1tk=None,pos2tk=None,background=None,foreground=None,tag='tag'):
 		self._pos1tk = pos1tk
@@ -1388,35 +1340,35 @@ class ParallelTexts: # Requires Search
 		self.icon()
 		self.close()
 		
-	def reset(self,h_words1,h_words2,h_words3=None,h_words4=None):
+	def reset(self,words1,words2,words3=None,words4=None):
 		log.append('ParallelTexts.reset',lev_info,'Reset widget') # todo: del when optimized
 		widgets.waitbox().reset(func_title='ParallelTexts.reset',message='Reset widget')
 		widgets._waitbox.show()
-		self.h_words1 = h_words1
-		self.h_words2 = h_words2
-		self.h_words3 = h_words3
-		self.h_words4 = h_words4
-		if self.h_words3 and self.h_words4:
+		self.words1 = words1
+		self.words2 = words2
+		self.words3 = words3
+		self.words4 = words4
+		if self.words3 and self.words4:
 			self.Extended = True
 		else:
 			self.Extended = False
-		self.txt1.reset_logic(h_words=self.h_words1)
+		self.txt1.reset_logic(words=self.words1)
 		self.txt1.reset_data()
-		self.txt2.reset_logic(h_words=self.h_words2)
+		self.txt2.reset_logic(words=self.words2)
 		self.txt2.reset_data()
 		if self.Extended:
-			self.txt3.reset_logic(h_words=self.h_words3)
+			self.txt3.reset_logic(words=self.words3)
 			self.txt3.reset_data()
-			self.txt4.reset_logic(h_words=self.h_words4)
+			self.txt4.reset_logic(words=self.words4)
 			self.txt4.reset_data()
-		self.h_tk_pos1.reset_logic(h_words=self.h_words1)
+		self.h_tk_pos1.reset_logic(words=self.words1)
 		self.h_tk_pos1.reset_data()
-		self.h_tk_pos2.reset_logic(h_words=self.h_words2)
+		self.h_tk_pos2.reset_logic(words=self.words2)
 		self.h_tk_pos2.reset_data()
 		if self.Extended:
-			self.h_tk_pos3.reset_logic(h_words=self.h_words3)
+			self.h_tk_pos3.reset_logic(words=self.words3)
 			self.h_tk_pos3.reset_data()
-			self.h_tk_pos4.reset_logic(h_words=self.h_words4)
+			self.h_tk_pos4.reset_logic(words=self.words4)
 			self.h_tk_pos4.reset_data()
 		self.fill()
 		# Setting ReadOnly state works only after filling text
@@ -1498,15 +1450,15 @@ class ParallelTexts: # Requires Search
 		self.obj.title(text)
 		
 	def fill(self):
-		self.txt1.insert(text=self.h_words1._text)
-		self.txt2.insert(text=self.h_words2._text)
+		self.txt1.insert(text=self.words1._text)
+		self.txt2.insert(text=self.words2._text)
 		if self.Extended:
-			self.txt3.insert(text=self.h_words3._text)
-			self.txt4.insert(text=self.h_words4._text)
+			self.txt3.insert(text=self.words3._text)
+			self.txt4.insert(text=self.words4._text)
 		
-	def update_txt(self,h_widget,h_words,background='orange'):
-		pos1 = h_words.tk_p_f()
-		pos2 = h_words.tk_p_l()
+	def update_txt(self,h_widget,words,background='orange'):
+		pos1 = words.tk_p_f()
+		pos2 = words.tk_p_l()
 		if pos1 and pos2:
 			h_widget.tag_add(tag_name='tag',pos1tk=pos1,pos2tk=pos2,DeletePrevious=True)
 			h_widget.widget.tag_config('tag',background=background)
@@ -1518,78 +1470,78 @@ class ParallelTexts: # Requires Search
 			Message(func='ParallelTexts.update_txt',type=lev_err,message=globs['mes'].wrong_input2)
 			
 	def synchronize11(self):
-		_search = self.h_words22.np() # Substring=False
-		_loop22 = Search(self.h_words22._text,_search).next_loop()
+		_search = self.words22.np() # Substring=False
+		_loop22 = Search(self.words22._text,_search).next_loop()
 		try:
-			index22 = _loop22.index(self.h_words22.f_sym_p())
+			index22 = _loop22.index(self.words22.f_sym_p())
 		except ValueError:
 			#Message(func='ParallelTexts.synchronize11',type=lev_err,message=globs['mes'].wrong_input2)
 			index22 = 0
-		_loop11 = Search(self.h_words11._text,_search).next_loop()
+		_loop11 = Search(self.words11._text,_search).next_loop()
 		if index22 >= len(_loop11):
 			''' # Go to the last stone
-			h_words11.change_no(h_words11.len()-1)
-			_no = h_words11.stone_no()
+			words11.change_no(words11.len()-1)
+			_no = words11.stone_no()
 			'''
 			_no = None # Keep old selection
 		else:
-			_no = self.h_words11.get_p_no(_loop11[index22])
+			_no = self.words11.get_p_no(_loop11[index22])
 		if _no is not None:
-			self.h_words11.change_no(_no)
-			self.update_txt(self.txt11,self.h_words11,background='orange')
+			self.words11.change_no(_no)
+			self.update_txt(self.txt11,self.words11,background='orange')
 			
 	def synchronize22(self):
-		_search = self.h_words11.np()
+		_search = self.words11.np()
 		# This helps in case the word has both Cyrillic symbols and digits
 		_search = Text(text=_search,Auto=False).delete_cyrillic()
 		# cur
 		_search = _search.replace(' ','') # Removing the non-breaking space
-		_loop11 = Search(self.h_words11._text,_search).next_loop()
+		_loop11 = Search(self.words11._text,_search).next_loop()
 		try:
-			index11 = _loop11.index(self.h_words11.f_sym_p())
+			index11 = _loop11.index(self.words11.f_sym_p())
 		except ValueError:
 			#Message(func='ParallelTexts.synchronize22',type=lev_err,message=globs['mes'].wrong_input2)
 			index11 = 0
-		_loop22 = Search(self.h_words22._text,_search).next_loop()
+		_loop22 = Search(self.words22._text,_search).next_loop()
 		if index11 >= len(_loop22):
 			''' # Go to the last stone
-			self.h_words22.change_no(self.h_words22.len()-1)
-			_no = self.h_words22.stone_no()
+			self.words22.change_no(self.words22.len()-1)
+			_no = self.words22.stone_no()
 			'''
 			_no = None # Keep old selection
 		else:
-			_no = self.h_words22.get_p_no(_loop22[index11])
+			_no = self.words22.get_p_no(_loop22[index11])
 		if _no is not None:
-			self.h_words22.change_no(_no)
-			self.update_txt(self.txt22,self.h_words22,background='cyan')
+			self.words22.change_no(_no)
+			self.update_txt(self.txt22,self.words22,background='cyan')
 			
 	def select11(self,*args):
 		self.h_tk_pos11.reset()
-		self.h_words11.change_no(no=self.h_tk_pos11.p_no())
-		result = self.h_words11.stone_no()
+		self.words11.change_no(no=self.h_tk_pos11.p_no())
+		result = self.words11.stone_no()
 		if result == '-2':
 			Message(func='ParallelTexts.select11',type=lev_err,message=globs['mes'].wrong_input2)
 		else:
-			self.h_words11.change_no(no=result)
-			self.update_txt(self.txt11,self.h_words11)
+			self.words11.change_no(no=result)
+			self.update_txt(self.txt11,self.words11)
 			self.synchronize22()
 
 	def select22(self,*args):
 		self.h_tk_pos22.reset()
-		self.h_words22.change_no(no=self.h_tk_pos22.p_no())
-		result = self.h_words22.stone_no()
+		self.words22.change_no(no=self.h_tk_pos22.p_no())
+		result = self.words22.stone_no()
 		if result == '-2':
 			Message(func='ParallelTexts.select22',type=lev_err,message=globs['mes'].wrong_input2)
 		else:
-			self.h_words22.change_no(no=result)
-			self.update_txt(self.txt22,self.h_words22,'cyan')
+			self.words22.change_no(no=result)
+			self.update_txt(self.txt22,self.words22,'cyan')
 			self.synchronize11()
 			
 	def duplicates(self,h_tk_pos11,h_tk_pos22):
 		self.h_tk_pos11 = h_tk_pos11
 		self.h_tk_pos22 = h_tk_pos22
-		self.h_words11 = self.h_tk_pos11.h_words
-		self.h_words22 = self.h_tk_pos22.h_words
+		self.words11 = self.h_tk_pos11.words
+		self.words22 = self.h_tk_pos22.words
 		self.txt11 = self.h_tk_pos11.h_widget
 		self.txt22 = self.h_tk_pos22.h_widget
 		
@@ -1603,19 +1555,19 @@ class ParallelTexts: # Requires Search
 
 class TkPos:
 	
-	def __init__(self,h_widget,h_words=None):
+	def __init__(self,h_widget,words=None):
 		self.h_widget = h_widget
-		self.h_words = h_words
+		self.words = words
 		self.reset_data()
 	
-	def reset(self,mode='data',h_words=None,pos=None,pos_tk=None,sent_no=None,sents_len=None,p_no=None,First=True):
+	def reset(self,mode='data',words=None,pos=None,pos_tk=None,sent_no=None,sents_len=None,p_no=None,First=True):
 		if mode == 'data':
 			self.reset_data(pos=pos,pos_tk=pos_tk,sent_no=sent_no,sents_len=sents_len,p_no=p_no,First=First)
 		else:
-			self.reset_logic(h_words=h_words)
+			self.reset_logic(words=words)
 	
-	def reset_logic(self,h_words):
-		self.h_words = h_words
+	def reset_logic(self,words):
+		self.words = words
 	
 	def reset_data(self,pos=None,pos_tk=None,sent_no=None,sents_len=None,p_no=None,First=True):
 		self._pos = pos
@@ -1651,18 +1603,18 @@ class TkPos:
 		
 	def p_no(self):
 		if self._p_no is None:
-			self._p_no = self.h_words.get_p_no(pos=self.pos())
+			self._p_no = self.words.get_p_no(pos=self.pos())
 		if self._p_no is None:
 			Message(func='TkPos.p_no',type=lev_err,message=globs['mes'].wrong_input2)
 			self._p_no = 0
 		return self._p_no
 		
 	def pos2tk(self):
-		self.h_words.change_no(no=self.p_no())
+		self.words.change_no(no=self.p_no())
 		if self.First:
-			self._pos_tk = self.h_words.tk_p_f()
+			self._pos_tk = self.words.tk_p_f()
 		else:
-			self._pos_tk = self.h_words.tk_p_l()
+			self._pos_tk = self.words.tk_p_l()
 		return self._pos_tk
 			
 	def split(self):
@@ -1672,7 +1624,7 @@ class TkPos:
 			if self._sent_no == 0:
 				self._sents_len = 0
 			else:
-				self._sents_len = self.h_words.sents_p_len(sent_no=self._sent_no)
+				self._sents_len = self.words.sents_p_len(sent_no=self._sent_no)
 				if self._sents_len is None:
 					self._sents_len = 0
 			self._pos = self._sents_len + Text(_tuple[2],Auto=False).str2int()
@@ -2257,10 +2209,10 @@ class Widgets:
 			Geometry(parent_obj=h_top).set('400x300')
 		return self._edit_clip
 		
-	def txt(self):
+	def txt(self,words=None,Spelling=False):
 		if not self._txt:
 			h_top = Top(parent_obj=self.root(),Maximize=True)
-			self._txt = TextBox(parent_obj=h_top)
+			self._txt = TextBox(parent_obj=h_top,words=words,Spelling=Spelling)
 			self._txt.focus()
 			self._lst.append(self._txt)
 		return self._txt
@@ -2288,9 +2240,9 @@ if __name__ == '__main__':
 	text = '''Something funny with this guy
 	I am glad he is not my test
 	Glad is so angry'''
-	h_words = Words(text)
+	words = Words(text)
 	h_top = Top(parent_obj=widgets.root())
-	h_txt = TextBox(parent_obj=h_top,h_words=h_words)
+	h_txt = TextBox(parent_obj=h_top,words=words)
 	h_txt.title(text='My text is:')
 	h_txt.insert(text)
 	h_txt.widget.focus_set()

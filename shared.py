@@ -1901,7 +1901,7 @@ class Word:
 			_nf: position of the 1st symbol of _n
 			_nl: position of the last symbol of _n
 		'''
-		self.OrigCyr = self._nm = self._pf = self._pl = self._nf = self._nl = self._cyr = self._lat = self._greek = self._digit = self._empty = self._stone = self._sent_no = self._spell_ru = None
+		self.OrigCyr = self._nm = self._pf = self._pl = self._nf = self._nl = self._cyr = self._lat = self._greek = self._digit = self._empty = self._stone = self._sent_no = self._spell_ru = self._sents_len = self._tf = self._tl = None
 		
 	def print(self,no=0):
 		log.append('Word.print',lev_debug,'no: %d; OrigCyr: %s; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _stone: %s; _sent_no: %s; _spell_ru: %s' % (no,str(self.OrigCyr),str(self._p),str(self._n),str(self._nm),str(self._pf),str(self._pl),str(self._nf),str(self._nl),str(self._cyr),str(self._lat),str(self._greek),str(self._digit),str(self._empty),str(self._stone),str(self._sent_no),str(self._spell_ru)))
@@ -1989,9 +1989,39 @@ class Word:
 	def spell_ru(self):
 		if self._spell_ru is None:
 			self._spell_ru = True
-			if self._n:
-				self._spell_ru = h_obj.enchant().check(self._n)
+			if self.OrigCyr and self._n:
+				self._spell_ru = objs.enchant().check(self._n)
 		return self._spell_ru
+		
+	def tf(self):
+		if self._tf is None:
+			self._tf = '1.0'
+			if self._sent_no is None:
+				Message(func='Words.tf',type=lev_err,message=globs['mes'].not_enough_input_data)
+			else:
+				# This is easier, but assigning a tag throws an error
+				#self._tf = '1.0+%dc' % (self._pf - self._sent_no)
+				result = self._pf - self._sents_len
+				if self._sent_no > 0 and result > 0:
+					result -= 1
+				self._tf = '%d.%d' % (self._sent_no + 1,result)
+				log.append('Word.tf',lev_debug,self._tf)
+		return self._tf
+		
+	def tl(self):
+		if self._tl is None:
+			self._tl = '1.0'
+			if self._sent_no is None:
+				Message(func='Words.tl',type=lev_err,message=globs['mes'].not_enough_input_data)
+			else:
+				# This is easier, but assigning a tag throws an error
+				#self._tl = '1.0+%dc' % (self._pl - self._sent_no + 1)
+				result = self._pl - self._sents_len
+				if self._sent_no > 0 and result > 0:
+					result -= 1
+				self._tl = '%d.%d' % (self._sent_no + 1,result + 1)
+				log.append('Word.tl',lev_debug,self._tl)
+		return self._tl
 
 
 
@@ -2052,13 +2082,15 @@ class Words: # Requires Search, Text
 		return len(self.words)
 			
 	def _sent_nos(self):
-		no = 0
+		no = sents_len = 0
 		for i in range(self.len()):
-			if self.words[i]._nl + 1 in self._line_breaks:
+			if self.words[i]._pf - 1 in self._line_breaks:
+				sents_len = self.words[i]._pf - 1
 				no += 1
 			self.words[i]._sent_no = no
+			self.words[i]._sents_len = sents_len
 	
-	def sent_nos(self): # runs for ~2s
+	def sent_nos(self):
 		if self.Success:
 			if self.len() > 0:
 				if self.words[self._no]._sent_no is None:
@@ -2146,6 +2178,17 @@ class Words: # Requires Search, Text
 			return self._text_nm
 		else:
 			log.append('Words.text_nm',lev_warn,globs['mes'].canceled)
+			
+	def no_by_pos(self,pos):
+		if self.Success:
+			result = self._no
+			for i in range(self.len()):
+				if self.words[i]._nf <= pos <= self.words[i]._nl:
+					result = i
+					break
+			return result
+		else:
+			log.append('Words.no_by_pos',lev_warn,globs['mes'].canceled)
 	
 	def complete(self):
 		if self.Success:
@@ -2491,7 +2534,7 @@ class Decline:
 			# Inflecting '', None, digits and Latin words *only* fails
 			#log.append('Decline.decline',lev_debug,'Decline "%s" in "%s" number and "%s" case' % (str(self._list[i]),str(self.number()),str(self.case()))) # todo: mes
 			try:
-				self._list[i] = h_obj.morph().parse(self._list[i])[0].inflect({self.number(),self.case()}).word
+				self._list[i] = objs.morph().parse(self._list[i])[0].inflect({self.number(),self.case()}).word
 			except AttributeError:
 				self._list[i] = self._list[i]
 		return self
@@ -2499,7 +2542,7 @@ class Decline:
 	# If input is a phrase, 'normal' each word of it
 	def normal(self):
 		for i in range(len(self._list)):
-			self._list[i] = h_obj.morph().parse(self._list[i])[0].normal_form
+			self._list[i] = objs.morph().parse(self._list[i])[0].normal_form
 		return self
 		
 	def number(self):
@@ -2509,7 +2552,7 @@ class Decline:
 				tmp = []
 				for i in range(len(self._list)):
 					if self._list[i]:
-						tmp.append(h_obj.morph().parse(self._list[i])[0].tag.number) # Returns 'sing', 'plur' or None
+						tmp.append(objs.morph().parse(self._list[i])[0].tag.number) # Returns 'sing', 'plur' or None
 				if tmp and max(tmp,key=tmp.count) == 'plur':
 					self._number = 'plur'
 			log.append('Decline.number',lev_debug,str(self._number))
@@ -2522,7 +2565,7 @@ class Decline:
 				tmp = []
 				for i in range(len(self._list)):
 					if self._list[i]:
-						tmp.append(h_obj.morph().parse(self._list[i])[0].tag.case)
+						tmp.append(objs.morph().parse(self._list[i])[0].tag.case)
 				result = max(tmp,key=tmp.count)
 				if result:
 					self._case = result
@@ -2593,7 +2636,7 @@ class MessagePool:
 
 
 
-h_obj = Objects()
+objs = Objects()
 
 if __name__ == '__main__':
 	# NOTE: Focusing on the widget is lost randomly (is assigned to root). This could be a Tkinter/DM bug.
