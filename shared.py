@@ -1993,11 +1993,13 @@ class Word:
 				self._spell_ru = objs.enchant().check(self._n)
 		return self._spell_ru
 		
+	# Wrong selection upon search: see an annotation to SearchBox
 	def tf(self):
 		if self._tf is None:
 			self._tf = '1.0'
+			# This could happen if double line breaks were not deleted
 			if self._sent_no is None:
-				Message(func='Words.tf',type=lev_err,message=globs['mes'].not_enough_input_data)
+				log.append('Words.tf',lev_warn,globs['mes'].not_enough_input_data)
 			else:
 				# This is easier, but assigning a tag throws an error
 				#self._tf = '1.0+%dc' % (self._pf - self._sent_no)
@@ -2010,9 +2012,10 @@ class Word:
 		
 	def tl(self):
 		if self._tl is None:
-			self._tl = '1.0'
+			self._tl = '1.1'
+			# This could happen if double line breaks were not deleted
 			if self._sent_no is None:
-				Message(func='Words.tl',type=lev_err,message=globs['mes'].not_enough_input_data)
+				log.append('Words.tl',lev_warn,globs['mes'].not_enough_input_data)
 			else:
 				# This is easier, but assigning a tag throws an error
 				#self._tl = '1.0+%dc' % (self._pl - self._sent_no + 1)
@@ -2028,7 +2031,7 @@ class Word:
 # Use cases: case-insensitive search; spellchecking; text comparison
 class Words: # Requires Search, Text
 	
-	def __init__(self,text,OrigCyr=False):
+	def __init__(self,text,OrigCyr=False,Auto=True):
 		self.Success = True
 		self.OrigCyr = OrigCyr
 		self.words = []
@@ -2036,8 +2039,8 @@ class Words: # Requires Search, Text
 			log.append('Words.__init__',lev_info,'Analyze the text') # todo: mes
 			# This is MUCH faster than using old symbol-per-symbol algorithm for finding words. We must, however, drop double space cases.
 			self._no = 0
-			# todo: 'Auto' is probably needed before
-			self._text_orig = Text(text=text,Auto=True).text
+			self.Auto = Auto
+			self._text_orig = Text(text=text,Auto=self.Auto).text
 			self._line_breaks = Search(self._text_orig,'\n').next_loop()
 			self._text_p = Text(text=self._text_orig).delete_line_breaks()
 			self._text_n = Text(text=self._text_p).delete_punctuation().lower()
@@ -2084,9 +2087,16 @@ class Words: # Requires Search, Text
 	def _sent_nos(self):
 		no = sents_len = 0
 		for i in range(self.len()):
-			if self.words[i]._pf - 1 in self._line_breaks:
-				sents_len = self.words[i]._pf - 1
+			condition1 = self.words[i]._pf - 1 in self._line_breaks
+			if self.Auto:
+				condition = condition1
+			else:
+				# In case duplicate spaces/line breaks were not deleted
+				condition2 = self.words[i]._p == '\n' or self.words[i]._p == '\r' or self.words[i]._p == '\r\n'
+				condition = condition1 or condition2
+			if condition:
 				no += 1
+				sents_len = self.words[i]._pf - 1
 			self.words[i]._sent_no = no
 			self.words[i]._sents_len = sents_len
 	
@@ -2198,6 +2208,8 @@ class Words: # Requires Search, Text
 				self.words[i].stone()
 				self.words[i].nm()
 				self.words[i].spell_ru()
+				self.words[i].tf()
+				self.words[i].tl()
 		else:
 			log.append('Words.complete',lev_warn,globs['mes'].canceled)
 

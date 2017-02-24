@@ -227,6 +227,7 @@ class Top:
 
 
 
+# todo (?): fix: if duplicate spaces/line breaks are not deleted, text with and without punctuation will have a different number of words; thus, tkinter will be supplied wrong positions upon Search
 class SearchBox:
 
 	def __init__(self,obj):
@@ -246,7 +247,6 @@ class SearchBox:
 		self.words = words
 		self.Strict = Strict
 		if self.words:
-			self.words.sent_nos() # cur
 			if self.Strict: # Do not get text from the widget - it's not packed yet
 				self._text = self.words._text_p
 			else:
@@ -393,7 +393,7 @@ class SearchBox:
 
 class TextBox:
 	
-	def __init__(self,parent_obj,Composite=False,expand=1,side=None,fill='both',words=None,font='Serif 14',HorizontalScrollbar=False,Spelling=False):
+	def __init__(self,parent_obj,Composite=False,expand=1,side=None,fill='both',words=None,font='Serif 14',HorizontalScrollbar=False):
 		self.type = 'TextBox'
 		self.Composite = Composite
 		self.HorizontalScrollbar = HorizontalScrollbar
@@ -408,7 +408,7 @@ class TextBox:
 		self.side = side
 		self.fill = fill
 		self.gui()
-		self.reset_logic(words=words,Spelling=Spelling)
+		self.reset_logic(words=words)
 		
 	def _gui_txt(self):
 		if self.parent_obj.type == 'Toplevel' or self.parent_obj.type == 'Root':
@@ -442,17 +442,15 @@ class TextBox:
 		WidgetShared.custom_buttons(self)
 		self.custom_bindings()
 		
-	def reset(self,mode='data',words=None,Spelling=False):
+	def reset(self,mode='data',words=None):
 		if mode == 'data':
 			self.reset_data()
 		else:
-			self.reset_logic(words=words,Spelling=Spelling)
+			self.reset_logic(words=words)
 	
-	def reset_logic(self,words=None,Spelling=False):
+	def reset_logic(self,words=None):
 		self.words = words
-		self.Spelling = Spelling
 		self.search_box.reset_logic(words=self.words)
-		self.spelling()
 	
 	# Delete text, tags, marks
 	def reset_data(self,*args):
@@ -663,26 +661,29 @@ class TextBox:
 	def focus(self,*args):
 		self.widget.focus_set()
 		
+	# Tags can be marked only after text in inserted; thus, call this procedure separately before '.show'
 	def spelling(self):
-		if self.Spelling:
-			if self.words:
-				self.words.sent_nos() # cur
-				result = []
-				for i in range(self.words.len()):
-					if not self.words.words[i].spell_ru():
-						result.append(i)
-				if result:
-					self.clear_tags()
-					for i in range(len(result)):
-						no = self.words._no = result[i]
-						pos1tk = self.words.words[no].tf()
-						pos2tk = self.words.words[no].tl()
+		if self.words:
+			self.words.sent_nos()
+			result = []
+			for i in range(self.words.len()):
+				if not self.words.words[i].spell_ru():
+					result.append(i)
+			if result:
+				self.clear_tags()
+				for i in range(len(result)):
+					no = self.words._no = result[i]
+					pos1tk = self.words.words[no].tf()
+					pos2tk = self.words.words[no].tl()
+					# todo: apply IGNORE_SPELLING
+					if pos1tk and pos2tk:
 						self.tag_add(tag_name='spell',pos1tk=pos1tk,pos2tk=pos2tk,DeletePrevious=False)
-					self.tag_config(tag_name='spell',background='red')
-				else:
-					log.append('TextBox.spelling',lev_info,'Spelling seems to be correct.') # todo: mes
+				log.append('TextBox.spelling',lev_debug,'%d tags to assign' % len(result))
+				self.tag_config(tag_name='spell',background='red')
 			else:
-				Message(func='TextBox.spelling',type=lev_warn,message=globs['mes'].not_enough_input_data,Silent=True)
+				log.append('TextBox.spelling',lev_info,'Spelling seems to be correct.') # todo: mes
+		else:
+			Message(func='TextBox.spelling',type=lev_warn,message=globs['mes'].not_enough_input_data,Silent=True)
 		
 	def zzz(self):
 		pass
@@ -2209,10 +2210,10 @@ class Widgets:
 			Geometry(parent_obj=h_top).set('400x300')
 		return self._edit_clip
 		
-	def txt(self,words=None,Spelling=False):
+	def txt(self,words=None):
 		if not self._txt:
 			h_top = Top(parent_obj=self.root(),Maximize=True)
-			self._txt = TextBox(parent_obj=h_top,words=words,Spelling=Spelling)
+			self._txt = TextBox(parent_obj=h_top,words=words)
 			self._txt.focus()
 			self._lst.append(self._txt)
 		return self._txt
