@@ -2,7 +2,6 @@
 #coding=UTF-8
 
 import tkinter as tk
-import tkinter.messagebox as tkmes # todo: decide whether to use this
 import tkinter.filedialog as dialog
 import mes_ru as mes
 import sys, os
@@ -1936,11 +1935,7 @@ class Message:
 	def error(self):
 		if self.Success:
 			if not self.Silent:
-				# todo: decide which to use
-				# todo: fix: importing from another module does not allow to loop Search
-				# todo: fix: importing GUI from another module still hangs up the program
-				#widgets.error().reset(title=self.func+':',text=self.message).show()
-				tkmes.showerror(self.func+':',self.message)
+				widgets.error().reset(title=self.func+':',text=self.message).show()
 			log.append(self.func,lev_err,self.message)
 		else:
 			log.append('Message.error',lev_err,globs['mes'].canceled)
@@ -1948,17 +1943,15 @@ class Message:
 	def info(self):
 		if self.Success:
 			if not self.Silent:
-				#widgets.info().reset(title=self.func+':',text=self.message).show()
-				tkmes.showinfo(self.func+':',self.message)
+				widgets.info().reset(title=self.func+':',text=self.message).show()
 			log.append(self.func,lev_info,self.message)
 		else:
 			log.append('Message.info',lev_info,globs['mes'].canceled)
 	
 	def question(self):
 		if self.Success:
-			#widgets.question().reset(title=self.func+':',text=self.message).show()
-			#self.Yes = widgets._question.Yes
-			self.Yes = tkmes.askokcancel(self.func+':',self.message)
+			widgets.question().reset(title=self.func+':',text=self.message).show()
+			self.Yes = widgets._question.Yes
 			log.append(self.func,lev_ques,self.message)
 		else:
 			log.append('Message.question',lev_ques,globs['mes'].canceled)
@@ -1966,8 +1959,7 @@ class Message:
 	def warning(self):
 		if self.Success:
 			if not self.Silent:
-				#widgets.warning().reset(title=self.func+':',text=self.message).show()
-				tkmes.showwarning(self.func+':',self.message)
+				widgets.warning().reset(title=self.func+':',text=self.message).show()
 			log.append(self.func,lev_warn,self.message)
 		else:
 			log.append('Message.warning',lev_warn,globs['mes'].canceled)
@@ -2220,9 +2212,8 @@ class Widgets:
 
 
 
-widgets = Widgets()
-
 if __name__ == '__main__':
+	widgets = Widgets()
 	widgets.start()
 	text = '''Something funny with this guy
 	I am glad he is not my test

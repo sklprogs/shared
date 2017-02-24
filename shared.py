@@ -2645,8 +2645,7 @@ class MessagePool:
 
 
 
-objs = Objects()
-
 if __name__ == '__main__':
+	objs = Objects()
 	# NOTE: Focusing on the widget is lost randomly (is assigned to root). This could be a Tkinter/DM bug.
 	Message(func='shared.__main__',type=lev_info,message='Все прошло удачно!')
