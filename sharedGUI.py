@@ -2,6 +2,7 @@
 #coding=UTF-8
 
 import tkinter as tk
+import tkinter.messagebox as tkmes # todo: decide whether to use this
 import tkinter.filedialog as dialog
 import mes_ru as mes
 import sys, os
@@ -164,31 +165,23 @@ class WidgetShared:
 
 class Top:
 
-	# todo: del 'trigger_obj'
-	def __init__(self,parent_obj,Maximize=False,AutoCenter=True,trigger_obj=None):
+	def __init__(self,parent_obj,Maximize=False,AutoCenter=True):
 		self.type = 'Toplevel'
 		# Lock = True - блокировать дальнейшее выполнение программы до попытки закрытия виджета. Lock = False позволяет создать одновременно несколько виджетов на экране. Они будут работать, однако, виджет с Lock = False будет закрыт при закрытии виджета с Lock = True. Кроме того, если ни один из виджетов не имеет Lock = True, то они все будут показаны и тут же закрыты.
 		self.Lock = False
 		self.parent_obj = parent_obj
 		self.AutoCenter = AutoCenter
-		self.trigger_obj = trigger_obj
 		self.count = 0
 		self.widget = tk.Toplevel(self.parent_obj.widget)
 		self.widget.protocol("WM_DELETE_WINDOW",self.close)
 		if Maximize:
 			Geometry(parent_obj=self).maximize()
-		if self.trigger_obj:
-			self.trigger_obj.add(self)
-		else:
-			self.tk_trigger = tk.BooleanVar()
+		self.tk_trigger = tk.BooleanVar()
 	
 	def close(self,*args):
 		self.widget.withdraw()
 		if self.Lock:
-			if self.trigger_obj:
-				self.trigger_obj.on_close()
-			else:
-				self.tk_trigger.set(True)
+			self.tk_trigger.set(True)
 	
 	def show(self,Lock=True):
 		self.count += 1
@@ -198,11 +191,8 @@ class Top:
 			self.center()
 		self.Lock = Lock
 		if self.Lock:
-			if self.trigger_obj:
-				self.trigger_obj.on_show()
-			else:
-				self.tk_trigger = tk.BooleanVar()
-				self.widget.wait_variable(self.tk_trigger)
+			self.tk_trigger = tk.BooleanVar()
+			self.widget.wait_variable(self.tk_trigger)
 	
 	def title(self,text='Title:'):
 		WidgetShared.title(self,text=text)
@@ -1946,7 +1936,11 @@ class Message:
 	def error(self):
 		if self.Success:
 			if not self.Silent:
-				widgets.error().reset(title=self.func+':',text=self.message).show()
+				# todo: decide which to use
+				# todo: fix: importing from another module does not allow to loop Search
+				# todo: fix: importing GUI from another module still hangs up the program
+				#widgets.error().reset(title=self.func+':',text=self.message).show()
+				tkmes.showerror(self.func+':',self.message)
 			log.append(self.func,lev_err,self.message)
 		else:
 			log.append('Message.error',lev_err,globs['mes'].canceled)
@@ -1954,15 +1948,17 @@ class Message:
 	def info(self):
 		if self.Success:
 			if not self.Silent:
-				widgets.info().reset(title=self.func+':',text=self.message).show()
+				#widgets.info().reset(title=self.func+':',text=self.message).show()
+				tkmes.showinfo(self.func+':',self.message)
 			log.append(self.func,lev_info,self.message)
 		else:
 			log.append('Message.info',lev_info,globs['mes'].canceled)
 	
 	def question(self):
 		if self.Success:
-			widgets.question().reset(title=self.func+':',text=self.message).show()
-			self.Yes = widgets._question.Yes
+			#widgets.question().reset(title=self.func+':',text=self.message).show()
+			#self.Yes = widgets._question.Yes
+			self.Yes = tkmes.askokcancel(self.func+':',self.message)
 			log.append(self.func,lev_ques,self.message)
 		else:
 			log.append('Message.question',lev_ques,globs['mes'].canceled)
@@ -1970,7 +1966,8 @@ class Message:
 	def warning(self):
 		if self.Success:
 			if not self.Silent:
-				widgets.warning().reset(title=self.func+':',text=self.message).show()
+				#widgets.warning().reset(title=self.func+':',text=self.message).show()
+				tkmes.showwarning(self.func+':',self.message)
 			log.append(self.func,lev_warn,self.message)
 		else:
 			log.append('Message.warning',lev_warn,globs['mes'].canceled)
@@ -2083,11 +2080,11 @@ class MessageBuilder: # Requires 'constants'
 
 class Clipboard: # Requires 'widgets'
 	
+	# todo: check this
 	# We need to explicitly set the root object, otherwise, Tk hangs when launched from another module
-	def __init__(self,root_obj,Silent=False,trigger_obj=None):
+	def __init__(self,root_obj,Silent=False):
 		self.Silent = Silent
 		self.root_obj = root_obj
-		self.trigger_obj = trigger_obj
 	
 	def copy(self,text,CopyEmpty=True):
 		if text or CopyEmpty:

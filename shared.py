@@ -19,9 +19,9 @@ from constants import *
 
 def Message(func='MAIN',type=lev_warn,message='Message',Silent=False):
 	# todo: fix
-	#import sharedGUI
-	#sharedGUI.Message(func=func,type=type,message=message,Silent=Silent)
-	log.append(func,type,message)
+	import sharedGUI
+	sharedGUI.Message(func=func,type=type,message=message,Silent=Silent)
+	#log.append(func,type,message)
 
 
 # todo: Timing class functions sometimes shows inadequate results
