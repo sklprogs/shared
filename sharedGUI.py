@@ -1343,8 +1343,6 @@ class ParallelTexts: # Requires Search
 		
 	def reset(self,words1,words2,words3=None,words4=None):
 		log.append('ParallelTexts.reset',lev_info,'Reset widget') # todo: del when optimized
-		widgets.waitbox().reset(func_title='ParallelTexts.reset',message='Reset widget')
-		widgets._waitbox.show()
 		self.words1 = words1
 		self.words2 = words2
 		self.words3 = words3
@@ -1380,9 +1378,6 @@ class ParallelTexts: # Requires Search
 			self.txt4.read_only(ReadOnly=True)
 		self.txt1.focus()
 		self.init_cursor_pos()
-		self.select1()
-		# todo: del when optimized
-		widgets._waitbox.close()
 		
 	# Set the cursor to the start of the text
 	def init_cursor_pos(self):
@@ -1451,92 +1446,83 @@ class ParallelTexts: # Requires Search
 		self.obj.title(text)
 		
 	def fill(self):
-		self.txt1.insert(text=self.words1._text)
-		self.txt2.insert(text=self.words2._text)
+		self.txt1.insert(text=self.words1._text_orig)
+		self.txt2.insert(text=self.words2._text_orig)
 		if self.Extended:
-			self.txt3.insert(text=self.words3._text)
-			self.txt4.insert(text=self.words4._text)
+			self.txt3.insert(text=self.words3._text_orig)
+			self.txt4.insert(text=self.words4._text_orig)
 		
 	def update_txt(self,h_widget,words,background='orange'):
-		pos1 = words.tk_p_f()
-		pos2 = words.tk_p_l()
+		pos1 = words.words[words._no].tf()
+		pos2 = words.words[words._no].tl()
 		if pos1 and pos2:
 			h_widget.tag_add(tag_name='tag',pos1tk=pos1,pos2tk=pos2,DeletePrevious=True)
 			h_widget.widget.tag_config('tag',background=background)
 			# Set the cursor to the first symbol of the selection
 			h_widget.mark_add('insert',pos1)
 			h_widget.mark_add(mark_name='yview',postk=pos1)
-			h_widget.widget.see('yview')
+			h_widget.see(mark='yview')
 		else:
 			Message(func='ParallelTexts.update_txt',type=lev_err,message=globs['mes'].wrong_input2)
 			
 	def synchronize11(self):
-		_search = self.words22.np() # Substring=False
-		_loop22 = Search(self.words22._text,_search).next_loop()
+		word11 = self.words11.words[self.words11._no]
+		word22 = self.words22.words[self.words22._no]
+		_search = word22._n
+		_loop22 = Search(self.words22._text_n,_search).next_loop()
 		try:
-			index22 = _loop22.index(self.words22.f_sym_p())
+			index22 = _loop22.index(word22._n)
 		except ValueError:
 			#Message(func='ParallelTexts.synchronize11',type=lev_err,message=globs['mes'].wrong_input2)
 			index22 = 0
-		_loop11 = Search(self.words11._text,_search).next_loop()
+		_loop11 = Search(self.words11._text_n,_search).next_loop()
 		if index22 >= len(_loop11):
-			''' # Go to the last stone
-			words11.change_no(words11.len()-1)
-			_no = words11.stone_no()
-			'''
 			_no = None # Keep old selection
 		else:
-			_no = self.words11.get_p_no(_loop11[index22])
+			_no = self.words11.no_by_pos(_loop11[index22])
 		if _no is not None:
-			self.words11.change_no(_no)
+			self.words11._no = _no
 			self.update_txt(self.txt11,self.words11,background='orange')
 			
 	def synchronize22(self):
-		_search = self.words11.np()
+		word11 = self.words11.words[self.words11._no]
+		_search = word11._n
 		# This helps in case the word has both Cyrillic symbols and digits
 		_search = Text(text=_search,Auto=False).delete_cyrillic()
 		# cur
 		_search = _search.replace(' ','') # Removing the non-breaking space
-		_loop11 = Search(self.words11._text,_search).next_loop()
+		_loop11 = Search(self.words11._text_n,_search).next_loop()
 		try:
-			index11 = _loop11.index(self.words11.f_sym_p())
+			index11 = _loop11.index(word11._pf)
 		except ValueError:
 			#Message(func='ParallelTexts.synchronize22',type=lev_err,message=globs['mes'].wrong_input2)
 			index11 = 0
-		_loop22 = Search(self.words22._text,_search).next_loop()
+		_loop22 = Search(self.words22._text_n,_search).next_loop()
 		if index11 >= len(_loop22):
-			''' # Go to the last stone
-			self.words22.change_no(self.words22.len()-1)
-			_no = self.words22.stone_no()
-			'''
 			_no = None # Keep old selection
 		else:
-			_no = self.words22.get_p_no(_loop22[index11])
+			_no = self.words22.no_by_pos(_loop22[index11])
 		if _no is not None:
-			self.words22.change_no(_no)
+			self.words22._no = _no
 			self.update_txt(self.txt22,self.words22,background='cyan')
 			
 	def select11(self,*args):
 		self.h_tk_pos11.reset()
-		self.words11.change_no(no=self.h_tk_pos11.p_no())
-		result = self.words11.stone_no()
-		if result == '-2':
-			Message(func='ParallelTexts.select11',type=lev_err,message=globs['mes'].wrong_input2)
-		else:
-			self.words11.change_no(no=result)
-			self.update_txt(self.txt11,self.words11)
-			self.synchronize22()
+		result = self.h_tk_pos11.p_no()
+		if result or result == 0:
+			self.words11._no = result
+		self.words11.next_stone()
+		self.update_txt(self.txt11,self.words11)
+		self.synchronize22()
 
 	def select22(self,*args):
 		self.h_tk_pos22.reset()
-		self.words22.change_no(no=self.h_tk_pos22.p_no())
-		result = self.words22.stone_no()
-		if result == '-2':
-			Message(func='ParallelTexts.select22',type=lev_err,message=globs['mes'].wrong_input2)
-		else:
-			self.words22.change_no(no=result)
-			self.update_txt(self.txt22,self.words22,'cyan')
-			self.synchronize11()
+		result = self.h_tk_pos22.p_no()
+		if result or result == 0:
+			self.words22._no = result
+		self.words22.next_stone()
+		self.update_txt(self.txt22,self.words22)
+		self.synchronize11()
 			
 	def duplicates(self,h_tk_pos11,h_tk_pos22):
 		self.h_tk_pos11 = h_tk_pos11
@@ -1604,20 +1590,23 @@ class TkPos:
 		
 	def p_no(self):
 		if self._p_no is None:
-			self._p_no = self.words.get_p_no(pos=self.pos())
+			self._p_no = self.words.no_by_pos(pos=self.pos())
 		if self._p_no is None:
 			Message(func='TkPos.p_no',type=lev_err,message=globs['mes'].wrong_input2)
 			self._p_no = 0
 		return self._p_no
 		
 	def pos2tk(self):
-		self.words.change_no(no=self.p_no())
+		result = self.p_no()
+		if result or result == 0:
+			self.words._no = result
 		if self.First:
-			self._pos_tk = self.words.tk_p_f()
+			self._pos_tk = self.words.words[self.words._no].tf()
 		else:
-			self._pos_tk = self.words.tk_p_l()
+			self._pos_tk = self.words.words[self.words._no].tl()
 		return self._pos_tk
 			
+	# todo: get from words
 	def split(self):
 		_tuple = self.pos_tk().partition('.')
 		if _tuple[2]:
@@ -1625,7 +1614,7 @@ class TkPos:
 			if self._sent_no == 0:
 				self._sents_len = 0
 			else:
-				self._sents_len = self.words.sents_p_len(sent_no=self._sent_no)
+				self._sents_len = self.words.words[self.words._no]._sents_len
 				if self._sents_len is None:
 					self._sents_len = 0
 			self._pos = self._sents_len + Text(_tuple[2],Auto=False).str2int()
