@@ -1,6 +1,15 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
+copyright = 'Copyright 2015-2017, Peter Sklyar'
+license = 'GPL v.3'
+email = 'skl.progs@gmail.com'
+
+import re
+import os, sys
+import mes_ru
+import mes_en
+import configparser
 import calendar
 import os
 import pickle
@@ -14,13 +23,86 @@ import webbrowser
 import urllib.request, urllib.parse
 import difflib
 import sqlite3
-from constants import *
 
 
+
+class OSSpecific:
+	
+	def __init__(self):
+		self._sys = ''
+		self._sep = ''
+		self.sys()
+		self.sep()
+	
+	def sys(self):
+		if not self._sys:
+			self._sys = 'unknown'
+			sys_plat = sys.platform
+			if 'win' in sys_plat:
+				self._sys = 'win'
+			elif 'lin' in sys_plat:
+				self._sys = 'lin'
+			elif 'mac' in sys_plat:
+				self._sys = 'mac'
+		return self._sys
+	
+	def sep(self):
+		if not self._sep:
+			self._sep = os.path.sep
+		return self._sep
+
+
+
+config_parser = configparser.SafeConfigParser()
+
+gpl3_url_en = 'http://www.gnu.org/licenses/gpl.html'
+gpl3_url_ru = 'http://rusgpl.ru/rusgpl.html'
+
+globs = {'int':{},'bool':{},'var':{}}
+
+lev_crit = 'CRITICAL'
+lev_debug = 'DEBUG'
+lev_debug_err = 'DEBUG-ERROR'
+lev_err = 'ERROR'
+lev_info = 'INFO'
+lev_ques = 'QUESTION'
+lev_warn = 'WARNING'
+
+ru_alphabet = '№АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЫЪЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщыъьэюя'
+ru_alphabet_low = 'аеиоубявгдёжзйклмнпрстфхцчшщыъьэю№' # Some vowels are put at the start for the faster search
+lat_alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+lat_alphabet_low = 'abcdefghijklmnopqrstuvwxyz'
+greek_alphabet = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω'
+greek_alphabet_low = 'αβγδεζηθικλμνξοπρστυφχψω'
+other_alphabet = 'ÀÁÂÆÇÈÉÊÑÒÓÔÖŒÙÚÛÜàáâæßçèéêñòóôöœùúûü'
+other_alphabet_low = 'àáâæßçèéêñòóôöœùúûü'
+digits = '0123456789'
+
+SectionBooleans = 'Boolean'
+SectionBooleans_abbr = 'bool'
+SectionFloatings = 'Floating Values'
+SectionFloatings_abbr = 'float'
+SectionIntegers = 'Integer Values'
+SectionIntegers_abbr = 'int'
+SectionLinuxSettings = 'Linux settings'
+SectionMacSettings = 'Mac settings'
+SectionVariables = 'Variables'
+SectionVariables_abbr = 'var'
+SectionWindowsSettings = 'Windows settings'
+
+punc_array = ['.',',','!','?',':',';']
+#punc_ext_array = ['"','”','»',']','}',')'] # todo: why there were no opening brackets?
+punc_ext_array = ['"','“','”','','«','»','[',']','{','}','(',')']
+
+h_os = OSSpecific()
+
+
+
+# Cannot cross-import 2 modules, therefore, we need to have a local proecedure
 def Message(func='MAIN',type=lev_warn,message='Message',Silent=False):
-	# todo: fix
-	import sharedGUI
-	sharedGUI.Message(func=func,type=type,message=message,Silent=Silent)
+	import sharedGUI as sg
+	#sg.widgets = sg.Widgets()
+	sg.Message(func=func,type=type,message=message,Silent=Silent)
 	#log.append(func,type,message)
 
 
@@ -2586,7 +2668,7 @@ class Decline:
 class Objects:
 	
 	def __init__(self):
-		self._enchant = self._morph = self._pretty_table = None
+		self._enchant = self._morph = self._pretty_table = self._diff = None
 	
 	def enchant(self):
 		if not self._enchant:
@@ -2605,6 +2687,11 @@ class Objects:
 			from prettytable import PrettyTable
 			self._pretty_table = PrettyTable
 		return self._pretty_table
+		
+	def diff(self):
+		if not self._diff:
+			self._diff = Diff()
+		return self._diff
 
 
 
@@ -2645,7 +2732,9 @@ class MessagePool:
 
 
 
+objs = Objects() # If there are problems with import or tkinter's wait_variable, put this beneath 'if __name__'
+
+
 if __name__ == '__main__':
-	objs = Objects()
 	# NOTE: Focusing on the widget is lost randomly (is assigned to root). This could be a Tkinter/DM bug.
 	Message(func='shared.__main__',type=lev_info,message='Все прошло удачно!')

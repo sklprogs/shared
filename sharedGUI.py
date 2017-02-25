@@ -5,25 +5,10 @@ import tkinter as tk
 import tkinter.filedialog as dialog
 import mes_ru as mes
 import sys, os
-
-import constants
-import shared
-
-h_os = constants.h_os
-globs = constants.globs
-globs['mes'] = constants.mes_ru
-lev_crit = constants.lev_crit
-lev_debug = constants.lev_debug
-lev_debug_err = constants.lev_debug_err
-lev_err = constants.lev_err
-lev_info = constants.lev_info
-lev_ques = constants.lev_ques
-lev_warn = constants.lev_warn
-
-from shared import Search, Text, timer, Words, log
+import shared as sh
 
 
-if h_os.sys() == 'win':
+if sh.h_os.sys() == 'win':
 	import win32gui, win32con, ctypes
 
 # Вернуть тип параметра
@@ -35,37 +20,37 @@ def get_obj_type(obj,Verbal=True,IgnoreErrors=False):
 	# int, float, str, list, dict, tuple, NoneType
 	if Verbal:
 		obj_type_str = obj_type_verbal(obj_type_str,IgnoreErrors=IgnoreErrors)
-	#log.append('get_obj_type',lev_debug,obj_type_str)
+	#sh.log.append('get_obj_type',sh.lev_debug,obj_type_str)
 	return obj_type_str
 	
 # Название типа на русском
 def obj_type_verbal(obj_type_str,IgnoreErrors=False):
 	obj_type_str = str(obj_type_str)
 	if obj_type_str == 'str':
-		obj_type_str = globs['mes'].type_str
+		obj_type_str = sh.globs['mes'].type_str
 	elif obj_type_str == 'list':
-		obj_type_str = globs['mes'].type_lst
+		obj_type_str = sh.globs['mes'].type_lst
 	elif obj_type_str == 'dict':
-		obj_type_str = globs['mes'].type_dic
+		obj_type_str = sh.globs['mes'].type_dic
 	elif obj_type_str == 'tuple':
-		obj_type_str = globs['mes'].type_tuple
+		obj_type_str = sh.globs['mes'].type_tuple
 	elif obj_type_str == 'set' or obj_type_str == 'frozenset':
-		obj_type_str = globs['mes'].type_set
+		obj_type_str = sh.globs['mes'].type_set
 	elif obj_type_str == 'int':
-		obj_type_str = globs['mes'].type_int
+		obj_type_str = sh.globs['mes'].type_int
 	elif obj_type_str == 'long':
-		obj_type = globs['mes'].type_long_int
+		obj_type = sh.globs['mes'].type_long_int
 	elif obj_type_str == 'float':
-		obj_type_str = globs['mes'].type_float
+		obj_type_str = sh.globs['mes'].type_float
 	elif obj_type_str == 'complex':
-		obj_type_str = globs['mes'].type_complex
+		obj_type_str = sh.globs['mes'].type_complex
 	elif obj_type_str == 'bool':
-		obj_type_str = globs['mes'].type_bool
+		obj_type_str = sh.globs['mes'].type_bool
 	elif IgnoreErrors:
 		pass
 	else:
-		Message(func='obj_type_verbal',type=lev_err,message=globs['mes'].unknown_mode % (obj_type_str,'str, list, dict, tuple, set, frozenset, int, long, float, complex, bool'))
-	#log.append('obj_type_verbal',lev_debug,obj_type_str)
+		Message(func='obj_type_verbal',type=sh.lev_err,message=sh.globs['mes'].unknown_mode % (obj_type_str,'str, list, dict, tuple, set, frozenset, int, long, float, complex, bool'))
+	#sh.log.append('obj_type_verbal',sh.lev_debug,obj_type_str)
 	return obj_type_str
 	
 
@@ -100,16 +85,16 @@ class Root:
 # Привязать горячие клавиши или кнопки мыши к действию
 def create_binding(widget,bindings,action): # widget, list, function
 	bindings_type = get_obj_type(bindings,Verbal=True,IgnoreErrors=True)
-	if bindings_type == globs['mes'].type_str or bindings_type == globs['mes'].type_lst:
-		if bindings_type == globs['mes'].type_str:
+	if bindings_type == sh.globs['mes'].type_str or bindings_type == sh.globs['mes'].type_lst:
+		if bindings_type == sh.globs['mes'].type_str:
 			bindings = [bindings]
 		for i in range(len(bindings)):
 			try:
 				widget.bind(bindings[i],action)
 			except tk.TclError:
-				Message(func='create_binding',type=lev_err,message=globs['mes'].wrong_keybinding % bindings[i])
+				Message(func='create_binding',type=sh.lev_err,message=sh.globs['mes'].wrong_keybinding % bindings[i])
 	else:
-		Message(func='create_binding',type=lev_err,message=globs['mes'].unknown_mode % (str(bindings_type),'%s, %s' % (globs['mes'].type_str,globs['mes'].type_lst)))
+		Message(func='create_binding',type=sh.lev_err,message=sh.globs['mes'].unknown_mode % (str(bindings_type),'%s, %s' % (sh.globs['mes'].type_str,sh.globs['mes'].type_lst)))
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 class WidgetShared:
@@ -124,13 +109,13 @@ class WidgetShared:
 					object.widget.insert(pos,text)
 				except tk.TclError:
 					try:
-						object.widget.insert(pos,globs['mes'].insert_failure)
+						object.widget.insert(pos,sh.globs['mes'].insert_failure)
 					except tk.TclError:
-						Message(func='WidgetShared.insert',type=lev_err,message=globs['mes'].insert_failure)
+						Message(func='WidgetShared.insert',type=sh.lev_err,message=sh.globs['mes'].insert_failure)
 		else:
-			log.append('WidgetShared.insert',lev_warn,globs['mes'].empty_input)
+			sh.log.append('WidgetShared.insert',sh.lev_warn,sh.globs['mes'].empty_input)
 
-	def font(object,font='Sans 11'): # font_style, globs['var']['menu_font']
+	def font(object,font='Sans 11'): # font_style, sh.globs['var']['menu_font']
 		if object.type == 'TextBox' or object.type == 'Entry':
 			object.widget.config(font=font)
 
@@ -143,7 +128,7 @@ class WidgetShared:
 				object.widget.config(state='normal')
 				object.state = 'normal'
 			
-	def title(object,text=globs['mes'].text,my_program_title=''): # Родительский виджет
+	def title(object,text=sh.globs['mes'].text,my_program_title=''): # Родительский виджет
 		if object.type == 'Toplevel' or object.type == 'Root':
 			object.widget.title(text + my_program_title)
 		
@@ -151,9 +136,9 @@ class WidgetShared:
 		if not object.Composite:
 			if object.parent_obj.type == 'Toplevel' or object.parent_obj.type == 'Root':
 				if object.state == 'disabled':
-					object.parent_obj.close_button.widget.config(text=globs['mes'].btn_x)
+					object.parent_obj.close_button.widget.config(text=sh.globs['mes'].btn_x)
 				else:
-					object.parent_obj.close_button.widget.config(text=globs['mes'].save_and_close)
+					object.parent_obj.close_button.widget.config(text=sh.globs['mes'].save_and_close)
 				
 	def icon(object,file): # Родительский объект
 		if object.type == 'Toplevel' or object.type == 'Root':
@@ -241,10 +226,10 @@ class SearchBox:
 			else:
 				self._text = self.words._text_n
 			self.h_sel.reset_logic(words=self.words)
-			self.h_search = Search(text=self._text)
+			self.h_search = sh.Search(text=self._text)
 		else:
 			self.Success = False
-			Message(func='SearchBox.reset_logic',type=lev_warn,message=globs['mes'].not_enough_input_data,Silent=True)
+			Message(func='SearchBox.reset_logic',type=sh.lev_warn,message=sh.globs['mes'].not_enough_input_data,Silent=True)
 	
 	def reset_data(self):
 		self.Success = True
@@ -255,11 +240,11 @@ class SearchBox:
 			self.h_search.reset(text=self._text,search=self._search)
 			self.h_search.next_loop()
 			if not self.h_search._next_loop: # Prevents from calling self.search() once again
-				Message(func='SearchBox.reset_data',type=lev_info,message='No matches!') # todo: mes
+				Message(func='SearchBox.reset_data',type=sh.lev_info,message='No matches!') # todo: mes
 				self.Success = False
 		else:
 			self.Success = False
-			log.append('SearchBox.reset_data',lev_warn,globs['mes'].canceled)
+			sh.log.append('SearchBox.reset_data',sh.lev_warn,sh.globs['mes'].canceled)
 			
 	def reset(self,mode='data',words=None,Strict=False):
 		if mode == 'data':
@@ -272,7 +257,7 @@ class SearchBox:
 			if not self.h_search._next_loop:
 				self.reset()
 		else:
-			log.append('SearchBox.loop',lev_warn,globs['mes'].canceled)
+			sh.log.append('SearchBox.loop',sh.lev_warn,sh.globs['mes'].canceled)
 		return self.h_search._next_loop
 		
 	def add(self):
@@ -280,14 +265,14 @@ class SearchBox:
 			if self.i < len(self.loop()) - 1:
 				self.i += 1
 		else:
-			log.append('SearchBox.add',lev_warn,globs['mes'].canceled)
+			sh.log.append('SearchBox.add',sh.lev_warn,sh.globs['mes'].canceled)
 			
 	def subtract(self):
 		if self.Success:
 			if self.i > 0:
 				self.i -= 1
 		else:
-			log.append('SearchBox.subtract',lev_warn,globs['mes'].canceled)
+			sh.log.append('SearchBox.subtract',sh.lev_warn,sh.globs['mes'].canceled)
 
 	def new(self,*args):
 		self.reset_data()
@@ -298,14 +283,14 @@ class SearchBox:
 			result = self.words.no_by_pos(pos=self.pos1())
 			if result is None:
 				_pos1tk = _pos2tk = '1.0'
-				log.append('SearchBox.select',lev_err,globs['mes'].wrong_input2)
+				sh.log.append('SearchBox.select',sh.lev_err,sh.globs['mes'].wrong_input2)
 			else:
 				_pos1tk = self.words.words[result].tf()
 				_pos2tk = self.words.words[result].tl()
 			self.h_sel.reset(pos1tk=_pos1tk,pos2tk=_pos2tk,background='green')
 			self.h_sel.set()
 		else:
-			log.append('SearchBox.select',lev_warn,globs['mes'].canceled)
+			sh.log.append('SearchBox.select',sh.lev_warn,sh.globs['mes'].canceled)
 
 	def search(self):
 		if self.Success:
@@ -315,12 +300,12 @@ class SearchBox:
 				self.h_entry.show()
 				self._search = self.h_entry.get()
 				if self._search and not self.Strict:
-					self._search = Text(text=self._search,Auto=False).delete_punctuation()
-					self._search = Text(text=self._search,Auto=False).delete_duplicate_spaces()
+					self._search = sh.Text(text=self._search,Auto=False).delete_punctuation()
+					self._search = sh.Text(text=self._search,Auto=False).delete_duplicate_spaces()
 					self._search = self._search.lower()
 			return self._search
 		else:
-			log.append('SearchBox.search',lev_warn,globs['mes'].canceled)
+			sh.log.append('SearchBox.search',sh.lev_warn,sh.globs['mes'].canceled)
 	
 	def next(self,*args):
 		if self.Success:
@@ -330,15 +315,15 @@ class SearchBox:
 				self.add()
 				if old_i == self.i:
 					if len(_loop) == 1:
-						Message(func='SearchBox.next',type=lev_info,message='Only one match found!') # todo: mes
+						Message(func='SearchBox.next',type=sh.lev_info,message='Only one match found!') # todo: mes
 					else:
-						Message(func='SearchBox.next',type=lev_info,message='No more matches, continuing from the top!') # todo: mes
+						Message(func='SearchBox.next',type=sh.lev_info,message='No more matches, continuing from the top!') # todo: mes
 						self.i = 0
 				self.select()
 			else:
-				Message(func='SearchBox.next',type=lev_info,message='No matches!') # todo: mes
+				Message(func='SearchBox.next',type=sh.lev_info,message='No matches!') # todo: mes
 		else:
-			log.append('SearchBox.next',lev_warn,globs['mes'].canceled)
+			sh.log.append('SearchBox.next',sh.lev_warn,sh.globs['mes'].canceled)
 
 	def prev(self,*args):
 		if self.Success:
@@ -348,15 +333,15 @@ class SearchBox:
 				self.subtract()
 				if old_i == self.i:
 					if len(_loop) == 1:
-						Message(func='SearchBox.prev',type=lev_info,message='Only one match found!') # todo: mes
+						Message(func='SearchBox.prev',type=sh.lev_info,message='Only one match found!') # todo: mes
 					else:
-						Message(func='SearchBox.prev',type=lev_info,message='No more matches, continuing from the bottom!') # todo: mes
+						Message(func='SearchBox.prev',type=sh.lev_info,message='No more matches, continuing from the bottom!') # todo: mes
 						self.i = len(_loop) - 1 # Not just -1
 				self.select()
 			else:
-				Message(func='SearchBox.prev',type=lev_info,message='No matches!') # todo: mes
+				Message(func='SearchBox.prev',type=sh.lev_info,message='No matches!') # todo: mes
 		else:
-			log.append('SearchBox.prev',lev_warn,globs['mes'].canceled)
+			sh.log.append('SearchBox.prev',sh.lev_warn,sh.globs['mes'].canceled)
 
 	def pos1(self):
 		if self.Success:
@@ -368,7 +353,7 @@ class SearchBox:
 				self._pos1 = _loop[self.i]
 			return self._pos1
 		else:
-			log.append('SearchBox.pos1',lev_warn,globs['mes'].canceled)
+			sh.log.append('SearchBox.pos1',sh.lev_warn,sh.globs['mes'].canceled)
 		
 	def pos2(self):
 		if self.Success:
@@ -376,7 +361,7 @@ class SearchBox:
 				self._pos2 = self._pos1 + len(self.search())
 			return self._pos2
 		else:
-			log.append('SearchBox.pos2',lev_warn,globs['mes'].canceled)
+			sh.log.append('SearchBox.pos2',sh.lev_warn,sh.globs['mes'].canceled)
 
 
 
@@ -426,7 +411,7 @@ class TextBox:
 			self._gui_scroll_hor()
 		if not self.Composite and not hasattr(self.parent_obj,'close_button'):
 			if self.parent_obj.type == 'Toplevel' or self.parent_obj.type == 'Root':
-				self.parent_obj.close_button = Button(self.parent_obj,text=globs['mes'].btn_x,hint=globs['mes'].btn_x,action=self.close,expand=0,side='bottom')
+				self.parent_obj.close_button = Button(self.parent_obj,text=sh.globs['mes'].btn_x,hint=sh.globs['mes'].btn_x,action=self.close,expand=0,side='bottom')
 		self.search_box = SearchBox(self)
 		WidgetShared.custom_buttons(self)
 		self.custom_bindings()
@@ -478,7 +463,7 @@ class TextBox:
 			return self.widget.get('1.0','end')
 		except tk._tkinter.TclError:
 			# Do not use GUI
-			log.append('TextBox._get',lev_warn,'The parent has already been destroyed.') # todo: mes
+			sh.log.append('TextBox._get',sh.lev_warn,'The parent has already been destroyed.') # todo: mes
 	
 	def get(self,Strip=True):
 		result = self._get()
@@ -502,7 +487,7 @@ class TextBox:
 		try:
 			self.widget.tag_remove(tag_name,pos1tk,pos2tk)
 		except tk.TclError:
-			log.append('TextBox.tag_remove',lev_warn,globs['mes'].tag_remove_failed % (tag_name,str(widget),pos1tk,pos2tk))
+			sh.log.append('TextBox.tag_remove',sh.lev_warn,sh.globs['mes'].tag_remove_failed % (tag_name,str(widget),pos1tk,pos2tk))
 	
 	def tag_remove(self,tag_name='sel',pos1tk='1.0',pos2tk='end'):
 		self._tag_remove(tag_name=tag_name,pos1tk=pos1tk,pos2tk=pos2tk)
@@ -511,7 +496,7 @@ class TextBox:
 				self.tags.remove(tag_name)
 			except ValueError:
 				# todo: Что тут не работает?
-				log.append('TextBox.tag_remove',lev_debug_err,globs['mes'].element_not_found % (tag_name,str(self.tags)))
+				sh.log.append('TextBox.tag_remove',sh.lev_debug_err,sh.globs['mes'].element_not_found % (tag_name,str(self.tags)))
 
 	# Tk.Entry не поддерживает тэги и метки
 	def tag_add(self,tag_name='sel',pos1tk='1.0',pos2tk='end',DeletePrevious=True):
@@ -520,7 +505,7 @@ class TextBox:
 		try:
 			self.widget.tag_add(tag_name,pos1tk,pos2tk)
 		except tk.TclError:
-			log.append('TextBox.tag_add',lev_err,globs['mes'].tag_addition_failure % (tag_name,pos1tk,pos2tk))
+			sh.log.append('TextBox.tag_add',sh.lev_err,sh.globs['mes'].tag_addition_failure % (tag_name,pos1tk,pos2tk))
 		self.tags.append(tag_name)
 		
 	def tag_config(self,tag_name='sel',background=None,foreground=None):
@@ -528,41 +513,41 @@ class TextBox:
 			try:
 				self.widget.tag_config(tag_name,background=background)
 			except tk.TclError:
-				log.append('TextBox.tag_config',lev_err,globs['mes'].tag_bg_failure2 % (str(tag_name),str(background)))
+				sh.log.append('TextBox.tag_config',sh.lev_err,sh.globs['mes'].tag_bg_failure2 % (str(tag_name),str(background)))
 		if foreground:
 			try:
 				self.widget.tag_config(tag_name,foreground=foreground)
 			except tk.TclError:
-				log.append('TextBox.tag_config',lev_err,globs['mes'].tag_fg_failure2 % (str(tag_name),str(foreground)))
+				sh.log.append('TextBox.tag_config',sh.lev_err,sh.globs['mes'].tag_fg_failure2 % (str(tag_name),str(foreground)))
 	
 	# Tk.Entry не поддерживает тэги и метки
 	def mark_add(self,mark_name='insert',postk='1.0'):
 		try:
 			self.widget.mark_set(mark_name,postk)
 			# todo: mes: adding mark
-			log.append('TextBox.mark_add',lev_debug,globs['mes'].mark_added % (mark_name,postk))
+			sh.log.append('TextBox.mark_add',sh.lev_debug,sh.globs['mes'].mark_added % (mark_name,postk))
 		except tk.TclError:
-			log.append('TextBox.tag_add',lev_err,globs['mes'].mark_addition_failure % (mark_name,postk))
+			sh.log.append('TextBox.tag_add',sh.lev_err,sh.globs['mes'].mark_addition_failure % (mark_name,postk))
 		self.marks.append(mark_name)
 	
 	def mark_remove(self,mark_name='insert'):
 		try:
 			self.widget.mark_unset(mark_name)
 			# todo: mes: removing mark
-			log.append('TextBox.mark_remove',lev_debug,globs['mes'].mark_removed % (mark_name))
+			sh.log.append('TextBox.mark_remove',sh.lev_debug,sh.globs['mes'].mark_removed % (mark_name))
 		except tk.TclError:
-			log.append('TextBox.mark_remove',lev_err,globs['mes'].mark_removal_failure % mark_name)
+			sh.log.append('TextBox.mark_remove',sh.lev_err,sh.globs['mes'].mark_removal_failure % mark_name)
 		try:
 			self.marks.remove(mark_name)
 		except ValueError:
-			log.append('TextBox.mark_remove',lev_err,globs['mes'].element_not_found % (mark_name,str(self.marks)))
+			sh.log.append('TextBox.mark_remove',sh.lev_err,sh.globs['mes'].element_not_found % (mark_name,str(self.marks)))
 			
 	def clear_text(self):
 		try:
 			self.widget.delete('1.0','end')
 		except tk._tkinter.TclError:
 			# Do not use GUI
-			log.append('TextBox.clear_text',lev_warn,'The parent has already been destroyed.') # todo: mes
+			sh.log.append('TextBox.clear_text',sh.lev_warn,'The parent has already been destroyed.') # todo: mes
 		
 	def clear_tags(self):
 		i = len(self.tags) - 1
@@ -584,14 +569,14 @@ class TextBox:
 				self.mark_add('insert',goto_pos)
 				self.widget.yview('goto')
 			except:
-				log.append('TextBox.goto',lev_err,globs['mes'].shift_screen_failure % 'goto')
+				sh.log.append('TextBox.goto',sh.lev_err,sh.globs['mes'].shift_screen_failure % 'goto')
 				
 	# Сместить экран до позиции tkinter или до метки (тэги не работают)
 	def scroll(self,mark):
 		try:
 			self.widget.yview(mark)
 		except tk.TclError:
-			log.append('TextBox.scroll',lev_warn,globs['mes'].shift_screen_failure % str(mark))
+			sh.log.append('TextBox.scroll',sh.lev_warn,sh.globs['mes'].shift_screen_failure % str(mark))
 			
 	# Сместить экран до позиции tkinter или до метки, если они не видны (тэги не работают)
 	def autoscroll(self,mark):
@@ -638,10 +623,10 @@ class TextBox:
 	def cursor(self,*args):
 		try:
 			self._pos = self.widget.index('insert')
-			log.append('TextBox.cursor',lev_debug,'Got position: "%s"' % str(self._pos)) # todo: mes
+			sh.log.append('TextBox.cursor',sh.lev_debug,'Got position: "%s"' % str(self._pos)) # todo: mes
 		except tk.TclError:
 			self._pos = '1.0'
-			log.append('TextBox.cursor',lev_warn,'Cannot return a cursor position!') # todo: mes
+			sh.log.append('TextBox.cursor',sh.lev_warn,'Cannot return a cursor position!') # todo: mes
 		return self._pos
 		
 	def focus_set(self,*args):
@@ -667,12 +652,12 @@ class TextBox:
 					# todo: apply IGNORE_SPELLING
 					if pos1tk and pos2tk:
 						self.tag_add(tag_name='spell',pos1tk=pos1tk,pos2tk=pos2tk,DeletePrevious=False)
-				log.append('TextBox.spelling',lev_debug,'%d tags to assign' % len(result))
+				sh.log.append('TextBox.spelling',sh.lev_debug,'%d tags to assign' % len(result))
 				self.tag_config(tag_name='spell',background='red')
 			else:
-				log.append('TextBox.spelling',lev_info,'Spelling seems to be correct.') # todo: mes
+				sh.log.append('TextBox.spelling',sh.lev_info,'Spelling seems to be correct.') # todo: mes
 		else:
-			Message(func='TextBox.spelling',type=lev_warn,message=globs['mes'].not_enough_input_data,Silent=True)
+			Message(func='TextBox.spelling',type=sh.lev_warn,message=sh.globs['mes'].not_enough_input_data,Silent=True)
 		
 	def zzz(self):
 		pass
@@ -687,13 +672,13 @@ class Entry:
 		self.state = 'normal' # 'disabled' - отключить редактирование
 		self.Save = False
 		self.parent_obj = parent_obj
-		self.widget = tk.Entry(self.parent_obj.widget,font='Sans 11',width=width) #globs['var']['menu_font']
+		self.widget = tk.Entry(self.parent_obj.widget,font='Sans 11',width=width) #sh.globs['var']['menu_font']
 		create_binding(widget=self.widget,bindings='<Control-a>',action=self.select_all)
 		self.widget.pack(side=side,ipadx=ipadx,ipady=ipady,fill=fill,expand=expand)
 		if not self.Composite:
 			# Тип родительского виджета может быть любым
 			if not hasattr(self.parent_obj,'close_button'):
-				self.parent_obj.close_button = Button(self.parent_obj,text=globs['mes'].btn_x,hint=globs['mes'].btn_x,action=self.close,expand=0,side='bottom')
+				self.parent_obj.close_button = Button(self.parent_obj,text=sh.globs['mes'].btn_x,hint=sh.globs['mes'].btn_x,action=self.close,expand=0,side='bottom')
 			WidgetShared.custom_buttons(self)
 		self.custom_bindings()
 	
@@ -720,7 +705,7 @@ class Entry:
 			return self.widget.get()
 		except tk._tkinter.TclError:
 			# Do not use GUI
-			log.append('Entry.clear_text',lev_warn,'The parent has already been destroyed.') # todo: mes
+			sh.log.append('Entry.clear_text',sh.lev_warn,'The parent has already been destroyed.') # todo: mes
 			
 	def get(self,Strip=False):
 		result = self._get()
@@ -743,7 +728,7 @@ class Entry:
 			self.widget.delete(0,'end')
 		except tk._tkinter.TclError:
 			# Do not use GUI
-			log.append('Entry.clear_text',lev_warn,'The parent has already been destroyed.') # todo: mes
+			sh.log.append('Entry.clear_text',sh.lev_warn,'The parent has already been destroyed.') # todo: mes
 		
 	# GoTo работает только в tk.Text и оставлено для совместимости с ним (как и SpecialReturn)
 	def update(self,title='Title:',text='',SelectAll=True,ReadOnly=False,CursorPos=0,icon='',GoTo='',SpecialReturn=False):
@@ -915,8 +900,8 @@ class ToolTipBase:
 			self.button.after_cancel(id)
 
 	def showtip(self):
-		if not 'geom_top' in globs or not 'width' in globs['geom_top'] or not 'height' in globs['geom_top']:
-			log.append('ToolTipBase.showtip',lev_err,globs['mes'].not_enough_input_data)
+		if not 'geom_top' in sh.globs or not 'width' in sh.globs['geom_top'] or not 'height' in sh.globs['geom_top']:
+			sh.log.append('ToolTipBase.showtip',sh.lev_err,sh.globs['mes'].not_enough_input_data)
 		if self.tipwindow:
 			return
 		# The tip window must be completely outside the button; otherwise when the mouse enters the tip window we get a leave event and it disappears, and then we get an enter event and it reappears, and so on forever :-(
@@ -927,12 +912,12 @@ class ToolTipBase:
 		elif self.hint_direction == 'top':
 			y = self.button.winfo_rooty() - self.hint_height - 1
 		else:
-			Message(func='ToolTipBase.showtip',type=lev_err,message=globs['mes'].unknown_mode % (str(self.hint_direction),'top, bottom'))
-		if 'geom_top' in globs and 'width' in globs['geom_top'] and 'height' in globs['geom_top']:
+			Message(func='ToolTipBase.showtip',type=sh.lev_err,message=sh.globs['mes'].unknown_mode % (str(self.hint_direction),'top, bottom'))
+		if 'geom_top' in sh.globs and 'width' in sh.globs['geom_top'] and 'height' in sh.globs['geom_top']:
 			self.tipwindow = tw = tk.Toplevel(self.button)
 			tw.wm_overrideredirect(1)
 			# "+%d+%d" is not enough!
-			log.append('ToolTipBase.showtip',lev_info,globs['mes'].new_geometry % ('tw',self.hint_width,self.hint_height,x,y))
+			sh.log.append('ToolTipBase.showtip',sh.lev_info,sh.globs['mes'].new_geometry % ('tw',self.hint_width,self.hint_height,x,y))
 			tw.wm_geometry("%dx%d+%d+%d" % (self.hint_width,self.hint_height,x, y))
 			self.showcontents()
 
@@ -948,19 +933,19 @@ class ToolTip(ToolTipBase):
 
 	def __init__(self,button,text='Sample text',hint_delay=None,hint_width=None,hint_height=None,hint_background=None,hint_direction=None,hint_border_width=None,hint_border_color=None,button_side='left'):
 		if not hint_delay:
-			hint_delay = 800 #globs['int']['default_hint_delay']
+			hint_delay = 800 #sh.globs['int']['default_hint_delay']
 		if not hint_width:
-			hint_width = 280 #globs['int']['default_hint_width']
+			hint_width = 280 #sh.globs['int']['default_hint_width']
 		if not hint_height:
-			hint_height = 40 #globs['int']['default_hint_height']
+			hint_height = 40 #sh.globs['int']['default_hint_height']
 		if not hint_background:
-			hint_background = '#ffffe0' #globs['var']['default_hint_background']
+			hint_background = '#ffffe0' #sh.globs['var']['default_hint_background']
 		if not hint_direction:
-			hint_direction = 'top' #globs['var']['default_hint_direction']
+			hint_direction = 'top' #sh.globs['var']['default_hint_direction']
 		if not hint_border_width:
-			hint_border_width = 1 #globs['int']['default_hint_border_width']
+			hint_border_width = 1 #sh.globs['int']['default_hint_border_width']
 		if not hint_border_color:
-			hint_border_color = 'navy' #globs['var']['default_hint_border_color']
+			hint_border_color = 'navy' #sh.globs['var']['default_hint_border_color']
 		self.text = text
 		self.hint_delay = hint_delay
 		self.hint_direction = hint_direction
@@ -1031,7 +1016,7 @@ class ListBox:
 		if not self.Composite:
 			# Тип родительского виджета может быть любым
 			if not hasattr(self.parent_obj,'close_button'):
-				self.parent_obj.close_button = Button(self.parent_obj,text=globs['mes'].btn_x,hint=globs['mes'].btn_x,action=self.close,expand=0,side='bottom')
+				self.parent_obj.close_button = Button(self.parent_obj,text=sh.globs['mes'].btn_x,hint=sh.globs['mes'].btn_x,action=self.close,expand=0,side='bottom')
 			WidgetShared.custom_buttons(self)
 
 	def _scroll(self):
@@ -1151,15 +1136,15 @@ class ListBox:
 def dialog_save_file(filetypes=()):
 	file = ''
 	if not filetypes:
-		filetypes = ((globs['mes'].plain_text,'.txt'),(globs['mes'].webpage,'.htm'),(globs['mes'].webpage,'.html'),(globs['mes'].all_files,'*'))
+		filetypes = ((sh.globs['mes'].plain_text,'.txt'),(sh.globs['mes'].webpage,'.htm'),(sh.globs['mes'].webpage,'.html'),(sh.globs['mes'].all_files,'*'))
 	options = {}
 	options['initialfile'] = ''
 	options['filetypes'] = filetypes
-	options['title'] = globs['mes'].save_as
+	options['title'] = sh.globs['mes'].save_as
 	try:
 		file = dialog.asksaveasfilename(**options)
 	except:
-		Message(func='dialog_save_file',type=lev_err,message=globs['mes'].file_sel_failed)
+		Message(func='dialog_save_file',type=sh.lev_err,message=sh.globs['mes'].file_sel_failed)
 	return file
 
 
@@ -1268,8 +1253,8 @@ class Selection: # Selecting words only
 			self._pos2tk = self.h_widget.widget.index('sel.last')
 		except tk.TclError:
 			self._pos1tk, self._pos2tk = None, None
-			log.append('Selection.tk_poses',lev_warn,globs['mes'].no_selection2 % 1) # todo: mes
-		log.append('Selection.tk_poses',lev_debug,str((self._pos1tk,self._pos2tk)))
+			sh.log.append('Selection.tk_poses',sh.lev_warn,sh.globs['mes'].no_selection2 % 1) # todo: mes
+		sh.log.append('Selection.tk_poses',sh.lev_debug,str((self._pos1tk,self._pos2tk)))
 		return(self._pos1tk,self._pos2tk)
 		
 	def text(self):
@@ -1277,7 +1262,7 @@ class Selection: # Selecting words only
 			self._text = self.h_widget.widget.get('sel.first','sel.last').replace('\r','').replace('\n','')
 		except tk.TclError:
 			self._text = ''
-			log.append('Selection.text',lev_err,globs['mes'].tk_sel_failure2)
+			sh.log.append('Selection.text',sh.lev_err,sh.globs['mes'].tk_sel_failure2)
 		return self._text
 		
 	def cursor(self):
@@ -1331,7 +1316,7 @@ class ParallelTexts: # Requires Search
 		self.close()
 		
 	def reset(self,words1,words2,words3=None,words4=None):
-		log.append('ParallelTexts.reset',lev_info,'Reset widget') # todo: del when optimized
+		sh.log.append('ParallelTexts.reset',sh.lev_info,'Reset widget') # todo: del when optimized
 		self.words1 = words1
 		self.words2 = words2
 		self.words3 = words3
@@ -1452,19 +1437,19 @@ class ParallelTexts: # Requires Search
 			h_widget.mark_add(mark_name='yview',postk=pos1)
 			h_widget.see(mark='yview')
 		else:
-			Message(func='ParallelTexts.update_txt',type=lev_err,message=globs['mes'].wrong_input2)
+			Message(func='ParallelTexts.update_txt',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 			
 	def synchronize11(self):
 		word11 = self.words11.words[self.words11._no]
 		word22 = self.words22.words[self.words22._no]
 		_search = word22._n
-		_loop22 = Search(self.words22._text_n,_search).next_loop()
+		_loop22 = sh.Search(self.words22._text_n,_search).next_loop()
 		try:
 			index22 = _loop22.index(word22._n)
 		except ValueError:
-			#Message(func='ParallelTexts.synchronize11',type=lev_err,message=globs['mes'].wrong_input2)
+			#Message(func='ParallelTexts.synchronize11',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 			index22 = 0
-		_loop11 = Search(self.words11._text_n,_search).next_loop()
+		_loop11 = sh.Search(self.words11._text_n,_search).next_loop()
 		if index22 >= len(_loop11):
 			_no = None # Keep old selection
 		else:
@@ -1477,16 +1462,16 @@ class ParallelTexts: # Requires Search
 		word11 = self.words11.words[self.words11._no]
 		_search = word11._n
 		# This helps in case the word has both Cyrillic symbols and digits
-		_search = Text(text=_search,Auto=False).delete_cyrillic()
+		_search = sh.Text(text=_search,Auto=False).delete_cyrillic()
 		# cur
 		_search = _search.replace(' ','') # Removing the non-breaking space
-		_loop11 = Search(self.words11._text_n,_search).next_loop()
+		_loop11 = sh.Search(self.words11._text_n,_search).next_loop()
 		try:
 			index11 = _loop11.index(word11._pf)
 		except ValueError:
-			#Message(func='ParallelTexts.synchronize22',type=lev_err,message=globs['mes'].wrong_input2)
+			#Message(func='ParallelTexts.synchronize22',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 			index11 = 0
-		_loop22 = Search(self.words22._text_n,_search).next_loop()
+		_loop22 = sh.Search(self.words22._text_n,_search).next_loop()
 		if index11 >= len(_loop22):
 			_no = None # Keep old selection
 		else:
@@ -1525,7 +1510,7 @@ class ParallelTexts: # Requires Search
 		if path:
 			self.obj.icon(path)
 		else:
-			self.obj.icon('.' + h_os.sep() + 'resources' + h_os.sep() + 'icon_64x64_cpt.gif')
+			self.obj.icon('.' + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'icon_64x64_cpt.gif')
 
 
 
@@ -1581,7 +1566,7 @@ class TkPos:
 		if self._p_no is None:
 			self._p_no = self.words.no_by_pos(pos=self.pos())
 		if self._p_no is None:
-			Message(func='TkPos.p_no',type=lev_err,message=globs['mes'].wrong_input2)
+			Message(func='TkPos.p_no',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 			self._p_no = 0
 		return self._p_no
 		
@@ -1599,16 +1584,16 @@ class TkPos:
 	def split(self):
 		_tuple = self.pos_tk().partition('.')
 		if _tuple[2]:
-			self._sent_no = Text(_tuple[0],Auto=False).str2int() - 1
+			self._sent_no = sh.Text(_tuple[0],Auto=False).str2int() - 1
 			if self._sent_no == 0:
 				self._sents_len = 0
 			else:
 				self._sents_len = self.words.words[self.words._no]._sents_len
 				if self._sents_len is None:
 					self._sents_len = 0
-			self._pos = self._sents_len + Text(_tuple[2],Auto=False).str2int()
+			self._pos = self._sents_len + sh.Text(_tuple[2],Auto=False).str2int()
 		else:
-			Message(func='TkPos.split',type=lev_err,message=globs['mes'].wrong_input2)
+			Message(func='TkPos.split',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 			self._sent_no = self._sents_len = self._pos = 0
 
 
@@ -1621,14 +1606,14 @@ class SymbolMap:
 		self.parent_obj = parent_obj
 		self.obj = Top(parent_obj)
 		self.widget = self.obj.widget
-		self.obj.title(globs['mes'].paste_spec_symbol)
+		self.obj.title(sh.globs['mes'].paste_spec_symbol)
 		self.frame = Frame(self.obj,expand=1)
-		for i in range(len(globs['var']['spec_syms'])):
+		for i in range(len(sh.globs['var']['spec_syms'])):
 			if i % 10 == 0:
 				self.frame = Frame(self.obj,expand=1)
 			# lambda сработает правильно только при моментальной упаковке, которая не поддерживается create_button (моментальная упаковка возвращает None вместо виджета), поэтому не используем эту функцию. По этой же причине нельзя привязать кнопкам '<Return>' и '<KP_Enter>', сработают только встроенные '<space>' и '<ButtonRelease-1>'.
 			# width и height нужны для Windows
-			self.button = tk.Button(self.frame.widget,text=globs['var']['spec_syms'][i],command=lambda i=i:self.set(globs['var']['spec_syms'][i]),width=2,height=2).pack(side='left',expand=1)
+			self.button = tk.Button(self.frame.widget,text=sh.globs['var']['spec_syms'][i],command=lambda i=i:self.set(sh.globs['var']['spec_syms'][i]),width=2,height=2).pack(side='left',expand=1)
 		self.close()
 		
 	def set(self,sym,*args):
@@ -1648,7 +1633,7 @@ class SymbolMap:
 
 
 # Window behavior is not uniform through different platforms or even through different Windows versions, so we bypass Tkinter's commands here
-class Geometry: # Requires h_os, widgets
+class Geometry: # Requires sh.h_os, widgets
 	
 	def __init__(self,parent_obj=None,title=None,hwnd=None):
 		self.parent_obj = parent_obj
@@ -1663,68 +1648,68 @@ class Geometry: # Requires h_os, widgets
 		if self.parent_obj:
 			self.update()
 			self._geom = self.parent_obj.widget.geometry()
-			log.append('Geometry.save',lev_info,'Saved geometry: %s' % self._geom) # todo: mes
+			sh.log.append('Geometry.save',sh.lev_info,'Saved geometry: %s' % self._geom) # todo: mes
 		else:
-			Message(func='Geometry.save',type=lev_err,message=globs['mes'].wrong_input2)
+			Message(func='Geometry.save',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 		
 	def restore(self):
 		if self.parent_obj:
 			if self._geom:
-				log.append('Geometry.restore',lev_info,'Restoring geometry: %s' % self._geom) # todo: mes
+				sh.log.append('Geometry.restore',sh.lev_info,'Restoring geometry: %s' % self._geom) # todo: mes
 				self.parent_obj.widget.geometry(self._geom)
 			else:
-				Message(func='Geometry.update',type=lev_warn,message='Failed to restore geometry!') # todo: mes
+				Message(func='Geometry.update',type=sh.lev_warn,message='Failed to restore geometry!') # todo: mes
 		else:
-			Message(func='Geometry.restore',type=lev_err,message=globs['mes'].wrong_input2)
+			Message(func='Geometry.restore',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 	
 	def foreground(self,*args):
-		if h_os.sys() == 'win':
+		if sh.h_os.sys() == 'win':
 			if self.hwnd():
 				try:
 					win32gui.SetForegroundWindow(self._hwnd)
 				except: # 'pywintypes.error', but needs to import this for some reason
 					# In Windows 'Message' can be raised foreground, so we just log it
-					log.append('Geometry.foreground',lev_err,'Failed to change window properties!') # todo: mes
+					sh.log.append('Geometry.foreground',sh.lev_err,'Failed to change window properties!') # todo: mes
 			else:
-				Message(func='Geometry.foreground',type=lev_err,message=globs['mes'].wrong_input2)
+				Message(func='Geometry.foreground',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 		elif self.parent_obj:
 			self.parent_obj.widget.lift()
 		else:
-			Message(func='Geometry.foreground',type=lev_err,message=globs['mes'].wrong_input2)
+			Message(func='Geometry.foreground',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 
 	def minimize(self,*args):
 		if self.parent_obj:
 			''' # Does not always work
-			if h_os.sys() == 'win':
+			if sh.h_os.sys() == 'win':
 				win32gui.ShowWindow(self.hwnd(),win32con.SW_MINIMIZE)
 			else:
 			'''
 			self.parent_obj.widget.iconify()
 		else:
-			Message(func='Geometry.minimize',type=lev_err,message=globs['mes'].wrong_input2)
+			Message(func='Geometry.minimize',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 
 	def maximize(self,*args):
-		if h_os.sys() == 'win':
+		if sh.h_os.sys() == 'win':
 			#win32gui.ShowWindow(self.hwnd(),win32con.SW_MAXIMIZE)
 			self.parent_obj.widget.wm_state(newstate='zoomed')
 		elif self.parent_obj:
 			self.parent_obj.widget.wm_attributes('-zoomed',True)
 		else:
-			Message(func='Geometry.maximize',type=lev_err,message=globs['mes'].wrong_input2)
+			Message(func='Geometry.maximize',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 
 	def focus(self,*args):
-		if h_os.sys() == 'win':
+		if sh.h_os.sys() == 'win':
 			win32gui.SetActiveWindow(self.hwnd())
 		elif self.parent_obj:
 			self.parent_obj.widget.focus_set()
 		else:
-			Message(func='Geometry.focus',type=lev_err,message=globs['mes'].wrong_input2)
+			Message(func='Geometry.focus',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 
 	def lift(self,*args):
 		if self.parent_obj:
 			self.parent_obj.widget.lift()
 		else:
-			Message(func='Geometry.list',type=lev_err,message=globs['mes'].wrong_input2)
+			Message(func='Geometry.list',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 
 	def _activate(self):
 		if self.parent_obj:
@@ -1732,11 +1717,11 @@ class Geometry: # Requires h_os, widgets
 			#self.parent_obj.widget.focus_set()
 			self.parent_obj.widget.lift()
 		else:
-			Message(func='Geometry._activate',type=lev_err,message=globs['mes'].wrong_input2)
+			Message(func='Geometry._activate',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 	
 	def activate(self,MouseClicked=False,*args):
 		self._activate()
-		if h_os.sys() == 'win':
+		if sh.h_os.sys() == 'win':
 			self.parent_obj.widget.wm_attributes('-topmost',1)
 			self.parent_obj.widget.wm_attributes('-topmost',0)
 			# Иначе нажатие кнопки будет вызывать переход по ссылке там, где это не надо
@@ -1752,9 +1737,9 @@ class Geometry: # Requires h_os, widgets
 				try:
 					self._hwnd = win32gui.FindWindow(None,self._title)
 				except win32ui.error:
-					Message(func='Geometry.hwnd',type=lev_err,message='Failed to get the window handle!') # todo: mes
+					Message(func='Geometry.hwnd',type=sh.lev_err,message='Failed to get the window handle!') # todo: mes
 			else:
-				Message(func='Geometry.hwnd',type=lev_err,message=globs['mes'].not_enough_input_data)
+				Message(func='Geometry.hwnd',type=sh.lev_err,message=sh.globs['mes'].not_enough_input_data)
 		return self._hwnd
 		
 	def set(self,arg='800x600'):
@@ -1772,7 +1757,7 @@ class WaitBox:
 		self.obj = Top(parent_obj=self.parent_obj,Maximize=False)
 		self.widget = self.obj.widget
 		self.widget.geometry('300x150')
-		self.label = tk.Label(self.widget,text=globs['mes'].wait)
+		self.label = tk.Label(self.widget,text=sh.globs['mes'].wait)
 		self.label.pack(expand=True)
 		self.close()
 		
@@ -1792,7 +1777,7 @@ class WaitBox:
 			else:
 				func_res = self._func()
 		else:
-			Message(func='WaitBox.run',type=lev_err,message=globs['mes'].wrong_input2)
+			Message(func='WaitBox.run',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 		self.close()
 		return func_res
 	
@@ -1814,9 +1799,9 @@ class WaitBox:
 		if message:
 			self._message = message
 		if self._message:
-			self.label.config(text=self._message + '\n\n' + globs['mes'].wait)
+			self.label.config(text=self._message + '\n\n' + sh.globs['mes'].wait)
 		else:
-			self.label.config(text=globs['mes'].wait)
+			self.label.config(text=sh.globs['mes'].wait)
 
 
 
@@ -1853,7 +1838,7 @@ class Label:
 		try:
 			self.widget.config(font=self._font)
 		except tk.TclError:
-			Message(func='Label.font',type=lev_err,message='Wrong font: "%s"!' % str(self._font)) # todo: mes
+			Message(func='Label.font',type=sh.lev_err,message='Wrong font: "%s"!' % str(self._font)) # todo: mes
 			self._font = 'Sans 11'
 		
 	def show(self):
@@ -1911,7 +1896,7 @@ class CheckBox:
 		
 class Message:
 	
-	def __init__(self,func='MAIN',type=lev_warn,message='Message',Silent=False):
+	def __init__(self,func='MAIN',type=sh.lev_warn,message='Message',Silent=False):
 		self.Success = True
 		self.Yes = False
 		self.func = func
@@ -1920,49 +1905,49 @@ class Message:
 		self.Silent = Silent
 		if not self.func or not self.message:
 			self.Success = False
-			log.append('Message.__init__',lev_err,globs['mes'].not_enough_input_data)
-		if self.type == lev_info:
+			sh.log.append('Message.__init__',sh.lev_err,sh.globs['mes'].not_enough_input_data)
+		if self.type == sh.lev_info:
 			self.info()
-		elif self.type == lev_warn:
+		elif self.type == sh.lev_warn:
 			self.warning()
-		elif self.type == lev_err:
+		elif self.type == sh.lev_err:
 			self.error()
-		elif self.type == lev_ques:
+		elif self.type == sh.lev_ques:
 			self.question()
 		else:
-			log.append('Message.__init__',lev_err,globs['mes'].unknown_mode % (str(self.type),lev_info + ', ' + lev_warn + ', ' + lev_err + ', ' + lev_ques))
+			sh.log.append('Message.__init__',sh.lev_err,sh.globs['mes'].unknown_mode % (str(self.type),sh.lev_info + ', ' + sh.lev_warn + ', ' + sh.lev_err + ', ' + sh.lev_ques))
 			
 	def error(self):
 		if self.Success:
 			if not self.Silent:
 				widgets.error().reset(title=self.func+':',text=self.message).show()
-			log.append(self.func,lev_err,self.message)
+			sh.log.append(self.func,sh.lev_err,self.message)
 		else:
-			log.append('Message.error',lev_err,globs['mes'].canceled)
+			sh.log.append('Message.error',sh.lev_err,sh.globs['mes'].canceled)
 			
 	def info(self):
 		if self.Success:
 			if not self.Silent:
 				widgets.info().reset(title=self.func+':',text=self.message).show()
-			log.append(self.func,lev_info,self.message)
+			sh.log.append(self.func,sh.lev_info,self.message)
 		else:
-			log.append('Message.info',lev_info,globs['mes'].canceled)
+			sh.log.append('Message.info',sh.lev_info,sh.globs['mes'].canceled)
 	
 	def question(self):
 		if self.Success:
 			widgets.question().reset(title=self.func+':',text=self.message).show()
 			self.Yes = widgets._question.Yes
-			log.append(self.func,lev_ques,self.message)
+			sh.log.append(self.func,sh.lev_ques,self.message)
 		else:
-			log.append('Message.question',lev_ques,globs['mes'].canceled)
+			sh.log.append('Message.question',sh.lev_ques,sh.globs['mes'].canceled)
 	
 	def warning(self):
 		if self.Success:
 			if not self.Silent:
 				widgets.warning().reset(title=self.func+':',text=self.message).show()
-			log.append(self.func,lev_warn,self.message)
+			sh.log.append(self.func,sh.lev_warn,self.message)
 		else:
-			log.append('Message.warning',lev_warn,globs['mes'].canceled)
+			sh.log.append('Message.warning',sh.lev_warn,sh.globs['mes'].canceled)
 
 
 
@@ -1992,16 +1977,16 @@ class MessageBuilder: # Requires 'constants'
 		self.widget.protocol("WM_DELETE_WINDOW",self.close)
 		
 	def paths(self):
-		if self.type == lev_warn:
-			self.path = '.' + h_os.sep() + 'resources' + h_os.sep() + 'warning.gif'
-		elif self.type == lev_info:
-			self.path = '.' + h_os.sep() + 'resources' + h_os.sep() + 'info.gif'
-		elif self.type == lev_ques:
-			self.path = '.' + h_os.sep() + 'resources' + h_os.sep() + 'question.gif'
-		elif self.type == lev_err:
-			self.path = '.' + h_os.sep() + 'resources' + h_os.sep() + 'error.gif'
+		if self.type == sh.lev_warn:
+			self.path = '.' + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'warning.gif'
+		elif self.type == sh.lev_info:
+			self.path = '.' + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'info.gif'
+		elif self.type == sh.lev_ques:
+			self.path = '.' + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'question.gif'
+		elif self.type == sh.lev_err:
+			self.path = '.' + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'error.gif'
 		else:
-			log.append('MessageBuilder.paths',lev_err,globs['mes'].unknown_mode % (str(self.path),', '.join([lev_warn,lev_err,lev_ques,lev_info])))
+			sh.log.append('MessageBuilder.paths',sh.lev_err,sh.globs['mes'].unknown_mode % (str(self.path),', '.join([sh.lev_warn,sh.lev_err,sh.lev_ques,sh.lev_info])))
 		
 	def frames(self):
 		frame = Frame(parent_obj=self.obj,expand=1)
@@ -2013,13 +1998,13 @@ class MessageBuilder: # Requires 'constants'
 		self.bottom_right = Frame(parent_obj=bottom,expand=1,side='right')
 		
 	def buttons(self):
-		if self.YesNo or self.type == lev_ques:
+		if self.YesNo or self.type == sh.lev_ques:
 			YesName = 'Yes'
 			NoName = 'No'
 		else:
 			YesName = 'OK'
 			NoName = 'Cancel'
-		if self.Single and self.type != lev_ques:
+		if self.Single and self.type != sh.lev_ques:
 			Button(parent_obj=self.bottom_left,action=self.close_yes,hint='Accept and close',text=YesName,TakeFocus=1,side='right') # todo: mes
 		else:
 			Button(parent_obj=self.bottom_left,action=self.close_no,hint='Reject and close',text=NoName,side='left') # todo: mes
@@ -2066,7 +2051,7 @@ class MessageBuilder: # Requires 'constants'
 			# Without explicitly indicating 'master', we get "image pyimage1 doesn't exist"
 			self.label = Label(parent_obj=self.top_left,image=tk.PhotoImage(master=self.top_left.widget,file=self.path))
 		else:
-			log.append('MessageBuilder.picture',lev_warn,'Picture "%s" was not found!' % self.path) # todo: mes
+			sh.log.append('MessageBuilder.picture',sh.lev_warn,'Picture "%s" was not found!' % self.path) # todo: mes
 
 
 
@@ -2088,29 +2073,29 @@ class Clipboard: # Requires 'widgets'
 				self.root_obj.widget.clipboard_append(text)
 			except tk.TclError:
 				# todo: Show a window to manually copy from
-				Message(func='Clipboard.copy',type=lev_err,message=globs['mes'].clipboard_failure,Silent=self.Silent)
+				Message(func='Clipboard.copy',type=sh.lev_err,message=sh.globs['mes'].clipboard_failure,Silent=self.Silent)
 			except tk._tkinter.TclError:
 				# Do not use GUI
-				log.append('Clipboard.copy',lev_warn,'The parent has already been destroyed.') # todo: mes
+				sh.log.append('Clipboard.copy',sh.lev_warn,'The parent has already been destroyed.') # todo: mes
 			except:
-				log.append('Clipboard.copy',lev_err,'An unknown error has occurred.') # todo: mes
-			log.append('Clipoard.copy',lev_debug,text)
+				sh.log.append('Clipboard.copy',sh.lev_err,'An unknown error has occurred.') # todo: mes
+			sh.log.append('Clipoard.copy',sh.lev_debug,text)
 		else:
-			log.append('Clipboard.copy',lev_warn,globs['mes'].empty_input)
+			sh.log.append('Clipboard.copy',sh.lev_warn,sh.globs['mes'].empty_input)
 				
 	def paste(self):
 		text = ''
 		try:
 			text = str(self.root_obj.widget.clipboard_get())
 		except tk.TclError:
-			Message(func='Clipboard.paste',type=lev_err,message=globs['mes'].clipboard_paste_failure,Silent=self.Silent)
+			Message(func='Clipboard.paste',type=sh.lev_err,message=sh.globs['mes'].clipboard_paste_failure,Silent=self.Silent)
 		except tk._tkinter.TclError:
 			# Do not use GUI
-			log.append('Clipboard.paste',lev_warn,'The parent has already been destroyed.') # todo: mes
+			sh.log.append('Clipboard.paste',sh.lev_warn,'The parent has already been destroyed.') # todo: mes
 		except:
-			log.append('Clipboard.paste',lev_err,'An unknown error has occurred.') # todo: mes
+			sh.log.append('Clipboard.paste',sh.lev_err,'An unknown error has occurred.') # todo: mes
 		# Further actions: strip, delete double line breaks
-		log.append('Clipoard.paste',lev_debug,text)
+		sh.log.append('Clipoard.paste',sh.lev_debug,text)
 		return text
 
 
@@ -2138,40 +2123,40 @@ class Widgets:
 		self._root.run()
 		
 	def add(self,obj):
-		log.append('Widgets.add',lev_info,'Add %s' % type(obj)) # todo: mes
+		sh.log.append('Widgets.add',sh.lev_info,'Add %s' % type(obj)) # todo: mes
 		self._lst.append(obj)
 	
 	def warning(self):
 		if not self._warning:
-			self._warning = MessageBuilder(parent_obj=self.root(),type=lev_warn)
+			self._warning = MessageBuilder(parent_obj=self.root(),type=sh.lev_warn)
 			self._lst.append(self._warning)
 		return self._warning
 		
 	def error(self):
 		if not self._error:
-			self._error = MessageBuilder(parent_obj=self.root(),type=lev_err)
+			self._error = MessageBuilder(parent_obj=self.root(),type=sh.lev_err)
 			self._lst.append(self._error)
 		return self._error
 		
 	def question(self):
 		if not self._question:
-			self._question = MessageBuilder(parent_obj=self.root(),type=lev_ques)
+			self._question = MessageBuilder(parent_obj=self.root(),type=sh.lev_ques)
 			self._lst.append(self._question)
 		return self._question
 	
 	def info(self):
 		if not self._info:
-			self._info = MessageBuilder(parent_obj=self.root(),type=lev_info)
+			self._info = MessageBuilder(parent_obj=self.root(),type=sh.lev_info)
 			self._lst.append(self._info)
 		return self._info
 		
 	def close_all(self):
-		log.append('Widgets.close_all',lev_info,'Close %d widgets' % len(self._lst)) # todo: mes
+		sh.log.append('Widgets.close_all',sh.lev_info,'Close %d widgets' % len(self._lst)) # todo: mes
 		for i in range(len(self._lst)):
 			if hasattr(self._lst[i],'close'):
 				self._lst[i].close()
 			else:
-				log.append('Widgets.close_all',lev_err,'Widget "%s" does not have a "close" action!' % type(self._lst[i]))
+				sh.log.append('Widgets.close_all',sh.lev_err,'Widget "%s" does not have a "close" action!' % type(self._lst[i]))
 				
 	def clipboard(self):
 		if not self._clipboard:
@@ -2182,7 +2167,7 @@ class Widgets:
 		if not self._edit_clip:
 			h_top = Top(parent_obj=self.root(),Maximize=False)
 			self._edit_clip = TextBox(parent_obj=h_top)
-			self._edit_clip.title(text=globs['mes'].correct_clipboard)
+			self._edit_clip.title(text=sh.globs['mes'].correct_clipboard)
 			self._edit_clip.focus()
 			self._lst.append(self._edit_clip)
 			Geometry(parent_obj=h_top).set('400x300')
@@ -2212,13 +2197,15 @@ class Widgets:
 
 
 
+widgets = Widgets() # If there are problems with import or tkinter's wait_variable, put this beneath 'if __name__'
+
+
 if __name__ == '__main__':
-	widgets = Widgets()
 	widgets.start()
 	text = '''Something funny with this guy
 	I am glad he is not my test
 	Glad is so angry'''
-	words = Words(text)
+	words = sh.Words(text)
 	h_top = Top(parent_obj=widgets.root())
 	h_txt = TextBox(parent_obj=h_top,words=words)
 	h_txt.title(text='My text is:')
