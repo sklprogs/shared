@@ -280,7 +280,10 @@ class SearchBox:
 
 	def select(self):
 		if self.Success:
-			result = self.words.no_by_pos_p(pos=self.pos1())
+			if self.Strict:
+				result = self.words.no_by_pos_p(pos=self.pos1())
+			else:
+				result = self.words.no_by_pos_n(pos=self.pos1())
 			if result is None:
 				_pos1tk = _pos2tk = '1.0'
 				sh.log.append('SearchBox.select',sh.lev_err,sh.globs['mes'].wrong_input2)
@@ -1510,91 +1513,6 @@ class ParallelTexts: # Requires Search
 			self.obj.icon(path)
 		else:
 			self.obj.icon('.' + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'icon_64x64_cpt.gif')
-
-
-
-class TkPos:
-	
-	def __init__(self,h_widget,words=None):
-		self.h_widget = h_widget
-		self.words = words
-		self.reset_data()
-	
-	def reset(self,mode='data',words=None,pos=None,pos_tk=None,sent_no=None,sents_len=None,p_no=None,First=True):
-		if mode == 'data':
-			self.reset_data(pos=pos,pos_tk=pos_tk,sent_no=sent_no,sents_len=sents_len,p_no=p_no,First=First)
-		else:
-			self.reset_logic(words=words)
-	
-	def reset_logic(self,words):
-		self.words = words
-	
-	def reset_data(self,pos=None,pos_tk=None,sent_no=None,sents_len=None,p_no=None,First=True):
-		self._pos = pos
-		self._pos_tk = pos_tk
-		self._sent_no = sent_no
-		self._sents_len = sents_len
-		self._p_no = p_no
-		self.First = First
-		
-	def sent_no(self):
-		if self._sent_no is None:
-			self.split()
-		return self._sent_no
-		
-	def sents_len(self):
-		if self._sents_len is None:
-			self.split()
-		return self._sents_len
-		
-	def pos_tk(self):
-		if self._pos_tk is None:
-			self._pos_tk = self.h_widget.cursor()
-		return self._pos_tk
-		
-	def pos(self):
-		if self._pos is None:
-			self.tk2pos()
-		return self._pos
-	
-	def tk2pos(self):
-		self.split()
-		return self._pos
-		
-	def p_no(self):
-		if self._p_no is None:
-			self._p_no = self.words.no_by_pos_p(pos=self.pos())
-		if self._p_no is None:
-			Message(func='TkPos.p_no',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
-			self._p_no = 0
-		sh.log.append('TkPos.p_no',sh.lev_debug,'self._p_no: %d' % self._p_no) # cur
-		return self._p_no
-		
-	def pos2tk(self):
-		result = self.p_no()
-		if result or result == 0:
-			self.words._no = result
-		if self.First:
-			self._pos_tk = self.words.words[self.words._no].tf()
-		else:
-			self._pos_tk = self.words.words[self.words._no].tl()
-		return self._pos_tk
-			
-	# todo: get from words
-	def split(self):
-		_tuple = self.pos_tk().partition('.')
-		if _tuple[2]:
-			self._sent_no = sh.Text(_tuple[0],Auto=False).str2int() - 1
-			if self._sent_no == 0:
-				self._sents_len = 0
-			else:
-				self._sents_len = self.words.words[self.words._no]._sents_len
-				if self._sents_len is None:
-					self._sents_len = 0
-			self._pos = self._sents_len + sh.Text(_tuple[2],Auto=False).str2int()
-		else:
-			Message(func='TkPos.split',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
-			self._sent_no = self._sents_len = self._pos = 0
 
 
 
