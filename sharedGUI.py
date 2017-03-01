@@ -1308,11 +1308,6 @@ class ParallelTexts: # Requires Search
 		if self.Extended:
 			self.txt3 = TextBox(self.frame2,Composite=True,side='left')
 			self.txt4 = TextBox(self.frame2,Composite=True,side='right')
-		self.h_tk_pos1 = TkPos(h_widget=self.txt1)
-		self.h_tk_pos2 = TkPos(h_widget=self.txt2)
-		if self.Extended:
-			self.h_tk_pos3 = TkPos(h_widget=self.txt3)
-			self.h_tk_pos4 = TkPos(h_widget=self.txt4)
 		self.bindings()
 		self.icon()
 		self.close()
@@ -1336,15 +1331,6 @@ class ParallelTexts: # Requires Search
 			self.txt3.reset_data()
 			self.txt4.reset_logic(words=self.words4)
 			self.txt4.reset_data()
-		self.h_tk_pos1.reset_logic(words=self.words1)
-		self.h_tk_pos1.reset_data()
-		self.h_tk_pos2.reset_logic(words=self.words2)
-		self.h_tk_pos2.reset_data()
-		if self.Extended:
-			self.h_tk_pos3.reset_logic(words=self.words3)
-			self.h_tk_pos3.reset_data()
-			self.h_tk_pos4.reset_logic(words=self.words4)
-			self.h_tk_pos4.reset_data()
 		self.fill()
 		# Setting ReadOnly state works only after filling text
 		self.txt1.read_only(ReadOnly=True)
@@ -1367,28 +1353,40 @@ class ParallelTexts: # Requires Search
 		self.txt1.focus() # Without this the search doesn't work (the pane is inactive)
 		self.decolorize()
 		self.txt1.widget.config(bg='old lace')
-		self.duplicates(self.h_tk_pos1,self.h_tk_pos2)
+		self.txt11 = self.txt1
+		self.words11 = self.words1
+		self.txt22 = self.txt2
+		self.words22 = self.words2
 		self.select11()
 		
 	def select2(self,*args):
 		self.txt2.focus() # Without this the search doesn't work (the pane is inactive)
 		self.decolorize()
 		self.txt2.widget.config(bg='old lace')
-		self.duplicates(self.h_tk_pos1,self.h_tk_pos2)
+		self.txt11 = self.txt2
+		self.words11 = self.words2
+		self.txt22 = self.txt1
+		self.words22 = self.words1
 		self.select22()
 		
 	def select3(self,*args):
 		self.txt3.focus() # Without this the search doesn't work (the pane is inactive)
 		self.decolorize()
 		self.txt3.widget.config(bg='old lace')
-		self.duplicates(self.h_tk_pos3,self.h_tk_pos4)
+		self.txt11 = self.txt3
+		self.words11 = self.words3
+		self.txt22 = self.txt4
+		self.words22 = self.words4
 		self.select11()
 		
 	def select4(self,*args):
 		self.txt4.focus() # Without this the search doesn't work (the pane is inactive)
 		self.decolorize()
 		self.txt4.widget.config(bg='old lace')
-		self.duplicates(self.h_tk_pos3,self.h_tk_pos4)
+		self.txt11 = self.txt4
+		self.words11 = self.words4
+		self.txt22 = self.txt3
+		self.words22 = self.words3
 		self.select22()
 	
 	def bindings(self):
@@ -1483,8 +1481,7 @@ class ParallelTexts: # Requires Search
 			self.update_txt(self.txt22,self.words22,background='cyan')
 			
 	def select11(self,*args):
-		self.h_tk_pos11.reset()
-		result = self.h_tk_pos11.p_no()
+		result = self.words11.no_by_tk(tkpos=self.txt11.cursor())
 		if result or result == 0:
 			self.words11._no = result
 		self.words11.next_stone()
@@ -1492,21 +1489,12 @@ class ParallelTexts: # Requires Search
 		self.synchronize22()
 
 	def select22(self,*args):
-		self.h_tk_pos22.reset()
-		result = self.h_tk_pos22.p_no()
+		result = self.words22.no_by_tk(tkpos=self.txt22.cursor())
 		if result or result == 0:
 			self.words22._no = result
 		self.words22.next_stone()
 		self.update_txt(self.txt22,self.words22)
 		self.synchronize11()
-			
-	def duplicates(self,h_tk_pos11,h_tk_pos22):
-		self.h_tk_pos11 = h_tk_pos11
-		self.h_tk_pos22 = h_tk_pos22
-		self.words11 = self.h_tk_pos11.words
-		self.words22 = self.h_tk_pos22.words
-		self.txt11 = self.h_tk_pos11.h_widget
-		self.txt22 = self.h_tk_pos22.h_widget
 		
 	def icon(self,path=None):
 		if path:
