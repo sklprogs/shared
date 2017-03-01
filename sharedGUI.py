@@ -280,7 +280,7 @@ class SearchBox:
 
 	def select(self):
 		if self.Success:
-			result = self.words.no_by_pos(pos=self.pos1())
+			result = self.words.no_by_pos_p(pos=self.pos1())
 			if result is None:
 				_pos1tk = _pos2tk = '1.0'
 				sh.log.append('SearchBox.select',sh.lev_err,sh.globs['mes'].wrong_input2)
@@ -414,7 +414,7 @@ class TextBox:
 				self.parent_obj.close_button = Button(self.parent_obj,text=sh.globs['mes'].btn_x,hint=sh.globs['mes'].btn_x,action=self.close,expand=0,side='bottom')
 		self.search_box = SearchBox(self)
 		WidgetShared.custom_buttons(self)
-		self.custom_bindings()
+		self.bindings()
 		
 	def reset(self,mode='data',words=None):
 		if mode == 'data':
@@ -444,7 +444,7 @@ class TextBox:
 		self.parent_obj.close()
 		return 'break'
 	
-	def custom_bindings(self):
+	def bindings(self):
 		create_binding(widget=self.widget,bindings=['<Control-f>','<Control-F3>'],action=self.search_box.new)
 		create_binding(widget=self.widget,bindings='<F3>',action=self.search_box.next)
 		create_binding(widget=self.widget,bindings='<Shift-F3>',action=self.search_box.prev)
@@ -614,7 +614,7 @@ class TextBox:
 			self.select_all()
 		self.goto(GoTo=GoTo)
 		# Только для несоставных виджетов
-		self.custom_bindings()
+		self.bindings()
 		
 	def visible(self,tk_pos):
 		if self.widget.bbox(tk_pos):
@@ -680,13 +680,13 @@ class Entry:
 			if not hasattr(self.parent_obj,'close_button'):
 				self.parent_obj.close_button = Button(self.parent_obj,text=sh.globs['mes'].btn_x,hint=sh.globs['mes'].btn_x,action=self.close,expand=0,side='bottom')
 			WidgetShared.custom_buttons(self)
-		self.custom_bindings()
+		self.bindings()
 	
 	# Setting ReadOnly state works only after filling text. Only widgets tk.Text, tk.Entry and not tk.Toplevel are supported.
 	def read_only(self,ReadOnly=True):
 		WidgetShared.set_state(self,ReadOnly=ReadOnly)
 	
-	def custom_bindings(self):
+	def bindings(self):
 		if self.Composite:
 			self.clear_text()
 		else:
@@ -708,12 +708,11 @@ class Entry:
 			sh.log.append('Entry.clear_text',sh.lev_warn,'The parent has already been destroyed.') # todo: mes
 			
 	def get(self,Strip=False):
-		result = self._get()
-		if result:
-			if Strip:
-				return result.strip()
-			else:
-				return result.strip('\n')
+		result = sh.Text(text=self._get()).not_none() # None != 'None' != ''
+		if Strip:
+			return result.strip()
+		else:
+			return result.strip('\n')
 
 	def insert(self,text='text',pos=0):
 		WidgetShared.insert(self,text=text,pos=pos)
@@ -1311,7 +1310,7 @@ class ParallelTexts: # Requires Search
 		if self.Extended:
 			self.h_tk_pos3 = TkPos(h_widget=self.txt3)
 			self.h_tk_pos4 = TkPos(h_widget=self.txt4)
-		self.custom_bindings()
+		self.bindings()
 		self.icon()
 		self.close()
 		
@@ -1389,7 +1388,7 @@ class ParallelTexts: # Requires Search
 		self.duplicates(self.h_tk_pos3,self.h_tk_pos4)
 		self.select22()
 	
-	def custom_bindings(self):
+	def bindings(self):
 		create_binding(widget=self.widget,bindings='<Control-q>',action=self.close)
 		create_binding(widget=self.widget,bindings='<Escape>',action=Geometry(parent_obj=self.obj).minimize)
 		create_binding(widget=self.widget,bindings=['<Alt-Key-1>','<Control-Key-1>'],action=self.select1)
@@ -1453,7 +1452,7 @@ class ParallelTexts: # Requires Search
 		if index22 >= len(_loop11):
 			_no = None # Keep old selection
 		else:
-			_no = self.words11.no_by_pos(_loop11[index22])
+			_no = self.words11.no_by_pos_n(_loop11[index22])
 		if _no is not None:
 			self.words11._no = _no
 			self.update_txt(self.txt11,self.words11,background='orange')
@@ -1475,7 +1474,7 @@ class ParallelTexts: # Requires Search
 		if index11 >= len(_loop22):
 			_no = None # Keep old selection
 		else:
-			_no = self.words22.no_by_pos(_loop22[index11])
+			_no = self.words22.no_by_pos_n(_loop22[index11])
 		if _no is not None:
 			self.words22._no = _no
 			self.update_txt(self.txt22,self.words22,background='cyan')
@@ -1564,10 +1563,11 @@ class TkPos:
 		
 	def p_no(self):
 		if self._p_no is None:
-			self._p_no = self.words.no_by_pos(pos=self.pos())
+			self._p_no = self.words.no_by_pos_p(pos=self.pos())
 		if self._p_no is None:
 			Message(func='TkPos.p_no',type=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 			self._p_no = 0
+		sh.log.append('TkPos.p_no',sh.lev_debug,'self._p_no: %d' % self._p_no) # cur
 		return self._p_no
 		
 	def pos2tk(self):
@@ -2118,7 +2118,6 @@ class Widgets:
 		self._root.close()
 		
 	def end(self):
-		self.close_all()
 		self.root().kill()
 		self._root.run()
 		

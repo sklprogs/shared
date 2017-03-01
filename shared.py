@@ -1985,8 +1985,8 @@ class Word:
 		'''
 		self.OrigCyr = self._nm = self._pf = self._pl = self._nf = self._nl = self._cyr = self._lat = self._greek = self._digit = self._empty = self._stone = self._sent_no = self._spell_ru = self._sents_len = self._tf = self._tl = None
 		
-	def print(self,no=0):
-		log.append('Word.print',lev_debug,'no: %d; OrigCyr: %s; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _stone: %s; _sent_no: %s; _spell_ru: %s' % (no,str(self.OrigCyr),str(self._p),str(self._n),str(self._nm),str(self._pf),str(self._pl),str(self._nf),str(self._nl),str(self._cyr),str(self._lat),str(self._greek),str(self._digit),str(self._empty),str(self._stone),str(self._sent_no),str(self._spell_ru)))
+	def print(self,no=0): # Do only after Words.sent_nos
+		log.append('Word.print',lev_debug,'no: %d; OrigCyr: %s; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _stone: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s' % (no,str(self.OrigCyr),str(self._p),str(self._n),str(self._nm),str(self._pf),str(self._pl),str(self._nf),str(self._nl),str(self._cyr),str(self._lat),str(self._greek),str(self._digit),str(self._empty),str(self._stone),str(self._sent_no),str(self._sents_len),str(self._spell_ru)))
 	
 	def nm(self):
 		if self._nm is None:
@@ -2022,7 +2022,7 @@ class Word:
 		''' Criteria for setting the 'stone' mark:
 			1) The word has both Cyrillic and Latin characters
 			2) The word has Greek characters (that are treated as variables. Greek should NOT be a predominant language)
-			3) The word has Latin characters in the predominantly Russian text # todo: implement
+			3) The word has Latin characters in the predominantly Russian text
 			4) The word has digits
 		'''
 		if self._stone is None:
@@ -2031,8 +2031,6 @@ class Word:
 				# todo (?): redo
 				self._stone = 2 # This is done to cheat 'CompareStones' which needs stone == 1. Other functions must use 'if self.stone():'
 			elif self.cyr() and self.lat() or self.greek() or self.digit():
-				self._stone = 1
-			elif self.OrigCyr and self.lat():
 				self._stone = 1
 		return self._stone
 		
@@ -2210,6 +2208,7 @@ class Words: # Requires Search, Text
 					self._no += 1
 			if not Found:
 				self._no = old
+			log.append('Words.next_stone',lev_debug,'self._no: %d' % self._no) # cur
 			return self._no
 		else:
 			log.append('Words.next_stone',lev_warn,globs['mes'].canceled)
@@ -2226,6 +2225,7 @@ class Words: # Requires Search, Text
 					self._no -= 1
 			if not Found:
 				self._no = old
+			log.append('Words.prev_stone',lev_debug,'self._no: %d' % self._no) # cur
 			return self._no
 		else:
 			log.append('Words.prev_stone',lev_warn,globs['mes'].canceled)
@@ -2271,16 +2271,54 @@ class Words: # Requires Search, Text
 		else:
 			log.append('Words.text_nm',lev_warn,globs['mes'].canceled)
 			
-	def no_by_pos(self,pos):
+	def no_by_pos_p(self,pos):
 		if self.Success:
 			result = self._no
 			for i in range(self.len()):
-				if self.words[i]._nf <= pos <= self.words[i]._nl:
+				if self.words[i]._pf - 1 <= pos <= self.words[i]._pl + 1:
 					result = i
 					break
 			return result
 		else:
-			log.append('Words.no_by_pos',lev_warn,globs['mes'].canceled)
+			log.append('Words.no_by_pos_p',lev_warn,globs['mes'].canceled)
+			
+	def no_by_pos_n(self,pos):
+		if self.Success:
+			result = self._no
+			for i in range(self.len()):
+				if self.words[i]._nf - 1 <= pos <= self.words[i]._nl + 1:
+					result = i
+					break
+			return result
+		else:
+			log.append('Words.no_by_pos_n',lev_warn,globs['mes'].canceled)
+			
+	def no_by_tk(self,tkpos):
+		if tkpos:
+			lst = tkpos.split('.')
+			if len(lst) == 2:
+				lst[0] = Text(text=lst[0]).str2int()
+				if lst[0] > 0:
+					lst[0] -= 1
+				lst[1] = Text(text=lst[1]).str2int()
+				result = None
+				for i in range(self.len()):
+					if self.words[i]._sent_no == lst[0]:
+						result = self.words[i]._sents_len
+						break
+				if result is not None:
+					if lst[1] == 0:
+						result += 1
+					elif lst[0] == 0:
+						result += lst[1]
+					else:
+						result += lst[1] + 1
+					log.append('Words.no_by_tk',lev_debug,'%s -> %d' % (tkpos,result))
+					return self.no_by_pos_p(pos=result)
+			else:
+				Message(func='Words.no_by_tk',type=lev_warn,message=globs['mes'].wrong_input3 % str(lst))
+		else:
+			Message(func='Words.no_by_tk',type=lev_warn,message=globs['mes'].wrong_input3 % str(lst))
 	
 	def complete(self):
 		if self.Success:
