@@ -281,17 +281,18 @@ class SearchBox:
 	def select(self):
 		if self.Success:
 			if self.Strict:
-				result = self.words.no_by_pos_p(pos=self.pos1())
+				result1 = self.words.no_by_pos_p(pos=self.pos1())
+				result2 = self.words.no_by_pos_p(pos=self.pos2())
 			else:
-				result = self.words.no_by_pos_n(pos=self.pos1())
-			if result is None:
-				_pos1tk = _pos2tk = '1.0'
+				result1 = self.words.no_by_pos_n(pos=self.pos1())
+				result2 = self.words.no_by_pos_n(pos=self.pos2())
+			if result1 is None or result2 is None:
 				sh.log.append('SearchBox.select',sh.lev_err,sh.globs['mes'].wrong_input2)
 			else:
-				_pos1tk = self.words.words[result].tf()
-				_pos2tk = self.words.words[result].tl()
-			self.h_sel.reset(pos1tk=_pos1tk,pos2tk=_pos2tk,background='green')
-			self.h_sel.set()
+				_pos1tk = self.words.words[result1].tf()
+				_pos2tk = self.words.words[result2].tl()
+				self.h_sel.reset(pos1tk=_pos1tk,pos2tk=_pos2tk,background='green')
+				self.h_sel.set()
 		else:
 			sh.log.append('SearchBox.select',sh.lev_warn,sh.globs['mes'].canceled)
 
