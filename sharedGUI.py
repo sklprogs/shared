@@ -1501,7 +1501,7 @@ class ParallelTexts: # Requires Search
 		if path:
 			self.obj.icon(path)
 		else:
-			self.obj.icon('.' + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'icon_64x64_cpt.gif')
+			self.obj.icon(sys.path[0] + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'icon_64x64_cpt.gif')
 
 
 
@@ -1876,7 +1876,7 @@ class MessageBuilder: # Requires 'constants'
 		self.txt = TextBox(parent_obj=self.top_right,Composite=True)
 		self.buttons()
 		self.bindings()
-		Geometry(parent_obj=self.obj).set('400x300')
+		Geometry(parent_obj=self.obj).set('400x250')
 		self.close()
 		
 	def bindings(self):
@@ -1884,14 +1884,15 @@ class MessageBuilder: # Requires 'constants'
 		self.widget.protocol("WM_DELETE_WINDOW",self.close)
 		
 	def paths(self):
+		# Python can operate with relative pathes, however, 'resources' will not be found if the script is launched, for exampple, in '/home'
 		if self.type == sh.lev_warn:
-			self.path = '.' + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'warning.gif'
+			self.path = sys.path[0] + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'warning.gif'
 		elif self.type == sh.lev_info:
-			self.path = '.' + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'info.gif'
+			self.path = sys.path[0] + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'info.gif'
 		elif self.type == sh.lev_ques:
-			self.path = '.' + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'question.gif'
+			self.path = sys.path[0] + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'question.gif'
 		elif self.type == sh.lev_err:
-			self.path = '.' + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'error.gif'
+			self.path = sys.path[0] + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'error.gif'
 		else:
 			sh.log.append('MessageBuilder.paths',sh.lev_err,sh.globs['mes'].unknown_mode % (str(self.path),', '.join([sh.lev_warn,sh.lev_err,sh.lev_ques,sh.lev_info])))
 		
