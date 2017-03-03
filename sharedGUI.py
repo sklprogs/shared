@@ -1972,7 +1972,7 @@ class Clipboard: # Requires 'widgets'
 	
 	def copy(self,text,CopyEmpty=True):
 		if text or CopyEmpty:
-			text = str(text)
+			text = str(sh.Text(text=text).not_none())
 			self.root_obj.widget.clipboard_clear()
 			self.root_obj.widget.clipboard_append(text)
 			try:

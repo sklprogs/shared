@@ -2208,7 +2208,6 @@ class Words: # Requires Search, Text
 					self._no += 1
 			if not Found:
 				self._no = old
-			log.append('Words.next_stone',lev_debug,'self._no: %d' % self._no) # cur
 			return self._no
 		else:
 			log.append('Words.next_stone',lev_warn,globs['mes'].canceled)
@@ -2225,7 +2224,6 @@ class Words: # Requires Search, Text
 					self._no -= 1
 			if not Found:
 				self._no = old
-			log.append('Words.prev_stone',lev_debug,'self._no: %d' % self._no) # cur
 			return self._no
 		else:
 			log.append('Words.prev_stone',lev_warn,globs['mes'].canceled)
