@@ -436,7 +436,7 @@ class TextBox:
 		self.clear_tags()
 		self.clear_marks()
 
-	# Setting ReadOnly state works only after filling text. Only widgets tk.Text, tk.Entry and not tk.Toplevel are supported.
+	# Setting ReadOnly state works only after filling text. Only objs tk.Text, tk.Entry and not tk.Toplevel are supported.
 	def read_only(self,ReadOnly=True):
 		WidgetShared.set_state(self,ReadOnly=ReadOnly)
 		
@@ -686,7 +686,7 @@ class Entry:
 			WidgetShared.custom_buttons(self)
 		self.bindings()
 	
-	# Setting ReadOnly state works only after filling text. Only widgets tk.Text, tk.Entry and not tk.Toplevel are supported.
+	# Setting ReadOnly state works only after filling text. Only objs tk.Text, tk.Entry and not tk.Toplevel are supported.
 	def read_only(self,ReadOnly=True):
 		WidgetShared.set_state(self,ReadOnly=ReadOnly)
 	
@@ -1540,7 +1540,7 @@ class SymbolMap:
 
 
 # Window behavior is not uniform through different platforms or even through different Windows versions, so we bypass Tkinter's commands here
-class Geometry: # Requires sh.h_os, widgets
+class Geometry: # Requires sh.h_os, objs
 	
 	def __init__(self,parent_obj=None,title=None,hwnd=None):
 		self.parent_obj = parent_obj
@@ -1549,7 +1549,7 @@ class Geometry: # Requires sh.h_os, widgets
 		self._geom = None
 
 	def update(self):
-		widgets.root().widget.update_idletasks()
+		objs.root().widget.update_idletasks()
 	
 	def save(self):
 		if self.parent_obj:
@@ -1827,7 +1827,7 @@ class Message:
 	def error(self):
 		if self.Success:
 			if not self.Silent:
-				widgets.error().reset(title=self.func+':',text=self.message).show()
+				objs.error().reset(title=self.func+':',text=self.message).show()
 			sh.log.append(self.func,sh.lev_err,self.message)
 		else:
 			sh.log.append('Message.error',sh.lev_err,sh.globs['mes'].canceled)
@@ -1835,15 +1835,15 @@ class Message:
 	def info(self):
 		if self.Success:
 			if not self.Silent:
-				widgets.info().reset(title=self.func+':',text=self.message).show()
+				objs.info().reset(title=self.func+':',text=self.message).show()
 			sh.log.append(self.func,sh.lev_info,self.message)
 		else:
 			sh.log.append('Message.info',sh.lev_info,sh.globs['mes'].canceled)
 	
 	def question(self):
 		if self.Success:
-			widgets.question().reset(title=self.func+':',text=self.message).show()
-			self.Yes = widgets._question.Yes
+			objs.question().reset(title=self.func+':',text=self.message).show()
+			self.Yes = objs._question.Yes
 			sh.log.append(self.func,sh.lev_ques,self.message)
 		else:
 			sh.log.append('Message.question',sh.lev_ques,sh.globs['mes'].canceled)
@@ -1851,7 +1851,7 @@ class Message:
 	def warning(self):
 		if self.Success:
 			if not self.Silent:
-				widgets.warning().reset(title=self.func+':',text=self.message).show()
+				objs.warning().reset(title=self.func+':',text=self.message).show()
 			sh.log.append(self.func,sh.lev_warn,self.message)
 		else:
 			sh.log.append('Message.warning',sh.lev_warn,sh.globs['mes'].canceled)
@@ -1884,7 +1884,7 @@ class MessageBuilder: # Requires 'constants'
 		self.widget.protocol("WM_DELETE_WINDOW",self.close)
 		
 	def paths(self):
-		# Python can operate with relative pathes, however, 'resources' will not be found if the script is launched, for exampple, in '/home'
+		# Python can operate with relative pathes, however, 'resources' will not be found if the script is launched, for example, in '/home'
 		if self.type == sh.lev_warn:
 			self.path = sys.path[0] + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'warning.gif'
 		elif self.type == sh.lev_info:
@@ -1919,9 +1919,7 @@ class MessageBuilder: # Requires 'constants'
 			Button(parent_obj=self.bottom_right,action=self.close_yes,hint='Accept and close',text=YesName,TakeFocus=1,side='right') # todo: mes
 		
 	def title(self,text=None):
-		if text:
-			text += ':'
-		else:
+		if not text:
 			text = 'Title:' # todo: mes
 		self.obj.title(text=text)
 		
@@ -1942,8 +1940,6 @@ class MessageBuilder: # Requires 'constants'
 	
 	def close(self,*args):
 		self.obj.close()
-		# todo: fix tkinter's wait_variable problem; this partly helps
-		#self.obj.widget.destroy()
 		
 	def close_yes(self,*args):
 		self.Yes = True
@@ -1963,22 +1959,19 @@ class MessageBuilder: # Requires 'constants'
 
 
 
-class Clipboard: # Requires 'widgets'
+class Clipboard: # Requires 'objs'
 	
-	# todo: check this
-	# We need to explicitly set the root object, otherwise, Tk hangs when launched from another module
-	def __init__(self,root_obj,Silent=False):
+	def __init__(self,Silent=False):
 		self.Silent = Silent
-		self.root_obj = root_obj
 	
 	def copy(self,text,CopyEmpty=True):
 		if text or CopyEmpty:
 			text = str(sh.Text(text=text).not_none())
-			self.root_obj.widget.clipboard_clear()
-			self.root_obj.widget.clipboard_append(text)
+			objs.root().widget.clipboard_clear()
+			objs._root.widget.clipboard_append(text)
 			try:
-				self.root_obj.widget.clipboard_clear()
-				self.root_obj.widget.clipboard_append(text)
+				objs._root.widget.clipboard_clear()
+				objs._root.widget.clipboard_append(text)
 			except tk.TclError:
 				# todo: Show a window to manually copy from
 				Message(func='Clipboard.copy',type=sh.lev_err,message=sh.globs['mes'].clipboard_failure,Silent=self.Silent)
@@ -1987,14 +1980,14 @@ class Clipboard: # Requires 'widgets'
 				sh.log.append('Clipboard.copy',sh.lev_warn,'The parent has already been destroyed.') # todo: mes
 			except:
 				sh.log.append('Clipboard.copy',sh.lev_err,'An unknown error has occurred.') # todo: mes
-			sh.log.append('Clipoard.copy',sh.lev_debug,text)
+			sh.log.append('Clipboard.copy',sh.lev_debug,text)
 		else:
 			sh.log.append('Clipboard.copy',sh.lev_warn,sh.globs['mes'].empty_input)
 				
 	def paste(self):
 		text = ''
 		try:
-			text = str(self.root_obj.widget.clipboard_get())
+			text = str(objs.root().widget.clipboard_get())
 		except tk.TclError:
 			Message(func='Clipboard.paste',type=sh.lev_err,message=sh.globs['mes'].clipboard_paste_failure,Silent=self.Silent)
 		except tk._tkinter.TclError:
@@ -2003,12 +1996,12 @@ class Clipboard: # Requires 'widgets'
 		except:
 			sh.log.append('Clipboard.paste',sh.lev_err,'An unknown error has occurred.') # todo: mes
 		# Further actions: strip, delete double line breaks
-		sh.log.append('Clipoard.paste',sh.lev_debug,text)
+		sh.log.append('Clipboard.paste',sh.lev_debug,text)
 		return text
 
 
 
-class Widgets:
+class Objects:
 	
 	def __init__(self):
 		self._root = self._warning = self._error = self._question = self._info = self._edit_clip = self._waitbox = self._txt = self._entry = self._clipboard = None
@@ -2030,7 +2023,7 @@ class Widgets:
 		self._root.run()
 		
 	def add(self,obj):
-		sh.log.append('Widgets.add',sh.lev_info,'Add %s' % type(obj)) # todo: mes
+		sh.log.append('Objects.add',sh.lev_info,'Add %s' % type(obj)) # todo: mes
 		self._lst.append(obj)
 	
 	def warning(self):
@@ -2058,17 +2051,12 @@ class Widgets:
 		return self._info
 		
 	def close_all(self):
-		sh.log.append('Widgets.close_all',sh.lev_info,'Close %d widgets' % len(self._lst)) # todo: mes
+		sh.log.append('Objects.close_all',sh.lev_info,'Close %d objs' % len(self._lst)) # todo: mes
 		for i in range(len(self._lst)):
 			if hasattr(self._lst[i],'close'):
 				self._lst[i].close()
 			else:
-				sh.log.append('Widgets.close_all',sh.lev_err,'Widget "%s" does not have a "close" action!' % type(self._lst[i]))
-				
-	def clipboard(self):
-		if not self._clipboard:
-			self._clipboard = Clipboard(root_obj=self.root())
-		return self._clipboard
+				sh.log.append('Objects.close_all',sh.lev_err,'Widget "%s" does not have a "close" action!' % type(self._lst[i]))
 				
 	def edit_clip(self):
 		if not self._edit_clip:
@@ -2104,20 +2092,20 @@ class Widgets:
 
 
 
-widgets = Widgets() # If there are problems with import or tkinter's wait_variable, put this beneath 'if __name__'
+objs = Objects() # If there are problems with import or tkinter's wait_variable, put this beneath 'if __name__'
 
 
 if __name__ == '__main__':
-	widgets.start()
+	objs.start()
 	text = '''Something funny with this guy
 	I am glad he is not my test
 	Glad is so angry'''
 	words = sh.Words(text)
-	h_top = Top(parent_obj=widgets.root())
+	h_top = Top(parent_obj=objs.root())
 	h_txt = TextBox(parent_obj=h_top,words=words)
 	h_txt.title(text='My text is:')
 	h_txt.insert(text)
 	h_txt.widget.focus_set()
 	Geometry(parent_obj=h_top).set('500x350')
 	h_txt.show()
-	widgets.end()
+	objs.end()

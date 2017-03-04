@@ -101,7 +101,7 @@ h_os = OSSpecific()
 # Cannot cross-import 2 modules, therefore, we need to have a local proecedure
 def Message(func='MAIN',type=lev_warn,message='Message',Silent=False):
 	import sharedGUI as sg
-	#sg.widgets = sg.Widgets()
+	#sg.objs = sg.Widgets()
 	sg.Message(func=func,type=type,message=message,Silent=Silent)
 	#log.append(func,type,message)
 
