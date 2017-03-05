@@ -99,10 +99,10 @@ h_os = OSSpecific()
 
 
 # Cannot cross-import 2 modules, therefore, we need to have a local proecedure
-def Message(func='MAIN',type=lev_warn,message='Message',Silent=False):
+def Message(func='MAIN',level=lev_warn,message='Message',Silent=False):
 	import sharedGUI as sg
 	#sg.objs = sg.Widgets()
-	sg.Message(func=func,type=type,message=message,Silent=Silent)
+	sg.Message(func=func,level=type,message=message,Silent=Silent)
 	#log.append(func,type,message)
 
 
@@ -124,7 +124,7 @@ def rewrite(dest,AskRewrite=True):
 	# We use AskRewrite just to shorten other procedures (to be able to use 'rewrite' silently in the code without ifs)
 	if AskRewrite and os.path.isfile(dest):
 		# We don't actually need to force rewriting or delete the file before rewriting
-		Confirmed = Message(func='rewrite',type=lev_ques,message=globs['mes'].rewrite_ques % dest).Yes
+		Confirmed = Message(func='rewrite',level=lev_ques,message=globs['mes'].rewrite_ques % dest).Yes
 	return Confirmed
 	
 
@@ -172,7 +172,7 @@ class Launch:
 				else:
 					subprocess.Popen(self.custom_args)
 			except:
-				Message(func='Launch._launch',type=lev_err,message=globs['mes'].launch_failure2 % str(self.custom_args))
+				Message(func='Launch._launch',level=lev_err,message=globs['mes'].launch_failure2 % str(self.custom_args))
 		else:
 			log.append('Launch._launch',lev_err,globs['mes'].not_enough_input_data)
 	
@@ -180,19 +180,19 @@ class Launch:
 		try:
 			os.system("xdg-open " + self.h_path.escape() + "&")
 		except:
-			Message(func='Launch._lin',type=lev_err,message=globs['mes'].ext_prog_failure,Silent=self.Silent)
+			Message(func='Launch._lin',level=lev_err,message=globs['mes'].ext_prog_failure,Silent=self.Silent)
 			
 	def _mac(self):
 		try:
 			os.system("open " + self.target)
 		except:
-			Message(func='Launch._mac',type=lev_err,message=globs['mes'].ext_prog_failure,Silent=self.Silent)
+			Message(func='Launch._mac',level=lev_err,message=globs['mes'].ext_prog_failure,Silent=self.Silent)
 			
 	def _win(self):
 		try:
 			os.startfile(self.target)
 		except:
-			Message(func='Launch._win',type=lev_err,message=globs['mes'].ext_prog_failure,Silent=self.Silent)
+			Message(func='Launch._win',level=lev_err,message=globs['mes'].ext_prog_failure,Silent=self.Silent)
 	
 	def app(self,custom_app='',custom_args=[]):
 		self.custom_app = custom_app
@@ -251,7 +251,7 @@ class WriteTextFile:
 		self.Success = True
 		if not self.file:
 			if self.UseLog:
-				Message(func='WriteTextFile.__init__',type=lev_err,message=globs['mes'].not_enough_input_data,Silent=self.Silent)
+				Message(func='WriteTextFile.__init__',level=lev_err,message=globs['mes'].not_enough_input_data,Silent=self.Silent)
 			else:
 				print('WriteTextFile.__init__: Not enough input data!')
 			self.Success = False
@@ -266,12 +266,12 @@ class WriteTextFile:
 			except:
 				self.Success = False
 				if self.UseLog:
-					Message(func='WriteTextFile._write',type=lev_err,message=globs['mes'].file_write_failure % self.file,Silent=self.Silent)
+					Message(func='WriteTextFile._write',level=lev_err,message=globs['mes'].file_write_failure % self.file,Silent=self.Silent)
 				else:
 					print('WriteTextFile._write: Unable to write the file!')
 		else:
 			if self.UseLog:
-				Message(func='WriteTextFile._write',type=lev_err,message=globs['mes'].unknown_mode % (str(mode),'a, w'),Silent=False)
+				Message(func='WriteTextFile._write',level=lev_err,message=globs['mes'].unknown_mode % (str(mode),'a, w'),Silent=False)
 			else:
 				print('WriteTextFile._write: An unknown mode!')
 			
@@ -283,7 +283,7 @@ class WriteTextFile:
 				self._write('a')
 			else:
 				if self.UseLog:
-					Message(func='WriteTextFile.append',type=lev_err,message=globs['mes'].not_enough_input_data,Silent=self.Silent)
+					Message(func='WriteTextFile.append',level=lev_err,message=globs['mes'].not_enough_input_data,Silent=self.Silent)
 				else:
 					print('WriteTextFile.append: Not enough input data!')
 		else:
@@ -298,7 +298,7 @@ class WriteTextFile:
 					self._write('w')
 			else:
 				if self.UseLog:
-					Message(func='WriteTextFile.write',type=lev_err,message=globs['mes'].not_enough_input_data,Silent=self.Silent)
+					Message(func='WriteTextFile.write',level=lev_err,message=globs['mes'].not_enough_input_data,Silent=self.Silent)
 				else:
 					print('WriteTextFile.write: Not enough input data!')
 		else:
@@ -392,7 +392,7 @@ class TextDic:
 				self._split() # Update original and translation
 				self.sort() # After using set(), the original order was lost
 			else:
-				Message(func='TextDic._delete_duplicates',type=lev_warn,message=globs['mes'].non_sortable % self.file,Silent=self.Silent)
+				Message(func='TextDic._delete_duplicates',level=lev_warn,message=globs['mes'].non_sortable % self.file,Silent=self.Silent)
 		else:
 			log.append('TextDic._delete_duplicates',lev_warn,globs['mes'].canceled)
 
@@ -405,7 +405,7 @@ class TextDic:
 				self._list.append(self.orig[i]+'\t'+self.transl[i])
 			self.text = '\n'.join(self._list)
 		else:
-			Message(func='TextDic._join',type=lev_warn,message=globs['mes'].wrong_input2,Silent=False)
+			Message(func='TextDic._join',level=lev_warn,message=globs['mes'].wrong_input2,Silent=False)
 
 	# We can use this to check integrity and/or update original and translation lists
 	def _split(self):
@@ -422,7 +422,7 @@ class TextDic:
 				else:
 					self.Success = False
 					# i+1: Count from 1
-					Message(func='TextDic._split',type=lev_warn,message=globs['mes'].incorrect_line % (self.file,i+1,self._list[i]),Silent=self.Silent)
+					Message(func='TextDic._split',level=lev_warn,message=globs['mes'].incorrect_line % (self.file,i+1,self._list[i]),Silent=self.Silent)
 		else:
 			self.Success = False
 			
@@ -435,7 +435,7 @@ class TextDic:
 				self.transl.append(translation)
 				self._join()
 			else:
-				Message(func='TextDic.append',type=lev_warn,message=globs['mes'].empty_input,Silent=self.Silent)
+				Message(func='TextDic.append',level=lev_warn,message=globs['mes'].empty_input,Silent=self.Silent)
 		else:
 			log.append('TextDic.append',lev_warn,globs['mes'].canceled)
 	
@@ -448,7 +448,7 @@ class TextDic:
 				del self.transl[entry_no]
 				self._join()
 			else:
-				Message(func='TextDic.delete_entry',type=lev_err,message=globs['mes'].condition_failed % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
+				Message(func='TextDic.delete_entry',level=lev_err,message=globs['mes'].condition_failed % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
 		else:
 			log.append('TextDic.append',lev_warn,globs['mes'].canceled)
 			
@@ -461,7 +461,7 @@ class TextDic:
 				self.transl[entry_no] = transl
 				self._join()
 			else:
-				Message(func='TextDic.delete_entry',type=lev_err,message=globs['mes'].condition_failed % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
+				Message(func='TextDic.delete_entry',level=lev_err,message=globs['mes'].condition_failed % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
 		else:
 			log.append('TextDic.append',lev_warn,globs['mes'].canceled)
 	
@@ -502,7 +502,7 @@ class TextDic:
 					self._list[i] = self.orig[i] + '\t' + self.transl[i]
 				self.text = '\n'.join(self._list)
 			else:
-				Message(func='TextDic.sort',type=lev_warn,message=globs['mes'].non_sortable % self.file,Silent=self.Silent)
+				Message(func='TextDic.sort',level=lev_warn,message=globs['mes'].non_sortable % self.file,Silent=self.Silent)
 		else:
 			log.append('TextDic.sort',lev_warn,globs['mes'].canceled)
 	
@@ -542,13 +542,13 @@ class ReadTextFile:
 			pass
 		elif not self.file:
 			self.Success = False
-			Message(func='ReadTextFile.__init__',type=lev_err,message=globs['mes'].not_enough_input_data,Silent=self.Silent)
+			Message(func='ReadTextFile.__init__',level=lev_err,message=globs['mes'].not_enough_input_data,Silent=self.Silent)
 		elif not os.path.exists(self.file):
 			self.Success = False
-			Message(func='ReadTextFile.__init__',type=lev_warn,message=globs['mes'].file_not_found % self.file,Silent=self.Silent)
+			Message(func='ReadTextFile.__init__',level=lev_warn,message=globs['mes'].file_not_found % self.file,Silent=self.Silent)
 		else:
 			self.Success = False
-			Message(func='ReadTextFile.__init__',type=lev_err,message=globs['mes'].wrong_input2,Silent=self.Silent)
+			Message(func='ReadTextFile.__init__',level=lev_err,message=globs['mes'].wrong_input2,Silent=self.Silent)
 		
 	def _read(self,encoding):
 		try:
@@ -601,7 +601,7 @@ class ReadTextFile:
 				# The file cannot be read OR the file is empty (we don't need empty files)
 				# todo: Update the message
 				self.Success = False
-				Message(func='ReadTextFile.load',type=lev_err,message=globs['mes'].file_read_failure % self.file)
+				Message(func='ReadTextFile.load',level=lev_err,message=globs['mes'].file_read_failure % self.file)
 			self.delete_bom()
 		else:
 			log.append('ReadTextFile.load',lev_warn,globs['mes'].canceled)
@@ -618,7 +618,7 @@ class Digits:
 		if str(self.val).isdigit():
 			return True
 		else:
-			Message(func=func_title,type=lev_err,message='Wrong value of "%s": "%s"!' % (var_title,str(self.val))) # todo: mes
+			Message(func=func_title,level=lev_err,message='Wrong value of "%s": "%s"!' % (var_title,str(self.val))) # todo: mes
 
 
 
@@ -788,7 +788,7 @@ class Text:
 			self.text = result[2]
 			hash += self.str2int()
 		#else:
-		#	Message(func='Text.extract_date_hash',type=lev_warn,message=globs['mes'].wrong_input2,Silent=self.Silent)
+		#	Message(func='Text.extract_date_hash',level=lev_warn,message=globs['mes'].wrong_input2,Silent=self.Silent)
 		return hash
 	
 	# Fix possible misprints and OCR errors in the text where a degree sign can be witnessed
@@ -814,7 +814,7 @@ class Text:
 	# Replace commas or semicolons with line breaks or line breaks with commas
 	def split_by_comma(self):
 		if (';' in self.text or ',' in self.text) and '\n' in self.text:
-			Message(func='Text.split_by_comma',type=lev_warn,message=globs['mes'].comma_ambiguous,Silent=self.Silent)
+			Message(func='Text.split_by_comma',level=lev_warn,message=globs['mes'].comma_ambiguous,Silent=self.Silent)
 		elif ';' in self.text or ',' in self.text:
 			self.text = self.text.replace(',','\n')
 			self.text = self.text.replace(';','\n')
@@ -939,7 +939,7 @@ class Time: # We constantly recalculate each value because they depend on each o
 				self._instance += datetime.timedelta(days=days_delta)
 			except:
 				self.Success = False
-				Message(func='Time.instance',type=lev_warn,message=globs['mes'].time_error)
+				Message(func='Time.instance',level=lev_warn,message=globs['mes'].time_error)
 			self.monday_warning()
 		else:
 			log.append('Time.add_days',lev_warn,globs['mes'].canceled)
@@ -952,7 +952,7 @@ class Time: # We constantly recalculate each value because they depend on each o
 				self._date = self._instance.strftime(self.pattern)
 			except:
 				self.Success = False
-				Message(func='Time.instance',type=lev_warn,message=globs['mes'].time_error)
+				Message(func='Time.instance',level=lev_warn,message=globs['mes'].time_error)
 		else:
 			log.append('Time.date',lev_warn,globs['mes'].canceled)
 		return self._date
@@ -965,7 +965,7 @@ class Time: # We constantly recalculate each value because they depend on each o
 				self._instance = datetime.datetime.fromtimestamp(self._timestamp)
 			except:
 				self.Success = False
-				Message(func='Time.instance',type=lev_warn,message=globs['mes'].time_error)
+				Message(func='Time.instance',level=lev_warn,message=globs['mes'].time_error)
 		else:
 			log.append('Time.instance',lev_warn,globs['mes'].canceled)
 		return self._instance
@@ -978,7 +978,7 @@ class Time: # We constantly recalculate each value because they depend on each o
 				self._timestamp = time.mktime(datetime.datetime.strptime(self._date,self.pattern).timetuple())
 			except:
 				self.Success = False
-				Message(func='Time.timestamp',type=lev_warn,message=globs['mes'].time_error)
+				Message(func='Time.timestamp',level=lev_warn,message=globs['mes'].time_error)
 		else:
 			log.append('Time.timestamp',lev_warn,globs['mes'].canceled)
 		return self._timestamp
@@ -988,7 +988,7 @@ class Time: # We constantly recalculate each value because they depend on each o
 			if not self._instance:
 				self.instance()
 			if self.MondayWarning and datetime.datetime.weekday(self._instance) == 0:
-				Message(func='Time.monday_warning',type=lev_info,message=globs['mes'].monday,Silent=self.Silent)
+				Message(func='Time.monday_warning',level=lev_info,message=globs['mes'].monday,Silent=self.Silent)
 		else:
 			log.append('Time.monday_warning',lev_warn,globs['mes'].canceled)
 				
@@ -1021,7 +1021,7 @@ class Time: # We constantly recalculate each value because they depend on each o
 				self._year = self._instance.strftime("%Y")
 			except:
 				self.Success = False
-				Message(func='Time.instance',type=lev_warn,message=globs['mes'].time_error)
+				Message(func='Time.instance',level=lev_warn,message=globs['mes'].time_error)
 		else:
 			log.append('Time.year',lev_warn,globs['mes'].canceled)
 		return self._year
@@ -1045,13 +1045,13 @@ class File:
 				self.dest += os.path.sep + Path(self.file).basename()
 		elif not self.file:
 			self.Success = False
-			Message(func='File.__init__',type=lev_err,message=globs['mes'].empty_input,Silent=self.Silent)
+			Message(func='File.__init__',level=lev_err,message=globs['mes'].empty_input,Silent=self.Silent)
 		elif not os.path.exists(self.file):
 			self.Success = False
-			Message(func='File.__init__',type=lev_warn,message=globs['mes'].file_not_found % self.file,Silent=self.Silent)
+			Message(func='File.__init__',level=lev_warn,message=globs['mes'].file_not_found % self.file,Silent=self.Silent)
 		else:
 			self.Success = False
-			Message(func='File.__init__',type=lev_warn,message=globs['mes'].not_file % self.file,Silent=self.Silent)
+			Message(func='File.__init__',level=lev_warn,message=globs['mes'].not_file % self.file,Silent=self.Silent)
 			
 	def _copy(self):
 		Success = True
@@ -1060,7 +1060,7 @@ class File:
 			shutil.copyfile(self.file,self.dest)
 		except:
 			Success = False
-			Message(func='File._copy',type=lev_err,message=globs['mes'].file_copy_failure % (self.file,self.dest),Silent=self.Silent)
+			Message(func='File._copy',level=lev_err,message=globs['mes'].file_copy_failure % (self.file,self.dest),Silent=self.Silent)
 		return Success
 		
 	def _move(self):
@@ -1070,7 +1070,7 @@ class File:
 			shutil.move(self.file,self.dest)
 		except:
 			Success = False
-			Message(func='File._move',type=lev_err,message=globs['mes'].move_failure % (self.file,self.dest),Silent=self.Silent)
+			Message(func='File._move',level=lev_err,message=globs['mes'].move_failure % (self.file,self.dest),Silent=self.Silent)
 		return Success
 	
 	def access_time(self):
@@ -1079,7 +1079,7 @@ class File:
 				self.atime = os.path.getatime(self.file)
 				# Further steps: datetime.date.fromtimestamp(self.atime).strftime(self.pattern)
 			except:
-				Message(func='File.access_time',type=lev_warn,message=globs['mes'].file_date_failure % self.file,Silent=self.Silent)
+				Message(func='File.access_time',level=lev_warn,message=globs['mes'].file_date_failure % self.file,Silent=self.Silent)
 		else:
 			log.append('File.access_time',lev_warn,globs['mes'].canceled)
 
@@ -1087,7 +1087,7 @@ class File:
 		Success = True
 		if self.Success:
 			if self.file.lower() == self.dest.lower():
-				Message(func='File.copy',type=lev_err,message=globs['mes'].file_copy_failure2 % self.file,Silent=self.Silent)
+				Message(func='File.copy',level=lev_err,message=globs['mes'].file_copy_failure2 % self.file,Silent=self.Silent)
 			elif rewrite(self.dest,AskRewrite=self.AskRewrite):
 				Success = self._copy()
 			else:
@@ -1104,7 +1104,7 @@ class File:
 				os.remove(self.file)
 			except:
 				Success = False
-				Message(func='File.delete',type=lev_warn,message=globs['mes'].file_del_failure % self.file,Silent=self.Silent)
+				Message(func='File.delete',level=lev_warn,message=globs['mes'].file_del_failure % self.file,Silent=self.Silent)
 		else:
 			log.append('File.delete',lev_warn,globs['mes'].canceled)
 		return Success
@@ -1122,7 +1122,7 @@ class File:
 				self.mtime = os.path.getmtime(self.file)
 				# Further steps: datetime.date.fromtimestamp(self.mtime).strftime(self.pattern)
 			except:
-				Message(func='File.modification_time',type=lev_warn,message=globs['mes'].file_date_failure % self.file,Silent=self.Silent)
+				Message(func='File.modification_time',level=lev_warn,message=globs['mes'].file_date_failure % self.file,Silent=self.Silent)
 		else:
 			log.append('File.modification_time',lev_warn,globs['mes'].canceled)
 			
@@ -1130,7 +1130,7 @@ class File:
 		Success = True
 		if self.Success:
 			if self.file.lower() == self.dest.lower():
-				Message(func='File.move',type=lev_err,message=globs['mes'].move_failure3,Silent=self.Silent)
+				Message(func='File.move',level=lev_err,message=globs['mes'].move_failure3,Silent=self.Silent)
 			elif rewrite(selt.dest,AskRewrite=self.AskRewrite):
 				Success = self._move()
 			else:
@@ -1146,7 +1146,7 @@ class File:
 				try:
 					os.utime(self.file,(self.atime,self.mtime))
 				except:
-					Message(func='File.set_time',type=lev_warn,message=globs['mes'].file_time_change_failure % (self.file,str((self.atime,self.mtime))),Silent=self.Silent)
+					Message(func='File.set_time',level=lev_warn,message=globs['mes'].file_time_change_failure % (self.file,str((self.atime,self.mtime))),Silent=self.Silent)
 		else:
 			log.append('File.set_time',lev_warn,globs['mes'].canceled)
 			
@@ -1175,17 +1175,17 @@ class Path:
 					log.append('Path.create',lev_info,globs['mes'].dir_exists % self.path)
 				else:
 					Success = False
-					Message(func='Path.create',type=lev_warn,message=globs['mes'].invalid_path % self.path)
+					Message(func='Path.create',level=lev_warn,message=globs['mes'].invalid_path % self.path)
 			else:
 				log.append('Path.create',lev_info,globs['mes'].creating_dir % self.path)
 				try:
 					os.makedirs(self.path) # todo: consider os.mkdir
 				except:
 					Success = False
-					Message(func='Path.create',type=lev_err,message=globs['mes'].dir_creation_failure % self.path)
+					Message(func='Path.create',level=lev_err,message=globs['mes'].dir_creation_failure % self.path)
 		else:
 			Success = False
-			Message(func='Path.create',type=lev_err,message=globs['mes'].not_enough_input_data)
+			Message(func='Path.create',level=lev_err,message=globs['mes'].not_enough_input_data)
 		return Success
 	
 	def delete_inappropriate_symbols(self): # These symbols may pose a problem while opening files # todo: check whether this is really necessary
@@ -1261,16 +1261,16 @@ class WriteBinary:
 						pickle.dump(self.fragm,f)
 			except:
 				self.Success = False
-				Message(func='WriteBinary._write',type=lev_err,message=globs['mes'].file_write_failure % self.file,Silent=self.Silent)
+				Message(func='WriteBinary._write',level=lev_err,message=globs['mes'].file_write_failure % self.file,Silent=self.Silent)
 		else:
-			Message(func='WriteTextFile._write',type=lev_err,message=globs['mes'].unknown_mode % (str(mode),'w+b, a+b'),Silent=False)
+			Message(func='WriteTextFile._write',level=lev_err,message=globs['mes'].unknown_mode % (str(mode),'w+b, a+b'),Silent=False)
 			
 	def append(self,fragm):
 		self.fragm = fragm
 		if self.fragm:
 			self._write(mode='a+b')
 		else:
-			Message(func='WriteBinary.append',type=lev_err,message=globs['mes'].empty_input,Silent=self.Silent)
+			Message(func='WriteBinary.append',level=lev_err,message=globs['mes'].empty_input,Silent=self.Silent)
 	
 	def write(self):
 		if self.obj:
@@ -1279,7 +1279,7 @@ class WriteBinary:
 			else:
 				log.append('WriteBinary.write',lev_info,globs['mes'].canceled_by_user)
 		else:
-			Message(func='WriteBinary.write',type=lev_err,message=globs['mes'].empty_input,Silent=self.Silent)
+			Message(func='WriteBinary.write',level=lev_err,message=globs['mes'].empty_input,Silent=self.Silent)
 
 
 
@@ -1305,7 +1305,7 @@ class Dic:
 				self._split() # Update original and translation
 				self.sort() # After using set(), the original order was lost
 			else:
-				Message(func='Dic._delete_duplicates',type=lev_warn,message=globs['mes'].non_sortable % self.file,Silent=self.Silent)
+				Message(func='Dic._delete_duplicates',level=lev_warn,message=globs['mes'].non_sortable % self.file,Silent=self.Silent)
 		else:
 			log.append('Dic._delete_duplicates',lev_warn,globs['mes'].canceled)
 
@@ -1318,7 +1318,7 @@ class Dic:
 				self._list.append(self.orig[i]+'\t'+self.transl[i])
 			self.text = '\n'.join(self._list)
 		else:
-			Message(func='Dic._join',type=lev_warn,message=globs['mes'].wrong_input2,Silent=False)
+			Message(func='Dic._join',level=lev_warn,message=globs['mes'].wrong_input2,Silent=False)
 
 	# We can use this to check integrity and/or update original and translation lists
 	def _split(self):
@@ -1335,7 +1335,7 @@ class Dic:
 				else:
 					self.Success = False
 					# i+1: Count from 1
-					Message(func='Dic._split',type=lev_warn,message=globs['mes'].incorrect_line % (self.file,i+1,self._list[i]),Silent=self.Silent)
+					Message(func='Dic._split',level=lev_warn,message=globs['mes'].incorrect_line % (self.file,i+1,self._list[i]),Silent=self.Silent)
 		else:
 			self.Success = False
 			
@@ -1348,7 +1348,7 @@ class Dic:
 				self.transl.append(translation)
 				self._join()
 			else:
-				Message(func='Dic.append',type=lev_warn,message=globs['mes'].empty_input,Silent=self.Silent)
+				Message(func='Dic.append',level=lev_warn,message=globs['mes'].empty_input,Silent=self.Silent)
 		else:
 			log.append('Dic.append',lev_warn,globs['mes'].canceled)
 	
@@ -1361,7 +1361,7 @@ class Dic:
 				del self.transl[entry_no]
 				self._join()
 			else:
-				Message(func='Dic.delete_entry',type=lev_err,message=globs['mes'].condition_failed % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
+				Message(func='Dic.delete_entry',level=lev_err,message=globs['mes'].condition_failed % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
 		else:
 			log.append('Dic.append',lev_warn,globs['mes'].canceled)
 			
@@ -1374,7 +1374,7 @@ class Dic:
 				self.transl[entry_no] = transl
 				self._join()
 			else:
-				Message(func='Dic.delete_entry',type=lev_err,message=globs['mes'].condition_failed % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
+				Message(func='Dic.delete_entry',level=lev_err,message=globs['mes'].condition_failed % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
 		else:
 			log.append('Dic.append',lev_warn,globs['mes'].canceled)
 	
@@ -1415,7 +1415,7 @@ class Dic:
 					self._list[i] = self.orig[i] + '\t' + self.transl[i]
 				self.text = '\n'.join(self._list)
 			else:
-				Message(func='Dic.sort',type=lev_warn,message=globs['mes'].non_sortable % self.file,Silent=self.Silent)
+				Message(func='Dic.sort',level=lev_warn,message=globs['mes'].non_sortable % self.file,Silent=self.Silent)
 		else:
 			log.append('Dic.sort',lev_warn,globs['mes'].canceled)
 	
@@ -1460,7 +1460,7 @@ class ReadBinary:
 				self.obj = pickle.load(f)
 		except:
 			self.Success = False
-			Message(func='ReadBinary._load',type=lev_err,message=globs['mes'].file_read_failure % self.file,Silent=self.Silent)
+			Message(func='ReadBinary._load',level=lev_err,message=globs['mes'].file_read_failure % self.file,Silent=self.Silent)
 			
 	# todo: load fragments appended to a binary
 	def load(self):
@@ -1506,7 +1506,7 @@ class Directory:
 		self._rel_dirs = []
 		if not os.path.isdir(self.dir):
 			self.Success = False
-			Message(func='Directory.__init__',type=lev_warn,message=globs['mes'].wrong_input3 % self.dir,Silent=self.Silent)
+			Message(func='Directory.__init__',level=lev_warn,message=globs['mes'].wrong_input3 % self.dir,Silent=self.Silent)
 			
 	def delete(self):
 		if self.Success:
@@ -1514,7 +1514,7 @@ class Directory:
 			try:
 				shutil.rmtree(self.dir)
 			except:
-				Message(func='Directory.delete',type=lev_warn,message=globs['mes'].dir_del_failure % str(self.dir))
+				Message(func='Directory.delete',level=lev_warn,message=globs['mes'].dir_del_failure % str(self.dir))
 		else:
 			log.append('Directory.delete',lev_warn,globs['mes'].canceled)
 			
@@ -1574,9 +1574,9 @@ class Directory:
 	def copy(self):
 		if self.Success:
 			if self.dir.lower() == self.dest.lower():
-				Message(func='Directory.copy',type=lev_err,message=globs['mes'].copy_failure2 % self.dir,Silent=self.Silent)
+				Message(func='Directory.copy',level=lev_err,message=globs['mes'].copy_failure2 % self.dir,Silent=self.Silent)
 			elif os.path.isdir(self.dest):
-				Message(func='Directory.copy',type=lev_info,message=globs['mes'].dir_exists % self.dest,Silent=self.Silent)
+				Message(func='Directory.copy',level=lev_info,message=globs['mes'].dir_exists % self.dest,Silent=self.Silent)
 			else:
 				self._copy()
 		else:
@@ -1588,7 +1588,7 @@ class Directory:
 			shutil.copytree(self.dir,self.dest)
 		except:
 			self.Success = False
-			Message(func='Directory._copy',type=lev_err,message=globs['mes'].copy_failure % (self.dir,self.dest),Silent=self.Silent)
+			Message(func='Directory._copy',level=lev_err,message=globs['mes'].copy_failure % (self.dir,self.dest),Silent=self.Silent)
 
 
 
@@ -1629,7 +1629,7 @@ class Config:
 				self.message += '\n' + globs['mes'].missing_sections % self.missing_sections
 				self.message += '\n' + globs['mes'].missing_keys % self.missing_keys
 				self.message += '\n' + globs['mes'].default_config
-				Message(func='Config.check',type=lev_warn,message=self.message)
+				Message(func='Config.check',level=lev_warn,message=self.message)
 				self._default()
 		else:
 			log.append('Config.check',lev_warn,globs['mes'].canceled)
@@ -1640,7 +1640,7 @@ class Config:
 				config_parser.read(self.path,'utf-8')
 			except:
 				Success = False
-				Message(func='Config.open',type=lev_warn,message=globs['mes'].invalid_config % self.path,Silent=self.Silent)
+				Message(func='Config.open',level=lev_warn,message=globs['mes'].invalid_config % self.path,Silent=self.Silent)
 		else:
 			log.append('Config.open',lev_warn,globs['mes'].canceled)
 			
@@ -1678,7 +1678,7 @@ class Online:
 		try:
 			webbrowser.open(self.url(),new=2,autoraise=True)
 		except:
-			Message(func='Online.browse',type=lev_err,message=globs['mes'].browser_failure % self._url)
+			Message(func='Online.browse',level=lev_err,message=globs['mes'].browser_failure % self._url)
 				
 	# Create a correct online link (URI => URL)
 	def url(self):
@@ -1737,7 +1737,7 @@ class Diff:
 	def compare(self):
 		if self.text1 and self.text2:
 			if self.text1 == self.text2:
-				Message(func='Diff.compare',type=lev_info,message='Texts are identical!') # todo: mes
+				Message(func='Diff.compare',level=lev_info,message='Texts are identical!') # todo: mes
 			else:
 				self.diff()
 				self.header()
@@ -1746,7 +1746,7 @@ class Diff:
 					# Cannot reuse the class instance because the temporary file might be missing
 					Launch(target=self.file).default()
 		else:
-			Message(func='Diff.compare',type=lev_warn,message=globs['mes'].empty_input)
+			Message(func='Diff.compare',level=lev_warn,message=globs['mes'].empty_input)
 
 
 
@@ -1759,7 +1759,7 @@ class Shortcut:
 		self.symlink = symlink
 		if not self.path and not self.symlink:
 			self.Success = False
-			Message(func='Shortcut.__init__',type=lev_warn,message=globs['mes'].wrong_input2,Silent=self.Silent)
+			Message(func='Shortcut.__init__',level=lev_warn,message=globs['mes'].wrong_input2,Silent=self.Silent)
 		
 	# http://timgolden.me.uk/python/win32_how_do_i/read-a-shortcut.html
 	def _get_win(self):
@@ -1785,7 +1785,7 @@ class Shortcut:
 		try:
 			os.unlink(self.symlink)
 		except:
-			Message(func='Shortcut._delete',type=lev_warn,message=globs['mes'].symlink_removal_failure % self.symlink)
+			Message(func='Shortcut._delete',level=lev_warn,message=globs['mes'].symlink_removal_failure % self.symlink)
 	
 	def delete(self):
 		if self.Success:
@@ -1799,7 +1799,7 @@ class Shortcut:
 		try:
 			os.symlink(self.path,self.symlink)
 		except:
-			Message(func='Shortcut._create_unix',type=lev_err,message=globs['mes'].symlink_creation_failure % self.symlink)
+			Message(func='Shortcut._create_unix',level=lev_err,message=globs['mes'].symlink_creation_failure % self.symlink)
 	
 	def create_unix(self):
 		self.delete()
@@ -1808,7 +1808,7 @@ class Shortcut:
 				log.append('Shortcut.create_unix',globs['mes'].action_not_required)
 			else:
 				self.Success = False
-				Message(func='Shortcut.create_unix',type=lev_warn,message=globs['mes'].wrong_input2,Silent=self.Silent)
+				Message(func='Shortcut.create_unix',level=lev_warn,message=globs['mes'].wrong_input2,Silent=self.Silent)
 		else:
 			self._create_unix()
 			
@@ -1821,7 +1821,7 @@ class Shortcut:
 			shortcut.Targetpath = self.path
 			shortcut.save()
 		except:
-			Message(func='Shortcut._create_win',type=lev_err,message=globs['mes'].symlink_creation_failure % self.symlink)
+			Message(func='Shortcut._create_win',level=lev_err,message=globs['mes'].symlink_creation_failure % self.symlink)
 	
 	def create_win(self):
 		# Using python 3 and windows (since 2009) it is possible to create a symbolic link, however, this will not be the same as a shortcut (.lnk). Therefore, in case the shortcut is used, os.path.islink() will always return False (not supported) (must use os.path.exists()), however, os.unlink() will work as expected.
@@ -1860,7 +1860,7 @@ class Email:
 		try:
 			webbrowser.open('mailto:%s?subject=%s&body=%s' % (self._email,self._subject,self._message))
 		except:
-			Message(func='TkinterHtmlMod.response_back',type=lev_err,message=globs['mes'].email_agent_failure)
+			Message(func='TkinterHtmlMod.response_back',level=lev_err,message=globs['mes'].email_agent_failure)
 
 
 
@@ -2314,9 +2314,9 @@ class Words: # Requires Search, Text
 					log.append('Words.no_by_tk',lev_debug,'%s -> %d' % (tkpos,result))
 					return self.no_by_pos_p(pos=result)
 			else:
-				Message(func='Words.no_by_tk',type=lev_warn,message=globs['mes'].wrong_input3 % str(lst))
+				Message(func='Words.no_by_tk',level=lev_warn,message=globs['mes'].wrong_input3 % str(lst))
 		else:
-			Message(func='Words.no_by_tk',type=lev_warn,message=globs['mes'].wrong_input3 % str(lst))
+			Message(func='Words.no_by_tk',level=lev_warn,message=globs['mes'].wrong_input3 % str(lst))
 	
 	def complete(self):
 		if self.Success:
@@ -2351,7 +2351,7 @@ class Search:
 		self._text = text
 		self._search = search
 		if not self._search or not self._text:
-			Message(func='Search.__init__',type=lev_warn,message=globs['mes'].wrong_input2)
+			Message(func='Search.__init__',level=lev_warn,message=globs['mes'].wrong_input2)
 			self.Success = False
 	
 	def add(self):
@@ -2773,4 +2773,4 @@ objs = Objects() # If there are problems with import or tkinter's wait_variable,
 
 if __name__ == '__main__':
 	# NOTE: Focusing on the widget is lost randomly (is assigned to root). This could be a Tkinter/DM bug.
-	Message(func='shared.__main__',type=lev_info,message='Все прошло удачно!')
+	Message(func='shared.__main__',level=lev_info,message='Все прошло удачно!')
