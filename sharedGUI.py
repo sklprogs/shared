@@ -8,51 +8,20 @@ import sys, os
 import shared as sh
 
 
-if sh.h_os.sys() == 'win':
-	import win32gui, win32con, ctypes
 
-# Вернуть тип параметра
-def get_obj_type(obj,Verbal=True,IgnoreErrors=False):
-	obj_type_str = ''
-	obj_type_str = str(type(obj))
-	obj_type_str = obj_type_str.replace("<class '",'')
-	obj_type_str = obj_type_str.replace("'>",'')
-	# int, float, str, list, dict, tuple, NoneType
-	if Verbal:
-		obj_type_str = obj_type_verbal(obj_type_str,IgnoreErrors=IgnoreErrors)
-	#sh.log.append('get_obj_type',sh.lev_debug,obj_type_str)
-	return obj_type_str
-	
-# Название типа на русском
-def obj_type_verbal(obj_type_str,IgnoreErrors=False):
-	obj_type_str = str(obj_type_str)
-	if obj_type_str == 'str':
-		obj_type_str = sh.globs['mes'].type_str
-	elif obj_type_str == 'list':
-		obj_type_str = sh.globs['mes'].type_lst
-	elif obj_type_str == 'dict':
-		obj_type_str = sh.globs['mes'].type_dic
-	elif obj_type_str == 'tuple':
-		obj_type_str = sh.globs['mes'].type_tuple
-	elif obj_type_str == 'set' or obj_type_str == 'frozenset':
-		obj_type_str = sh.globs['mes'].type_set
-	elif obj_type_str == 'int':
-		obj_type_str = sh.globs['mes'].type_int
-	elif obj_type_str == 'long':
-		obj_type = sh.globs['mes'].type_long_int
-	elif obj_type_str == 'float':
-		obj_type_str = sh.globs['mes'].type_float
-	elif obj_type_str == 'complex':
-		obj_type_str = sh.globs['mes'].type_complex
-	elif obj_type_str == 'bool':
-		obj_type_str = sh.globs['mes'].type_bool
-	elif IgnoreErrors:
-		pass
+# Привязать горячие клавиши или кнопки мыши к действию
+def bind(widget,bindings,action): # widget, str/list, function
+	if isinstance(bindings,str) or isinstance(bindings,list):
+		if isinstance(bindings,str):
+			bindings = [bindings]
+		for i in range(len(bindings)):
+			try:
+				widget.bind(bindings[i],action)
+			except tk.TclError:
+				Message(func='bind',level=sh.lev_err,message=sh.globs['mes'].wrong_keybinding % bindings[i])
 	else:
-		Message(func='obj_type_verbal',level=sh.lev_err,message=sh.globs['mes'].unknown_mode % (obj_type_str,'str, list, dict, tuple, set, frozenset, int, long, float, complex, bool'))
-	#sh.log.append('obj_type_verbal',sh.lev_debug,obj_type_str)
-	return obj_type_str
-	
+		Message(func='bind',level=sh.lev_err,message=sh.globs['mes'].wrong_input3 % str(bindings))
+
 
 
 # Класс для оформления root как виджета
@@ -82,21 +51,6 @@ class Root:
 
 
 
-# Привязать горячие клавиши или кнопки мыши к действию
-def create_binding(widget,bindings,action): # widget, list, function
-	bindings_type = get_obj_type(bindings,Verbal=True,IgnoreErrors=True)
-	if bindings_type == sh.globs['mes'].type_str or bindings_type == sh.globs['mes'].type_lst:
-		if bindings_type == sh.globs['mes'].type_str:
-			bindings = [bindings]
-		for i in range(len(bindings)):
-			try:
-				widget.bind(bindings[i],action)
-			except tk.TclError:
-				Message(func='create_binding',level=sh.lev_err,message=sh.globs['mes'].wrong_keybinding % bindings[i])
-	else:
-		Message(func='create_binding',level=sh.lev_err,message=sh.globs['mes'].unknown_mode % (str(bindings_type),'%s, %s' % (sh.globs['mes'].type_str,sh.globs['mes'].type_lst)))
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 class WidgetShared:
 	
 	def focus(object,*args):
@@ -449,18 +403,18 @@ class TextBox:
 		return 'break'
 	
 	def bindings(self):
-		create_binding(widget=self.widget,bindings=['<Control-f>','<Control-F3>'],action=self.search_box.new)
-		create_binding(widget=self.widget,bindings='<F3>',action=self.search_box.next)
-		create_binding(widget=self.widget,bindings='<Shift-F3>',action=self.search_box.prev)
+		bind(widget=self.widget,bindings=['<Control-f>','<Control-F3>'],action=self.search_box.new)
+		bind(widget=self.widget,bindings='<F3>',action=self.search_box.next)
+		bind(widget=self.widget,bindings='<Shift-F3>',action=self.search_box.prev)
 		# Только для несоставных виджетов
 		if not self.Composite:
 			self.widget.unbind('<Return>')
 			if self.state == 'disabled' or self.SpecialReturn:
 				# Разрешать считывать текст после нажатия Escape (в Entry запрещено)
-				create_binding(widget=self.widget,bindings=['<Return>','<KP_Enter>','<Escape>'],action=self.close)
+				bind(widget=self.widget,bindings=['<Return>','<KP_Enter>','<Escape>'],action=self.close)
 			else:
-				create_binding(widget=self.widget,bindings=['<Escape>'],action=self.close)
-		create_binding(widget=self.widget,bindings='<Control-a>',action=self.select_all)
+				bind(widget=self.widget,bindings=['<Escape>'],action=self.close)
+		bind(widget=self.widget,bindings='<Control-a>',action=self.select_all)
 	
 	def _get(self):
 		try:
@@ -677,7 +631,7 @@ class Entry:
 		self.Save = False
 		self.parent_obj = parent_obj
 		self.widget = tk.Entry(self.parent_obj.widget,font='Sans 11',width=width) #sh.globs['var']['menu_font']
-		create_binding(widget=self.widget,bindings='<Control-a>',action=self.select_all)
+		bind(widget=self.widget,bindings='<Control-a>',action=self.select_all)
 		self.widget.pack(side=side,ipadx=ipadx,ipady=ipady,fill=fill,expand=expand)
 		if not self.Composite:
 			# Тип родительского виджета может быть любым
@@ -694,8 +648,8 @@ class Entry:
 		if self.Composite:
 			self.clear_text()
 		else:
-			create_binding(widget=self.widget,bindings=['<Return>','<KP_Enter>'],action=self.close)
-			create_binding(widget=self.widget,bindings='<Escape>',action=self.parent_obj.close)
+			bind(widget=self.widget,bindings=['<Return>','<KP_Enter>'],action=self.close)
+			bind(widget=self.widget,bindings='<Escape>',action=self.parent_obj.close)
 
 	def show(self,*args):
 		self.parent_obj.show()
@@ -817,7 +771,7 @@ class Button:
 			hint_extended = hint
 		ToolTip(self.widget,text=hint_extended,hint_delay=hint_delay,hint_width=hint_width,hint_height=hint_height,hint_background=hint_background,hint_direction=hint_direction,button_side=side)
 		self.show()
-		create_binding(widget=self.widget,bindings=['<ButtonRelease-1>','<space>','<Return>','<KP_Enter>'],action=self.click)
+		bind(widget=self.widget,bindings=['<ButtonRelease-1>','<space>','<Return>','<KP_Enter>'],action=self.click)
 		if TakeFocus:
 			self.widget.focus_set()
 	
@@ -992,17 +946,17 @@ class ListBox:
 		
 	def bindings(self):
 		if self.user_function:
-			create_binding(self.widget,'<<ListboxSelect>>',self.user_function) # Binding just to '<Button-1>' does not work. We do not need binding Return/space/etc. because the function will be called each time the selection is changed. However, we still need to bind Up/Down.
+			bind(self.widget,'<<ListboxSelect>>',self.user_function) # Binding just to '<Button-1>' does not work. We do not need binding Return/space/etc. because the function will be called each time the selection is changed. However, we still need to bind Up/Down.
 		elif self.SelectionCloses:
 			# todo: test <KP_Enter> in Windows
-			create_binding(self.widget,['<Return>','<KP_Enter>','<Double-Button-1>'],self.close)
+			bind(self.widget,['<Return>','<KP_Enter>','<Double-Button-1>'],self.close)
 			if self.SingleClick and not self.Multiple:
-				create_binding(self.widget,'<Button-1>',self.close)
+				bind(self.widget,'<Button-1>',self.close)
 		if not self.Multiple:
-			create_binding(self.widget,'<Up>',self.move_up)
-			create_binding(self.widget,'<Down>',self.move_down)
+			bind(self.widget,'<Up>',self.move_up)
+			bind(self.widget,'<Down>',self.move_down)
 		if not self.Composite: # todo: test
-			create_binding(self.widget,['<Escape>','<Control-q>','<Control-w>'],self.close)
+			bind(self.widget,['<Escape>','<Control-q>','<Control-w>'],self.close)
 		
 	def gui(self):
 		self._scroll()
@@ -1205,7 +1159,7 @@ class OptionMenu:
 
 
 '''	Usage:
-	create_binding(h_txt.widget,'<ButtonRelease-1>',action)
+	bind(h_txt.widget,'<ButtonRelease-1>',action)
 
 def action(*args):
 	h_selection.get() # Refresh coordinates (or set h_selection._pos1tk, h_selection._pos2tk manually)
@@ -1391,18 +1345,18 @@ class ParallelTexts: # Requires Search
 		self.select22()
 	
 	def bindings(self):
-		create_binding(widget=self.widget,bindings='<Control-q>',action=self.close)
-		create_binding(widget=self.widget,bindings='<Escape>',action=Geometry(parent_obj=self.obj).minimize)
-		create_binding(widget=self.widget,bindings=['<Alt-Key-1>','<Control-Key-1>'],action=self.select1)
-		create_binding(widget=self.widget,bindings=['<Alt-Key-2>','<Control-Key-2>'],action=self.select2)
+		bind(widget=self.widget,bindings='<Control-q>',action=self.close)
+		bind(widget=self.widget,bindings='<Escape>',action=Geometry(parent_obj=self.obj).minimize)
+		bind(widget=self.widget,bindings=['<Alt-Key-1>','<Control-Key-1>'],action=self.select1)
+		bind(widget=self.widget,bindings=['<Alt-Key-2>','<Control-Key-2>'],action=self.select2)
 		if self.Extended:
-			create_binding(widget=self.widget,bindings=['<Alt-Key-3>','<Control-Key-3>'],action=self.select3)
-			create_binding(widget=self.widget,bindings=['<Alt-Key-4>','<Control-Key-4>'],action=self.select4)
-		create_binding(self.txt1.widget,'<ButtonRelease-1>',self.select1)
-		create_binding(self.txt2.widget,'<ButtonRelease-1>',self.select2)
+			bind(widget=self.widget,bindings=['<Alt-Key-3>','<Control-Key-3>'],action=self.select3)
+			bind(widget=self.widget,bindings=['<Alt-Key-4>','<Control-Key-4>'],action=self.select4)
+		bind(self.txt1.widget,'<ButtonRelease-1>',self.select1)
+		bind(self.txt2.widget,'<ButtonRelease-1>',self.select2)
 		if self.Extended:
-			create_binding(self.txt3.widget,'<ButtonRelease-1>',self.select3)
-			create_binding(self.txt4.widget,'<ButtonRelease-1>',self.select4)
+			bind(self.txt3.widget,'<ButtonRelease-1>',self.select3)
+			bind(self.txt4.widget,'<ButtonRelease-1>',self.select4)
 			
 	def decolorize(self):
 		self.txt1.widget.config(bg='white')
@@ -1501,7 +1455,7 @@ class ParallelTexts: # Requires Search
 		if path:
 			self.obj.icon(path)
 		else:
-			self.obj.icon(sys.path[0] + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'icon_64x64_cpt.gif')
+			self.obj.icon(sys.path[0] + os.path.sep + 'resources' + os.path.sep + 'icon_64x64_cpt.gif')
 
 
 
@@ -1540,7 +1494,7 @@ class SymbolMap:
 
 
 # Window behavior is not uniform through different platforms or even through different Windows versions, so we bypass Tkinter's commands here
-class Geometry: # Requires sh.h_os, objs
+class Geometry: # Requires sh.oss, objs
 	
 	def __init__(self,parent_obj=None,title=None,hwnd=None):
 		self.parent_obj = parent_obj
@@ -1570,7 +1524,7 @@ class Geometry: # Requires sh.h_os, objs
 			Message(func='Geometry.restore',level=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 	
 	def foreground(self,*args):
-		if sh.h_os.sys() == 'win':
+		if sh.oss.win():
 			if self.hwnd():
 				try:
 					win32gui.SetForegroundWindow(self._hwnd)
@@ -1587,7 +1541,7 @@ class Geometry: # Requires sh.h_os, objs
 	def minimize(self,*args):
 		if self.parent_obj:
 			''' # Does not always work
-			if sh.h_os.sys() == 'win':
+			if sh.oss.win():
 				win32gui.ShowWindow(self.hwnd(),win32con.SW_MINIMIZE)
 			else:
 			'''
@@ -1596,7 +1550,7 @@ class Geometry: # Requires sh.h_os, objs
 			Message(func='Geometry.minimize',level=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 
 	def maximize(self,*args):
-		if sh.h_os.sys() == 'win':
+		if sh.oss.win():
 			#win32gui.ShowWindow(self.hwnd(),win32con.SW_MAXIMIZE)
 			self.parent_obj.widget.wm_state(newstate='zoomed')
 		elif self.parent_obj:
@@ -1605,7 +1559,7 @@ class Geometry: # Requires sh.h_os, objs
 			Message(func='Geometry.maximize',level=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 
 	def focus(self,*args):
-		if sh.h_os.sys() == 'win':
+		if sh.oss.win():
 			win32gui.SetActiveWindow(self.hwnd())
 		elif self.parent_obj:
 			self.parent_obj.widget.focus_set()
@@ -1628,7 +1582,7 @@ class Geometry: # Requires sh.h_os, objs
 	
 	def activate(self,MouseClicked=False,*args):
 		self._activate()
-		if sh.h_os.sys() == 'win':
+		if sh.oss.win():
 			self.parent_obj.widget.wm_attributes('-topmost',1)
 			self.parent_obj.widget.wm_attributes('-topmost',0)
 			# Иначе нажатие кнопки будет вызывать переход по ссылке там, где это не надо
@@ -1880,19 +1834,19 @@ class MessageBuilder: # Requires 'constants'
 		self.close()
 		
 	def bindings(self):
-		create_binding(widget=self.widget,bindings=['<Control-q>','<Control-w>','<Escape>'],action=self.close_no)
+		bind(widget=self.widget,bindings=['<Control-q>','<Control-w>','<Escape>'],action=self.close_no)
 		self.widget.protocol("WM_DELETE_WINDOW",self.close)
 		
 	def paths(self):
 		# Python can operate with relative pathes, however, 'resources' will not be found if the script is launched, for example, in '/home'
 		if self.level == sh.lev_warn:
-			self.path = sys.path[0] + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'warning.gif'
+			self.path = sys.path[0] + os.path.sep + 'resources' + os.path.sep + 'warning.gif'
 		elif self.level == sh.lev_info:
-			self.path = sys.path[0] + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'info.gif'
+			self.path = sys.path[0] + os.path.sep + 'resources' + os.path.sep + 'info.gif'
 		elif self.level == sh.lev_ques:
-			self.path = sys.path[0] + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'question.gif'
+			self.path = sys.path[0] + os.path.sep + 'resources' + os.path.sep + 'question.gif'
 		elif self.level == sh.lev_err:
-			self.path = sys.path[0] + sh.h_os.sep() + 'resources' + sh.h_os.sep() + 'error.gif'
+			self.path = sys.path[0] + os.path.sep + 'resources' + os.path.sep + 'error.gif'
 		else:
 			sh.log.append('MessageBuilder.paths',sh.lev_err,sh.globs['mes'].unknown_mode % (str(self.path),', '.join([sh.lev_warn,sh.lev_err,sh.lev_ques,sh.lev_info])))
 		

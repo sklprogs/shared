@@ -29,27 +29,54 @@ import sqlite3
 class OSSpecific:
 	
 	def __init__(self):
-		self._sys = ''
-		self._sep = ''
-		self.sys()
-		self.sep()
+		self._name = ''
+		self.import_win()
+		# Load last due to problems with TZ
+		import datetime
+		
+	def shift_tab(self):
+		if self.lin():
+			return '<Shift-ISO_Left_Tab>'
+		else:
+			return '<Shift-KeyPress-Tab>'
 	
-	def sys(self):
-		if not self._sys:
-			self._sys = 'unknown'
-			sys_plat = sys.platform
-			if 'win' in sys_plat:
-				self._sys = 'win'
-			elif 'lin' in sys_plat:
-				self._sys = 'lin'
-			elif 'mac' in sys_plat:
-				self._sys = 'mac'
-		return self._sys
+	def win(self):
+		return 'win' in sys.platform
+		
+	def lin(self):
+		return 'lin' in sys.platform
+		
+	def mac(self):
+		return 'mac' in sys.platform
+		
+	def name(self):
+		if not self._name:
+			if self.win():
+				self._name = 'win'
+			elif self.lin():
+				self._name = 'lin'
+			elif self.mac():
+				self._name = 'mac'
+			else:
+				self._name = 'unknown'
+		return self._name
 	
-	def sep(self):
-		if not self._sep:
-			self._sep = os.path.sep
-		return self._sep
+	def import_win(self):
+		if self.win():
+			#http://mail.python.org/pipermail/python-win32/2012-July/012493.html
+			_tz = os.getenv('TZ')
+			if _tz is not None and '/' in _tz:
+				os.unsetenv('TZ')
+			import pythoncom
+			from win32com.shell import shell, shellcon
+			import win32com.client, win32api
+			if win32com.client.gencache.is_readonly:
+				win32com.client.gencache.is_readonly = False
+				# under p2exe/cx_freeze the call in gencache to __init__() does not happen so we use Rebuild() to force the creation of the gen_py folder
+				# the contents of library.zip\win32com shall be unpacked to exe.win32 - 3.3\win32com
+				# See also the section where EnsureDispatch is called.
+				win32com.client.gencache.Rebuild()
+			import win32gui, win32con, ctypes # Required by 'Geometry'
 
 
 
@@ -94,7 +121,7 @@ punc_array = ['.',',','!','?',':',';']
 #punc_ext_array = ['"','”','»',']','}',')'] # todo: why there were no opening brackets?
 punc_ext_array = ['"','“','”','','«','»','[',']','{','}','(',')']
 
-h_os = OSSpecific()
+oss = OSSpecific()
 
 
 
@@ -127,26 +154,6 @@ def rewrite(dest,AskRewrite=True):
 		Confirmed = Message(func='rewrite',level=lev_ques,message=globs['mes'].rewrite_ques % dest).Yes
 	return Confirmed
 	
-
-
-if h_os.sys() == 'win':
-	#http://mail.python.org/pipermail/python-win32/2012-July/012493.html
-	_tz = os.getenv('TZ')
-	if _tz is not None and '/' in _tz:
-		os.unsetenv('TZ')
-	# Импортируем win-only модули 
-	import pythoncom
-	from win32com.shell import shell, shellcon
-	import win32com.client, win32api
-	if win32com.client.gencache.is_readonly:
-		win32com.client.gencache.is_readonly = False
-		# under p2exe/cx_freeze the call in gencache to __init__() does not happen so we use Rebuild() to force the creation of the gen_py folder
-		# the contents of library.zip\win32com shall be unpacked to exe.win32 - 3.3\win32com
-		# See also the section where EnsureDispatch is called.
-		win32com.client.gencache.Rebuild()
-# Загружается последним ввиду проблем с TZ (см. выше)
-import datetime
-
 
 
 class Launch:
@@ -207,13 +214,13 @@ class Launch:
 	def auto(self):
 		if self.TargetExists:
 			if self.ext == '.txt' and globs['bool']['ForceAltTXTApp']:
-				self.custom_app = globs[h_os.sys()]['txt_app']
+				self.custom_app = globs[oss.name()]['txt_app']
 				self.custom()
 			elif self.ext == '.pdf' and globs['bool']['ForceAltPDFApp']:
-				self.custom_app = globs[h_os.sys()]['pdf_app']
+				self.custom_app = globs[oss.name()]['pdf_app']
 				self.custom()
 			elif os.path.isdir(self.target) and globs['bool']['ForceAltFileMan']:
-				self.custom_app = globs[h_os.sys()]['dir_app']
+				self.custom_app = globs[oss.name()]['dir_app']
 				self.custom()
 			else:
 				self.default()
@@ -229,11 +236,11 @@ class Launch:
 	
 	def default(self):
 		if self.TargetExists:
-			if h_os.sys() == 'lin':
+			if oss.lin():
 				self._lin()
-			elif h_os.sys() == 'mac':
+			elif oss.mac():
 				self._mac()
-			elif h_os.sys() == 'win':
+			elif oss.win():
 				self._win()
 		else:
 			log.append('Launch.default',lev_warn,globs['mes'].canceled)
@@ -363,7 +370,7 @@ class Log:
 				self.write()
 				self.count += 1
 				
-if h_os == 'win':
+if oss.win():
 	log = Log(Use=True,Write=False,Print=True,Short=False,file=r'C:\Users\pete\AppData\Local\Temp\log')
 else:
 	log = Log(Use=True,Write=False,Print=True,Short=False,file='/tmp/log')
@@ -1225,7 +1232,7 @@ class Path:
 		
 	def split(self):
 		if not self.parts:
-			self.parts = self.path.split(h_os.sep())
+			self.parts = self.path.split(os.path.sep)
 			i = 0
 			tmp_str = ''
 			while i < len(self.parts):
@@ -1233,7 +1240,7 @@ class Path:
 					self.parts[i] = tmp_str + self.parts[i]
 					tmp_str = ''
 				else:
-					tmp_str += h_os.sep()
+					tmp_str += os.path.sep
 					del self.parts[i]
 					i -= 1
 				i += 1
@@ -1532,7 +1539,7 @@ class Directory:
 				self._list = os.listdir(self.dir)
 				self._rel_list = list(self._list)
 				for i in range(len(self._list)):
-					self._list[i] = self.dir + h_os.sep() + self._list[i]
+					self._list[i] = self.dir + os.path.sep + self._list[i]
 		else:
 			log.append('Directory.list',lev_warn,globs['mes'].canceled)
 		return self._list
@@ -1701,7 +1708,7 @@ class Diff:
 	def __init__(self,Silent=False):
 		self.Silent = Silent
 		self.Custom = False
-		self.wda_html = globs[h_os.sys()]['tmp_folder'] + h_os.sep() + 'wda.html'
+		self.wda_html = globs[oss.name()]['tmp_folder'] + os.path.sep + 'wda.html'
 		self.h_wda_write = WriteTextFile(self.wda_html,AskRewrite=False,Silent=self.Silent)
 	
 	def reset(self,text1,text2,file=None):
@@ -1774,7 +1781,7 @@ class Shortcut:
 		
 	def get(self):
 		if self.Success and not self.path:
-			if h_os.sys() == 'win':
+			if oss.win():
 				self._get_win()
 			else:
 				self._get_unix()
@@ -1839,7 +1846,7 @@ class Shortcut:
 	
 	def create(self):
 		if self.Success:
-			if h_os.sys() == 'win':
+			if oss.win():
 				self.create_win()
 			else:
 				self.create_unix()
