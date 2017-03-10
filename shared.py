@@ -1245,17 +1245,22 @@ class Path:
 					i -= 1
 				i += 1
 		return self.parts
-		
-		
+
+
 
 class WriteBinary:
+
 	def __init__(self,file,obj,Silent=False,AskRewrite=False):
 		self.Success = True
 		self.file = file
-		self.Silent = Silent
-		self.AskRewrite = AskRewrite
 		self.obj = obj
-		self.fragm = None
+		if self.file and self.obj:
+			self.Silent = Silent
+			self.AskRewrite = AskRewrite
+			self.fragm = None
+		else:
+			self.Success = False
+			log.append('WriteBinary.__init__',lev_warn,globs['mes'].canceled)
 		
 	def _write(self,mode='w+b'):
 		log.append('WriteBinary._write',lev_info,globs['mes'].writing % self.file)
@@ -1273,20 +1278,23 @@ class WriteBinary:
 			Message(func='WriteTextFile._write',level=lev_err,message=globs['mes'].unknown_mode % (str(mode),'w+b, a+b'),Silent=False)
 			
 	def append(self,fragm):
-		self.fragm = fragm
-		if self.fragm:
-			self._write(mode='a+b')
+		if self.Success:
+			self.fragm = fragm
+			if self.fragm:
+				self._write(mode='a+b')
+			else:
+				Message(func='WriteBinary.append',level=lev_err,message=globs['mes'].empty_input,Silent=self.Silent)
 		else:
-			Message(func='WriteBinary.append',level=lev_err,message=globs['mes'].empty_input,Silent=self.Silent)
+			log.append('WriteBinary.append',lev_warn,globs['mes'].canceled)
 	
 	def write(self):
-		if self.obj:
+		if self.Success:
 			if rewrite(self.file,AskRewrite=self.AskRewrite):
 				self._write(mode='w+b')
 			else:
 				log.append('WriteBinary.write',lev_info,globs['mes'].canceled_by_user)
 		else:
-			Message(func='WriteBinary.write',level=lev_err,message=globs['mes'].empty_input,Silent=self.Silent)
+			log.append('WriteBinary.write',lev_warn,globs['mes'].canceled)
 
 
 
@@ -1989,11 +1997,13 @@ class Word:
 			_pl: position of the last symbol of _p
 			_nf: position of the 1st symbol of _n
 			_nl: position of the last symbol of _n
+			_nmf: position of the 1st symbol of _nm		# 'matches'
+			_nml: position of the last symbol of _nm	# 'matches'
 		'''
-		self.OrigCyr = self._nm = self._pf = self._pl = self._nf = self._nl = self._cyr = self._lat = self._greek = self._digit = self._empty = self._stone = self._sent_no = self._spell_ru = self._sents_len = self._tf = self._tl = None
+		self.OrigCyr = self._nm = self._nmf = self._nml = self._pf = self._pl = self._nf = self._nl = self._cyr = self._lat = self._greek = self._digit = self._empty = self._stone = self._sent_no = self._spell_ru = self._sents_len = self._tf = self._tl = None
 		
 	def print(self,no=0): # Do only after Words.sent_nos
-		log.append('Word.print',lev_debug,'no: %d; OrigCyr: %s; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _stone: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s' % (no,str(self.OrigCyr),str(self._p),str(self._n),str(self._nm),str(self._pf),str(self._pl),str(self._nf),str(self._nl),str(self._cyr),str(self._lat),str(self._greek),str(self._digit),str(self._empty),str(self._stone),str(self._sent_no),str(self._sents_len),str(self._spell_ru)))
+		log.append('Word.print',lev_debug,'no: %d; OrigCyr: %s; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _stone: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s; _nmf: %s; _nml: %s' % (no,str(self.OrigCyr),str(self._p),str(self._n),str(self._nm),str(self._pf),str(self._pl),str(self._nf),str(self._nl),str(self._cyr),str(self._lat),str(self._greek),str(self._digit),str(self._empty),str(self._stone),str(self._sent_no),str(self._sents_len),str(self._spell_ru),str(self._nmf),str(self._nml)))
 	
 	def nm(self):
 		if self._nm is None:
@@ -2004,7 +2014,7 @@ class Word:
 				if result:
 					self._nm = result.replace('ё','е')
 				else:
-					self._nm = self._n()
+					self._nm = self._n
 		return self._nm
 		
 	def empty(self):
@@ -2262,8 +2272,14 @@ class Words: # Requires Search, Text
 	def list_nm(self): # Needed for text comparison
 		if self.Success:
 			if not self._list_nm:
+				cur_len_nm = 0
 				for i in range(self.len()):
 					self._list_nm.append(self.words[i].nm())
+					if i > 0:
+						cur_len_nm += 2
+					cur_word = self.words[i]
+					cur_word._nmf = cur_len_nm
+					cur_len_nm = cur_word._nml = cur_word._nmf + len(cur_word._nm) - 1
 			return self._list_nm
 		else:
 			log.append('Words.list_nm',lev_warn,globs['mes'].canceled)
@@ -2297,6 +2313,17 @@ class Words: # Requires Search, Text
 			return result
 		else:
 			log.append('Words.no_by_pos_n',lev_warn,globs['mes'].canceled)
+			
+	def no_by_pos_nm(self,pos): # Call 'list_nm()' first
+		if self.Success:
+			result = self._no
+			for i in range(self.len()):
+				if self.words[i]._nmf - 1 <= pos <= self.words[i]._nml + 1:
+					result = i
+					break
+			return result
+		else:
+			log.append('Words.no_by_pos_nm',lev_warn,globs['mes'].canceled)
 			
 	def no_by_tk(self,tkpos):
 		if tkpos:
