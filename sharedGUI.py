@@ -666,7 +666,7 @@ class Entry:
 			sh.log.append('Entry.clear_text',sh.lev_warn,'The parent has already been destroyed.') # todo: mes
 			
 	def get(self,Strip=False):
-		result = sh.Text(text=self._get()).not_none() # None != 'None' != ''
+		result = sh.Input(val=self._get()).not_none() # None != 'None' != ''
 		if Strip:
 			return result.strip()
 		else:
@@ -1210,8 +1210,8 @@ class Selection: # Selecting words only
 			self._pos2tk = self.h_widget.widget.index('sel.last')
 		except tk.TclError:
 			self._pos1tk, self._pos2tk = None, None
-			sh.log.append('Selection.tk_poses',sh.lev_warn,sh.globs['mes'].no_selection2 % 1) # todo: mes
-		sh.log.append('Selection.tk_poses',sh.lev_debug,str((self._pos1tk,self._pos2tk)))
+			sh.log.append('Selection.get',sh.lev_warn,sh.globs['mes'].no_selection2 % 1) # todo: mes
+		sh.log.append('Selection.get',sh.lev_debug,str((self._pos1tk,self._pos2tk)))
 		return(self._pos1tk,self._pos2tk)
 		
 	def text(self):
@@ -1250,6 +1250,7 @@ class Selection: # Selecting words only
 class ParallelTexts: # Requires Search
 	
 	def __init__(self,parent_obj,Extended=True):
+		self.Success = True
 		self.parent_obj = parent_obj
 		self.obj = Top(self.parent_obj,Maximize=True)
 		self.widget = self.obj.widget
@@ -1273,189 +1274,244 @@ class ParallelTexts: # Requires Search
 		self.words2 = words2
 		self.words3 = words3
 		self.words4 = words4
-		if self.words3 and self.words4:
-			self.Extended = True
+		if self.words1 and self.words2:
+			if self.words3 and self.words4:
+				self.Extended = True
+			else:
+				self.Extended = False
+			self.txt1.reset_logic(words=self.words1)
+			self.txt1.reset_data()
+			self.txt2.reset_logic(words=self.words2)
+			self.txt2.reset_data()
+			if self.Extended:
+				self.txt3.reset_logic(words=self.words3)
+				self.txt3.reset_data()
+				self.txt4.reset_logic(words=self.words4)
+				self.txt4.reset_data()
+			self.fill()
+			# Setting ReadOnly state works only after filling text
+			self.txt1.read_only(ReadOnly=True)
+			self.txt2.read_only(ReadOnly=True)
+			if self.Extended:
+				self.txt3.read_only(ReadOnly=True)
+				self.txt4.read_only(ReadOnly=True)
+			self.txt1.focus()
+			self.init_cursor_pos()
 		else:
-			self.Extended = False
-		self.txt1.reset_logic(words=self.words1)
-		self.txt1.reset_data()
-		self.txt2.reset_logic(words=self.words2)
-		self.txt2.reset_data()
-		if self.Extended:
-			self.txt3.reset_logic(words=self.words3)
-			self.txt3.reset_data()
-			self.txt4.reset_logic(words=self.words4)
-			self.txt4.reset_data()
-		self.fill()
-		# Setting ReadOnly state works only after filling text
-		self.txt1.read_only(ReadOnly=True)
-		self.txt2.read_only(ReadOnly=True)
-		if self.Extended:
-			self.txt3.read_only(ReadOnly=True)
-			self.txt4.read_only(ReadOnly=True)
-		self.txt1.focus()
-		self.init_cursor_pos()
+			self.Success = False
+			sh.log.append('ParallelTexts.reset',sh.lev_warn,sh.globs['mes'].canceled)
 		
 	# Set the cursor to the start of the text
 	def init_cursor_pos(self):
-		self.txt1.mark_add()
-		self.txt2.mark_add()
-		if self.Extended:
-			self.txt3.mark_add()
-			self.txt4.mark_add()
+		if self.Success:
+			self.txt1.mark_add()
+			self.txt2.mark_add()
+			if self.Extended:
+				self.txt3.mark_add()
+				self.txt4.mark_add()
+		else:
+			sh.log.append('ParallelTexts.init_cursor_pos',sh.lev_warn,sh.globs['mes'].canceled)
 		
 	def select1(self,*args):
-		self.txt1.focus() # Without this the search doesn't work (the pane is inactive)
-		self.decolorize()
-		self.txt1.widget.config(bg='old lace')
-		self.txt11 = self.txt1
-		self.words11 = self.words1
-		self.txt22 = self.txt2
-		self.words22 = self.words2
-		self.select11()
+		if self.Success:
+			self.txt1.focus() # Without this the search doesn't work (the pane is inactive)
+			self.decolorize()
+			self.txt1.widget.config(bg='old lace')
+			self.txt11 = self.txt1
+			self.words11 = self.words1
+			self.txt22 = self.txt2
+			self.words22 = self.words2
+			self.select11()
+		else:
+			sh.log.append('ParallelTexts.select1',sh.lev_warn,sh.globs['mes'].canceled)
 		
 	def select2(self,*args):
-		self.txt2.focus() # Without this the search doesn't work (the pane is inactive)
-		self.decolorize()
-		self.txt2.widget.config(bg='old lace')
-		self.txt11 = self.txt2
-		self.words11 = self.words2
-		self.txt22 = self.txt1
-		self.words22 = self.words1
-		self.select22()
+		if self.Success:
+			self.txt2.focus() # Without this the search doesn't work (the pane is inactive)
+			self.decolorize()
+			self.txt2.widget.config(bg='old lace')
+			self.txt11 = self.txt2
+			self.words11 = self.words2
+			self.txt22 = self.txt1
+			self.words22 = self.words1
+			self.select22()
+		else:
+			sh.log.append('ParallelTexts.select2',sh.lev_warn,sh.globs['mes'].canceled)
 		
 	def select3(self,*args):
-		self.txt3.focus() # Without this the search doesn't work (the pane is inactive)
-		self.decolorize()
-		self.txt3.widget.config(bg='old lace')
-		self.txt11 = self.txt3
-		self.words11 = self.words3
-		self.txt22 = self.txt4
-		self.words22 = self.words4
-		self.select11()
+		if self.Success:
+			self.txt3.focus() # Without this the search doesn't work (the pane is inactive)
+			self.decolorize()
+			self.txt3.widget.config(bg='old lace')
+			self.txt11 = self.txt3
+			self.words11 = self.words3
+			self.txt22 = self.txt4
+			self.words22 = self.words4
+			self.select11()
+		else:
+			sh.log.append('ParallelTexts.select3',sh.lev_warn,sh.globs['mes'].canceled)
 		
 	def select4(self,*args):
-		self.txt4.focus() # Without this the search doesn't work (the pane is inactive)
-		self.decolorize()
-		self.txt4.widget.config(bg='old lace')
-		self.txt11 = self.txt4
-		self.words11 = self.words4
-		self.txt22 = self.txt3
-		self.words22 = self.words3
-		self.select22()
+		if self.Success:
+			self.txt4.focus() # Without this the search doesn't work (the pane is inactive)
+			self.decolorize()
+			self.txt4.widget.config(bg='old lace')
+			self.txt11 = self.txt4
+			self.words11 = self.words4
+			self.txt22 = self.txt3
+			self.words22 = self.words3
+			self.select22()
+		else:
+			sh.log.append('ParallelTexts.select4',sh.lev_warn,sh.globs['mes'].canceled)
 	
 	def bindings(self):
-		bind(widget=self.widget,bindings='<Control-q>',action=self.close)
-		bind(widget=self.widget,bindings='<Escape>',action=Geometry(parent_obj=self.obj).minimize)
-		bind(widget=self.widget,bindings=['<Alt-Key-1>','<Control-Key-1>'],action=self.select1)
-		bind(widget=self.widget,bindings=['<Alt-Key-2>','<Control-Key-2>'],action=self.select2)
-		if self.Extended:
-			bind(widget=self.widget,bindings=['<Alt-Key-3>','<Control-Key-3>'],action=self.select3)
-			bind(widget=self.widget,bindings=['<Alt-Key-4>','<Control-Key-4>'],action=self.select4)
-		bind(self.txt1.widget,'<ButtonRelease-1>',self.select1)
-		bind(self.txt2.widget,'<ButtonRelease-1>',self.select2)
-		if self.Extended:
-			bind(self.txt3.widget,'<ButtonRelease-1>',self.select3)
-			bind(self.txt4.widget,'<ButtonRelease-1>',self.select4)
+		if self.Success:
+			bind(widget=self.widget,bindings='<Control-q>',action=self.close)
+			bind(widget=self.widget,bindings='<Escape>',action=Geometry(parent_obj=self.obj).minimize)
+			bind(widget=self.widget,bindings=['<Alt-Key-1>','<Control-Key-1>'],action=self.select1)
+			bind(widget=self.widget,bindings=['<Alt-Key-2>','<Control-Key-2>'],action=self.select2)
+			if self.Extended:
+				bind(widget=self.widget,bindings=['<Alt-Key-3>','<Control-Key-3>'],action=self.select3)
+				bind(widget=self.widget,bindings=['<Alt-Key-4>','<Control-Key-4>'],action=self.select4)
+			bind(self.txt1.widget,'<ButtonRelease-1>',self.select1)
+			bind(self.txt2.widget,'<ButtonRelease-1>',self.select2)
+			if self.Extended:
+				bind(self.txt3.widget,'<ButtonRelease-1>',self.select3)
+				bind(self.txt4.widget,'<ButtonRelease-1>',self.select4)
+		else:
+			sh.log.append('ParallelTexts.bindings',sh.lev_warn,sh.globs['mes'].canceled)
 			
 	def decolorize(self):
-		self.txt1.widget.config(bg='white')
-		self.txt2.widget.config(bg='white')
-		if self.Extended:
-			self.txt3.widget.config(bg='white')
-			self.txt4.widget.config(bg='white')
+		if self.Success:
+			self.txt1.widget.config(bg='white')
+			self.txt2.widget.config(bg='white')
+			if self.Extended:
+				self.txt3.widget.config(bg='white')
+				self.txt4.widget.config(bg='white')
+		else:
+			sh.log.append('ParallelTexts.decolorize',sh.lev_warn,sh.globs['mes'].canceled)
 		
 	def show(self):
-		self.obj.show()
+		if self.Success:
+			self.obj.show()
+		else:
+			sh.log.append('ParallelTexts.show',sh.lev_warn,sh.globs['mes'].canceled)
 		
 	def close(self,*args):
-		self.obj.close()
+		if self.Success:
+			self.obj.close()
+		else:
+			sh.log.append('ParallelTexts.close',sh.lev_warn,sh.globs['mes'].canceled)
 		
 	def title(self,text='Compare texts:'):
-		self.obj.title(text)
+		if self.Success:
+			self.obj.title(text)
+		else:
+			sh.log.append('ParallelTexts.title',sh.lev_warn,sh.globs['mes'].canceled)
 		
 	def fill(self):
-		self.txt1.insert(text=self.words1._text_orig)
-		self.txt2.insert(text=self.words2._text_orig)
-		if self.Extended:
-			self.txt3.insert(text=self.words3._text_orig)
-			self.txt4.insert(text=self.words4._text_orig)
+		if self.Success:
+			self.txt1.insert(text=self.words1._text_orig)
+			self.txt2.insert(text=self.words2._text_orig)
+			if self.Extended:
+				self.txt3.insert(text=self.words3._text_orig)
+				self.txt4.insert(text=self.words4._text_orig)
+		else:
+			sh.log.append('ParallelTexts.fill',sh.lev_warn,sh.globs['mes'].canceled)
 		
 	def update_txt(self,h_widget,words,background='orange'):
-		pos1 = words.words[words._no].tf()
-		pos2 = words.words[words._no].tl()
-		if pos1 and pos2:
-			h_widget.tag_add(tag_name='tag',pos1tk=pos1,pos2tk=pos2,DeletePrevious=True)
-			h_widget.widget.tag_config('tag',background=background)
-			# Set the cursor to the first symbol of the selection
-			h_widget.mark_add('insert',pos1)
-			h_widget.mark_add(mark_name='yview',postk=pos1)
-			h_widget.see(mark='yview')
+		if self.Success:
+			pos1 = words.words[words._no].tf()
+			pos2 = words.words[words._no].tl()
+			if pos1 and pos2:
+				h_widget.tag_add(tag_name='tag',pos1tk=pos1,pos2tk=pos2,DeletePrevious=True)
+				h_widget.widget.tag_config('tag',background=background)
+				# Set the cursor to the first symbol of the selection
+				h_widget.mark_add('insert',pos1)
+				h_widget.mark_add(mark_name='yview',postk=pos1)
+				h_widget.see(mark='yview')
+			else:
+				Message(func='ParallelTexts.update_txt',level=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 		else:
-			Message(func='ParallelTexts.update_txt',level=sh.lev_err,message=sh.globs['mes'].wrong_input2)
+			sh.log.append('ParallelTexts.update_txt',sh.lev_warn,sh.globs['mes'].canceled)
 			
 	def synchronize11(self):
-		word11 = self.words11.words[self.words11._no]
-		word22 = self.words22.words[self.words22._no]
-		_search = word22._n
-		_loop22 = sh.Search(self.words22._text_n,_search).next_loop()
-		try:
-			index22 = _loop22.index(word22._n)
-		except ValueError:
-			#Message(func='ParallelTexts.synchronize11',level=sh.lev_err,message=sh.globs['mes'].wrong_input2)
-			index22 = 0
-		_loop11 = sh.Search(self.words11._text_n,_search).next_loop()
-		if index22 >= len(_loop11):
-			_no = None # Keep old selection
+		if self.Success:
+			word11 = self.words11.words[self.words11._no]
+			word22 = self.words22.words[self.words22._no]
+			_search = word22._n
+			_loop22 = sh.Search(self.words22._text_n,_search).next_loop()
+			try:
+				index22 = _loop22.index(word22._n)
+			except ValueError:
+				#Message(func='ParallelTexts.synchronize11',level=sh.lev_err,message=sh.globs['mes'].wrong_input2)
+				index22 = 0
+			_loop11 = sh.Search(self.words11._text_n,_search).next_loop()
+			if index22 >= len(_loop11):
+				_no = None # Keep old selection
+			else:
+				_no = self.words11.no_by_pos_n(_loop11[index22])
+			if _no is not None:
+				self.words11._no = _no
+				self.update_txt(self.txt11,self.words11,background='orange')
 		else:
-			_no = self.words11.no_by_pos_n(_loop11[index22])
-		if _no is not None:
-			self.words11._no = _no
-			self.update_txt(self.txt11,self.words11,background='orange')
+			sh.log.append('ParallelTexts.synchronize11',sh.lev_warn,sh.globs['mes'].canceled)
 			
 	def synchronize22(self):
-		word11 = self.words11.words[self.words11._no]
-		_search = word11._n
-		# This helps in case the word has both Cyrillic symbols and digits
-		_search = sh.Text(text=_search,Auto=False).delete_cyrillic()
-		# cur
-		_search = _search.replace(' ','') # Removing the non-breaking space
-		_loop11 = sh.Search(self.words11._text_n,_search).next_loop()
-		try:
-			index11 = _loop11.index(word11._pf)
-		except ValueError:
-			#Message(func='ParallelTexts.synchronize22',level=sh.lev_err,message=sh.globs['mes'].wrong_input2)
-			index11 = 0
-		_loop22 = sh.Search(self.words22._text_n,_search).next_loop()
-		if index11 >= len(_loop22):
-			_no = None # Keep old selection
+		if self.Success:
+			word11 = self.words11.words[self.words11._no]
+			_search = word11._n
+			# This helps in case the word has both Cyrillic symbols and digits
+			_search = sh.Text(text=_search,Auto=False).delete_cyrillic()
+			# cur
+			_search = _search.replace(' ','') # Removing the non-breaking space
+			_loop11 = sh.Search(self.words11._text_n,_search).next_loop()
+			try:
+				index11 = _loop11.index(word11._pf)
+			except ValueError:
+				#Message(func='ParallelTexts.synchronize22',level=sh.lev_err,message=sh.globs['mes'].wrong_input2)
+				index11 = 0
+			_loop22 = sh.Search(self.words22._text_n,_search).next_loop()
+			if index11 >= len(_loop22):
+				_no = None # Keep old selection
+			else:
+				_no = self.words22.no_by_pos_n(_loop22[index11])
+			if _no is not None:
+				self.words22._no = _no
+				self.update_txt(self.txt22,self.words22,background='cyan')
 		else:
-			_no = self.words22.no_by_pos_n(_loop22[index11])
-		if _no is not None:
-			self.words22._no = _no
-			self.update_txt(self.txt22,self.words22,background='cyan')
+			sh.log.append('ParallelTexts.synchronize22',sh.lev_warn,sh.globs['mes'].canceled)
 			
 	def select11(self,*args):
-		result = self.words11.no_by_tk(tkpos=self.txt11.cursor())
-		if result or result == 0:
-			self.words11._no = result
-		self.words11.next_stone()
-		self.update_txt(self.txt11,self.words11)
-		self.synchronize22()
+		if self.Success:
+			result = self.words11.no_by_tk(tkpos=self.txt11.cursor())
+			if result or result == 0:
+				self.words11._no = result
+			self.words11.next_stone()
+			self.update_txt(self.txt11,self.words11)
+			self.synchronize22()
+		else:
+			sh.log.append('ParallelTexts.select11',sh.lev_warn,sh.globs['mes'].canceled)
 
 	def select22(self,*args):
-		result = self.words22.no_by_tk(tkpos=self.txt22.cursor())
-		if result or result == 0:
-			self.words22._no = result
-		self.words22.next_stone()
-		self.update_txt(self.txt22,self.words22)
-		self.synchronize11()
+		if self.Success:
+			result = self.words22.no_by_tk(tkpos=self.txt22.cursor())
+			if result or result == 0:
+				self.words22._no = result
+			self.words22.next_stone()
+			self.update_txt(self.txt22,self.words22)
+			self.synchronize11()
+		else:
+			sh.log.append('ParallelTexts.select22',sh.lev_warn,sh.globs['mes'].canceled)
 		
 	def icon(self,path=None):
-		if path:
-			self.obj.icon(path)
+		if self.Success:
+			if path:
+				self.obj.icon(path)
+			else:
+				self.obj.icon(sys.path[0] + os.path.sep + 'resources' + os.path.sep + 'icon_64x64_cpt.gif')
 		else:
-			self.obj.icon(sys.path[0] + os.path.sep + 'resources' + os.path.sep + 'icon_64x64_cpt.gif')
+			sh.log.append('ParallelTexts.icon',sh.lev_warn,sh.globs['mes'].canceled)
 
 
 
@@ -1776,7 +1832,7 @@ class Message:
 		elif self.level == sh.lev_ques:
 			self.question()
 		else:
-			sh.log.append('Message.__init__',sh.lev_err,sh.globs['mes'].unknown_mode % (str(self.type),sh.lev_info + ', ' + sh.lev_warn + ', ' + sh.lev_err + ', ' + sh.lev_ques))
+			sh.log.append('Message.__init__',sh.lev_err,sh.globs['mes'].unknown_mode % (str(self.level),sh.lev_info + ', ' + sh.lev_warn + ', ' + sh.lev_err + ', ' + sh.lev_ques))
 			
 	def error(self):
 		if self.Success:
@@ -1920,7 +1976,7 @@ class Clipboard: # Requires 'objs'
 	
 	def copy(self,text,CopyEmpty=True):
 		if text or CopyEmpty:
-			text = str(sh.Text(text=text).not_none())
+			text = str(sh.Input(val=text).not_none())
 			objs.root().widget.clipboard_clear()
 			objs._root.widget.clipboard_append(text)
 			try:
@@ -2022,6 +2078,9 @@ class Objects:
 			Geometry(parent_obj=h_top).set('400x300')
 		return self._edit_clip
 		
+	def new_top(self):
+		return Top(parent_obj=self.root())
+	
 	def txt(self,words=None):
 		if not self._txt:
 			h_top = Top(parent_obj=self.root(),Maximize=True)

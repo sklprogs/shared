@@ -30,9 +30,7 @@ class OSSpecific:
 	
 	def __init__(self):
 		self._name = ''
-		self.import_win()
-		# Load last due to problems with TZ
-		import datetime
+		self.win_import()
 		
 	def shift_tab(self):
 		if self.lin():
@@ -61,7 +59,7 @@ class OSSpecific:
 				self._name = 'unknown'
 		return self._name
 	
-	def import_win(self):
+	def win_import(self):
 		if self.win():
 			#http://mail.python.org/pipermail/python-win32/2012-July/012493.html
 			_tz = os.getenv('TZ')
@@ -122,15 +120,15 @@ punc_array = ['.',',','!','?',':',';']
 punc_ext_array = ['"','“','”','','«','»','[',']','{','}','(',')']
 
 oss = OSSpecific()
+# Load last due to problems with TZ (see 'oss.win_import')
+import datetime
 
 
 
 # Cannot cross-import 2 modules, therefore, we need to have a local proecedure
 def Message(func='MAIN',level=lev_warn,message='Message',Silent=False):
 	import sharedGUI as sg
-	#sg.objs = sg.Widgets()
-	sg.Message(func=func,level=type,message=message,Silent=Silent)
-	#log.append(func,type,message)
+	sg.Message(func=func,level=level,message=message,Silent=Silent)
 
 
 # todo: Timing class functions sometimes shows inadequate results
@@ -616,16 +614,28 @@ class ReadTextFile:
 
 
 
-class Digits:
+class Input:
 	
-	def __init__(self,val):
+	def __init__(self,val,func_title='Input'):
+		self.func_title = func_title
 		self.val = val
 		
-	def debug(self,func_title,var_title):
-		if str(self.val).isdigit():
-			return True
+	def integer(self):
+		if isinstance(self.val,int):
+			return self.val
+		elif str(self.val).isdigit():
+			self.val = int(self.val)
+			log.append(self.func_title,lev_info,'Convert "%s" to an integer' % str(self.val)) # todo: mes
 		else:
-			Message(func=func_title,level=lev_err,message='Wrong value of "%s": "%s"!' % (var_title,str(self.val))) # todo: mes
+			Message(func=self.func_title,level=lev_err,message='Integer is required at input, but found "%s"! Return 0' % str(type(self.val))) # todo: mes
+			self.val = 0
+		return self.val
+			
+	# Insert '' instead of 'None' into text widgets
+	def not_none(self):
+		if not self.val:
+			self.val = ''
+		return self.val
 
 
 
@@ -634,7 +644,7 @@ class Text:
 	def __init__(self,text,Auto=False,Silent=False):
 		self.text = text
 		self.Silent = Silent
-		self.not_none()
+		self.text = Input(val=self.text).not_none()
 		# This can be useful in many cases, e.g. after OCR
 		if Auto:
 			self.convert_line_breaks()
@@ -659,12 +669,6 @@ class Text:
 			if old == self.text:
 				break
 			match = re.search(expr,self.text)
-		return self.text
-	
-	# Insert '' instead of 'None' into text widgets
-	def not_none(self):
-		if not self.text:
-			self.text = ''
 		return self.text
 	
 	def country(self):
