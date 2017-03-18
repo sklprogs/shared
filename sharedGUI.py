@@ -1827,7 +1827,7 @@ class Message:
 			self.info()
 		elif self.level == sh.lev_warn:
 			self.warning()
-		elif self.level == sh.lev_err:
+		elif self.level == sh.lev_err or self.level == sh.lev_crit:
 			self.error()
 		elif self.level == sh.lev_ques:
 			self.question()
@@ -1881,6 +1881,7 @@ class MessageBuilder: # Requires 'constants'
 		self.parent_obj = parent_obj
 		self.obj = Top(parent_obj=self.parent_obj)
 		self.widget = self.obj.widget
+		self.icon()
 		self.frames()
 		self.picture()
 		self.txt = TextBox(parent_obj=self.top_right,Composite=True)
@@ -1894,7 +1895,6 @@ class MessageBuilder: # Requires 'constants'
 		self.widget.protocol("WM_DELETE_WINDOW",self.close)
 		
 	def paths(self):
-		# Python can operate with relative pathes, however, 'resources' will not be found if the script is launched, for example, in '/home'
 		if self.level == sh.lev_warn:
 			self.path = sys.path[0] + os.path.sep + 'resources' + os.path.sep + 'warning.gif'
 		elif self.level == sh.lev_info:
@@ -1905,6 +1905,12 @@ class MessageBuilder: # Requires 'constants'
 			self.path = sys.path[0] + os.path.sep + 'resources' + os.path.sep + 'error.gif'
 		else:
 			sh.log.append('MessageBuilder.paths',sh.lev_err,sh.globs['mes'].unknown_mode % (str(self.path),', '.join([sh.lev_warn,sh.lev_err,sh.lev_ques,sh.lev_info])))
+			
+	def icon(self,path=None):
+		if path:
+			self.obj.icon(path=path)
+		else:
+			self.obj.icon(path=self.path)
 		
 	def frames(self):
 		frame = Frame(parent_obj=self.obj,expand=1)
@@ -1940,9 +1946,10 @@ class MessageBuilder: # Requires 'constants'
 		self.txt.insert(text=text)
 		self.txt.read_only(ReadOnly=True)
 	
-	def reset(self,text='Message',title='Title:'):
+	def reset(self,text='Message',title='Title:',icon=None):
 		self.update(text=text)
 		self.title(text=title)
+		self.icon(path=icon)
 		return self
 	
 	def show(self,Lock=False,*args):

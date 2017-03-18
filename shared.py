@@ -128,7 +128,7 @@ import datetime
 # Cannot cross-import 2 modules, therefore, we need to have a local proecedure
 def Message(func='MAIN',level=lev_warn,message='Message',Silent=False):
 	import sharedGUI as sg
-	sg.Message(func=func,level=level,message=message,Silent=Silent)
+	return sg.Message(func=func,level=level,message=message,Silent=Silent) # pass 'Yes'
 
 
 # todo: Timing class functions sometimes shows inadequate results
@@ -144,13 +144,13 @@ def timer(func_title,func,args=None): # Use tuple to pass multiple arguments
 		
 # We do not put this into File class because we do not need to check existence
 def rewrite(dest,AskRewrite=True):
-	# We return True so we may proceed with writing if the file has not been found
-	Confirmed = True
 	# We use AskRewrite just to shorten other procedures (to be able to use 'rewrite' silently in the code without ifs)
 	if AskRewrite and os.path.isfile(dest):
 		# We don't actually need to force rewriting or delete the file before rewriting
-		Confirmed = Message(func='rewrite',level=lev_ques,message=globs['mes'].rewrite_ques % dest).Yes
-	return Confirmed
+		return Message(func='rewrite',level=lev_ques,message=globs['mes'].rewrite_ques % dest).Yes
+	else:
+		# We return True so we may proceed with writing if the file has not been found
+		return True
 	
 
 
@@ -780,6 +780,7 @@ class Text:
 		for i in range(len(punc_array)):
 			self.text = self.text.replace(' '+punc_array[i],punc_array[i])
 		self.text = self.text.replace('“ ','“').replace(' ”','”').replace('( ','(').replace(' )',')').replace('[ ','[').replace(' ]',']').replace('{ ','{').replace(' }','}')
+		return self.text
 		
 	def extract_date(self): # Only for pattern '(YYYY-MM-DD)'
 		expr = '\((\d\d\d\d-\d\d-\d\d)\)'
@@ -2011,8 +2012,11 @@ class Word:
 	
 	def nm(self):
 		if self._nm is None:
-			if self.empty() or self.stone(): # Probably dangerous. See 'matches()' before modifying.
-				self._nm = ''
+			if self.empty() or self.stone():
+				''' # note: Setting '_nm' to '' allows to find longer matches (without stones), but requires replacing duplicate spaces in 'text_nm' with ordinary ones and using another word numbering for '_nm'.
+				'''
+				#self._nm = ''
+				self._nm = self._n
 			else:
 				result = Decline(text=self._n,Auto=False).normal().get()
 				if result:
@@ -2594,65 +2598,17 @@ class OCR:
 	
 	def __init__(self,text):
 		self._text = text
-		self.ocr1()
-		self.ocr2()
-		self.ocr3()
-		self.ocr4()
-		
-	# 100o => 100°
-	def ocr1(self):
-		my_expr = '(\d+)[oо]'
-		match = re.search(my_expr,self._text)
-		while match:
-			old = self._text
-			replace_what = match.group(0)
-			replace_with = match.group(1) + '°'
-			self._text = self._text.replace(replace_what,replace_with)
-			match = re.search(my_expr,self._text)
-			if old == self._text:
-				match = False
-		return self._text
-		
-	# 106а => 106a (Cyrillic)
-	def ocr2(self):
-		my_expr = '(\d+)а'
-		match = re.search(my_expr,self._text)
-		while match:
-			old = self._text
-			replace_what = match.group(0)
-			replace_with = match.group(1) + 'a'
-			self._text = self._text.replace(replace_what,replace_with)
-			match = re.search(my_expr,self._text)
-			if old == self._text:
-				match = False
-		return self._text
-		
-	# 106е => 106e (Cyrillic)
-	def ocr3(self):
-		my_expr = '(\d+)е'
-		match = re.search(my_expr,self._text)
-		while match:
-			old = self._text
-			replace_what = match.group(0)
-			replace_with = match.group(1) + 'e'
-			self._text = self._text.replace(replace_what,replace_with)
-			match = re.search(my_expr,self._text)
-			if old == self._text:
-				match = False
-		return self._text
-		
-	# 106Ь => 106b
-	def ocr4(self):
-		my_expr = '(\d+)Ь'
-		match = re.search(my_expr,self._text)
-		while match:
-			old = self._text
-			replace_what = match.group(0)
-			replace_with = match.group(1) + 'b'
-			self._text = self._text.replace(replace_what,replace_with)
-			match = re.search(my_expr,self._text)
-			if old == self._text:
-				match = False
+		self.ocr()
+	
+	def ocr(self):
+		# 100o => 100°
+		self._text = re.sub(r'(\d+)[oо]',r'\1°',self._text)
+		# 106а => 106a (Cyrillic)
+		self._text = re.sub(r'(\d+)а',r'\1a',self._text)
+		# 106е => 106e (Cyrillic)
+		self._text = re.sub(r'(\d+)е',r'\1e',self._text)
+		# 106Ь => 106b
+		self._text = re.sub(r'(\d+)Ь',r'\1b',self._text)
 		return self._text
 
 
