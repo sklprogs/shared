@@ -2213,7 +2213,20 @@ class Words: # Requires Search, Text
 		else:
 			log.append('Words.sent_nos',lev_warn,globs['mes'].canceled)
 			
-	# todo: Do we really need this?
+	def sent_p(self):
+		if self.Success:
+			sent_no = self.sent_no()
+			sent_no = Input(func_title='Words.sent_p',val=sent_no).integer()
+			old = self._no
+			result = []
+			for self._no in range(self.len()):
+				if self.words[self._no]._sent_no == sent_no:
+					result.append(self.words[self._no]._p)
+			self._no = old
+			return ' '.join(result)
+		else:
+			log.append('Words.sent_p',lev_warn,globs['mes'].canceled)
+			
 	def sent_no(self):
 		if self.Success:
 			self.sent_nos()
