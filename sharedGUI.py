@@ -10,17 +10,20 @@ import shared as sh
 
 
 # Привязать горячие клавиши или кнопки мыши к действию
-def bind(widget,bindings,action): # widget, str/list, function
-	if isinstance(bindings,str) or isinstance(bindings,list):
-		if isinstance(bindings,str):
-			bindings = [bindings]
-		for i in range(len(bindings)):
-			try:
-				widget.bind(bindings[i],action)
-			except tk.TclError:
-				Message(func='bind',level=sh.lev_err,message=sh.globs['mes'].wrong_keybinding % bindings[i])
+def bind(obj,bindings,action): # object, str/list, function
+	if hasattr(obj,'widget'):
+		if isinstance(bindings,str) or isinstance(bindings,list):
+			if isinstance(bindings,str):
+				bindings = [bindings]
+			for i in range(len(bindings)):
+				try:
+					obj.widget.bind(bindings[i],action)
+				except tk.TclError:
+					Message(func='bind',level=sh.lev_err,message=sh.globs['mes'].wrong_keybinding % bindings[i])
+		else:
+			Message(func='bind',level=sh.lev_err,message=sh.globs['mes'].wrong_input3 % str(bindings))
 	else:
-		Message(func='bind',level=sh.lev_err,message=sh.globs['mes'].wrong_input3 % str(bindings))
+		Message(func='bind',level=sh.lev_err,message=sh.globs['mes'].wrong_input2)
 
 
 
@@ -403,18 +406,18 @@ class TextBox:
 		return 'break'
 	
 	def bindings(self):
-		bind(widget=self.widget,bindings=['<Control-f>','<Control-F3>'],action=self.search_box.new)
-		bind(widget=self.widget,bindings='<F3>',action=self.search_box.next)
-		bind(widget=self.widget,bindings='<Shift-F3>',action=self.search_box.prev)
+		bind(obj=self,bindings=['<Control-f>','<Control-F3>'],action=self.search_box.new)
+		bind(obj=self,bindings='<F3>',action=self.search_box.next)
+		bind(obj=self,bindings='<Shift-F3>',action=self.search_box.prev)
 		# Только для несоставных виджетов
 		if not self.Composite:
 			self.widget.unbind('<Return>')
 			if self.state == 'disabled' or self.SpecialReturn:
 				# Разрешать считывать текст после нажатия Escape (в Entry запрещено)
-				bind(widget=self.widget,bindings=['<Return>','<KP_Enter>','<Escape>'],action=self.close)
+				bind(obj=self,bindings=['<Return>','<KP_Enter>','<Escape>'],action=self.close)
 			else:
-				bind(widget=self.widget,bindings=['<Escape>'],action=self.close)
-		bind(widget=self.widget,bindings='<Control-a>',action=self.select_all)
+				bind(obj=self,bindings=['<Escape>'],action=self.close)
+		bind(obj=self,bindings='<Control-a>',action=self.select_all)
 	
 	def _get(self):
 		try:
@@ -631,7 +634,7 @@ class Entry:
 		self.Save = False
 		self.parent_obj = parent_obj
 		self.widget = tk.Entry(self.parent_obj.widget,font='Sans 11',width=width) #sh.globs['var']['menu_font']
-		bind(widget=self.widget,bindings='<Control-a>',action=self.select_all)
+		bind(obj=self,bindings='<Control-a>',action=self.select_all)
 		self.widget.pack(side=side,ipadx=ipadx,ipady=ipady,fill=fill,expand=expand)
 		if not self.Composite:
 			# Тип родительского виджета может быть любым
@@ -648,8 +651,8 @@ class Entry:
 		if self.Composite:
 			self.clear_text()
 		else:
-			bind(widget=self.widget,bindings=['<Return>','<KP_Enter>'],action=self.close)
-			bind(widget=self.widget,bindings='<Escape>',action=self.parent_obj.close)
+			bind(obj=self,bindings=['<Return>','<KP_Enter>'],action=self.close)
+			bind(obj=self,bindings='<Escape>',action=self.parent_obj.close)
 
 	def show(self,*args):
 		self.parent_obj.show()
@@ -771,7 +774,7 @@ class Button:
 			hint_extended = hint
 		ToolTip(self.widget,text=hint_extended,hint_delay=hint_delay,hint_width=hint_width,hint_height=hint_height,hint_background=hint_background,hint_direction=hint_direction,button_side=side)
 		self.show()
-		bind(widget=self.widget,bindings=['<ButtonRelease-1>','<space>','<Return>','<KP_Enter>'],action=self.click)
+		bind(obj=self,bindings=['<ButtonRelease-1>','<space>','<Return>','<KP_Enter>'],action=self.click)
 		if TakeFocus:
 			self.widget.focus_set()
 	
@@ -946,17 +949,17 @@ class ListBox:
 		
 	def bindings(self):
 		if self.user_function:
-			bind(self.widget,'<<ListboxSelect>>',self.user_function) # Binding just to '<Button-1>' does not work. We do not need binding Return/space/etc. because the function will be called each time the selection is changed. However, we still need to bind Up/Down.
+			bind(self,'<<ListboxSelect>>',self.user_function) # Binding just to '<Button-1>' does not work. We do not need binding Return/space/etc. because the function will be called each time the selection is changed. However, we still need to bind Up/Down.
 		elif self.SelectionCloses:
 			# todo: test <KP_Enter> in Windows
-			bind(self.widget,['<Return>','<KP_Enter>','<Double-Button-1>'],self.close)
+			bind(self,['<Return>','<KP_Enter>','<Double-Button-1>'],self.close)
 			if self.SingleClick and not self.Multiple:
-				bind(self.widget,'<Button-1>',self.close)
+				bind(self,'<Button-1>',self.close)
 		if not self.Multiple:
-			bind(self.widget,'<Up>',self.move_up)
-			bind(self.widget,'<Down>',self.move_down)
+			bind(self,'<Up>',self.move_up)
+			bind(self,'<Down>',self.move_down)
 		if not self.Composite: # todo: test
-			bind(self.widget,['<Escape>','<Control-q>','<Control-w>'],self.close)
+			bind(self,['<Escape>','<Control-q>','<Control-w>'],self.close)
 		
 	def gui(self):
 		self._scroll()
@@ -1366,13 +1369,13 @@ class ParallelTexts: # Requires Search
 	
 	def bindings(self):
 		if self.Success:
-			bind(widget=self.widget,bindings='<Control-q>',action=self.close)
-			bind(widget=self.widget,bindings='<Escape>',action=Geometry(parent_obj=self.obj).minimize)
-			bind(widget=self.widget,bindings=['<Alt-Key-1>','<Control-Key-1>'],action=self.select1)
-			bind(widget=self.widget,bindings=['<Alt-Key-2>','<Control-Key-2>'],action=self.select2)
+			bind(obj=self,bindings='<Control-q>',action=self.close)
+			bind(obj=self,bindings='<Escape>',action=Geometry(parent_obj=self.obj).minimize)
+			bind(obj=self,bindings=['<Alt-Key-1>','<Control-Key-1>'],action=self.select1)
+			bind(obj=self,bindings=['<Alt-Key-2>','<Control-Key-2>'],action=self.select2)
 			if self.Extended:
-				bind(widget=self.widget,bindings=['<Alt-Key-3>','<Control-Key-3>'],action=self.select3)
-				bind(widget=self.widget,bindings=['<Alt-Key-4>','<Control-Key-4>'],action=self.select4)
+				bind(obj=self,bindings=['<Alt-Key-3>','<Control-Key-3>'],action=self.select3)
+				bind(obj=self,bindings=['<Alt-Key-4>','<Control-Key-4>'],action=self.select4)
 			bind(self.txt1.widget,'<ButtonRelease-1>',self.select1)
 			bind(self.txt2.widget,'<ButtonRelease-1>',self.select2)
 			if self.Extended:
@@ -1891,7 +1894,7 @@ class MessageBuilder: # Requires 'constants'
 		self.close()
 		
 	def bindings(self):
-		bind(widget=self.widget,bindings=['<Control-q>','<Control-w>','<Escape>'],action=self.close_no)
+		bind(obj=self,bindings=['<Control-q>','<Control-w>','<Escape>'],action=self.close_no)
 		self.widget.protocol("WM_DELETE_WINDOW",self.close)
 		
 	def paths(self):
