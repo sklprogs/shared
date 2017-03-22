@@ -1054,7 +1054,7 @@ class File:
 		self.mtime = ''
 		if self.file and os.path.isfile(self.file): # This already checks existence
 			if os.path.isdir(self.dest): # If the destination directory does not exist, this will be caught in try-except while copying/moving
-				self.dest += os.path.sep + Path(self.file).basename()
+				self.dest = os.path.join(self.dest,Path(self.file).basename())
 		elif not self.file:
 			self.Success = False
 			Message(func='File.__init__',level=lev_err,message=globs['mes'].empty_input,Silent=self.Silent)
@@ -1143,7 +1143,7 @@ class File:
 		if self.Success:
 			if self.file.lower() == self.dest.lower():
 				Message(func='File.move',level=lev_err,message=globs['mes'].move_failure3,Silent=self.Silent)
-			elif rewrite(selt.dest,AskRewrite=self.AskRewrite):
+			elif rewrite(self.dest,AskRewrite=self.AskRewrite):
 				Success = self._move()
 			else:
 				log.append('File.move',lev_info,globs['mes'].canceled_by_user)
@@ -1225,10 +1225,11 @@ class Path:
 	
 	def reset(self,path,Silent=False):
 		self.path = path
-		# Unescaped Windows paths must be preceeded with r, e.g., r'C:\1.txt', which will be automatically converted to 'C:\\1.txt'.
-		# We can import ntpath, posixpath instead
-		# todo: check if paths with \\ are always valid in Windows (do we need to replace this back)
-		self.path = self.path.replace('\\','//')
+		''' Building paths in Windows:
+			- Use raw strings (e.g., set path as r'C:\1.txt')
+			- Use os.path.join(mydir,myfile) or os.path.normpath(path) instead of os.path.sep
+			- As an alternative, import ntpath, posixpath
+		'''
 		# We remove a separator from the end, because basename and dirname work differently in this case ('' and the last directory, correspondingly)
 		self.path = self.path.rstrip('//')
 		self._basename = self._dirname = self._extension = self._filename = self._split = self._date = ''
@@ -1573,7 +1574,7 @@ class Directory:
 				self._list = os.listdir(self.dir)
 				self._rel_list = list(self._list)
 				for i in range(len(self._list)):
-					self._list[i] = self.dir + os.path.sep + self._list[i]
+					self._list[i] = os.path.join(self.dir,self._list[i])
 		else:
 			log.append('Directory.list',lev_warn,globs['mes'].canceled)
 		return self._list
@@ -1742,7 +1743,7 @@ class Diff:
 	def __init__(self,Silent=False):
 		self.Silent = Silent
 		self.Custom = False
-		self.wda_html = globs[oss.name()]['tmp_folder'] + os.path.sep + 'wda.html'
+		self.wda_html = os.path.join(globs[oss.name()]['tmp_folder'],'wda.html')
 		self.h_wda_write = WriteTextFile(self.wda_html,AskRewrite=False,Silent=self.Silent)
 	
 	def reset(self,text1,text2,file=None):
