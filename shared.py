@@ -1524,10 +1524,31 @@ class Directory:
 		self._rel_files = []
 		self._dirs = []
 		self._rel_dirs = []
+		self._extensions = []
+		self._extensions_low = []
 		if not os.path.isdir(self.dir):
 			self.Success = False
 			Message(func='Directory.__init__',level=lev_warn,message=globs['mes'].wrong_input3 % self.dir,Silent=self.Silent)
 			
+	def extensions(self): # with a dot
+		if self.Success:
+			if not self._extensions:
+				for file in self.rel_files():
+					ext = Path(path=file).extension()
+					self._extensions.append(ext)
+					self._extensions_low.append(ext.lower())
+		else:
+			log.append('Directory.extensions',lev_warn,globs['mes'].canceled)
+		return self._extensions
+		
+	def extensions_low(self): # with a dot
+		if self.Success:
+			if not self._extensions_low:
+				self.extensions()
+		else:
+			log.append('Directory.extensions_low',lev_warn,globs['mes'].canceled)
+		return self._extensions_low
+		
 	def delete(self):
 		if self.Success:
 			log.append('Directory.delete',lev_info,globs['mes'].deleting % self.dir)

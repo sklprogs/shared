@@ -1376,11 +1376,11 @@ class ParallelTexts: # Requires Search
 			if self.Extended:
 				bind(obj=self,bindings=['<Alt-Key-3>','<Control-Key-3>'],action=self.select3)
 				bind(obj=self,bindings=['<Alt-Key-4>','<Control-Key-4>'],action=self.select4)
-			bind(self.txt1.widget,'<ButtonRelease-1>',self.select1)
-			bind(self.txt2.widget,'<ButtonRelease-1>',self.select2)
+			bind(obj=self.txt1,bindings='<ButtonRelease-1>',action=self.select1)
+			bind(obj=self.txt2,bindings='<ButtonRelease-1>',action=self.select2)
 			if self.Extended:
-				bind(self.txt3.widget,'<ButtonRelease-1>',self.select3)
-				bind(self.txt4.widget,'<ButtonRelease-1>',self.select4)
+				bind(obj=self.txt3,bindings='<ButtonRelease-1>',action=self.select3)
+				bind(obj=self.txt4,bindings='<ButtonRelease-1>',action=self.select4)
 		else:
 			sh.log.append('ParallelTexts.bindings',sh.lev_warn,sh.globs['mes'].canceled)
 			
@@ -1772,43 +1772,46 @@ class Label:
 
 
 
-class CheckBox:
+class CheckBox: 
 	
-	def __init__(self,parent_obj,Active=False):
+	# note: For some reason, CheckBox that should be Active must be assigned to a variable (var = CheckBox(parent_obj,Active=1))
+	def __init__(self,parent_obj,Active=False,side=None,action=None):
 		self.parent_obj = parent_obj
+		self.side = side
+		self.action = action
 		self.status = tk.IntVar()
 		self.gui()
 		self.reset(Active=Active)
-			
+
 	def reset(self,Active=False):
 		if Active:
 			self.enable()
 		else:
 			self.disable()
-		
+
 	def gui(self):
-		self.widget = tk.Checkbutton(self.parent_obj.widget,variable=self.status)
-		self.widget.pack()
+		self.widget = tk.Checkbutton(self.parent_obj.widget,variable=self.status,command=self.action)
+		self.widget.pack(side=self.side)
 		self.obj = self
-		
+
 	def show(self):
 		self.parent_obj.show()
-		
+
 	def close(self):
 		self.parent_obj.close()
-		
+
 	def focus(self,*args):
 		self.widget.focus_set()
-		
+
 	def enable(self):
 		self.widget.select()
-		
+
 	def disable(self):
 		self.widget.deselect()
-		
+
 	def get(self,*args):
 		return self.status.get()
-		
+
 	def toggle(self,*args):
 		self.widget.toggle()
 
