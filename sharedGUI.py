@@ -469,7 +469,7 @@ class TextBox:
 			sh.log.append('TextBox.tag_add',sh.lev_err,sh.globs['mes'].tag_addition_failure % (tag_name,pos1tk,pos2tk))
 		self.tags.append(tag_name)
 		
-	def tag_config(self,tag_name='sel',background=None,foreground=None):
+	def tag_config(self,tag_name='sel',background=None,foreground=None,font=None):
 		if background:
 			try:
 				self.widget.tag_config(tag_name,background=background)
@@ -480,6 +480,11 @@ class TextBox:
 				self.widget.tag_config(tag_name,foreground=foreground)
 			except tk.TclError:
 				sh.log.append('TextBox.tag_config',sh.lev_err,sh.globs['mes'].tag_fg_failure2 % (str(tag_name),str(foreground)))
+		if font:
+			try:
+				self.widget.tag_config(tag_name,font=font)
+			except tk.TclError:
+				sh.log.append('TextBox.tag_config',sh.lev_err,'Failed to configure tag "%s" to have the font "%s"!' % (str(tag_name),str(font))) # todo: mes
 	
 	# Tk.Entry не поддерживает тэги и метки
 	def mark_add(self,mark_name='insert',postk='1.0'):
@@ -540,7 +545,7 @@ class TextBox:
 			sh.log.append('TextBox.scroll',sh.lev_warn,sh.globs['mes'].shift_screen_failure % str(mark))
 			
 	# Сместить экран до позиции tkinter или до метки, если они не видны (тэги не работают)
-	def autoscroll(self,mark):
+	def autoscroll(self,mark='1.0'):
 		if not self.visible(mark):
 			self.scroll(mark)
 			
@@ -1487,23 +1492,27 @@ class ParallelTexts: # Requires Search
 			
 	def select11(self,*args):
 		if self.Success:
-			result = self.words11.no_by_tk(tkpos=self.txt11.cursor())
-			if result or result == 0:
-				self.words11._no = result
-			self.words11.next_stone()
-			self.update_txt(self.txt11,self.words11)
-			self.synchronize22()
+			# cur # todo: fix
+			if not Selection(h_widget=self.txt11).pos2tk():
+				result = self.words11.no_by_tk(tkpos=self.txt11.cursor())
+				if result or result == 0:
+					self.words11._no = result
+				self.words11.next_stone()
+				self.update_txt(self.txt11,self.words11)
+				self.synchronize22()
 		else:
 			sh.log.append('ParallelTexts.select11',sh.lev_warn,sh.globs['mes'].canceled)
 
 	def select22(self,*args):
 		if self.Success:
-			result = self.words22.no_by_tk(tkpos=self.txt22.cursor())
-			if result or result == 0:
-				self.words22._no = result
-			self.words22.next_stone()
-			self.update_txt(self.txt22,self.words22)
-			self.synchronize11()
+			# cur # todo: fix
+			if not Selection(h_widget=self.txt11).pos2tk():
+				result = self.words22.no_by_tk(tkpos=self.txt22.cursor())
+				if result or result == 0:
+					self.words22._no = result
+				self.words22.next_stone()
+				self.update_txt(self.txt22,self.words22)
+				self.synchronize11()
 		else:
 			sh.log.append('ParallelTexts.select22',sh.lev_warn,sh.globs['mes'].canceled)
 		
@@ -2091,8 +2100,8 @@ class Objects:
 			Geometry(parent_obj=h_top).set('400x300')
 		return self._edit_clip
 		
-	def new_top(self):
-		return Top(parent_obj=self.root())
+	def new_top(self,Maximize=1,AutoCenter=1):
+		return Top(parent_obj=self.root(),Maximize=Maximize,AutoCenter=AutoCenter)
 	
 	def txt(self,words=None):
 		if not self._txt:

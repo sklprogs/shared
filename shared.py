@@ -1238,6 +1238,7 @@ class Path:
 		
 	def split(self):
 		if not self.parts:
+			# todo: use os.path.split
 			self.parts = self.path.split(os.path.sep)
 			i = 0
 			tmp_str = ''
@@ -2369,31 +2370,52 @@ class Words: # Requires Search, Text
 			log.append('Words.no_by_pos_nm',lev_warn,globs['mes'].canceled)
 			
 	def no_by_tk(self,tkpos):
-		if tkpos:
-			lst = tkpos.split('.')
-			if len(lst) == 2:
-				lst[0] = Text(text=lst[0]).str2int()
-				if lst[0] > 0:
-					lst[0] -= 1
-				lst[1] = Text(text=lst[1]).str2int()
-				result = None
-				for i in range(self.len()):
-					if self.words[i]._sent_no == lst[0]:
-						result = self.words[i]._sents_len
-						break
-				if result is not None:
-					if lst[1] == 0:
-						result += 1
-					elif lst[0] == 0:
-						result += lst[1]
-					else:
-						result += lst[1] + 1
-					log.append('Words.no_by_tk',lev_debug,'%s -> %d' % (tkpos,result))
-					return self.no_by_pos_p(pos=result)
+		if self.Success:
+			if tkpos:
+				lst = tkpos.split('.')
+				if len(lst) == 2:
+					lst[0] = Text(text=lst[0]).str2int()
+					if lst[0] > 0:
+						lst[0] -= 1
+					lst[1] = Text(text=lst[1]).str2int()
+					result = None
+					for i in range(self.len()):
+						if self.words[i]._sent_no == lst[0]:
+							result = self.words[i]._sents_len
+							break
+					if result is not None:
+						if lst[1] == 0:
+							result += 1
+						elif lst[0] == 0:
+							result += lst[1]
+						else:
+							result += lst[1] + 1
+						log.append('Words.no_by_tk',lev_debug,'%s -> %d' % (tkpos,result))
+						return self.no_by_pos_p(pos=result)
+				else:
+					Message(func='Words.no_by_tk',level=lev_warn,message=globs['mes'].wrong_input3 % str(lst))
 			else:
 				Message(func='Words.no_by_tk',level=lev_warn,message=globs['mes'].wrong_input3 % str(lst))
 		else:
-			Message(func='Words.no_by_tk',level=lev_warn,message=globs['mes'].wrong_input3 % str(lst))
+			log.append('Words.no_by_tk',lev_warn,globs['mes'].canceled)
+			
+	def nos_by_sent_no(self,sent_no=0):
+		result = (0,0)
+		if self.Success:
+			sent_no = Input(func_title='Words.nos_by_sent_no',val=sent_no).integer()
+			old = self._no
+			nos = []
+			for self._no in range(self.len()):
+				if sent_no == self.sent_no():
+					nos.append(self._no)
+			self._no = old
+			if nos:
+				result = (min(nos),max(nos)) # Valid for one-word paragraph
+			else:
+				log.append('Words.nos_by_sent_no',lev_warn,'Failed to find words of paragraph #%d!' % sent_no) # todo: mes
+		else:
+			log.append('Words.nos_by_sent_no',lev_warn,globs['mes'].canceled)
+		return result
 	
 	def complete(self):
 		if self.Success:
