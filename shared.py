@@ -655,8 +655,7 @@ class Text:
 			self.replace_x()
 			self.delete_duplicate_spaces()
 			self.yo()
-			self.fix_degree_sign()
-			self.text = OCR(text=self.text)._text
+			self.text = OCR(text=self.text).common()
 			self.delete_space_with_punctuation()
 			self.text = self.text.strip() # This is necessary even if we do strip for each line (we need to strip '\n' at the beginning/end)
 			
@@ -803,18 +802,6 @@ class Text:
 		#	Message(func='Text.extract_date_hash',level=lev_warn,message=globs['mes'].wrong_input2,Silent=self.Silent)
 		return hash
 	
-	# Fix possible misprints and OCR errors in the text where a degree sign can be witnessed
-	def fix_degree_sign(self):
-		my_expr = '[\s]{0,1}[°o][\s]{0,1}[CС](\W)'
-		match = re.search(my_expr,self.text)
-		while match:
-			old = self.text
-			self.text = self.text.replace(match.group(0),'°C'+match.group(1))
-			match = re.search(my_expr,self.text)
-			if old == self.text:
-				match = False
-		return self.text
-		
 	# Shorten a title up to a max length
 	def prepare_title(self,max_title_len=20,Enclose=True):
 		if len(self.text) > max_title_len:
@@ -2655,9 +2642,20 @@ class OCR:
 	
 	def __init__(self,text):
 		self._text = text
-		self.ocr()
 	
-	def ocr(self):
+	def cyr2lat(self):     # Texts in Latin characters only
+		# 'У' -> 'Y' is not actually an OCR error, but rather a human one
+		cyr = ['А','В','Е','К','М','Н','О','Р','С','Т','У','Х','Ь','а','е','о','р','с','у']
+		lat = ['A','B','E','K','M','H','O','P','C','T','Y','X','b','a','e','o','p','c','y']
+		for i in range(len(cyr)):
+			self._text = self._text.replace(cyr[i],lat[i])
+		return self._text
+		
+	def letter2digit(self): # Digits only
+		self._text = self._text.replace('З','3').replace('з','3').replace('O','0').replace('О','0').replace('б','6')
+		return self._text
+	
+	def common(self):
 		# 100o => 100°
 		self._text = re.sub(r'(\d+)[oо]',r'\1°',self._text)
 		# 106а => 106a (Cyrillic)
@@ -2666,6 +2664,8 @@ class OCR:
 		self._text = re.sub(r'(\d+)е',r'\1e',self._text)
 		# 106Ь => 106b
 		self._text = re.sub(r'(\d+)Ь',r'\1b',self._text)
+		# Fix a degree sign
+		self._text = re.sub(r'[\s]{0,1}[°o][\s]{0,1}[CС](\W)',r'°C',self._text)
 		return self._text
 
 
