@@ -698,34 +698,37 @@ class Text:
 		return self.text
 	
 	def delete_embraced_text(self,opening_sym='{',closing_sym='}'):
-		opening_parentheses = []
-		closing_parentheses = []
-		for i in range(len(self.text)):
-			if self.text[i] == opening_sym:
-				opening_parentheses.append(i)
-			elif self.text[i] == closing_sym:
-				closing_parentheses.append(i)
+		if self.text.count(opening_sym) == self.text.count(closing_sym):
+			opening_parentheses = []
+			closing_parentheses = []
+			for i in range(len(self.text)):
+				if self.text[i] == opening_sym:
+					opening_parentheses.append(i)
+				elif self.text[i] == closing_sym:
+					closing_parentheses.append(i)
 
-		min_val = min(len(opening_parentheses),len(closing_parentheses))
+			min_val = min(len(opening_parentheses),len(closing_parentheses))
 
-		opening_parentheses = opening_parentheses[::-1]
-		closing_parentheses = closing_parentheses[::-1]
+			opening_parentheses = opening_parentheses[::-1]
+			closing_parentheses = closing_parentheses[::-1]
 
-		# Ignore non-matching parentheses
-		i = 0
-		while i < min_val:
-			if opening_parentheses[i] >= closing_parentheses[i]:
-				del closing_parentheses[i]
-				i -= 1
-				min_val -= 1
-			i += 1
+			# Ignore non-matching parentheses
+			i = 0
+			while i < min_val:
+				if opening_parentheses[i] >= closing_parentheses[i]:
+					del closing_parentheses[i]
+					i -= 1
+					min_val -= 1
+				i += 1
 
-		self.text = list(self.text)
-		for i in range(min_val):
-			if opening_parentheses[i] < closing_parentheses[i]:
-				self.text = self.text[0:opening_parentheses[i]] + self.text[closing_parentheses[i]+1:]
-		self.text = ''.join(self.text)
-		# Further steps: self.delete_duplicate_spaces(), self.text.strip()
+			self.text = list(self.text)
+			for i in range(min_val):
+				if opening_parentheses[i] < closing_parentheses[i]:
+					self.text = self.text[0:opening_parentheses[i]] + self.text[closing_parentheses[i]+1:]
+			self.text = ''.join(self.text)
+			# Further steps: self.delete_duplicate_spaces(), self.text.strip()
+		else:
+			Message(func='Text.delete_embraced_text',level=lev_warn,message='Different number of opening and closing brackets: "%s": %d; "%s": %d!' % (opening_sym,self.text.count(opening_sym),closing_sym,self.text.count(closing_sym)))
 		return self.text
 	
 	def convert_line_breaks(self):
