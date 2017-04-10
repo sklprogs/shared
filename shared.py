@@ -2020,24 +2020,6 @@ class Word:
 		'''
 		self.OrigCyr = self._nm = self._nmf = self._nml = self._pf = self._pl = self._nf = self._nl = self._cyr = self._lat = self._greek = self._digit = self._empty = self._stone = self._sent_no = self._spell_ru = self._sents_len = self._tf = self._tl = None
 		
-	def print(self,no=0): # Do only after Words.sent_nos
-		log.append('Word.print',lev_debug,'no: %d; OrigCyr: %s; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _stone: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s; _nmf: %s; _nml: %s' % (no,str(self.OrigCyr),str(self._p),str(self._n),str(self._nm),str(self._pf),str(self._pl),str(self._nf),str(self._nl),str(self._cyr),str(self._lat),str(self._greek),str(self._digit),str(self._empty),str(self._stone),str(self._sent_no),str(self._sents_len),str(self._spell_ru),str(self._nmf),str(self._nml)))
-	
-	def nm(self):
-		if self._nm is None:
-			if self.empty() or self.stone():
-				''' # note: Setting '_nm' to '' allows to find longer matches (without stones), but requires replacing duplicate spaces in 'text_nm' with ordinary ones and using another word numbering for '_nm'.
-				'''
-				#self._nm = ''
-				self._nm = self._n
-			else:
-				result = Decline(text=self._n,Auto=False).normal().get()
-				if result:
-					self._nm = result.replace('ё','е')
-				else:
-					self._nm = self._n
-		return self._nm
-		
 	def empty(self):
 		if self._empty is None:
 			self._empty = True
@@ -2055,22 +2037,6 @@ class Word:
 					self._digit = True
 					break
 		return self._digit
-		
-	def stone(self):
-		''' Criteria for setting the 'stone' mark:
-			1) The word has both Cyrillic and Latin characters
-			2) The word has Greek characters (that are treated as variables. Greek should NOT be a predominant language)
-			3) The word has Latin characters in the predominantly Russian text
-			4) The word has digits
-		'''
-		if self._stone is None:
-			self._stone = 0
-			if self.OrigCyr and self.lat():
-				# todo (?): redo
-				self._stone = 2 # This is done to cheat 'CompareStones' which needs stone == 1. Other functions must use 'if self.stone():'
-			elif self.cyr() and self.lat() or self.greek() or self.digit():
-				self._stone = 1
-		return self._stone
 		
 	def cyr(self):
 		if self._cyr is None:
@@ -2099,6 +2065,35 @@ class Word:
 					break
 		return self._greek
 		
+	def print(self,no=0): # Do only after Words.sent_nos
+		log.append('Word.print',lev_debug,'no: %d; OrigCyr: %s; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _stone: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s; _nmf: %s; _nml: %s' % (no,str(self.OrigCyr),str(self._p),str(self._n),str(self._nm),str(self._pf),str(self._pl),str(self._nf),str(self._nl),str(self._cyr),str(self._lat),str(self._greek),str(self._digit),str(self._empty),str(self._stone),str(self._sent_no),str(self._sents_len),str(self._spell_ru),str(self._nmf),str(self._nml)))
+	
+	def nm(self):
+		if self._nm is None:
+			if self.stone():
+				''' # note: Setting '_nm' to '' allows to find longer matches (without stones), but requires replacing duplicate spaces in 'text_nm' with ordinary ones and using another word numbering for '_nm'.
+				'''
+				#self._nm = ''
+				self._nm = self._n
+			else:
+				result = Decline(text=self._n,Auto=False).normal().get()
+				if result:
+					self._nm = result.replace('ё','е')
+				else:
+					self._nm = self._n
+		return self._nm
+		
+	def stone(self):
+		''' Criteria for setting the 'stone' mark:
+			- The word has digits
+			- The word has Greek characters (that are treated as variables. Greek should NOT be a predominant language)
+			- The word has Latin characters in the predominantly Russian text (inexact)
+			- The word has '-' (inexact) (# note: when finding matches, set the condition of ''.join(set(stone)) != '-')
+		'''
+		if self._stone is None:
+			self._stone = ''.join([x for x in self._n if x in digits or x == '-' or x in greek_alphabet_low])
+		return self._stone
+		
 	''' Enchant:
 		1) Lower-case, upper-case and words where the first letter is capital, are all accepted. Mixed case is not accepted
 		2) Punctuation is not accepted
@@ -2107,6 +2102,7 @@ class Word:
 	def spell_ru(self):
 		if self._spell_ru is None:
 			self._spell_ru = True
+			# todo: del OrigCyr: Cyrillic text can have words in foreign languages, we should define the language word-by-word anyway
 			if self.OrigCyr and self._n:
 				self._spell_ru = objs.enchant().check(self._n)
 		return self._spell_ru
@@ -2151,7 +2147,7 @@ class Words: # Requires Search, Text
 	
 	def __init__(self,text,OrigCyr=False,Auto=False):
 		self.Success = True
-		self.OrigCyr = OrigCyr
+		self.OrigCyr = OrigCyr # todo: Do we really need this?
 		self.words = []
 		if text:
 			log.append('Words.__init__',lev_info,'Analyze the text') # todo: mes
