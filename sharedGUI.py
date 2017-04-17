@@ -15,11 +15,11 @@ def bind(obj,bindings,action): # object, str/list, function
 		if isinstance(bindings,str) or isinstance(bindings,list):
 			if isinstance(bindings,str):
 				bindings = [bindings]
-			for i in range(len(bindings)):
+			for binding in bindings:
 				try:
-					obj.widget.bind(bindings[i],action)
+					obj.widget.bind(binding,action)
 				except tk.TclError:
-					Message(func='bind',level=sh.lev_err,message=sh.globs['mes'].wrong_keybinding % bindings[i])
+					Message(func='bind',level=sh.lev_err,message=sh.globs['mes'].wrong_keybinding % binding)
 		else:
 			Message(func='bind',level=sh.lev_err,message=sh.globs['mes'].wrong_input3 % str(bindings))
 	else:
@@ -822,6 +822,9 @@ class Button:
 	
 	def close(self):
 		self.widget.pack_forget()
+		
+	def focus(self,*args):
+		self.widget.focus_set()
 
 
 
@@ -1116,15 +1119,19 @@ def dialog_save_file(filetypes=()):
 
 class OptionMenu:
 	
-	def __init__(self,parent_obj,items=(1,2,3,4,5),side='left',anchor='center',command=None):
+	def __init__(self,parent_obj,items=(1,2,3,4,5),side='left',anchor='center',command=None,takefocus=1):
 		self.parent_obj = parent_obj
 		self.items = items
 		self.command = command
 		self.choice = None
 		self.index = 0
 		self.var = tk.StringVar(self.parent_obj.widget)
+		# An error is thrown if 'items' is ()
+		if not self.items:
+			self.items = (1,2,3,4,5)
 		self.widget = tk.OptionMenu(self.parent_obj.widget,self.var,*self.items,command=self.trigger)
 		self.widget.pack(side=side,anchor=anchor)
+		self.widget.configure(takefocus=takefocus) # Must be 1/True to be operational from keyboard
 		self.default_set()
 		
 	def trigger(self,*args):
@@ -1143,6 +1150,9 @@ class OptionMenu:
 	
 	def reset(self,items=(1,2,3,4,5)):
 		self.items = items
+		# An error is thrown if 'items' is ()
+		if not self.items:
+			self.items = (1,2,3,4,5)
 		self.fill()
 		self.default_set()
 		
@@ -1163,6 +1173,9 @@ class OptionMenu:
 		else:
 			self.index += 1
 		self.var.set(self.items[self.index])
+		
+	def focus(self,*args):
+		self.widget.focus_set()
 
 
 
@@ -1374,7 +1387,7 @@ class ParallelTexts: # Requires Search
 	
 	def bindings(self):
 		if self.Success:
-			bind(obj=self,bindings='<Control-q>',action=self.close)
+			bind(obj=self,bindings=['<Control-q>','<Control-w>'],action=self.close)
 			bind(obj=self,bindings='<Escape>',action=Geometry(parent_obj=self.obj).minimize)
 			bind(obj=self,bindings=['<Alt-Key-1>','<Control-Key-1>'],action=self.select1)
 			bind(obj=self,bindings=['<Alt-Key-2>','<Control-Key-2>'],action=self.select2)
