@@ -616,9 +616,11 @@ class ReadTextFile:
 
 class Input:
 	
-	def __init__(self,val,func_title='Input'):
+	def __init__(self,val,func_title='Input',Silent=False):
 		self.func_title = func_title
 		self.val = val
+		# In a few cases it is appropriate to set Silent=1, since None is not necessarily an error (e.g., a subject fueld in an email message)
+		self.Silent = Silent
 		
 	def integer(self):
 		if isinstance(self.val,int):
@@ -627,7 +629,7 @@ class Input:
 			self.val = int(self.val)
 			log.append(self.func_title,lev_info,'Convert "%s" to an integer' % str(self.val)) # todo: mes
 		else:
-			Message(func=self.func_title,level=lev_err,message='Integer is required at input, but found "%s"! Return 0' % str(type(self.val))) # todo: mes
+			Message(func=self.func_title,level=lev_err,message='Integer is required at input, but found "%s"! Return 0' % str(type(self.val)),Silent=self.Silent) # todo: mes
 			self.val = 0
 		return self.val
 			
@@ -1883,17 +1885,32 @@ class Shortcut:
 
 class Email:
 	
-	def __init__(self,email,subject='',message=''):
+	def __init__(self,email,subject='',message='',attachment=''):
 		self._sep = ',' # Not all mail agents support ';'
 		self._email = email # A single address or multiple comma-separated addresses
-		self._subject = subject
-		self._message = message
+		self._subject = Input(func_title='Email.__init__',val=subject,Silent=1).not_none()
+		self._message = Input(func_title='Email.__init__',val=message,Silent=1).not_none()
+		self._attachment = attachment
+		self.Success = True
+		if not self._email:
+			self.Success = False
+			log.append('Email.__init__',lev_warn,globs['mes'].empty_input)
+		if self._attachment:
+			self.Success = File(file=self._attachment).Success
+			if not self.Success:
+				log.append('Email.__init__',lev_warn,globs['mes'].canceled)
 		
 	def create(self):
-		try:
-			webbrowser.open('mailto:%s?subject=%s&body=%s' % (self._email,self._subject,self._message))
-		except:
-			Message(func='TkinterHtmlMod.response_back',level=lev_err,message=globs['mes'].email_agent_failure)
+		if self.Success:
+			try:
+				if self._attachment:
+					webbrowser.open('mailto:%s?subject=%s&body=%s&attach="%s"' % (self._email,self._subject,self._message,self._attachment))
+				else:
+					webbrowser.open('mailto:%s?subject=%s&body=%s' % (self._email,self._subject,self._message))
+			except:
+				Message(func='TkinterHtmlMod.response_back',level=lev_err,message=globs['mes'].email_agent_failure)
+		else:
+			log.append('Email.create',lev_warn,globs['mes'].canceled)
 
 
 

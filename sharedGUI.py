@@ -551,7 +551,10 @@ class TextBox:
 			
 	# todo: select either 'see' or 'autoscroll'
 	def see(self,mark):
-		self.widget.see(mark)
+		if mark is None:
+			sh.log.append('TextBox.see',sh.lev_warn,sh.globs['mes'].empty_input)
+		else:
+			self.widget.see(mark)
 	
 	def title(self,text='Title:'):
 		WidgetShared.title(self.parent_obj,text)
