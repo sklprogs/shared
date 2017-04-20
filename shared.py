@@ -1886,8 +1886,7 @@ class Shortcut:
 class Email:
 	
 	def __init__(self,email,subject='',message='',attachment=''):
-		self._sep = ',' # Not all mail agents support ';'
-		self._email = email # A single address or multiple comma-separated addresses
+		self._email = email # A single address or multiple comma-separated addresses (not all mail agents support ';')
 		self._subject = Input(func_title='Email.__init__',val=subject,Silent=1).not_none()
 		self._message = Input(func_title='Email.__init__',val=message,Silent=1).not_none()
 		self._attachment = attachment
@@ -1962,7 +1961,7 @@ class Grep:
 		self.sanitize()
 		self._found = []
 		self.i = 0
-			
+
 	# Get rid of constructs like [None] instead of checking arguments when parameterizing
 	def sanitize(self):
 		if len(self._lst) == 1:
