@@ -937,26 +937,13 @@ class ToolTip(ToolTipBase):
 
 
 class ListBox:
-	# todo: fix: Cannot cancel by Escape
 	# todo: configure a font
-	# todo: SelectFirst is enabled, however, after pressing Save button nothing happens
-	def __init__(self,parent_obj,Multiple=False,lst=[],title='Title:',icon=None,SelectionCloses=True,SelectFirst=True,Composite=False,SingleClick=True,user_function=None,side=None,Scrollbar=True,expand=1,fill='both'):
-		self.parent_obj = parent_obj
-		self.Multiple = Multiple
-		self.expand = expand
-		self.Composite = Composite
-		self.Scrollbar = Scrollbar
-		self._fill = fill
-		self.side = side
-		# A user-defined function that is run when pressing Up/Down arrow keys and LMB. There is a problem binding it externally, so we bind it here.
-		self.user_function = user_function
-		self._index = 0
-		self.state = 'normal'
-		self.SelectionCloses = SelectionCloses
-		self.SingleClick = SingleClick
-		self._icon = icon
+	def __init__(self,parent_obj,Multiple=False,lst=[],title='Title:',icon=None,SelectionCloses=True,Composite=False,SingleClick=True,user_function=None,side=None,Scrollbar=True,expand=1,fill='both'):
+		self.state = 'normal' # See 'WidgetShared'
+		# 'user_function': A user-defined function that is run when pressing Up/Down arrow keys and LMB. There is a problem binding it externally, so we bind it here.
+		self.parent_obj, self.Multiple, self.expand, self.Composite, self.Scrollbar, self.side, self._fill, self.user_function, self.SelectionCloses, self.SingleClick, self._icon = parent_obj, Multiple, expand, Composite, Scrollbar, side, fill, user_function, SelectionCloses, SingleClick, icon
 		self.gui()
-		self.reset(lst=lst,title=title,SelectFirst=SelectFirst)
+		self.reset(lst=lst,title=title)
 		
 	def bindings(self):
 		if self.user_function:
@@ -965,12 +952,12 @@ class ListBox:
 			# todo: test <KP_Enter> in Windows
 			bind(self,['<Return>','<KP_Enter>','<Double-Button-1>'],self.close)
 			if self.SingleClick and not self.Multiple:
-				bind(self,'<Button-1>',self.close)
+				bind(self,'<<ListboxSelect>>',self.close) # Binding to '<Button-1>' does not allow to select an entry before closing
 		if not self.Multiple:
 			bind(self,'<Up>',self.move_up)
 			bind(self,'<Down>',self.move_down)
 		if not self.Composite: # todo: test
-			bind(self,['<Escape>','<Control-q>','<Control-w>'],self.close)
+			bind(self,['<Escape>','<Control-q>','<Control-w>'],self.interrupt)
 		
 	def gui(self):
 		self._scroll()
@@ -1014,31 +1001,31 @@ class ListBox:
 	def clear_selection(self):
 		self.widget.selection_clear(0,tk.END)
 	
-	def reset(self,lst=[],title=None,SelectFirst=True):
-		self.SelectFirst = SelectFirst
+	def reset(self,lst=[],title=None):
 		self._title = title
 		self.clear()
 		self.lst = list(lst)
 		self.title(text=self._title)
 		self.fill()
 		self._resize()
-		self._index = 0
-		if self.SelectFirst:
-			self.select()
-		else:
-			self.clear_selection()
-		self.IQuit = False
+		self._get, self._index = '', 0
+		self.select()
 	
 	def select(self):
 		self.clear_selection()
 		self.widget.selection_set(self._index)
 		self.widget.see(self._index)
 	
-	def show(self):
+	def show(self,*args):
 		self.parent_obj.show()
 
+	def interrupt(self,*args):
+		self._index, self._get = 0, '' # To be sure
+		self.parent_obj.close()
+	
 	def close(self,*args):
-		self.IQuit = True
+		self.index()
+		self.get()
 		self.parent_obj.close()
 	
 	def fill(self):
@@ -1074,21 +1061,12 @@ class ListBox:
 		else:
 			self._index = len(self.lst) - 1
 	
-	def _get(self): # Call this externally to get results *before* closing the widget
+	def get(self):
 		result = [self.widget.get(idx) for idx in self.widget.curselection()]
 		if self.Multiple:
-			return result
-		else:
-			if len(result) > 0:
-				return result[0]
-	
-	def get(self):
-		if self.SelectionCloses:
-			# Return a result if the user has selected anything or None otherwise
-			if self.IQuit:
-				return self._get()
-		else:
-			return self._get()
+			self._get = result
+		elif len(result) > 0:
+			self._get = result[0]
 			
 	def move_down(self,*args):
 		self.index_add()
