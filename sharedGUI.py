@@ -938,7 +938,21 @@ class ToolTip(ToolTipBase):
 
 class ListBox:
 	# todo: configure a font
-	def __init__(self,parent_obj,Multiple=False,lst=[],title='Title:',icon=None,SelectionCloses=True,Composite=False,SingleClick=True,user_function=None,side=None,Scrollbar=True,expand=1,fill='both'):
+	def __init__(self,
+	             parent_obj                  ,
+	             Multiple        = False     ,
+	             lst             = []        ,
+	             title           = 'Title:'  ,
+	             icon            = None      ,
+	             SelectionCloses = True      ,
+	             Composite       = False     ,
+	             SingleClick     = True      ,
+	             user_function   = None      ,
+	             side            = None      ,
+	             Scrollbar       = True      ,
+	             expand          = 1         ,
+	             fill            = 'both'
+	            ):
 		self.state = 'normal' # See 'WidgetShared'
 		# 'user_function': A user-defined function that is run when pressing Up/Down arrow keys and LMB. There is a problem binding it externally, so we bind it here.
 		self.parent_obj, self.Multiple, self.expand, self.Composite, self.Scrollbar, self.side, self._fill, self.user_function, self.SelectionCloses, self.SingleClick, self._icon = parent_obj, Multiple, expand, Composite, Scrollbar, side, fill, user_function, SelectionCloses, SingleClick, icon
@@ -958,6 +972,7 @@ class ListBox:
 			bind(self,'<Down>',self.move_down)
 		if not self.Composite: # todo: test
 			bind(self,['<Escape>','<Control-q>','<Control-w>'],self.interrupt)
+			self.parent_obj.widget.protocol("WM_DELETE_WINDOW",self.interrupt)
 		
 	def gui(self):
 		self._scroll()
@@ -1008,19 +1023,27 @@ class ListBox:
 		self.title(text=self._title)
 		self.fill()
 		self._resize()
-		self._get, self._index = '', 0
+		# Do not set '_index' to 0, because we need 'self.interrupt'. Other functions use 'self.index()', which returns an actual value.
+		self._get, self._index = '', None
 		self.select()
 	
 	def select(self):
 		self.clear_selection()
-		self.widget.selection_set(self._index)
-		self.widget.see(self._index)
+		# Use an index changed with keyboard arrows. If it is not set, use current index (returned by 'self.index()').
+		if self._index is None:
+			self.index()
+		if self._index is None:
+			Message(func='ListBox.select',level=sh.lev_err,message=sh.globs['mes'].empty_input)
+		else:
+			self.widget.selection_set(self._index)
+			self.widget.see(self._index)
 	
 	def show(self,*args):
 		self.parent_obj.show()
 
 	def interrupt(self,*args):
-		self._index, self._get = 0, '' # To be sure
+		# Do not set '_index' to 0, because we need 'self.interrupt'. Other functions use 'self.index()', which returns an actual value.
+		self._get, self._index = '', None
 		self.parent_obj.close()
 	
 	def close(self,*args):
@@ -1040,14 +1063,15 @@ class ListBox:
 		if path:
 			WidgetShared.icon(self.parent_obj,path)
 		
+	# Read 'self._index' instead of calling this because we need 0 in case of 'self.interrupt', and this always returns an actual value
 	def index(self):
 		selection = self.widget.curselection()
 		if selection and len(selection) > 0:
-			# ATTENTION: selection[0] is a number in Python 3.4, however, in older interpreters and builds based on them it is a string. In order to preserve compatibility, we convert it to a number.
+			# note: selection[0] is a number in Python 3.4, however, in older interpreters and builds based on them it is a string. In order to preserve compatibility, we convert it to a number.
 			self._index = int(selection[0])
-			return self._index
 		else:
-			return 0
+			self._index = 0
+		return self._index
 			
 	def index_add(self):
 		if self.index() < len(self.lst) - 1:
@@ -1061,12 +1085,14 @@ class ListBox:
 		else:
 			self._index = len(self.lst) - 1
 	
+	# Read 'self._get' instead of calling this because we need '' in case of 'self.interrupt', and this always returns an actual value
 	def get(self):
 		result = [self.widget.get(idx) for idx in self.widget.curselection()]
 		if self.Multiple:
 			self._get = result
 		elif len(result) > 0:
 			self._get = result[0]
+		return self._get
 			
 	def move_down(self,*args):
 		self.index_add()
