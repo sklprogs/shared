@@ -54,7 +54,7 @@ class Root:
 
 
 
-class WidgetShared:
+class WidgetShared: # Do not use graphical logging there
 	
 	def focus(object,*args):
 		object.widget.focus()
@@ -68,13 +68,17 @@ class WidgetShared:
 					try:
 						object.widget.insert(pos,sh.globs['mes'].insert_failure)
 					except tk.TclError:
-						Message(func='WidgetShared.insert',level=sh.lev_err,message=sh.globs['mes'].insert_failure)
+						sh.log.append(func='WidgetShared.insert',level=sh.lev_err,message=sh.globs['mes'].insert_failure)
+			else:
+				sh.log.append(func='WidgetShared.insert',level=sh.lev_err,message=sh.globs['mes'].unknown_obj_type % str(object.type))
 		else:
 			sh.log.append('WidgetShared.insert',sh.lev_warn,sh.globs['mes'].empty_input)
 
 	def font(object,font='Sans 11'): # font_style, sh.globs['var']['menu_font']
 		if object.type == 'TextBox' or object.type == 'Entry':
 			object.widget.config(font=font)
+		else:
+			sh.log.append(func='WidgetShared.font',level=sh.lev_err,message=sh.globs['mes'].unknown_obj_type % str(object.type))
 
 	def set_state(object,ReadOnly=False):
 		if object.type == 'TextBox' or object.type == 'Entry':
@@ -84,10 +88,14 @@ class WidgetShared:
 			else:
 				object.widget.config(state='normal')
 				object.state = 'normal'
+		else:
+			sh.log.append(func='WidgetShared.set_state',level=sh.lev_err,message=sh.globs['mes'].unknown_obj_type % str(object.type))
 			
 	def title(object,text=sh.globs['mes'].text,my_program_title=''): # Родительский виджет
 		if object.type == 'Toplevel' or object.type == 'Root':
 			object.widget.title(text + my_program_title)
+		else:
+			sh.log.append(func='WidgetShared.title',level=sh.lev_err,message=sh.globs['mes'].unknown_obj_type % str(object.type))
 		
 	def custom_buttons(object):
 		if not object.Composite:
@@ -96,11 +104,17 @@ class WidgetShared:
 					object.parent_obj.close_button.widget.config(text=sh.globs['mes'].btn_x)
 				else:
 					object.parent_obj.close_button.widget.config(text=sh.globs['mes'].save_and_close)
+			else:
+				sh.log.append(func='WidgetShared.custom_buttons',level=sh.lev_err,message=sh.globs['mes'].unknown_obj_type % str(object.type))
 				
 	def icon(object,file): # Родительский объект
 		if object.type == 'Toplevel' or object.type == 'Root':
 			if file and os.path.exists(file):
 				object.widget.tk.call('wm','iconphoto',object.widget._w,tk.PhotoImage(master=object.widget,file=file))
+			else:
+				sh.log.append(func='WidgetShared.icon',level=sh.lev_err,message=sh.globs['mes'].file_not_found % str(file))
+		else:
+			sh.log.append(func='WidgetShared.icon',level=sh.lev_err,message=sh.globs['mes'].unknown_obj_type % str(object.type))
 
 
 
@@ -1756,7 +1770,7 @@ class WaitBox:
 
 class Label:
 	
-	def __init__(self,parent_obj,text='Text:',font='Sans 11',side=None,fill=None,expand=False,ipadx=None,ipady=None,image=None): # 'Top' and 'Root' (the last only with 'wait_window()')
+	def __init__(self,parent_obj,text='Text:',font='Sans 11',side=None,fill=None,expand=False,ipadx=None,ipady=None,image=None,fg=None,bg=None): # 'Top' and 'Root' (the last only with 'wait_window()')
 		self.type = 'Label'
 		self.parent_obj = parent_obj
 		self.side = side
@@ -1767,11 +1781,13 @@ class Label:
 		self.ipadx = ipadx
 		self.ipady = ipady
 		self.image = image
+		self.bg = bg
+		self.fg = fg
 		self.gui()
 		self.close()
 		
 	def gui(self):
-		self.widget = tk.Label(self.parent_obj.widget,image=self.image)
+		self.widget = tk.Label(self.parent_obj.widget,image=self.image,bg=self.bg,fg=self.fg)
 		self.text()
 		self.font()
 		self.widget.pack(side=self.side,fill=self.fill,expand=self.expand,ipadx=self.ipadx,ipady=self.ipady)
