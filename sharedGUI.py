@@ -1033,7 +1033,10 @@ class ListBox:
 	def reset(self,lst=[],title=None):
 		self._title = title
 		self.clear()
-		self.lst = list(lst)
+		if lst is None:
+			self.lst = []
+		else:
+			self.lst = list(lst)
 		self.title(text=self._title)
 		self.fill()
 		self._resize()
