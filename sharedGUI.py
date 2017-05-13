@@ -1967,12 +1967,12 @@ class MessageBuilder: # Requires 'constants'
 			self.obj.icon(path=self.path)
 		
 	def frames(self):
-		frame = Frame(parent_obj=self.obj,expand=1)
-		top = Frame(parent_obj=frame,expand=1,side='top')
-		bottom = Frame(parent_obj=frame,expand=0,side='bottom')
-		self.top_left = Frame(parent_obj=top,expand=0,side='left')
-		self.top_right = Frame(parent_obj=top,expand=1,side='right')
-		self.bottom_left = Frame(parent_obj=bottom,expand=1,side='left')
+		frame             = Frame(parent_obj=self.obj,expand=1)
+		top               = Frame(parent_obj=frame,expand=1,side='top')
+		bottom            = Frame(parent_obj=frame,expand=0,side='bottom')
+		self.top_left     = Frame(parent_obj=top,expand=0,side='left')
+		self.top_right    = Frame(parent_obj=top,expand=1,side='right')
+		self.bottom_left  = Frame(parent_obj=bottom,expand=1,side='left')
 		self.bottom_right = Frame(parent_obj=bottom,expand=1,side='right')
 		
 	def buttons(self):
@@ -1994,11 +1994,12 @@ class MessageBuilder: # Requires 'constants'
 		self.obj.title(text=text)
 		
 	def update(self,text='Message'):
+		# todo: Control-c does not work with 'ReadOnly=True'
 		# Otherwise, updating text will not work
-		self.txt.read_only(ReadOnly=False)
+		#self.txt.read_only(ReadOnly=False)
 		self.txt.clear_text()
 		self.txt.insert(text=text)
-		self.txt.read_only(ReadOnly=True)
+		#self.txt.read_only(ReadOnly=True)
 	
 	def reset(self,text='Message',title='Title:',icon=None):
 		self.update(text=text)
