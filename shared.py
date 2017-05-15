@@ -606,7 +606,7 @@ class ReadTextFile:
 				# The file cannot be read OR the file is empty (we don't need empty files)
 				# todo: Update the message
 				self.Success = False
-				Message(func='ReadTextFile.load',level=lev_err,message=globs['mes'].file_read_failure % self.file)
+				Message(func='ReadTextFile.load',level=lev_err,message=globs['mes'].file_read_failure % self.file,Silent=self.Silent)
 			self.delete_bom()
 		else:
 			log.append('ReadTextFile.load',lev_warn,globs['mes'].canceled)
