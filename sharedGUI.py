@@ -794,7 +794,7 @@ class Button:
 			hint_extended = hint + '\n' + str(bindings).replace('[','').replace(']','').replace('<','').replace('>','').replace("'",'')
 		else:
 			hint_extended = hint
-		ToolTip(self.widget,text=hint_extended,hint_delay=hint_delay,hint_width=hint_width,hint_height=hint_height,hint_background=hint_background,hint_direction=hint_direction,button_side=side)
+		self.tip = ToolTip(self.widget,text=hint_extended,hint_delay=hint_delay,hint_width=hint_width,hint_height=hint_height,hint_background=hint_background,hint_direction=hint_direction,button_side=side)
 		self.show()
 		bind(obj=self,bindings=['<ButtonRelease-1>','<space>','<Return>','<KP_Enter>'],action=self.click)
 		if TakeFocus:
@@ -931,22 +931,22 @@ class ToolTip(ToolTipBase):
 			hint_border_width = 1 #sh.globs['int']['default_hint_border_width']
 		if not hint_border_color:
 			hint_border_color = 'navy' #sh.globs['var']['default_hint_border_color']
-		self.text = text
-		self.hint_delay = hint_delay
-		self.hint_direction = hint_direction
-		self.hint_background = hint_background
+		self.text              = text
+		self.hint_delay        = hint_delay
+		self.hint_direction    = hint_direction
+		self.hint_background   = hint_background
 		self.hint_border_color = hint_border_color
-		self.hint_height = hint_height
-		self.hint_width = hint_width
+		self.hint_height       = hint_height
+		self.hint_width        = hint_width
 		self.hint_border_width = hint_border_width
-		self.button_side = button_side
+		self.button_side       = button_side
 		ToolTipBase.__init__(self,button)
 
 	def showcontents(self):
 		frame = tk.Frame(self.tipwindow,background=self.hint_border_color,borderwidth=self.hint_border_width)
 		frame.pack()
-		label = tk.Label(frame,text=self.text,justify='center',background=self.hint_background,width=self.hint_width,height=self.hint_height)
-		label.pack() #expand=1,fill='x'
+		self.label = tk.Label(frame,text=self.text,justify='center',background=self.hint_background,width=self.hint_width,height=self.hint_height)
+		self.label.pack() #expand=1,fill='x'
 		
 
 
