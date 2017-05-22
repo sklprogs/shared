@@ -1166,6 +1166,12 @@ class OptionMenu:
 	def default_set(self):
 		if len(self.items) > 0:
 			self.var.set(self.items[0])
+			
+	def set(self,item,*args):
+		if item in self.items:
+			self.var.set(item)
+		else:
+			Message(func='OptionMenu.set',level=sh.lev_err,message=sh.globs['mes'].wrong_input3 % str(item))
 	
 	def fill(self):
 		self.widget['menu'].delete(0,'end')
@@ -1182,7 +1188,13 @@ class OptionMenu:
 		
 	def _get(self,*args): # Auto updated (after selecting an item)
 		self.choice = self.var.get()
-		self.index = self.items.index(self.choice)
+		# 'OptionMenu' always returns a string
+		if self.choice not in self.items:
+			self.choice = sh.Input(func_title='OptionMenu._get',val=self.choice).integer()
+		try:
+			self.index = self.items.index(self.choice)
+		except ValueError:
+			Message(func='OptionMenu._get',level=sh.lev_err,message=sh.globs['mes'].wrong_input3 % str(self.choice))
 		
 	def set_prev(self,*args):
 		if self.index == 0:
