@@ -2770,7 +2770,12 @@ class Decline:
 class Objects:
 	
 	def __init__(self):
-		self._enchant = self._morph = self._pretty_table = self._diff = None
+		self._enchant = self._morph = self._pretty_table = self._diff = self._pdir = None
+	
+	def pdir(self):
+		if not self._pdir:
+			self._pdir = ProgramDir()
+		return self._pdir
 	
 	def enchant(self):
 		if not self._enchant:
@@ -2831,6 +2836,18 @@ class MessagePool:
 		
 	def get(self):
 		return List(lst1=self.pool).space_items()
+
+
+
+class ProgramDir:
+	
+	def __init__(self):
+		self.dir = sys.path[0]
+		if os.path.isfile(self.dir): # We run app, not interpreter
+			self.dir = Path(path=self.dir).dirname()
+		
+	def add(self,*args):
+		return os.path.join(self.dir,*args)
 
 
 
