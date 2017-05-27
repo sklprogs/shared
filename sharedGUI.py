@@ -432,6 +432,7 @@ class TextBox:
 			else:
 				bind(obj=self,bindings=['<Escape>'],action=self.close)
 		bind(obj=self,bindings='<Control-a>',action=self.select_all)
+		bind(obj=self,bindings='<Control-v>',action=self.insert_clipboard)
 	
 	def _get(self):
 		try:
@@ -452,6 +453,13 @@ class TextBox:
 		WidgetShared.insert(self,text=text,pos=pos)
 		if MoveTop:
 			self.mark_add() # Move to the beginning
+			
+	# Fixes weird Tkinter's scrolling after pressing '<Control-v>'
+	def insert_clipboard(self,*args):
+		# For some reason, 'self.insert' does not work here with 'break'
+		#self.insert(text=Clipboard().paste(),MoveTop=False)
+		self.widget.insert(self.cursor(),Clipboard().paste())
+		return 'break'
 
 	def select_all(self,*args):
 		self.tag_add()
