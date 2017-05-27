@@ -356,6 +356,7 @@ class TextBox:
 		self.expand = expand
 		self.side = side
 		self.fill = fill
+		self.selection = Selection(h_widget=self)
 		self.gui()
 		self.reset_logic(words=words)
 		
@@ -400,6 +401,8 @@ class TextBox:
 	def reset_logic(self,words=None):
 		self.words = words
 		self.search_box.reset_logic(words=self.words)
+		self.selection.reset_data()
+		self.selection.reset_logic(words=self.words)
 	
 	# Delete text, tags, marks
 	def reset_data(self,*args):
@@ -433,6 +436,7 @@ class TextBox:
 				bind(obj=self,bindings=['<Escape>'],action=self.close)
 		bind(obj=self,bindings='<Control-a>',action=self.select_all)
 		bind(obj=self,bindings='<Control-v>',action=self.insert_clipboard)
+		bind(obj=self,bindings='<Key>',action=self.clear_on_key)
 	
 	def _get(self):
 		try:
@@ -454,8 +458,12 @@ class TextBox:
 		if MoveTop:
 			self.mark_add() # Move to the beginning
 			
-	# Fixes weird Tkinter's scrolling after pressing '<Control-v>'
+	''' Fix (probable) Tkinter bug(s) after pressing '<Control-v>':
+		1) Fix weird scrolling
+		2) Delete selected text before pasting
+	'''
 	def insert_clipboard(self,*args):
+		self.clear_selection()
 		# For some reason, 'self.insert' does not work here with 'break'
 		#self.insert(text=Clipboard().paste(),MoveTop=False)
 		self.widget.insert(self.cursor(),Clipboard().paste())
@@ -530,13 +538,33 @@ class TextBox:
 		except ValueError:
 			sh.log.append('TextBox.mark_remove',sh.lev_err,sh.globs['mes'].element_not_found % (mark_name,str(self.marks)))
 			
-	def clear_text(self):
+	def clear_text(self,pos1='1.0',pos2='end'):
 		try:
-			self.widget.delete('1.0','end')
+			self.widget.delete(pos1,pos2)
 		except tk._tkinter.TclError:
 			# Do not use GUI
 			sh.log.append('TextBox.clear_text',sh.lev_warn,'The parent has already been destroyed.') # todo: mes
-		
+			
+	# Fix Tkinter limitations
+	def clear_on_key(self,event=None):
+		if event and event.char:
+			# fix: Does not work correctly when the selection is on and Delete is pressed
+			if event.char in sh.lat_alphabet or event.char in sh.ru_alphabet or event.char in sh.digits or event.char in sh.punc_array or sh.punc_ext_array:
+				# todo: suppress excessive logging (Selection.get, TextBox.clear_selection, TextBox.cursor, Clipboard.paste, Words.no_by_tk)
+				pos1tk, pos2tk = self.selection.get()
+				if pos1tk and pos2tk:
+					self.clear_text(pos1=pos1tk,pos2=pos2tk)
+					self.widget.insert(pos1tk,event.char)
+					return 'break'
+	
+	def clear_selection(self,*args):
+		pos1tk, pos2tk = self.selection.get()
+		if pos1tk and pos2tk:
+			self.clear_text(pos1=pos1tk,pos2=pos2tk)
+			return 'break'
+		else:
+			sh.log.append('TextBox.clear_selection',sh.lev_warn,sh.globs['mes'].empty_input)
+			
 	def clear_tags(self):
 		i = len(self.tags) - 1
 		while i >= 0:
@@ -713,9 +741,9 @@ class Entry:
 		self.widget.select_range(0,'end')
 		return 'break'
 
-	def clear_text(self):
+	def clear_text(self,pos1=0,pos2='end'):
 		try:
-			self.widget.delete(0,'end')
+			self.widget.delete(pos1,pos2)
 		except tk._tkinter.TclError:
 			# Do not use GUI
 			sh.log.append('Entry.clear_text',sh.lev_warn,'The parent has already been destroyed.') # todo: mes
