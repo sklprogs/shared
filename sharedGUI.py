@@ -548,14 +548,9 @@ class TextBox:
 	# Fix Tkinter limitations
 	def clear_on_key(self,event=None):
 		if event and event.char:
-			# fix: Does not work correctly when the selection is on and Delete is pressed
-			if event.char in sh.lat_alphabet or event.char in sh.ru_alphabet or event.char in sh.digits or event.char in sh.punc_array or sh.punc_ext_array:
+			if event.char.isspace() or event.char in sh.lat_alphabet or event.char in sh.ru_alphabet or event.char in sh.digits or event.char in sh.punc_array or event.char in sh.punc_ext_array:
 				# todo: suppress excessive logging (Selection.get, TextBox.clear_selection, TextBox.cursor, Clipboard.paste, Words.no_by_tk)
-				pos1tk, pos2tk = self.selection.get()
-				if pos1tk and pos2tk:
-					self.clear_text(pos1=pos1tk,pos2=pos2tk)
-					self.widget.insert(pos1tk,event.char)
-					return 'break'
+				self.clear_selection()
 	
 	def clear_selection(self,*args):
 		pos1tk, pos2tk = self.selection.get()
