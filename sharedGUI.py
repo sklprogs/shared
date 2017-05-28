@@ -809,12 +809,12 @@ class Button:
 		self.action = action
 		self.Status = False
 		self.height = height
-		self.width = width
-		self.side = side
+		self.width  = width
+		self.side   = side
 		self.expand = expand
-		self.fill = fill
+		self.fill   = fill
 		self.inactive_image = self.image(inactive_image_path)
-		self.active_image = self.image(active_image_path)
+		self.active_image   = self.image(active_image_path)
 		if self.inactive_image:
 			self.widget = tk.Button(self.parent_obj.widget,image=self.inactive_image,height=self.height,width=self.width,bd=bd,fg=fg)
 		else:
@@ -1376,18 +1376,22 @@ class ParallelTexts: # Requires Search
 				self.txt3.reset_data()
 				self.txt4.reset_logic(words=self.words4)
 				self.txt4.reset_data()
+			self.read_only(ReadOnly=False)
 			self.fill()
-			# Setting ReadOnly state works only after filling text
-			self.txt1.read_only(ReadOnly=True)
-			self.txt2.read_only(ReadOnly=True)
-			if self.Extended:
-				self.txt3.read_only(ReadOnly=True)
-				self.txt4.read_only(ReadOnly=True)
+			self.read_only(ReadOnly=True)
 			self.txt1.focus()
 			self.init_cursor_pos()
 		else:
 			self.Success = False
 			sh.log.append('ParallelTexts.reset',sh.lev_warn,sh.globs['mes'].canceled)
+			
+	def read_only(self,ReadOnly=False):
+		# Setting ReadOnly state works only after filling text
+		self.txt1.read_only(ReadOnly=ReadOnly)
+		self.txt2.read_only(ReadOnly=ReadOnly)
+		if self.Extended:
+			self.txt3.read_only(ReadOnly=ReadOnly)
+			self.txt4.read_only(ReadOnly=ReadOnly)
 		
 	# Set the cursor to the start of the text
 	def init_cursor_pos(self):
