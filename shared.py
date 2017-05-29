@@ -661,6 +661,11 @@ class Text:
 			self.delete_space_with_punctuation()
 			self.text = self.text.strip() # This is necessary even if we do strip for each line (we need to strip '\n' at the beginning/end)
 			
+	def quotations(self):
+		self.text = re.sub(r'"([a-zA-Z\d\(\[\{])',r'“\1',self.text)
+		self.text = re.sub(r'([a-zA-Z\d\.\?\!])"',r'\1”',self.text)
+		return self.text
+	
 	def delete_space_with_figure(self):
 		expr = '[-\s]\d+'
 		match = re.search(expr,self.text)
