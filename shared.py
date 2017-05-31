@@ -661,6 +661,13 @@ class Text:
 			self.delete_space_with_punctuation()
 			self.text = self.text.strip() # This is necessary even if we do strip for each line (we need to strip '\n' at the beginning/end)
 			
+	def toggle_case(self):
+		if self.text == self.text.lower():
+			self.text = self.text.upper()
+		else:
+			self.text = self.text.lower()
+		return self.text
+	
 	def quotations(self):
 		self.text = re.sub(r'"([a-zA-Z\d\(\[\{])',r'“\1',self.text)
 		self.text = re.sub(r'([a-zA-Z\d\.\?\!])"',r'\1”',self.text)

@@ -437,6 +437,19 @@ class TextBox:
 		bind(obj=self,bindings='<Control-a>',action=self.select_all)
 		bind(obj=self,bindings='<Control-v>',action=self.insert_clipboard)
 		bind(obj=self,bindings='<Key>',action=self.clear_on_key)
+		bind(obj=self,bindings='<Control-Alt-u>',action=self.toggle_case)
+		
+	def toggle_case(self,*args):
+		text = sh.Text(text=self.selection.text()).toggle_case()
+		pos1, pos2 = self.selection.get()
+		self.clear_selection()
+		self.insert(text=text,pos=self.cursor(),MoveTop=0)
+		if pos1 and pos2:
+			self.selection.reset(pos1tk=pos1,pos2tk=pos2,tag='sel',background='gray')
+			self.selection.set(DeletePrevious=0,AutoScroll=0)
+		else:
+			sh.log.append('TextBox.toggle_case',sh.lev_warn,sh.globs['mes'].empty_input)
+		return 'break'
 	
 	def _get(self):
 		try:
