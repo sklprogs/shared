@@ -93,6 +93,8 @@ lev_info = 'INFO'
 lev_ques = 'QUESTION'
 lev_warn = 'WARNING'
 
+nbspace = ' '
+
 ru_alphabet = '№АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЫЪЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщыъьэюя'
 ru_alphabet_low = 'аеиоубявгдёжзйклмнпрстфхцчшщыъьэю№' # Some vowels are put at the start for the faster search
 lat_alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
