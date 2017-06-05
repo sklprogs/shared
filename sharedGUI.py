@@ -1187,10 +1187,11 @@ def dialog_save_file(filetypes=()):
 
 class OptionMenu:
 	
-	def __init__(self,parent_obj,items=(1,2,3,4,5),side='left',anchor='center',command=None,takefocus=1):
+	def __init__(self,parent_obj,items=(1,2,3,4,5),side='left',anchor='center',command=None,takefocus=1,default=None):
 		self.parent_obj = parent_obj
 		self.items = items
 		self.command = command
+		self.default = default
 		self.choice = None
 		self.index = 0
 		self.var = tk.StringVar(self.parent_obj.widget)
@@ -1207,9 +1208,19 @@ class OptionMenu:
 		if self.command:
 			self.command()
 	
-	def default_set(self):
+	def _default_set(self):
 		if len(self.items) > 0:
 			self.var.set(self.items[0])
+	
+	def default_set(self):
+		if self.default is None:
+			self._default_set()
+		else:
+			if self.default in self.items:
+				self.var.set(self.default)
+			else:
+				sg.Message('OptionMenu.default_set',sh.lev_err,sh.globs['mes'].unknown_mode % (str(self.default),';'.join(self.items)))
+				self._default_set()
 			
 	def set(self,item,*args):
 		if item in self.items:
