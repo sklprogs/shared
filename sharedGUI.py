@@ -8,7 +8,6 @@ import sys, os
 import shared as sh
 
 
-
 # Привязать горячие клавиши или кнопки мыши к действию
 def bind(obj,bindings,action): # object, str/list, function
 	if hasattr(obj,'widget'):
@@ -1759,6 +1758,8 @@ class Geometry: # Requires sh.oss, objs
 	def activate(self,MouseClicked=False,*args):
 		self._activate()
 		if sh.oss.win():
+			# todo: learn how to properly import modules
+			import ctypes
 			self.parent_obj.widget.wm_attributes('-topmost',1)
 			self.parent_obj.widget.wm_attributes('-topmost',0)
 			# Иначе нажатие кнопки будет вызывать переход по ссылке там, где это не надо
