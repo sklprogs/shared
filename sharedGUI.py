@@ -430,9 +430,9 @@ class TextBox:
 			self.widget.unbind('<Return>')
 			if self.state == 'disabled' or self.SpecialReturn:
 				# Разрешать считывать текст после нажатия Escape (в Entry запрещено)
-				bind(obj=self,bindings=['<Return>','<KP_Enter>','<Escape>'],action=self.close)
+				bind(obj=self.parent_obj,bindings=['<Return>','<KP_Enter>','<Escape>'],action=self.close)
 			else:
-				bind(obj=self,bindings=['<Escape>'],action=self.close)
+				bind(obj=self.parent_obj,bindings='<Escape>',action=self.close)
 		bind(obj=self,bindings='<Control-a>',action=self.select_all)
 		bind(obj=self,bindings='<Control-v>',action=self.insert_clipboard)
 		bind(obj=self,bindings='<Key>',action=self.clear_on_key)
@@ -619,29 +619,6 @@ class TextBox:
 	def icon(self,path):
 		WidgetShared.icon(self.parent_obj,path)
 	
-	# Только для несоставных виджетов (ввиду custom_bindings)
-	def update(self,title='Title:',text='',GoTo='',SelectAll=False,ReadOnly=False,CursorPos='1.0',icon='',SpecialReturn=True):
-		self.Save = False
-		self.SpecialReturn = SpecialReturn
-		# Операции над главным виджетом
-		self.icon(path=icon)
-		self.title(text=title)
-		# Иначе обновление текста не сработает. Необходимо делать до любых операций по обновлению текста.
-		self.read_only(ReadOnly=False)
-		self.reset()
-		# Присвоение аргументов
-		self.insert(text=text)
-		# Перейти в указанное место
-		self.mark_add(mark_name='insert',postk=CursorPos)
-		self.widget.yview(CursorPos)
-		self.read_only(ReadOnly=ReadOnly)
-		WidgetShared.custom_buttons(self)
-		if SelectAll:
-			self.select_all()
-		self.goto(GoTo=GoTo)
-		# Только для несоставных виджетов
-		self.bindings()
-		
 	def visible(self,tk_pos):
 		if self.widget.bbox(tk_pos):
 			return True
@@ -2215,6 +2192,7 @@ class Objects:
 	def new_top(self,Maximize=1,AutoCenter=1):
 		return Top(parent_obj=self.root(),Maximize=Maximize,AutoCenter=AutoCenter)
 	
+	# It is better to use this for temporary widgets only
 	def txt(self,words=None):
 		if not self._txt:
 			h_top = Top(parent_obj=self.root(),Maximize=True)
