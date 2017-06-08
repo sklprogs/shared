@@ -358,6 +358,8 @@ class TextBox:
 		self.selection = Selection(h_widget=self)
 		self.gui()
 		self.reset_logic(words=words)
+		if not self.Composite:
+			self.focus()
 		
 	def _gui_txt(self):
 		if self.parent_obj.type == 'Toplevel' or self.parent_obj.type == 'Root':
@@ -431,6 +433,8 @@ class TextBox:
 			if self.state == 'disabled' or self.SpecialReturn:
 				# Разрешать считывать текст после нажатия Escape (в Entry запрещено)
 				bind(obj=self.parent_obj,bindings=['<Return>','<KP_Enter>','<Escape>'],action=self.close)
+				# We need to bind 'Return' to the widget anyway even if we have already bound this to 'parent_obj', because we need to return 'break'
+				bind(obj=self,bindings=['<Return>','<KP_Enter>'],action=self.close)
 			else:
 				bind(obj=self.parent_obj,bindings='<Escape>',action=self.close)
 		bind(obj=self,bindings='<Control-a>',action=self.select_all)
