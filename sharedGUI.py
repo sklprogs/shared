@@ -1205,6 +1205,7 @@ class OptionMenu:
 	def set(self,item,*args):
 		if item in self.items:
 			self.var.set(item)
+			self.choice = item
 		else:
 			Message(func='OptionMenu.set',level=sh.lev_err,message=sh.globs['mes'].wrong_input3 % str(item))
 	
@@ -2129,7 +2130,7 @@ class Clipboard: # Requires 'objs'
 class Objects:
 	
 	def __init__(self):
-		self._root = self._warning = self._error = self._question = self._info = self._edit_clip = self._waitbox = self._txt = self._entry = self._clipboard = None
+		self._root = self._warning = self._error = self._question = self._info = self._waitbox = self._txt = self._entry = self._clipboard = None
 		self._lst = []
 		
 	def root(self,Close=True):
@@ -2183,16 +2184,6 @@ class Objects:
 			else:
 				sh.log.append('Objects.close_all',sh.lev_err,'Widget "%s" does not have a "close" action!' % type(self._lst[i]))
 				
-	def edit_clip(self):
-		if not self._edit_clip:
-			h_top = Top(parent_obj=self.root(),Maximize=False)
-			self._edit_clip = TextBox(parent_obj=h_top)
-			self._edit_clip.title(text=sh.globs['mes'].correct_clipboard)
-			self._edit_clip.focus()
-			self._lst.append(self._edit_clip)
-			Geometry(parent_obj=h_top).set('400x300')
-		return self._edit_clip
-		
 	def new_top(self,Maximize=1,AutoCenter=1):
 		return Top(parent_obj=self.root(),Maximize=Maximize,AutoCenter=AutoCenter)
 	
