@@ -673,6 +673,7 @@ class Text:
 	def quotations(self):
 		self.text = re.sub(r'"([a-zA-Z\d\(\[\{])',r'“\1',self.text)
 		self.text = re.sub(r'([a-zA-Z\d\.\?\!])"',r'\1”',self.text)
+		self.text = re.sub(r'"(\.\.\.[a-zA-Z\d])',r'“\1',self.text)
 		return self.text
 	
 	def delete_space_with_figure(self):
