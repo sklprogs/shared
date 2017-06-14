@@ -671,8 +671,8 @@ class Text:
 		return self.text
 	
 	def quotations(self):
-		self.text = re.sub(r'"([a-zA-Z\d\(\[\{])',r'“\1',self.text)
-		self.text = re.sub(r'([a-zA-Z\d\.\?\!])"',r'\1”',self.text)
+		self.text = re.sub(r'"([a-zA-Z\d\(\[\{\(])',r'“\1',self.text)
+		self.text = re.sub(r'([a-zA-Z\d\.\?\!\)])"',r'\1”',self.text)
 		self.text = re.sub(r'"(\.\.\.[a-zA-Z\d])',r'“\1',self.text)
 		return self.text
 	
