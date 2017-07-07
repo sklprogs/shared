@@ -22,7 +22,6 @@ import webbrowser
 # 'import urllib' does not work in Python 3, importing must be as follows:
 import urllib.request, urllib.parse
 import difflib
-import sqlite3
 
 
 
@@ -133,17 +132,6 @@ def Message(func='MAIN',level=lev_warn,message='Message',Silent=False):
 	return sg.Message(func=func,level=level,message=message,Silent=Silent) # pass 'Yes'
 
 
-# todo: Timing class functions sometimes shows inadequate results
-def timer(func_title,func,args=None): # Use tuple to pass multiple arguments
-	start_time = time.time()
-	if args:
-		func_res = func(args)
-		log.append(func_title,lev_info,globs['mes'].operation_completed % float(time.time()-start_time))
-	else:
-		func_res = func()
-		log.append(func_title,lev_info,globs['mes'].operation_completed % float(time.time()-start_time))
-	return func_res
-		
 # We do not put this into File class because we do not need to check existence
 def rewrite(dest,AskRewrite=True):
 	# We use AskRewrite just to shorten other procedures (to be able to use 'rewrite' silently in the code without ifs)
@@ -901,6 +889,7 @@ class List:
 			self.lst2 = list(lst2)
 		
 	# Add a space where necessary and convert to a string
+	# fix: ['(','denghu',')'] -> '( denghu )'
 	def space_items(self):
 		text = ''
 		for i in range(len(self.lst1)):
@@ -1738,20 +1727,21 @@ class Online:
 		return self._url
 		
 	def reset(self,base_str='',search_str='',encoding='UTF-8',MTSpecific=False):
-		self.encoding = encoding
+		self.encoding   = encoding
 		self.MTSpecific = MTSpecific
-		self.base_str = base_str
+		self.base_str   = base_str
 		self.search_str = search_str
-		self._bytes = self._url = None
+		self._bytes     = None
+		self._url       = None
 
 
 
 class Diff:
 	
 	def __init__(self,Silent=False):
-		self.Silent = Silent
-		self.Custom = False
-		self.wda_html = os.path.join(globs[oss.name()]['tmp_folder'],'wda.html')
+		self.Silent      = Silent
+		self.Custom      = False
+		self.wda_html    = os.path.join(globs[oss.name()]['tmp_folder'],'wda.html')
 		self.h_wda_write = WriteTextFile(self.wda_html,AskRewrite=False,Silent=self.Silent)
 	
 	def reset(self,text1,text2,file=None):
@@ -1759,14 +1749,14 @@ class Diff:
 		self.text1 = text1
 		self.text2 = text2
 		if file:
-			self.Custom = True
-			self.file = file
+			self.Custom  = True
+			self.file    = file
 			self._header = ''
 			self.h_write = WriteTextFile(self.file,AskRewrite=True,Silent=self.Silent)
-			self.h_path = Path(self.file)
+			self.h_path  = Path(self.file)
 		else:
-			self.Custom = False
-			self.file = self.wda_html
+			self.Custom  = False
+			self.file    = self.wda_html
 			self._header = globs['mes'].title_diff
 			self.h_write = self.h_wda_write
 		return self
@@ -2179,18 +2169,18 @@ class Words: # Requires Search, Text
 	def __init__(self,text,OrigCyr=False,Auto=False):
 		self.Success = True
 		self.OrigCyr = OrigCyr # todo: Do we really need this?
-		self.words = []
+		self.words   = []
 		if text:
 			log.append('Words.__init__',lev_info,'Analyze the text') # todo: mes
 			# This is MUCH faster than using old symbol-per-symbol algorithm for finding words. We must, however, drop double space cases.
-			self._no = 0
-			self.Auto = Auto
-			self._text_orig = Text(text=text,Auto=self.Auto).text
+			self._no          = 0
+			self.Auto         = Auto
+			self._text_orig   = Text(text=text,Auto=self.Auto).text
 			self._line_breaks = Search(self._text_orig,'\n').next_loop()
-			self._text_p = Text(text=self._text_orig).delete_line_breaks()
-			self._text_n = Text(text=self._text_p).delete_punctuation().lower()
-			self._list_nm = []
-			self._text_nm = None
+			self._text_p      = Text(text=self._text_orig).delete_line_breaks()
+			self._text_n      = Text(text=self._text_p).delete_punctuation().lower()
+			self._list_nm     = []
+			self._text_nm     = None
 			self.split()
 		else:
 			self.Success = False
@@ -2863,6 +2853,20 @@ class ProgramDir:
 		
 	def add(self,*args):
 		return os.path.join(self.dir,*args)
+
+
+
+class Timer:
+	
+	def __init__(self,func_title='__main__'):
+		self._start = self._end = 0
+		self._func_title = func_title
+		
+	def start(self):
+		self._start = time.time()
+		
+	def end(self):
+		log.append(self._func_title,lev_info,globs['mes'].operation_completed % float(time.time()-self._start))
 
 
 

@@ -175,21 +175,21 @@ class Top:
 class SearchBox:
 
 	def __init__(self,obj):
-		self.type = 'SearchBox'
-		self.obj = obj
+		self.type       = 'SearchBox'
+		self.obj        = obj
 		self.parent_obj = self.obj.parent_obj
-		h_top = Top(self.parent_obj)
-		self.h_entry = Entry(h_top)
+		h_top           = Top(self.parent_obj)
+		self.h_entry    = Entry(h_top)
 		self.h_entry.title(text='Find:') # todo: mes
 		self.h_entry.close()
-		self.h_sel = Selection(self.obj)
+		self.h_sel      = Selection(self.obj)
 
 	def reset_logic(self,words=None,Strict=False): # Strict: case-sensitive, with punctuation
-		self.Success = True
+		self.Success    = True
 		self._prev_loop = self._next_loop = self._search = self._pos1 = self._pos2 = self._text = None
-		self.i = 0
-		self.words = words
-		self.Strict = Strict
+		self.i          = 0
+		self.words      = words
+		self.Strict     = Strict
 		if self.words:
 			if self.Strict: # Do not get text from the widget - it's not packed yet
 				self._text = self.words._text_p
@@ -202,9 +202,9 @@ class SearchBox:
 			Message(func='SearchBox.reset_logic',level=sh.lev_warn,message=sh.globs['mes'].not_enough_input_data,Silent=True)
 	
 	def reset_data(self):
-		self.Success = True
+		self.Success    = True
 		self._prev_loop = self._next_loop = self._search = self._pos1 = self._pos2 = None
-		self.i = 0
+		self.i          = 0
 		self.search()
 		if self._text and self._search:
 			self.h_search.reset(text=self._text,search=self._search)
@@ -348,6 +348,8 @@ class TextBox:
 		self.font = font
 		self.state = 'normal' # 'disabled' - отключить редактирование
 		self.SpecialReturn = True
+		# (optional, external) Prevent resetting the active (already shown) widget
+		self.Active = False
 		self.Save = False
 		self.tags = []
 		self.marks = []
@@ -416,10 +418,12 @@ class TextBox:
 		WidgetShared.set_state(self,ReadOnly=ReadOnly)
 		
 	def show(self):
+		self.Active = True
 		self.parent_obj.show()
 	
 	def close(self,*args):
 		self.Save = True
+		self.Active = False
 		self.parent_obj.close()
 		return 'break'
 	
@@ -441,6 +445,8 @@ class TextBox:
 		bind(obj=self,bindings='<Control-v>',action=self.insert_clipboard)
 		bind(obj=self,bindings='<Key>',action=self.clear_on_key)
 		bind(obj=self,bindings='<Control-Alt-u>',action=self.toggle_case)
+		if hasattr(self.parent_obj,'type') and self.parent_obj.type == 'Toplevel':
+			self.parent_obj.widget.protocol("WM_DELETE_WINDOW",self.close)
 		
 	def toggle_case(self,*args):
 		text = sh.Text(text=self.selection.text()).toggle_case()
@@ -473,6 +479,8 @@ class TextBox:
 		WidgetShared.insert(self,text=text,pos=pos)
 		if MoveTop:
 			self.mark_add() # Move to the beginning
+		else:
+			self.scroll(mark='insert')
 			
 	''' Fix (probable) Tkinter bug(s) after pressing '<Control-v>':
 		1) Fix weird scrolling
@@ -1010,7 +1018,8 @@ class ListBox:
 			bind(self,'<Down>',self.move_down)
 		if not self.Composite: # todo: test
 			bind(self,['<Escape>','<Control-q>','<Control-w>'],self.interrupt)
-			self.parent_obj.widget.protocol("WM_DELETE_WINDOW",self.interrupt)
+			if hasattr(self.parent_obj,'type') and self.parent_obj.type == 'Toplevel':
+				self.parent_obj.widget.protocol("WM_DELETE_WINDOW",self.interrupt)
 		
 	def gui(self):
 		self._scroll()
@@ -2000,7 +2009,8 @@ class MessageBuilder: # Requires 'constants'
 		
 	def bindings(self):
 		bind(obj=self,bindings=['<Control-q>','<Control-w>','<Escape>'],action=self.close_no)
-		self.widget.protocol("WM_DELETE_WINDOW",self.close)
+		if hasattr(self.parent_obj,'type') and self.parent_obj.type == 'Toplevel':
+			self.widget.protocol("WM_DELETE_WINDOW",self.close)
 		
 	def paths(self):
 		if self.level == sh.lev_warn:
@@ -2188,9 +2198,9 @@ class Objects:
 		return Top(parent_obj=self.root(),Maximize=Maximize,AutoCenter=AutoCenter)
 	
 	# It is better to use this for temporary widgets only
-	def txt(self,words=None):
+	def txt(self,Maximize=True,words=None):
 		if not self._txt:
-			h_top = Top(parent_obj=self.root(),Maximize=True)
+			h_top = Top(parent_obj=self.root(),Maximize=Maximize)
 			self._txt = TextBox(parent_obj=h_top,words=words)
 			self._txt.focus()
 			self._lst.append(self._txt)
