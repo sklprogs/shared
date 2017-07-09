@@ -810,10 +810,10 @@ class Text:
 		#	Message(func='Text.extract_date_hash',level=lev_warn,message=globs['mes'].wrong_input2,Silent=self.Silent)
 		return hash
 	
-	# Shorten a title up to a max length
-	def prepare_title(self,max_title_len=20,Enclose=True):
-		if len(self.text) > max_title_len:
-			self.text = self.text[0:max_title_len] + '...'
+	# Shorten a string up to a max length
+	def shorten(self,max_len=10,Enclose=False):
+		if len(self.text) > max_len:
+			self.text = self.text[0:max_len] + '...'
 		if Enclose:
 			self.text = '"' + self.text + '"' #'[' + self.text + ']'
 		return self.text
@@ -2867,6 +2867,50 @@ class Timer:
 		
 	def end(self):
 		log.append(self._func_title,lev_info,globs['mes'].operation_completed % float(time.time()-self._start))
+
+
+
+class Table:
+	
+	def __init__(self,headers,rows,Shorten=False,MaxHeader=10,MaxRow=20):
+		self._headers  = headers
+		self._rows     = rows
+		self.Shorten   = Shorten
+		self.MaxHeader = MaxHeader
+		self.MaxRow    = MaxRow
+		if self._headers and self._rows:
+			self.Success = True
+		else:
+			self.Success = False
+			log.append('Table.__init__',lev_warn,globs['mes'].empty_input)
+
+	def _shorten_headers(self):
+		self._headers = [Text(text=header).shorten(max_len=self.MaxHeader) for header in self._headers]
+		
+	def _shorten_rows(self):
+		# Will not be assigned without using 'for i in range...'
+		for i in range(len(self._rows)):
+			if isinstance(self._rows[i],tuple):
+				self._rows[i] = list(self._rows[i])
+			for j in range(len(self._rows[i])):
+				if isinstance(self._rows[i][j],str):
+					if len(self._rows[i][j]) > self.MaxRow:
+						self._rows[i][j] = self._rows[i][j][0:self.MaxRow]
+	
+	def shorten(self):
+		if self.Success:
+			if self.Shorten:
+				self._shorten_headers ()
+				self._shorten_rows    ()
+		else:
+			log.append('Table.shorten',lev_warn,globs['mes'].canceled)
+
+	def print(self):
+		self.shorten()
+		obj = objs.pretty_table()(self._headers)
+		for row in self._rows:
+			obj.add_row(row)
+		print(obj)
 
 
 
