@@ -2872,12 +2872,13 @@ class Timer:
 
 class Table:
 	
-	def __init__(self,headers,rows,Shorten=False,MaxHeader=10,MaxRow=20):
+	def __init__(self,headers,rows,Shorten=True,MaxHeader=10,MaxRow=20,MaxRows=20):
 		self._headers  = headers
 		self._rows     = rows
 		self.Shorten   = Shorten
 		self.MaxHeader = MaxHeader
 		self.MaxRow    = MaxRow
+		self.MaxRows   = MaxRows
 		if self._headers and self._rows:
 			self.Success = True
 		else:
@@ -2888,6 +2889,15 @@ class Table:
 		self._headers = [Text(text=header).shorten(max_len=self.MaxHeader) for header in self._headers]
 		
 	def _shorten_rows(self):
+		if self.MaxRows < 2 or self.MaxRows > len(self._rows):
+			self.MaxRows = len(self._rows)
+			log.append('Table._shorten_rows',lev_info,'Set the max number of rows to %d' % self.MaxRows) # todo: mes
+		self.MaxRows = int(self.MaxRows / 2)
+		pos3 = len(self._rows)
+		pos2 = pos3 - self.MaxRows
+		self._rows = self._rows[0:self.MaxRows] + self._rows[pos2:pos3]
+	
+	def _shorten_row(self):
 		# Will not be assigned without using 'for i in range...'
 		for i in range(len(self._rows)):
 			if isinstance(self._rows[i],tuple):
@@ -2901,7 +2911,8 @@ class Table:
 		if self.Success:
 			if self.Shorten:
 				self._shorten_headers ()
-				self._shorten_rows    ()
+				self._shorten_rows   ()
+				self._shorten_row    ()
 		else:
 			log.append('Table.shorten',lev_warn,globs['mes'].canceled)
 
