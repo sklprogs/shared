@@ -2872,13 +2872,12 @@ class Timer:
 
 class Table:
 	
-	def __init__(self,headers,rows,Shorten=True,MaxHeader=10,MaxRow=20,MaxRows=20):
-		self._headers  = headers
-		self._rows     = rows
-		self.Shorten   = Shorten
-		self.MaxHeader = MaxHeader
-		self.MaxRow    = MaxRow
-		self.MaxRows   = MaxRows
+	def __init__(self,headers,rows,Shorten=True,MaxRow=18,MaxRows=20):
+		self._headers = headers
+		self._rows    = rows
+		self.Shorten  = Shorten
+		self.MaxRow   = MaxRow
+		self.MaxRows  = MaxRows
 		if self._headers and self._rows:
 			self.Success = True
 		else:
@@ -2886,7 +2885,7 @@ class Table:
 			log.append('Table.__init__',lev_warn,globs['mes'].empty_input)
 
 	def _shorten_headers(self):
-		self._headers = [Text(text=header).shorten(max_len=self.MaxHeader) for header in self._headers]
+		self._headers = [Text(text=header).shorten(max_len=self.MaxRow) for header in self._headers]
 		
 	def _shorten_rows(self):
 		if self.MaxRows < 2 or self.MaxRows > len(self._rows):
@@ -2911,17 +2910,20 @@ class Table:
 		if self.Success:
 			if self.Shorten:
 				self._shorten_headers ()
-				self._shorten_rows   ()
-				self._shorten_row    ()
+				self._shorten_rows    ()
+				self._shorten_row     ()
 		else:
 			log.append('Table.shorten',lev_warn,globs['mes'].canceled)
 
 	def print(self):
-		self.shorten()
-		obj = objs.pretty_table()(self._headers)
-		for row in self._rows:
-			obj.add_row(row)
-		print(obj)
+		if self.Success:
+			self.shorten()
+			obj = objs.pretty_table()(self._headers)
+			for row in self._rows:
+				obj.add_row(row)
+			print(obj)
+		else:
+			log.append('Table.print',lev_warn,globs['mes'].canceled)
 
 
 
