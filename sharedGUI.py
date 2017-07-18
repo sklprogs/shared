@@ -682,18 +682,34 @@ class TextBox:
 class Entry:
 	
 	def __init__(self,parent_obj,Composite=False,side=None,ipadx=None,ipady=None,fill=None,width=None,expand=None):
-		self.type = 'Entry'
-		self.Composite = Composite
-		self.state = 'normal' # 'disabled' - отключить редактирование
-		self.Save = False
+		self.type       = 'Entry'
+		self.Composite  = Composite
+		self.state      = 'normal' # 'disabled' - отключить редактирование
+		self.Save       = False
 		self.parent_obj = parent_obj
-		self.widget = tk.Entry(self.parent_obj.widget,font='Sans 11',width=width) #sh.globs['var']['menu_font']
-		bind(obj=self,bindings='<Control-a>',action=self.select_all)
-		self.widget.pack(side=side,ipadx=ipadx,ipady=ipady,fill=fill,expand=expand)
+		self.widget     = tk.Entry (
+		            self.parent_obj.widget                                    ,
+		            font                = 'Sans 11'                           ,
+		            width               = width
+		                           )
+		bind (
+		            obj                 = self                                ,
+		            bindings            = '<Control-a>'                       ,
+		            action              = self.select_all
+		     )
+		self.widget.pack (
+		            side                = side                                ,
+		            ipadx               = ipadx                               ,
+		            ipady               = ipady                               ,
+		            fill                = fill                                ,
+		            expand              = expand
+		                 )
 		if not self.Composite:
 			# Тип родительского виджета может быть любым
 			if not hasattr(self.parent_obj,'close_button'):
-				self.parent_obj.close_button = Button(self.parent_obj,text=sh.globs['mes'].btn_x,hint=sh.globs['mes'].btn_x,action=self.close,expand=0,side='bottom')
+				# cur
+				self.parent_obj.close_button = Button (
+				    self.parent_obj                                     ,text=sh.globs['mes'].btn_x,hint=sh.globs['mes'].btn_x,action=self.close,expand=0,side='bottom')
 			WidgetShared.custom_buttons(self)
 		self.bindings()
 	
@@ -739,30 +755,11 @@ class Entry:
 
 	def clear_text(self,pos1=0,pos2='end'):
 		try:
+			self.widget.selection_clear()
 			self.widget.delete(pos1,pos2)
 		except tk._tkinter.TclError:
 			# Do not use GUI
 			sh.log.append('Entry.clear_text',sh.lev_warn,'The parent has already been destroyed.') # todo: mes
-		
-	# GoTo работает только в tk.Text и оставлено для совместимости с ним (как и SpecialReturn)
-	def update(self,title='Title:',text='',SelectAll=True,ReadOnly=False,CursorPos=0,icon='',GoTo='',SpecialReturn=False):
-		self.Save = False
-		# Операции над главным виджетом
-		self.icon(path=icon)
-		self.title(text=title)
-		# Иначе обновление текста не сработает. Необходимо делать до любых операций по обновлению текста.
-		self.read_only(ReadOnly=False)
-		# Очистка текста
-		self.clear_text()
-		# Присвоение аргументов
-		self.insert(text=text)
-		# Перейти в указанное место
-		self.widget.icursor(CursorPos) # int, 'end'
-		self.read_only(ReadOnly=ReadOnly)
-		WidgetShared.custom_buttons(self)
-		if SelectAll:
-			self.select_all()
-		self.widget.focus_set()
 		
 	def icon(self,path):
 		WidgetShared.icon(self.parent_obj,path)
@@ -782,11 +779,29 @@ class Entry:
 
 class Frame:
 	
-	def __init__(self,parent_obj,expand=1,fill='both',side=None,padx=None,pady=None,ipadx=None,ipady=None):
-		self.type = 'Frame'
+	def __init__ (
+	                self                                                      ,
+	                parent_obj                                                ,
+	                expand              = 1                                   ,
+	                fill                = 'both'                              ,
+	                side                = None                                ,
+	                padx                = None                                ,
+	                pady                = None                                ,
+	                ipadx               = None                                ,
+	                ipady               = None
+	             ):
+		self.type       = 'Frame'
 		self.parent_obj = parent_obj
-		self.widget = tk.Frame(self.parent_obj.widget)
-		self.widget.pack(expand=expand,fill=fill,side=side,padx=padx,pady=pady,ipadx=ipadx,ipady=ipady)
+		self.widget     = tk.Frame(self.parent_obj.widget)
+		self.widget.pack (
+		            expand              = expand                              ,
+		            fill                = fill                                ,
+		            side                = side                                ,
+		            padx                = padx                                ,
+		            pady                = pady                                ,
+		            ipadx               = ipadx                               ,
+		            ipady               = ipady
+		                 )
 			
 	def title(self,text=None):
 		if text:
@@ -805,19 +820,50 @@ class Frame:
 # todo: Нужно ли на входе ,bindings=[]?
 class Button:
 	
-	def __init__(self,parent_obj,action,hint='<Hint>',inactive_image_path=None,active_image_path=None,text='Press me',height=36,width=36,side='left',expand=0,fg='black',bd=0,hint_delay=800,hint_width=280,hint_height=40,hint_background='#ffffe0',hint_direction='top',hint_border_width=1,hint_border_color='navy',bindings=[],fill='both',TakeFocus=False):
-		self.parent_obj = parent_obj
-		self.action = action
-		self.Status = False
-		self.height = height
-		self.width  = width
-		self.side   = side
-		self.expand = expand
-		self.fill   = fill
+	def __init__ (
+	                self                                                      ,
+	                parent_obj                                                ,
+	                action                                                    ,
+	                hint                = '<Hint>'                            ,
+	                inactive_image_path = None                                ,
+	                active_image_path   = None                                ,
+	                text                = 'Press me'                          ,
+	                height              = 36                                  ,
+	                width               = 36                                  ,
+	                side                = 'left'                              ,
+	                expand              = 0                                   ,
+	                fg                  = 'black'                             ,
+	                bd                  = 0                                   ,
+	                hint_delay          = 800                                 ,
+	                hint_width          = 280                                 ,
+	                hint_height         = 40                                  ,
+	                hint_background     = '#ffffe0'                           ,
+	                hint_direction      = 'top'                               ,
+	                hint_border_width   = 1                                   ,
+	                hint_border_color   = 'navy'                              ,
+	                bindings            = []                                  ,
+	                fill                = 'both'                              ,
+	                TakeFocus           = False
+	             ):
+		self.parent_obj     = parent_obj
+		self.action         = action
+		self.Status         = False
+		self.height         = height
+		self.width          = width
+		self.side           = side
+		self.expand         = expand
+		self.fill           = fill
 		self.inactive_image = self.image(inactive_image_path)
 		self.active_image   = self.image(active_image_path)
 		if self.inactive_image:
-			self.widget = tk.Button(self.parent_obj.widget,image=self.inactive_image,height=self.height,width=self.width,bd=bd,fg=fg)
+			self.widget     = tk.Button (
+			        self.parent_obj.widget                                    ,
+			        image               = self.inactive_image                 ,
+			        height              = self.height                         ,
+			        width               = self.width                          ,
+			        bd                  = bd                                  ,
+			        fg                  = fg
+			                            )
 		else:
 			# В большинстве случаев текстовая кнопка не требует задания высоты и ширины по умолчанию, они определяются автоматически. Также в большинстве случаев для текстовых кнопок следует использовать рамку.
 			self.widget = tk.Button(self.parent_obj.widget,bd=1,fg=fg)
@@ -826,9 +872,27 @@ class Button:
 			hint_extended = hint + '\n' + str(bindings).replace('[','').replace(']','').replace('<','').replace('>','').replace("'",'')
 		else:
 			hint_extended = hint
-		self.tip = ToolTip(self.widget,text=hint_extended,hint_delay=hint_delay,hint_width=hint_width,hint_height=hint_height,hint_background=hint_background,hint_direction=hint_direction,button_side=side)
+		self.tip = ToolTip (
+		            self.widget                                               ,
+		            text                = hint_extended                       ,
+		            hint_delay          = hint_delay                          ,
+		            hint_width          = hint_width                          ,
+		            hint_height         = hint_height                         ,
+		            hint_background     = hint_background                     ,
+		            hint_direction      = hint_direction                      ,
+		            button_side         = side
+		                   )
 		self.show()
-		bind(obj=self,bindings=['<ButtonRelease-1>','<space>','<Return>','<KP_Enter>'],action=self.click)
+		bind (
+		            obj                 = self                                ,
+		            bindings            = [
+		                                    '<ButtonRelease-1>'               ,
+		                                    '<space>'                         ,
+		                                    '<Return>'                        ,
+		                                    '<KP_Enter>'
+		                                  ]                                   ,
+		            action              = self.click
+		     )
 		if TakeFocus:
 			self.widget.focus_set()
 	
@@ -839,7 +903,12 @@ class Button:
 	def image(self,button_image_path=None):
 		# Без 'file=' не сработает!
 		if button_image_path and os.path.exists(button_image_path):
-			button_image = tk.PhotoImage(file=button_image_path,master=self.parent_obj.widget,width=self.width,height=self.height)
+			button_image = tk.PhotoImage (
+			        file                = button_image_path                   ,
+			        master              = self.parent_obj.widget              ,
+			        width               = self.width                          ,
+			        height              = self.height
+			                             )
 		else:
 			button_image = None
 		return button_image
@@ -895,9 +964,9 @@ class ToolTipBase:
 		self.tipwindow = None
 		self.id = None
 		self.x = self.y = 0
-		self._id1 = self.button.bind("<Enter>", self.enter)
-		self._id2 = self.button.bind("<Leave>", self.leave)
-		self._id3 = self.button.bind("<ButtonPress>", self.leave)
+		self._id1 = self.button.bind("<Enter>",self.enter)
+		self._id2 = self.button.bind("<Leave>",self.leave)
+		self._id3 = self.button.bind("<ButtonPress>",self.leave)
 
 	def enter(self, event=None):
 		self.schedule()
@@ -908,7 +977,7 @@ class ToolTipBase:
 
 	def schedule(self):
 		self.unschedule()
-		self.id = self.button.after(self.hint_delay, self.showtip)
+		self.id = self.button.after(self.hint_delay,self.showtip)
 
 	def unschedule(self):
 		id = self.id
@@ -975,9 +1044,20 @@ class ToolTip(ToolTipBase):
 		ToolTipBase.__init__(self,button)
 
 	def showcontents(self):
-		frame = tk.Frame(self.tipwindow,background=self.hint_border_color,borderwidth=self.hint_border_width)
+		frame = tk.Frame (
+		            self.tipwindow                                            ,
+		            background          = self.hint_border_color              ,
+		            borderwidth         = self.hint_border_width
+		                 )
 		frame.pack()
-		self.label = tk.Label(frame,text=self.text,justify='center',background=self.hint_background,width=self.hint_width,height=self.hint_height)
+		self.label = tk.Label (
+		            frame                                                     ,
+		            text                = self.text                           ,
+		            justify             = 'center'                            ,
+		            background          = self.hint_background                ,
+		            width               = self.hint_width                     ,
+		            height              = self.hint_height
+		                      )
 		self.label.pack() #expand=1,fill='x'
 		
 
@@ -1001,18 +1081,30 @@ class ListBox:
 	            ):
 		self.state = 'normal' # See 'WidgetShared'
 		# 'user_function': A user-defined function that is run when pressing Up/Down arrow keys and LMB. There is a problem binding it externally, so we bind it here.
-		self.parent_obj, self.Multiple, self.expand, self.Composite, self.Scrollbar, self.side, self._fill, self.user_function, self.SelectionCloses, self.SingleClick, self._icon = parent_obj, Multiple, expand, Composite, Scrollbar, side, fill, user_function, SelectionCloses, SingleClick, icon
+		self.parent_obj      = parent_obj
+		self.Multiple        = Multiple
+		self.expand          = expand
+		self.Composite       = Composite
+		self.Scrollbar       = Scrollbar
+		self.side            = side
+		self._fill           = fill
+		self.user_function   = user_function
+		self.SelectionCloses = SelectionCloses
+		self.SingleClick     = SingleClick
+		self._icon           = icon
 		self.gui()
 		self.reset(lst=lst,title=title)
 		
 	def bindings(self):
 		if self.user_function:
-			bind(self,'<<ListboxSelect>>',self.user_function) # Binding just to '<Button-1>' does not work. We do not need binding Return/space/etc. because the function will be called each time the selection is changed. However, we still need to bind Up/Down.
+			# Binding just to '<Button-1>' does not work. We do not need binding Return/space/etc. because the function will be called each time the selection is changed. However, we still need to bind Up/Down.
+			bind(self,'<<ListboxSelect>>',self.user_function)
 		elif self.SelectionCloses:
 			# todo: test <KP_Enter> in Windows
 			bind(self,['<Return>','<KP_Enter>','<Double-Button-1>'],self.close)
 			if self.SingleClick and not self.Multiple:
-				bind(self,'<<ListboxSelect>>',self.close) # Binding to '<Button-1>' does not allow to select an entry before closing
+				# Binding to '<Button-1>' does not allow to select an entry before closing
+				bind(self,'<<ListboxSelect>>',self.close)
 		if not self.Multiple:
 			bind(self,'<Up>',self.move_up)
 			bind(self,'<Down>',self.move_down)
@@ -1024,9 +1116,17 @@ class ListBox:
 	def gui(self):
 		self._scroll()
 		if self.Multiple:
-			self.widget = tk.Listbox(self.parent_obj.widget,exportselection=0,selectmode=tk.MULTIPLE)
+			self.widget = tk.Listbox (
+			        self.parent_obj.widget                                    ,
+			        exportselection     = 0                                   ,
+			        selectmode          = tk.MULTIPLE
+			                         )
 		else:
-			self.widget = tk.Listbox(self.parent_obj.widget,exportselection=0,selectmode=tk.SINGLE)
+			self.widget = tk.Listbox (
+			        self.parent_obj.widget                                    ,
+			        exportselection     = 0                                   ,
+			        selectmode          = tk.SINGLE
+			                         )
 		self.widget.pack(expand=self.expand,fill=self._fill,side=self.side)
 		self._resize()
 		self._scroll_config()
@@ -1036,7 +1136,14 @@ class ListBox:
 		if not self.Composite:
 			# Тип родительского виджета может быть любым
 			if not hasattr(self.parent_obj,'close_button'):
-				self.parent_obj.close_button = Button(self.parent_obj,text=sh.globs['mes'].btn_x,hint=sh.globs['mes'].btn_x,action=self.close,expand=0,side='bottom')
+				self.parent_obj.close_button = Button (
+				    self.parent_obj                                           ,
+				    text                = sh.globs['mes'].btn_x               ,
+				    hint                = sh.globs['mes'].btn_x               ,
+				    action              = self.close                          ,
+				    expand              = 0                                   ,
+				    side                = 'bottom'
+				                                      )
 			WidgetShared.custom_buttons(self)
 
 	def _scroll(self):
@@ -1161,33 +1268,55 @@ class ListBox:
 def dialog_save_file(filetypes=()):
 	file = ''
 	if not filetypes:
-		filetypes = ((sh.globs['mes'].plain_text,'.txt'),(sh.globs['mes'].webpage,'.htm'),(sh.globs['mes'].webpage,'.html'),(sh.globs['mes'].all_files,'*'))
-	options = {}
+		filetypes = (
+		              ( sh.globs['mes'].plain_text,'.txt' )                   ,
+		              ( sh.globs['mes'].webpage,'.htm'    )                   ,
+		              ( sh.globs['mes'].webpage,'.html'   )                   ,
+		              ( sh.globs['mes'].all_files,'*'     )
+		            )
+	options                = {}
 	options['initialfile'] = ''
-	options['filetypes'] = filetypes
-	options['title'] = sh.globs['mes'].save_as
+	options['filetypes']   = filetypes
+	options['title']       = sh.globs['mes'].save_as
 	try:
 		file = dialog.asksaveasfilename(**options)
 	except:
-		Message(func='dialog_save_file',level=sh.lev_err,message=sh.globs['mes'].file_sel_failed)
+		Message (
+		            func                = 'dialog_save_file'                  ,
+		            level               = sh.lev_err                          ,
+		            message             = sh.globs['mes'].file_sel_failed
+		        )
 	return file
 
 
 
 class OptionMenu:
 	
-	def __init__(self,parent_obj,items=(1,2,3,4,5),side='left',anchor='center',command=None,takefocus=1,default=None):
+	def __init__ (self,
+	                parent_obj                                                ,
+	                items               = (1,2,3,4,5)                         ,
+	                side                = 'left'                              ,
+	                anchor              = 'center'                            ,
+	                command             = None                                ,
+	                takefocus           = 1                                   ,
+	                default             = None
+	             ):
 		self.parent_obj = parent_obj
-		self.items = items
-		self.command = command
-		self.default = default
-		self.choice = None
-		self.index = 0
-		self.var = tk.StringVar(self.parent_obj.widget)
+		self.items      = items
+		self.command    = command
+		self.default    = default
+		self.choice     = None
+		self.index      = 0
+		self.var        = tk.StringVar(self.parent_obj.widget)
 		# An error is thrown if 'items' is ()
 		if not self.items:
 			self.items = (1,2,3,4,5)
-		self.widget = tk.OptionMenu(self.parent_obj.widget,self.var,*self.items,command=self.trigger)
+		self.widget    = tk.OptionMenu (
+		            self.parent_obj.widget                                    ,
+		            self.var                                                  ,
+		            *self.items                                               ,
+		            command             = self.trigger
+		                               )
 		self.widget.pack(side=side,anchor=anchor)
 		self.widget.configure(takefocus=takefocus) # Must be 1/True to be operational from keyboard
 		self.default_set()
@@ -1208,7 +1337,11 @@ class OptionMenu:
 			if self.default in self.items:
 				self.var.set(self.default)
 			else:
-				sg.Message('OptionMenu.default_set',sh.lev_err,sh.globs['mes'].unknown_mode % (str(self.default),';'.join(self.items)))
+				sg.Message (
+				    'OptionMenu.default_set'                                  ,
+				    sh.lev_err                                                ,
+				    sh.globs['mes'].unknown_mode % (str(self.default),';'.join(self.items))
+				           )
 				self._default_set()
 			
 	def set(self,item,*args):
@@ -1216,12 +1349,20 @@ class OptionMenu:
 			self.var.set(item)
 			self.choice = item
 		else:
-			Message(func='OptionMenu.set',level=sh.lev_err,message=sh.globs['mes'].wrong_input3 % str(item))
+			Message (
+			        func                = 'OptionMenu.set'                    ,
+			        level               = sh.lev_err                          ,
+			        message             = sh.globs['mes'].wrong_input3 % str(item)
+			        )
 	
 	def fill(self):
 		self.widget['menu'].delete(0,'end')
 		for item in self.items:
-			self.widget['menu'].add_command(label=item,command=lambda v=self.var,l=item:v.set(l))
+			self.widget['menu'].add_command (
+			        label               = item                                ,
+			        command             = lambda v=self.var                   ,
+			        l                   = item:v.set(l)
+			                                )
 	
 	def reset(self,items=(1,2,3,4,5)):
 		self.items = items
@@ -1274,16 +1415,38 @@ class Selection: # Selecting words only
 		self.reset_logic(words=words)
 		self.reset_data()
 		
-	def reset(self,mode='data',words=None,pos1tk=None,pos2tk=None,background=None,foreground=None,tag='tag'):
+	def reset (
+	                self                                                      ,
+	                mode                = 'data'                              ,
+	                words               = None                                ,
+	                pos1tk              = None                                ,
+	                pos2tk              = None                                ,
+	                background          = None                                ,
+	                foreground          = None                                ,
+	                tag                 = 'tag'
+	          ):
 		if mode == 'data':
-			self.reset_data(pos1tk=pos1tk,pos2tk=pos2tk,background=background,foreground=foreground,tag=tag)
+			self.reset_data (
+			        pos1tk              = pos1tk                              ,
+			        pos2tk              = pos2tk                              ,
+			        background          = background                          ,
+			        foreground          = foreground                          ,
+			        tag                 = tag
+			                )
 		else:
 			self.reset_logic(words=words)
 	
 	def reset_logic(self,words):
 		self.words = words
 		
-	def reset_data(self,pos1tk=None,pos2tk=None,background=None,foreground=None,tag='tag'):
+	def reset_data (
+	                self                                                      ,
+	                pos1tk              = None                                ,
+	                pos2tk              = None                                ,
+	                background          = None                                ,
+	                foreground          = None                                ,
+	                tag                 = 'tag'
+	               ):
 		self._pos1tk = pos1tk
 		self._pos2tk = pos2tk
 		self._text = ''
@@ -1294,7 +1457,11 @@ class Selection: # Selecting words only
 		self._tag = tag
 		
 	def clear(self,tag_name='sel',pos1tk='1.0',pos2tk='end'):
-		self.h_widget._tag_remove(tag_name=tag_name,pos1tk=pos1tk,pos2tk=pos2tk)
+		self.h_widget._tag_remove (
+		            tag_name            = tag_name                            ,
+		            pos1tk              = pos1tk                              ,
+		            pos2tk              = pos2tk
+		                          )
 	
 	def pos1tk(self):
 		if self._pos1tk is None:
