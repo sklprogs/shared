@@ -1064,20 +1064,20 @@ class ToolTip(ToolTipBase):
 
 class ListBox:
 	# todo: configure a font
-	def __init__(self,
-	             parent_obj                  ,
-	             Multiple        = False     ,
-	             lst             = []        ,
-	             title           = 'Title:'  ,
-	             icon            = None      ,
-	             SelectionCloses = True      ,
-	             Composite       = False     ,
-	             SingleClick     = True      ,
-	             user_function   = None      ,
-	             side            = None      ,
-	             Scrollbar       = True      ,
-	             expand          = 1         ,
-	             fill            = 'both'
+	def __init__(self
+	            ,parent_obj
+	            ,Multiple        = False
+	            ,lst             = []
+	            ,title           = 'Title:'
+	            ,icon            = None
+	            ,SelectionCloses = True
+	            ,Composite       = False
+	            ,SingleClick     = True
+	            ,user_function   = None
+	            ,side            = None
+	            ,Scrollbar       = True
+	            ,expand          = 1
+	            ,fill            = 'both'
 	            ):
 		self.state = 'normal' # See 'WidgetShared'
 		# 'user_function': A user-defined function that is run when pressing Up/Down arrow keys and LMB. There is a problem binding it externally, so we bind it here.
@@ -1192,8 +1192,21 @@ class ListBox:
 		if self._index is None:
 			Message(func='ListBox.select',level=sh.lev_err,message=sh.globs['mes'].empty_input)
 		else:
-			self.widget.selection_set(self._index)
-			self.widget.see(self._index)
+			self._select()
+			
+	def _select(self):
+		self.widget.selection_set(self._index)
+		self.widget.see(self._index)
+			
+	def set(self,item):
+		if item:
+			if item in self.lst:
+				self._index = lst.index(item)
+				self._select()
+			else:
+				Message('ListBox.set',sh.lev_err,'Item "%s" is not in list!' % str(item)) # todo: mes
+		else:
+			sh.log.append('ListBox.set',sh.lev_warn,sh.globs['mes'].empty_input)
 	
 	def show(self,*args):
 		self.parent_obj.show()
