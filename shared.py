@@ -889,12 +889,32 @@ class List:
 			self.lst2 = list(lst2)
 		
 	# Add a space where necessary and convert to a string
-	# fix: ['(','denghu',')'] -> '( denghu )'
-	def space_items(self):
+	def space_items(self,MultSpaces=False):
 		text = ''
 		for i in range(len(self.lst1)):
 			if not self.lst1[i] == '':
 				if text == '':
+					text += self.lst1[i]
+				elif self.lst1[i] and self.lst1[i][0] in punc_array or self.lst1[i][0] in '”»])}':
+					text += self.lst1[i]
+				# We do not know for sure where quotes should be placed, but we cannot leave out cases like ' " '
+				elif len(text) > 1 and text[-2].isspace() and text[-1] == '"':
+					text += self.lst1[i]
+				elif len(text) > 1 and text[-2].isspace() and text[-1] == "'":
+					text += self.lst1[i]
+				# Only after "text == ''"
+				elif text[-1] in '“«[{(':
+					text += self.lst1[i]
+				elif text[-1].isspace() and self.lst1[i] and self.lst1[i][0].isspace() and not MultSpaces:
+					tmp = self.lst1[i].lstrip()
+					if tmp:
+						text += tmp
+				elif text[-1].isspace():
+					text += self.lst1[i]
+				elif i == len(self.lst1) - 1 and self.lst1[i] in punc_array:
+					text += self.lst1[i]
+				# Do not allow ' "' in the end
+				elif i == len(self.lst1) - 1 and self.lst1[i] in ('”','»',']',')','}','"',"'"):
 					text += self.lst1[i]
 				else:
 					text += ' ' + self.lst1[i]
