@@ -1201,7 +1201,7 @@ class ListBox:
 	def set(self,item):
 		if item:
 			if item in self.lst:
-				self._index = lst.index(item)
+				self._index = self.lst.index(item)
 				self._select()
 			else:
 				Message('ListBox.set',sh.lev_err,'Item "%s" is not in list!' % str(item)) # todo: mes
