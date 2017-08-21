@@ -820,30 +820,29 @@ class Frame:
 # todo: Нужно ли на входе ,bindings=[]?
 class Button:
     
-    def __init__ (
-                    self                                                      ,
-                    parent_obj                                                ,
-                    action                                                    ,
-                    hint                = '<Hint>'                            ,
-                    inactive_image_path = None                                ,
-                    active_image_path   = None                                ,
-                    text                = 'Press me'                          ,
-                    height              = 36                                  ,
-                    width               = 36                                  ,
-                    side                = 'left'                              ,
-                    expand              = 0                                   ,
-                    fg                  = 'black'                             ,
-                    bd                  = 0                                   ,
-                    hint_delay          = 800                                 ,
-                    hint_width          = 280                                 ,
-                    hint_height         = 40                                  ,
-                    hint_background     = '#ffffe0'                           ,
-                    hint_direction      = 'top'                               ,
-                    hint_border_width   = 1                                   ,
-                    hint_border_color   = 'navy'                              ,
-                    bindings            = []                                  ,
-                    fill                = 'both'                              ,
-                    TakeFocus           = False
+    def __init__ (self
+                 ,parent_obj
+                 ,action
+                 ,hint                = None
+                 ,inactive_image_path = None
+                 ,active_image_path   = None
+                 ,text                = 'Press me'
+                 ,height              = 36
+                 ,width               = 36
+                 ,side                = 'left'
+                 ,expand              = 0
+                 ,fg                  = 'black'
+                 ,bd                  = 0
+                 ,hint_delay          = 800
+                 ,hint_width          = 280
+                 ,hint_height         = 40
+                 ,hint_background     = '#ffffe0'
+                 ,hint_direction      = 'top'
+                 ,hint_border_width   = 1
+                 ,hint_border_color   = 'navy'
+                 ,bindings            = []
+                 ,fill                = 'both'
+                 ,TakeFocus           = False
                  ):
         self.parent_obj     = parent_obj
         self.action         = action
@@ -856,42 +855,39 @@ class Button:
         self.inactive_image = self.image(inactive_image_path)
         self.active_image   = self.image(active_image_path)
         if self.inactive_image:
-            self.widget     = tk.Button (
-                    self.parent_obj.widget                                    ,
-                    image               = self.inactive_image                 ,
-                    height              = self.height                         ,
-                    width               = self.width                          ,
-                    bd                  = bd                                  ,
-                    fg                  = fg
-                                        )
+            self.widget = tk.Button (self.parent_obj.widget
+                                    ,image  = self.inactive_image
+                                    ,height = self.height
+                                    ,width  = self.width
+                                    ,bd     = bd
+                                    ,fg     = fg
+                                    )
         else:
             # В большинстве случаев текстовая кнопка не требует задания высоты и ширины по умолчанию, они определяются автоматически. Также в большинстве случаев для текстовых кнопок следует использовать рамку.
             self.widget = tk.Button(self.parent_obj.widget,bd=1,fg=fg)
         self.title(button_text=text)
-        if bindings:
-            hint_extended = hint + '\n' + str(bindings).replace('[','').replace(']','').replace('<','').replace('>','').replace("'",'')
-        else:
-            hint_extended = hint
-        self.tip = ToolTip (
-                    self.widget                                               ,
-                    text                = hint_extended                       ,
-                    hint_delay          = hint_delay                          ,
-                    hint_width          = hint_width                          ,
-                    hint_height         = hint_height                         ,
-                    hint_background     = hint_background                     ,
-                    hint_direction      = hint_direction                      ,
-                    button_side         = side
-                           )
+        if hint:
+            if bindings:
+                hint_extended = hint + '\n' + str(bindings).replace('[','').replace(']','').replace('<','').replace('>','').replace("'",'')
+            else:
+                hint_extended = hint
+            self.tip = ToolTip (self.widget
+                               ,text            = hint_extended
+                               ,hint_delay      = hint_delay
+                               ,hint_width      = hint_width
+                               ,hint_height     = hint_height
+                               ,hint_background = hint_background
+                               ,hint_direction  = hint_direction
+                               ,button_side     = side
+                               )
         self.show()
-        bind (
-                    obj                 = self                                ,
-                    bindings            = [
-                                            '<ButtonRelease-1>'               ,
-                                            '<space>'                         ,
-                                            '<Return>'                        ,
-                                            '<KP_Enter>'
-                                          ]                                   ,
-                    action              = self.click
+        bind (obj      = self
+             ,bindings = ['<ButtonRelease-1>'
+                         ,'<space>'
+                         ,'<Return>'
+                         ,'<KP_Enter>'
+                         ]
+             ,action   = self.click
              )
         if TakeFocus:
             self.widget.focus_set()
@@ -903,11 +899,10 @@ class Button:
     def image(self,button_image_path=None):
         # Без 'file=' не сработает!
         if button_image_path and os.path.exists(button_image_path):
-            button_image = tk.PhotoImage (
-                    file                = button_image_path                   ,
-                    master              = self.parent_obj.widget              ,
-                    width               = self.width                          ,
-                    height              = self.height
+            button_image = tk.PhotoImage (file   = button_image_path
+                                         ,master = self.parent_obj.widget
+                                         ,width  = self.width
+                                         ,height = self.height
                                          )
         else:
             button_image = None
@@ -996,7 +991,10 @@ class ToolTipBase:
         elif self.hint_direction == 'top':
             y = self.button.winfo_rooty() - self.hint_height - 1
         else:
-            Message(func='ToolTipBase.showtip',level=sh.lev_err,message=sh.globs['mes'].unknown_mode % (str(self.hint_direction),'top, bottom'))
+            Message (func    = 'ToolTipBase.showtip'
+                    ,level   = sh.lev_err
+                    ,message = sh.globs['mes'].unknown_mode % (str(self.hint_direction),'top, bottom')
+                    )
         self.tipwindow = tw = tk.Toplevel(self.button)
         tw.wm_overrideredirect(1)
         # "+%d+%d" is not enough!
