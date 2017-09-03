@@ -56,7 +56,10 @@ class Record:
                            )
             return result
         else:
-            sh.log.append('Record.apply',_('WARNING'),_('Operation has been canceled.'))
+            sh.log.append ('Record.apply'
+                          ,_('WARNING')
+                          ,_('Operation has been canceled.')
+                          )
     
     def _check(self):
         if self.Success:
@@ -68,7 +71,10 @@ class Record:
                            ,_('Regular expression %s has failed: we were expecting\n"%s",\nbut received\n"%s".') % (str(self._id),str(self._with),str(result))
                            )
         else:
-            sh.log.append('Record.check',_('WARNING'),_('Operation has been canceled.'))
+            sh.log.append ('Record.check'
+                          ,_('WARNING')
+                          ,_('Operation has been canceled.')
+                          )
         return self.Success
     
     def check(self):
@@ -91,9 +97,15 @@ class Record:
                     self._check()
             else:
                 self.Success = False
-                sg.Message('Record.check',_('WARNING'),_('Not enough input data!'))
+                sg.Message ('Record.check'
+                           ,_('WARNING')
+                           ,_('Not enough input data!')
+                           )
         else:
-            sh.log.append('Record.check',_('WARNING'),_('Operation has been canceled.'))
+            sh.log.append ('Record.check'
+                          ,_('WARNING')
+                          ,_('Operation has been canceled.')
+                          )
         return self.Success
 
 
