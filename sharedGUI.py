@@ -403,7 +403,10 @@ class SearchBox:
                         ,message = _('No matches!')
                         )
         else:
-            sh.log.append('SearchBox.prev',_('WARNING'),_('Operation has been canceled.'))
+            sh.log.append ('SearchBox.prev'
+                          ,_('WARNING')
+                          ,_('Operation has been canceled.')
+                          )
 
     def pos1(self):
         if self.Success:
@@ -415,7 +418,10 @@ class SearchBox:
                 self._pos1 = _loop[self.i]
             return self._pos1
         else:
-            sh.log.append('SearchBox.pos1',_('WARNING'),_('Operation has been canceled.'))
+            sh.log.append ('SearchBox.pos1'
+                          ,_('WARNING')
+                          ,_('Operation has been canceled.')
+                          )
 
     def pos2(self):
         if self.Success:
@@ -941,8 +947,14 @@ class Entry:
         if self.Composite:
             self.clear_text()
         else:
-            bind(obj=self,bindings=['<Return>','<KP_Enter>'],action=self.close)
-            bind(obj=self,bindings='<Escape>',action=self.parent_obj.close)
+            bind (obj      = self
+                 ,bindings = ['<Return>','<KP_Enter>']
+                 ,action   = self.close
+                 )
+            bind (obj      = self
+                 ,bindings = '<Escape>'
+                 ,action   = self.parent_obj.close
+                 )
 
     def show(self,*args):
         self.parent_obj.show()
@@ -1301,18 +1313,33 @@ class ListBox:
     def bindings(self):
         if self.user_function:
             # Binding just to '<Button-1>' does not work. We do not need binding Return/space/etc. because the function will be called each time the selection is changed. However, we still need to bind Up/Down.
-            bind(self,'<<ListboxSelect>>',self.user_function)
+            bind (obj      = self
+                 ,bindings = '<<ListboxSelect>>'
+                 ,action   = self.user_function
+                 )
         elif self.SelectionCloses:
             # todo: test <KP_Enter> in Windows
-            bind(self,['<Return>','<KP_Enter>','<Double-Button-1>'],self.close)
+            bind (obj      = self
+                 ,bindings = ['<Return>','<KP_Enter>','<Double-Button-1>']
+                 ,action   = self.close
+                 )
             if self.SingleClick and not self.Multiple:
                 # Binding to '<Button-1>' does not allow to select an entry before closing
-                bind(self,'<<ListboxSelect>>',self.close)
+                bind (obj      = self
+                     ,bindings = '<<ListboxSelect>>'
+                     ,action   = self.close
+                     )
         if not self.Multiple:
-            bind(self,'<Up>',self.move_up)
+            bind (obj      = self
+                 ,bindings = '<Up>'
+                 ,action   = self.move_up
+                 )
             bind(self,'<Down>',self.move_down)
         if not self.Composite: # todo: test
-            bind(self,['<Escape>','<Control-q>','<Control-w>'],self.interrupt)
+            bind (obj      = self
+                 ,bindings = ['<Escape>','<Control-q>','<Control-w>']
+                 ,action   = self.interrupt
+                 )
             if hasattr(self.parent_obj,'type') and self.parent_obj.type == 'Toplevel':
                 self.parent_obj.widget.protocol("WM_DELETE_WINDOW",self.interrupt)
 
@@ -1593,7 +1620,9 @@ class OptionMenu:
         self.choice = self.var.get()
         # 'OptionMenu' always returns a string
         if self.choice not in self.items:
-            self.choice = sh.Input(func_title='OptionMenu._get',val=self.choice).integer()
+            self.choice = sh.Input (func_title = 'OptionMenu._get'
+                                   ,val        = self.choice
+                                   ).integer()
         try:
             self.index = self.items.index(self.choice)
         except ValueError:
@@ -1772,7 +1801,10 @@ class ParallelTexts: # Requires Search
         self.close()
 
     def reset(self,words1,words2,words3=None,words4=None):
-        sh.log.append('ParallelTexts.reset',_('INFO'),'Reset widget') # todo: del when optimized
+        sh.log.append ('ParallelTexts.reset'
+                      ,_('INFO')
+                      ,'Reset widget'
+                      ) # todo: del when optimized
         self.words1 = words1
         self.words2 = words2
         self.words3 = words3
@@ -2599,7 +2631,10 @@ class MessageBuilder: # Requires 'constants'
         self.close()
 
     def bindings(self):
-        bind(obj=self,bindings=['<Control-q>','<Control-w>','<Escape>'],action=self.close_no)
+        bind (obj      = self
+             ,bindings = ['<Control-q>','<Control-w>','<Escape>']
+             ,action   = self.close_no
+             )
         if hasattr(self.parent_obj,'type') and self.parent_obj.type == 'Toplevel':
             self.widget.protocol("WM_DELETE_WINDOW",self.close)
 

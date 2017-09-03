@@ -133,7 +133,10 @@ def rewrite(dest,AskRewrite=True):
     # We use AskRewrite just to shorten other procedures (to be able to use 'rewrite' silently in the code without ifs)
     if AskRewrite and os.path.isfile(dest):
         # We don't actually need to force rewriting or delete the file before rewriting
-        return Message(func='rewrite',level=_('QUESTION'),message=_('ATTENTION: Do yo really want to rewrite file "%s"?') % dest).Yes
+        return Message (func    = 'rewrite'
+                       ,level   = _('QUESTION')
+                       ,message = _('ATTENTION: Do yo really want to rewrite file "%s"?') % dest
+                       ).Yes
     else:
         # We return True so we may proceed with writing if the file has not been found
         return True
@@ -163,27 +166,45 @@ class Launch:
                 else:
                     subprocess.Popen(self.custom_args)
             except:
-                Message(func='Launch._launch',level=_('ERROR'),message=_('Failed to run "%s"!') % str(self.custom_args))
+                Message (func    = 'Launch._launch'
+                        ,level   = _('ERROR')
+                        ,message = _('Failed to run "%s"!') % str(self.custom_args)
+                        )
         else:
-            log.append('Launch._launch',_('ERROR'),_('Not enough input data!'))
+            log.append ('Launch._launch'
+                       ,_('ERROR')
+                       ,_('Not enough input data!')
+                       )
 
     def _lin(self):
         try:
             os.system("xdg-open " + self.h_path.escape() + "&")
         except:
-            Message(func='Launch._lin',level=_('ERROR'),message=_('Unable to open the file in an external program. You should probably check the file associations.'),Silent=self.Silent)
+            Message (func    = 'Launch._lin'
+                    ,level   = _('ERROR')
+                    ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
+                    ,Silent  = self.Silent
+                    )
 
     def _mac(self):
         try:
             os.system("open " + self.target)
         except:
-            Message(func='Launch._mac',level=_('ERROR'),message=_('Unable to open the file in an external program. You should probably check the file associations.'),Silent=self.Silent)
+            Message (func    = 'Launch._mac'
+                    ,level   = _('ERROR')
+                    ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
+                    ,Silent  = self.Silent
+                    )
 
     def _win(self):
         try:
             os.startfile(self.target)
         except:
-            Message(func='Launch._win',level=_('ERROR'),message=_('Unable to open the file in an external program. You should probably check the file associations.'),Silent=self.Silent)
+            Message (func    = 'Launch._win'
+                    ,level   = _('ERROR')
+                    ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
+                    ,Silent  = self.Silent
+                    )
 
     def app(self,custom_app='',custom_args=[]):
         self.custom_app = custom_app
@@ -209,14 +230,20 @@ class Launch:
             else:
                 self.default()
         else:
-            log.append('Launch.auto',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Launch.auto'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def custom(self):
         if self.TargetExists:
             self.custom_args = [self.custom_app,self.target]
             self._launch()
         else:
-            log.append('Launch.custom',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Launch.custom'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def default(self):
         if self.TargetExists:
@@ -227,7 +254,10 @@ class Launch:
             elif oss.win():
                 self._win()
         else:
-            log.append('Launch.default',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Launch.default'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
 
 
@@ -242,7 +272,11 @@ class WriteTextFile:
         self.Success = True
         if not self.file:
             if self.UseLog:
-                Message(func='WriteTextFile.__init__',level=_('ERROR'),message=_('Not enough input data!'),Silent=self.Silent)
+                Message (func    = 'WriteTextFile.__init__'
+                        ,level   = _('ERROR')
+                        ,message = _('Not enough input data!')
+                        ,Silent  = self.Silent
+                        )
             else:
                 print('WriteTextFile.__init__: Not enough input data!')
             self.Success = False
@@ -250,19 +284,30 @@ class WriteTextFile:
     def _write(self,mode='w'):
         if mode == 'w' or mode == 'a':
             if self.UseLog:
-                log.append('WriteTextFile._write',_('INFO'),_('Write file "%s"') % self.file)
+                log.append ('WriteTextFile._write'
+                           ,_('INFO')
+                           ,_('Write file "%s"') % self.file
+                           )
             try:
                 with open(self.file,mode,encoding='UTF-8') as f:
                     f.write(self.text)
             except:
                 self.Success = False
                 if self.UseLog:
-                    Message(func='WriteTextFile._write',level=_('ERROR'),message=_('Unable to write file "%s"!') % self.file,Silent=self.Silent)
+                    Message (func    = 'WriteTextFile._write'
+                            ,level   = _('ERROR')
+                            ,message = _('Unable to write file "%s"!') % self.file
+                            ,Silent  = self.Silent
+                            )
                 else:
                     print('WriteTextFile._write: Unable to write the file!')
         else:
             if self.UseLog:
-                Message(func='WriteTextFile._write',level=_('ERROR'),message=_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') % (str(mode),'a, w'),Silent=False)
+                Message (func    = 'WriteTextFile._write'
+                        ,level   = _('ERROR')
+                        ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') % (str(mode),'a, w')
+                        ,Silent  = False
+                        )
             else:
                 print('WriteTextFile._write: An unknown mode!')
 
@@ -274,12 +319,19 @@ class WriteTextFile:
                 self._write('a')
             else:
                 if self.UseLog:
-                    Message(func='WriteTextFile.append',level=_('ERROR'),message=_('Not enough input data!'),Silent=self.Silent)
+                    Message (func    = 'WriteTextFile.append'
+                            ,level   = _('ERROR')
+                            ,message = _('Not enough input data!')
+                            ,Silent  = self.Silent
+                            )
                 else:
                     print('WriteTextFile.append: Not enough input data!')
         else:
             if self.UseLog:
-                log.append('WriteTextFile.append',_('WARNING'),_('Operation has been canceled.'))
+                log.append ('WriteTextFile.append'
+                           ,_('WARNING')
+                           ,_('Operation has been canceled.')
+                           )
 
     def write(self,text=''):
         if self.Success:
@@ -289,18 +341,27 @@ class WriteTextFile:
                     self._write('w')
             else:
                 if self.UseLog:
-                    Message(func='WriteTextFile.write',level=_('ERROR'),message=_('Not enough input data!'),Silent=self.Silent)
+                    Message (func    = 'WriteTextFile.write'
+                            ,level   = _('ERROR')
+                            ,message = _('Not enough input data!')
+                            ,Silent  = self.Silent
+                            )
                 else:
                     print('WriteTextFile.write: Not enough input data!')
         else:
             if self.UseLog:
-                log.append('WriteTextFile.write',_('WARNING'),_('Operation has been canceled.'))
+                log.append ('WriteTextFile.write'
+                           ,_('WARNING')
+                           ,_('Operation has been canceled.')
+                           )
 
 
 
 class Log:
 
-    def __init__(self,Use=True,Write=False,Print=True,Short=False,file=None,TransFunc=False): # TransFunc is ommitted for now
+    def __init__(self,Use=True,Write=False
+                ,Print=True,Short=False,file=None
+                ):
         self.Success = True
         self.file    = file
         self.func    = 'Log.__init__'
@@ -313,7 +374,10 @@ class Log:
         if not Use:
             self.Success = False
         if self.Write:
-            self.h_write = WriteTextFile(file=self.file,AskRewrite=False,UseLog=False)
+            self.h_write = WriteTextFile (file       = self.file
+                                         ,AskRewrite = False
+                                         ,UseLog     = False
+                                         )
             self.Success = self.h_write.Success
             self.clear()
 
@@ -378,14 +442,24 @@ class TextDic:
                 old = self.lines()
                 self._list = list(set(self.list()))
                 new = self._lines = len(self._list)
-                log.append('TextDic._delete_duplicates',_('INFO'),_('Entries deleted: %d (%d-%d)') % (old-new,old,new))
+                log.append ('TextDic._delete_duplicates'
+                           ,_('INFO')
+                           ,_('Entries deleted: %d (%d-%d)') % (old-new,old,new)
+                           )
                 self.text = '\n'.join(self._list)
                 self._split() # Update original and translation
                 self.sort() # After using set(), the original order was lost
             else:
-                Message(func='TextDic._delete_duplicates',level=_('WARNING'),message=_('File "%s" is not sortable!') % self.file,Silent=self.Silent)
+                Message (func    = 'TextDic._delete_duplicates'
+                        ,level   = _('WARNING')
+                        ,message = _('File "%s" is not sortable!') % self.file
+                        ,Silent  = self.Silent
+                        )
         else:
-            log.append('TextDic._delete_duplicates',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('TextDic._delete_duplicates'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     # We can use this as an updater, even without relying on Success
     def _join(self):
@@ -396,7 +470,11 @@ class TextDic:
                 self._list.append(self.orig[i]+'\t'+self.transl[i])
             self.text = '\n'.join(self._list)
         else:
-            Message(func='TextDic._join',level=_('WARNING'),message=_('Wrong input data!'),Silent=False)
+            Message (func    = 'TextDic._join'
+                    ,level   = _('WARNING')
+                    ,message = _('Wrong input data!')
+                    ,Silent  = False
+                    )
 
     # We can use this to check integrity and/or update original and translation lists
     def _split(self):
@@ -413,7 +491,11 @@ class TextDic:
                 else:
                     self.Success = False
                     # i+1: Count from 1
-                    Message(func='TextDic._split',level=_('WARNING'),message=_('Dictionary "%s": Incorrect line #%d: "%s"!') % (self.file,i+1,self._list[i]),Silent=self.Silent)
+                    Message (func    = 'TextDic._split'
+                            ,level   = _('WARNING')
+                            ,message = _('Dictionary "%s": Incorrect line #%d: "%s"!') % (self.file,i+1,self._list[i])
+                            ,Silent  = self.Silent
+                            )
         else:
             self.Success = False
 
@@ -426,9 +508,16 @@ class TextDic:
                 self.transl.append(translation)
                 self._join()
             else:
-                Message(func='TextDic.append',level=_('WARNING'),message=_('Empty input is not allowed!'),Silent=self.Silent)
+                Message (func    = 'TextDic.append'
+                        ,level   = _('WARNING')
+                        ,message = _('Empty input is not allowed!')
+                        ,Silent  = self.Silent
+                        )
         else:
-            log.append('TextDic.append',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('TextDic.append'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     # todo: fix: an entry which is only one in a dictionary is not deleted
     def delete_entry(self,entry_no): # Count from 1
@@ -439,9 +528,16 @@ class TextDic:
                 del self.transl[entry_no]
                 self._join()
             else:
-                Message(func='TextDic.delete_entry',level=_('ERROR'),message=_('The condition "%s" is not observed!') % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
+                Message (func    = 'TextDic.delete_entry'
+                        ,level   = _('ERROR')
+                        ,message = _('The condition "%s" is not observed!') % ('0 <= ' + str(entry_no) + ' < %d' % self.lines())
+                        ,Silent  = False
+                        )
         else:
-            log.append('TextDic.append',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('TextDic.append'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     # todo: Add checking orig and transl (where needed) for a wrapper function
     def edit_entry(self,entry_no,orig,transl): # Count from 1
@@ -452,9 +548,16 @@ class TextDic:
                 self.transl[entry_no] = transl
                 self._join()
             else:
-                Message(func='TextDic.delete_entry',level=_('ERROR'),message=_('The condition "%s" is not observed!') % ('0 <= ' + str(entry_no) + ' < %d' % self.lines()),Silent=False)
+                Message (func    = 'TextDic.delete_entry'
+                        ,level   = _('ERROR')
+                        ,message = _('The condition "%s" is not observed!') % ('0 <= ' + str(entry_no) + ' < %d' % self.lines())
+                        ,Silent  = False
+                        )
         else:
-            log.append('TextDic.append',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('TextDic.append'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def get(self):
         if not self.text:
@@ -493,9 +596,16 @@ class TextDic:
                     self._list[i] = self.orig[i] + '\t' + self.transl[i]
                 self.text = '\n'.join(self._list)
             else:
-                Message(func='TextDic.sort',level=_('WARNING'),message=_('File "%s" is not sortable!') % self.file,Silent=self.Silent)
+                Message (func    = 'TextDic.sort'
+                        ,level   = _('WARNING')
+                        ,message = _('File "%s" is not sortable!') % self.file
+                        ,Silent  = self.Silent
+                        )
         else:
-            log.append('TextDic.sort',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('TextDic.sort'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def tail(self):
         tail_text = ''
@@ -510,14 +620,20 @@ class TextDic:
                 tail_text += str(i+1) + ':' + '"' + self.list()[i] + '"\n'
                 i += 1
         else:
-            log.append('TextDic.tail',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('TextDic.tail'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return tail_text
 
     def write(self):
         if self.Success:
             WriteTextFile(self.file,self.get(),Silent=self.Silent,AskRewrite=False).write()
         else:
-            log.append('TextDic.write',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('TextDic.write'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
 
 
@@ -533,13 +649,25 @@ class ReadTextFile:
             pass
         elif not self.file:
             self.Success = False
-            Message(func='ReadTextFile.__init__',level=_('ERROR'),message=_('Not enough input data!'),Silent=self.Silent)
+            Message (func    = 'ReadTextFile.__init__'
+                    ,level   = _('ERROR')
+                    ,message = _('Not enough input data!')
+                    ,Silent  = self.Silent
+                    )
         elif not os.path.exists(self.file):
             self.Success = False
-            Message(func='ReadTextFile.__init__',level=_('WARNING'),message=_('File "%s" has not been found!') % self.file,Silent=self.Silent)
+            Message (func    = 'ReadTextFile.__init__'
+                    ,level   = _('WARNING')
+                    ,message = _('File "%s" has not been found!') % self.file
+                    ,Silent  = self.Silent
+                    )
         else:
             self.Success = False
-            Message(func='ReadTextFile.__init__',level=_('ERROR'),message=_('Wrong input data!'),Silent=self.Silent)
+            Message (func    = 'ReadTextFile.__init__'
+                    ,level   = _('ERROR')
+                    ,message = _('Wrong input data!')
+                    ,Silent  = self.Silent
+                    )
 
     def _read(self,encoding):
         try:
@@ -553,7 +681,10 @@ class ReadTextFile:
         if self.Success:
             self._text = self._text.replace('\N{ZERO WIDTH NO-BREAK SPACE}','')
         else:
-            log.append('ReadTextFile.delete_bom',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('ReadTextFile.delete_bom'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     # Return the text from memory (or load the file first)
     def get(self):
@@ -561,7 +692,10 @@ class ReadTextFile:
             if not self._text:
                 self.load()
         else:
-            log.append('ReadTextFile.get',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('ReadTextFile.get'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return self._text
 
     # Return a number of lines in the file. Returns 0 for an empty file.
@@ -569,19 +703,28 @@ class ReadTextFile:
         if self.Success:
             return len(self.list())
         else:
-            log.append('ReadTextFile.lines',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('ReadTextFile.lines'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def list(self):
         if self.Success:
             if not self._list:
                 self._list = self.get().splitlines()
         else:
-            log.append('ReadTextFile.list',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('ReadTextFile.list'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return self._list # len(None) causes an error
 
     def load(self):
         if self.Success:
-            log.append('ReadTextFile.load',_('INFO'),_('Load file "%s"') % self.file)
+            log.append ('ReadTextFile.load'
+                       ,_('INFO')
+                       ,_('Load file "%s"') % self.file
+                       )
             # We can try to define an encoding automatically, however, this often spoils some symbols, so we just proceed with try-except and the most popular encodings
             self._read('UTF-8')
             if not self._text:
@@ -592,10 +735,17 @@ class ReadTextFile:
                 # The file cannot be read OR the file is empty (we don't need empty files)
                 # todo: Update the message
                 self.Success = False
-                Message(func='ReadTextFile.load',level=_('ERROR'),message=_('Unable to read file "%s"!') % self.file,Silent=self.Silent)
+                Message (func    = 'ReadTextFile.load'
+                        ,level   = _('ERROR')
+                        ,message = _('Unable to read file "%s"!') % self.file
+                        ,Silent  = self.Silent
+                        )
             self.delete_bom()
         else:
-            log.append('ReadTextFile.load',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('ReadTextFile.load'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return self._text
 
 
@@ -613,9 +763,16 @@ class Input:
             return self.val
         elif str(self.val).isdigit():
             self.val = int(self.val)
-            log.append(self.func_title,_('INFO'),_('Convert "%s" to an integer') % str(self.val))
+            log.append (self.func_title
+                       ,_('INFO')
+                       ,_('Convert "%s" to an integer') % str(self.val)
+                       )
         else:
-            Message(func=self.func_title,level=_('ERROR'),message=_('Integer is required at input, but found "%s"! Return 0') % str(type(self.val)),Silent=self.Silent)
+            Message (func    = self.func_title
+                    ,level   = _('ERROR')
+                    ,message = _('Integer is required at input, but found "%s"! Return 0') % str(type(self.val))
+                    ,Silent  = self.Silent
+                    )
             self.val = 0
         return self.val
 
@@ -729,7 +886,10 @@ class Text:
             self.text = ''.join(self.text)
             # Further steps: self.delete_duplicate_spaces(), self.text.strip()
         else:
-            Message(func='Text.delete_embraced_text',level=_('WARNING'),message='Different number of opening and closing brackets: "%s": %d; "%s": %d!' % (opening_sym,self.text.count(opening_sym),closing_sym,self.text.count(closing_sym)))
+            Message (func    = 'Text.delete_embraced_text'
+                    ,level   = _('WARNING')
+                    ,message = 'Different number of opening and closing brackets: "%s": %d; "%s": %d!' % (opening_sym,self.text.count(opening_sym),closing_sym,self.text.count(closing_sym))
+                    )
         return self.text
 
     def convert_line_breaks(self):
@@ -760,7 +920,10 @@ class Text:
                 while self.text[-1] == ' ' or self.text[-1] in punc_array:
                     self.text = self.text[:-1]
         else:
-            log.append('Text.delete_end_punc',_('WARNING'),_('Empty strings are not supported!'))
+            log.append ('Text.delete_end_punc'
+                       ,_('WARNING')
+                       ,_('Empty strings are not supported!')
+                       )
         return self.text
 
     def delete_figures(self):
@@ -802,8 +965,14 @@ class Text:
             hash += self.str2int() * 12
             self.text = result[2]
             hash += self.str2int()
-        #else:
-        #   Message(func='Text.extract_date_hash',level=_('WARNING'),message=_('Wrong input data!'),Silent=self.Silent)
+        '''
+        else:
+           Message (func    = 'Text.extract_date_hash'
+                   ,level   = _('WARNING')
+                   ,message = _('Wrong input data!')
+                   ,Silent  = self.Silent
+                   )
+        '''
         return hash
 
     # Shorten a string up to a max length
@@ -817,7 +986,11 @@ class Text:
     # Replace commas or semicolons with line breaks or line breaks with commas
     def split_by_comma(self):
         if (';' in self.text or ',' in self.text) and '\n' in self.text:
-            Message(func='Text.split_by_comma',level=_('WARNING'),message=_('Commas and/or semicolons or line breaks can be used, but not altogether!'),Silent=self.Silent)
+            Message (func    = 'Text.split_by_comma'
+                    ,level   = _('WARNING')
+                    ,message = _('Commas and/or semicolons or line breaks can be used, but not altogether!')
+                    ,Silent  = self.Silent
+                    )
         elif ';' in self.text or ',' in self.text:
             self.text = self.text.replace(',','\n')
             self.text = self.text.replace(';','\n')
@@ -838,7 +1011,10 @@ class Text:
         try:
             par = int(self.text)
         except(ValueError,TypeError):
-            log.append('Text.str2int',_('ERROR'),_('Failed to convert "%s" to an integer!') % str(self.text))
+            log.append ('Text.str2int'
+                       ,_('WARNING')
+                       ,_('Failed to convert "%s" to an integer!') % str(self.text)
+                       )
         return par
 
     def str2float(self):
@@ -846,7 +1022,10 @@ class Text:
         try:
             par = float(self.text)
         except(ValueError,TypeError):
-            log.append('Text.str2float',_('ERROR'),_('Failed to convert "%s" to a floating-point number!') % str(self.text))
+            log.append ('Text.str2float'
+                       ,_('WARNING')
+                       ,_('Failed to convert "%s" to a floating-point number!') % str(self.text)
+                       )
         return par
 
     def strip_lines(self):
@@ -963,10 +1142,16 @@ class Time: # We constantly recalculate each value because they depend on each o
                 self._instance += datetime.timedelta(days=days_delta)
             except:
                 self.Success = False
-                Message(func='Time.instance',level=_('WARNING'),message=_('Set time parameters are incorrect or not supported.'))
+                Message (func    = 'Time.instance'
+                        ,level   = _('WARNING')
+                        ,message = _('Set time parameters are incorrect or not supported.')
+                        )
             self.monday_warning()
         else:
-            log.append('Time.add_days',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Time.add_days'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def date(self):
         if self.Success:
@@ -976,9 +1161,15 @@ class Time: # We constantly recalculate each value because they depend on each o
                 self._date = self._instance.strftime(self.pattern)
             except:
                 self.Success = False
-                Message(func='Time.instance',level=_('WARNING'),message=_('Set time parameters are incorrect or not supported.'))
+                Message (func    = 'Time.instance'
+                        ,level   = _('WARNING')
+                        ,message = _('Set time parameters are incorrect or not supported.')
+                        )
         else:
-            log.append('Time.date',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Time.date'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return self._date
 
     def instance(self):
@@ -989,9 +1180,15 @@ class Time: # We constantly recalculate each value because they depend on each o
                 self._instance = datetime.datetime.fromtimestamp(self._timestamp)
             except:
                 self.Success = False
-                Message(func='Time.instance',level=_('WARNING'),message=_('Set time parameters are incorrect or not supported.'))
+                Message (func    = 'Time.instance'
+                        ,level   = _('WARNING')
+                        ,message = _('Set time parameters are incorrect or not supported.')
+                        )
         else:
-            log.append('Time.instance',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Time.instance'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return self._instance
 
     def timestamp(self):
@@ -1002,9 +1199,15 @@ class Time: # We constantly recalculate each value because they depend on each o
                 self._timestamp = time.mktime(datetime.datetime.strptime(self._date,self.pattern).timetuple())
             except:
                 self.Success = False
-                Message(func='Time.timestamp',level=_('WARNING'),message=_('Set time parameters are incorrect or not supported.'))
+                Message (func    = 'Time.timestamp'
+                        ,level   = _('WARNING')
+                        ,message = _('Set time parameters are incorrect or not supported.')
+                        )
         else:
-            log.append('Time.timestamp',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Time.timestamp'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return self._timestamp
 
     def monday_warning(self):
@@ -1012,9 +1215,16 @@ class Time: # We constantly recalculate each value because they depend on each o
             if not self._instance:
                 self.instance()
             if self.MondayWarning and datetime.datetime.weekday(self._instance) == 0:
-                Message(func='Time.monday_warning',level=_('INFO'),message=_('Note: it will be Monday!'),Silent=self.Silent)
+                Message (func    = 'Time.monday_warning'
+                        ,level   = _('INFO')
+                        ,message = _('Note: it will be Monday!')
+                        ,Silent  = self.Silent
+                        )
         else:
-            log.append('Time.monday_warning',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Time.monday_warning'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def month_name(self):
         if self.Success:
@@ -1022,7 +1232,10 @@ class Time: # We constantly recalculate each value because they depend on each o
                 self.instance()
             self._month_name = calendar.month_name[Text(self._instance.strftime("%m"),Auto=False).str2int()]
         else:
-            log.append('Time.month_local',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Time.month_local'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return self._month_name
 
     def month_abbr(self):
@@ -1031,7 +1244,10 @@ class Time: # We constantly recalculate each value because they depend on each o
                 self.instance()
             self._month_abbr = calendar.month_abbr[Text(self._instance.strftime("%m"),Auto=False).str2int()]
         else:
-            log.append('Time.month_abbr',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Time.month_abbr'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return self._month_abbr
 
     def todays_date(self):
@@ -1045,9 +1261,15 @@ class Time: # We constantly recalculate each value because they depend on each o
                 self._year = self._instance.strftime("%Y")
             except:
                 self.Success = False
-                Message(func='Time.instance',level=_('WARNING'),message=_('Set time parameters are incorrect or not supported.'))
+                Message (func    = 'Time.instance'
+                        ,level   = _('WARNING')
+                        ,message = _('Set time parameters are incorrect or not supported.')
+                        )
         else:
-            log.append('Time.year',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Time.year'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return self._year
 
 
@@ -1069,32 +1291,57 @@ class File:
                 self.dest = os.path.join(self.dest,Path(self.file).basename())
         elif not self.file:
             self.Success = False
-            Message(func='File.__init__',level=_('ERROR'),message=_('Empty input is not allowed!'),Silent=self.Silent)
+            Message (func    = 'File.__init__'
+                    ,level   = _('ERROR')
+                    ,message = _('Empty input is not allowed!')
+                    ,Silent  = self.Silent
+                    )
         elif not os.path.exists(self.file):
             self.Success = False
-            Message(func='File.__init__',level=_('WARNING'),message=_('File "%s" has not been found!') % self.file,Silent=self.Silent)
+            Message (func    = 'File.__init__'
+                    ,level   = _('WARNING')
+                    ,message = _('File "%s" has not been found!') % self.file
+                    ,Silent  = self.Silent
+                    )
         else:
             self.Success = False
-            Message(func='File.__init__',level=_('WARNING'),message=_('The object "%s" is not a file!') % self.file,Silent=self.Silent)
+            Message (func    = 'File.__init__'
+                    ,level   = _('WARNING')
+                    ,message = _('The object "%s" is not a file!') % self.file
+                    ,Silent=self.Silent)
 
     def _copy(self):
         Success = True
-        log.append('File._copy',_('INFO'),_('Copy "%s" to "%s"') % (self.file,self.dest))
+        log.append ('File._copy'
+                   ,_('INFO')
+                   ,_('Copy "%s" to "%s"') % (self.file,self.dest)
+                   )
         try:
             shutil.copyfile(self.file,self.dest)
         except:
             Success = False
-            Message(func='File._copy',level=_('ERROR'),message=_('Failed to copy file "%s" to "%s"!') % (self.file,self.dest),Silent=self.Silent)
+            Message (func    = 'File._copy'
+                    ,level   = _('ERROR')
+                    ,message = _('Failed to copy file "%s" to "%s"!') % (self.file,self.dest)
+                    ,Silent  = self.Silent
+                    )
         return Success
 
     def _move(self):
         Success = True
-        log.append('File._move',_('INFO'),_('Move "%s" to "%s"') % (self.file,self.dest))
+        log.append ('File._move'
+                   ,_('INFO')
+                   ,_('Move "%s" to "%s"') % (self.file,self.dest)
+                   )
         try:
             shutil.move(self.file,self.dest)
         except:
             Success = False
-            Message(func='File._move',level=_('ERROR'),message=_('Failed to move "%s" to "%s"!') % (self.file,self.dest),Silent=self.Silent)
+            Message (func    = 'File._move'
+                    ,level   = _('ERROR')
+                    ,message = _('Failed to move "%s" to "%s"!') % (self.file,self.dest)
+                    ,Silent  = self.Silent
+                    )
         return Success
 
     def access_time(self):
@@ -1103,34 +1350,61 @@ class File:
                 self.atime = os.path.getatime(self.file)
                 # Further steps: datetime.date.fromtimestamp(self.atime).strftime(self.pattern)
             except:
-                Message(func='File.access_time',level=_('WARNING'),message=_('Failed to get the date of the file "%s"!') % self.file,Silent=self.Silent)
+                Message (func    = 'File.access_time'
+                        ,level   = _('WARNING')
+                        ,message = _('Failed to get the date of the file "%s"!') % self.file
+                        ,Silent  = self.Silent
+                        )
         else:
-            log.append('File.access_time',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('File.access_time'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def copy(self):
         Success = True
         if self.Success:
             if self.file.lower() == self.dest.lower():
-                Message(func='File.copy',level=_('ERROR'),message=_('Unable to copy the file "%s" to iself!') % self.file,Silent=self.Silent)
+                Message (func    = 'File.copy'
+                        ,level   = _('ERROR')
+                        ,message = _('Unable to copy the file "%s" to iself!') % self.file
+                        ,Silent  = self.Silent
+                        )
             elif rewrite(self.dest,AskRewrite=self.AskRewrite):
                 Success = self._copy()
             else:
-                log.append('File.copy',_('INFO'),_('Operation has been canceled by the user.'))
+                log.append ('File.copy'
+                           ,_('INFO')
+                           ,_('Operation has been canceled by the user.')
+                           )
         else:
-            log.append('File.copy',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('File.copy'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return Success
 
     def delete(self):
         Success = True
         if self.Success:
-            log.append('File.delete',_('INFO'),_('Delete "%s"') % self.file)
+            log.append ('File.delete'
+                       ,_('INFO')
+                       ,_('Delete "%s"') % self.file
+                       )
             try:
                 os.remove(self.file)
             except:
                 Success = False
-                Message(func='File.delete',level=_('WARNING'),message=_('Failed to delete file "%s"!') % self.file,Silent=self.Silent)
+                Message (func    = 'File.delete'
+                        ,level   = _('WARNING')
+                        ,message = _('Failed to delete file "%s"!') % self.file
+                        ,Silent  = self.Silent
+                        )
         else:
-            log.append('File.delete',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('File.delete'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return Success
 
     def delete_wait(self):
@@ -1138,7 +1412,10 @@ class File:
             while os.path.exists(self.file) and not self.delete():
                 time.sleep(0.3)
         else:
-            log.append('File.delete_wait',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('File.delete_wait'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def modification_time(self):
         if self.Success:
@@ -1146,33 +1423,60 @@ class File:
                 self.mtime = os.path.getmtime(self.file)
                 # Further steps: datetime.date.fromtimestamp(self.mtime).strftime(self.pattern)
             except:
-                Message(func='File.modification_time',level=_('WARNING'),message=_('Failed to get the date of the file "%s"!') % self.file,Silent=self.Silent)
+                Message (func    = 'File.modification_time'
+                        ,level   = _('WARNING')
+                        ,message = _('Failed to get the date of the file "%s"!') % self.file
+                        ,Silent  = self.Silent
+                        )
         else:
-            log.append('File.modification_time',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('File.modification_time'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def move(self):
         Success = True
         if self.Success:
             if self.file.lower() == self.dest.lower():
-                Message(func='File.move',level=_('ERROR'),message=_('Moving is not necessary, because the source and destination are identical.'),Silent=self.Silent)
+                Message (func    = 'File.move'
+                        ,level   = _('ERROR')
+                        ,message = _('Moving is not necessary, because the source and destination are identical.')
+                        ,Silent  = self.Silent
+                        )
             elif rewrite(self.dest,AskRewrite=self.AskRewrite):
                 Success = self._move()
             else:
-                log.append('File.move',_('INFO'),_('Operation has been canceled by the user.'))
+                log.append ('File.move'
+                           ,_('INFO')
+                           ,_('Operation has been canceled by the user.')
+                           )
         else:
-            log.append('File.move',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('File.move'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return Success
 
     def set_time(self):
         if self.Success:
             if self.atime and self.mtime:
-                log.append('File.set_time',_('INFO'),_('Change the time of the file "%s" to %s') % (self.file,str((self.atime,self.mtime))))
+                log.append ('File.set_time'
+                           ,_('INFO')
+                           ,_('Change the time of the file "%s" to %s') % (self.file,str((self.atime,self.mtime)))
+                           )
                 try:
                     os.utime(self.file,(self.atime,self.mtime))
                 except:
-                    Message(func='File.set_time',level=_('WARNING'),message=_('Failed to change the time of the file "%s" to "%s"!') % (self.file,str((self.atime,self.mtime))),Silent=self.Silent)
+                    Message (func    = 'File.set_time'
+                            ,level   = _('WARNING')
+                            ,message = _('Failed to change the time of the file "%s" to "%s"!') % (self.file,str((self.atime,self.mtime)))
+                            ,Silent  = self.Silent
+                            )
         else:
-            log.append('File.set_time',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('File.set_time'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
 
 
@@ -1196,20 +1500,35 @@ class Path:
         if self.path:
             if os.path.exists(self.path):
                 if os.path.isdir(self.path):
-                    log.append('Path.create',_('INFO'),_('Directory "%s" already exists.') % self.path)
+                    log.append ('Path.create'
+                               ,_('INFO')
+                               ,_('Directory "%s" already exists.') % self.path
+                               )
                 else:
                     Success = False
-                    Message(func='Path.create',level=_('WARNING'),message=_('The path "%s" is invalid!') % self.path)
+                    Message (func    = 'Path.create'
+                            ,level   = _('WARNING')
+                            ,message = _('The path "%s" is invalid!') % self.path
+                            )
             else:
-                log.append('Path.create',_('INFO'),_('Create directory "%s"') % self.path)
+                log.append ('Path.create'
+                           ,_('INFO')
+                           ,_('Create directory "%s"') % self.path
+                           )
                 try:
                     os.makedirs(self.path) # todo: consider os.mkdir
                 except:
                     Success = False
-                    Message(func='Path.create',level=_('ERROR'),message=_('Failed to create directory "%s"!') % self.path)
+                    Message (func    = 'Path.create'
+                            ,level   = _('ERROR')
+                            ,message = _('Failed to create directory "%s"!') % self.path
+                            )
         else:
             Success = False
-            Message(func='Path.create',level=_('ERROR'),message=_('Not enough input data!'))
+            Message (func    = 'Path.create'
+                    ,level   = _('ERROR')
+                    ,message = _('Not enough input data!')
+                    )
         return Success
 
     def delete_inappropriate_symbols(self): # These symbols may pose a problem while opening files # todo: check whether this is really necessary
@@ -1279,7 +1598,10 @@ class WriteBinary:
             self.fragm = None
         else:
             self.Success = False
-            log.append('WriteBinary.__init__',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('WriteBinary.__init__'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def _write(self,mode='w+b'):
         log.append ('WriteBinary._write'
@@ -1546,7 +1868,10 @@ class Dic:
         if self.Success:
             WriteTextFile(self.file,self.get(),Silent=self.Silent,AskRewrite=False).write()
         else:
-            log.append('Dic.write',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Dic.write'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
 
 
@@ -1884,7 +2209,10 @@ class Online:
         try:
             webbrowser.open(self.url(),new=2,autoraise=True)
         except:
-            Message(func='Online.browse',level=_('ERROR'),message=_('Failed to open URL "%s" in a default browser!') % self._url)
+            Message (func    = 'Online.browse'
+                    ,level   = _('ERROR')
+                    ,message = _('Failed to open URL "%s" in a default browser!') % self._url
+                    )
 
     # Create a correct online link (URI => URL)
     def url(self):
@@ -1944,7 +2272,10 @@ class Diff:
     def compare(self):
         if self.text1 and self.text2:
             if self.text1 == self.text2:
-                Message(func='Diff.compare',level=_('INFO'),message=_('Texts are identical!'))
+                Message (func    = 'Diff.compare'
+                        ,level   = _('INFO')
+                        ,message = _('Texts are identical!')
+                        )
             else:
                 self.diff()
                 self.header()
@@ -1953,7 +2284,10 @@ class Diff:
                     # Cannot reuse the class instance because the temporary file might be missing
                     Launch(target=self.file).default()
         else:
-            Message(func='Diff.compare',level=_('WARNING'),message=_('Empty input is not allowed!'))
+            Message (func    = 'Diff.compare'
+                    ,level   = _('WARNING')
+                    ,message = _('Empty input is not allowed!')
+                    )
 
 
 
@@ -1966,7 +2300,11 @@ class Shortcut:
         self.symlink = symlink
         if not self.path and not self.symlink:
             self.Success = False
-            Message(func='Shortcut.__init__',level=_('WARNING'),message=_('Wrong input data!'),Silent=self.Silent)
+            Message (func    = 'Shortcut.__init__'
+                    ,level   = _('WARNING')
+                    ,message = _('Wrong input data!')
+                    ,Silent  = self.Silent
+                    )
 
     # http://timgolden.me.uk/python/win32_how_do_i/read-a-shortcut.html
     def _get_win(self):
@@ -1988,39 +2326,64 @@ class Shortcut:
         return self.path
 
     def _delete(self):
-        log.append('Shortcut._delete',_('INFO'),_('Delete the symbolic link "%s"') % self.symlink)
+        log.append ('Shortcut._delete'
+                   ,_('INFO')
+                   ,_('Delete the symbolic link "%s"') % self.symlink
+                   )
         try:
             os.unlink(self.symlink)
         except:
-            Message(func='Shortcut._delete',level=_('WARNING'),message=_('Failed to remove shortcut "%s". Remove it manually and press OK.') % self.symlink)
+            Message (func    = 'Shortcut._delete'
+                    ,level   = _('WARNING')
+                    ,message = _('Failed to remove shortcut "%s". Remove it manually and press OK.') % self.symlink
+                    )
 
     def delete(self):
         if self.Success:
             if os.path.islink(self.symlink):
                 self._delete()
         else:
-            log.append('Shortcut.delete',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Shortcut.delete'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def _create_unix(self):
-        log.append('Shortcut._create_unix',_('INFO'),_('Create a symbolic link "%s"') % self.symlink)
+        log.append ('Shortcut._create_unix'
+                   ,_('INFO')
+                   ,_('Create a symbolic link "%s"') % self.symlink
+                   )
         try:
             os.symlink(self.path,self.symlink)
         except:
-            Message(func='Shortcut._create_unix',level=_('ERROR'),message=_('Failed to create shortcut "%s". Create it manually and press OK.') % self.symlink)
+            Message (func    = 'Shortcut._create_unix'
+                    ,level   = _('ERROR')
+                    ,message = _('Failed to create shortcut "%s". Create it manually and press OK.') % self.symlink
+                    )
 
     def create_unix(self):
         self.delete()
         if os.path.exists(self.symlink):
             if os.path.islink(self.symlink):
-                log.append('Shortcut.create_unix',_('Nothing to do.'))
+                log.append ('Shortcut.create_unix'
+                           ,_('INFO')
+                           ,_('Nothing to do.')
+                           )
             else:
                 self.Success = False
-                Message(func='Shortcut.create_unix',level=_('WARNING'),message=_('Wrong input data!'),Silent=self.Silent)
+                Message (func    = 'Shortcut.create_unix'
+                        ,level   = _('WARNING')
+                        ,message = _('Wrong input data!')
+                        ,Silent  = self.Silent
+                        )
         else:
             self._create_unix()
 
     def _create_win(self):
-        log.append('Shortcut._create_win',_('INFO'),_('Create a symbolic link "%s"') % self.symlink)
+        log.append ('Shortcut._create_win'
+                   ,_('INFO')
+                   ,_('Create a symbolic link "%s"') % self.symlink
+                   )
         try:
             # The code will automatically add '.lnk' if necessary
             shell = win32com.client.Dispatch("WScript.Shell")
@@ -2028,7 +2391,10 @@ class Shortcut:
             shortcut.Targetpath = self.path
             shortcut.save()
         except:
-            Message(func='Shortcut._create_win',level=_('ERROR'),message=_('Failed to create shortcut "%s". Create it manually and press OK.') % self.symlink)
+            Message (func    = 'Shortcut._create_win'
+                    ,level   = _('ERROR')
+                    ,message = _('Failed to create shortcut "%s". Create it manually and press OK.') % self.symlink
+                    )
 
     def create_win(self):
         # Using python 3 and windows (since 2009) it is possible to create a symbolic link, however, this will not be the same as a shortcut (.lnk). Therefore, in case the shortcut is used, os.path.islink() will always return False (not supported) (must use os.path.exists()), however, os.unlink() will work as expected.
@@ -2038,11 +2404,17 @@ class Shortcut:
                 self.symlink += '.lnk'
             self.delete()
             if os.path.exists(self.symlink):
-                log.append('Shortcut.create_win',_('Nothing to do.'))
+                log.append ('Shortcut.create_win'
+                           ,_('INFO')
+                           ,_('Nothing to do.')
+                           )
             else:
                 self._create_win()
         else:
-            log.append('Shortcut.create_win',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Shortcut.create_win'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def create(self):
         if self.Success:
@@ -2051,7 +2423,10 @@ class Shortcut:
             else:
                 self.create_unix()
         else:
-            log.append('Shortcut.create',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Shortcut.create'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
 
 
@@ -2059,17 +2434,29 @@ class Email:
 
     def __init__(self,email,subject='',message='',attachment=''):
         self._email = email # A single address or multiple comma-separated addresses (not all mail agents support ';')
-        self._subject = Input(func_title='Email.__init__',val=subject,Silent=1).not_none()
-        self._message = Input(func_title='Email.__init__',val=message,Silent=1).not_none()
+        self._subject = Input (func_title = 'Email.__init__'
+                              ,val        = subject
+                              ,Silent     = 1
+                              ).not_none()
+        self._message = Input (func_title = 'Email.__init__'
+                              ,val        = message
+                              ,Silent     = 1
+                              ).not_none()
         self._attachment = attachment
         self.Success = True
         if not self._email:
             self.Success = False
-            log.append('Email.__init__',_('WARNING'),_('Empty input is not allowed!'))
+            log.append ('Email.__init__'
+                       ,_('WARNING')
+                       ,_('Empty input is not allowed!')
+                       )
         if self._attachment:
             self.Success = File(file=self._attachment).Success
             if not self.Success:
-                log.append('Email.__init__',_('WARNING'),_('Operation has been canceled.'))
+                log.append ('Email.__init__'
+                           ,_('WARNING')
+                           ,_('Operation has been canceled.')
+                           )
 
     def create(self):
         if self.Success:
@@ -2079,9 +2466,15 @@ class Email:
                 else:
                     webbrowser.open('mailto:%s?subject=%s&body=%s' % (self._email,self._subject,self._message))
             except:
-                Message(func='TkinterHtmlMod.response_back',level=_('ERROR'),message=_('Failed to load an e-mail client.'))
+                Message (func    = 'TkinterHtmlMod.response_back'
+                        ,level   = _('ERROR')
+                        ,message = _('Failed to load an e-mail client.')
+                        )
         else:
-            log.append('Email.create',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Email.create'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
 
 
@@ -2234,7 +2627,10 @@ class Word:
         return self._greek
 
     def print(self,no=0): # Do only after Words.sent_nos
-        log.append('Word.print',_('DEBUG'),'no: %d; OrigCyr: %s; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _stone: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s; _nmf: %s; _nml: %s' % (no,str(self.OrigCyr),str(self._p),str(self._n),str(self._nm),str(self._pf),str(self._pl),str(self._nf),str(self._nl),str(self._cyr),str(self._lat),str(self._greek),str(self._digit),str(self._empty),str(self._stone),str(self._sent_no),str(self._sents_len),str(self._spell_ru),str(self._nmf),str(self._nml)))
+        log.append ('Word.print'
+                   ,_('DEBUG')
+                   ,'no: %d; OrigCyr: %s; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _stone: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s; _nmf: %s; _nml: %s' % (no,str(self.OrigCyr),str(self._p),str(self._n),str(self._nm),str(self._pf),str(self._pl),str(self._nf),str(self._nl),str(self._cyr),str(self._lat),str(self._greek),str(self._digit),str(self._empty),str(self._stone),str(self._sent_no),str(self._sents_len),str(self._spell_ru),str(self._nmf),str(self._nml))
+                   )
 
     def nm(self):
         if self._nm is None:
@@ -2297,7 +2693,10 @@ class Word:
             self._tl = '1.1'
             # This could happen if double line breaks were not deleted
             if self._sent_no is None:
-                log.append('Words.tl',_('WARNING'),_('Not enough input data!'))
+                log.append ('Words.tl'
+                           ,_('WARNING')
+                           ,_('Not enough input data!')
+                           )
             else:
                 # This is easier, but assigning a tag throws an error
                 #self._tl = '1.0+%dc' % (self._pl - self._sent_no + 1)
@@ -2318,7 +2717,10 @@ class Words: # Requires Search, Text
         self.OrigCyr = OrigCyr # todo: Do we really need this?
         self.words   = []
         if text:
-            log.append('Words.__init__',_('INFO'),_('Analyze the text'))
+            log.append ('Words.__init__'
+                       ,_('INFO')
+                       ,_('Analyze the text')
+                       )
             # This is MUCH faster than using old symbol-per-symbol algorithm for finding words. We must, however, drop double space cases.
             self._no          = 0
             self.Auto         = Auto
@@ -2331,7 +2733,10 @@ class Words: # Requires Search, Text
             self.split()
         else:
             self.Success = False
-            log.append('Words.__init__',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.__init__'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def split(self):
         if self.Success:
@@ -2354,14 +2759,20 @@ class Words: # Requires Search, Text
                     cur_len_n = cur_word._nl = cur_word._nf + len(cur_word._n) - 1
                     self.words.append(cur_word)
         else:
-            log.append('Words.split',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.split'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def print(self):
         if self.Success:
             for i in range(self.len()):
                 self.words[i].print(no=i)
         else:
-            log.append('Words.print',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.print'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def len(self): # Running 'range(self.len())' does not re-run 'len'
         return len(self.words)
@@ -2388,7 +2799,10 @@ class Words: # Requires Search, Text
                 if self.words[self._no]._sent_no is None:
                     self._sent_nos()
         else:
-            log.append('Words.sent_nos',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.sent_nos'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def sent_p(self):
         if self.Success:
@@ -2402,14 +2816,20 @@ class Words: # Requires Search, Text
             self._no = old
             return ' '.join(result)
         else:
-            log.append('Words.sent_p',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.sent_p'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def sent_no(self):
         if self.Success:
             self.sent_nos()
             return self.words[self._no]._sent_no
         else:
-            log.append('Words.sent_no',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.sent_no'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def next_stone(self):
         if self.Success:
@@ -2425,7 +2845,10 @@ class Words: # Requires Search, Text
                 self._no = old
             return self._no
         else:
-            log.append('Words.next_stone',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.next_stone'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def prev_stone(self):
         if self.Success:
@@ -2441,7 +2864,10 @@ class Words: # Requires Search, Text
                 self._no = old
             return self._no
         else:
-            log.append('Words.prev_stone',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.prev_stone'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def _spellcheck_ru(self):
         for i in range(self.len()):
@@ -2453,7 +2879,10 @@ class Words: # Requires Search, Text
                 if self.words[0]._spell_ru is None:
                     self._spellcheck_ru()
         else:
-            log.append('Words.spellcheck_ru',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.spellcheck_ru'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def _stones(self):
         for i in range(self.len()):
@@ -2465,7 +2894,10 @@ class Words: # Requires Search, Text
                 if self.words[0]._stone is None:
                     self._stones()
         else:
-            log.append('Words.stones',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.stones'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def list_nm(self): # Needed for text comparison
         if self.Success:
@@ -2480,7 +2912,10 @@ class Words: # Requires Search, Text
                     cur_len_nm = cur_word._nml = cur_word._nmf + len(cur_word._nm) - 1
             return self._list_nm
         else:
-            log.append('Words.list_nm',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.list_nm'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def text_nm(self): # Needed for text comparison
         if self.Success:
@@ -2488,7 +2923,10 @@ class Words: # Requires Search, Text
                 self._text_nm = ' '.join(self.list_nm())
             return self._text_nm
         else:
-            log.append('Words.text_nm',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.text_nm'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def no_by_pos_p(self,pos):
         if self.Success:
@@ -2499,7 +2937,10 @@ class Words: # Requires Search, Text
                     break
             return result
         else:
-            log.append('Words.no_by_pos_p',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.no_by_pos_p'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def no_by_pos_n(self,pos):
         if self.Success:
@@ -2510,7 +2951,10 @@ class Words: # Requires Search, Text
                     break
             return result
         else:
-            log.append('Words.no_by_pos_n',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.no_by_pos_n'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def no_by_pos_nm(self,pos): # Call 'list_nm()' first
         if self.Success:
@@ -2521,7 +2965,10 @@ class Words: # Requires Search, Text
                     break
             return result
         else:
-            log.append('Words.no_by_pos_nm',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.no_by_pos_nm'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def no_by_tk(self,tkpos):
         if self.Success:
@@ -2544,19 +2991,33 @@ class Words: # Requires Search, Text
                             result += lst[1]
                         else:
                             result += lst[1] + 1
-                        log.append('Words.no_by_tk',_('DEBUG'),'%s -> %d' % (tkpos,result))
+                        log.append ('Words.no_by_tk'
+                                   ,_('DEBUG')
+                                   ,'%s -> %d' % (tkpos,result)
+                                   )
                         return self.no_by_pos_p(pos=result)
                 else:
-                    Message(func='Words.no_by_tk',level=_('WARNING'),message=_('Wrong input data: "%s"') % str(lst))
+                    Message (func    = 'Words.no_by_tk'
+                            ,level   = _('WARNING')
+                            ,message = _('Wrong input data: "%s"') % str(lst)
+                            )
             else:
-                Message(func='Words.no_by_tk',level=_('WARNING'),message=_('Wrong input data: "%s"') % str(lst))
+                Message (func    = 'Words.no_by_tk'
+                        ,level   = _('WARNING')
+                        ,message = _('Wrong input data: "%s"') % str(lst)
+                        )
         else:
-            log.append('Words.no_by_tk',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.no_by_tk'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def nos_by_sent_no(self,sent_no=0):
         result = (0,0)
         if self.Success:
-            sent_no = Input(func_title='Words.nos_by_sent_no',val=sent_no).integer()
+            sent_no = Input (func_title = 'Words.nos_by_sent_no'
+                            ,val        = sent_no
+                            ).integer()
             old = self._no
             nos = []
             for self._no in range(self.len()):
@@ -2566,9 +3027,15 @@ class Words: # Requires Search, Text
             if nos:
                 result = (min(nos),max(nos)) # Valid for one-word paragraph
             else:
-                log.append('Words.nos_by_sent_no',_('WARNING'),_('Failed to find words of paragraph #%d!') % sent_no)
+                log.append ('Words.nos_by_sent_no'
+                           ,_('WARNING')
+                           ,_('Failed to find words of paragraph #%d!') % sent_no
+                           )
         else:
-            log.append('Words.nos_by_sent_no',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.nos_by_sent_no'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return result
 
     def complete(self):
@@ -2582,7 +3049,10 @@ class Words: # Requires Search, Text
                 self.words[i].tf()
                 self.words[i].tl()
         else:
-            log.append('Words.complete',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Words.complete'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
 
 
@@ -2604,7 +3074,10 @@ class Search:
         self._text = text
         self._search = search
         if not self._search or not self._text:
-            Message(func='Search.__init__',level=_('WARNING'),message=_('Wrong input data!'))
+            Message (func    = 'Search.__init__'
+                    ,level   = _('WARNING')
+                    ,message = _('Wrong input data!')
+                    )
             self.Success = False
 
     def add(self):
@@ -2612,7 +3085,10 @@ class Search:
             if len(self._text) > self.i + len(self._search) - 1:
                 self.i += len(self._search)
         else:
-            log.append('Search.add',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Search.add'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def next(self):
         if self.Success:
@@ -2622,7 +3098,10 @@ class Search:
                 self.add()
             return result
         else:
-            log.append('Search.next',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Search.next'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def prev(self):
         if self.Success:
@@ -2632,7 +3111,10 @@ class Search:
                 self.i = result
             return result
         else:
-            log.append('Search.prev',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Search.prev'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def next_loop(self):
         if self.Success:
@@ -2645,7 +3127,10 @@ class Search:
                     else:
                         self._next_loop.append(result)
         else:
-            log.append('Search.next_loop',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Search.next_loop'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return self._next_loop
 
     def prev_loop(self):
@@ -2659,7 +3144,10 @@ class Search:
                     else:
                         self._prev_loop.append(result)
         else:
-            log.append('Search.prev_loop',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Search.prev_loop'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         return self._prev_loop
 
 
@@ -2681,7 +3169,10 @@ class CompareStones:
                 self.mark1()
                 self.mark2()
         else:
-            log.append('CompareStones.__init__',_('WARNING'),_('Wrong input data!'))
+            log.append ('CompareStones.__init__'
+                       ,_('WARNING')
+                       ,_('Wrong input data!')
+                       )
             self.Success = False
 
     def check(self):
@@ -2703,12 +3194,21 @@ class CompareStones:
                 3: marked as analysed (>=1) by CompareStones
             '''
             if str(result1).isdigit() and result1 >= 3 and str(result2).isdigit() and result2 >= 3:
-                log.append('CompareStones.check',_('INFO'),_('Nothing to do.'))
+                log.append ('CompareStones.check'
+                           ,_('INFO')
+                           ,_('Nothing to do.')
+                           )
                 return True
             else:
-                log.append('CompareStones.check',_('INFO'),_('Perform actions'))
+                log.append ('CompareStones.check'
+                           ,_('INFO')
+                           ,_('Perform actions')
+                           )
         else:
-            log.append('CompareStones.check',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('CompareStones.check'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def stones1(self):
         if self.Success:
@@ -2718,7 +3218,10 @@ class CompareStones:
                     tmp.append(self.w1.words[i]._n)
             return tmp
         else:
-            log.append('CompareStones.stones1',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('CompareStones.stones1'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def stones2(self):
         if self.Success:
@@ -2728,7 +3231,10 @@ class CompareStones:
                     tmp.append(self.w2.words[i]._n)
             return tmp
         else:
-            log.append('CompareStones.stones2',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('CompareStones.stones2'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def diff1(self): # Loop-safe
         if self.Success:
@@ -2736,7 +3242,10 @@ class CompareStones:
                 self.diff()
             return self._diff1
         else:
-            log.append('CompareStones.diff1',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('CompareStones.diff1'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def diff2(self): # Loop-safe
         if self.Success:
@@ -2744,7 +3253,10 @@ class CompareStones:
                 self.diff()
             return self._diff2
         else:
-            log.append('CompareStones.diff2',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('CompareStones.diff2'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def unmark1(self):
         if self.Success:
@@ -2757,7 +3269,10 @@ class CompareStones:
                 if first or first == 0:
                     self.w1.words[first]._stone = 0
         else:
-            log.append('CompareStones.unmark1',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('CompareStones.unmark1'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def unmark2(self):
         if self.Success:
@@ -2770,7 +3285,10 @@ class CompareStones:
                 if first or first == 0:
                     self.w2.words[first]._stone = 0
         else:
-            log.append('CompareStones.unmark2',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('CompareStones.unmark2'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def mark1(self):
         if self.Success:
@@ -2781,7 +3299,10 @@ class CompareStones:
             for i in range(len(result)):
                 self.w1.words[result[i]]._stone = 3
         else:
-            log.append('CompareStones.mark1',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('CompareStones.mark1'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def mark2(self):
         if self.Success:
@@ -2792,7 +3313,10 @@ class CompareStones:
             for i in range(len(result)):
                 self.w2.words[result[i]]._stone = 3
         else:
-            log.append('CompareStones.mark2',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('CompareStones.mark2'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def diff(self):
         if self.Success:
@@ -2801,7 +3325,10 @@ class CompareStones:
             self._diff1 = List(lst1=_stones1,lst2=_stones2).diff()
             self._diff2 = List(lst1=_stones2,lst2=_stones1).diff()
         else:
-            log.append('CompareStones.diff',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('CompareStones.diff'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
 
 
@@ -2974,19 +3501,28 @@ class MessagePool:
             self.free()
             self.pool.append(message)
         else:
-            log.append('MessagePool.add',_('WARNING'),_('Empty input is not allowed!'))
+            log.append ('MessagePool.add'
+                       ,_('WARNING')
+                       ,_('Empty input is not allowed!')
+                       )
 
     def delete_first(self):
         if len(self.pool) > 0:
             del self.pool[0]
         else:
-            log.append('MessagePool.delete_first',_('WARNING'),_('The pool is empty!'))
+            log.append ('MessagePool.delete_first'
+                       ,_('WARNING')
+                       ,_('The pool is empty!')
+                       )
 
     def delete_last(self):
         if len(self.pool) > 0:
             del self.pool[-1]
         else:
-            log.append('MessagePool.delete_last',_('WARNING'),_('The pool is empty!'))
+            log.append ('MessagePool.delete_last'
+                       ,_('WARNING')
+                       ,_('The pool is empty!')
+                       )
 
     def clear(self):
         self.pool = []
@@ -3018,7 +3554,10 @@ class Timer:
         self._start = time.time()
 
     def end(self):
-        log.append(self._func_title,_('INFO'),_('The operation has taken %f s.') % float(time.time()-self._start))
+        log.append (self._func_title
+                   ,_('INFO')
+                   ,_('The operation has taken %f s.') % float(time.time()-self._start)
+                   )
 
 
 
@@ -3034,7 +3573,10 @@ class Table:
             self.Success = True
         else:
             self.Success = False
-            log.append('Table.__init__',_('WARNING'),_('Empty input is not allowed!'))
+            log.append ('Table.__init__'
+                       ,_('WARNING')
+                       ,_('Empty input is not allowed!')
+                       )
 
     def _shorten_headers(self):
         self._headers = [Text(text=header).shorten(max_len=self.MaxRow) for header in self._headers]
@@ -3042,7 +3584,10 @@ class Table:
     def _shorten_rows(self):
         if self.MaxRows < 2 or self.MaxRows > len(self._rows):
             self.MaxRows = len(self._rows)
-            log.append('Table._shorten_rows',_('INFO'),_('Set the max number of rows to %d') % self.MaxRows)
+            log.append ('Table._shorten_rows'
+                       ,_('INFO')
+                       ,_('Set the max number of rows to %d') % self.MaxRows
+                       )
         self.MaxRows = int(self.MaxRows / 2)
         pos3 = len(self._rows)
         pos2 = pos3 - self.MaxRows
@@ -3065,7 +3610,10 @@ class Table:
                 self._shorten_rows   ()
                 self._shorten_row    ()
         else:
-            log.append('Table.shorten',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Table.shorten'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
     def print(self):
         if self.Success:
@@ -3075,7 +3623,10 @@ class Table:
                 obj.add_row(row)
             print(obj)
         else:
-            log.append('Table.print',_('WARNING'),_('Operation has been canceled.'))
+            log.append ('Table.print'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
 
 
@@ -3084,4 +3635,7 @@ objs = Objects() # If there are problems with import or tkinter's wait_variable,
 
 if __name__ == '__main__':
     # NOTE: Focusing on the widget is lost randomly (is assigned to root). This could be a Tkinter/DM bug.
-    Message(func='shared.__main__',level=_('INFO'),message='Все прошло удачно!')
+    Message (func    = 'shared.__main__'
+            ,level   = _('INFO')
+            ,message = 'Все прошло удачно!'
+            )
