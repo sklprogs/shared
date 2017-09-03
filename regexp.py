@@ -18,7 +18,11 @@ class Record:
             with1:      'Figures 1-2 show that...'
         '''
     
-    def __init__(self,orig,final,what1=None,with1=None,what2=None,with2=None,what3=None,with3=None,_id='Unknown id',Silent=False):
+    def __init__(self,orig,final,what1=None
+                ,with1=None,what2=None,with2=None
+                ,what3=None,with3=None,_id='Unknown id'
+                ,Silent=False
+                ):
         self.Success = True
         self._orig = orig
         self._final = final
@@ -33,7 +37,11 @@ class Record:
         self.Silent = Silent
         if not self._orig or not self._final:
             self.Success = False
-            sg.Message('Record.__init__',sh.lev_warn,sh.globs['mes'].not_enough_input_data,Silent=self.Silent)
+            sg.Message ('Record.__init__'
+                       ,_('WARNING')
+                       ,_('Not enough input data!')
+                       ,Silent=self.Silent
+                       )
     
     def apply(self,text):
         if self.Success:
@@ -42,19 +50,25 @@ class Record:
             except sre_constants.error:
                 result = ''
                 self.Success = False
-                sg.Message('Record.apply',sh.lev_warn,'A syntax error in the regular expression (id: %s)!' % str(self._id)) # todo: mes
+                sg.Message ('Record.apply'
+                           ,_('WARNING')
+                           ,_('A syntax error in the regular expression (id: %s)!') % str(self._id)
+                           )
             return result
         else:
-            sh.log.append('Record.apply',sh.lev_warn,sh.globs['mes'].canceled)
+            sh.log.append('Record.apply',_('WARNING'),_('Operation has been canceled.'))
     
     def _check(self):
         if self.Success:
             result = self.apply(text=self._what)
             if self.Success and result != self._with:
                 self.Success = False
-                sg.Message('Record._check',sh.lev_warn,sh.globs['mes'].reg_ex_failure % (str(self._id),str(self._with),str(result)))
+                sg.Message ('Record._check'
+                           ,_('WARNING')
+                           ,_('Regular expression %s has failed: we were expecting\n"%s",\nbut received\n"%s".') % (str(self._id),str(self._with),str(result))
+                           )
         else:
-            sh.log.append('Record.check',sh.lev_warn,sh.globs['mes'].canceled)
+            sh.log.append('Record.check',_('WARNING'),_('Operation has been canceled.'))
         return self.Success
     
     def check(self):
@@ -77,9 +91,9 @@ class Record:
                     self._check()
             else:
                 self.Success = False
-                sg.Message('Record.check',sh.lev_warn,sh.globs['mes'].not_enough_input_data)
+                sg.Message('Record.check',_('WARNING'),_('Not enough input data!'))
         else:
-            sh.log.append('Record.check',sh.lev_warn,sh.globs['mes'].canceled)
+            sh.log.append('Record.check',_('WARNING'),_('Operation has been canceled.'))
         return self.Success
 
 
