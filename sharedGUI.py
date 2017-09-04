@@ -827,7 +827,7 @@ class TextBox:
         else:
             self.widget.see(mark)
 
-    def title(self,text='Title:'):
+    def title(self,text=_('Title:')):
         WidgetShared.title(self.parent_obj,text)
 
     def icon(self,path):
@@ -1562,7 +1562,7 @@ class OptionMenu:
         self.widget    = tk.OptionMenu (self.parent_obj.widget
                                        ,self.var
                                        ,*self.items
-                                       ,command= self.trigger
+                                       ,command = self.trigger
                                        )
         self.widget.pack(side=side,anchor=anchor)
         self.widget.configure(takefocus=takefocus) # Must be 1/True to be operational from keyboard
@@ -1576,6 +1576,8 @@ class OptionMenu:
     def _default_set(self):
         if len(self.items) > 0:
             self.var.set(self.items[0])
+            # Return a default value instead of 'None' if there was no interaction with the widget
+            self.choice = self.items[0]
 
     def default_set(self):
         if self.default is None:
@@ -1583,6 +1585,8 @@ class OptionMenu:
         else:
             if self.default in self.items:
                 self.var.set(self.default)
+                # Return a default value instead of 'None' if there was no interaction with the widget
+                self.choice = self.default
             else:
                 sg.Message ('OptionMenu.default_set'
                            ,_('ERROR')

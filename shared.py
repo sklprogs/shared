@@ -2677,7 +2677,10 @@ class Word:
             self._tf = '1.0'
             # This could happen if double line breaks were not deleted
             if self._sent_no is None:
-                log.append('Words.tf',_('WARNING'),_('Not enough input data!'))
+                log.append ('Words.tf'
+                           ,_('WARNING')
+                           ,_('Not enough input data!')
+                           )
             else:
                 # This is easier, but assigning a tag throws an error
                 #self._tf = '1.0+%dc' % (self._pf - self._sent_no)
@@ -2685,7 +2688,7 @@ class Word:
                 if self._sent_no > 0 and result > 0:
                     result -= 1
                 self._tf = '%d.%d' % (self._sent_no + 1,result)
-                log.append('Word.tf',_('DEBUG'),self._tf)
+                log.append ('Word.tf',_('DEBUG'),self._tf)
         return self._tf
 
     def tl(self):
