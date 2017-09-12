@@ -1578,6 +1578,7 @@ class OptionMenu:
             self.var.set(self.items[0])
             # Return a default value instead of 'None' if there was no interaction with the widget
             self.choice = self.items[0]
+            self.index  = 0
 
     def default_set(self):
         if self.default is None:
@@ -1587,6 +1588,7 @@ class OptionMenu:
                 self.var.set(self.default)
                 # Return a default value instead of 'None' if there was no interaction with the widget
                 self.choice = self.default
+                self.index  = self.items.index(self.choice)
             else:
                 sg.Message ('OptionMenu.default_set'
                            ,_('ERROR')
@@ -1612,12 +1614,16 @@ class OptionMenu:
                                             ,l       = item:v.set(l)
                                             )
 
-    def reset(self,items=(1,2,3,4,5)):
+    def reset(self,items=(1,2,3,4,5),default=None):
         self.items = items
         # An error is thrown if 'items' is ()
         if not self.items:
             self.items = (1,2,3,4,5)
         self.fill()
+        if default is None:
+            if self.choice in self.items:
+                default = self.choice
+        self.default = default
         self.default_set()
 
     def _get(self,*args): # Auto updated (after selecting an item)
