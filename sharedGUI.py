@@ -1590,10 +1590,10 @@ class OptionMenu:
                 self.choice = self.default
                 self.index  = self.items.index(self.choice)
             else:
-                sg.Message ('OptionMenu.default_set'
-                           ,_('ERROR')
-                           ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') % (str(self.default),';'.join(self.items))
-                           )
+                Message ('OptionMenu.default_set'
+                        ,_('ERROR')
+                        ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') % (str(self.default),';'.join(self.items))
+                        )
                 self._default_set()
 
     def set(self,item,*args):
