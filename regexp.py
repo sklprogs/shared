@@ -6,6 +6,10 @@ import shared as sh
 import sharedGUI as sg
 
 
+import gettext, gettext_windows
+gettext_windows.setup_env()
+gettext.install('shared','./locale')
+
 
 # This class is for both checking a regular expression and replacing matches through text (these actions require different arguments and are not necessarily interconnected)
 class Record:
