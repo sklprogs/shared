@@ -5,8 +5,8 @@ copyright = 'Copyright 2015-2017, Peter Sklyar'
 license   = 'GPL v.3'
 email     = 'skl.progs@gmail.com'
 
-import gettext
-
+import gettext, gettext_windows
+gettext_windows.setup_env()
 gettext.install('shared','./locale')
 
 import re
