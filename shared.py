@@ -3583,6 +3583,13 @@ class Table:
 
     def _shorten_headers(self):
         self._headers = [Text(text=header).shorten(max_len=self.MaxRow) for header in self._headers]
+        # prettytable.py, 302: Exception: Field names must be unique!
+        headers = list(set(self._headers))
+        # prettytable.py, 818: Exception: Row has incorrect number of values
+        if len(headers) != len(self._headers):
+            result = List(lst1=headers,lst2=self._headers).equalize()
+            if result:
+                self._headers = result[0]
 
     def _shorten_rows(self):
         if self.MaxRows < 2 or self.MaxRows > len(self._rows):
