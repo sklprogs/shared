@@ -440,14 +440,16 @@ class TextBox:
 
     def __init__(self,parent_obj,Composite=False
                 ,expand=1,side=None,fill='both'
-                ,words=None,font='Serif 14',HorizontalScrollbar=False
+                ,words=None,font='Serif 14'
+                ,HorizontalScrollbar=False,SpecialReturn=True
+                ,state='normal'
                 ):
         self.type = 'TextBox'
         self.Composite = Composite
         self.HorizontalScrollbar = HorizontalScrollbar
         self.font = font
-        self.state = 'normal' # 'disabled' - отключить редактирование
-        self.SpecialReturn = True
+        self.state = state # 'normal' - обычный режим; 'disabled' - отключить редактирование; выберите 'disabled', чтобы надпись на кнопке была другой
+        self.SpecialReturn = SpecialReturn
         # (optional, external) Prevent resetting the active (already shown) widget
         self.Active = False
         self.Save = False
@@ -481,7 +483,11 @@ class TextBox:
                          )
 
     def _gui_scroll_hor(self):
-        frame = Frame(parent_obj=self.parent_obj,expand=0,fill='x',side='top')
+        frame = Frame (parent_obj = self.parent_obj
+                      ,expand     = 0
+                      ,fill       = 'x'
+                      ,side       = 'top'
+                      )
         self.scrollbar_hor = tk.Scrollbar (frame.widget
                                           ,orient    = tk.HORIZONTAL
                                           ,jump      = 0
@@ -604,7 +610,11 @@ class TextBox:
         self.clear_selection()
         self.insert(text=text,pos=self.cursor(),MoveTop=0)
         if pos1 and pos2:
-            self.selection.reset(pos1tk=pos1,pos2tk=pos2,tag='sel',background='gray')
+            self.selection.reset (pos1tk     = pos1
+                                 ,pos2tk     = pos2
+                                 ,tag        = 'sel'
+                                 ,background = 'gray'
+                                 )
             self.selection.set(DeletePrevious=0,AutoScroll=0)
         else:
             sh.log.append ('TextBox.toggle_case'
@@ -1020,10 +1030,11 @@ class Frame:
     def __init__ (self,parent_obj,expand=1
                  ,fill='both',side=None,padx=None
                  ,pady=None,ipadx=None,ipady=None
+                 ,bd=None,bg=None
                  ):
         self.type       = 'Frame'
         self.parent_obj = parent_obj
-        self.widget     = tk.Frame(self.parent_obj.widget)
+        self.widget     = tk.Frame(self.parent_obj.widget,bd=bd,bg=bg)
         self.widget.pack (expand = expand
                          ,fill   = fill
                          ,side   = side

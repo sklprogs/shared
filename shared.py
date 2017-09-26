@@ -125,7 +125,11 @@ import datetime
 # Cannot cross-import 2 modules, therefore, we need to have a local proecedure
 def Message(func='MAIN',level=_('WARNING'),message='Message',Silent=False):
     import sharedGUI as sg
-    return sg.Message(func=func,level=level,message=message,Silent=Silent) # pass 'Yes'
+    return sg.Message (func    = func
+                      ,level   = level
+                      ,message = message
+                      ,Silent  = Silent
+                      ) # pass 'Yes'
 
 
 # We do not put this into File class because we do not need to check existence
@@ -1119,15 +1123,23 @@ class List:
 
 class Time: # We constantly recalculate each value because they depend on each other
 
-    def __init__(self,_timestamp=None,pattern='%Y-%m-%d',MondayWarning=True,Silent=False):
-        self.reset(_timestamp=_timestamp,pattern=pattern,MondayWarning=MondayWarning,Silent=Silent)
+    def __init__ (self,_timestamp=None,pattern='%Y-%m-%d'
+                 ,MondayWarning=True,Silent=False
+                 ):
+        self.reset (_timestamp    = _timestamp
+                   ,pattern       = pattern
+                   ,MondayWarning = MondayWarning
+                   ,Silent        = Silent
+                   )
 
-    def reset(self,_timestamp=None,pattern='%Y-%m-%d',MondayWarning=True,Silent=False):
-        self.Success = True
-        self.Silent = Silent
-        self.pattern = pattern
+    def reset (self,_timestamp=None,pattern='%Y-%m-%d'
+              ,MondayWarning=True,Silent=False
+              ):
+        self.Success       = True
+        self.Silent        = Silent
+        self.pattern       = pattern
         self.MondayWarning = MondayWarning
-        self._timestamp = _timestamp
+        self._timestamp    = _timestamp
         self._date = self._instance = self._date = self._year = self._month_abbr = self._month_name = ''
         if self._timestamp or self._timestamp == 0: # Prevent recursion
             self.instance()
@@ -1663,14 +1675,15 @@ class WriteBinary:
 
 
 
-# todo: fix: Reading 'largest_dic' failes without this class
+# todo: fix: Reading 'largest_dic' fails without this class
 class Dic:
 
     def __init__(self,file,Silent=False,Sortable=False):
-        self.file = file
-        self.Silent = Silent
+        self.file     = file
+        self.Silent   = Silent
         self.Sortable = Sortable
-        self.h_read = ReadTextFile(self.file,Silent=self.Silent)
+        self.errors   = []
+        self.h_read   = ReadTextFile(self.file,Silent=self.Silent)
         self.reset()
 
     # This is might be needed only for those dictionaries that already may contain duplicates (dictionaries with newly added entries do not have duplicates due to new algorithms)
@@ -1718,8 +1731,8 @@ class Dic:
     def _split(self):
         if self.get():
             self.Success = True
-            self.orig = []
-            self.transl = []
+            self.orig    = []
+            self.transl  = []
             # Building lists takes ~0.1 longer without temporary variables (now self._split() takes ~0.256)
             for i in range(self._lines):
                 tmp_lst = self._list[i].split('\t')
@@ -1727,15 +1740,22 @@ class Dic:
                     self.orig.append(tmp_lst[0])
                     self.transl.append(tmp_lst[1])
                 else:
+                    # Lines that were successfully parsed can be further processed upon correcting 'self.lines'
                     self.Success = False
-                    # i+1: Count from 1
-                    Message (func    = 'Dic._split'
-                            ,level   = _('WARNING')
-                            ,message = _('Dictionary "%s": Incorrect line #%d: "%s"!') % (self.file,i+1,self._list[i])
-                            ,Silent  = self.Silent
-                            )
+                    self.errors.append(str(i))
+            self.warn()
+            if not self.orig or not self.transl:
+                self.Success = False
         else:
             self.Success = False
+            
+    def warn(self):
+        if self.errors:
+            message = ', '.join(self.errors)
+            Message (func    = 'Dic.warn'
+                    ,level   = _('WARNING')
+                    ,message = _('The following lines cannot be parsed:') + '\n' + message
+                    )
 
     # todo: write a dictionary in an append mode after appending to memory
     # todo: skip repetitions
@@ -1813,10 +1833,10 @@ class Dic:
         return self._list
 
     def reset(self):
-        self.text = self.h_read.load()
-        self.orig = []
+        self.text   = self.h_read.load()
+        self.orig   = []
         self.transl = []
-        self._list = self.get().splitlines()
+        self._list  = self.get().splitlines()
         self._lines = len(self._list)
         self._split()
 
@@ -1866,7 +1886,11 @@ class Dic:
 
     def write(self):
         if self.Success:
-            WriteTextFile(self.file,self.get(),Silent=self.Silent,AskRewrite=False).write()
+            WriteTextFile (self.file
+                          ,self.get()
+                          ,Silent     = self.Silent
+                          ,AskRewrite = False
+                          ).write()
         else:
             log.append ('Dic.write'
                        ,_('WARNING')
