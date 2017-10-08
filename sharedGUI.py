@@ -159,17 +159,20 @@ class WidgetShared: # Do not use graphical logging there
 class Top:
 
     def __init__(self,parent_obj,Maximize=False,AutoCenter=True):
-        self.type = 'Toplevel'
-        # Lock = True - блокировать дальнейшее выполнение программы до попытки закрытия виджета. Lock = False позволяет создать одновременно несколько виджетов на экране. Они будут работать, однако, виджет с Lock = False будет закрыт при закрытии виджета с Lock = True. Кроме того, если ни один из виджетов не имеет Lock = True, то они все будут показаны и тут же закрыты.
-        self.Lock = False
+        self.values()
         self.parent_obj = parent_obj
         self.AutoCenter = AutoCenter
-        self.count = 0
-        self.widget = tk.Toplevel(self.parent_obj.widget)
+        self.widget     = tk.Toplevel(self.parent_obj.widget)
         self.widget.protocol("WM_DELETE_WINDOW",self.close)
         if Maximize:
             Geometry(parent_obj=self).maximize()
         self.tk_trigger = tk.BooleanVar()
+        
+    def values(self):
+        self.type  = 'Toplevel'
+        # Lock = True - блокировать дальнейшее выполнение программы до попытки закрытия виджета. Lock = False позволяет создать одновременно несколько виджетов на экране. Они будут работать, однако, виджет с Lock = False будет закрыт при закрытии виджета с Lock = True. Кроме того, если ни один из виджетов не имеет Lock = True, то они все будут показаны и тут же закрыты.
+        self.Lock  = False
+        self.count = 0
 
     def close(self,*args):
         self.widget.withdraw()
@@ -193,14 +196,18 @@ class Top:
     def icon(self,path):
         WidgetShared.icon(self,path)
 
+    def resolution(self):
+        self.widget.update_idletasks()
+        return (self.widget.winfo_screenwidth()
+               ,self.widget.winfo_screenheight()
+               )
+
     # todo: not centers without Force=True when Lock=False
     def center(self,Force=False):
         # Make child widget always centered at the first time and up to a user's choice any other time (if the widget is reused).
         if self.count == 1 or Force:
-            self.widget.update_idletasks()
-            width = self.widget.winfo_screenwidth()
-            height = self.widget.winfo_screenheight()
-            size = tuple(int(_) for _ in self.widget.geometry().split('+')[0].split('x'))
+            width, height = self.resolution()
+            size = tuple(int(item) for item in self.widget.geometry().split('+')[0].split('x'))
             x = width/2 - size[0]/2
             y = height/2 - size[1]/2
             self.widget.geometry("%dx%d+%d+%d" % (size + (x, y)))
@@ -2393,7 +2400,9 @@ class WaitBox:
         self.label.pack(expand=True)
         self.close()
 
-    def reset(self,func_title=None,func=None,args=None,message=None): # Use tuple for 'args' to pass multiple arguments
+    def reset (self,func_title=None,func=None
+              ,args=None,message=None
+              ): # Use tuple for 'args' to pass multiple arguments
         self._func    = func
         self._title   = func_title
         self._args    = args
@@ -2508,7 +2517,9 @@ class Label:
 class CheckBox:
 
     # note: For some reason, CheckBox that should be Active must be assigned to a variable (var = CheckBox(parent_obj,Active=1))
-    def __init__(self,parent_obj,Active=False,side=None,action=None):
+    def __init__ (self,parent_obj,Active=False
+                 ,side=None,action=None
+                 ):
         self.parent_obj = parent_obj
         self.side = side
         self.action = action
@@ -2555,13 +2566,15 @@ class CheckBox:
 
 class Message:
 
-    def __init__(self,func='MAIN',level=_('WARNING'),message='Message',Silent=False):
+    def __init__ (self,func='MAIN',level=_('WARNING')
+                 ,message=_('Message'),Silent=False
+                 ):
         self.Success = True
-        self.Yes = False
-        self.func = func
+        self.Yes     = False
+        self.func    = func
         self.message = message
-        self.level = level
-        self.Silent = Silent
+        self.level   = level
+        self.Silent  = Silent
         if not self.func or not self.message:
             self.Success = False
             sh.log.append ('Message.__init__'
@@ -2586,7 +2599,9 @@ class Message:
     def error(self):
         if self.Success:
             if not self.Silent:
-                objs.error().reset(title=self.func+':',text=self.message).show()
+                objs.error().reset (title = self.func + ':'
+                                   ,text  = self.message
+                                   ).show()
             sh.log.append(self.func,_('ERROR'),self.message)
         else:
             sh.log.append ('Message.error'
@@ -2597,7 +2612,9 @@ class Message:
     def info(self):
         if self.Success:
             if not self.Silent:
-                objs.info().reset(title=self.func+':',text=self.message).show()
+                objs.info().reset (title = self.func + ':'
+                                  ,text  = self.message
+                                  ).show()
             sh.log.append(self.func,_('INFO'),self.message)
         else:
             sh.log.append ('Message.info'
@@ -2607,7 +2624,9 @@ class Message:
 
     def question(self):
         if self.Success:
-            objs.question().reset(title=self.func+':',text=self.message).show()
+            objs.question().reset (title = self.func + ':'
+                                  ,text  = self.message
+                                  ).show()
             self.Yes = objs._question.Yes
             sh.log.append(self.func,_('QUESTION'),self.message)
         else:
@@ -2619,7 +2638,9 @@ class Message:
     def warning(self):
         if self.Success:
             if not self.Silent:
-                objs.warning().reset(title=self.func+':',text=self.message).show()
+                objs.warning().reset (title = self.func + ':'
+                                     ,text  = self.message
+                                     ).show()
             sh.log.append(self.func,_('WARNING'),self.message)
         else:
             sh.log.append ('Message.warning'
@@ -2681,13 +2702,33 @@ class MessageBuilder: # Requires 'constants'
             self.obj.icon(path=self.path)
 
     def frames(self):
-        frame             = Frame(parent_obj=self.obj,expand=1)
-        top               = Frame(parent_obj=frame,expand=1,side='top')
-        bottom            = Frame(parent_obj=frame,expand=0,side='bottom')
-        self.top_left     = Frame(parent_obj=top,expand=0,side='left')
-        self.top_right    = Frame(parent_obj=top,expand=1,side='right')
-        self.bottom_left  = Frame(parent_obj=bottom,expand=1,side='left')
-        self.bottom_right = Frame(parent_obj=bottom,expand=1,side='right')
+        frame = Frame (parent_obj = self.obj
+                      ,expand     = 1
+                      )
+        top = Frame (parent_obj = frame
+                    ,expand     = 1
+                    ,side       = 'top'
+                    )
+        bottom = Frame (parent_obj = frame
+                       ,expand     = 0
+                       ,side       = 'bottom'
+                       )
+        self.top_left = Frame (parent_obj = top
+                              ,expand     = 0
+                              ,side       = 'left'
+                              )
+        self.top_right = Frame (parent_obj = top
+                               ,expand     = 1
+                               ,side       = 'right'
+                               )
+        self.bottom_left = Frame (parent_obj = bottom
+                                 ,expand     = 1
+                                 ,side       = 'left'
+                                 )
+        self.bottom_right = Frame (parent_obj = bottom
+                                  ,expand     = 1
+                                  ,side       = 'right'
+                                  )
 
     def buttons(self):
         if self.YesNo or self.level == _('QUESTION'):
@@ -2724,7 +2765,7 @@ class MessageBuilder: # Requires 'constants'
             text = _('Title:')
         self.obj.title(text=text)
 
-    def update(self,text='Message'):
+    def update(self,text=_('Message')):
         # todo: Control-c does not work with 'ReadOnly=True'
         # Otherwise, updating text will not work
         #self.txt.read_only(ReadOnly=False)
@@ -2732,7 +2773,7 @@ class MessageBuilder: # Requires 'constants'
         self.txt.insert(text=text)
         #self.txt.read_only(ReadOnly=True)
 
-    def reset(self,text='Message',title='Title:',icon=None):
+    def reset(self,text=_('Message'),title=_('Title:'),icon=None):
         self.update(text=text)
         self.title(text=title)
         self.icon(path=icon)
@@ -2829,8 +2870,55 @@ class Clipboard: # Requires 'objs'
                           ,_('An unknown error has occurred.')
                           )
         # Further actions: strip, delete double line breaks
-        sh.log.append('Clipboard.paste',_('DEBUG'),text)
+        sh.log.append ('Clipboard.paste'
+                      ,_('DEBUG')
+                      ,text
+                      )
         return text
+
+
+
+class Canvas:
+    
+    def __init__(self,parent_obj,expand=True
+                ,side=None,scrollregion=None
+                ,width=None,height=None,fill='both'
+                ):
+        self.parent_obj   = parent_obj
+        self.expand       = expand
+        self.side         = side
+        self.scrollregion = scrollregion
+        self.width        = width
+        self.height       = height
+        self.fill         = fill
+        self.gui()
+        
+    def gui(self):
+        self.widget = tk.Canvas (master       = self.parent_obj.widget
+                                ,scrollregion = self.scrollregion
+                                ,width        = self.width
+                                ,height       = self.height
+                                )
+        self.widget.pack (expand = self.expand
+                         ,side   = self.side
+                         ,fill   = self.fill
+                         )
+        
+    def embed(self,obj):
+        if hasattr(obj,'widget'):
+            self.widget.create_window(0,0,window=obj.widget)
+        else:
+            Message (func    = 'Canvas.embed'
+                    ,level   = _('WARNING')
+                    ,message = _('Wrong input data!')
+                    ,Silent  = False
+                    )
+        
+    def show(self,*args):
+        self.parent_obj.show()
+        
+    def close(self,*args):
+        self.parent_obj.close()
 
 
 
