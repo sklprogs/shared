@@ -267,7 +267,9 @@ class Launch:
 
 class WriteTextFile:
 
-    def __init__(self,file,Silent=False,AskRewrite=True,UseLog=True):
+    def __init__ (self,file,Silent=False
+                 ,AskRewrite=True,UseLog=True
+                 ):
         self.file = file
         self.text = ''
         self.Silent = Silent

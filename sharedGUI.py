@@ -2191,12 +2191,16 @@ class ParallelTexts: # Requires Search
 class SymbolMap:
 
     def __init__(self,parent_obj):
-        self.symbol = 'EMPTY'
+        self.symbol     = 'EMPTY'
         self.parent_obj = parent_obj
-        self.obj = Top(parent_obj)
+        self.gui()
+        self.bindings()
+        
+    def gui(self):
+        self.obj    = Top(self.parent_obj)
         self.widget = self.obj.widget
+        self.frame  = Frame(self.obj,expand=1)
         self.obj.title(_('Paste a special symbol'))
-        self.frame = Frame(self.obj,expand=1)
         for i in range(len(sh.globs['var']['spec_syms'])):
             if i % 10 == 0:
                 self.frame = Frame(self.obj,expand=1)
@@ -2208,6 +2212,12 @@ class SymbolMap:
                                     ,width=2,height=2).pack(side='left',expand=1)
         self.close()
 
+    def bindings(self):
+        bind (obj      = self.obj
+             ,bindings = ['<Escape>','<Control-q>','<Control-w>']
+             ,action   = self.close
+             )
+    
     def set(self,sym,*args):
         self.symbol = sym
         self.close()
