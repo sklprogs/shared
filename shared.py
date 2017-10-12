@@ -1904,10 +1904,10 @@ class Dic:
 class ReadBinary:
 
     def __init__(self,file,Silent=False):
-        self.file = file
-        self.Silent = Silent
-        self.obj = None
-        h_file = File(self.file,Silent=self.Silent)
+        self.file    = file
+        self.Silent  = Silent
+        self.obj     = None
+        h_file       = File(self.file,Silent=self.Silent)
         self.Success = h_file.Success
 
     def _load(self):
