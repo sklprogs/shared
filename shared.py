@@ -2714,7 +2714,7 @@ class Word:
                 if self._sent_no > 0 and result > 0:
                     result -= 1
                 self._tf = '%d.%d' % (self._sent_no + 1,result)
-                log.append ('Word.tf',_('DEBUG'),self._tf)
+                #log.append ('Word.tf',_('DEBUG'),self._tf)
         return self._tf
 
     def tl(self):
@@ -2733,7 +2733,7 @@ class Word:
                 if self._sent_no > 0 and result > 0:
                     result -= 1
                 self._tl = '%d.%d' % (self._sent_no + 1,result + 1)
-                log.append('Word.tl',_('DEBUG'),self._tl)
+                #log.append('Word.tl',_('DEBUG'),self._tl)
         return self._tl
 
 
@@ -3456,7 +3456,7 @@ class Decline:
                         tmp.append(objs.morph().parse(self._list[i])[0].tag.number) # Returns 'sing', 'plur' or None
                 if tmp and max(tmp,key=tmp.count) == 'plur':
                     self._number = 'plur'
-            log.append('Decline.number',_('DEBUG'),str(self._number))
+            #log.append('Decline.number',_('DEBUG'),str(self._number))
         return self._number
 
     def case(self):

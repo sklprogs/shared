@@ -735,10 +735,12 @@ class TextBox:
     def mark_add(self,mark_name='insert',postk='1.0'):
         try:
             self.widget.mark_set(mark_name,postk)
+            '''
             sh.log.append ('TextBox.mark_add'
                           ,_('DEBUG')
                           ,_('Mark "%s" has been inserted in position "%s".') % (mark_name,postk)
                           )
+            '''
         except tk.TclError:
             sh.log.append ('TextBox.tag_add'
                           ,_('ERROR')
@@ -749,10 +751,12 @@ class TextBox:
     def mark_remove(self,mark_name='insert'):
         try:
             self.widget.mark_unset(mark_name)
+            '''
             sh.log.append ('TextBox.mark_remove'
                           ,_('DEBUG')
                           ,_('Mark "%s" has been removed.') % (mark_name)
                           )
+            '''
         except tk.TclError:
             sh.log.append ('TextBox.mark_remove'
                           ,_('ERROR')
@@ -1618,6 +1622,7 @@ class OptionMenu:
         if item in self.items:
             self.var.set(item)
             self.choice = item
+            self.index  = self.items.index(self.choice)
         else:
             Message (func    = 'OptionMenu.set'
                     ,level   = _('ERROR')
