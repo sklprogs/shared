@@ -122,8 +122,10 @@ import datetime
 
 
 
-# Cannot cross-import 2 modules, therefore, we need to have a local proecedure
-def Message(func='MAIN',level=_('WARNING'),message='Message',Silent=False):
+# Cannot cross-import 2 modules, therefore, we need to have a local procedure
+def Message (func='MAIN',level=_('WARNING')
+            ,message='Message',Silent=False
+            ):
     import sharedGUI as sg
     return sg.Message (func    = func
                       ,level   = level
