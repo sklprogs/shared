@@ -28,17 +28,17 @@ class Record:
                 ,Silent=False
                 ):
         self.Success = True
-        self._orig = orig
-        self._final = final
-        self._what1 = what1
-        self._with1 = with1
-        self._what2 = what2
-        self._with2 = with2
-        self._what3 = what3
-        self._with3 = with3
-        self._id = _id
-        self._what = self._with = ''
-        self.Silent = Silent
+        self._orig   = orig
+        self._final  = final
+        self._what1  = what1
+        self._with1  = with1
+        self._what2  = what2
+        self._with2  = with2
+        self._what3  = what3
+        self._with3  = with3
+        self._id     = _id
+        self._what   = self._with = ''
+        self.Silent  = Silent
         if not self._orig or not self._final:
             self.Success = False
             sg.Message ('Record.__init__'

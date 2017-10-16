@@ -2130,8 +2130,19 @@ class Directory:
 class Config:
 
     def __init__(self,Silent=False):
-        self.Success = True
         self.Silent = Silent
+        self.values()
+        
+    def values(self):
+        self.Success          = True
+        self.sections         = [SectionVariables]
+        self.sections_abbr    = [SectionVariables_abbr]
+        self.sections_func    = [config_parser.get]
+        self.message          = _('The following sections and/or keys are missing:') + '\n'
+        self.total_keys       = 0
+        self.changed_keys     = 0
+        self.missing_keys     = 0
+        self.missing_sections = 0
 
     def load(self):
         if self.Success:
@@ -2505,16 +2516,16 @@ class Email:
 
 
 def lang():
-	result = locale.getdefaultlocale()
-	if result and len(result) > 0 and result[0]:
-		if 'ru' in result[0]:
-			globs['ui_lang'] = 'ru'
-			globs['license_url'] = gpl3_url_ru
-		else:
-			globs['ui_lang'] = 'en'
-			globs['license_url'] = gpl3_url_en
-	else:
-		globs['ui_lang'] = 'en'
+    result = locale.getdefaultlocale()
+    if result and len(result) > 0 and result[0]:
+        if 'ru' in result[0]:
+            globs['ui_lang'] = 'ru'
+            globs['license_url'] = gpl3_url_ru
+        else:
+            globs['ui_lang'] = 'en'
+            globs['license_url'] = gpl3_url_en
+    else:
+        globs['ui_lang'] = 'en'
 
 
 lang()

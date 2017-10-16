@@ -448,32 +448,32 @@ class TextBox:
     def __init__(self,parent_obj,Composite=False
                 ,expand=1,side=None,fill='both'
                 ,words=None,font='Serif 14'
-                ,HorizontalScrollbar=False,SpecialReturn=True
+                ,ScrollX=False,SpecialReturn=True
                 ,state='normal'
                 ):
-        self.type = 'TextBox'
+        self.type      = 'TextBox'
         self.Composite = Composite
-        self.HorizontalScrollbar = HorizontalScrollbar
-        self.font = font
-        self.state = state # 'normal' - обычный режим; 'disabled' - отключить редактирование; выберите 'disabled', чтобы надпись на кнопке была другой
+        self.ScrollX   = ScrollX
+        self.font      = font
+        self.state     = state # 'normal' - обычный режим; 'disabled' - отключить редактирование; выберите 'disabled', чтобы надпись на кнопке была другой
         self.SpecialReturn = SpecialReturn
         # (optional, external) Prevent resetting the active (already shown) widget
-        self.Active = False
-        self.Save = False
-        self.tags = []
-        self.marks = []
+        self.Active     = False
+        self.Save       = False
+        self.tags       = []
+        self.marks      = []
         self.parent_obj = parent_obj
-        self.expand = expand
-        self.side = side
-        self.fill = fill
-        self.selection = Selection(h_widget=self)
+        self.expand     = expand
+        self.side       = side
+        self.fill       = fill
+        self.selection  = Selection(h_widget=self)
         self.gui()
         self.reset_logic(words=words)
         if not self.Composite:
             self.focus()
 
     def _gui_txt(self):
-        if self.parent_obj.type == 'Toplevel' or self.parent_obj.type == 'Root':
+        if self.parent_obj.type in ('Root','Toplevel'):
             self.widget = tk.Text (self.parent_obj.widget
                                   ,font   = self.font
                                   ,wrap   = 'word'
@@ -513,7 +513,7 @@ class TextBox:
     def gui(self):
         self._gui_txt()
         self._gui_scroll_ver()
-        if self.HorizontalScrollbar:
+        if self.ScrollX:
             self._gui_scroll_hor()
         if not self.Composite and not hasattr(self.parent_obj,'close_button'):
             if self.parent_obj.type == 'Toplevel' or self.parent_obj.type == 'Root':
@@ -555,7 +555,7 @@ class TextBox:
         self.parent_obj.show()
 
     def close(self,*args):
-        self.Save = True
+        self.Save   = True
         self.Active = False
         self.parent_obj.close()
         return 'break'
@@ -693,7 +693,9 @@ class TextBox:
                               )
 
     # Tk.Entry не поддерживает тэги и метки
-    def tag_add(self,tag_name='sel',pos1tk='1.0',pos2tk='end',DeletePrevious=True):
+    def tag_add (self,tag_name='sel',pos1tk='1.0'
+                ,pos2tk='end',DeletePrevious=True
+                ):
         if DeletePrevious:
             self.tag_remove(tag_name)
         try:
@@ -705,7 +707,8 @@ class TextBox:
                           )
         self.tags.append(tag_name)
 
-    def tag_config(self,tag_name='sel',background=None,foreground=None,font=None):
+    def tag_config (self,tag_name='sel',background=None
+                   ,foreground=None,font=None):
         if background:
             try:
                 self.widget.tag_config(tag_name,background=background)
@@ -792,11 +795,14 @@ class TextBox:
         if pos1tk and pos2tk:
             self.clear_text(pos1=pos1tk,pos2=pos2tk)
             return 'break'
+        # Too frequent
+        '''
         else:
             sh.log.append ('TextBox.clear_selection'
                           ,_('WARNING')
                           ,_('Empty input is not allowed!')
                           )
+        '''
 
     def clear_tags(self):
         i = len(self.tags) - 1
@@ -1183,7 +1189,10 @@ class Button:
             #self.widget.config(text="I'm Inactive")
 
     def show(self):
-        self.widget.pack(expand=self.expand,side=self.side,fill=self.fill)
+        self.widget.pack (expand = self.expand
+                         ,side   = self.side
+                         ,fill   = self.fill
+                         )
 
     def close(self):
         self.widget.pack_forget()
@@ -1757,11 +1766,20 @@ class Selection: # Selecting words only
             self._pos2tk = self.h_widget.widget.index('sel.last')
         except tk.TclError:
             self._pos1tk, self._pos2tk = None, None
+            # Too frequent
+            '''
             sh.log.append ('Selection.get'
                           ,_('WARNING')
                           ,_('Nothing is selected in window %d, therefore, it is not possible to return coordinates!') % 1
                           )
-        sh.log.append('Selection.get',_('DEBUG'),str((self._pos1tk,self._pos2tk)))
+            '''
+        # Too frequent
+        '''
+        sh.log.append ('Selection.get'
+                      ,_('DEBUG')
+                      ,str((self._pos1tk,self._pos2tk))
+                      )
+        '''
         return(self._pos1tk,self._pos2tk)
 
     def text(self):
@@ -1815,20 +1833,32 @@ class Selection: # Selecting words only
 class ParallelTexts: # Requires Search
 
     def __init__(self,parent_obj,Extended=True):
-        self.Success = True
+        self.Success    = True
         self.parent_obj = parent_obj
-        self.obj = Top(self.parent_obj,Maximize=True)
-        self.widget = self.obj.widget
+        self.obj        = Top(self.parent_obj,Maximize=True)
+        self.widget     = self.obj.widget
         self.title()
-        self.frame1 = Frame(parent_obj=self.obj,side='top')
-        self.Extended = Extended
+        self.frame1     = Frame(parent_obj=self.obj,side='top')
+        self.Extended   = Extended
         if self.Extended:
             self.frame2 = Frame(parent_obj=self.obj,side='bottom')
-        self.txt1 = TextBox(self.frame1,Composite=True,side='left')
-        self.txt2 = TextBox(self.frame1,Composite=True,side='right')
+        self.txt1 = TextBox (parent_obj = self.frame1
+                            ,Composite  = True
+                            ,side       = 'left'
+                            )
+        self.txt2 = TextBox (parent_obj = self.frame1
+                            ,Composite  = True
+                            ,side       = 'right'
+                            )
         if self.Extended:
-            self.txt3 = TextBox(self.frame2,Composite=True,side='left')
-            self.txt4 = TextBox(self.frame2,Composite=True,side='right')
+            self.txt3 = TextBox (parent_obj = self.frame2
+                                ,Composite  = True
+                                ,side       = 'left'
+                                )
+            self.txt4 = TextBox (parent_obj = self.frame2
+                                ,Composite  = True
+                                ,side       = 'right'
+                                )
         self.bindings()
         self.icon()
         self.close()
@@ -1911,9 +1941,9 @@ class ParallelTexts: # Requires Search
             self.txt2.focus() # Without this the search doesn't work (the pane is inactive)
             self.decolorize()
             self.txt2.widget.config(bg='old lace')
-            self.txt11 = self.txt2
+            self.txt11   = self.txt2
             self.words11 = self.words2
-            self.txt22 = self.txt1
+            self.txt22   = self.txt1
             self.words22 = self.words1
             self.select22()
         else:
@@ -1927,9 +1957,9 @@ class ParallelTexts: # Requires Search
             self.txt3.focus() # Without this the search doesn't work (the pane is inactive)
             self.decolorize()
             self.txt3.widget.config(bg='old lace')
-            self.txt11 = self.txt3
+            self.txt11   = self.txt3
             self.words11 = self.words3
-            self.txt22 = self.txt4
+            self.txt22   = self.txt4
             self.words22 = self.words4
             self.select11()
         else:
@@ -2600,7 +2630,7 @@ class Message:
             self.info()
         elif self.level == _('WARNING'):
             self.warning()
-        elif self.level == _('ERROR') or self.level == _('CRITICAL'):
+        elif self.level in (_('ERROR'),_('CRITICAL')):
             self.error()
         elif self.level == _('QUESTION'):
             self.question()
@@ -2668,12 +2698,14 @@ class Message:
 # Not using tkinter.messagebox because it blocks main GUI (even if we specify a non-root parent)
 class MessageBuilder: # Requires 'constants'
 
-    def __init__(self,parent_obj,level,Single=True,YesNo=False): # Most often: 'root'
-        self.Yes = False
-        self.YesNo = YesNo
+    def __init__ (self,parent_obj,level
+                 ,Single=True,YesNo=False
+                 ): # Most often: 'root'
+        self.Yes    = False
+        self.YesNo  = YesNo
         self.Single = Single
-        self.level = level
-        self.Lock = False
+        self.level  = level
+        self.Lock   = False
         self.paths()
         self.parent_obj = parent_obj
         self.obj = Top(parent_obj=self.parent_obj)
@@ -2681,7 +2713,9 @@ class MessageBuilder: # Requires 'constants'
         self.icon()
         self.frames()
         self.picture()
-        self.txt = TextBox(parent_obj=self.top_right,Composite=True)
+        self.txt = TextBox (parent_obj = self.top_right
+                           ,Composite  = True
+                           )
         self.buttons()
         self.bindings()
         Geometry(parent_obj=self.obj).set('400x250')
@@ -2959,7 +2993,10 @@ class Objects:
         self._root.run()
 
     def add(self,obj):
-        sh.log.append('Objects.add',_('INFO'),_('Add %s') % type(obj))
+        sh.log.append ('Objects.add'
+                      ,_('INFO')
+                      ,_('Add %s') % type(obj)
+                      )
         self._lst.append(obj)
 
     def warning(self):
@@ -3009,13 +3046,20 @@ class Objects:
                               )
 
     def new_top(self,Maximize=1,AutoCenter=1):
-        return Top(parent_obj=self.root(),Maximize=Maximize,AutoCenter=AutoCenter)
+        return Top (parent_obj = self.root()
+                   ,Maximize   = Maximize
+                   ,AutoCenter = AutoCenter
+                   )
 
     # It is better to use this for temporary widgets only
     def txt(self,Maximize=True,words=None):
         if not self._txt:
-            h_top = Top(parent_obj=self.root(),Maximize=Maximize)
-            self._txt = TextBox(parent_obj=h_top,words=words)
+            h_top = Top (parent_obj = self.root()
+                        ,Maximize   = Maximize
+                        )
+            self._txt = TextBox (parent_obj = h_top
+                                ,words      = words
+                                )
             self._txt.focus()
             self._lst.append(self._txt)
         return self._txt
@@ -3046,7 +3090,9 @@ if __name__ == '__main__':
     Glad is so angry'''
     words = sh.Words(text)
     h_top = Top(parent_obj=objs.root())
-    h_txt = TextBox(parent_obj=h_top,words=words)
+    h_txt = TextBox (parent_obj = h_top
+                    ,words      = words
+                    )
     h_txt.title(text='My text is:')
     h_txt.insert(text)
     h_txt.widget.focus_set()
