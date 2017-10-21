@@ -2720,8 +2720,8 @@ class MessageBuilder: # Requires 'constants'
         self.Lock   = False
         self.paths()
         self.parent_obj = parent_obj
-        self.obj = Top(parent_obj=self.parent_obj)
-        self.widget = self.obj.widget
+        self.obj        = Top(parent_obj=self.parent_obj)
+        self.widget     = self.obj.widget
         self.icon()
         self.frames()
         self.picture()
@@ -2743,13 +2743,13 @@ class MessageBuilder: # Requires 'constants'
 
     def paths(self):
         if self.level == _('WARNING'):
-            self.path = sys.path[0] + os.path.sep + 'resources' + os.path.sep + 'warning.gif'
+            self.path = sh.objs.pdir().add('resources','warning.gif')
         elif self.level == _('INFO'):
-            self.path = sys.path[0] + os.path.sep + 'resources' + os.path.sep + 'info.gif'
+            self.path = sh.objs.pdir().add('resources','info.gif')
         elif self.level == _('QUESTION'):
-            self.path = sys.path[0] + os.path.sep + 'resources' + os.path.sep + 'question.gif'
+            self.path = sh.objs.pdir().add('resources','question.gif')
         elif self.level == _('ERROR'):
-            self.path = sys.path[0] + os.path.sep + 'resources' + os.path.sep + 'error.gif'
+            self.path = sh.objs.pdir().add('resources','error.gif')
         else:
             sh.log.append('MessageBuilder.paths'
                          ,_('ERROR')
@@ -2794,10 +2794,10 @@ class MessageBuilder: # Requires 'constants'
     def buttons(self):
         if self.YesNo or self.level == _('QUESTION'):
             YesName = 'Yes'
-            NoName = 'No'
+            NoName  = 'No'
         else:
             YesName = 'OK'
-            NoName = 'Cancel'
+            NoName  = 'Cancel'
         if self.Single and self.level != _('QUESTION'):
             Button (parent_obj = self.bottom_left
                    ,action     = self.close_yes
