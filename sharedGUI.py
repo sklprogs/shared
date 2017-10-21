@@ -1396,12 +1396,12 @@ class ListBox:
             # Тип родительского виджета может быть любым
             if not hasattr(self.parent_obj,'close_button'):
                 self.parent_obj.close_button = Button (
-                    self.parent_obj
-                   ,text   = _('Quit')
-                   ,hint   = _('Quit')
-                   ,action = self.close
-                   ,expand = 0
-                   ,side   = 'bottom'
+                    parent_obj = self.parent_obj
+                   ,text       = _('Quit')
+                   ,hint       = _('Quit')
+                   ,action     = self.close
+                   ,expand     = 0
+                   ,side       = 'bottom'
                                                       )
             WidgetShared.custom_buttons(self)
 
@@ -2647,7 +2647,10 @@ class Message:
                 objs.error().reset (title = self.func + ':'
                                    ,text  = self.message
                                    ).show()
-            sh.log.append(self.func,_('ERROR'),self.message)
+            sh.log.append (func    = self.func
+                          ,level   = _('ERROR')
+                          ,message = self.message
+                          )
         else:
             sh.log.append ('Message.error'
                           ,_('ERROR')
@@ -2660,7 +2663,10 @@ class Message:
                 objs.info().reset (title = self.func + ':'
                                   ,text  = self.message
                                   ).show()
-            sh.log.append(self.func,_('INFO'),self.message)
+            sh.log.append (func    = self.func
+                          ,level   = _('INFO')
+                          ,message = self.message
+                          )
         else:
             sh.log.append ('Message.info'
                           ,_('INFO')
@@ -2673,7 +2679,10 @@ class Message:
                                   ,text  = self.message
                                   ).show()
             self.Yes = objs._question.Yes
-            sh.log.append(self.func,_('QUESTION'),self.message)
+            sh.log.append (func    = self.func
+                          ,level   = _('QUESTION')
+                          ,message = self.message
+                          )
         else:
             sh.log.append ('Message.question'
                           ,_('QUESTION')
@@ -2686,7 +2695,10 @@ class Message:
                 objs.warning().reset (title = self.func + ':'
                                      ,text  = self.message
                                      ).show()
-            sh.log.append(self.func,_('WARNING'),self.message)
+            sh.log.append (func    = self.func
+                          ,level   = _('WARNING')
+                          ,message = self.message
+                          )
         else:
             sh.log.append ('Message.warning'
                           ,_('WARNING')
