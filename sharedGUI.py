@@ -28,12 +28,51 @@ def bind(obj,bindings,action): # object, str/list, function
         else:
             Message (func    = 'bind'
                     ,level   = _('ERROR')
-                    ,message=_('Wrong input data: "%s"') % str(bindings)
+                    ,message =_('Wrong input data: "%s"') % str(bindings)
                     )
     else:
         Message (func    = 'bind'
                 ,level   = _('ERROR')
                 ,message = _('Wrong input data!')
+                )
+
+def dialog_save_file(filetypes=()):
+    file = ''
+    if not filetypes:
+        filetypes = ((_('Plain text (UTF-8)'),'.txt' )
+                    ,( _('Web-page')         ,'.htm' )
+                    ,( _('Web-page')         ,'.html')
+                    ,( _('All files')        ,'*'    )
+                    )
+    options                = {}
+    options['initialfile'] = ''
+    options['filetypes']   = filetypes
+    options['title']       = _('Save As:')
+    try:
+        file = dialog.asksaveasfilename(**options)
+    except:
+        Message (func    = 'dialog_save_file'
+                ,level   = _('ERROR')
+                ,message = _('Failed to select a file!')
+                )
+    return file
+    
+# Make a color (a color name (/usr/share/X11/rgb.txt) or a hex value) brighter (positive delta) or darker (negative delta)
+def mod_color(color,delta=76): # ~30%
+    if -255 <= delta <= 255:
+        try:
+            rgb = objs.root().widget.winfo_rgb(color=color)
+            rgb = tuple(max(min(255,x/256+delta),0) for x in rgb)
+            return '#%02x%02x%02x' % rgb
+        except tk._tkinter.TclError:
+            Message (func    = 'mod_color'
+                    ,level   = _('WARNING')
+                    ,message = _('An unknown color "%s"!') % str(color)
+                    )
+    else:
+        Message (func    = 'mod_color'
+                ,level   = _('WARNING')
+                ,message = _('The condition "%s" is not observed!') % ('-255 <= %d <= 255' % delta)
                 )
 
 
@@ -1202,14 +1241,6 @@ class Button:
 
 
 
-def button_test(button):
-    if button.Status:
-        button.title('I am active')
-    else:
-        button.title('I am passive')
-
-
-
 # Всплывающие подсказки для кнопок
 # see also 'calltips'
 # based on idlelib.ToolTip
@@ -1543,29 +1574,6 @@ class ListBox:
         self.select()
         if self.user_function:
             self.user_function()
-
-
-
-def dialog_save_file(filetypes=()):
-    file = ''
-    if not filetypes:
-        filetypes = ((_('Plain text (UTF-8)'),'.txt' )
-                    ,( _('Web-page')         ,'.htm' )
-                    ,( _('Web-page')         ,'.html')
-                    ,( _('All files')        ,'*'    )
-                    )
-    options                = {}
-    options['initialfile'] = ''
-    options['filetypes']   = filetypes
-    options['title']       = _('Save As:')
-    try:
-        file = dialog.asksaveasfilename(**options)
-    except:
-        Message (func    = 'dialog_save_file'
-                ,level   = _('ERROR')
-                ,message = _('Failed to select a file!')
-                )
-    return file
 
 
 
@@ -2496,31 +2504,32 @@ class WaitBox:
 
 class Label:
 
+    # Use fill='both' with 'expand=1', otherwise, 'expand' does not work
     def __init__(self,parent_obj,text='Text:'
                 ,font='Sans 11',side=None,fill=None
                 ,expand=False,ipadx=None,ipady=None
                 ,image=None,fg=None,bg=None
                 ): # 'Top' and 'Root' (the last only with 'wait_window()')
-        self.type = 'Label'
+        self.type       = 'Label'
         self.parent_obj = parent_obj
-        self.side = side
-        self.fill = fill
-        self.expand = expand
-        self._text = text
-        self._font = font
-        self.ipadx = ipadx
-        self.ipady = ipady
-        self.image = image
-        self.bg = bg
-        self.fg = fg
+        self.side       = side
+        self.fill       = fill
+        self.expand     = expand
+        self._text      = text
+        self._font      = font
+        self.ipadx      = ipadx
+        self.ipady      = ipady
+        self.image      = image
+        self.bg         = bg
+        self.fg         = fg
         self.gui()
         self.close()
 
     def gui(self):
-        self.widget = tk.Label (self.parent_obj.widget
-                               ,image = self.image
-                               ,bg    = self.bg
-                               ,fg    = self.fg
+        self.widget = tk.Label (master = self.parent_obj.widget
+                               ,image  = self.image
+                               ,bg     = self.bg
+                               ,fg     = self.fg
                                )
         self.text()
         self.font()
