@@ -1,4 +1,5 @@
 (English)
+! Use ord() just like in mclient to get rid of chars not supported by Tcl before pasting the text into text widgets
 
 
 (Russian)

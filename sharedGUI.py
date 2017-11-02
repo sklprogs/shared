@@ -229,7 +229,7 @@ class Top:
             self.tk_trigger = tk.BooleanVar()
             self.widget.wait_variable(self.tk_trigger)
 
-    def title(self,text='Title:'):
+    def title(self,text=_('Title:')):
         WidgetShared.title(self,text=text)
 
     def icon(self,path):
@@ -544,7 +544,10 @@ class TextBox:
         self.scrollbar_hor.pack(expand=1,fill='x')
 
     def _gui_scroll_ver(self):
-        self.scrollbar = tk.Scrollbar(self.widget,jump=0,takefocus=False)
+        self.scrollbar = tk.Scrollbar (master    = self.widget
+                                      ,jump      = 0
+                                      ,takefocus = False
+                                      )
         self.widget.config(yscrollcommand=self.scrollbar.set)
         self.scrollbar.config(command=self.widget.yview)
         self.scrollbar.pack(side='right',fill='y')
@@ -1152,7 +1155,7 @@ class Button:
         self.inactive_image = self.image(inactive_image_path)
         self.active_image   = self.image(active_image_path)
         if self.inactive_image:
-            self.widget = tk.Button (self.parent_obj.widget
+            self.widget = tk.Button (master = self.parent_obj.widget
                                     ,image  = self.inactive_image
                                     ,height = self.height
                                     ,width  = self.width
@@ -1161,7 +1164,10 @@ class Button:
                                     )
         else:
             # В большинстве случаев текстовая кнопка не требует задания высоты и ширины по умолчанию, они определяются автоматически. Также в большинстве случаев для текстовых кнопок следует использовать рамку.
-            self.widget = tk.Button(self.parent_obj.widget,bd=1,fg=fg)
+            self.widget = tk.Button (master = self.parent_obj.widget
+                                    ,bd     = 1
+                                    ,fg     = fg
+                                    )
         self.title(button_text=text)
         if hint:
             if bindings:
@@ -1843,13 +1849,19 @@ class ParallelTexts: # Requires Search
     def __init__(self,parent_obj,Extended=True):
         self.Success    = True
         self.parent_obj = parent_obj
-        self.obj        = Top(self.parent_obj,Maximize=True)
+        self.obj        = Top (parent_obj = self.parent_obj
+                              ,Maximize   = True
+                              )
         self.widget     = self.obj.widget
         self.title()
-        self.frame1     = Frame(parent_obj=self.obj,side='top')
+        self.frame1     = Frame (parent_obj = self.obj
+                                ,side       = 'top'
+                                )
         self.Extended   = Extended
         if self.Extended:
-            self.frame2 = Frame(parent_obj=self.obj,side='bottom')
+            self.frame2 = Frame (parent_obj = self.obj
+                                ,side       = 'bottom'
+                                )
         self.txt1 = TextBox (parent_obj = self.frame1
                             ,Composite  = True
                             ,side       = 'left'
@@ -1933,9 +1945,9 @@ class ParallelTexts: # Requires Search
             self.txt1.focus() # Without this the search doesn't work (the pane is inactive)
             self.decolorize()
             self.txt1.widget.config(bg='old lace')
-            self.txt11 = self.txt1
+            self.txt11   = self.txt1
             self.words11 = self.words1
-            self.txt22 = self.txt2
+            self.txt22   = self.txt2
             self.words22 = self.words2
             self.select11()
         else:
