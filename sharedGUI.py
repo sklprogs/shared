@@ -1131,7 +1131,10 @@ class Button:
                  ,width               = 36
                  ,side                = 'left'
                  ,expand              = 0
-                 ,fg                  = 'black'
+                 ,bg                  = None
+                 ,bg_focus            = None
+                 ,fg                  = None
+                 ,fg_focus            = None
                  ,bd                  = 0
                  ,hint_delay          = 800
                  ,hint_width          = 280
@@ -1144,46 +1147,35 @@ class Button:
                  ,fill                = 'both'
                  ,TakeFocus           = False
                  ):
-        self.parent_obj     = parent_obj
-        self.action         = action
-        self.Status         = False
-        self.height         = height
-        self.width          = width
-        self.side           = side
-        self.expand         = expand
-        self.fill           = fill
-        self.inactive_image = self.image(inactive_image_path)
-        self.active_image   = self.image(active_image_path)
-        if self.inactive_image:
-            self.widget = tk.Button (master = self.parent_obj.widget
-                                    ,image  = self.inactive_image
-                                    ,height = self.height
-                                    ,width  = self.width
-                                    ,bd     = bd
-                                    ,fg     = fg
-                                    )
-        else:
-            # В большинстве случаев текстовая кнопка не требует задания высоты и ширины по умолчанию, они определяются автоматически. Также в большинстве случаев для текстовых кнопок следует использовать рамку.
-            self.widget = tk.Button (master = self.parent_obj.widget
-                                    ,bd     = 1
-                                    ,fg     = fg
-                                    )
-        self.title(button_text=text)
-        if hint:
-            if bindings:
-                hint_extended = hint + '\n' + str(bindings).replace('[','').replace(']','').replace('<','').replace('>','').replace("'",'')
-            else:
-                hint_extended = hint
-            self.tip = ToolTip (self.widget
-                               ,text            = hint_extended
-                               ,hint_delay      = hint_delay
-                               ,hint_width      = hint_width
-                               ,hint_height     = hint_height
-                               ,hint_background = hint_background
-                               ,hint_direction  = hint_direction
-                               ,button_side     = side
-                               )
-        self.show()
+        self.Status          = False
+        self.parent_obj      = parent_obj
+        self.action          = action
+        self.height          = height
+        self.width           = width
+        self.side            = side
+        self.expand          = expand
+        self.fill            = fill
+        self.text            = text
+        self._bindings       = bindings
+        self.TakeFocus       = TakeFocus
+        self.bd              = bd
+        self.bg              = bg
+        self.bg_focus        = bg_focus
+        self.fg              = fg
+        self.fg_focus        = fg_focus
+        self.hint            = hint
+        self.hint_delay      = hint_delay
+        self.hint_width      = hint_width
+        self.hint_height     = hint_height
+        self.hint_background = hint_background
+        self.hint_direction  = hint_direction
+        self.side            = side
+        self.inactive_image  = self.image(inactive_image_path)
+        self.active_image    = self.image(active_image_path)
+        
+        self.gui()
+        
+    def bindings(self):
         bind (obj      = self
              ,bindings = ['<ButtonRelease-1>'
                          ,'<space>'
@@ -1192,7 +1184,46 @@ class Button:
                          ]
              ,action   = self.click
              )
-        if TakeFocus:
+    
+    def gui(self):
+        if self.inactive_image:
+            self.widget = tk.Button (master           = self.parent_obj.widget
+                                    ,image            = self.inactive_image
+                                    ,height           = self.height
+                                    ,width            = self.width
+                                    ,bd               = self.bd
+                                    ,bg               = self.bg
+                                    ,fg               = self.fg
+                                    ,activebackground = self.bg_focus
+                                    ,activeforeground = self.fg_focus
+                                    )
+        else:
+            # В большинстве случаев текстовая кнопка не требует задания высоты и ширины по умолчанию, они определяются автоматически. Также в большинстве случаев для текстовых кнопок следует использовать рамку.
+            self.widget = tk.Button (master           = self.parent_obj.widget
+                                    ,bd               = 1
+                                    ,bg               = self.bg
+                                    ,fg               = self.fg
+                                    ,activebackground = self.bg_focus
+                                    ,activeforeground = self.fg_focus
+                                    )
+        self.title(button_text=self.text)
+        if self.hint:
+            if self._bindings:
+                self.hint_extended = self.hint + '\n' + str(self._bindings).replace('[','').replace(']','').replace('<','').replace('>','').replace("'",'')
+            else:
+                self.hint_extended = self.hint
+            self.tip = ToolTip (button          = self.widget
+                               ,text            = self.hint_extended
+                               ,hint_delay      = self.hint_delay
+                               ,hint_width      = self.hint_width
+                               ,hint_height     = self.hint_height
+                               ,hint_background = self.hint_background
+                               ,hint_direction  = self.hint_direction
+                               ,button_side     = self.side
+                               )
+        self.show()
+        self.bindings()
+        if self.TakeFocus:
             self.widget.focus_set()
 
     def title(self,button_text='Press me'):
@@ -1244,6 +1275,7 @@ class Button:
 
     def focus(self,*args):
         self.widget.focus_set()
+        
 
 
 
