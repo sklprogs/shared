@@ -1617,9 +1617,15 @@ class ListBox:
 
 class OptionMenu:
 
+    ''' tk.OptionMenu will convert integers to strings,
+    but we better do this here to avoid problems with
+    iterating ("in requires int as the left operand")
+    later (this happens when we pass a sequence of 
+    chars instead of a list of strings).
+    '''
     def __init__ (self
                  ,parent_obj
-                 ,items      = (1,2,3,4,5)
+                 ,items      = ('1','2','3','4','5')
                  ,side       = 'left'
                  ,anchor     = 'center'
                  ,command    = None
@@ -1635,7 +1641,7 @@ class OptionMenu:
         self.var        = tk.StringVar(self.parent_obj.widget)
         # An error is thrown if 'items' is ()
         if not self.items:
-            self.items = (1,2,3,4,5)
+            self.items = ('1','2','3','4','5')
         self.widget    = tk.OptionMenu (self.parent_obj.widget
                                        ,self.var
                                        ,*self.items
@@ -1692,17 +1698,21 @@ class OptionMenu:
                                             ,l       = item:v.set(l)
                                             )
 
-    def reset(self,items=(1,2,3,4,5),default=None):
+    def reset(self,items=('1','2','3','4','5'),default=None):
         self.items = items
         # An error is thrown if 'items' is ()
         if not self.items:
-            self.items = (1,2,3,4,5)
+            self.items = ('1','2','3','4','5')
         self.fill()
         if default is None:
             if self.choice in self.items:
                 default = self.choice
         self.default = default
         self.default_set()
+        if len(items) == 1:
+            self.widget.config(state='disabled')
+        else:
+            self.widget.config(state='normal')
 
     def _get(self,*args): # Auto updated (after selecting an item)
         self.choice = self.var.get()
