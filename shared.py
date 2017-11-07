@@ -896,7 +896,7 @@ class Text:
         else:
             Message (func    = 'Text.delete_embraced_text'
                     ,level   = _('WARNING')
-                    ,message = 'Different number of opening and closing brackets: "%s": %d; "%s": %d!' % (opening_sym,self.text.count(opening_sym),closing_sym,self.text.count(closing_sym))
+                    ,message = _('Different number of opening and closing brackets: "%s": %d; "%s": %d!') % (opening_sym,self.text.count(opening_sym),closing_sym,self.text.count(closing_sym))
                     )
         return self.text
 
@@ -2757,21 +2757,18 @@ class Words: # Requires Search, Text
     def __init__(self,text,OrigCyr=False,Auto=False):
         self.Success = True
         self.OrigCyr = OrigCyr # todo: Do we really need this?
-        self.words   = []
+        self.Auto    = Auto
+        self.values()
         if text:
             log.append ('Words.__init__'
                        ,_('INFO')
                        ,_('Analyze the text')
                        )
             # This is MUCH faster than using old symbol-per-symbol algorithm for finding words. We must, however, drop double space cases.
-            self._no          = 0
-            self.Auto         = Auto
             self._text_orig   = Text(text=text,Auto=self.Auto).text
             self._line_breaks = Search(self._text_orig,'\n').next_loop()
             self._text_p      = Text(text=self._text_orig).delete_line_breaks()
             self._text_n      = Text(text=self._text_p).delete_punctuation().lower()
-            self._list_nm     = []
-            self._text_nm     = None
             self.split()
         else:
             self.Success = False
@@ -2779,6 +2776,16 @@ class Words: # Requires Search, Text
                        ,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
+                       
+    def values(self):
+        self._no          = 0
+        self.words        = []
+        self._line_breaks = []
+        self._list_nm     = []
+        self._text_nm     = None
+        self._text_orig   = ''
+        self._text_p      = ''
+        self._text_n      = ''
 
     def split(self):
         if self.Success:
@@ -3605,7 +3612,10 @@ class Timer:
 
 class Table:
 
-    def __init__(self,headers,rows,Shorten=True,MaxRow=18,MaxRows=20):
+    def __init__ (self,headers,rows
+                 ,Shorten=True,MaxRow=18
+                 ,MaxRows=20
+                 ):
         self._headers = headers
         self._rows    = rows
         self.Shorten  = Shorten
