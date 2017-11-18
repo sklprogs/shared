@@ -1056,6 +1056,19 @@ class Text:
     def alphanum(self):
         self.text = ''.join([x for x in self.text if x.isalnum()])
         return self.text
+        
+    def has_latin(self):
+        for sym in self.text:
+            if sym in lat_alphabet:
+                return True
+                
+    def has_cyrillic(self):
+        for sym in self.text:
+            if sym in ru_alphabet:
+                return True
+    
+    def zzz(self):
+        pass
 
 
 
