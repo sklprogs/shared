@@ -151,19 +151,23 @@ def rewrite(dest,AskRewrite=True):
 
 class Launch:
 
+    # note: 'Block' works only a 'custom_app' is set
     def __init__(self,target='',Block=False,Silent=False):
+        self.values()
         self.target = target
-        self.Block = Block
+        self.Block  = Block
         self.Silent = Silent
         self.h_path = Path(self.target) # Do not shorten, Path is used further
-        self.ext = self.h_path.extension().lower()
-        self.custom_app = ''
-        self.custom_args = []
-        if self.target and os.path.exists(self.target): # We do not use the File class because a target can be a directory
+        self.ext    = self.h_path.extension().lower()
+        if self.target and os.path.exists(self.target): # We do not use the File class because the target can be a directory
             self.TargetExists = True
         else:
             self.TargetExists = False
 
+    def values(self):
+        self.custom_app  = ''
+        self.custom_args = []
+    
     def _launch(self):
         if self.custom_args:
             try:
@@ -213,7 +217,7 @@ class Launch:
                     )
 
     def app(self,custom_app='',custom_args=[]):
-        self.custom_app = custom_app
+        self.custom_app  = custom_app
         self.custom_args = custom_args
         if self.custom_app:
             if self.custom_args and len(self.custom_args) > 0:
@@ -1305,7 +1309,9 @@ class Time: # We constantly recalculate each value because they depend on each o
 
 class File:
 
-    def __init__(self,file,dest=None,Silent=False,AskRewrite=True):
+    def __init__ (self,file,dest=None
+                 ,Silent=False,AskRewrite=True
+                 ):
         self.Success = True
         self.Silent = Silent
         self.AskRewrite = AskRewrite
@@ -3515,7 +3521,11 @@ class Objects:
 
     def tmpfile(self,suffix='.htm',Delete=0):
         if not self._tmpfile:
-            self._tmpfile = tempfile.NamedTemporaryFile(mode='w',encoding='UTF-8',suffix=suffix,delete=Delete).name
+            self._tmpfile = tempfile.NamedTemporaryFile (mode     = 'w'
+                                                        ,encoding = 'UTF-8'
+                                                        ,suffix   = suffix
+                                                        ,delete   = Delete
+                                                        ).name
         return self._tmpfile
 
     def pdir(self):
