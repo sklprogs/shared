@@ -2856,11 +2856,11 @@ class MessageBuilder: # Requires 'constants'
 
     def buttons(self):
         if self.YesNo or self.level == _('QUESTION'):
-            YesName = 'Yes'
-            NoName  = 'No'
+            YesName = _('Yes')
+            NoName  = _('No')
         else:
             YesName = 'OK'
-            NoName  = 'Cancel'
+            NoName  = _('Cancel')
         if self.Single and self.level != _('QUESTION'):
             Button (parent_obj = self.bottom_left
                    ,action     = self.close_yes

@@ -799,9 +799,9 @@ class Input:
 class Text:
 
     def __init__(self,text,Auto=False,Silent=False):
-        self.text = text
+        self.text   = text
         self.Silent = Silent
-        self.text = Input(val=self.text).not_none()
+        self.text   = Input(val=self.text).not_none()
         # This can be useful in many cases, e.g. after OCR
         if Auto:
             self.convert_line_breaks()
