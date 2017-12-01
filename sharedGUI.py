@@ -127,11 +127,14 @@ class WidgetShared: # Do not use graphical logging there
                               ,level   = _('ERROR')
                               ,message = _('A logic error: unknown object type: "%s"!') % str(object.type)
                               )
+        # Too frequent
+        '''
         else:
             sh.log.append ('WidgetShared.insert'
                           ,_('WARNING')
                           ,_('Empty input is not allowed!')
                           )
+        '''
 
     def font(object,font='Sans 11'): # font_style, sh.globs['var']['menu_font']
         if object.type == 'TextBox' or object.type == 'Entry':
@@ -284,11 +287,14 @@ class SearchBox:
             self.h_search = sh.Search(text=self._text)
         else:
             self.Success = False
+            # Too frequent
+            '''
             Message (func    = 'SearchBox.reset_logic'
                     ,level   = _('WARNING')
                     ,message = _('Not enough input data!')
                     ,Silent  = True
                     )
+            '''
 
     def reset_data(self):
         self.Success    = True
@@ -2500,7 +2506,12 @@ class WaitBox:
         self.type = 'WaitBox'
         self.parent_obj = parent_obj
         self._func = self._title = self._args = self._message = None
-        self.obj = Top(parent_obj=self.parent_obj,Maximize=False)
+        self.obj = Top (parent_obj = self.parent_obj
+                       ,Maximize   = False
+                       ,AutoCenter = True
+                       )
+        # todo: fix centering in Top.center() when Lock=False
+        #self.obj.center(Force=1)
         self.widget = self.obj.widget
         self.widget.geometry('300x150')
         self.label = tk.Label(self.widget,text=_('Please wait...'))
@@ -2534,8 +2545,6 @@ class WaitBox:
 
     def show(self):
         self.obj.show(Lock=False)
-        # todo: fix centering in Top.center() when Lock=False
-        self.obj.center(Force=True)
 
     def close(self):
         self.obj.close()

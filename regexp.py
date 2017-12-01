@@ -24,8 +24,9 @@ class Record:
     
     def __init__(self,orig,final,what1=None
                 ,with1=None,what2=None,with2=None
-                ,what3=None,with3=None,_id='Unknown id'
-                ,Silent=False
+                ,what3=None,with3=None,what4=None
+                ,with4=None,what5=None,with5=None
+                ,_id='Unknown id',Silent=False
                 ):
         self.Success = True
         self._orig   = orig
@@ -36,6 +37,10 @@ class Record:
         self._with2  = with2
         self._what3  = what3
         self._with3  = with3
+        self._what4  = what4
+        self._with4  = with4
+        self._what5  = what5
+        self._with5  = with5
         self._id     = _id
         self._what   = self._with = ''
         self.Silent  = Silent
@@ -86,7 +91,9 @@ class Record:
             cond1 = self._what1 and self._with1
             cond2 = self._what2 and self._with2
             cond3 = self._what3 and self._with3
-            if cond1 or cond2 or cond3:
+            cond4 = self._what4 and self._with4
+            cond5 = self._what5 and self._with5
+            if cond1 or cond2 or cond3 or cond4 or cond5:
                 if cond1:
                     self._what = self._what1
                     self._with = self._with1
@@ -98,6 +105,14 @@ class Record:
                 if self.Success and cond3:
                     self._what = self._what3
                     self._with = self._with3
+                    self._check()
+                if self.Success and cond4:
+                    self._what = self._what4
+                    self._with = self._with4
+                    self._check()
+                if self.Success and cond5:
+                    self._what = self._what5
+                    self._with = self._with5
                     self._check()
             else:
                 self.Success = False
