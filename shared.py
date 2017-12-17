@@ -116,6 +116,13 @@ punc_array      = ['.',',','!','?',':',';']
 #punc_ext_array = ['"','”','»',']','}',')'] # todo: why there were no opening brackets?
 punc_ext_array  = ['"','“','”','','«','»','[',']','{','}','(',')']
 
+forbidden_win = '/\?%*:|"<>'
+forbidden_lin = '/'
+forbidden_mac = '/\?*:|"<>'
+reserved_win  = ['CON','PRN','AUX','NUL','COM1','COM2','COM3','COM4','COM5'
+                ,'COM6','COM7','COM8','COM9','LPT1','LPT2','LPT3','LPT4','LPT5'
+                ,'LPT6','LPT7','LPT8','LPT9']
+
 oss = OSSpecific()
 # Load last due to problems with TZ (see 'oss.win_import')
 import datetime
@@ -3709,6 +3716,71 @@ class Table:
                        ,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
+
+
+
+''' Change file/folder names so that they comply with OS-specific rules. 
+    We should not use absolute paths at input because we cannot tell for sure 
+    that the path separator is actually the path separator and not an illegal 
+    character.
+'''
+class FixBaseNames:
+    
+    def __init__(self,basename,dir='.',AllOS=False,max_len=0):
+        self.AllOS    = AllOS
+        self._dir     = dir
+        self._name    = basename
+        self._max_len = max_len
+        
+    def not_empty(self):
+        if self._name:
+            self._name = os.path.join(self._dir,self._name)
+        else:
+            self._name = tempfile.NamedTemporaryFile (delete = False
+                                                     ,dir    = self._dir
+                                                     ).name
+
+    def length(self):
+        if self._max_len:
+            self._name = self._name[:self._max_len]
+    
+    def win(self):
+        self._name = [char for char in self._name if not char in forbidden_win]
+        self._name = ''.join(self._name)
+        if self._name.endswith('.'):
+            self._name = self._name[:-1]
+        self._name = self._name.strip()
+        if self._name.upper() in reserved_win:
+            self._name = ''
+        
+    def lin(self):
+        self._name = [char for char in self._name if not char in forbidden_lin]
+        self._name = ''.join(self._name)
+        self._name = self._name.strip()
+        
+    def mac(self):
+        self._name = [char for char in self._name if not char in forbidden_mac]
+        self._name = ''.join(self._name)
+        self._name = self._name.strip()
+        
+    def run(self):
+        if self.AllOS:
+            self.win()
+            self.lin()
+            self.mac()
+        elif oss.win():
+            self.win()
+        elif oss.lin():
+            self.lin()
+        elif oss.mac():
+            self.mac()
+        else:
+            self.win()
+            self.lin()
+            self.mac()
+        self.not_empty()
+        self.length()
+        return self._name
 
 
 

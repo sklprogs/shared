@@ -2545,6 +2545,7 @@ class WaitBox:
 
     def show(self):
         self.obj.show(Lock=False)
+        self.obj.center(Force=1) # cur
 
     def close(self):
         self.obj.close()
