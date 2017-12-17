@@ -16,6 +16,7 @@ import calendar
 import os
 import pickle
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -196,7 +197,7 @@ class Launch:
     def _lin(self):
         try:
             os.system("xdg-open " + self.h_path.escape() + "&")
-        except:
+        except OSError:
             Message (func    = 'Launch._lin'
                     ,level   = _('ERROR')
                     ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
@@ -1581,8 +1582,10 @@ class Path:
             self._dirname = os.path.dirname(self.path)
         return self._dirname
 
-    def escape(self): # In order to use xdg-open, we need to escape spaces first
-        return self.path.replace(' ','\ ').replace('(','\(').replace(')','\)')
+    # In order to use xdg-open, we need to escape some characters first
+    def escape(self):
+        self.path = shlex.quote(self.path)
+        return self.path
 
     def extension(self): # with a dot
         if not self._extension:
