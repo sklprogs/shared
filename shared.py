@@ -3722,27 +3722,18 @@ class Table:
 
 
 
-''' Change file/folder names so that they comply with OS-specific rules. 
+''' Return a path base name that would comply with OS-specific rules. 
     We should not use absolute paths at input because we cannot tell for sure 
-    that the path separator is actually the path separator and not an illegal 
+    that the path separator is actually a separator and not an illegal 
     character.
 '''
-class FixBaseNames:
+class FixBaseName:
     
-    def __init__(self,basename,dir='.',AllOS=False,max_len=0):
+    def __init__(self,basename,AllOS=False,max_len=0):
         self.AllOS    = AllOS
-        self._dir     = dir
         self._name    = basename
         self._max_len = max_len
         
-    def not_empty(self):
-        if self._name:
-            self._name = os.path.join(self._dir,self._name)
-        else:
-            self._name = tempfile.NamedTemporaryFile (delete = False
-                                                     ,dir    = self._dir
-                                                     ).name
-
     def length(self):
         if self._max_len:
             self._name = self._name[:self._max_len]
@@ -3781,9 +3772,72 @@ class FixBaseNames:
             self.win()
             self.lin()
             self.mac()
-        self.not_empty()
         self.length()
         return self._name
+
+
+
+class Get:
+    
+    def __init__(self,url,encoding='UTF-8'):
+        self._url      = url
+        self._timeout  = 6
+        self._html     = ''
+        self._encoding = encoding
+        
+    def _get(self):
+        try:
+            self._html = urllib.request.urlopen (url     = self._url
+                                                ,data    = None
+                                                ,timeout = self._timeout
+                                                ).read()
+            log.append ('Get._get'
+                       ,_('INFO')
+                       ,_('[OK]: "%s"') % self._url
+                       )
+        # Too many possible exceptions
+        except:
+            log.append ('Get._get'
+                       ,_('WARNING')
+                       ,_('[FAILED]: "%s"') % self._url
+                       )
+    
+    def decode(self):
+        if self._html:
+            try:
+                self._html = self._html.decode(encoding=self._encoding)
+            except UnicodeDecodeError:
+                self._html = ''
+                log.append ('Get.decode'
+                           ,_('WARNING')
+                           ,_('Unable to decode "%s"!') % str(self._url)
+                           )
+        else:
+            log.append ('Get.decode'
+                       ,_('WARNING')
+                       ,_('Empty input is not allowed!')
+                       )
+    
+    def run(self):
+        if self._url:
+            # Safely use URL as a string
+            if isinstance(self._url,str):
+                timer = Timer(func_title='Get.run')
+                timer.start()
+                self._get()
+                self.decode()
+                timer.end()
+                return self._html
+            else:
+                log.append ('Get.run'
+                           ,_('WARNING')
+                           ,_('Wrong input data!')
+                           )
+        else:
+            log.append ('Get.run'
+                       ,_('WARNING')
+                       ,_('Empty input is not allowed!')
+                       )
 
 
 
