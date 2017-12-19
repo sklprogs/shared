@@ -1892,404 +1892,6 @@ class Selection: # Selecting words only
 
 
 
-class ParallelTexts: # Requires Search
-
-    def __init__(self,parent_obj,Extended=True):
-        self.Success    = True
-        self.parent_obj = parent_obj
-        self.obj        = Top (parent_obj = self.parent_obj
-                              ,Maximize   = True
-                              )
-        self.widget     = self.obj.widget
-        self.title()
-        self.frame1     = Frame (parent_obj = self.obj
-                                ,side       = 'top'
-                                )
-        self.Extended   = Extended
-        if self.Extended:
-            self.frame2 = Frame (parent_obj = self.obj
-                                ,side       = 'bottom'
-                                )
-        self.txt1 = TextBox (parent_obj = self.frame1
-                            ,Composite  = True
-                            ,side       = 'left'
-                            )
-        self.txt2 = TextBox (parent_obj = self.frame1
-                            ,Composite  = True
-                            ,side       = 'right'
-                            )
-        if self.Extended:
-            self.txt3 = TextBox (parent_obj = self.frame2
-                                ,Composite  = True
-                                ,side       = 'left'
-                                )
-            self.txt4 = TextBox (parent_obj = self.frame2
-                                ,Composite  = True
-                                ,side       = 'right'
-                                )
-        self.bindings()
-        self.icon()
-        self.close()
-
-    def reset(self,words1,words2,words3=None,words4=None):
-        sh.log.append ('ParallelTexts.reset'
-                      ,_('INFO')
-                      ,'Reset widget'
-                      ) # todo: del when optimized
-        self.words1 = words1
-        self.words2 = words2
-        self.words3 = words3
-        self.words4 = words4
-        if self.words1 and self.words2:
-            if self.words3 and self.words4:
-                self.Extended = True
-            else:
-                self.Extended = False
-            self.txt1.reset_logic(words=self.words1)
-            self.txt1.reset_data()
-            self.txt2.reset_logic(words=self.words2)
-            self.txt2.reset_data()
-            if self.Extended:
-                self.txt3.reset_logic(words=self.words3)
-                self.txt3.reset_data()
-                self.txt4.reset_logic(words=self.words4)
-                self.txt4.reset_data()
-            self.read_only(ReadOnly=False)
-            self.fill()
-            self.read_only(ReadOnly=True)
-            self.txt1.focus()
-            self.init_cursor_pos()
-        else:
-            self.Success = False
-            sh.log.append ('ParallelTexts.reset'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def read_only(self,ReadOnly=False):
-        # Setting ReadOnly state works only after filling text
-        self.txt1.read_only(ReadOnly=ReadOnly)
-        self.txt2.read_only(ReadOnly=ReadOnly)
-        if self.Extended:
-            self.txt3.read_only(ReadOnly=ReadOnly)
-            self.txt4.read_only(ReadOnly=ReadOnly)
-
-    # Set the cursor to the start of the text
-    def init_cursor_pos(self):
-        if self.Success:
-            self.txt1.mark_add()
-            self.txt2.mark_add()
-            if self.Extended:
-                self.txt3.mark_add()
-                self.txt4.mark_add()
-        else:
-            sh.log.append ('ParallelTexts.init_cursor_pos'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def select1(self,*args):
-        if self.Success:
-            self.txt1.focus() # Without this the search doesn't work (the pane is inactive)
-            self.decolorize()
-            self.txt1.widget.config(bg='old lace')
-            self.txt11   = self.txt1
-            self.words11 = self.words1
-            self.txt22   = self.txt2
-            self.words22 = self.words2
-            self.select11()
-        else:
-            sh.log.append ('ParallelTexts.select1'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def select2(self,*args):
-        if self.Success:
-            self.txt2.focus() # Without this the search doesn't work (the pane is inactive)
-            self.decolorize()
-            self.txt2.widget.config(bg='old lace')
-            self.txt11   = self.txt2
-            self.words11 = self.words2
-            self.txt22   = self.txt1
-            self.words22 = self.words1
-            self.select22()
-        else:
-            sh.log.append ('ParallelTexts.select2'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def select3(self,*args):
-        if self.Success:
-            self.txt3.focus() # Without this the search doesn't work (the pane is inactive)
-            self.decolorize()
-            self.txt3.widget.config(bg='old lace')
-            self.txt11   = self.txt3
-            self.words11 = self.words3
-            self.txt22   = self.txt4
-            self.words22 = self.words4
-            self.select11()
-        else:
-            sh.log.append ('ParallelTexts.select3'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def select4(self,*args):
-        if self.Success:
-            self.txt4.focus() # Without this the search doesn't work (the pane is inactive)
-            self.decolorize()
-            self.txt4.widget.config(bg='old lace')
-            self.txt11   = self.txt4
-            self.words11 = self.words4
-            self.txt22   = self.txt3
-            self.words22 = self.words3
-            self.select22()
-        else:
-            sh.log.append ('ParallelTexts.select4'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def bindings(self):
-        if self.Success:
-            bind (obj      = self
-                 ,bindings = ['<Control-q>','<Control-w>']
-                 ,action   = self.close
-                 )
-            bind (obj      = self
-                 ,bindings = '<Escape>'
-                 ,action   = Geometry(parent_obj=self.obj).minimize
-                 )
-            bind (obj      = self
-                 ,bindings = ['<Alt-Key-1>','<Control-Key-1>']
-                 ,action   = self.select1
-                 )
-            bind (obj      = self
-                 ,bindings = ['<Alt-Key-2>','<Control-Key-2>']
-                 ,action   = self.select2
-                 )
-            if self.Extended:
-                bind (obj      = self
-                     ,bindings = ['<Alt-Key-3>','<Control-Key-3>']
-                     ,action   = self.select3
-                     )
-                bind (obj      = self
-                     ,bindings = ['<Alt-Key-4>','<Control-Key-4>']
-                     ,action   = self.select4
-                     )
-            bind (obj      = self.txt1
-                 ,bindings = '<ButtonRelease-1>'
-                 ,action   = self.select1
-                 )
-            bind (obj      = self.txt2
-                 ,bindings = '<ButtonRelease-1>'
-                 ,action   = self.select2
-                 )
-            if self.Extended:
-                bind (obj      = self.txt3
-                     ,bindings = '<ButtonRelease-1>'
-                     ,action   = self.select3
-                     )
-                bind (obj      = self.txt4
-                     ,bindings = '<ButtonRelease-1>'
-                     ,action   = self.select4
-                     )
-        else:
-            sh.log.append ('ParallelTexts.bindings'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def decolorize(self):
-        if self.Success:
-            self.txt1.widget.config(bg='white')
-            self.txt2.widget.config(bg='white')
-            if self.Extended:
-                self.txt3.widget.config(bg='white')
-                self.txt4.widget.config(bg='white')
-        else:
-            sh.log.append ('ParallelTexts.decolorize'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def show(self):
-        if self.Success:
-            self.obj.show()
-        else:
-            sh.log.append ('ParallelTexts.show'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def close(self,*args):
-        if self.Success:
-            self.obj.close()
-        else:
-            sh.log.append ('ParallelTexts.close'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def title(self,text='Compare texts:'):
-        if self.Success:
-            self.obj.title(text)
-        else:
-            sh.log.append ('ParallelTexts.title'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def fill(self):
-        if self.Success:
-            self.txt1.insert(text=self.words1._text_orig)
-            self.txt2.insert(text=self.words2._text_orig)
-            if self.Extended:
-                self.txt3.insert(text=self.words3._text_orig)
-                self.txt4.insert(text=self.words4._text_orig)
-        else:
-            sh.log.append ('ParallelTexts.fill'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def update_txt(self,h_widget,words,background='orange'):
-        if self.Success:
-            pos1 = words.words[words._no].tf()
-            pos2 = words.words[words._no].tl()
-            if pos1 and pos2:
-                h_widget.tag_add (tag_name       = 'tag'
-                                 ,pos1tk         = pos1
-                                 ,pos2tk         = pos2
-                                 ,DeletePrevious = True
-                                 )
-                h_widget.widget.tag_config('tag',background=background)
-                # Set the cursor to the first symbol of the selection
-                h_widget.mark_add('insert',pos1)
-                h_widget.mark_add(mark_name='yview',postk=pos1)
-                h_widget.see(mark='yview')
-            else:
-                Message (func    = 'ParallelTexts.update_txt'
-                        ,level   = _('ERROR')
-                        ,message = _('Wrong input data!')
-                        )
-        else:
-            sh.log.append ('ParallelTexts.update_txt'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def synchronize11(self):
-        if self.Success:
-            word11 = self.words11.words[self.words11._no]
-            word22 = self.words22.words[self.words22._no]
-            _search = word22._n
-            _loop22 = sh.Search(self.words22._text_n,_search).next_loop()
-            try:
-                index22 = _loop22.index(word22._n)
-            except ValueError:
-                '''
-                Message (func    = 'ParallelTexts.synchronize11'
-                        ,level   = _('ERROR')
-                        ,message = _('Wrong input data!')
-                        )
-                '''
-                index22 = 0
-            _loop11 = sh.Search(self.words11._text_n,_search).next_loop()
-            if index22 >= len(_loop11):
-                _no = None # Keep old selection
-            else:
-                _no = self.words11.no_by_pos_n(_loop11[index22])
-            if _no is not None:
-                self.words11._no = _no
-                self.update_txt(self.txt11,self.words11,background='orange')
-        else:
-            sh.log.append ('ParallelTexts.synchronize11'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def synchronize22(self):
-        if self.Success:
-            word11 = self.words11.words[self.words11._no]
-            _search = word11._n
-            # This helps in case the word has both Cyrillic symbols and digits
-            _search = sh.Text(text=_search,Auto=False).delete_cyrillic()
-            # cur
-            _search = _search.replace(' ','') # Removing the non-breaking space
-            _loop11 = sh.Search(self.words11._text_n,_search).next_loop()
-            try:
-                index11 = _loop11.index(word11._pf)
-            except ValueError:
-                '''
-                Message (func    = 'ParallelTexts.synchronize22'
-                        ,level   = _('ERROR')
-                        ,message = _('Wrong input data!')
-                        )
-                '''
-                index11 = 0
-            _loop22 = sh.Search(self.words22._text_n,_search).next_loop()
-            if index11 >= len(_loop22):
-                _no = None # Keep old selection
-            else:
-                _no = self.words22.no_by_pos_n(_loop22[index11])
-            if _no is not None:
-                self.words22._no = _no
-                self.update_txt(self.txt22,self.words22,background='cyan')
-        else:
-            sh.log.append ('ParallelTexts.synchronize22'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def select11(self,*args):
-        if self.Success:
-            # cur # todo: fix
-            if not Selection(h_widget=self.txt11).pos2tk():
-                result = self.words11.no_by_tk(tkpos=self.txt11.cursor())
-                if result or result == 0:
-                    self.words11._no = result
-                self.words11.next_stone()
-                self.update_txt(self.txt11,self.words11)
-                self.synchronize22()
-        else:
-            sh.log.append ('ParallelTexts.select11'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def select22(self,*args):
-        if self.Success:
-            # cur # todo: fix
-            if not Selection(h_widget=self.txt11).pos2tk():
-                result = self.words22.no_by_tk(tkpos=self.txt22.cursor())
-                if result or result == 0:
-                    self.words22._no = result
-                self.words22.next_stone()
-                self.update_txt(self.txt22,self.words22)
-                self.synchronize11()
-        else:
-            sh.log.append ('ParallelTexts.select22'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-    def icon(self,path=None):
-        if self.Success:
-            if path:
-                self.obj.icon(path)
-            else:
-                self.obj.icon(sys.path[0] + os.path.sep + 'resources' + os.path.sep + 'icon_64x64_cpt.gif')
-        else:
-            sh.log.append ('ParallelTexts.icon'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
-
-
-
 # A modified mclient class
 class SymbolMap:
 
@@ -3163,6 +2765,249 @@ class Objects:
             self._lst.append(self._waitbox)
         return self._waitbox
 
+
+
+# A read-only widget for displaying texts with numbered lines
+class TextIndex:
+    
+    def __init__(self,parent_obj):
+        self.parent_obj = parent_obj
+        self.gui()
+        
+    ''' Redraw line numbers. This is a simplified version,
+    preferably for read-only text widgets. See the full version: https://stackoverflow.com/questions/16369470/tkinter-adding-line-number-to-text-widget
+    '''
+    def update(self,*args):
+        self.canvas.widget.delete("all")
+        i = self.obj.widget.index("@0,0")
+        while True:
+            dline = self.obj.widget.dlineinfo(i)
+            if dline is None:
+                break
+            y = dline[1]
+            linenum = str(i).split(".")[0]
+            self.canvas.widget.create_text(2,y,anchor="nw",text=linenum)
+            i = self.obj.widget.index("%s+1line" % i)
+    
+    def bindings(self):
+        bind (obj      = self.obj
+             ,bindings = ['<ButtonRelease-1>'
+                         ,'<ButtonRelease-2>'
+                         ,'<Up>'
+                         ,'<Down>'
+                         ,'<Prior>'
+                         ,'<Next>'
+                         ]
+             ,action   = self.update
+             )
+        if sh.oss.win() or sh.oss.mac():
+            bind (obj      = self.parent_obj
+                 ,bindings = '<MouseWheel>'
+                 ,action   = self.update
+                 )
+        else:
+            bind (obj      = self.parent_obj
+                 ,bindings = ['<Button 4>'
+                             ,'<Button 5>'
+                             ]
+                 ,action   = self.update
+                 )
+    
+    def gui(self):
+        self.canvas = Canvas (parent_obj = self.parent_obj
+                             ,expand     = False
+                             ,width      = 30
+                             ,side       = 'left'
+                             )
+        self.obj = TextBox (parent_obj = self.parent_obj
+                           ,Composite  = True
+                           ,side       = 'left'
+                           ,state      = 'disabled'
+                           ,SpecialReturn = False
+                           )
+        self.widget = self.obj.widget
+        self.bindings()
+        self.obj.focus()
+                                   
+    def show(self,*args):
+        self.parent_obj.show()
+        
+    def close(self,*args):
+        self.parent_obj.close()
+        
+    def reset_logic(self,words=None):
+        self.obj.words = words
+        self.obj.search_box.reset_logic(words=self.obj.words)
+        self.obj.selection.reset_data()
+        self.obj.selection.reset_logic(words=self.obj.words)
+
+    # Delete text, tags, marks
+    def reset_data(self,*args):
+        self.obj.clear_text()
+        self.obj.clear_tags()
+        self.obj.clear_marks()
+        
+    def fill(self,text):
+        self.obj.read_only(ReadOnly=False)
+        self.reset_data()
+        self.obj.insert(text=text)
+        self.obj.read_only(ReadOnly=True)
+        self.update()
+
+
+
+class SimpleCompare:
+    
+    def __init__(self):
+        self._bg = 'old lace'
+        self.gui()
+        
+    def reset(self,words1,words2,words3,words4):
+        self.w1 = words1
+        self.w2 = words2
+        self.w3 = words3
+        self.w4 = words4
+        self.w1.sent_nos()
+        self.w2.sent_nos()
+        self.w3.sent_nos()
+        self.w4.sent_nos()
+        self.pane1.reset_logic(words=self.w1)
+        self.pane2.reset_logic(words=self.w2)
+        self.pane3.reset_logic(words=self.w3)
+        self.pane4.reset_logic(words=self.w4)
+        self.pane3.reset_data()
+        self.pane4.reset_data()
+        self.fill()
+        
+    def frames(self):
+        self.frame1 = Frame (parent_obj = self.obj
+                            ,side       = 'top'
+                            ,expand     = False
+                            ,fill       = 'both'
+                            )
+        self.frame2 = Frame (parent_obj = self.obj
+                            ,side       = 'bottom'
+                            ,expand     = True
+                            ,fill       = 'both'
+                            )
+                               
+    def panes(self):
+        self.pane1 = TextIndex(parent_obj=self.frame1)
+        self.pane2 = TextIndex(parent_obj=self.frame1)
+        self.pane3 = TextBox (parent_obj = self.frame2
+                             ,Composite  = True
+                             ,side       = 'left'
+                             )
+        self.pane4 = TextBox (parent_obj = self.frame2
+                             ,Composite  = True
+                             ,side       = 'left'
+                             )
+    
+    def gui(self):
+        self.obj = objs.new_top()
+        self.widget = self.obj.widget
+        self.frames()
+        self.panes()
+        self.pane1.obj.focus()
+        self.icon()
+        self.title()
+        self.bindings()
+        
+    def title(self,text=_('Compare texts:')):
+        self.obj.title(text=text)
+        
+    def show(self,*args):
+        self.obj.show()
+        
+    def close(self,*args):
+        self.obj.close()
+        
+    def fill(self):
+        self.pane1.fill(text=self.w1._text_orig)
+        self.pane2.fill(text=self.w2._text_orig)
+        self.pane3.insert(text=self.w3._text_orig)
+        self.pane4.insert(text=self.w4._text_orig)
+        
+    def bindings(self):
+        bind (obj      = self
+             ,bindings = ['<Control-q>','<Control-w>']
+             ,action   = self.close
+             )
+        bind (obj      = self
+             ,bindings = '<Escape>'
+             ,action   = Geometry(parent_obj=self.obj).minimize
+             )
+        bind (obj      = self
+             ,bindings = ['<Alt-Key-1>','<Control-Key-1>']
+             ,action   = self.select1
+             )
+        bind (obj      = self
+             ,bindings = ['<Alt-Key-2>','<Control-Key-2>']
+             ,action   = self.select2
+             )
+        bind (obj      = self
+             ,bindings = ['<Alt-Key-3>','<Control-Key-3>']
+             ,action   = self.select3
+             )
+        bind (obj      = self
+             ,bindings = ['<Alt-Key-4>','<Control-Key-4>']
+             ,action   = self.select4
+             )
+        # cur # todo: avoid conflicts
+        '''
+        bind (obj      = self.pane1
+             ,bindings = '<ButtonRelease-1>'
+             ,action   = self.select1
+             )
+        bind (obj      = self.pane2
+             ,bindings = '<ButtonRelease-1>'
+             ,action   = self.select2
+             )
+        bind (obj      = self.pane3
+             ,bindings = '<ButtonRelease-1>'
+             ,action   = self.select3
+             )
+        bind (obj      = self.pane4
+             ,bindings = '<ButtonRelease-1>'
+             ,action   = self.select4
+             )
+        '''
+             
+    def decolorize(self):
+        self.pane1.obj.widget.config(bg='white')
+        self.pane2.obj.widget.config(bg='white')
+        self.pane3.widget.config(bg='white')
+        self.pane4.widget.config(bg='white')
+    
+    def select1(self,*args):
+        self.pane1.obj.focus() # Without this the search doesn't work (the pane is inactive)
+        self.decolorize()
+        self.pane1.obj.widget.config(bg=self._bg)
+        
+    def select2(self,*args):
+        self.pane2.obj.focus() # Without this the search doesn't work (the pane is inactive)
+        self.decolorize()
+        self.pane2.obj.widget.config(bg=self._bg)
+        
+    def select3(self,*args):
+        self.pane3.focus() # Without this the search doesn't work (the pane is inactive)
+        self.decolorize()
+        self.pane3.widget.config(bg=self._bg)
+        
+    def select4(self,*args):
+        self.pane4.focus() # Without this the search doesn't work (the pane is inactive)
+        self.decolorize()
+        self.pane4.widget.config(bg=self._bg)
+        
+    def icon(self,path=None):
+        if path:
+            self.obj.icon(path)
+        else:
+            self.obj.icon (os.path.join (sys.path[0]
+                                        ,'resources'
+                                        ,'icon_64x64_cpt.gif'
+                                        )
+                          )
 
 
 objs = Objects() # If there are problems with import or tkinter's wait_variable, put this beneath 'if __name__'

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-12-18 05:18+0300\n"
-"PO-Revision-Date: 2017-12-18 05:19+0300\n"
+"PO-Revision-Date: 2017-12-19 01:01+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -451,7 +451,7 @@ msgstr "Файл \"%s\" не найден!"
 #: /usr/local/bin/shared/sharedGUI.py:2899
 #: /usr/local/bin/shared/sharedGUI.py:2910
 msgid "Title:"
-msgstr "Заголовок"
+msgstr "Заголовок:"
 
 #: /usr/local/bin/shared/sharedGUI.py:271
 msgid "Find:"
