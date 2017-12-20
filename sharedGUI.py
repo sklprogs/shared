@@ -2170,11 +2170,15 @@ class WaitBox:
 
 class Label:
 
-    # Use fill='both' with 'expand=1', otherwise, 'expand' does not work
+    ''' 1) Use fill='both' with 'expand=1', otherwise, 'expand' does
+           not work
+        2) In case 'justify="left"' does not work, use 'anchor="w"'
+    '''
     def __init__(self,parent_obj,text='Text:'
                 ,font='Sans 11',side=None,fill=None
                 ,expand=False,ipadx=None,ipady=None
                 ,image=None,fg=None,bg=None
+                ,justify=None,anchor=None
                 ): # 'Top' and 'Root' (the last only with 'wait_window()')
         self.type       = 'Label'
         self.parent_obj = parent_obj
@@ -2188,6 +2192,8 @@ class Label:
         self.image      = image
         self.bg         = bg
         self.fg         = fg
+        self.justify    = justify
+        self.anchor     = anchor
         self.gui()
         self.close()
 
@@ -2199,11 +2205,13 @@ class Label:
                                )
         self.text()
         self.font()
+        self.widget.config(justify=self.justify)
         self.widget.pack (side   = self.side
                          ,fill   = self.fill
                          ,expand = self.expand
                          ,ipadx  = self.ipadx
                          ,ipady  = self.ipady
+                         ,anchor = self.anchor
                          )
 
     def text(self,arg=None):

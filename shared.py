@@ -1351,7 +1351,8 @@ class File:
             Message (func    = 'File.__init__'
                     ,level   = _('WARNING')
                     ,message = _('The object "%s" is not a file!') % self.file
-                    ,Silent=self.Silent)
+                    ,Silent  = self.Silent
+                    )
 
     def _copy(self):
         Success = True
