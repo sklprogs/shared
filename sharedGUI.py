@@ -1799,9 +1799,9 @@ class Selection: # Selecting words only
                    ):
         self._pos1tk = pos1tk
         self._pos2tk = pos2tk
-        self._text = ''
-        self._bg = background
-        self._fg = foreground
+        self._text   = ''
+        self._bg     = background
+        self._fg     = foreground
         if not self._bg and not self._fg:
             self._bg = 'cyan'
         self._tag = tag
@@ -2962,7 +2962,6 @@ class SimpleCompare:
              ,action   = self.select4
              )
         # cur # todo: avoid conflicts
-        '''
         bind (obj      = self.pane1
              ,bindings = '<ButtonRelease-1>'
              ,action   = self.select1
@@ -2979,7 +2978,6 @@ class SimpleCompare:
              ,bindings = '<ButtonRelease-1>'
              ,action   = self.select4
              )
-        '''
              
     def decolorize(self):
         self.pane1.obj.widget.config(bg='white')

@@ -816,7 +816,7 @@ class Text:
             self.strip_lines()
             self.delete_duplicate_line_breaks()
             self.tabs2spaces()
-            self.text = self.text.replace('· ','').replace('• ','') # Getting rid of some useless symbols
+            self.trash()
             self.replace_x()
             self.delete_duplicate_spaces()
             self.yo()
@@ -824,6 +824,10 @@ class Text:
             self.delete_space_with_punctuation()
             self.text = self.text.strip() # This is necessary even if we do strip for each line (we need to strip '\n' at the beginning/end)
 
+    # Getting rid of some useless symbols
+    def trash(self):
+        self.text = self.text.replace('· ','').replace('• ','').replace('¬','')
+    
     def toggle_case(self):
         if self.text == self.text.lower():
             self.text = self.text.upper()
