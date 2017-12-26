@@ -159,7 +159,8 @@ class WidgetShared: # Do not use graphical logging there
                           ,message = _('A logic error: unknown object type: "%s"!') % str(object.type)
                           )
 
-    def title(object,text=_('Text:'),my_program_title=''): # Родительский виджет
+    # Родительский виджет
+    def title(object,text=_('Text:'),my_program_title=''):
         if object.type == 'Toplevel' or object.type == 'Root':
             object.widget.title(text + my_program_title)
         else:
@@ -490,15 +491,16 @@ class SearchBox:
 
 class TextBox:
 
-    def __init__(self,parent_obj,Composite=False
-                ,expand=1,side=None,fill='both'
-                ,words=None,font='Serif 14'
-                ,ScrollX=False,SpecialReturn=True
-                ,state='normal'
-                ):
+    def __init__ (self,parent_obj,Composite=False
+                 ,expand=1,side=None,fill='both'
+                 ,words=None,font='Serif 14'
+                 ,ScrollX=False,ScrollY=True
+                 ,SpecialReturn=True,state='normal'
+                 ):
         self.type      = 'TextBox'
         self.Composite = Composite
         self.ScrollX   = ScrollX
+        self.ScrollY   = ScrollY
         self.font      = font
         self.state     = state # 'normal' - обычный режим; 'disabled' - отключить редактирование; выберите 'disabled', чтобы надпись на кнопке была другой
         self.SpecialReturn = SpecialReturn
@@ -560,18 +562,21 @@ class TextBox:
 
     def gui(self):
         self._gui_txt()
-        self._gui_scroll_ver()
+        if self.ScrollY:
+            self._gui_scroll_ver()
         if self.ScrollX:
             self._gui_scroll_hor()
         if not self.Composite and not hasattr(self.parent_obj,'close_button'):
-            if self.parent_obj.type == 'Toplevel' or self.parent_obj.type == 'Root':
-                self.parent_obj.close_button = Button (self.parent_obj
-                                                      ,text   = _('Quit')
-                                                      ,hint   = _('Quit')
-                                                      ,action = self.close
-                                                      ,expand = 0
-                                                      ,side   = 'bottom'
-                                                      )
+            if self.parent_obj.type == 'Toplevel' \
+            or self.parent_obj.type == 'Root':
+                self.parent_obj.close_button = \
+                Button (self.parent_obj
+                       ,text   = _('Quit')
+                       ,hint   = _('Quit')
+                       ,action = self.close
+                       ,expand = 0
+                       ,side   = 'bottom'
+                       )
         self.search_box = SearchBox(self)
         WidgetShared.custom_buttons(self)
         self.bindings()
@@ -2628,6 +2633,7 @@ class Canvas:
                 ,side=None,scrollregion=None
                 ,width=None,height=None,fill='both'
                 ):
+        self.type         = 'Canvas'
         self.parent_obj   = parent_obj
         self.expand       = expand
         self.side         = side
@@ -2658,6 +2664,9 @@ class Canvas:
                     ,Silent  = False
                     )
         
+    def focus(self,*args):
+        self.widget.focus_set()
+    
     def show(self,*args):
         self.parent_obj.show()
         
@@ -3014,6 +3023,27 @@ class SimpleCompare:
                                         ,'icon_64x64_cpt.gif'
                                         )
                           )
+
+
+
+class SimpleTop:
+    
+    def __init__(self,parent_obj):
+        self.type = 'Toplevel'
+        self.parent_obj = parent_obj
+        self.gui()
+        
+    def title(self,text=_('Title:')):
+        WidgetShared.title(self,text=text)
+    
+    def gui(self):
+        self.widget = tk.Toplevel(self.parent_obj.widget)
+        
+    def close(self,*args):
+        pass
+        
+    def show(self,Lock=False,*args):
+        self.widget.wait_window()
 
 
 objs = Objects() # If there are problems with import or tkinter's wait_variable, put this beneath 'if __name__'
