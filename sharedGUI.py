@@ -3058,8 +3058,8 @@ class SimpleTop:
         # 'Label' will trigger closing with unwanted results
         #self.widget.destroy()
         sh.log.append ('SimpleTop.close'
-                      ,_('INFO')
-                      ,_('Action is not required.')
+                      ,_('DEBUG')
+                      ,_('Nothing to do.')
                       )
         
     def show(self,Lock=False,*args):
