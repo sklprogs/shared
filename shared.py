@@ -3812,7 +3812,7 @@ class Get:
             try:
                 self._html = self._html.decode(encoding=self._encoding)
             except UnicodeDecodeError:
-                self._html = ''
+                self._html = str(self._html)
                 log.append ('Get.decode'
                            ,_('WARNING')
                            ,_('Unable to decode "%s"!') % str(self._url)

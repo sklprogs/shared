@@ -566,7 +566,8 @@ class TextBox:
             self._gui_scroll_ver()
         if self.ScrollX:
             self._gui_scroll_hor()
-        if not self.Composite and not hasattr(self.parent_obj,'close_button'):
+        if not self.Composite and \
+           not hasattr(self.parent_obj,'close_button'):
             if self.parent_obj.type == 'Toplevel' \
             or self.parent_obj.type == 'Root':
                 self.parent_obj.close_button = \
@@ -1100,11 +1101,17 @@ class Frame:
     def __init__ (self,parent_obj,expand=1
                  ,fill='both',side=None,padx=None
                  ,pady=None,ipadx=None,ipady=None
-                 ,bd=None,bg=None
+                 ,bd=None,bg=None,width=None
+                 ,height=None
                  ):
         self.type       = 'Frame'
         self.parent_obj = parent_obj
-        self.widget     = tk.Frame(self.parent_obj.widget,bd=bd,bg=bg)
+        self.widget     = tk.Frame (master = self.parent_obj.widget
+                                   ,bd     = bd
+                                   ,bg     = bg
+                                   ,width  = width
+                                   ,height = height
+                                   )
         self.widget.pack (expand = expand
                          ,fill   = fill
                          ,side   = side
@@ -2178,13 +2185,16 @@ class Label:
     ''' 1) Use fill='both' with 'expand=1', otherwise, 'expand' does
            not work
         2) In case 'justify="left"' does not work, use 'anchor="w"'
+        3) Parents are 'Top' and 'Root' (the last only with
+           'wait_window()')
     '''
     def __init__(self,parent_obj,text='Text:'
                 ,font='Sans 11',side=None,fill=None
                 ,expand=False,ipadx=None,ipady=None
                 ,image=None,fg=None,bg=None
-                ,justify=None,anchor=None
-                ): # 'Top' and 'Root' (the last only with 'wait_window()')
+                ,justify=None,anchor=None,Close=True
+                ,width=None,height=None
+                ):
         self.type       = 'Label'
         self.parent_obj = parent_obj
         self.side       = side
@@ -2199,14 +2209,19 @@ class Label:
         self.fg         = fg
         self.justify    = justify
         self.anchor     = anchor
+        self.width      = width
+        self.height     = height
         self.gui()
-        self.close()
+        if Close:
+            self.close()
 
     def gui(self):
         self.widget = tk.Label (master = self.parent_obj.widget
                                ,image  = self.image
                                ,bg     = self.bg
                                ,fg     = self.fg
+                               ,width  = self.width
+                               ,height = self.height
                                )
         self.text()
         self.font()
@@ -3040,10 +3055,52 @@ class SimpleTop:
         self.widget = tk.Toplevel(self.parent_obj.widget)
         
     def close(self,*args):
-        pass
+        # 'Label' will trigger closing with unwanted results
+        #self.widget.destroy()
+        sh.log.append ('SimpleTop.close'
+                      ,_('INFO')
+                      ,_('Action is not required.')
+                      )
         
     def show(self,Lock=False,*args):
         self.widget.wait_window()
+
+
+
+class Scrollbar:
+    
+    def __init__(self,parent_obj,scroll_obj,Horizontal=False):
+        self.type       = 'Scrollbar'
+        self.parent_obj = parent_obj
+        self.scroll_obj = scroll_obj
+        self.Horizontal = Horizontal
+        self.gui()
+        
+    def gui(self):
+        if hasattr(self.parent_obj,'widget'):
+            if self.Horizontal:
+                orient = tk.HORIZONTAL
+                fill   = 'x'
+            else:
+                orient = tk.VERTICAL
+                fill   = 'y'
+            self.widget = tk.Scrollbar (master = self.parent_obj.widget
+                                       ,orient = orient
+                                       )
+            self.widget.pack (expand = True
+                             ,fill   = fill
+                             )
+            if self.Horizontal:
+                self.scroll_obj.widget.config(xscrollcommand=self.widget.set)
+                self.widget.config(command=self.scroll_obj.widget.xview)
+            else:
+                self.scroll_obj.widget.config(yscrollcommand=self.widget.set)
+                self.widget.config(command=self.scroll_obj.widget.yview)
+        else:
+            sg.Message (func  = 'Scrollbar.gui'
+                       ,level = _('ERROR')
+                       ,title = _('Wrong input data!')
+                       )
 
 
 objs = Objects() # If there are problems with import or tkinter's wait_variable, put this beneath 'if __name__'
