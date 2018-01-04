@@ -1082,6 +1082,16 @@ class Text:
         for sym in self.text:
             if sym in ru_alphabet:
                 return True
+                
+    ''' Remove characters from a range not supported by Tcl 
+        (and causing a Tkinter error).
+    '''
+    def delete_unsupported(self):
+        self.text = ''.join ([char for char in self.text if ord(char) \
+                              in range(65536)
+                             ]
+                            )
+        return self.text
     
     def zzz(self):
         pass

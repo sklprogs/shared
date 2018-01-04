@@ -2184,17 +2184,19 @@ class Label:
 
     ''' 1) Use fill='both' with 'expand=1', otherwise, 'expand' does
            not work
-        2) In case 'justify="left"' does not work, use 'anchor="w"'
+        2) Use 'anchor="w"' to left align text
         3) Parents are 'Top' and 'Root' (the last only with
            'wait_window()')
+        4) Inappropriate use of 'config' may result in resetting 
+           config options. List of them: http://effbot.org/tkinterbook/label.htm#Tkinter.Label.config-method
     '''
-    def __init__(self,parent_obj,text='Text:'
-                ,font='Sans 11',side=None,fill=None
-                ,expand=False,ipadx=None,ipady=None
-                ,image=None,fg=None,bg=None
-                ,justify=None,anchor=None,Close=True
-                ,width=None,height=None
-                ):
+    def __init__ (self,parent_obj,text='Text:'
+                 ,font='Sans 11',side=None,fill=None
+                 ,expand=False,ipadx=None,ipady=None
+                 ,image=None,fg=None,bg=None
+                 ,anchor=None,Close=True,width=None
+                 ,height=None
+                 ):
         self.type       = 'Label'
         self.parent_obj = parent_obj
         self.side       = side
@@ -2207,7 +2209,6 @@ class Label:
         self.image      = image
         self.bg         = bg
         self.fg         = fg
-        self.justify    = justify
         self.anchor     = anchor
         self.width      = width
         self.height     = height
@@ -2225,7 +2226,6 @@ class Label:
                                )
         self.text()
         self.font()
-        self.widget.config(justify=self.justify)
         self.widget.pack (side   = self.side
                          ,fill   = self.fill
                          ,expand = self.expand
@@ -2259,6 +2259,23 @@ class Label:
 
     def title(self,text='Title:'):
         self.parent_obj.title(text=text)
+        
+    ''' # note # todo For some reason, using 'config' externally may 
+        reset config options. Use them altogether to prevent such 
+        behavior.
+    '''
+    def reset(self):
+        self.widget.config (text   = self._text
+                           ,font   = self._font
+                           ,ipadx  = self.ipadx
+                           ,ipady  = self.ipady
+                           #,image  = self.image
+                           ,bg     = self.bg
+                           ,fg     = self.fg
+                           ,anchor = self.anchor
+                           ,width  = self.width
+                           ,height = self.height
+                           )
 
 
 
@@ -3081,14 +3098,17 @@ class Scrollbar:
             if self.Horizontal:
                 orient = tk.HORIZONTAL
                 fill   = 'x'
+                side   = 'bottom'
             else:
                 orient = tk.VERTICAL
                 fill   = 'y'
+                side   = 'right'
             self.widget = tk.Scrollbar (master = self.parent_obj.widget
                                        ,orient = orient
                                        )
             self.widget.pack (expand = True
                              ,fill   = fill
+                             ,side   = side
                              )
             if self.Horizontal:
                 self.scroll_obj.widget.config(xscrollcommand=self.widget.set)
@@ -3097,10 +3117,10 @@ class Scrollbar:
                 self.scroll_obj.widget.config(yscrollcommand=self.widget.set)
                 self.widget.config(command=self.scroll_obj.widget.yview)
         else:
-            sg.Message (func  = 'Scrollbar.gui'
-                       ,level = _('ERROR')
-                       ,title = _('Wrong input data!')
-                       )
+            Message (func  = 'Scrollbar.gui'
+                    ,level = _('ERROR')
+                    ,title = _('Wrong input data!')
+                    )
 
 
 objs = Objects() # If there are problems with import or tkinter's wait_variable, put this beneath 'if __name__'
