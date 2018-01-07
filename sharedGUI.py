@@ -2710,9 +2710,32 @@ class Canvas:
 class Objects:
 
     def __init__(self):
-        self._root = self._warning = self._error = self._question = self._info = self._waitbox = self._txt = self._entry = self._clipboard = None
+        self._root = self._warning = self._error = self._question \
+                   = self._info = self._waitbox = self._txt \
+                   = self._entry = self._clipboard = self._ig \
+                   = self._it = self._io = None
         self._lst = []
 
+    def io(self):
+        if not self._io:
+            import io
+            self._io = io
+        return self._io
+    
+    def ig(self):
+        # Load PIL only after loading tkinter
+        if not self._ig:
+            from PIL import Image
+            self._ig = Image
+        return self._ig
+        
+    def it(self):
+        # Load PIL only after loading tkinter
+        if not self._it:
+            from PIL import ImageTk
+            self._it = ImageTk
+        return self._it
+    
     def root(self,Close=True):
         if not self._root:
             self._root = Root()
@@ -3123,22 +3146,76 @@ class Scrollbar:
                     )
 
 
+
+''' Load an image from a file, convert this image to bytes and convert
+    bytes back to the image.
+    'it.PhotoImage' needs the 'tkinter' to be preloaded, so this class
+    should be included in 'sharedGUI'.
+'''
+class Image:
+    
+    def __init__(self):
+        self._image = self._bytes = self._loader = None
+        
+    def open(self,path):
+        if sh.File(file=path).Success:
+            self._loader = objs.ig().open(path)
+            self._image = objs.it().PhotoImage(self._loader)
+        return self._image
+            
+    def loader(self):
+        if not self._loader:
+            if self._bytes:
+                self._loader = \
+                objs.ig().open(objs.io().BytesIO(self._bytes))
+            else:
+                sh.log.append ('Image.loader'
+                              ,_('WARNING')
+                              ,_('Empty input is not allowed!')
+                              )
+        return self._loader
+        
+    def image(self):
+        if not self._image:
+            if self._loader:
+                self._image = objs.it().PhotoImage(self._loader)
+            else:
+                sh.log.append ('Image.image'
+                              ,_('WARNING')
+                              ,_('Empty input is not allowed!')
+                              )
+        return self._image
+        
+    def bytes(self,ext='PNG'):
+        if not self._bytes:
+            if self._loader:
+                self._bytes = objs.io().BytesIO()
+                self._loader.save(self._bytes,format=ext)
+                self._bytes = self._bytes.getvalue()
+        return self._bytes
+
+
 objs = Objects() # If there are problems with import or tkinter's wait_variable, put this beneath 'if __name__'
 
 
 if __name__ == '__main__':
     objs.start()
-    text = '''Something funny with this guy
-    I am glad he is not my test
-    Glad is so angry'''
-    words = sh.Words(text)
-    h_top = Top(parent_obj=objs.root())
-    h_txt = TextBox (parent_obj = h_top
-                    ,words      = words
-                    )
-    h_txt.title(text='My text is:')
-    h_txt.insert(text)
-    h_txt.widget.focus_set()
-    Geometry(parent_obj=h_top).set('500x350')
-    h_txt.show()
+    timer = sh.Timer('image manipulations')
+    timer.start()
+    img = Image()
+    # Read an image from a file
+    img.open(path='/tmp/image.jpg')
+    result = img.bytes()
+    # Convert bytes back to the image
+    img = Image()
+    img._bytes = result
+    img.loader()
+    img.image()
+    timer.end()
+    # Show the image
+    obj = objs.new_top(Maximize=0)
+    Label (parent_obj = obj
+          ,image      = img._image
+          )
+    obj.show()
     objs.end()
