@@ -3154,11 +3154,12 @@ class Scrollbar:
 '''
 class Image:
     
-    def __init__(self):
+    def __init__(self,Silent=False):
         self._image = self._bytes = self._loader = None
+        self.Silent = Silent
         
     def open(self,path):
-        if sh.File(file=path).Success:
+        if sh.File(file=path,Silent=self.Silent).Success:
             self._loader = objs.ig().open(path)
             self._image = objs.it().PhotoImage(self._loader)
         return self._image

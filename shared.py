@@ -3796,13 +3796,9 @@ class Get:
     
     def __init__(self,url,encoding='UTF-8'):
         self._url      = url
-        self._timeout  = 6
         self._encoding = encoding
-        if self._encoding:
-            self._html = ''
-        else:
-            # In case a non-text content is being downloaded, the result
-            self._html = None
+        self._timeout  = 6
+        self._html     = ''
         
     def _get(self):
         try:
