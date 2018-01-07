@@ -3797,8 +3797,12 @@ class Get:
     def __init__(self,url,encoding='UTF-8'):
         self._url      = url
         self._timeout  = 6
-        self._html     = ''
         self._encoding = encoding
+        if self._encoding:
+            self._html = ''
+        else:
+            # In case a non-text content is being downloaded, the result
+            self._html = None
         
     def _get(self):
         try:
@@ -3818,20 +3822,26 @@ class Get:
                        )
     
     def decode(self):
-        if self._html:
-            try:
-                self._html = self._html.decode(encoding=self._encoding)
-            except UnicodeDecodeError:
-                self._html = str(self._html)
+        ''' Set 'encoding' to None to cancel decoding. This is useful
+            if we are downloading a non-text content.
+        '''
+        if self._encoding:
+            if self._html:
+                try:
+                    self._html = \
+                    self._html.decode(encoding=self._encoding)
+                except UnicodeDecodeError:
+                    self._html = str(self._html)
+                    log.append ('Get.decode'
+                               ,_('WARNING')
+                               ,_('Unable to decode "%s"!') \
+                                % str(self._url)
+                               )
+            else:
                 log.append ('Get.decode'
                            ,_('WARNING')
-                           ,_('Unable to decode "%s"!') % str(self._url)
+                           ,_('Empty input is not allowed!')
                            )
-        else:
-            log.append ('Get.decode'
-                       ,_('WARNING')
-                       ,_('Empty input is not allowed!')
-                       )
     
     def run(self):
         if self._url:
