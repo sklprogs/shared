@@ -192,7 +192,8 @@ class WidgetShared: # Do not use graphical logging there
             else:
                 sh.log.append (func    = 'WidgetShared.custom_buttons'
                               ,level   = _('ERROR')
-                              ,message = _('A logic error: unknown object type: "%s"!') % str(object.type)
+                              ,message = _('A logic error: unknown object type: "%s"!') \
+                              % str(object.type)
                               )
 
     def icon(object,file): # Родительский объект
@@ -2674,16 +2675,16 @@ class MessageBuilder: # Requires 'constants'
         elif self.level == _('ERROR'):
             self.path = sh.objs.pdir().add('resources','error.gif')
         else:
-            sh.log.append('MessageBuilder.paths'
-                         ,_('ERROR')
-                         ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
-                         % (str(self.path)
-                           ,', '.join ([_('WARNING'),_('ERROR')
-                                       ,_('QUESTION'),_('INFO')
-                                       ]
-                                      )
-                           )
-                         )
+            sh.log.append ('MessageBuilder.paths'
+                          ,_('ERROR')
+                          ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+                          % (str(self.path)
+                            ,', '.join ([_('WARNING'),_('ERROR')
+                                        ,_('QUESTION'),_('INFO')
+                                        ]
+                                       )
+                            )
+                          )
 
     def icon(self,path=None):
         if path:
@@ -2925,9 +2926,15 @@ class Objects:
         self._root = self._warning = self._error = self._question \
                    = self._info = self._waitbox = self._txt \
                    = self._entry = self._clipboard = self._ig \
-                   = self._it = self._io = None
+                   = self._it = self._io = self._txtnotes = None
         self._lst = []
 
+    def txtnotes (self,text='',notes=''):
+        if not self._txtnotes:
+            self._txtnotes = TextBoxNotes()
+        self._txtnotes.reset(text=text,notes=notes)
+        return self._txtnotes
+    
     def io(self):
         if not self._io:
             import io
@@ -3410,6 +3417,147 @@ class Image:
         return self._bytes
 
 
+
+class TextBoxNotes:
+    
+    def __init__ (self,parent_obj=None,NotesTop=True
+                 ,ExpandNotes=True,text='',notes=''
+                 ,title=_('Text with instructions:')
+                 ):
+        self._title      = title
+        self.NotesTop    = NotesTop
+        ''' If False, only the text of the 1st line (before the line 
+            break) will be shown.
+        '''
+        self.ExpandNotes = ExpandNotes
+        self.parent_obj  = parent_obj
+        self.set_parent()
+        self.gui()
+        self.title(text=self._title)
+        # Without this trick panes are not resized equally
+        self.obj.widget.config(width=0,height=0)
+        self.notes.widget.config(width=0,height=0)
+        if notes:
+            self.reset(text=text,notes=notes)
+            
+    def title(self,text=None):
+        if text:
+            self.parent_obj.title(text)
+        else:
+            self.parent_obj.title()
+            
+    def set_parent(self):
+        if self.parent_obj:
+            if hasattr(self.parent_obj,'type') \
+                and self.parent_obj.type == 'Toplevel':
+                pass
+            else:
+                sh.log.append ('TextBoxNotes.set_parent'
+                              ,_('ERROR')
+                              ,_('Parent is not supported, using the default one.')
+                              )
+                self.default_parent()
+        else:
+            self.default_parent()
+    
+    def default_parent(self):
+        self.parent_obj = objs.new_top(Maximize=False)
+        Geometry(parent_obj=self.parent_obj).set('700x500')
+    
+    def show(self,*args):
+        self.obj.show()
+    
+    def close(self,*args):
+        self.obj.close()
+        
+    def interrupt(self,*args):
+        self.obj.clear_text()
+        self.obj.close()
+        
+    def get(self,*args):
+        self.close()
+        return self.obj.get()
+        
+    def frames(self):
+        if self.NotesTop:
+            side1, side2 = 'top', 'top'
+        else:
+            side1, side2 = 'bottom', 'top'
+        self.frame1 = Frame (parent_obj = self.parent_obj
+                            ,side       = side1
+                            ,expand     = self.ExpandNotes
+                            )
+        self.frame2 = Frame (parent_obj = self.parent_obj
+                            ,side       = side2
+                            )
+        self.frame3 = Frame (parent_obj = self.parent_obj
+                            ,expand     = False
+                            ,side       = 'bottom'
+                            )
+        self.frame4 = Frame (parent_obj = self.frame3
+                            ,side       = 'left'
+                            )
+        self.frame5 = Frame (parent_obj = self.frame3
+                            ,side       = 'right'
+                            )
+    
+    def buttons(self):
+        Button (parent_obj = self.frame4
+               ,text       = _('Cancel')
+               ,side       = 'left'
+               ,hint       = _('Reject and close')
+               ,action     = self.interrupt
+               )
+        Button (parent_obj = self.frame4
+               ,text       = _('Clear')
+               ,side       = 'right'
+               ,hint       = _('Delete all text')
+               ,action     = self.obj.reset_data
+               )
+        Button (parent_obj = self.frame5
+               ,text       = 'OK'
+               ,side       = 'right'
+               ,hint       = _('Accept and close')
+               ,action     = self.close
+               )
+    
+    def txts(self):
+        self.notes = TextBox (parent_obj = self.frame1
+                             ,Composite  = True
+                             ,state      = 'disabled'
+                             ,ScrollY    = False
+                             )
+        self.obj = TextBox (parent_obj    = self.frame2
+                           ,Composite     = True
+                           ,SpecialReturn = False
+                           )
+    
+    def bindings(self):
+        bind (obj      = self.parent_obj
+             ,bindings = ['<Escape>','<Control-w>','<Control-q>']
+             ,action   = self.interrupt
+             )
+        bind (obj      = self.parent_obj
+             ,bindings = ['<F2>','<Control-s>']
+             ,action   = self.close
+             )
+    
+    def gui(self):
+        self.frames()
+        self.txts()
+        self.buttons()
+        self.bindings()
+        self.obj.focus()
+                              
+    def reset(self,text='',notes=''):
+        self.notes.reset_data()
+        if notes:
+            self.notes.insert(text=notes)
+        self.obj.reset_data()
+        if text:
+            self.obj.insert(text=text)
+
+
 ''' If there are problems with import or tkinter's wait_variable, put
     this beneath 'if __name__'
 '''
@@ -3418,22 +3566,13 @@ objs = Objects()
 
 if __name__ == '__main__':
     objs.start()
-    timer = sh.Timer('image manipulations')
-    timer.start()
-    img = Image()
-    # Read an image from a file
-    img.open(path='/tmp/image.jpg')
-    result = img.bytes()
-    # Convert bytes back to the image
-    img = Image()
-    img._bytes = result
-    img.loader()
-    img.image()
-    timer.end()
-    # Show the image
-    obj = objs.new_top(Maximize=0)
-    Label (parent_obj = obj
-          ,image      = img._image
-          )
-    obj.show()
+    notes = TextBoxNotes(NotesTop=True,ExpandNotes=True)
+    notes.reset(notes='''1st line.
+2nd line.
+3rd line.
+    
+end
+    ''')
+    notes.show()
+    print(notes.get())
     objs.end()
