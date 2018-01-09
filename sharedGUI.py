@@ -1428,6 +1428,23 @@ class ListBox:
         self.gui()
         self.reset(lst=lst,title=title)
 
+    def delete(self,*args):
+        self.index() # Set an actual value
+        try:
+            del self.lst[self._index]
+            # Set this after 'del' to be triggered only on success
+            sh.log.append ('ListBox.delete'
+                          ,_('DEBUG')
+                          ,_('Remove item #%d') % self._index
+                          )
+        except IndexError:
+            sh.log.append ('ListBox.delete'
+                          ,_('WARNING')
+                          ,_('No item #%d!') % self._index
+                          )
+        else:
+            self.reset(lst=self.lst,title=self._title)
+    
     def bindings(self):
         if self.user_function:
             # Binding just to '<Button-1>' does not work. We do not need binding Return/space/etc. because the function will be called each time the selection is changed. However, we still need to bind Up/Down.
@@ -1526,7 +1543,10 @@ class ListBox:
         self.title(text=self._title)
         self.fill()
         self._resize()
-        # Do not set '_index' to 0, because we need 'self.interrupt'. Other functions use 'self.index()', which returns an actual value.
+        ''' Do not set '_index' to 0, because we need 'self.interrupt'.
+            Other functions use 'self.index()', which returns an actual
+            value.
+        '''
         self._get, self._index = '', None
         self.select()
 
@@ -1567,7 +1587,10 @@ class ListBox:
         self.parent_obj.show()
 
     def interrupt(self,*args):
-        # Do not set '_index' to 0, because we need 'self.interrupt'. Other functions use 'self.index()', which returns an actual value.
+        ''' Do not set '_index' to 0, because we need 'self.interrupt'.
+            Other functions use 'self.index()', which returns an actual
+            value.
+        '''
         self._get, self._index = '', None
         self.parent_obj.close()
 
@@ -1588,7 +1611,10 @@ class ListBox:
         if path:
             WidgetShared.icon(self.parent_obj,path)
 
-    # Read 'self._index' instead of calling this because we need 0 in case of 'self.interrupt', and this always returns an actual value
+    ''' Read 'self._index' instead of calling this because we need 0
+        in case of 'self.interrupt', and this always returns an actual
+        value
+    '''
     def index(self):
         selection = self.widget.curselection()
         if selection and len(selection) > 0:
