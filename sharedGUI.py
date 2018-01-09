@@ -23,12 +23,14 @@ def bind(obj,bindings,action): # object, str/list, function
                 except tk.TclError:
                     Message (func    = 'bind'
                             ,level   = _('ERROR')
-                            ,message = _('Failed to enable key combination "%s"!') % binding
+                            ,message = _('Failed to enable key combination "%s"!') \
+                            % binding
                             )
         else:
             Message (func    = 'bind'
                     ,level   = _('ERROR')
-                    ,message =_('Wrong input data: "%s"') % str(bindings)
+                    ,message =_('Wrong input data: "%s"') \
+                    % str(bindings)
                     )
     else:
         Message (func    = 'bind'
@@ -57,7 +59,9 @@ def dialog_save_file(filetypes=()):
                 )
     return file
     
-# Make a color (a color name (/usr/share/X11/rgb.txt) or a hex value) brighter (positive delta) or darker (negative delta)
+''' Make a color (a color name (/usr/share/X11/rgb.txt) or a hex value)
+    brighter (positive delta) or darker (negative delta)
+'''
 def mod_color(color,delta=76): # ~30%
     if -255 <= delta <= 255:
         try:
@@ -72,7 +76,8 @@ def mod_color(color,delta=76): # ~30%
     else:
         Message (func    = 'mod_color'
                 ,level   = _('WARNING')
-                ,message = _('The condition "%s" is not observed!') % ('-255 <= %d <= 255' % delta)
+                ,message = _('The condition "%s" is not observed!') \
+                           % ('-255 <= %d <= 255' % delta)
                 )
 
 
@@ -116,7 +121,9 @@ class WidgetShared: # Do not use graphical logging there
                     object.widget.insert(pos,text)
                 except tk.TclError:
                     try:
-                        object.widget.insert(pos,_('Failed to insert the text!'))
+                        object.widget.insert (pos
+                                             ,_('Failed to insert the text!')
+                                             )
                     except tk.TclError:
                         sh.log.append (func    = 'WidgetShared.insert'
                                       ,level   = _('ERROR')
@@ -125,7 +132,8 @@ class WidgetShared: # Do not use graphical logging there
             else:
                 sh.log.append (func    = 'WidgetShared.insert'
                               ,level   = _('ERROR')
-                              ,message = _('A logic error: unknown object type: "%s"!') % str(object.type)
+                              ,message = _('A logic error: unknown object type: "%s"!') \
+                              % str(object.type)
                               )
         # Too frequent
         '''
@@ -136,13 +144,15 @@ class WidgetShared: # Do not use graphical logging there
                           )
         '''
 
-    def font(object,font='Sans 11'): # font_style, sh.globs['var']['menu_font']
+    # font_style, sh.globs['var']['menu_font']
+    def font(object,font='Sans 11'):
         if object.type == 'TextBox' or object.type == 'Entry':
             object.widget.config(font=font)
         else:
             sh.log.append (func    = 'WidgetShared.font'
                           ,level   = _('ERROR')
-                          ,message = _('A logic error: unknown object type: "%s"!') % str(object.type)
+                          ,message = _('A logic error: unknown object type: "%s"!') \
+                          % str(object.type)
                           )
 
     def set_state(object,ReadOnly=False):
@@ -156,7 +166,8 @@ class WidgetShared: # Do not use graphical logging there
         else:
             sh.log.append (func    = 'WidgetShared.set_state'
                           ,level   = _('ERROR')
-                          ,message = _('A logic error: unknown object type: "%s"!') % str(object.type)
+                          ,message = _('A logic error: unknown object type: "%s"!') \
+                          % str(object.type)
                           )
 
     # Родительский виджет
@@ -166,12 +177,14 @@ class WidgetShared: # Do not use graphical logging there
         else:
             sh.log.append (func    = 'WidgetShared.title'
                           ,level   = _('ERROR')
-                          ,message = _('A logic error: unknown object type: "%s"!') % str(object.type)
+                          ,message = _('A logic error: unknown object type: "%s"!') \
+                          % str(object.type)
                           )
 
     def custom_buttons(object):
         if not object.Composite:
-            if object.parent_obj.type == 'Toplevel' or object.parent_obj.type == 'Root':
+            if object.parent_obj.type == 'Toplevel' \
+            or object.parent_obj.type == 'Root':
                 if object.state == 'disabled':
                     object.parent_obj.close_button.widget.config(text=_('Quit'))
                 else:
@@ -185,16 +198,23 @@ class WidgetShared: # Do not use graphical logging there
     def icon(object,file): # Родительский объект
         if object.type == 'Toplevel' or object.type == 'Root':
             if file and os.path.exists(file):
-                object.widget.tk.call('wm','iconphoto',object.widget._w,tk.PhotoImage(master=object.widget,file=file))
+                object.widget.tk.call ('wm','iconphoto'
+                                      ,object.widget._w
+                                      ,tk.PhotoImage (master = object.widget
+                                                     ,file   = file
+                                                     )
+                                      )
             else:
                 sh.log.append (func    = 'WidgetShared.icon'
                               ,level   = _('ERROR')
-                              ,message = _('File "%s" has not been found!') % str(file)
+                              ,message = _('File "%s" has not been found!') \
+                              % str(file)
                               )
         else:
             sh.log.append (func    = 'WidgetShared.icon'
                           ,level   = _('ERROR')
-                          ,message = _('A logic error: unknown object type: "%s"!') % str(object.type)
+                          ,message = _('A logic error: unknown object type: "%s"!') \
+                          % str(object.type)
                           )
 
 
@@ -213,7 +233,14 @@ class Top:
         
     def values(self):
         self.type  = 'Toplevel'
-        # Lock = True - блокировать дальнейшее выполнение программы до попытки закрытия виджета. Lock = False позволяет создать одновременно несколько виджетов на экране. Они будут работать, однако, виджет с Lock = False будет закрыт при закрытии виджета с Lock = True. Кроме того, если ни один из виджетов не имеет Lock = True, то они все будут показаны и тут же закрыты.
+        ''' Lock = True - блокировать дальнейшее выполнение программы до
+            попытки закрытия виджета. Lock = False позволяет создать
+            одновременно несколько виджетов на экране. Они будут
+            работать, однако, виджет с Lock = False будет закрыт при
+            закрытии виджета с Lock = True. Кроме того, если ни один из
+            виджетов не имеет Lock = True, то они все будут показаны и
+            тут же закрыты.
+        '''
         self.Lock  = False
         self.count = 0
 
@@ -225,7 +252,9 @@ class Top:
     def show(self,Lock=True):
         self.count += 1
         self.widget.deiconify()
-        # Changing geometry at a wrong time may prevent frames from autoresizing after 'pack_forget'
+        ''' Changing geometry at a wrong time may prevent frames from
+            autoresizing after 'pack_forget'.
+        '''
         if self.AutoCenter:
             self.center()
         self.Lock = Lock
@@ -247,10 +276,13 @@ class Top:
 
     # todo: not centers without Force=True when Lock=False
     def center(self,Force=False):
-        # Make child widget always centered at the first time and up to a user's choice any other time (if the widget is reused).
+        ''' Make child widget always centered at the first time and up
+            to a user's choice any other time (if the widget is reused).
+        '''
         if self.count == 1 or Force:
             width, height = self.resolution()
-            size = tuple(int(item) for item in self.widget.geometry().split('+')[0].split('x'))
+            size = tuple(int(item) for item \
+                   in self.widget.geometry().split('+')[0].split('x'))
             x = width/2 - size[0]/2
             y = height/2 - size[1]/2
             self.widget.geometry("%dx%d+%d+%d" % (size + (x, y)))
@@ -260,7 +292,10 @@ class Top:
 
 
 
-# todo (?): fix: if duplicate spaces/line breaks are not deleted, text with and without punctuation will have a different number of words; thus, tkinter will be supplied wrong positions upon Search
+''' # todo (?): fix: if duplicate spaces/line breaks are not deleted,
+    text with and without punctuation will have a different number of
+    words; thus, tkinter will be supplied wrong positions upon Search.
+'''
 class SearchBox:
 
     def __init__(self,obj):
@@ -273,14 +308,16 @@ class SearchBox:
         self.h_entry.close()
         self.h_sel      = Selection(self.obj)
 
-    def reset_logic(self,words=None,Strict=False): # Strict: case-sensitive, with punctuation
+    # Strict: case-sensitive, with punctuation
+    def reset_logic(self,words=None,Strict=False):
         self.Success    = True
         self._prev_loop = self._next_loop = self._search = self._pos1 = self._pos2 = self._text = None
         self.i          = 0
         self.words      = words
         self.Strict     = Strict
         if self.words:
-            if self.Strict: # Do not get text from the widget - it's not packed yet
+            # Do not get text from the widget - it's not packed yet
+            if self.Strict:
                 self._text = self.words._text_p
             else:
                 self._text = self.words._text_n
@@ -299,13 +336,15 @@ class SearchBox:
 
     def reset_data(self):
         self.Success    = True
-        self._prev_loop = self._next_loop = self._search = self._pos1 = self._pos2 = None
+        self._prev_loop = self._next_loop = self._search = self._pos1 \
+                        = self._pos2 = None
         self.i          = 0
         self.search()
         if self._text and self._search:
             self.h_search.reset(text=self._text,search=self._search)
             self.h_search.next_loop()
-            if not self.h_search._next_loop: # Prevents from calling self.search() once again
+            # Prevents from calling self.search() once again
+            if not self.h_search._next_loop:
                 Message (func    = 'SearchBox.reset_data'
                         ,level   = _('INFO')
                         ,message = _('No matches!')
@@ -375,7 +414,10 @@ class SearchBox:
             else:
                 _pos1tk = self.words.words[result1].tf()
                 _pos2tk = self.words.words[result2].tl()
-                self.h_sel.reset(pos1tk=_pos1tk,pos2tk=_pos2tk,background='green')
+                self.h_sel.reset (pos1tk     = _pos1tk
+                                 ,pos2tk     = _pos2tk
+                                 ,background = 'green'
+                                 )
                 self.h_sel.set()
         else:
             sh.log.append ('SearchBox.select'
@@ -502,9 +544,15 @@ class TextBox:
         self.ScrollX   = ScrollX
         self.ScrollY   = ScrollY
         self.font      = font
-        self.state     = state # 'normal' - обычный режим; 'disabled' - отключить редактирование; выберите 'disabled', чтобы надпись на кнопке была другой
+        ''' 'normal' - обычный режим
+            'disabled' - отключить редактирование
+            выберите 'disabled', чтобы надпись на кнопке была другой
+        '''
+        self.state     = state
         self.SpecialReturn = SpecialReturn
-        # (optional, external) Prevent resetting the active (already shown) widget
+        ''' (optional, external) Prevent resetting the active (already
+            shown) widget
+        '''
         self.Active     = False
         self.Save       = False
         self.tags       = []
@@ -600,7 +648,9 @@ class TextBox:
         self.clear_tags()
         self.clear_marks()
 
-    # Setting ReadOnly state works only after filling text. Only tk.Text, tk.Entry and not tk.Toplevel are supported.
+    ''' Setting ReadOnly state works only after filling text.
+        Only tk.Text, tk.Entry and not tk.Toplevel are supported.
+    '''
     def read_only(self,ReadOnly=True):
         WidgetShared.set_state(self,ReadOnly=ReadOnly)
 
@@ -631,12 +681,17 @@ class TextBox:
         if not self.Composite:
             self.widget.unbind('<Return>')
             if self.state == 'disabled' or self.SpecialReturn:
-                # Разрешать считывать текст после нажатия Escape (в Entry запрещено)
+                ''' Разрешать считывать текст после нажатия Escape
+                    (в Entry запрещено)
+                '''
                 bind (obj      = self.parent_obj
                      ,bindings = ['<Return>','<KP_Enter>','<Escape>']
                      ,action   = self.close
                      )
-                # We need to bind 'Return' to the widget anyway even if we have already bound this to 'parent_obj', because we need to return 'break'
+                ''' We need to bind 'Return' to the widget anyway even
+                    if we have already bound this to 'parent_obj',
+                    because we need to return 'break'
+                '''
                 bind (obj      = self
                      ,bindings = ['<Return>','<KP_Enter>']
                      ,action   = self.close
@@ -662,8 +717,11 @@ class TextBox:
              ,bindings = '<Control-Alt-u>'
              ,action   = self.toggle_case
              )
-        if hasattr(self.parent_obj,'type') and self.parent_obj.type == 'Toplevel':
-            self.parent_obj.widget.protocol("WM_DELETE_WINDOW",self.close)
+        if hasattr(self.parent_obj,'type') \
+            and self.parent_obj.type == 'Toplevel':
+            self.parent_obj.widget.protocol ("WM_DELETE_WINDOW"
+                                            ,self.close
+                                            )
 
     def toggle_case(self,*args):
         text = sh.Text(text=self.selection.text()).toggle_case()
@@ -731,7 +789,8 @@ class TextBox:
         except tk.TclError:
             sh.log.append ('TextBox.tag_remove'
                           ,_('WARNING')
-                          ,_('Failed to remove the tag %s in the widget %s in positions %s-%s!') % (tag_name,str(widget),pos1tk,pos2tk)
+                          ,_('Failed to remove the tag %s in the widget %s in positions %s-%s!') \
+                          % (tag_name,str(widget),pos1tk,pos2tk)
                           )
 
     def tag_remove(self,tag_name='sel',pos1tk='1.0',pos2tk='end'):
@@ -743,7 +802,8 @@ class TextBox:
                 # todo: Что тут не работает?
                 sh.log.append ('TextBox.tag_remove'
                               ,_('DEBUG-ERROR')
-                              ,_('Element "%s" has not been found in fragment "%s"!') % (tag_name,str(self.tags))
+                              ,_('Element "%s" has not been found in fragment "%s"!') \
+                              % (tag_name,str(self.tags))
                               )
 
     # Tk.Entry не поддерживает тэги и метки
@@ -757,7 +817,8 @@ class TextBox:
         except tk.TclError:
             sh.log.append ('TextBox.tag_add'
                           ,_('ERROR')
-                          ,_('Failed to add tag "%s" for positions %s-%s!') % (tag_name,pos1tk,pos2tk)
+                          ,_('Failed to add tag "%s" for positions %s-%s!') \
+                          % (tag_name,pos1tk,pos2tk)
                           )
         self.tags.append(tag_name)
 
@@ -769,7 +830,8 @@ class TextBox:
             except tk.TclError:
                 sh.log.append ('TextBox.tag_config'
                               ,_('ERROR')
-                              ,_('Failed to configure tag "%s" to have the background of color "%s"!') % (str(tag_name),str(background))
+                              ,_('Failed to configure tag "%s" to have the background of color "%s"!') \
+                              % (str(tag_name),str(background))
                               )
         if foreground:
             try:
@@ -777,7 +839,8 @@ class TextBox:
             except tk.TclError:
                 sh.log.append ('TextBox.tag_config'
                               ,_('ERROR')
-                              ,_('Failed to configure tag "%s" to have the foreground of color "%s"!') % (str(tag_name),str(foreground))
+                              ,_('Failed to configure tag "%s" to have the foreground of color "%s"!') \
+                              % (str(tag_name),str(foreground))
                               )
         if font:
             try:
@@ -785,7 +848,8 @@ class TextBox:
             except tk.TclError:
                 sh.log.append ('TextBox.tag_config'
                               ,_('ERROR')
-                              ,_('Failed to configure tag "%s" to have the font "%s"!') % (str(tag_name),str(font))
+                              ,_('Failed to configure tag "%s" to have the font "%s"!') \
+                              % (str(tag_name),str(font))
                               )
 
     # Tk.Entry не поддерживает тэги и метки
@@ -795,13 +859,15 @@ class TextBox:
             '''
             sh.log.append ('TextBox.mark_add'
                           ,_('DEBUG')
-                          ,_('Mark "%s" has been inserted in position "%s".') % (mark_name,postk)
+                          ,_('Mark "%s" has been inserted in position "%s".') \
+                          % (mark_name,postk)
                           )
             '''
         except tk.TclError:
             sh.log.append ('TextBox.tag_add'
                           ,_('ERROR')
-                          ,_('Failed to insert mark "%s" in position "%s"!') % (mark_name,postk)
+                          ,_('Failed to insert mark "%s" in position "%s"!') \
+                          % (mark_name,postk)
                           )
         self.marks.append(mark_name)
 
@@ -824,7 +890,8 @@ class TextBox:
         except ValueError:
             sh.log.append ('TextBox.mark_remove'
                           ,_('ERROR')
-                          ,_('Element "%s" has not been found in fragment "%s"!') % (mark_name,str(self.marks))
+                          ,_('Element "%s" has not been found in fragment "%s"!') \
+                          % (mark_name,str(self.marks))
                           )
 
     def clear_text(self,pos1='1.0',pos2='end'):
@@ -840,8 +907,14 @@ class TextBox:
     # Fix Tkinter limitations
     def clear_on_key(self,event=None):
         if event and event.char:
-            if event.char.isspace() or event.char in sh.lat_alphabet or event.char in sh.ru_alphabet or event.char in sh.digits or event.char in sh.punc_array or event.char in sh.punc_ext_array:
-                # todo: suppress excessive logging (Selection.get, TextBox.clear_selection, TextBox.cursor, Clipboard.paste, Words.no_by_tk)
+            if event.char.isspace() or event.char in sh.lat_alphabet \
+            or event.char in sh.ru_alphabet or event.char in sh.digits \
+            or event.char in sh.punc_array or event.char \
+            in sh.punc_ext_array:
+                ''' # todo: suppress excessive logging (Selection.get,
+                    TextBox.clear_selection, TextBox.cursor,
+                    Clipboard.paste, Words.no_by_tk)
+                '''
                 self.clear_selection()
 
     def clear_selection(self,*args):
@@ -880,7 +953,8 @@ class TextBox:
             except:
                 sh.log.append ('TextBox.goto'
                               ,_('ERROR')
-                              ,_('Failed to shift screen to label "%s"!') % 'goto'
+                              ,_('Failed to shift screen to label "%s"!') \
+                              % 'goto'
                               )
 
     # Сместить экран до позиции tkinter или до метки (тэги не работают)
@@ -890,10 +964,13 @@ class TextBox:
         except tk.TclError:
             sh.log.append ('TextBox.scroll'
                           ,_('WARNING')
-                          ,_('Failed to shift screen to label "%s"!') % str(mark)
+                          ,_('Failed to shift screen to label "%s"!') \
+                          % str(mark)
                           )
 
-    # Сместить экран до позиции tkinter или до метки, если они не видны (тэги не работают)
+    ''' Сместить экран до позиции tkinter или до метки, если они не
+        видны (тэги не работают)
+    '''
     def autoscroll(self,mark='1.0'):
         if not self.visible(mark):
             self.scroll(mark)
@@ -939,7 +1016,9 @@ class TextBox:
     def focus(self,*args):
         self.widget.focus_set()
 
-    # Tags can be marked only after text in inserted; thus, call this procedure separately before '.show'
+    ''' Tags can be marked only after text in inserted; thus, call this
+        procedure separately before '.show'
+    '''
     def spelling(self):
         if self.words:
             self.words.sent_nos()
@@ -990,7 +1069,8 @@ class Entry:
                 ):
         self.type       = 'Entry'
         self.Composite  = Composite
-        self.state      = 'normal' # 'disabled' - отключить редактирование
+        # 'disabled' - отключить редактирование
+        self.state      = 'normal'
         self.Save       = False
         self.parent_obj = parent_obj
         self.widget     = tk.Entry (self.parent_obj.widget
@@ -1020,7 +1100,9 @@ class Entry:
             WidgetShared.custom_buttons(self)
         self.bindings()
 
-    # Setting ReadOnly state works only after filling text. Only tk.Text, tk.Entry and not tk.Toplevel are supported.
+    ''' Setting ReadOnly state works only after filling text. Only
+        tk.Text, tk.Entry and not tk.Toplevel are supported.
+    '''
     def read_only(self,ReadOnly=True):
         WidgetShared.set_state(self,ReadOnly=ReadOnly)
 
@@ -1055,7 +1137,8 @@ class Entry:
                           )
 
     def get(self,Strip=False):
-        result = sh.Input(val=self._get()).not_none() # None != 'None' != ''
+        # None != 'None' != ''
+        result = sh.Input(val=self._get()).not_none()
         if Strip:
             return result.strip()
         else:
@@ -1216,7 +1299,11 @@ class Button:
                                     ,activeforeground = self.fg_focus
                                     )
         else:
-            # В большинстве случаев текстовая кнопка не требует задания высоты и ширины по умолчанию, они определяются автоматически. Также в большинстве случаев для текстовых кнопок следует использовать рамку.
+            ''' В большинстве случаев текстовая кнопка не требует
+                задания высоты и ширины по умолчанию, они определяются
+                автоматически. Также в большинстве случаев для текстовых
+                кнопок следует использовать рамку.
+            '''
             self.widget = tk.Button (master           = self.parent_obj.widget
                                     ,bd               = 1
                                     ,bg               = self.bg
@@ -1293,7 +1380,6 @@ class Button:
 
     def focus(self,*args):
         self.widget.focus_set()
-        
 
 
 
@@ -1331,26 +1417,41 @@ class ToolTipBase:
     def showtip(self):
         if self.tipwindow:
             return
-        # The tip window must be completely outside the button; otherwise when the mouse enters the tip window we get a leave event and it disappears, and then we get an enter event and it reappears, and so on forever :-(
-        # Координаты подсказки рассчитываются так, чтобы по горизонтали подсказка и кнопка, несмотря на разные размеры, совпадали бы центрами.
-        x = self.button.winfo_rootx() + self.button.winfo_width()/2 - self.hint_width/2
+        ''' The tip window must be completely outside the button;
+            otherwise, when the mouse enters the tip window we get
+            a leave event and it disappears, and then we get an enter
+            event and it reappears, and so on forever :-(
+        '''
+        ''' Координаты подсказки рассчитываются так, чтобы по
+            горизонтали подсказка и кнопка, несмотря на разные размеры,
+            совпадали бы центрами.
+        '''
+        x = self.button.winfo_rootx() + self.button.winfo_width()/2 \
+                                      - self.hint_width/2
         if self.hint_direction == 'bottom':
-            y = self.button.winfo_rooty() + self.button.winfo_height() + 1
+            y = self.button.winfo_rooty() + self.button.winfo_height() \
+                                          + 1
         elif self.hint_direction == 'top':
             y = self.button.winfo_rooty() - self.hint_height - 1
         else:
             Message (func    = 'ToolTipBase.showtip'
                     ,level   = _('ERROR')
-                    ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') % (str(self.hint_direction),'top, bottom')
+                    ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+                    % (str(self.hint_direction),'top, bottom')
                     )
         self.tipwindow = tw = tk.Toplevel(self.button)
         tw.wm_overrideredirect(1)
         # "+%d+%d" is not enough!
         sh.log.append ('ToolTipBase.showtip'
                       ,_('INFO')
-                      ,_('Changing "%s" widget geometry to "%dx%d+%d+%d"') % ('tw',self.hint_width,self.hint_height,x,y)
+                      ,_('Changing "%s" widget geometry to "%dx%d+%d+%d"') \
+                      % ('tw',self.hint_width,self.hint_height,x,y)
                       )
-        tw.wm_geometry("%dx%d+%d+%d" % (self.hint_width,self.hint_height,x, y))
+        tw.wm_geometry ("%dx%d+%d+%d" % (self.hint_width
+                                        ,self.hint_height
+                                        ,x, y
+                                        )
+                       )
         self.showcontents()
 
     def hidetip(self):
@@ -1413,7 +1514,10 @@ class ListBox:
                 ,fill            = 'both'
                 ):
         self.state = 'normal' # See 'WidgetShared'
-        # 'user_function': A user-defined function that is run when pressing Up/Down arrow keys and LMB. There is a problem binding it externally, so we bind it here.
+        ''' 'user_function': A user-defined function that is run when
+            pressing Up/Down arrow keys and LMB. There is a problem
+            binding it externally, so we bind it here.
+        '''
         self.parent_obj      = parent_obj
         self.Multiple        = Multiple
         self.expand          = expand
@@ -1444,10 +1548,18 @@ class ListBox:
                           )
         else:
             self.reset(lst=self.lst,title=self._title)
+            
+    def insert(self,string):
+        self.lst.insert(0,string)
+        self.reset(lst=self.lst,title=self._title)
     
     def bindings(self):
         if self.user_function:
-            # Binding just to '<Button-1>' does not work. We do not need binding Return/space/etc. because the function will be called each time the selection is changed. However, we still need to bind Up/Down.
+            ''' Binding just to '<Button-1>' does not work. We do not
+                need binding Return/space/etc. because the function will
+                be called each time the selection is changed. However,
+                we still need to bind Up/Down.
+            '''
             bind (obj      = self
                  ,bindings = '<<ListboxSelect>>'
                  ,action   = self.user_function
@@ -1455,11 +1567,15 @@ class ListBox:
         elif self.SelectionCloses:
             # todo: test <KP_Enter> in Windows
             bind (obj      = self
-                 ,bindings = ['<Return>','<KP_Enter>','<Double-Button-1>']
+                 ,bindings = ['<Return>','<KP_Enter>'
+                             ,'<Double-Button-1>'
+                             ]
                  ,action   = self.close
                  )
             if self.SingleClick and not self.Multiple:
-                # Binding to '<Button-1>' does not allow to select an entry before closing
+                ''' Binding to '<Button-1>' does not allow to select
+                    an entry before closing
+                '''
                 bind (obj      = self
                      ,bindings = '<<ListboxSelect>>'
                      ,action   = self.close
@@ -1475,8 +1591,11 @@ class ListBox:
                  ,bindings = ['<Escape>','<Control-q>','<Control-w>']
                  ,action   = self.interrupt
                  )
-            if hasattr(self.parent_obj,'type') and self.parent_obj.type == 'Toplevel':
-                self.parent_obj.widget.protocol("WM_DELETE_WINDOW",self.interrupt)
+            if hasattr(self.parent_obj,'type') and \
+               self.parent_obj.type == 'Toplevel':
+                self.parent_obj.widget.protocol ("WM_DELETE_WINDOW"
+                                                ,self.interrupt
+                                                )
 
     def gui(self):
         self._scroll()
@@ -1490,7 +1609,10 @@ class ListBox:
                                      ,exportselection = 0
                                      ,selectmode      = tk.SINGLE
                                      )
-        self.widget.pack(expand=self.expand,fill=self._fill,side=self.side)
+        self.widget.pack (expand = self.expand
+                         ,fill   = self._fill
+                         ,side   = self.side
+                         )
         self._resize()
         self._scroll_config()
         self.icon(path=self._icon)
@@ -1521,8 +1643,7 @@ class ListBox:
 
     def _resize(self):
         # Autofit to contents
-        self.widget.config(width=0)
-        self.widget.config(height=0)
+        self.widget.config(width=0,height=0)
 
     def activate(self):
         self.widget.activate(self._index)
@@ -1552,7 +1673,9 @@ class ListBox:
 
     def select(self):
         self.clear_selection()
-        # Use an index changed with keyboard arrows. If it is not set, use current index (returned by 'self.index()').
+        ''' Use an index changed with keyboard arrows. If it is not set,
+            use current index (returned by 'self.index()').
+        '''
         if self._index is None:
             self.index()
         if self._index is None:
@@ -1618,7 +1741,11 @@ class ListBox:
     def index(self):
         selection = self.widget.curselection()
         if selection and len(selection) > 0:
-            # note: selection[0] is a number in Python 3.4, however, in older interpreters and builds based on them it is a string. In order to preserve compatibility, we convert it to a number.
+            ''' # note: selection[0] is a number in Python 3.4, however,
+                in older interpreters and builds based on them it is a
+                string. In order to preserve compatibility, we convert
+                it to a number.
+            '''
             self._index = int(selection[0])
         else:
             self._index = 0
@@ -1636,9 +1763,14 @@ class ListBox:
         else:
             self._index = len(self.lst) - 1
 
-    # Read 'self._get' instead of calling this because we need '' in case of 'self.interrupt', and this always returns an actual value
+    ''' Read 'self._get' instead of calling this because we need '' in
+        case of 'self.interrupt', and this always returns an actual
+        value
+    '''
     def get(self):
-        result = [self.widget.get(idx) for idx in self.widget.curselection()]
+        result = [self.widget.get(idx) for idx \
+                  in self.widget.curselection()
+                 ]
         if self.Multiple:
             self._get = result
         elif len(result) > 0:
@@ -1661,11 +1793,10 @@ class ListBox:
 
 class OptionMenu:
 
-    ''' tk.OptionMenu will convert integers to strings,
-    but we better do this here to avoid problems with
-    iterating ("in requires int as the left operand")
-    later (this happens when we pass a sequence of 
-    chars instead of a list of strings).
+    ''' tk.OptionMenu will convert integers to strings, but we better do
+    this here to avoid problems with iterating ("in requires int as the
+    left operand") later (this happens when we pass a sequence of chars
+    instead of a list of strings).
     '''
     def __init__ (self
                  ,parent_obj
@@ -1692,7 +1823,8 @@ class OptionMenu:
                                        ,command = self.trigger
                                        )
         self.widget.pack(side=side,anchor=anchor)
-        self.widget.configure(takefocus=takefocus) # Must be 1/True to be operational from keyboard
+        # Must be 1/True to be operational from keyboard
+        self.widget.configure(takefocus=takefocus)
         self.default_set()
 
     def trigger(self,*args):
@@ -1703,7 +1835,9 @@ class OptionMenu:
     def _default_set(self):
         if len(self.items) > 0:
             self.var.set(self.items[0])
-            # Return a default value instead of 'None' if there was no interaction with the widget
+            ''' Return a default value instead of 'None' if there was
+                no interaction with the widget
+            '''
             self.choice = self.items[0]
             self.index  = 0
 
@@ -1713,13 +1847,16 @@ class OptionMenu:
         else:
             if self.default in self.items:
                 self.var.set(self.default)
-                # Return a default value instead of 'None' if there was no interaction with the widget
+                ''' Return a default value instead of 'None' if there
+                    was no interaction with the widget
+                '''
                 self.choice = self.default
                 self.index  = self.items.index(self.choice)
             else:
                 Message ('OptionMenu.default_set'
                         ,_('ERROR')
-                        ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') % (str(self.default),';'.join(self.items))
+                        ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+                        % (str(self.default),';'.join(self.items))
                         )
                 self._default_set()
 
@@ -1770,7 +1907,8 @@ class OptionMenu:
         except ValueError:
             Message (func    = 'OptionMenu._get'
                     ,level   = _('ERROR')
-                    ,message = _('Wrong input data: "%s"') % str(self.choice)
+                    ,message = _('Wrong input data: "%s"') \
+                    % str(self.choice)
                     )
 
     def set_prev(self,*args):
@@ -1796,7 +1934,10 @@ class OptionMenu:
     bind(h_txt.widget,'<ButtonRelease-1>',action)
 
 def action(*args):
-    h_selection.get() # Refresh coordinates (or set h_selection._pos1tk, h_selection._pos2tk manually)
+    """ Refresh coordinates (or set h_selection._pos1tk,
+    h_selection._pos2tk manually)
+    """
+    h_selection.get()
     h_selection.set()
 '''
 class Selection: # Selecting words only
@@ -1916,7 +2057,11 @@ class Selection: # Selecting words only
                                   ,DeletePrevious = DeletePrevious
                                   )
         if self._bg:
-            # This is not necessary for 'sel' tag which is hardcoded for selection and permanently colored with gray. A 'background' attribute cannot be changed for a 'sel' tag.
+            ''' This is not necessary for 'sel' tag which is hardcoded
+                for selection and permanently colored with gray.
+                A 'background' attribute cannot be changed for a 'sel'
+                tag.
+            '''
             self.h_widget.widget.tag_config (tagName    = self._tag
                                             ,background = self._bg
                                             )
@@ -1947,7 +2092,14 @@ class SymbolMap:
         for i in range(len(sh.globs['var']['spec_syms'])):
             if i % 10 == 0:
                 self.frame = Frame(self.obj,expand=1)
-            # lambda сработает правильно только при моментальной упаковке, которая не поддерживается create_button (моментальная упаковка возвращает None вместо виджета), поэтому не используем эту функцию. По этой же причине нельзя привязать кнопкам '<Return>' и '<KP_Enter>', сработают только встроенные '<space>' и '<ButtonRelease-1>'.
+            ''' lambda сработает правильно только при моментальной
+                упаковке, которая не поддерживается create_button
+                (моментальная упаковка возвращает None вместо виджета),
+                поэтому не используем эту функцию. По этой же причине
+                нельзя привязать кнопкам '<Return>' и '<KP_Enter>',
+                сработают только встроенные '<space>' и
+                '<ButtonRelease-1>'.
+            '''
             # width и height нужны для Windows
             self.button = tk.Button (self.frame.widget
                                     ,text=sh.globs['var']['spec_syms'][i]
@@ -1977,7 +2129,10 @@ class SymbolMap:
 
 
 
-# Window behavior is not uniform through different platforms or even through different Windows versions, so we bypass Tkinter's commands here
+''' Window behavior is not uniform through different platforms or even
+    through different Windows versions, so we bypass Tkinter's commands
+    here
+'''
 class Geometry: # Requires sh.oss, objs
 
     def __init__(self,parent_obj=None,title=None,hwnd=None):
@@ -2025,10 +2180,15 @@ class Geometry: # Requires sh.oss, objs
     def foreground(self,*args):
         if sh.oss.win():
             if self.hwnd():
+                ''' 'pywintypes.error', but needs to import this for
+                    some reason
+                '''
                 try:
                     win32gui.SetForegroundWindow(self._hwnd)
-                except: # 'pywintypes.error', but needs to import this for some reason
-                    # In Windows 'Message' can be raised foreground, so we just log it
+                except:
+                    ''' In Windows 'Message' can be raised foreground,
+                        so we just log it
+                    '''
                     sh.log.append ('Geometry.foreground'
                                   ,_('ERROR')
                                   ,_('Failed to change window properties!')
@@ -2110,12 +2270,19 @@ class Geometry: # Requires sh.oss, objs
             import ctypes
             self.parent_obj.widget.wm_attributes('-topmost',1)
             self.parent_obj.widget.wm_attributes('-topmost',0)
-            # Иначе нажатие кнопки будет вызывать переход по ссылке там, где это не надо
+            ''' Иначе нажатие кнопки будет вызывать переход по ссылке
+                там, где это не надо
+            '''
             if MouseClicked:
-                # Уродливый хак, но иначе никак не поставить фокус на виджет (в Linux/Windows XP обходимся без этого, в Windows 7/8 - необходимо)
+                ''' Уродливый хак, но иначе никак не поставить фокус
+                    на виджет (в Linux/Windows XP обходимся без этого,
+                    в Windows 7/8 - необходимо)
+                '''
                 # Cимулируем нажатие кнопки мыши
-                ctypes.windll.user32.mouse_event(2, 0, 0, 0, 0) # left mouse button down
-                ctypes.windll.user32.mouse_event(4, 0, 0, 0, 0) # left mouse button up
+                # left mouse button down
+                ctypes.windll.user32.mouse_event(2, 0, 0, 0, 0)
+                # left mouse button up
+                ctypes.windll.user32.mouse_event(4, 0, 0, 0, 0)
 
     def hwnd(self,*args):
         if not self._hwnd:
@@ -2200,7 +2367,9 @@ class WaitBox:
         if message:
             self._message = message
         if self._message:
-            self.label.config(text=self._message + '\n\n' + _('Please wait...'))
+            self.label.config (text=self._message + '\n\n' \
+                              + _('Please wait...')
+                              )
         else:
             self.label.config(text=_('Please wait...'))
 
@@ -2307,7 +2476,9 @@ class Label:
 
 class CheckBox:
 
-    # note: For some reason, CheckBox that should be Active must be assigned to a variable (var = CheckBox(parent_obj,Active=1))
+    ''' # note: For some reason, CheckBox that should be Active must be
+        assigned to a variable (var = CheckBox(parent_obj,Active=1))
+    '''
     def __init__ (self,parent_obj,Active=False
                  ,side=None,action=None
                  ):
@@ -2383,8 +2554,11 @@ class Message:
         else:
             sh.log.append ('Message.__init__'
                           ,_('ERROR')
-                          ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') % (str(self.level)
-                          ,_('INFO') + ', ' + _('WARNING') + ', ' + _('ERROR') + ', ' + _('QUESTION'))
+                          ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+                          % (str(self.level)
+                            ,_('INFO') + ', ' + _('WARNING') + ', ' \
+                            + _('ERROR') + ', ' + _('QUESTION')
+                            )
                           )
 
     def error(self):
@@ -2453,7 +2627,9 @@ class Message:
 
 
 
-# Not using tkinter.messagebox because it blocks main GUI (even if we specify a non-root parent)
+''' Not using tkinter.messagebox because it blocks main GUI (even if we
+    specify a non-root parent)
+'''
 class MessageBuilder: # Requires 'constants'
 
     def __init__ (self,parent_obj,level
@@ -2484,7 +2660,8 @@ class MessageBuilder: # Requires 'constants'
              ,bindings = ['<Control-q>','<Control-w>','<Escape>']
              ,action   = self.close_no
              )
-        if hasattr(self.parent_obj,'type') and self.parent_obj.type == 'Toplevel':
+        if hasattr(self.parent_obj,'type') \
+        and self.parent_obj.type == 'Toplevel':
             self.widget.protocol("WM_DELETE_WINDOW",self.close)
 
     def paths(self):
@@ -2499,7 +2676,13 @@ class MessageBuilder: # Requires 'constants'
         else:
             sh.log.append('MessageBuilder.paths'
                          ,_('ERROR')
-                         ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') % (str(self.path),', '.join([_('WARNING'),_('ERROR'),_('QUESTION'),_('INFO')]))
+                         ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+                         % (str(self.path)
+                           ,', '.join ([_('WARNING'),_('ERROR')
+                                       ,_('QUESTION'),_('INFO')
+                                       ]
+                                      )
+                           )
                          )
 
     def icon(self,path=None):
@@ -2602,8 +2785,11 @@ class MessageBuilder: # Requires 'constants'
 
     def picture(self,*args):
         if os.path.exists(self.path):
-            # We need to assign self.variable to Label, otherwise, it gets destroyed
-            # Without explicitly indicating 'master', we get "image pyimage1 doesn't exist"
+            ''' We need to assign self.variable to Label, otherwise, it
+                gets destroyed.
+                Without explicitly indicating 'master', we get
+                "image pyimage1 doesn't exist".
+            '''
             self.label = Label (parent_obj = self.top_left
                                ,image      = tk.PhotoImage(master = self.top_left.widget
                                                           ,file   = self.path
@@ -2827,7 +3013,8 @@ class Objects:
             else:
                 sh.log.append ('Objects.close_all'
                               ,_('ERROR')
-                              ,_('Widget "%s" does not have a "close" action!') % type(self._lst[i])
+                              ,_('Widget "%s" does not have a "close" action!') \
+                              % type(self._lst[i])
                               )
 
     def new_top(self,Maximize=1,AutoCenter=1):
@@ -2873,7 +3060,8 @@ class TextIndex:
         self.gui()
         
     ''' Redraw line numbers. This is a simplified version,
-    preferably for read-only text widgets. See the full version: https://stackoverflow.com/questions/16369470/tkinter-adding-line-number-to-text-widget
+        preferably for read-only text widgets. See the full version:
+        https://stackoverflow.com/questions/16369470/tkinter-adding-line-number-to-text-widget
     '''
     def update(self,*args):
         self.canvas.widget.delete("all")
@@ -2889,12 +3077,8 @@ class TextIndex:
     
     def bindings(self):
         bind (obj      = self.obj
-             ,bindings = ['<ButtonRelease-1>'
-                         ,'<ButtonRelease-2>'
-                         ,'<Up>'
-                         ,'<Down>'
-                         ,'<Prior>'
-                         ,'<Next>'
+             ,bindings = ['<ButtonRelease-1>','<ButtonRelease-2>'
+                         ,'<Up>','<Down>','<Prior>','<Next>'
                          ]
              ,action   = self.update
              )
@@ -3076,22 +3260,26 @@ class SimpleCompare:
         self.pane4.widget.config(bg='white')
     
     def select1(self,*args):
-        self.pane1.obj.focus() # Without this the search doesn't work (the pane is inactive)
+        # Without this the search doesn't work (the pane is inactive)
+        self.pane1.obj.focus()
         self.decolorize()
         self.pane1.obj.widget.config(bg=self._bg)
         
     def select2(self,*args):
-        self.pane2.obj.focus() # Without this the search doesn't work (the pane is inactive)
+        # Without this the search doesn't work (the pane is inactive)
+        self.pane2.obj.focus()
         self.decolorize()
         self.pane2.obj.widget.config(bg=self._bg)
         
     def select3(self,*args):
-        self.pane3.focus() # Without this the search doesn't work (the pane is inactive)
+        # Without this the search doesn't work (the pane is inactive)
+        self.pane3.focus()
         self.decolorize()
         self.pane3.widget.config(bg=self._bg)
         
     def select4(self,*args):
-        self.pane4.focus() # Without this the search doesn't work (the pane is inactive)
+        # Without this the search doesn't work (the pane is inactive)
+        self.pane4.focus()
         self.decolorize()
         self.pane4.widget.config(bg=self._bg)
         
@@ -3222,7 +3410,10 @@ class Image:
         return self._bytes
 
 
-objs = Objects() # If there are problems with import or tkinter's wait_variable, put this beneath 'if __name__'
+''' If there are problems with import or tkinter's wait_variable, put
+    this beneath 'if __name__'
+'''
+objs = Objects()
 
 
 if __name__ == '__main__':
