@@ -1549,9 +1549,14 @@ class ListBox:
                           )
         else:
             self.reset(lst=self.lst,title=self._title)
-            
-    def insert(self,string):
-        self.lst.insert(0,string)
+
+    def insert(self,string,Top=False):
+        # Empty lists are allowed
+        if Top:
+            pos = 0
+        else:
+            pos = len(self.lst)
+        self.lst.insert(pos,string)
         self.reset(lst=self.lst,title=self._title)
     
     def bindings(self):
@@ -3558,6 +3563,76 @@ class TextBoxNotes:
             self.obj.insert(text=text)
 
 
+
+''' General: Editable ListBox
+    Yatube: Subscribe, unsubscribe, add a channel to or remove it from
+    the blocklist.
+'''
+class Manage:
+    
+    def __init__ (self,title=_('Manage subscriptions')
+                 ,notes='',icon=None
+                 ):
+        self._title = title
+        self._notes = notes
+        self._icon  = icon
+        self.gui()
+    
+    def get(self):
+        return self.obj.lst
+    
+    def gui(self):
+        self.parent_obj = objs.new_top(Maximize=False)
+        self.lb_frame  = Frame (parent_obj = self.parent_obj
+                               ,side       = 'left'
+                               )
+        self.but_frame = Frame (parent_obj = self.parent_obj
+                               ,side       = 'right'
+                               ,expand     = False
+                               )
+        Geometry(parent_obj=self.parent_obj).set('350x350')
+        self.obj = ListBox (parent_obj      = self.lb_frame
+                           ,icon            = self._icon
+                           ,SelectionCloses = False
+                           ,Composite       = True
+                           ,title           = self._title
+                           )
+        Button (parent_obj = self.but_frame
+               ,action     = self.add
+               ,text       = _('Add')
+               ,side       = 'top'
+               ,width      = None
+               ,height     = None
+               )
+        Button (parent_obj = self.but_frame
+               ,action     = self.obj.delete
+               ,text       = _('Remove')
+               ,side       = 'top'
+               ,width      = None
+               ,height     = None
+               )
+        
+    def fill(self,lst=[]):
+        self.obj.reset(lst=lst,title=self._title)
+    
+    def add(self,*args):
+        notes = objs.txtnotes(notes=self._notes)
+        notes.show()
+        result = notes.get()
+        if result:
+            result = result.splitlines()
+            result = [item.strip() for item in result if item.strip()]
+            for item in result:
+                if not item in self.obj.lst:
+                    self.obj.insert(string=item)
+    
+    def show(self,*args):
+        self.parent_obj.show()
+        
+    def close(self,*args):
+        self.parent_obj.close()
+
+
 ''' If there are problems with import or tkinter's wait_variable, put
     this beneath 'if __name__'
 '''
@@ -3566,13 +3641,17 @@ objs = Objects()
 
 if __name__ == '__main__':
     objs.start()
-    notes = TextBoxNotes(NotesTop=True,ExpandNotes=True)
-    notes.reset(notes='''1st line.
-2nd line.
-3rd line.
-    
-end
-    ''')
-    notes.show()
-    print(notes.get())
+    patterns = ('https://www.youtube.com/user/AvtoKriminalist/videos'
+               ,'https://www.youtube.com/channel/UCIpvyH9GKI54X1Ww2BDnEgg/videos'
+               ,'AvtoKriminalist'
+               ,'UCIpvyH9GKI54X1Ww2BDnEgg'
+               )
+    notes = _('Enter a channel URL, one URL per a line:')
+    notes += '\n'
+    notes += _('Patterns: %s') % '\n'.join(patterns)
+    block = Manage (title = _('Manage blacklist')
+                   ,notes = notes
+                   )
+    block.show()
+    print(block.get())
     objs.end()
