@@ -3801,11 +3801,18 @@ class Get:
         self._html     = ''
         
     def _get(self):
+        ''' Changing UA allows us to avoid a bot protection
+            ('Error 403: Forbidden').
+        '''
         try:
-            self._html = urllib.request.urlopen (url     = self._url
-                                                ,data    = None
-                                                ,timeout = self._timeout
-                                                ).read()
+            req = urllib.request.Request (url     = self._url
+                                         ,data    = None
+                                         ,headers = {'User-Agent': \
+                                                     'Mozilla'
+                                                    }
+                                         )
+            self._html = \
+            urllib.request.urlopen(req,timeout=self._timeout).read()
             log.append ('Get._get'
                        ,_('INFO')
                        ,_('[OK]: "%s"') % self._url
