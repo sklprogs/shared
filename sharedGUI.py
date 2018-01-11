@@ -2937,6 +2937,7 @@ class Objects:
     def txtnotes (self,text='',notes=''):
         if not self._txtnotes:
             self._txtnotes = TextBoxNotes()
+            self._lst.append(self._txtnotes)
         self._txtnotes.reset(text=text,notes=notes)
         return self._txtnotes
     
