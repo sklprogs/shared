@@ -776,10 +776,10 @@ class ReadTextFile:
         try:
             with open(self.file,'r',encoding=encoding) as f:
                 self._text = f.read()
-        ''' We can handle UnicodeDecodeError here, however, we just
-            handle them all (there could be access errors, etc.)
-        '''
         except:
+            ''' We can handle UnicodeDecodeError here, however, we just
+                handle them all (there could be access errors, etc.)
+            '''
             pass
 
     def delete_bom(self):
@@ -1285,7 +1285,8 @@ class List:
         return(self.lst1,self.lst2)
 
     # Find shared elements (strict order)
-    def diff(self): # Based on http://stackoverflow.com/a/788780
+    # Based on http://stackoverflow.com/a/788780
+    def diff(self):
         seqm = difflib.SequenceMatcher(a=self.lst1,b=self.lst2)
         output = []
         for opcode, a0, a1, b0, b1 in seqm.get_opcodes():
@@ -1296,7 +1297,7 @@ class List:
 
 
 ''' We constantly recalculate each value because they depend on each
-    other
+    other.
 '''
 class Time:
 
