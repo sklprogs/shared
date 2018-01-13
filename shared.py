@@ -23,7 +23,9 @@ import sys
 import tempfile
 import time
 import webbrowser
-# 'import urllib' does not work in Python 3, importing must be as follows:
+''' 'import urllib' does not work in Python 3, importing must be as
+    follows:
+'''
 import urllib.request, urllib.parse
 import difflib
 import locale
@@ -74,9 +76,13 @@ class OSSpecific:
             import win32com.client, win32api
             if win32com.client.gencache.is_readonly:
                 win32com.client.gencache.is_readonly = False
-                # under p2exe/cx_freeze the call in gencache to __init__() does not happen so we use Rebuild() to force the creation of the gen_py folder
-                # the contents of library.zip\win32com shall be unpacked to exe.win32 - 3.3\win32com
-                # See also the section where EnsureDispatch is called.
+                ''' Under p2exe/cx_freeze the call in gencache to
+                    __init__() does not happen so we use Rebuild() to
+                    force the creation of the gen_py folder.
+                    The contents of library.zip\win32com shall be
+                    unpacked to exe.win32 - 3.3\win32com.
+                    See also the section where EnsureDispatch is called.
+                '''
                 win32com.client.gencache.Rebuild()
             import win32gui, win32con, ctypes # Required by 'Geometry'
 
@@ -92,7 +98,8 @@ globs = {'int':{},'bool':{},'var':{}}
 nbspace = ' '
 
 ru_alphabet        = '№АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЫЪЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщыъьэюя'
-ru_alphabet_low    = 'аеиоубявгдёжзйклмнпрстфхцчшщыъьэю№' # Some vowels are put at the start for the faster search
+# Some vowels are put at the start for the faster search
+ru_alphabet_low    = 'аеиоубявгдёжзйклмнпрстфхцчшщыъьэю№'
 lat_alphabet       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 lat_alphabet_low   = 'abcdefghijklmnopqrstuvwxyz'
 greek_alphabet     = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω'
@@ -114,15 +121,17 @@ SectionVariables_abbr  = 'var'
 SectionWindowsSettings = 'Windows settings'
 
 punc_array      = ['.',',','!','?',':',';']
-#punc_ext_array = ['"','”','»',']','}',')'] # todo: why there were no opening brackets?
+# todo: why there were no opening brackets?
+#punc_ext_array = ['"','”','»',']','}',')']
 punc_ext_array  = ['"','“','”','','«','»','[',']','{','}','(',')']
 
 forbidden_win = '/\?%*:|"<>'
 forbidden_lin = '/'
 forbidden_mac = '/\?*:|"<>'
-reserved_win  = ['CON','PRN','AUX','NUL','COM1','COM2','COM3','COM4','COM5'
-                ,'COM6','COM7','COM8','COM9','LPT1','LPT2','LPT3','LPT4','LPT5'
-                ,'LPT6','LPT7','LPT8','LPT9']
+reserved_win  = ['CON','PRN','AUX','NUL','COM1','COM2','COM3','COM4'
+                ,'COM5','COM6','COM7','COM8','COM9','LPT1','LPT2','LPT3'
+                ,'LPT4','LPT5','LPT6','LPT7','LPT8','LPT9'
+                ]
 
 oss = OSSpecific()
 # Load last due to problems with TZ (see 'oss.win_import')
@@ -130,7 +139,9 @@ import datetime
 
 
 
-# Cannot cross-import 2 modules, therefore, we need to have a local procedure
+''' Cannot cross-import 2 modules, therefore, we need to have a local
+    procedure.
+'''
 def Message (func='MAIN',level=_('WARNING')
             ,message='Message',Silent=False
             ):
@@ -142,17 +153,26 @@ def Message (func='MAIN',level=_('WARNING')
                       ) # pass 'Yes'
 
 
-# We do not put this into File class because we do not need to check existence
+''' We do not put this into File class because we do not need to check
+    existence.
+'''
 def rewrite(dest,AskRewrite=True):
-    # We use AskRewrite just to shorten other procedures (to be able to use 'rewrite' silently in the code without ifs)
+    ''' We use AskRewrite just to shorten other procedures (to be able
+        to use 'rewrite' silently in the code without ifs)
+    '''
     if AskRewrite and os.path.isfile(dest):
-        # We don't actually need to force rewriting or delete the file before rewriting
+        ''' We don't actually need to force rewriting or delete the file
+            before rewriting
+        '''
         return Message (func    = 'rewrite'
                        ,level   = _('QUESTION')
-                       ,message = _('ATTENTION: Do yo really want to rewrite file "%s"?') % dest
+                       ,message = _('ATTENTION: Do yo really want to rewrite file "%s"?') \
+                       % dest
                        ).Yes
     else:
-        # We return True so we may proceed with writing if the file has not been found
+        ''' We return True so we may proceed with writing if the file
+            has not been found
+        '''
         return True
 
 
@@ -165,9 +185,13 @@ class Launch:
         self.target = target
         self.Block  = Block
         self.Silent = Silent
-        self.h_path = Path(self.target) # Do not shorten, Path is used further
+        # Do not shorten, Path is used further
+        self.h_path = Path(self.target)
         self.ext    = self.h_path.extension().lower()
-        if self.target and os.path.exists(self.target): # We do not use the File class because the target can be a directory
+        ''' We do not use the File class because the target can be a
+            directory.
+        '''
+        if self.target and os.path.exists(self.target):
             self.TargetExists = True
         else:
             self.TargetExists = False
@@ -179,14 +203,17 @@ class Launch:
     def _launch(self):
         if self.custom_args:
             try:
-                if self.Block: # Block the script till the called program is closed
+                ''' Block the script till the called program is closed
+                '''
+                if self.Block:
                     subprocess.call(self.custom_args)
                 else:
                     subprocess.Popen(self.custom_args)
             except:
                 Message (func    = 'Launch._launch'
                         ,level   = _('ERROR')
-                        ,message = _('Failed to run "%s"!') % str(self.custom_args)
+                        ,message = _('Failed to run "%s"!') \
+                        % str(self.custom_args)
                         )
         else:
             log.append ('Launch._launch'
@@ -242,7 +269,8 @@ class Launch:
             elif self.ext == '.pdf' and globs['bool']['ForceAltPDFApp']:
                 self.custom_app = globs[oss.name()]['pdf_app']
                 self.custom()
-            elif os.path.isdir(self.target) and globs['bool']['ForceAltFileMan']:
+            elif os.path.isdir(self.target) \
+            and globs['bool']['ForceAltFileMan']:
                 self.custom_app = globs[oss.name()]['dir_app']
                 self.custom()
             else:
@@ -316,7 +344,8 @@ class WriteTextFile:
                 if self.UseLog:
                     Message (func    = 'WriteTextFile._write'
                             ,level   = _('ERROR')
-                            ,message = _('Unable to write file "%s"!') % self.file
+                            ,message = _('Unable to write file "%s"!') \
+                            % self.file
                             ,Silent  = self.Silent
                             )
                 else:
@@ -325,7 +354,8 @@ class WriteTextFile:
             if self.UseLog:
                 Message (func    = 'WriteTextFile._write'
                         ,level   = _('ERROR')
-                        ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') % (str(mode),'a, w')
+                        ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+                        % (str(mode),'a, w')
                         ,Silent  = False
                         )
             else:
@@ -335,7 +365,10 @@ class WriteTextFile:
         if self.Success:
             self.text = text
             if self.text:
-                # todo: In the append mode the file is created if it does not exist, but should we warn the user that we create it from scratch?
+                ''' # todo: In the append mode the file is created if it
+                    does not exist, but should we warn the user that we
+                    create it from scratch?
+                '''
                 self._write('a')
             else:
                 if self.UseLog:
@@ -406,12 +439,18 @@ class Log:
             self.h_write.write(text=_('***** Start of log. *****'))
 
     def _write(self):
-        self.h_write.append(text='\n%d:%s:%s:%s' % (self.count,self.func,self.level,self.message))
+        self.h_write.append (text='\n%d:%s:%s:%s' % (self.count
+                                                    ,self.func
+                                                    ,self.level
+                                                    ,self.message
+                                                    )
+                            )
 
     def write(self):
         if self.Success and self.Write:
             if self.Short:
-                if self.level == _('WARNING') or self.level == _('ERROR'):
+                if self.level == _('WARNING') \
+                or self.level == _('ERROR'):
                     self._write()
             else:
                 self._write()
@@ -420,13 +459,17 @@ class Log:
         if self.Success:
             if self.Print:
                 if self.Short:
-                    if self.level == _('WARNING') or self.level == _('ERROR'):
+                    if self.level == _('WARNING') \
+                    or self.level == _('ERROR'):
                         self._print()
                 else:
                     self._print()
 
     def _print(self):
-        print('%d:%s:%s:%s' % (self.count,self.func,self.level,self.message))
+        print ('%d:%s:%s:%s' % (self.count,self.func,self.level
+                               ,self.message
+                               )
+              )
 
     def append(self,func='Log.append',level=_('INFO'),message='Test'):
         if self.Success:
@@ -439,9 +482,13 @@ class Log:
                 self.count += 1
 
 if oss.win():
-    log = Log(Use=True,Write=False,Print=True,Short=False,file=r'C:\Users\pete\AppData\Local\Temp\log')
+    log = Log (Use=True,Write=False,Print=True
+              ,Short=False,file=r'C:\Users\pete\AppData\Local\Temp\log'
+              )
 else:
-    log = Log(Use=True,Write=False,Print=True,Short=False,file='/tmp/log')
+    log = Log (Use=True,Write=False,Print=True
+              ,Short=False,file='/tmp/log'
+              )
 
 
 
@@ -455,7 +502,10 @@ class TextDic:
         self.h_read = ReadTextFile(self.file,Silent=self.Silent)
         self.reset()
 
-    # This is might be needed only for those dictionaries that already may contain duplicates (dictionaries with newly added entries do not have duplicates due to new algorithms)
+    ''' This is might be needed only for those dictionaries that
+        already may contain duplicates (dictionaries with newly added
+        entries do not have duplicates due to new algorithms)
+    '''
     def _delete_duplicates(self):
         if self.Success:
             if self.Sortable:
@@ -464,15 +514,21 @@ class TextDic:
                 new = self._lines = len(self._list)
                 log.append ('TextDic._delete_duplicates'
                            ,_('INFO')
-                           ,_('Entries deleted: %d (%d-%d)') % (old-new,old,new)
+                           ,_('Entries deleted: %d (%d-%d)') % (old-new
+                                                               ,old
+                                                               ,new
+                                                               )
                            )
                 self.text = '\n'.join(self._list)
-                self._split() # Update original and translation
-                self.sort() # After using set(), the original order was lost
+                # Update original and translation
+                self._split()
+                # After using set(), the original order was lost
+                self.sort()
             else:
                 Message (func    = 'TextDic._delete_duplicates'
                         ,level   = _('WARNING')
-                        ,message = _('File "%s" is not sortable!') % self.file
+                        ,message = _('File "%s" is not sortable!') \
+                                   % self.file
                         ,Silent  = self.Silent
                         )
         else:
@@ -496,13 +552,17 @@ class TextDic:
                     ,Silent  = False
                     )
 
-    # We can use this to check integrity and/or update original and translation lists
+    ''' We can use this to check integrity and/or update original and
+        translation lists
+    '''
     def _split(self):
         if self.get():
             self.Success = True
             self.orig = []
             self.transl = []
-            # Building lists takes ~0.1 longer without temporary variables (now self._split() takes ~0.256)
+            ''' Building lists takes ~0.1 longer without temporary
+                variables (now self._split() takes ~0.256)
+            '''
             for i in range(self._lines):
                 tmp_lst = self._list[i].split('\t')
                 if len(tmp_lst) == 2:
@@ -513,14 +573,17 @@ class TextDic:
                     # i+1: Count from 1
                     Message (func    = 'TextDic._split'
                             ,level   = _('WARNING')
-                            ,message = _('Dictionary "%s": Incorrect line #%d: "%s"!') % (self.file,i+1,self._list[i])
+                            ,message = _('Dictionary "%s": Incorrect line #%d: "%s"!') \
+                                       % (self.file,i+1,self._list[i])
                             ,Silent  = self.Silent
                             )
         else:
             self.Success = False
 
-    # todo: write a dictionary in an append mode after appending to memory
-    # todo: skip repetitions
+    ''' # todo: write a dictionary in an append mode after appending to
+        memory
+    '''
+    #todo: skip repetitions
     def append(self,original,translation):
         if self.Success:
             if original and translation:
@@ -539,7 +602,9 @@ class TextDic:
                        ,_('Operation has been canceled.')
                        )
 
-    # todo: fix: an entry which is only one in a dictionary is not deleted
+    ''' #todo: #fix: an entry which is only one in a dictionary is not
+        deleted
+    '''
     def delete_entry(self,entry_no): # Count from 1
         if self.Success:
             entry_no -= 1
@@ -550,7 +615,10 @@ class TextDic:
             else:
                 Message (func    = 'TextDic.delete_entry'
                         ,level   = _('ERROR')
-                        ,message = _('The condition "%s" is not observed!') % ('0 <= ' + str(entry_no) + ' < %d' % self.lines())
+                        ,message = _('The condition "%s" is not observed!') \
+                                   % ('0 <= ' + str(entry_no) + ' < %d'\
+                                     % self.lines()
+                                     )
                         ,Silent  = False
                         )
         else:
@@ -559,7 +627,9 @@ class TextDic:
                        ,_('Operation has been canceled.')
                        )
 
-    # todo: Add checking orig and transl (where needed) for a wrapper function
+    ''' #todo: Add checking orig and transl (where needed) for a wrapper
+        function
+    '''
     def edit_entry(self,entry_no,orig,transl): # Count from 1
         if self.Success:
             entry_no -= 1
@@ -570,7 +640,10 @@ class TextDic:
             else:
                 Message (func    = 'TextDic.delete_entry'
                         ,level   = _('ERROR')
-                        ,message = _('The condition "%s" is not observed!') % ('0 <= ' + str(entry_no) + ' < %d' % self.lines())
+                        ,message = _('The condition "%s" is not observed!') \
+                                   % ('0 <= ' + str(entry_no) + ' < %d'\
+                                     % self.lines()
+                                     )
                         ,Silent  = False
                         )
         else:
@@ -608,17 +681,23 @@ class TextDic:
             if self.Sortable:
                 tmp_list = []
                 for i in range(len(self._list)):
-                    tmp_list += [[len(self.orig[i]),self.orig[i],self.transl[i]]]
+                    tmp_list += [[len(self.orig[i])
+                                 ,self.orig[i]
+                                 ,self.transl[i]
+                                 ]
+                                ]
                 tmp_list.sort(key=lambda x: x[0],reverse=True)
                 for i in range(len(self._list)):
-                    self.orig[i] = tmp_list[i][1]
+                    self.orig[i]   = tmp_list[i][1]
                     self.transl[i] = tmp_list[i][2]
-                    self._list[i] = self.orig[i] + '\t' + self.transl[i]
+                    self._list[i]  = self.orig[i] + '\t' \
+                                                  + self.transl[i]
                 self.text = '\n'.join(self._list)
             else:
                 Message (func    = 'TextDic.sort'
                         ,level   = _('WARNING')
-                        ,message = _('File "%s" is not sortable!') % self.file
+                        ,message = _('File "%s" is not sortable!') \
+                                   % self.file
                         ,Silent  = self.Silent
                         )
         else:
@@ -637,7 +716,8 @@ class TextDic:
             # We count from 1, therefore it is < and not <=
             while i < self.lines():
                 # i+1 by the same reason
-                tail_text += str(i+1) + ':' + '"' + self.list()[i] + '"\n'
+                tail_text += str(i+1) + ':' + '"' + self.list()[i] \
+                                      + '"\n'
                 i += 1
         else:
             log.append ('TextDic.tail'
@@ -648,7 +728,9 @@ class TextDic:
 
     def write(self):
         if self.Success:
-            WriteTextFile(self.file,self.get(),Silent=self.Silent,AskRewrite=False).write()
+            WriteTextFile (self.file,self.get(),Silent=self.Silent
+                          ,AskRewrite=False
+                          ).write()
         else:
             log.append ('TextDic.write'
                        ,_('WARNING')
@@ -678,7 +760,8 @@ class ReadTextFile:
             self.Success = False
             Message (func    = 'ReadTextFile.__init__'
                     ,level   = _('WARNING')
-                    ,message = _('File "%s" has not been found!') % self.file
+                    ,message = _('File "%s" has not been found!') \
+                               % self.file
                     ,Silent  = self.Silent
                     )
         else:
@@ -693,7 +776,9 @@ class ReadTextFile:
         try:
             with open(self.file,'r',encoding=encoding) as f:
                 self._text = f.read()
-        # We can handle UnicodeDecodeError here, however, we just handle them all (there could be access errors, etc.)
+        ''' We can handle UnicodeDecodeError here, however, we just
+            handle them all (there could be access errors, etc.)
+        '''
         except:
             pass
 
@@ -745,19 +830,25 @@ class ReadTextFile:
                        ,_('INFO')
                        ,_('Load file "%s"') % self.file
                        )
-            # We can try to define an encoding automatically, however, this often spoils some symbols, so we just proceed with try-except and the most popular encodings
+            ''' We can try to define an encoding automatically, however,
+                this often spoils some symbols, so we just proceed with
+                try-except and the most popular encodings.
+            '''
             self._read('UTF-8')
             if not self._text:
                 self._read('windows-1251')
             if not self._text:
                 self._read('windows-1252')
             if not self._text:
-                # The file cannot be read OR the file is empty (we don't need empty files)
-                # todo: Update the message
+                ''' The file cannot be read OR the file is empty (we
+                    don't need empty files)
+                    #todo: Update the message
+                '''
                 self.Success = False
                 Message (func    = 'ReadTextFile.load'
                         ,level   = _('ERROR')
-                        ,message = _('Unable to read file "%s"!') % self.file
+                        ,message = _('Unable to read file "%s"!') \
+                                   % self.file
                         ,Silent  = self.Silent
                         )
             self.delete_bom()
@@ -775,7 +866,10 @@ class Input:
     def __init__(self,val,func_title='Input',Silent=False):
         self.func_title = func_title
         self.val = val
-        # In a few cases it is appropriate to set Silent=1, since None is not necessarily an error (e.g., a subject fueld in an email message)
+        ''' In a few cases it is appropriate to set Silent=1, since None
+            is not necessarily an error (e.g., a subject fueld in an
+            email message)
+        '''
         self.Silent = Silent
 
     def integer(self):
@@ -790,7 +884,8 @@ class Input:
         else:
             Message (func    = self.func_title
                     ,level   = _('ERROR')
-                    ,message = _('Integer is required at input, but found "%s"! Return 0') % str(type(self.val))
+                    ,message = _('Integer is required at input, but found "%s"! Return 0') \
+                               % str(type(self.val))
                     ,Silent  = self.Silent
                     )
             self.val = 0
@@ -822,7 +917,10 @@ class Text:
             self.yo()
             self.text = OCR(text=self.text).common()
             self.delete_space_with_punctuation()
-            self.text = self.text.strip() # This is necessary even if we do strip for each line (we need to strip '\n' at the beginning/end)
+            ''' This is necessary even if we do strip for each line (we
+                need to strip '\n' at the beginning/end).
+            '''
+            self.text = self.text.strip()
 
     # Getting rid of some useless symbols
     def trash(self):
@@ -855,7 +953,8 @@ class Text:
     def country(self):
         if len(self.text) > 4:
             if self.text[-4:-2] == ', ':
-                if self.text[-1].isalpha() and self.text[-1].isupper() and self.text[-2].isalpha() and self.text[-2].isupper():
+                if self.text[-1].isalpha() and self.text[-1].isupper() \
+                and self.text[-2].isalpha() and self.text[-2].isupper():
                     return self.text[-2:]
 
     def reset(self,text):
@@ -889,7 +988,9 @@ class Text:
                 elif self.text[i] == closing_sym:
                     closing_parentheses.append(i)
 
-            min_val = min(len(opening_parentheses),len(closing_parentheses))
+            min_val = min (len(opening_parentheses)
+                          ,len(closing_parentheses)
+                          )
 
             opening_parentheses = opening_parentheses[::-1]
             closing_parentheses = closing_parentheses[::-1]
@@ -906,13 +1007,21 @@ class Text:
             self.text = list(self.text)
             for i in range(min_val):
                 if opening_parentheses[i] < closing_parentheses[i]:
-                    self.text = self.text[0:opening_parentheses[i]] + self.text[closing_parentheses[i]+1:]
+                    self.text = self.text[0:opening_parentheses[i]] \
+                                + self.text[closing_parentheses[i]+1:]
             self.text = ''.join(self.text)
-            # Further steps: self.delete_duplicate_spaces(), self.text.strip()
+            ''' Further steps: self.delete_duplicate_spaces(),
+                self.text.strip()
+            '''
         else:
             Message (func    = 'Text.delete_embraced_text'
                     ,level   = _('WARNING')
-                    ,message = _('Different number of opening and closing brackets: "%s": %d; "%s": %d!') % (opening_sym,self.text.count(opening_sym),closing_sym,self.text.count(closing_sym))
+                    ,message = _('Different number of opening and closing brackets: "%s": %d; "%s": %d!') \
+                               % (opening_sym
+                                 ,self.text.count(opening_sym)
+                                 ,closing_sym
+                                 ,self.text.count(closing_sym)
+                                 )
                     )
         return self.text
 
@@ -934,14 +1043,18 @@ class Text:
             self.text = self.text.replace('  ',' ')
         return self.text
 
-    # Delete a space and punctuation marks in the end of a line (useful when extracting features with CompareField)
+    ''' Delete a space and punctuation marks in the end of a line
+        (useful when extracting features with CompareField)
+    '''
     def delete_end_punc(self,Extended=False):
         if len(self.text) > 0:
             if Extended:
-                while self.text[-1] == ' ' or self.text[-1] in punc_array or self.text[-1] in punc_ext_array:
+                while self.text[-1] == ' ' or self.text[-1] \
+                in punc_array or self.text[-1] in punc_ext_array:
                     self.text = self.text[:-1]
             else:
-                while self.text[-1] == ' ' or self.text[-1] in punc_array:
+                while self.text[-1] == ' ' or self.text[-1] \
+                in punc_array:
                     self.text = self.text[:-1]
         else:
             log.append ('Text.delete_end_punc'
@@ -955,7 +1068,10 @@ class Text:
         return self.text
 
     def delete_cyrillic(self):
-        self.text = ''.join([sym for sym in self.text if sym not in ru_alphabet])
+        self.text = ''.join ([sym for sym in self.text if sym not \
+                              in ru_alphabet
+                             ]
+                            )
         return self.text
 
     def delete_punctuation(self):
@@ -968,11 +1084,14 @@ class Text:
     def delete_space_with_punctuation(self):
         # Delete duplicate spaces first
         for i in range(len(punc_array)):
-            self.text = self.text.replace(' '+punc_array[i],punc_array[i])
+            self.text = self.text.replace (' ' + punc_array[i]
+                                          ,punc_array[i]
+                                          )
         self.text = self.text.replace('“ ','“').replace(' ”','”').replace('( ','(').replace(' )',')').replace('[ ','[').replace(' ]',']').replace('{ ','{').replace(' }','}')
         return self.text
 
-    def extract_date(self): # Only for pattern '(YYYY-MM-DD)'
+    # Only for pattern '(YYYY-MM-DD)'
+    def extract_date(self):
         expr = '\((\d\d\d\d-\d\d-\d\d)\)'
         if self.text:
             match = re.search(expr,self.text)
@@ -981,7 +1100,8 @@ class Text:
 
     def extract_date_hash(self):
         hash = -1
-        result = self.text.split('-') # Only strings at input
+        # Only strings at input
+        result = self.text.split('-')
         if len(result) == 3:
             self.text = result[0]
             hash = self.str2int() * 365
@@ -1007,7 +1127,9 @@ class Text:
             self.text = '"' + self.text + '"' #'[' + self.text + ']'
         return self.text
 
-    # Replace commas or semicolons with line breaks or line breaks with commas
+    ''' Replace commas or semicolons with line breaks or line breaks
+        with commas
+    '''
     def split_by_comma(self):
         if (';' in self.text or ',' in self.text) and '\n' in self.text:
             Message (func    = 'Text.split_by_comma'
@@ -1021,7 +1143,8 @@ class Text:
             self.strip_lines()
         elif '\n' in self.text:
             self.delete_duplicate_line_breaks()
-            self.text.strip() # Delete a line break at the beginning/end
+            # Delete a line break at the beginning/end
+            self.text.strip()
             self.text = self.text.splitlines()
             for i in range(len(self.text)):
                 self.text[i] = self.text[i].strip()
@@ -1037,7 +1160,8 @@ class Text:
         except(ValueError,TypeError):
             log.append ('Text.str2int'
                        ,_('WARNING')
-                       ,_('Failed to convert "%s" to an integer!') % str(self.text)
+                       ,_('Failed to convert "%s" to an integer!') \
+                       % str(self.text)
                        )
         return par
 
@@ -1048,7 +1172,8 @@ class Text:
         except(ValueError,TypeError):
             log.append ('Text.str2float'
                        ,_('WARNING')
-                       ,_('Failed to convert "%s" to a floating-point number!') % str(self.text)
+                       ,_('Failed to convert "%s" to a floating-point number!') \
+                       % str(self.text)
                        )
         return par
 
@@ -1117,26 +1242,32 @@ class List:
             if not self.lst1[i] == '':
                 if text == '':
                     text += self.lst1[i]
-                elif self.lst1[i] and self.lst1[i][0] in punc_array or self.lst1[i][0] in '”»])}':
+                elif self.lst1[i] and self.lst1[i][0] in punc_array \
+                or self.lst1[i][0] in '”»])}':
                     text += self.lst1[i]
                 # We do not know for sure where quotes should be placed, but we cannot leave out cases like ' " '
-                elif len(text) > 1 and text[-2].isspace() and text[-1] == '"':
+                elif len(text) > 1 and text[-2].isspace() \
+                and text[-1] == '"':
                     text += self.lst1[i]
-                elif len(text) > 1 and text[-2].isspace() and text[-1] == "'":
+                elif len(text) > 1 and text[-2].isspace() \
+                and text[-1] == "'":
                     text += self.lst1[i]
                 # Only after "text == ''"
                 elif text[-1] in '“«[{(':
                     text += self.lst1[i]
-                elif text[-1].isspace() and self.lst1[i] and self.lst1[i][0].isspace() and not MultSpaces:
+                elif text[-1].isspace() and self.lst1[i] \
+                and self.lst1[i][0].isspace() and not MultSpaces:
                     tmp = self.lst1[i].lstrip()
                     if tmp:
                         text += tmp
                 elif text[-1].isspace():
                     text += self.lst1[i]
-                elif i == len(self.lst1) - 1 and self.lst1[i] in punc_array:
+                elif i == len(self.lst1) - 1 and self.lst1[i] \
+                in punc_array:
                     text += self.lst1[i]
                 # Do not allow ' "' in the end
-                elif i == len(self.lst1) - 1 and self.lst1[i] in ('”','»',']',')','}','"',"'"):
+                elif i == len(self.lst1) - 1 and self.lst1[i] \
+                in ('”','»',']',')','}','"',"'"):
                     text += self.lst1[i]
                 else:
                     text += ' ' + self.lst1[i]
@@ -1164,7 +1295,10 @@ class List:
 
 
 
-class Time: # We constantly recalculate each value because they depend on each other
+''' We constantly recalculate each value because they depend on each
+    other
+'''
+class Time:
 
     def __init__ (self,_timestamp=None,pattern='%Y-%m-%d'
                  ,MondayWarning=True,Silent=False
@@ -1183,8 +1317,10 @@ class Time: # We constantly recalculate each value because they depend on each o
         self.pattern       = pattern
         self.MondayWarning = MondayWarning
         self._timestamp    = _timestamp
-        self._date = self._instance = self._date = self._year = self._month_abbr = self._month_name = ''
-        if self._timestamp or self._timestamp == 0: # Prevent recursion
+        self._date = self._instance = self._date = self._year \
+                   = self._month_abbr = self._month_name = ''
+        # Prevent recursion
+        if self._timestamp or self._timestamp == 0:
             self.instance()
         else:
             self.todays_date()
@@ -1269,7 +1405,8 @@ class Time: # We constantly recalculate each value because they depend on each o
         if self.Success:
             if not self._instance:
                 self.instance()
-            if self.MondayWarning and datetime.datetime.weekday(self._instance) == 0:
+            if self.MondayWarning \
+            and datetime.datetime.weekday(self._instance) == 0:
                 Message (func    = 'Time.monday_warning'
                         ,level   = _('INFO')
                         ,message = _('Note: it will be Monday!')
@@ -1285,7 +1422,11 @@ class Time: # We constantly recalculate each value because they depend on each o
         if self.Success:
             if not self._instance:
                 self.instance()
-            self._month_name = calendar.month_name[Text(self._instance.strftime("%m"),Auto=False).str2int()]
+            self._month_name = calendar.month_name \
+                             [Text (text = self._instance.strftime("%m")
+                                   ,Auto = False
+                                   ).str2int()
+                             ]
         else:
             log.append ('Time.month_local'
                        ,_('WARNING')
@@ -1297,7 +1438,11 @@ class Time: # We constantly recalculate each value because they depend on each o
         if self.Success:
             if not self._instance:
                 self.instance()
-            self._month_abbr = calendar.month_abbr[Text(self._instance.strftime("%m"),Auto=False).str2int()]
+            self._month_abbr = calendar.month_abbr \
+                             [Text (text = self._instance.strftime("%m")
+                                   ,Auto = False
+                                   ).str2int()
+                             ]
         else:
             log.append ('Time.month_abbr'
                        ,_('WARNING')
@@ -1339,13 +1484,20 @@ class File:
         self.AskRewrite = AskRewrite
         self.file = file
         self.dest = dest
-        if not self.dest: # This will allow to skip some checks for destination
+        # This will allow to skip some checks for destination
+        if not self.dest:
             self.dest = self.file
         self.atime = ''
         self.mtime = ''
-        if self.file and os.path.isfile(self.file): # This already checks existence
-            if os.path.isdir(self.dest): # If the destination directory does not exist, this will be caught in try-except while copying/moving
-                self.dest = os.path.join(self.dest,Path(self.file).basename())
+        # This already checks existence
+        if self.file and os.path.isfile(self.file):
+            ''' If the destination directory does not exist, this will
+                be caught in try-except while copying/moving
+            '''
+            if os.path.isdir(self.dest):
+                self.dest = os.path.join (self.dest
+                                         ,Path(self.file).basename()
+                                         )
         elif not self.file:
             self.Success = False
             Message (func    = 'File.__init__'
@@ -1357,14 +1509,16 @@ class File:
             self.Success = False
             Message (func    = 'File.__init__'
                     ,level   = _('WARNING')
-                    ,message = _('File "%s" has not been found!') % self.file
+                    ,message = _('File "%s" has not been found!') \
+                               % self.file
                     ,Silent  = self.Silent
                     )
         else:
             self.Success = False
             Message (func    = 'File.__init__'
                     ,level   = _('WARNING')
-                    ,message = _('The object "%s" is not a file!') % self.file
+                    ,message = _('The object "%s" is not a file!') \
+                               % self.file
                     ,Silent  = self.Silent
                     )
 
@@ -1380,7 +1534,8 @@ class File:
             Success = False
             Message (func    = 'File._copy'
                     ,level   = _('ERROR')
-                    ,message = _('Failed to copy file "%s" to "%s"!') % (self.file,self.dest)
+                    ,message = _('Failed to copy file "%s" to "%s"!') \
+                               % (self.file,self.dest)
                     ,Silent  = self.Silent
                     )
         return Success
@@ -1397,7 +1552,8 @@ class File:
             Success = False
             Message (func    = 'File._move'
                     ,level   = _('ERROR')
-                    ,message = _('Failed to move "%s" to "%s"!') % (self.file,self.dest)
+                    ,message = _('Failed to move "%s" to "%s"!') \
+                               % (self.file,self.dest)
                     ,Silent  = self.Silent
                     )
         return Success
@@ -1410,7 +1566,8 @@ class File:
             except:
                 Message (func    = 'File.access_time'
                         ,level   = _('WARNING')
-                        ,message = _('Failed to get the date of the file "%s"!') % self.file
+                        ,message = _('Failed to get the date of the file "%s"!') \
+                                   % self.file
                         ,Silent  = self.Silent
                         )
         else:
@@ -1425,7 +1582,8 @@ class File:
             if self.file.lower() == self.dest.lower():
                 Message (func    = 'File.copy'
                         ,level   = _('ERROR')
-                        ,message = _('Unable to copy the file "%s" to iself!') % self.file
+                        ,message = _('Unable to copy the file "%s" to iself!') \
+                                   % self.file
                         ,Silent  = self.Silent
                         )
             elif rewrite(self.dest,AskRewrite=self.AskRewrite):
@@ -1455,7 +1613,8 @@ class File:
                 Success = False
                 Message (func    = 'File.delete'
                         ,level   = _('WARNING')
-                        ,message = _('Failed to delete file "%s"!') % self.file
+                        ,message = _('Failed to delete file "%s"!') \
+                                   % self.file
                         ,Silent  = self.Silent
                         )
         else:
@@ -1483,7 +1642,8 @@ class File:
             except:
                 Message (func    = 'File.modification_time'
                         ,level   = _('WARNING')
-                        ,message = _('Failed to get the date of the file "%s"!') % self.file
+                        ,message = _('Failed to get the date of the file "%s"!') \
+                                   % self.file
                         ,Silent  = self.Silent
                         )
         else:
@@ -1520,14 +1680,18 @@ class File:
             if self.atime and self.mtime:
                 log.append ('File.set_time'
                            ,_('INFO')
-                           ,_('Change the time of the file "%s" to %s') % (self.file,str((self.atime,self.mtime)))
+                           ,_('Change the time of the file "%s" to %s') \
+                           % (self.file,str((self.atime,self.mtime)))
                            )
                 try:
                     os.utime(self.file,(self.atime,self.mtime))
                 except:
                     Message (func    = 'File.set_time'
                             ,level   = _('WARNING')
-                            ,message = _('Failed to change the time of the file "%s" to "%s"!') % (self.file,str((self.atime,self.mtime)))
+                            ,message = _('Failed to change the time of the file "%s" to "%s"!') \
+                                       % (self.file
+                                         ,str((self.atime,self.mtime))
+                                         )
                             ,Silent  = self.Silent
                             )
         else:
@@ -1553,20 +1717,24 @@ class Path:
             self._basename = os.path.basename(self.path)
         return self._basename
 
-    def create(self): # This will recursively (by design) create self.path
-        Success = True # We actually don't need to fail the class globally
+    # This will recursively (by design) create self.path
+    def create(self):
+        # We actually don't need to fail the class globally
+        Success = True
         if self.path:
             if os.path.exists(self.path):
                 if os.path.isdir(self.path):
                     log.append ('Path.create'
                                ,_('INFO')
-                               ,_('Directory "%s" already exists.') % self.path
+                               ,_('Directory "%s" already exists.') \
+                               % self.path
                                )
                 else:
                     Success = False
                     Message (func    = 'Path.create'
                             ,level   = _('WARNING')
-                            ,message = _('The path "%s" is invalid!') % self.path
+                            ,message = _('The path "%s" is invalid!') \
+                                       % self.path
                             )
             else:
                 log.append ('Path.create'
@@ -1574,12 +1742,14 @@ class Path:
                            ,_('Create directory "%s"') % self.path
                            )
                 try:
-                    os.makedirs(self.path) # todo: consider os.mkdir
+                    # todo: consider os.mkdir
+                    os.makedirs(self.path)
                 except:
                     Success = False
                     Message (func    = 'Path.create'
                             ,level   = _('ERROR')
-                            ,message = _('Failed to create directory "%s"!') % self.path
+                            ,message = _('Failed to create directory "%s"!') \
+                                       % self.path
                             )
         else:
             Success = False
@@ -1589,7 +1759,10 @@ class Path:
                     )
         return Success
 
-    def delete_inappropriate_symbols(self): # These symbols may pose a problem while opening files # todo: check whether this is really necessary
+    ''' These symbols may pose a problem while opening files
+        #todo: check whether this is really necessary
+    '''
+    def delete_inappropriate_symbols(self):
         return self.filename().replace("'",'').replace("&",'')
 
     def dirname(self):
@@ -1602,7 +1775,8 @@ class Path:
         self.path = shlex.quote(self.path)
         return self.path
 
-    def extension(self): # with a dot
+    # An extension with a dot
+    def extension(self):
         if not self._extension:
             if len(self._splitpath()) > 1:
                 self._extension = self._splitpath()[1]
@@ -1618,14 +1792,19 @@ class Path:
         self.path = path
         ''' Building paths in Windows:
             - Use raw strings (e.g., set path as r'C:\1.txt')
-            - Use os.path.join(mydir,myfile) or os.path.normpath(path) instead of os.path.sep
+            - Use os.path.join(mydir,myfile) or os.path.normpath(path)
+              instead of os.path.sep
             - As an alternative, import ntpath, posixpath
         '''
-        # We remove a separator from the end, because basename and dirname work differently in this case ('' and the last directory, correspondingly)
-        self.path = self.path.rstrip('//')
-        self._basename = self._dirname = self._extension = self._filename = self._split = self._date = ''
-        self.parts = []
-        self.Silent = Silent
+        ''' We remove a separator from the end, because basename and
+            dirname work differently in this case ('' and the last
+            directory, correspondingly)
+        '''
+        self.path      = self.path.rstrip('//')
+        self._basename = self._dirname = self._extension \
+                       = self._filename = self._split = self._date = ''
+        self.parts     = []
+        self.Silent    = Silent
 
     def split(self):
         if not self.parts:
@@ -1679,13 +1858,15 @@ class WriteBinary:
                 self.Success = False
                 Message (func    = 'WriteBinary._write'
                         ,level   = _('ERROR')
-                        ,message = _('Unable to write file "%s"!') % self.file
+                        ,message = _('Unable to write file "%s"!') \
+                                   % self.file
                         ,Silent  = self.Silent
                         )
         else:
             Message (func    = 'WriteTextFile._write'
                     ,level   = _('ERROR')
-                    ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') % (str(mode),'w+b, a+b')
+                    ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+                               % (str(mode),'w+b, a+b')
                     ,Silent  = False
                     )
 
@@ -1734,7 +1915,10 @@ class Dic:
         self.h_read   = ReadTextFile(self.file,Silent=self.Silent)
         self.reset()
 
-    # This is might be needed only for those dictionaries that already may contain duplicates (dictionaries with newly added entries do not have duplicates due to new algorithms)
+    ''' This is might be needed only for those dictionaries that already
+        may contain duplicates (dictionaries with newly added entries do
+        not have duplicates due to new algorithms)
+    '''
     def _delete_duplicates(self):
         if self.Success:
             if self.Sortable:
@@ -1743,15 +1927,21 @@ class Dic:
                 new = self._lines = len(self._list)
                 log.append ('Dic._delete_duplicates'
                            ,_('INFO')
-                           ,_('Entries deleted: %d (%d-%d)') % (old-new,old,new)
+                           ,_('Entries deleted: %d (%d-%d)') % (old-new
+                                                               ,old
+                                                               ,new
+                                                               )
                            )
                 self.text = '\n'.join(self._list)
-                self._split() # Update original and translation
-                self.sort() # After using set(), the original order was lost
+                # Update original and translation
+                self._split()
+                # After using set(), the original order was lost
+                self.sort()
             else:
                 Message (func    = 'Dic._delete_duplicates'
                         ,level   = _('WARNING')
-                        ,message = _('File "%s" is not sortable!') % self.file
+                        ,message = _('File "%s" is not sortable!') \
+                                   % self.file
                         ,Silent  = self.Silent
                         )
         else:
@@ -1775,20 +1965,26 @@ class Dic:
                     ,Silent  = False
                     )
 
-    # We can use this to check integrity and/or update original and translation lists
+    ''' We can use this to check integrity and/or update original and
+        translation lists
+    '''
     def _split(self):
         if self.get():
             self.Success = True
             self.orig    = []
             self.transl  = []
-            # Building lists takes ~0.1 longer without temporary variables (now self._split() takes ~0.256)
+            ''' Building lists takes ~0.1 longer without temporary
+                variables (now self._split() takes ~0.256)
+            '''
             for i in range(self._lines):
                 tmp_lst = self._list[i].split('\t')
                 if len(tmp_lst) == 2:
                     self.orig.append(tmp_lst[0])
                     self.transl.append(tmp_lst[1])
                 else:
-                    # Lines that were successfully parsed can be further processed upon correcting 'self.lines'
+                    ''' Lines that were successfully parsed can be
+                        further processed upon correcting 'self.lines'
+                    '''
                     self.Success = False
                     self.errors.append(str(i))
             self.warn()
@@ -1802,10 +1998,13 @@ class Dic:
             message = ', '.join(self.errors)
             Message (func    = 'Dic.warn'
                     ,level   = _('WARNING')
-                    ,message = _('The following lines cannot be parsed:') + '\n' + message
+                    ,message = _('The following lines cannot be parsed:') \
+                               + '\n' + message
                     )
 
-    # todo: write a dictionary in an append mode after appending to memory
+    ''' #todo: write a dictionary in an append mode after appending to
+        memory
+    '''
     # todo: skip repetitions
     def append(self,original,translation):
         if self.Success:
@@ -1825,8 +2024,11 @@ class Dic:
                        ,_('Operation has been canceled.')
                        )
 
-    # todo: fix: an entry which is only one in a dictionary is not deleted
-    def delete_entry(self,entry_no): # Count from 1
+    ''' #todo: fix: an entry which is only one in a dictionary is not
+        deleted
+    '''
+    # Count from 1
+    def delete_entry(self,entry_no):
         if self.Success:
             entry_no -= 1
             if entry_no >= 0 and entry_no < self.lines():
@@ -1836,7 +2038,10 @@ class Dic:
             else:
                 Message (func    = 'Dic.delete_entry'
                         ,level   = _('ERROR')
-                        ,message = _('The condition "%s" is not observed!') % ('0 <= ' + str(entry_no) + ' < %d' % self.lines())
+                        ,message = _('The condition "%s" is not observed!') \
+                                   % ('0 <= ' + str(entry_no) + ' < %d'\
+                                     % self.lines()
+                                     )
                         ,Silent  = False
                         )
         else:
@@ -1845,8 +2050,11 @@ class Dic:
                        ,_('Operation has been canceled.')
                        )
 
-    # todo: Add checking orig and transl (where needed) for a wrapper function
-    def edit_entry(self,entry_no,orig,transl): # Count from 1
+    ''' #todo: Add checking orig and transl (where needed) for a wrapper
+        function
+    '''
+    # Count from 1
+    def edit_entry(self,entry_no,orig,transl):
         if self.Success:
             entry_no -= 1
             if entry_no >= 0 and entry_no < self.lines():
@@ -1856,7 +2064,10 @@ class Dic:
             else:
                 Message (func    = 'Dic.delete_entry'
                         ,level   = _('ERROR')
-                        ,message = _('The condition "%s" is not observed!') % ('0 <= ' + str(entry_no) + ' < %d' % self.lines())
+                        ,message = _('The condition "%s" is not observed!') \
+                                   % ('0 <= ' + str(entry_no) + ' < %d'\
+                                     % self.lines()
+                                     )
                         ,Silent  = False
                         )
         else:
@@ -1894,7 +2105,11 @@ class Dic:
             if self.Sortable:
                 tmp_list = []
                 for i in range(len(self._list)):
-                    tmp_list += [[len(self.orig[i]),self.orig[i],self.transl[i]]]
+                    tmp_list += [[len(self.orig[i])
+                                 ,self.orig[i]
+                                 ,self.transl[i]
+                                 ]
+                                ]
                 tmp_list.sort(key=lambda x: x[0],reverse=True)
                 for i in range(len(self._list)):
                     self.orig[i] = tmp_list[i][1]
@@ -1904,7 +2119,8 @@ class Dic:
             else:
                 Message (func    = 'Dic.sort'
                         ,level   = _('WARNING')
-                        ,message = _('File "%s" is not sortable!') % self.file
+                        ,message = _('File "%s" is not sortable!') \
+                                   % self.file
                         ,Silent  = self.Silent
                         )
         else:
@@ -1923,7 +2139,8 @@ class Dic:
             # We count from 1, therefore it is < and not <=
             while i < self.lines():
                 # i+1 by the same reason
-                tail_text += str(i+1) + ':' + '"' + self.list()[i] + '"\n'
+                tail_text += str(i+1) + ':' + '"' + self.list()[i] \
+                             + '"\n'
                 i += 1
         else:
             log.append ('Dic.tail'
@@ -1962,14 +2179,17 @@ class ReadBinary:
                    ,_('Load file "%s"') % self.file
                    )
         try:
-            # AttributeError means that a module using _load does not have a class that was defined while creating the binary
+            ''' AttributeError means that a module using _load does not
+                have a class that was defined while creating the binary
+            '''
             with open(self.file,'r+b') as f:
                 self.obj = pickle.load(f)
         except:
             self.Success = False
             Message (func    = 'ReadBinary._load'
                     ,level   = _('ERROR')
-                    ,message = _('Unable to read file "%s"!') % self.file
+                    ,message = _('Unable to read file "%s"!') \
+                               % self.file
                     ,Silent  = self.Silent
                     )
 
@@ -2004,7 +2224,8 @@ class Directory:
         self.Success = True
         self.Silent = Silent
         if path:
-            self.dir = Path(path).path # Removes trailing slashes if necessary
+            # Removes trailing slashes if necessary
+            self.dir = Path(path).path
         else:
             self.dir = ''
         if dest:
@@ -2064,7 +2285,8 @@ class Directory:
             except:
                 Message (func    = 'Directory.delete'
                         ,level   = _('WARNING')
-                        ,message = _('Failed to delete directory "%s"! Delete it manually.') % str(self.dir)
+                        ,message = _('Failed to delete directory "%s"! Delete it manually.') \
+                                   % str(self.dir)
                         )
         else:
             log.append ('Directory.delete'
@@ -2139,13 +2361,15 @@ class Directory:
             if self.dir.lower() == self.dest.lower():
                 Message (func    = 'Directory.copy'
                         ,level   = _('ERROR')
-                        ,message = _('Unable to copy "%s" to iself!') % self.dir
+                        ,message = _('Unable to copy "%s" to iself!') \
+                                   % self.dir
                         ,Silent  = self.Silent
                         )
             elif os.path.isdir(self.dest):
                 Message (func    = 'Directory.copy'
                         ,level   = _('INFO')
-                        ,message = _('Directory "%s" already exists.') % self.dest
+                        ,message = _('Directory "%s" already exists.') \
+                                   % self.dest
                         ,Silent  = self.Silent
                         )
             else:
@@ -2167,7 +2391,8 @@ class Directory:
             self.Success = False
             Message (func    = 'Directory._copy'
                     ,level   = _('ERROR')
-                    ,message = _('Failed to copy "%s" to "%s"!') % (self.dir,self.dest)
+                    ,message = _('Failed to copy "%s" to "%s"!') \
+                               % (self.dir,self.dest)
                     ,Silent  = self.Silent
                     )
 
@@ -2198,13 +2423,15 @@ class Config:
                     if globs[self.sections_abbr[i]][option] != new_val:
                         log.append ('Config.load_section'
                                    ,_('INFO')
-                                   ,_('New value of the key "%s" has been loaded.') % option
+                                   ,_('New value of the key "%s" has been loaded.') \
+                                   % option
                                    )
                         self.changed_keys += 1
                         globs[self.sections_abbr[i]][option] = new_val
             log.append ('Config.load'
                        ,_('INFO')
-                       ,_('Keys loaded in total: %d, whereas %d are modified.') % (self.total_keys,self.changed_keys)
+                       ,_('Keys loaded in total: %d, whereas %d are modified.') \
+                       % (self.total_keys,self.changed_keys)
                        )
         else:
             log.append ('Config.load'
@@ -2218,7 +2445,9 @@ class Config:
                 if config_parser.has_section(self.sections[i]):
                     for option in globs[self.sections_abbr[i]]:
                         self.total_keys += 1
-                        if not config_parser.has_option(self.sections[i],option):
+                        if not config_parser.has_option(self.sections[i]
+                                                       ,option
+                                                       ):
                             self.Success = False
                             self.missing_keys += 1
                             self.message += option + '; '
@@ -2227,8 +2456,10 @@ class Config:
                     self.missing_sections += 1
                     self.message += self.sections[i] + '; '
             if not self.Success:
-                self.message += '\n' + _('Missing sections: %d') % self.missing_sections
-                self.message += '\n' + _('Missing keys: %d') % self.missing_keys
+                self.message += '\n' + _('Missing sections: %d') \
+                                % self.missing_sections
+                self.message += '\n' + _('Missing keys: %d') \
+                                % self.missing_keys
                 self.message += '\n' + _('The default configuration has been loaded.')
                 Message (func    = 'Config.check'
                         ,level   = _('WARNING')
@@ -2249,7 +2480,8 @@ class Config:
                 Success = False
                 Message (func    = 'Config.open'
                         ,level   = _('WARNING')
-                        ,message = _('Failed to read the configuration file "%s". This file must share the same directory with the program and have UTF-8 encoding (no BOM) and UNIX line break type.') % self.path
+                        ,message = _('Failed to read the configuration file "%s". This file must share the same directory with the program and have UTF-8 encoding (no BOM) and UNIX line break type.') \
+                        % self.path
                         ,Silent  = self.Silent
                         )
         else:
@@ -2262,22 +2494,36 @@ class Config:
 
 class Online:
 
-    def __init__(self,base_str='',search_str='',encoding='UTF-8',MTSpecific=False):
-        self.reset(base_str=base_str,search_str=search_str,encoding=encoding,MTSpecific=MTSpecific)
+    def __init__ (self,base_str='',search_str=''
+                 ,encoding='UTF-8',MTSpecific=False
+                 ):
+        self.reset (base_str   = base_str
+                   ,search_str = search_str
+                   ,encoding   = encoding
+                   ,MTSpecific = MTSpecific
+                   )
 
     def bytes_common(self):
         if not self._bytes:
-            self._bytes = bytes(self.search_str,encoding=self.encoding)
+            self._bytes = bytes (self.search_str
+                                ,encoding = self.encoding
+                                )
 
     def bytes_multitran(self):
         if not self._bytes:
             # Otherwise, will not be able to encode 'Ъ'
             try:
-                self._bytes = bytes(self.search_str,encoding=globs['var']['win_encoding'])
+                self._bytes = bytes (self.search_str
+                                    ,encoding = globs['var']['win_encoding']
+                                    )
             except:
-                # Otherwise, will not be able to encode specific characters
+                ''' Otherwise, will not be able to encode specific
+                    characters
+                '''
                 try:
-                    self._bytes = bytes(self.search_str,encoding='UTF-8')
+                    self._bytes = bytes (self.search_str
+                                        ,encoding='UTF-8'
+                                        )
                 except:
                     self._bytes = ''
 
@@ -2294,7 +2540,8 @@ class Online:
         except:
             Message (func    = 'Online.browse'
                     ,level   = _('ERROR')
-                    ,message = _('Failed to open URL "%s" in a default browser!') % self._url
+                    ,message = _('Failed to open URL "%s" in a default browser!') \
+                               % self._url
                     )
 
     # Create a correct online link (URI => URL)
@@ -2304,7 +2551,9 @@ class Online:
             log.append('Online.url',_('DEBUG'),str(self._url))
         return self._url
 
-    def reset(self,base_str='',search_str='',encoding='UTF-8',MTSpecific=False):
+    def reset (self,base_str='',search_str=''
+              ,encoding='UTF-8',MTSpecific=False
+              ):
         self.encoding   = encoding
         self.MTSpecific = MTSpecific
         self.base_str   = base_str
@@ -2320,7 +2569,10 @@ class Diff:
         self.Silent      = Silent
         self.Custom      = False
         self.wda_html    = objs.tmpfile(suffix='.htm',Delete=0)
-        self.h_wda_write = WriteTextFile(self.wda_html,AskRewrite=False,Silent=self.Silent)
+        self.h_wda_write = WriteTextFile (file       = self.wda_html
+                                         ,AskRewrite = False
+                                         ,Silent     = self.Silent
+                                         )
 
     def reset(self,text1,text2,file=None):
         self._diff = ''
@@ -2330,7 +2582,10 @@ class Diff:
             self.Custom  = True
             self.file    = file
             self._header = ''
-            self.h_write = WriteTextFile(self.file,AskRewrite=True,Silent=self.Silent)
+            self.h_write = WriteTextFile (file       = self.file
+                                         ,AskRewrite = True
+                                         ,Silent     = self.Silent
+                                         )
             self.h_path  = Path(self.file)
         else:
             self.Custom  = False
@@ -2344,13 +2599,16 @@ class Diff:
         self.text2 = self.text2.split(' ')
         self._diff = difflib.HtmlDiff().make_file(self.text1,self.text2)
         # Avoid a bug in HtmlDiff()
-        self._diff = self._diff.replace('charset=ISO-8859-1','charset=UTF-8')
+        self._diff = self._diff.replace ('charset=ISO-8859-1'
+                                        ,'charset=UTF-8'
+                                        )
 
     def header(self):
         if self.Custom:
             self._header = self.h_path.basename().replace(self.h_path.extension(),'')
             self._header = '<title>' + self._header + '</title>'
-        self._diff = self._diff.replace('<title></title>',self._header) + '\n'
+        self._diff = self._diff.replace('<title></title>',self._header)\
+                     + '\n'
 
     def compare(self):
         if self.text1 and self.text2:
@@ -2364,7 +2622,9 @@ class Diff:
                 self.header()
                 self.h_write.write(self._diff)
                 if self.h_write.Success:
-                    # Cannot reuse the class instance because the temporary file might be missing
+                    ''' Cannot reuse the class instance because the
+                        temporary file might be missing
+                    '''
                     Launch(target=self.file).default()
         else:
             Message (func    = 'Diff.compare'
@@ -2391,9 +2651,16 @@ class Shortcut:
 
     # http://timgolden.me.uk/python/win32_how_do_i/read-a-shortcut.html
     def _get_win(self):
-        link = pythoncom.CoCreateInstance(shell.CLSID_ShellLink,None,pythoncom.CLSCTX_INPROC_SERVER,shell.IID_IShellLink)
+        link = pythoncom.CoCreateInstance (shell.CLSID_ShellLink
+                                          ,None
+                                          ,pythoncom.CLSCTX_INPROC_SERVER
+                                          ,shell.IID_IShellLink
+                                          )
         link.QueryInterface(pythoncom.IID_IPersistFile).Load(self.symlink)
-        ''' GetPath returns the name and a WIN32_FIND_DATA structure which we're ignoring. The parameter indicates whether shortname, UNC or the "raw path" are to be returned. Bizarrely, the docs indicate that the flags can be combined.
+        ''' GetPath returns the name and a WIN32_FIND_DATA structure
+            which we're ignoring. The parameter indicates whether
+            shortname, UNC or the "raw path" are to be returned.
+            Bizarrely, the docs indicate that the flags can be combined.
         '''
         self.path,_=link.GetPath(shell.SLGP_UNCPRIORITY)
 
@@ -2418,7 +2685,8 @@ class Shortcut:
         except:
             Message (func    = 'Shortcut._delete'
                     ,level   = _('WARNING')
-                    ,message = _('Failed to remove shortcut "%s". Remove it manually and press OK.') % self.symlink
+                    ,message = _('Failed to remove shortcut "%s". Remove it manually and press OK.') \
+                               % self.symlink
                     )
 
     def delete(self):
@@ -2441,7 +2709,8 @@ class Shortcut:
         except:
             Message (func    = 'Shortcut._create_unix'
                     ,level   = _('ERROR')
-                    ,message = _('Failed to create shortcut "%s". Create it manually and press OK.') % self.symlink
+                    ,message = _('Failed to create shortcut "%s". Create it manually and press OK.') \
+                               % self.symlink
                     )
 
     def create_unix(self):
@@ -2476,11 +2745,18 @@ class Shortcut:
         except:
             Message (func    = 'Shortcut._create_win'
                     ,level   = _('ERROR')
-                    ,message = _('Failed to create shortcut "%s". Create it manually and press OK.') % self.symlink
+                    ,message = _('Failed to create shortcut "%s". Create it manually and press OK.') \
+                               % self.symlink
                     )
 
     def create_win(self):
-        # Using python 3 and windows (since 2009) it is possible to create a symbolic link, however, this will not be the same as a shortcut (.lnk). Therefore, in case the shortcut is used, os.path.islink() will always return False (not supported) (must use os.path.exists()), however, os.unlink() will work as expected.
+        ''' Using python 3 and windows (since 2009) it is possible to
+            create a symbolic link, however, this will not be the same
+            as a shortcut (.lnk). Therefore, in case the shortcut is
+            used, os.path.islink() will always return False (not
+            supported) (must use os.path.exists()), however, os.unlink()
+            will work as expected.
+        '''
         # Do not forget: windows paths must have a double backslash!
         if self.Success:
             if not Path(self.symlink).extension().lower() == '.lnk':
@@ -2516,7 +2792,10 @@ class Shortcut:
 class Email:
 
     def __init__(self,email,subject='',message='',attachment=''):
-        self._email = email # A single address or multiple comma-separated addresses (not all mail agents support ';')
+        ''' A single address or multiple comma-separated addresses (not
+            all mail agents support ';')
+        '''
+        self._email = email
         self._subject = Input (func_title = 'Email.__init__'
                               ,val        = subject
                               ,Silent     = 1
@@ -2545,9 +2824,17 @@ class Email:
         if self.Success:
             try:
                 if self._attachment:
-                    webbrowser.open('mailto:%s?subject=%s&body=%s&attach="%s"' % (self._email,self._subject,self._message,self._attachment))
+                    webbrowser.open ('mailto:%s?subject=%s&body=%s&attach="%s"' \
+                                    % (self._email,self._subject
+                                      ,self._message,self._attachment
+                                      )
+                                    )
                 else:
-                    webbrowser.open('mailto:%s?subject=%s&body=%s' % (self._email,self._subject,self._message))
+                    webbrowser.open ('mailto:%s?subject=%s&body=%s' \
+                                    % (self._email,self._subject
+                                      ,self._message
+                                      )
+                                    )
             except:
                 Message (func    = 'TkinterHtmlMod.response_back'
                         ,level   = _('ERROR')
@@ -2590,7 +2877,9 @@ class Grep:
         self._found = []
         self.i = 0
 
-    # Get rid of constructs like [None] instead of checking arguments when parameterizing
+    ''' Get rid of constructs like [None] instead of checking arguments
+        when parameterizing
+    '''
     def sanitize(self):
         if len(self._lst) == 1:
             if not self._lst[0]:
@@ -2610,7 +2899,8 @@ class Grep:
             return True
         found = False
         for i in range(len(self._start)):
-            if self._start[i] and self._lst[self.i].startswith(self._start[i]):
+            if self._start[i] \
+            and self._lst[self.i].startswith(self._start[i]):
                 found = True
         return found
 
@@ -2628,7 +2918,8 @@ class Grep:
             return True
         found = False
         for i in range(len(self._end)):
-            if self._end[i] and self._lst[self.i].endswith(self._end[i]):
+            if self._end[i] \
+            and self._lst[self.i].endswith(self._end[i]):
                 found = True
         return found
 
@@ -2659,10 +2950,15 @@ class Word:
             _pl: position of the last symbol of _p
             _nf: position of the 1st symbol of _n
             _nl: position of the last symbol of _n
-            _nmf: position of the 1st symbol of _nm     # 'matches'
-            _nml: position of the last symbol of _nm    # 'matches'
+            _nmf: position of the 1st symbol of _nm  # 'matches'
+            _nml: position of the last symbol of _nm # 'matches'
         '''
-        self.OrigCyr = self._nm = self._nmf = self._nml = self._pf = self._pl = self._nf = self._nl = self._cyr = self._lat = self._greek = self._digit = self._empty = self._stone = self._sent_no = self._spell_ru = self._sents_len = self._tf = self._tl = None
+        self.OrigCyr = self._nm = self._nmf = self._nml = self._pf \
+                     = self._pl = self._nf = self._nl = self._cyr \
+                     = self._lat = self._greek = self._digit \
+                     = self._empty = self._stone = self._sent_no \
+                     = self._spell_ru = self._sents_len = self._tf \
+                     = self._tl = None
 
     def empty(self):
         if self._empty is None:
@@ -2709,16 +3005,28 @@ class Word:
                     break
         return self._greek
 
-    def print(self,no=0): # Do only after Words.sent_nos
+    # Do only after Words.sent_nos
+    def print(self,no=0):
         log.append ('Word.print'
                    ,_('DEBUG')
-                   ,'no: %d; OrigCyr: %s; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _stone: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s; _nmf: %s; _nml: %s' % (no,str(self.OrigCyr),str(self._p),str(self._n),str(self._nm),str(self._pf),str(self._pl),str(self._nf),str(self._nl),str(self._cyr),str(self._lat),str(self._greek),str(self._digit),str(self._empty),str(self._stone),str(self._sent_no),str(self._sents_len),str(self._spell_ru),str(self._nmf),str(self._nml))
+                   ,'no: %d; OrigCyr: %s; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _stone: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s; _nmf: %s; _nml: %s' \
+                   % (no,str(self.OrigCyr),str(self._p),str(self._n)
+                     ,str(self._nm),str(self._pf),str(self._pl)
+                     ,str(self._nf),str(self._nl),str(self._cyr)
+                     ,str(self._lat),str(self._greek),str(self._digit)
+                     ,str(self._empty),str(self._stone)
+                     ,str(self._sent_no),str(self._sents_len)
+                     ,str(self._spell_ru),str(self._nmf),str(self._nml)
+                     )
                    )
 
     def nm(self):
         if self._nm is None:
             if self.stone():
-                ''' # note: Setting '_nm' to '' allows to find longer matches (without stones), but requires replacing duplicate spaces in 'text_nm' with ordinary ones and using another word numbering for '_nm'.
+                ''' #note: Setting '_nm' to '' allows to find longer
+                    matches (without stones), but requires replacing
+                    duplicate spaces in 'text_nm' with ordinary ones and
+                    using another word numbering for '_nm'.
                 '''
                 #self._nm = ''
                 self._nm = self._n
@@ -2733,23 +3041,34 @@ class Word:
     def stone(self):
         ''' Criteria for setting the 'stone' mark:
             - The word has digits
-            - The word has Greek characters (that are treated as variables. Greek should NOT be a predominant language)
-            - The word has Latin characters in the predominantly Russian text (inexact)
-            - The word has '-' (inexact) (# note: when finding matches, set the condition of ''.join(set(stone)) != '-')
+            - The word has Greek characters (that are treated as
+              variables. Greek should NOT be a predominant language)
+            - The word has Latin characters in the predominantly Russian
+              text (inexact)
+            - The word has '-' (inexact) (#note: when finding matches,
+              set the condition of ''.join(set(stone)) != '-')
         '''
         if self._stone is None:
-            self._stone = ''.join([x for x in self._n if x in digits or x == '-' or x in greek_alphabet_low])
+            self._stone = ''.join ([x for x in self._n if x in digits \
+                                    or x == '-' or x \
+                                    in greek_alphabet_low
+                                   ]
+                                  )
         return self._stone
 
     ''' Enchant:
-        1) Lower-case, upper-case and words where the first letter is capital, are all accepted. Mixed case is not accepted
+        1) Lower-case, upper-case and words where the first letter is
+           capital, are all accepted. Mixed case is not accepted
         2) Punctuation is not accepted
         3) Empty input raises an exception
     '''
     def spell_ru(self):
         if self._spell_ru is None:
             self._spell_ru = True
-            # todo: del OrigCyr: Cyrillic text can have words in foreign languages, we should define the language word-by-word anyway
+            ''' #todo: del OrigCyr: Cyrillic text can have words in
+                foreign languages, we should define the language
+                word-by-word anyway
+            '''
             if self.OrigCyr and self._n:
                 self._spell_ru = objs.enchant().check(self._n)
         return self._spell_ru
@@ -2808,7 +3127,10 @@ class Words: # Requires Search, Text
                        ,_('INFO')
                        ,_('Analyze the text')
                        )
-            # This is MUCH faster than using old symbol-per-symbol algorithm for finding words. We must, however, drop double space cases.
+            ''' This is MUCH faster than using old symbol-per-symbol
+                algorithm for finding words. We must, however, drop
+                double space cases.
+            '''
             self._text_orig   = Text(text=text,Auto=self.Auto).text
             self._line_breaks = Search(self._text_orig,'\n').next_loop()
             self._text_p      = Text(text=self._text_orig).delete_line_breaks()
@@ -2848,8 +3170,10 @@ class Words: # Requires Search, Text
                     cur_word._n = lst_n[i]
                     cur_word._pf = cur_len_p
                     cur_word._nf = cur_len_n
-                    cur_len_p = cur_word._pl = cur_word._pf + len(cur_word._p) - 1
-                    cur_len_n = cur_word._nl = cur_word._nf + len(cur_word._n) - 1
+                    cur_len_p = cur_word._pl = cur_word._pf \
+                                               + len(cur_word._p) - 1
+                    cur_len_n = cur_word._nl = cur_word._nf \
+                                               + len(cur_word._n) - 1
                     self.words.append(cur_word)
         else:
             log.append ('Words.split'
@@ -2867,7 +3191,8 @@ class Words: # Requires Search, Text
                        ,_('Operation has been canceled.')
                        )
 
-    def len(self): # Running 'range(self.len())' does not re-run 'len'
+    # Running 'range(self.len())' does not re-run 'len'
+    def len(self):
         return len(self.words)
 
     def _sent_nos(self):
@@ -2878,7 +3203,9 @@ class Words: # Requires Search, Text
                 condition = condition1
             else:
                 # In case duplicate spaces/line breaks were not deleted
-                condition2 = self.words[i]._p == '\n' or self.words[i]._p == '\r' or self.words[i]._p == '\r\n'
+                condition2 = self.words[i]._p == '\n' \
+                             or self.words[i]._p == '\r' \
+                             or self.words[i]._p == '\r\n'
                 condition = condition1 or condition2
             if condition:
                 no += 1
@@ -2900,7 +3227,9 @@ class Words: # Requires Search, Text
     def sent_p(self):
         if self.Success:
             sent_no = self.sent_no()
-            sent_no = Input(func_title='Words.sent_p',val=sent_no).integer()
+            sent_no = Input (func_title = 'Words.sent_p'
+                            ,val        = sent_no
+                            ).integer()
             old = self._no
             result = []
             for self._no in range(self.len()):
@@ -3002,7 +3331,8 @@ class Words: # Requires Search, Text
                         cur_len_nm += 2
                     cur_word = self.words[i]
                     cur_word._nmf = cur_len_nm
-                    cur_len_nm = cur_word._nml = cur_word._nmf + len(cur_word._nm) - 1
+                    cur_len_nm = cur_word._nml = cur_word._nmf \
+                                               + len(cur_word._nm) - 1
             return self._list_nm
         else:
             log.append ('Words.list_nm'
@@ -3092,12 +3422,14 @@ class Words: # Requires Search, Text
                 else:
                     Message (func    = 'Words.no_by_tk'
                             ,level   = _('WARNING')
-                            ,message = _('Wrong input data: "%s"') % str(lst)
+                            ,message = _('Wrong input data: "%s"') \
+                                       % str(lst)
                             )
             else:
                 Message (func    = 'Words.no_by_tk'
                         ,level   = _('WARNING')
-                        ,message = _('Wrong input data: "%s"') % str(lst)
+                        ,message = _('Wrong input data: "%s"') \
+                                   % str(lst)
                         )
         else:
             log.append ('Words.no_by_tk'
@@ -3118,11 +3450,13 @@ class Words: # Requires Search, Text
                     nos.append(self._no)
             self._no = old
             if nos:
-                result = (min(nos),max(nos)) # Valid for one-word paragraph
+                # Valid for one-word paragraph
+                result = (min(nos),max(nos))
             else:
                 log.append ('Words.nos_by_sent_no'
                            ,_('WARNING')
-                           ,_('Failed to find words of paragraph #%d!') % sent_no
+                           ,_('Failed to find words of paragraph #%d!')\
+                           % sent_no
                            )
         else:
             log.append ('Words.nos_by_sent_no'
@@ -3198,7 +3532,9 @@ class Search:
 
     def prev(self):
         if self.Success:
-            # rfind, unlike find, does not include limits, so we can use it to search backwards
+            ''' rfind, unlike find, does not include limits, so we can
+                use it to search backwards
+            '''
             result = self._text.rfind(self._search,0,self.i)
             if result != -1:
                 self.i = result
@@ -3248,7 +3584,8 @@ class Search:
 # Compare stones (2 different tables) and leave only useful ones
 class CompareStones:
 
-    def __init__(self,w1,w2): # 'Words' objects
+    # 'Words' objects
+    def __init__(self,w1,w2):
         self.Success = True
         self.w1 = w1
         self.w2 = w2
@@ -3278,15 +3615,22 @@ class CompareStones:
             for i in range(self.w2.len()):
                 tmp.append(self.w2.words[i]._stone)
             result2 = max(tmp)
-            log.append('CompareStones.check',_('DEBUG'),str(result1))
-            log.append('CompareStones.check',_('DEBUG'),str(result2))
+            log.append ('CompareStones.check'
+                       ,_('DEBUG')
+                       ,str(result1)
+                       )
+            log.append ('CompareStones.check'
+                       ,_('DEBUG')
+                       ,str(result2)
+                       )
             ''' Stone value:
                 0: not a stone
                 1: a stone (as found by Words)
                 2: a forced stone
                 3: marked as analysed (>=1) by CompareStones
             '''
-            if str(result1).isdigit() and result1 >= 3 and str(result2).isdigit() and result2 >= 3:
+            if str(result1).isdigit() and result1 >= 3 \
+            and str(result2).isdigit() and result2 >= 3:
                 log.append ('CompareStones.check'
                            ,_('INFO')
                            ,_('Nothing to do.')
@@ -3356,7 +3700,8 @@ class CompareStones:
             for i in range(len(self.diff1())):
                 first = None
                 for j in range(self.w1.len()):
-                    if self.w1.words[j]._stone == 1 and self.w1.words[j]._n == self._diff1[i]:
+                    if self.w1.words[j]._stone == 1 \
+                    and self.w1.words[j]._n == self._diff1[i]:
                         first = j
                         break
                 if first or first == 0:
@@ -3372,7 +3717,8 @@ class CompareStones:
             for i in range(len(self.diff2())):
                 first = None
                 for j in range(self.w2.len()):
-                    if self.w2.words[j]._stone == 1 and self.w2.words[j]._n == self._diff2[i]:
+                    if self.w2.words[j]._stone == 1 \
+                    and self.w2.words[j]._n == self._diff2[i]:
                         first = j
                         break
                 if first or first == 0:
@@ -3430,10 +3776,17 @@ class OCR:
     def __init__(self,text):
         self._text = text
 
-    def cyr2lat(self):     # Texts in Latin characters only
-        # 'У' -> 'Y' is not actually an OCR error, but rather a human one
-        cyr = ['А','В','Е','К','М','Н','О','Р','С','Т','У','Х','Ь','а','е','о','р','с','у']
-        lat = ['A','B','E','K','M','H','O','P','C','T','Y','X','b','a','e','o','p','c','y']
+    # Texts in Latin characters only
+    def cyr2lat(self):
+        ''' 'У' -> 'Y' is not actually an OCR error, but rather a human
+            one.
+        '''
+        cyr = ['А','В','Е','К','М','Н','О','Р','С','Т','У','Х','Ь','а'
+              ,'е','о','р','с','у'
+              ]
+        lat = ['A','B','E','K','M','H','O','P','C','T','Y','X','b','a'
+              ,'e','o','p','c','y'
+              ]
         for i in range(len(cyr)):
             self._text = self._text.replace(cyr[i],lat[i])
         return self._text
@@ -3452,22 +3805,31 @@ class OCR:
         # 106Ь => 106b
         self._text = re.sub(r'(\d+)Ь',r'\1b',self._text)
         # Fix a degree sign
-        self._text = re.sub(r'[\s]{0,1}[°o][\s]{0,1}[CС](\W)',r'°C',self._text)
+        self._text = re.sub (r'[\s]{0,1}[°o][\s]{0,1}[CС](\W)'
+                            ,r'°C',self._text
+                            )
         return self._text
 
 
 
 ''' NOTE ABOUT PYMORPHY2:
-    1) Input must be stripped of punctuation, otherwise, the program fails
-    2) Output keeps unstripped spaces to the left, however, spaces to the right fail the program
-    3) Input can have any register. The output is lower-case
-    4) Output can have 'ё' irrespectively of input
+    1) Input must be stripped of punctuation, otherwise, the program
+       fails.
+    2) Output keeps unstripped spaces to the left, however, spaces to
+       the right fail the program.
+    3) Input can have any register. The output is lower-case.
+    4) Output can have 'ё' irrespectively of input.
 '''
 class Decline:
 
-    def __init__(self,text='',number='',case='',Auto=True):
+    def __init__ (self,text='',number=''
+                 ,case='',Auto=True):
         if text:
-            self.reset(text=text,number=number,case=case,Auto=Auto)
+            self.reset (text   = text
+                       ,number = number
+                       ,case   = case
+                       ,Auto   = Auto
+                       )
         else:
             self.Auto = Auto
             self._orig = ''
@@ -3475,18 +3837,25 @@ class Decline:
             self._case = 'nomn'
             self._list = []
 
-    # todo: 1) Restore punctuation 2) Optional leading/trailing spaces
+    ''' #todo:
+        1) Restore punctuation
+        2) Optional leading/trailing spaces
+    '''
     def reset(self,text,number='',case='',Auto=True):
         self._orig = text
         self._number = number
-        self._case = case # 'nomn', 'gent', 'datv', 'accs', 'ablt', 'loct'
+        # 'nomn', 'gent', 'datv', 'accs', 'ablt', 'loct'
+        self._case = case
         self.Auto = Auto
         if self.Auto:
             result = Text(text=self._orig).delete_punctuation()
         else:
             result = self._orig
         self._list = result.split(' ')
-        return self # Returning 'self' allows to call 'get' in the same line, e.g. Decline(text='текст').normal().get()
+        ''' Returning 'self' allows to call 'get' in the same line, e.g.
+            Decline(text='текст').normal().get()
+        '''
+        return self
 
     def get(self):
         result = ' '.join(self._list)
@@ -3497,7 +3866,15 @@ class Decline:
     def decline(self):
         for i in range(len(self._list)):
             # Inflecting '', None, digits and Latin words *only* fails
-            #log.append('Decline.decline',_('DEBUG'),_('Decline "%s" in "%s" number and "%s" case') % (str(self._list[i]),str(self.number()),str(self.case())))
+            ''' log.append ('Decline.decline'
+                           ,_('DEBUG')
+                           ,_('Decline "%s" in "%s" number and "%s" case') \
+                           % (str(self._list[i])
+                             ,str(self.number())
+                             ,str(self.case())
+                             )
+                           )
+            '''
             try:
                 self._list[i] = objs.morph().parse(self._list[i])[0].inflect({self.number(),self.case()}).word
             except AttributeError:
@@ -3517,16 +3894,22 @@ class Decline:
                 tmp = []
                 for i in range(len(self._list)):
                     if self._list[i]:
-                        tmp.append(objs.morph().parse(self._list[i])[0].tag.number) # Returns 'sing', 'plur' or None
+                        # Returns 'sing', 'plur' or None
+                        tmp.append(objs.morph().parse(self._list[i])[0].tag.number)
                 if tmp and max(tmp,key=tmp.count) == 'plur':
                     self._number = 'plur'
-            #log.append('Decline.number',_('DEBUG'),str(self._number))
+            ''' log.append ('Decline.number'
+                           ,_('DEBUG')
+                           ,str(self._number)
+                           )
+            '''
         return self._number
 
     def case(self):
         if not self._case:
             self._case = 'nomn'
-            if self._list: # Needed by 'max'
+            # Needed by 'max'
+            if self._list:
                 tmp = []
                 for i in range(len(self._list)):
                     if self._list[i]:
@@ -3534,7 +3917,10 @@ class Decline:
                 result = max(tmp,key=tmp.count)
                 if result:
                     self._case = result
-            log.append('Decline.case',_('DEBUG'),str(self._case))
+            log.append ('Decline.case'
+                       ,_('DEBUG')
+                       ,str(self._case)
+                       )
         return self._case
 
 
@@ -3542,7 +3928,8 @@ class Decline:
 class Objects:
 
     def __init__(self):
-        self._enchant = self._morph = self._pretty_table = self._diff = self._pdir = self._tmpfile = None
+        self._enchant = self._morph = self._pretty_table = self._diff \
+                      = self._pdir = self._tmpfile = None
 
     def tmpfile(self,suffix='.htm',Delete=0):
         if not self._tmpfile:
@@ -3653,7 +4040,8 @@ class Timer:
     def end(self):
         log.append (self._func_title
                    ,_('INFO')
-                   ,_('The operation has taken %f s.') % float(time.time()-self._start)
+                   ,_('The operation has taken %f s.') \
+                   % float(time.time()-self._start)
                    )
 
 
@@ -3679,10 +4067,14 @@ class Table:
                        )
 
     def _shorten_headers(self):
-        self._headers = [Text(text=header).shorten(max_len=self.MaxRow) for header in self._headers]
+        self._headers = [Text(text=header).shorten(max_len=self.MaxRow)\
+                         for header in self._headers
+                        ]
         # prettytable.py, 302: Exception: Field names must be unique!
         headers = list(set(self._headers))
-        # prettytable.py, 818: Exception: Row has incorrect number of values
+        ''' prettytable.py, 818: Exception: Row has incorrect number of
+            values
+        '''
         if len(headers) != len(self._headers):
             result = List(lst1=headers,lst2=self._headers).equalize()
             if result:
@@ -3693,7 +4085,8 @@ class Table:
             self.MaxRows = len(self._rows)
             log.append ('Table._shorten_rows'
                        ,_('INFO')
-                       ,_('Set the max number of rows to %d') % self.MaxRows
+                       ,_('Set the max number of rows to %d') \
+                       % self.MaxRows
                        )
         self.MaxRows = int(self.MaxRows / 2)
         pos3 = len(self._rows)
@@ -3738,9 +4131,9 @@ class Table:
 
 
 ''' Return a path base name that would comply with OS-specific rules. 
-    We should not use absolute paths at input because we cannot tell for sure 
-    that the path separator is actually a separator and not an illegal 
-    character.
+    We should not use absolute paths at input because we cannot tell for
+    sure that the path separator is actually a separator and not an
+    illegal character.
 '''
 class FixBaseName:
     
@@ -3754,7 +4147,9 @@ class FixBaseName:
             self._name = self._name[:self._max_len]
     
     def win(self):
-        self._name = [char for char in self._name if not char in forbidden_win]
+        self._name = [char for char in self._name if not char \
+                      in forbidden_win
+                     ]
         self._name = ''.join(self._name)
         if self._name.endswith('.'):
             self._name = self._name[:-1]
@@ -3763,12 +4158,16 @@ class FixBaseName:
             self._name = ''
         
     def lin(self):
-        self._name = [char for char in self._name if not char in forbidden_lin]
+        self._name = [char for char in self._name if not char \
+                      in forbidden_lin
+                     ]
         self._name = ''.join(self._name)
         self._name = self._name.strip()
         
     def mac(self):
-        self._name = [char for char in self._name if not char in forbidden_mac]
+        self._name = [char for char in self._name if not char \
+                      in forbidden_mac
+                     ]
         self._name = ''.join(self._name)
         self._name = self._name.strip()
         
@@ -3869,11 +4268,16 @@ class Get:
 
 
 
-objs = Objects() # If there are problems with import or tkinter's wait_variable, put this beneath 'if __name__'
+''' If there are problems with import or tkinter's wait_variable, put
+    this beneath 'if __name__'
+'''
+objs = Objects()
 
 
 if __name__ == '__main__':
-    # NOTE: Focusing on the widget is lost randomly (is assigned to root). This could be a Tkinter/DM bug.
+    ''' #note: Focusing on the widget is lost randomly (is assigned to
+        root). This could be a Tkinter/DM bug.
+    '''
     Message (func    = 'shared.__main__'
             ,level   = _('INFO')
             ,message = 'Все прошло удачно!'

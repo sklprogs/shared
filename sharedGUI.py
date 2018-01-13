@@ -1799,10 +1799,10 @@ class ListBox:
 
 class OptionMenu:
 
-    ''' tk.OptionMenu will convert integers to strings, but we better do
-    this here to avoid problems with iterating ("in requires int as the
-    left operand") later (this happens when we pass a sequence of chars
-    instead of a list of strings).
+    ''' tk.OptionMenu will convert integers to strings, but we better do this
+        here to avoid problems with iterating ("in requires int as the left
+        operand") later (this happens when we pass a sequence of chars instead
+        of a list of strings).
     '''
     def __init__ (self
                  ,parent_obj
