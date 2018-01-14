@@ -1435,6 +1435,38 @@ class Time:
                        )
         return self._month_name
 
+    def localize_month_abbr(self):
+        if self._month_abbr == 'Jan':
+            self._month_abbr = _('Jan')
+        elif self._month_abbr == 'Feb':
+            self._month_abbr = _('Feb')
+        elif self._month_abbr == 'Mar':
+            self._month_abbr = _('Mar')
+        elif self._month_abbr == 'Apr':
+            self._month_abbr = _('Apr')
+        elif self._month_abbr == 'May':
+            self._month_abbr = _('May')
+        elif self._month_abbr == 'Jun':
+            self._month_abbr = _('Jun')
+        elif self._month_abbr == 'Jul':
+            self._month_abbr = _('Jul')
+        elif self._month_abbr == 'Aug':
+            self._month_abbr = _('Aug')
+        elif self._month_abbr == 'Sep':
+            self._month_abbr = _('Sep')
+        elif self._month_abbr == 'Oct':
+            self._month_abbr = _('Oct')
+        elif self._month_abbr == 'Nov':
+            self._month_abbr = _('Nov')
+        elif self._month_abbr == 'Dec':
+            self._month_abbr = _('Dec')
+        else:
+            log.append ('Time.localize_month_abbr'
+                       ,_('WARNING')
+                       ,_('Wrong input data!')
+                       )
+        return self._month_abbr
+    
     def month_abbr(self):
         if self.Success:
             if not self._instance:
