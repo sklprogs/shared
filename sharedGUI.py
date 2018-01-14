@@ -1901,7 +1901,8 @@ class OptionMenu:
         else:
             self.widget.config(state='normal')
 
-    def _get(self,*args): # Auto updated (after selecting an item)
+    # Auto updated (after selecting an item)
+    def _get(self,*args):
         self.choice = self.var.get()
         # 'OptionMenu' always returns a string
         if self.choice not in self.items:
