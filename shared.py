@@ -121,7 +121,7 @@ SectionVariables_abbr  = 'var'
 SectionWindowsSettings = 'Windows settings'
 
 punc_array      = ['.',',','!','?',':',';']
-# todo: why there were no opening brackets?
+#todo: why there were no opening brackets?
 #punc_ext_array = ['"','”','»',']','}',')']
 punc_ext_array  = ['"','“','”','','«','»','[',']','{','}','(',')']
 
@@ -179,7 +179,7 @@ def rewrite(dest,AskRewrite=True):
 
 class Launch:
 
-    # note: 'Block' works only a 'custom_app' is set
+    #note: 'Block' works only a 'custom_app' is set
     def __init__(self,target='',Block=False,Silent=False):
         self.values()
         self.target = target
@@ -365,7 +365,7 @@ class WriteTextFile:
         if self.Success:
             self.text = text
             if self.text:
-                ''' # todo: In the append mode the file is created if it
+                ''' #todo: In the append mode the file is created if it
                     does not exist, but should we warn the user that we
                     create it from scratch?
                 '''
@@ -492,7 +492,7 @@ else:
 
 
 
-# todo: Do we really need this?
+#todo: Do we really need this?
 class TextDic:
 
     def __init__(self,file,Silent=False,Sortable=False):
@@ -580,7 +580,7 @@ class TextDic:
         else:
             self.Success = False
 
-    ''' # todo: write a dictionary in an append mode after appending to
+    ''' #todo: write a dictionary in an append mode after appending to
         memory
     '''
     #todo: skip repetitions
@@ -965,7 +965,7 @@ class Text:
         self.text = self.text.replace('\xa0',' ').replace('\x07',' ')
         return self.text
 
-    # todo: check
+    #todo: check
     def delete_alphabetic_numeration(self):
         my_expr = ' [\(,\[]{0,1}[aA-zZ,аА-яЯ][\.,\),\]]( \D)'
         match = re.search(my_expr,self.text)
@@ -1775,7 +1775,7 @@ class Path:
                            ,_('Create directory "%s"') % self.path
                            )
                 try:
-                    # todo: consider os.mkdir
+                    #todo: consider os.mkdir
                     os.makedirs(self.path)
                 except:
                     Success = False
@@ -1841,7 +1841,7 @@ class Path:
 
     def split(self):
         if not self.parts:
-            # todo: use os.path.split
+            #todo: use os.path.split
             self.parts = self.path.split(os.path.sep)
             i = 0
             tmp_str = ''
@@ -1937,7 +1937,7 @@ class WriteBinary:
 
 
 
-# todo: fix: Reading 'largest_dic' fails without this class
+#todo: fix: Reading 'largest_dic' fails without this class
 class Dic:
 
     def __init__(self,file,Silent=False,Sortable=False):
@@ -2038,7 +2038,7 @@ class Dic:
     ''' #todo: write a dictionary in an append mode after appending to
         memory
     '''
-    # todo: skip repetitions
+    #todo: skip repetitions
     def append(self,original,translation):
         if self.Success:
             if original and translation:
@@ -2226,7 +2226,7 @@ class ReadBinary:
                     ,Silent  = self.Silent
                     )
 
-    # todo: load fragments appended to a binary
+    #todo: load fragments appended to a binary
     def load(self):
         if self.Success:
             self._load()
@@ -2250,7 +2250,7 @@ class CreateInstance:
 
 
 
-# todo: fix: does not work with a root dir ('/')
+#todo: fix: does not work with a root dir ('/')
 class Directory:
 
     def __init__(self,path,dest='',Silent=False):
@@ -3152,7 +3152,7 @@ class Words: # Requires Search, Text
 
     def __init__(self,text,OrigCyr=False,Auto=False):
         self.Success = True
-        self.OrigCyr = OrigCyr # todo: Do we really need this?
+        self.OrigCyr = OrigCyr #todo: Do we really need this?
         self.Auto    = Auto
         self.values()
         if text:
@@ -3837,7 +3837,7 @@ class OCR:
         self._text = re.sub(r'(\d+)е',r'\1e',self._text)
         # 106Ь => 106b
         self._text = re.sub(r'(\d+)Ь',r'\1b',self._text)
-        # Fix a degree sign
+        #fix a degree sign
         self._text = re.sub (r'[\s]{0,1}[°o][\s]{0,1}[CС](\W)'
                             ,r'°C',self._text
                             )

@@ -11,11 +11,15 @@ gettext_windows.setup_env()
 gettext.install('shared','./locale')
 
 
-# This class is for both checking a regular expression and replacing matches through text (these actions require different arguments and are not necessarily interconnected)
+''' This class is for both checking a regular expression and replacing
+    matches through text (these actions require different arguments and
+    are not necessarily interconnected)
+'''
 class Record:
     
     ''' Example:
-            # Expressions must be raw strings, otherwise, there will be no match
+            # Expressions must be raw strings, otherwise, there will be
+              no match
             orig:       r'(\d+)[\s]{0,1}[–-][\s]{0,1}(\d+)'
             final:      r'\1-\2'
             what1:      'Figures 1 - 2 show that...'
@@ -61,7 +65,8 @@ class Record:
                 self.Success = False
                 sg.Message ('Record.apply'
                            ,_('WARNING')
-                           ,_('A syntax error in the regular expression (id: %s)!') % str(self._id)
+                           ,_('A syntax error in the regular expression (id: %s)!') \
+                           % str(self._id)
                            )
             return result
         else:
@@ -77,7 +82,8 @@ class Record:
                 self.Success = False
                 sg.Message ('Record._check'
                            ,_('WARNING')
-                           ,_('Regular expression %s has failed: we were expecting\n"%s",\nbut received\n"%s".') % (str(self._id),str(self._with),str(result))
+                           ,_('Regular expression %s has failed: we were expecting\n"%s",\nbut received\n"%s".') \
+                           % (str(self._id),str(self._with),str(result))
                            )
         else:
             sh.log.append ('Record.check'

@@ -183,12 +183,12 @@ class WidgetShared: # Do not use graphical logging there
 
     def custom_buttons(object):
         if not object.Composite:
-            if object.parent_obj.type == 'Toplevel' \
-            or object.parent_obj.type == 'Root':
+            if object.parent.type == 'Toplevel' \
+            or object.parent.type == 'Root':
                 if object.state == 'disabled':
-                    object.parent_obj.close_button.widget.config(text=_('Quit'))
+                    object.parent.close_button.widget.config(text=_('Quit'))
                 else:
-                    object.parent_obj.close_button.widget.config(text=_('Save and close'))
+                    object.parent.close_button.widget.config(text=_('Save and close'))
             else:
                 sh.log.append (func    = 'WidgetShared.custom_buttons'
                               ,level   = _('ERROR')
@@ -222,14 +222,14 @@ class WidgetShared: # Do not use graphical logging there
 
 class Top:
 
-    def __init__(self,parent_obj,Maximize=False,AutoCenter=True):
+    def __init__(self,parent,Maximize=False,AutoCenter=True):
         self.values()
-        self.parent_obj = parent_obj
+        self.parent     = parent
         self.AutoCenter = AutoCenter
-        self.widget     = tk.Toplevel(self.parent_obj.widget)
+        self.widget     = tk.Toplevel(self.parent.widget)
         self.widget.protocol("WM_DELETE_WINDOW",self.close)
         if Maximize:
-            Geometry(parent_obj=self).maximize()
+            Geometry(parent=self).maximize()
         self.tk_trigger = tk.BooleanVar()
         
     def values(self):
@@ -275,7 +275,7 @@ class Top:
                ,self.widget.winfo_screenheight()
                )
 
-    # todo: not centers without Force=True when Lock=False
+    #todo: not centers without Force=True when Lock=False
     def center(self,Force=False):
         ''' Make child widget always centered at the first time and up
             to a user's choice any other time (if the widget is reused).
@@ -293,21 +293,21 @@ class Top:
 
 
 
-''' # todo (?): fix: if duplicate spaces/line breaks are not deleted,
+''' #todo (?): fix: if duplicate spaces/line breaks are not deleted,
     text with and without punctuation will have a different number of
     words; thus, tkinter will be supplied wrong positions upon Search.
 '''
 class SearchBox:
 
     def __init__(self,obj):
-        self.type       = 'SearchBox'
-        self.obj        = obj
-        self.parent_obj = self.obj.parent_obj
-        h_top           = Top(self.parent_obj)
-        self.h_entry    = Entry(h_top)
+        self.type    = 'SearchBox'
+        self.obj     = obj
+        self.parent  = self.obj.parent
+        h_top        = Top(self.parent)
+        self.h_entry = Entry(h_top)
         self.h_entry.title(text=_('Find:'))
         self.h_entry.close()
-        self.h_sel      = Selection(self.obj)
+        self.h_sel   = Selection(self.obj)
 
     # Strict: case-sensitive, with punctuation
     def reset_logic(self,words=None,Strict=False):
@@ -534,7 +534,7 @@ class SearchBox:
 
 class TextBox:
 
-    def __init__ (self,parent_obj,Composite=False
+    def __init__ (self,parent,Composite=False
                  ,expand=1,side=None,fill='both'
                  ,words=None,font='Serif 14'
                  ,ScrollX=False,ScrollY=True
@@ -554,31 +554,31 @@ class TextBox:
         ''' (optional, external) Prevent resetting the active (already
             shown) widget
         '''
-        self.Active     = False
-        self.Save       = False
-        self.tags       = []
-        self.marks      = []
-        self.parent_obj = parent_obj
-        self.expand     = expand
-        self.side       = side
-        self.fill       = fill
-        self.selection  = Selection(h_widget=self)
+        self.Active    = False
+        self.Save      = False
+        self.tags      = []
+        self.marks     = []
+        self.parent    = parent
+        self.expand    = expand
+        self.side      = side
+        self.fill      = fill
+        self.selection = Selection(h_widget=self)
         self.gui()
         self.reset_logic(words=words)
         if not self.Composite:
             self.focus()
 
     def _gui_txt(self):
-        if self.parent_obj.type in ('Root','Toplevel'):
-            self.widget = tk.Text (self.parent_obj.widget
+        if self.parent.type in ('Root','Toplevel'):
+            self.widget = tk.Text (master = self.parent.widget
                                   ,font   = self.font
                                   ,wrap   = 'word'
                                   ,height = 1
                                   )
         else:
-            self.widget = tk.Text (self.parent_obj.widget
-                                  ,font = self.font
-                                  ,wrap = 'word'
+            self.widget = tk.Text (master = self.parent.widget
+                                  ,font   = self.font
+                                  ,wrap   = 'word'
                                   )
         self.widget.pack (expand = self.expand
                          ,fill   = self.fill
@@ -586,12 +586,12 @@ class TextBox:
                          )
 
     def _gui_scroll_hor(self):
-        frame = Frame (parent_obj = self.parent_obj
-                      ,expand     = 0
-                      ,fill       = 'x'
-                      ,side       = 'top'
+        frame = Frame (parent = self.parent
+                      ,expand = 0
+                      ,fill   = 'x'
+                      ,side   = 'top'
                       )
-        self.scrollbar_hor = tk.Scrollbar (frame.widget
+        self.scrollbar_hor = tk.Scrollbar (master    = frame.widget
                                           ,orient    = tk.HORIZONTAL
                                           ,jump      = 0
                                           ,takefocus = False
@@ -616,11 +616,11 @@ class TextBox:
         if self.ScrollX:
             self._gui_scroll_hor()
         if not self.Composite and \
-           not hasattr(self.parent_obj,'close_button'):
-            if self.parent_obj.type == 'Toplevel' \
-            or self.parent_obj.type == 'Root':
-                self.parent_obj.close_button = \
-                Button (self.parent_obj
+           not hasattr(self.parent,'close_button'):
+            if self.parent.type == 'Toplevel' \
+            or self.parent.type == 'Root':
+                self.parent.close_button = \
+                Button (parent = self.parent
                        ,text   = _('Quit')
                        ,hint   = _('Quit')
                        ,action = self.close
@@ -657,12 +657,12 @@ class TextBox:
 
     def show(self):
         self.Active = True
-        self.parent_obj.show()
+        self.parent.show()
 
     def close(self,*args):
         self.Save   = True
         self.Active = False
-        self.parent_obj.close()
+        self.parent.close()
         return 'break'
 
     def bindings(self):
@@ -685,12 +685,12 @@ class TextBox:
                 ''' Разрешать считывать текст после нажатия Escape
                     (в Entry запрещено)
                 '''
-                bind (obj      = self.parent_obj
+                bind (obj      = self.parent
                      ,bindings = ['<Return>','<KP_Enter>','<Escape>']
                      ,action   = self.close
                      )
                 ''' We need to bind 'Return' to the widget anyway even
-                    if we have already bound this to 'parent_obj',
+                    if we have already bound this to 'parent',
                     because we need to return 'break'
                 '''
                 bind (obj      = self
@@ -698,7 +698,7 @@ class TextBox:
                      ,action   = self.close
                      )
             else:
-                bind (obj      = self.parent_obj
+                bind (obj      = self.parent
                      ,bindings = '<Escape>'
                      ,action   = self.close
                      )
@@ -718,9 +718,9 @@ class TextBox:
              ,bindings = '<Control-Alt-u>'
              ,action   = self.toggle_case
              )
-        if hasattr(self.parent_obj,'type') \
-            and self.parent_obj.type == 'Toplevel':
-            self.parent_obj.widget.protocol ("WM_DELETE_WINDOW"
+        if hasattr(self.parent,'type') \
+            and self.parent.type == 'Toplevel':
+            self.parent.widget.protocol ("WM_DELETE_WINDOW"
                                             ,self.close
                                             )
 
@@ -800,7 +800,7 @@ class TextBox:
             try:
                 self.tags.remove(tag_name)
             except ValueError:
-                # todo: Что тут не работает?
+                #todo: Что тут не работает?
                 sh.log.append ('TextBox.tag_remove'
                               ,_('DEBUG-ERROR')
                               ,_('Element "%s" has not been found in fragment "%s"!') \
@@ -905,14 +905,14 @@ class TextBox:
                           ,_('The parent has already been destroyed.')
                           )
 
-    # Fix Tkinter limitations
+    #fix Tkinter limitations
     def clear_on_key(self,event=None):
         if event and event.char:
             if event.char.isspace() or event.char in sh.lat_alphabet \
             or event.char in sh.ru_alphabet or event.char in sh.digits \
             or event.char in sh.punc_array or event.char \
             in sh.punc_ext_array:
-                ''' # todo: suppress excessive logging (Selection.get,
+                ''' #todo: suppress excessive logging (Selection.get,
                     TextBox.clear_selection, TextBox.cursor,
                     Clipboard.paste, Words.no_by_tk)
                 '''
@@ -976,7 +976,7 @@ class TextBox:
         if not self.visible(mark):
             self.scroll(mark)
 
-    # todo: select either 'see' or 'autoscroll'
+    #todo: select either 'see' or 'autoscroll'
     def see(self,mark):
         if mark is None:
             sh.log.append ('TextBox.see'
@@ -987,10 +987,10 @@ class TextBox:
             self.widget.see(mark)
 
     def title(self,text=_('Title:')):
-        WidgetShared.title(self.parent_obj,text)
+        WidgetShared.title(self.parent,text)
 
     def icon(self,path):
-        WidgetShared.icon(self.parent_obj,path)
+        WidgetShared.icon(self.parent,path)
 
     def visible(self,tk_pos):
         if self.widget.bbox(tk_pos):
@@ -1033,7 +1033,7 @@ class TextBox:
                     no = self.words._no = result[i]
                     pos1tk = self.words.words[no].tf()
                     pos2tk = self.words.words[no].tl()
-                    # todo: apply IGNORE_SPELLING
+                    #todo: apply IGNORE_SPELLING
                     if pos1tk and pos2tk:
                         self.tag_add (tag_name       = 'spell'
                                      ,pos1tk         = pos1tk
@@ -1064,20 +1064,20 @@ class TextBox:
 
 class Entry:
 
-    def __init__(self,parent_obj,Composite=False
+    def __init__(self,parent,Composite=False
                 ,side=None,ipadx=None,ipady=None
                 ,fill=None,width=None,expand=None
                 ):
-        self.type       = 'Entry'
-        self.Composite  = Composite
+        self.type      = 'Entry'
+        self.Composite = Composite
         # 'disabled' - отключить редактирование
-        self.state      = 'normal'
-        self.Save       = False
-        self.parent_obj = parent_obj
-        self.widget     = tk.Entry (self.parent_obj.widget
-                                   ,font  = 'Sans 11'
-                                   ,width = width
-                                   )
+        self.state     = 'normal'
+        self.Save      = False
+        self.parent    = parent
+        self.widget    = tk.Entry (master = self.parent.widget
+                                  ,font   = 'Sans 11'
+                                  ,width  = width
+                                  )
         bind (obj      = self
              ,bindings = '<Control-a>'
              ,action   = self.select_all
@@ -1090,14 +1090,14 @@ class Entry:
                          )
         if not self.Composite:
             # Тип родительского виджета может быть любым
-            if not hasattr(self.parent_obj,'close_button'):
-                self.parent_obj.close_button = Button (self.parent_obj
-                                                      ,text   = _('Quit')
-                                                      ,hint   = _('Quit')
-                                                      ,action = self.close
-                                                      ,expand = 0
-                                                      ,side   = 'bottom'
-                                                      )
+            if not hasattr(self.parent,'close_button'):
+                self.parent.close_button = Button (parent = self.parent
+                                                  ,text   = _('Quit')
+                                                  ,hint   = _('Quit')
+                                                  ,action = self.close
+                                                  ,expand = 0
+                                                  ,side   = 'bottom'
+                                                  )
             WidgetShared.custom_buttons(self)
         self.bindings()
 
@@ -1117,15 +1117,15 @@ class Entry:
                  )
             bind (obj      = self
                  ,bindings = '<Escape>'
-                 ,action   = self.parent_obj.close
+                 ,action   = self.parent.close
                  )
 
     def show(self,*args):
-        self.parent_obj.show()
+        self.parent.show()
 
     def close(self,*args):
         self.Save = True
-        self.parent_obj.close()
+        self.parent.close()
 
     def _get(self):
         try:
@@ -1165,10 +1165,10 @@ class Entry:
                           )
 
     def icon(self,path):
-        WidgetShared.icon(self.parent_obj,path)
+        WidgetShared.icon(self.parent,path)
 
     def title(self,text='Title:'):
-        WidgetShared.title(self.parent_obj,text)
+        WidgetShared.title(self.parent,text)
 
     def focus_set(self,*args):
         self.focus()
@@ -1182,20 +1182,20 @@ class Entry:
 
 class Frame:
 
-    def __init__ (self,parent_obj,expand=1
+    def __init__ (self,parent,expand=1
                  ,fill='both',side=None,padx=None
                  ,pady=None,ipadx=None,ipady=None
                  ,bd=None,bg=None,width=None
                  ,height=None
                  ):
-        self.type       = 'Frame'
-        self.parent_obj = parent_obj
-        self.widget     = tk.Frame (master = self.parent_obj.widget
-                                   ,bd     = bd
-                                   ,bg     = bg
-                                   ,width  = width
-                                   ,height = height
-                                   )
+        self.type   = 'Frame'
+        self.parent = parent
+        self.widget = tk.Frame (master = self.parent.widget
+                               ,bd     = bd
+                               ,bg     = bg
+                               ,width  = width
+                               ,height = height
+                               )
         self.widget.pack (expand = expand
                          ,fill   = fill
                          ,side   = side
@@ -1207,23 +1207,23 @@ class Frame:
 
     def title(self,text=None):
         if text:
-            self.parent_obj.title(text)
+            self.parent.title(text)
         else:
-            self.parent_obj.title()
+            self.parent.title()
 
     def show(self):
-        self.parent_obj.show()
+        self.parent.show()
 
     def close(self):
-        self.parent_obj.close()
+        self.parent.close()
 
 
 
-# todo: Нужно ли на входе ,bindings=[]?
+#todo: Нужно ли на входе ,bindings=[]?
 class Button:
 
     def __init__ (self
-                 ,parent_obj
+                 ,parent
                  ,action
                  ,hint                = None
                  ,inactive_image_path = None
@@ -1250,7 +1250,7 @@ class Button:
                  ,TakeFocus           = False
                  ):
         self.Status          = False
-        self.parent_obj      = parent_obj
+        self.parent          = parent
         self.action          = action
         self.height          = height
         self.width           = width
@@ -1289,7 +1289,7 @@ class Button:
     
     def gui(self):
         if self.inactive_image:
-            self.widget = tk.Button (master           = self.parent_obj.widget
+            self.widget = tk.Button (master           = self.parent.widget
                                     ,image            = self.inactive_image
                                     ,height           = self.height
                                     ,width            = self.width
@@ -1305,7 +1305,7 @@ class Button:
                 автоматически. Также в большинстве случаев для текстовых
                 кнопок следует использовать рамку.
             '''
-            self.widget = tk.Button (master           = self.parent_obj.widget
+            self.widget = tk.Button (master           = self.parent.widget
                                     ,bd               = 1
                                     ,bg               = self.bg
                                     ,fg               = self.fg
@@ -1340,7 +1340,7 @@ class Button:
         # Без 'file=' не сработает!
         if button_image_path and os.path.exists(button_image_path):
             button_image = tk.PhotoImage (file   = button_image_path
-                                         ,master = self.parent_obj.widget
+                                         ,master = self.parent.widget
                                          ,width  = self.width
                                          ,height = self.height
                                          )
@@ -1498,9 +1498,9 @@ class ToolTip(ToolTipBase):
 
 
 class ListBox:
-    # todo: configure a font
+    #todo: configure a font
     def __init__(self
-                ,parent_obj
+                ,parent
                 ,Multiple        = False
                 ,lst             = []
                 ,title           = 'Title:'
@@ -1519,7 +1519,7 @@ class ListBox:
             pressing Up/Down arrow keys and LMB. There is a problem
             binding it externally, so we bind it here.
         '''
-        self.parent_obj      = parent_obj
+        self.parent          = parent
         self.Multiple        = Multiple
         self.expand          = expand
         self.Composite       = Composite
@@ -1571,7 +1571,7 @@ class ListBox:
                  ,action   = self.user_function
                  )
         elif self.SelectionCloses:
-            # todo: test <KP_Enter> in Windows
+            #todo: test <KP_Enter> in Windows
             bind (obj      = self
                  ,bindings = ['<Return>','<KP_Enter>'
                              ,'<Double-Button-1>'
@@ -1592,26 +1592,26 @@ class ListBox:
                  ,action   = self.move_up
                  )
             bind(self,'<Down>',self.move_down)
-        if not self.Composite: # todo: test
+        if not self.Composite: #todo: test
             bind (obj      = self
                  ,bindings = ['<Escape>','<Control-q>','<Control-w>']
                  ,action   = self.interrupt
                  )
-            if hasattr(self.parent_obj,'type') and \
-               self.parent_obj.type == 'Toplevel':
-                self.parent_obj.widget.protocol ("WM_DELETE_WINDOW"
-                                                ,self.interrupt
-                                                )
+            if hasattr(self.parent,'type') and \
+               self.parent.type == 'Toplevel':
+                self.parent.widget.protocol ("WM_DELETE_WINDOW"
+                                            ,self.interrupt
+                                            )
 
     def gui(self):
         self._scroll()
         if self.Multiple:
-            self.widget = tk.Listbox (self.parent_obj.widget
+            self.widget = tk.Listbox (master          = self.parent.widget
                                      ,exportselection = 0
                                      ,selectmode      = tk.MULTIPLE
                                      )
         else:
-            self.widget = tk.Listbox (self.parent_obj.widget
+            self.widget = tk.Listbox (master          = self.parent.widget
                                      ,exportselection = 0
                                      ,selectmode      = tk.SINGLE
                                      )
@@ -1626,20 +1626,20 @@ class ListBox:
         self.bindings()
         if not self.Composite:
             # Тип родительского виджета может быть любым
-            if not hasattr(self.parent_obj,'close_button'):
-                self.parent_obj.close_button = Button (
-                    parent_obj = self.parent_obj
-                   ,text       = _('Quit')
-                   ,hint       = _('Quit')
-                   ,action     = self.close
-                   ,expand     = 0
-                   ,side       = 'bottom'
-                                                      )
+            if not hasattr(self.parent,'close_button'):
+                self.parent.close_button = Button (
+                    parent = self.parent
+                   ,text   = _('Quit')
+                   ,hint   = _('Quit')
+                   ,action = self.close
+                   ,expand = 0
+                   ,side   = 'bottom'
+                                                  )
             WidgetShared.custom_buttons(self)
 
     def _scroll(self):
         if self.Scrollbar:
-            self.scrollbar = tk.Scrollbar(self.parent_obj.widget)
+            self.scrollbar = tk.Scrollbar(self.parent.widget)
             self.scrollbar.pack(side=tk.RIGHT,fill=tk.Y)
 
     def _scroll_config(self):
@@ -1713,7 +1713,7 @@ class ListBox:
                           )
 
     def show(self,*args):
-        self.parent_obj.show()
+        self.parent.show()
 
     def interrupt(self,*args):
         ''' Do not set '_index' to 0, because we need 'self.interrupt'.
@@ -1721,12 +1721,12 @@ class ListBox:
             value.
         '''
         self._get, self._index = '', None
-        self.parent_obj.close()
+        self.parent.close()
 
     def close(self,*args):
         self.index()
         self.get()
-        self.parent_obj.close()
+        self.parent.close()
 
     def fill(self):
         for i in range(len(self.lst)):
@@ -1734,11 +1734,11 @@ class ListBox:
 
     def title(self,text=None):
         if text:
-            self.parent_obj.title(text=text)
+            self.parent.title(text=text)
 
     def icon(self,path=None):
         if path:
-            WidgetShared.icon(self.parent_obj,path)
+            WidgetShared.icon(self.parent,path)
 
     ''' Read 'self._index' instead of calling this because we need 0
         in case of 'self.interrupt', and this always returns an actual
@@ -1747,7 +1747,7 @@ class ListBox:
     def index(self):
         selection = self.widget.curselection()
         if selection and len(selection) > 0:
-            ''' # note: selection[0] is a number in Python 3.4, however,
+            ''' #note: selection[0] is a number in Python 3.4, however,
                 in older interpreters and builds based on them it is a
                 string. In order to preserve compatibility, we convert
                 it to a number.
@@ -1805,25 +1805,25 @@ class OptionMenu:
         of a list of strings).
     '''
     def __init__ (self
-                 ,parent_obj
-                 ,items      = ('1','2','3','4','5')
-                 ,side       = 'left'
-                 ,anchor     = 'center'
-                 ,command    = None
-                 ,takefocus  = 1
-                 ,default    = None
+                 ,parent
+                 ,items     = ('1','2','3','4','5')
+                 ,side      = 'left'
+                 ,anchor    = 'center'
+                 ,command   = None
+                 ,takefocus = 1
+                 ,default   = None
                  ):
-        self.parent_obj = parent_obj
-        self.items      = items
-        self.command    = command
-        self.default    = default
-        self.choice     = None
-        self.index      = 0
-        self.var        = tk.StringVar(self.parent_obj.widget)
+        self.parent  = parent
+        self.items   = items
+        self.command = command
+        self.default = default
+        self.choice  = None
+        self.index   = 0
+        self.var     = tk.StringVar(self.parent.widget)
         # An error is thrown if 'items' is ()
         if not self.items:
             self.items = ('1','2','3','4','5')
-        self.widget    = tk.OptionMenu (self.parent_obj.widget
+        self.widget    = tk.OptionMenu (self.parent.widget
                                        ,self.var
                                        ,*self.items
                                        ,command = self.trigger
@@ -2076,7 +2076,7 @@ class Selection: # Selecting words only
             self.h_widget.widget.tag_config (tagName    = self._tag
                                             ,foreground = self._fg
                                             )
-        if AutoScroll: # todo: select either 'see' or 'autoscroll'
+        if AutoScroll: #todo: select either 'see' or 'autoscroll'
             #self.h_widget.see(mark)
             self.h_widget.autoscroll(mark)
 
@@ -2085,14 +2085,14 @@ class Selection: # Selecting words only
 # A modified mclient class
 class SymbolMap:
 
-    def __init__(self,parent_obj):
-        self.symbol     = 'EMPTY'
-        self.parent_obj = parent_obj
+    def __init__(self,parent):
+        self.symbol = 'EMPTY'
+        self.parent = parent
         self.gui()
         self.bindings()
         
     def gui(self):
-        self.obj    = Top(self.parent_obj)
+        self.obj    = Top(self.parent)
         self.widget = self.obj.widget
         self.frame  = Frame(self.obj,expand=1)
         self.obj.title(_('Paste a special symbol'))
@@ -2142,19 +2142,19 @@ class SymbolMap:
 '''
 class Geometry: # Requires sh.oss, objs
 
-    def __init__(self,parent_obj=None,title=None,hwnd=None):
-        self.parent_obj = parent_obj
+    def __init__(self,parent=None,title=None,hwnd=None):
+        self.parent = parent
         self._title = title
-        self._hwnd = hwnd
-        self._geom = None
+        self._hwnd  = hwnd
+        self._geom  = None
 
     def update(self):
         objs.root().widget.update_idletasks()
 
     def save(self):
-        if self.parent_obj:
+        if self.parent:
             self.update()
-            self._geom = self.parent_obj.widget.geometry()
+            self._geom = self.parent.widget.geometry()
             sh.log.append ('Geometry.save'
                           ,_('INFO')
                           ,_('Saved geometry: %s') % self._geom
@@ -2166,13 +2166,13 @@ class Geometry: # Requires sh.oss, objs
                     )
 
     def restore(self):
-        if self.parent_obj:
+        if self.parent:
             if self._geom:
                 sh.log.append ('Geometry.restore'
                               ,_('INFO')
                               ,_('Restoring geometry: %s') % self._geom
                               )
-                self.parent_obj.widget.geometry(self._geom)
+                self.parent.widget.geometry(self._geom)
             else:
                 Message (func    = 'Geometry.update'
                         ,level   = _('WARNING')
@@ -2205,8 +2205,8 @@ class Geometry: # Requires sh.oss, objs
                         ,level   = _('ERROR')
                         ,message = _('Wrong input data!')
                         )
-        elif self.parent_obj:
-            self.parent_obj.widget.lift()
+        elif self.parent:
+            self.parent.widget.lift()
         else:
             Message (func    = 'Geometry.foreground'
                     ,level   = _('ERROR')
@@ -2214,13 +2214,13 @@ class Geometry: # Requires sh.oss, objs
                     )
 
     def minimize(self,*args):
-        if self.parent_obj:
+        if self.parent:
             ''' # Does not always work
             if sh.oss.win():
                 win32gui.ShowWindow(self.hwnd(),win32con.SW_MINIMIZE)
             else:
             '''
-            self.parent_obj.widget.iconify()
+            self.parent.widget.iconify()
         else:
             Message (func    = 'Geometry.minimize'
                     ,level   = _('ERROR')
@@ -2230,9 +2230,9 @@ class Geometry: # Requires sh.oss, objs
     def maximize(self,*args):
         if sh.oss.win():
             #win32gui.ShowWindow(self.hwnd(),win32con.SW_MAXIMIZE)
-            self.parent_obj.widget.wm_state(newstate='zoomed')
-        elif self.parent_obj:
-            self.parent_obj.widget.wm_attributes('-zoomed',True)
+            self.parent.widget.wm_state(newstate='zoomed')
+        elif self.parent:
+            self.parent.widget.wm_attributes('-zoomed',True)
         else:
             Message (func    = 'Geometry.maximize'
                     ,level   = _('ERROR')
@@ -2242,8 +2242,8 @@ class Geometry: # Requires sh.oss, objs
     def focus(self,*args):
         if sh.oss.win():
             win32gui.SetActiveWindow(self.hwnd())
-        elif self.parent_obj:
-            self.parent_obj.widget.focus_set()
+        elif self.parent:
+            self.parent.widget.focus_set()
         else:
             Message (func    = 'Geometry.focus'
                     ,level   = _('ERROR')
@@ -2251,8 +2251,8 @@ class Geometry: # Requires sh.oss, objs
                     )
 
     def lift(self,*args):
-        if self.parent_obj:
-            self.parent_obj.widget.lift()
+        if self.parent:
+            self.parent.widget.lift()
         else:
             Message (func    = 'Geometry.list'
                     ,level   = _('ERROR')
@@ -2260,10 +2260,10 @@ class Geometry: # Requires sh.oss, objs
                     )
 
     def _activate(self):
-        if self.parent_obj:
-            self.parent_obj.widget.deiconify()
-            #self.parent_obj.widget.focus_set()
-            self.parent_obj.widget.lift()
+        if self.parent:
+            self.parent.widget.deiconify()
+            #self.parent.widget.focus_set()
+            self.parent.widget.lift()
         else:
             Message (func    = 'Geometry._activate'
                     ,level   = _('ERROR')
@@ -2273,10 +2273,10 @@ class Geometry: # Requires sh.oss, objs
     def activate(self,MouseClicked=False,*args):
         self._activate()
         if sh.oss.win():
-            # todo: learn how to properly import modules
+            #todo: learn how to properly import modules
             import ctypes
-            self.parent_obj.widget.wm_attributes('-topmost',1)
-            self.parent_obj.widget.wm_attributes('-topmost',0)
+            self.parent.widget.wm_attributes('-topmost',1)
+            self.parent.widget.wm_attributes('-topmost',0)
             ''' Иначе нажатие кнопки будет вызывать переход по ссылке
                 там, где это не надо
             '''
@@ -2316,15 +2316,15 @@ class Geometry: # Requires sh.oss, objs
 
 class WaitBox:
 
-    def __init__(self,parent_obj):
-        self.type = 'WaitBox'
-        self.parent_obj = parent_obj
-        self._func = self._title = self._args = self._message = None
-        self.obj = Top (parent_obj = self.parent_obj
-                       ,Maximize   = False
-                       ,AutoCenter = True
-                       )
-        # todo: fix centering in Top.center() when Lock=False
+    def __init__(self,parent):
+        self.type   = 'WaitBox'
+        self.parent = parent
+        self._func  = self._title = self._args = self._message = None
+        self.obj    = Top (parent = self.parent
+                          ,Maximize   = False
+                          ,AutoCenter = True
+                          )
+        #todo: fix centering in Top.center() when Lock=False
         #self.obj.center(Force=1)
         self.widget = self.obj.widget
         self.widget.geometry('300x150')
@@ -2392,34 +2392,34 @@ class Label:
         4) Inappropriate use of 'config' may result in resetting 
            config options. List of them: http://effbot.org/tkinterbook/label.htm#Tkinter.Label.config-method
     '''
-    def __init__ (self,parent_obj,text='Text:'
+    def __init__ (self,parent,text='Text:'
                  ,font='Sans 11',side=None,fill=None
                  ,expand=False,ipadx=None,ipady=None
                  ,image=None,fg=None,bg=None
                  ,anchor=None,Close=True,width=None
                  ,height=None
                  ):
-        self.type       = 'Label'
-        self.parent_obj = parent_obj
-        self.side       = side
-        self.fill       = fill
-        self.expand     = expand
-        self._text      = text
-        self._font      = font
-        self.ipadx      = ipadx
-        self.ipady      = ipady
-        self.image      = image
-        self.bg         = bg
-        self.fg         = fg
-        self.anchor     = anchor
-        self.width      = width
-        self.height     = height
+        self.type   = 'Label'
+        self.parent = parent
+        self.side   = side
+        self.fill   = fill
+        self.expand = expand
+        self._text  = text
+        self._font  = font
+        self.ipadx  = ipadx
+        self.ipady  = ipady
+        self.image  = image
+        self.bg     = bg
+        self.fg     = fg
+        self.anchor = anchor
+        self.width  = width
+        self.height = height
         self.gui()
         if Close:
             self.close()
 
     def gui(self):
-        self.widget = tk.Label (master = self.parent_obj.widget
+        self.widget = tk.Label (master = self.parent.widget
                                ,image  = self.image
                                ,bg     = self.bg
                                ,fg     = self.fg
@@ -2454,15 +2454,15 @@ class Label:
             self._font = 'Sans 11'
 
     def show(self):
-        self.parent_obj.show()
+        self.parent.show()
 
     def close(self):
-        self.parent_obj.close()
+        self.parent.close()
 
     def title(self,text='Title:'):
-        self.parent_obj.title(text=text)
+        self.parent.title(text=text)
         
-    ''' # note # todo For some reason, using 'config' externally may 
+    ''' #note #todo For some reason, using 'config' externally may 
         reset config options. Use them altogether to prevent such 
         behavior.
     '''
@@ -2483,16 +2483,16 @@ class Label:
 
 class CheckBox:
 
-    ''' # note: For some reason, CheckBox that should be Active must be
-        assigned to a variable (var = CheckBox(parent_obj,Active=1))
+    ''' #note: For some reason, CheckBox that should be Active must be
+        assigned to a variable (var = CheckBox(parent,Active=1))
     '''
-    def __init__ (self,parent_obj,Active=False
+    def __init__ (self,parent,Active=False
                  ,side=None,action=None
                  ):
-        self.parent_obj = parent_obj
-        self.side       = side
-        self.action     = action
-        self.status     = tk.IntVar()
+        self.parent = parent
+        self.side   = side
+        self.action = action
+        self.status = tk.IntVar()
         self.gui()
         self.reset(Active=Active)
 
@@ -2503,7 +2503,7 @@ class CheckBox:
             self.disable()
 
     def gui(self):
-        self.widget = tk.Checkbutton (master   = self.parent_obj.widget
+        self.widget = tk.Checkbutton (master   = self.parent.widget
                                      ,variable = self.status
                                      ,command  = self.action
                                      )
@@ -2511,10 +2511,10 @@ class CheckBox:
         self.obj = self
 
     def show(self):
-        self.parent_obj.show()
+        self.parent.show()
 
     def close(self):
-        self.parent_obj.close()
+        self.parent.close()
 
     def focus(self,*args):
         self.widget.focus_set()
@@ -2637,29 +2637,30 @@ class Message:
 ''' Not using tkinter.messagebox because it blocks main GUI (even if we
     specify a non-root parent)
 '''
-class MessageBuilder: # Requires 'constants'
+class MessageBuilder:
 
-    def __init__ (self,parent_obj,level
+    # Parent is root
+    def __init__ (self,parent,level
                  ,Single=True,YesNo=False
-                 ): # Most often: 'root'
+                 ):
         self.Yes    = False
         self.YesNo  = YesNo
         self.Single = Single
         self.level  = level
         self.Lock   = False
         self.paths()
-        self.parent_obj = parent_obj
-        self.obj        = Top(parent_obj=self.parent_obj)
-        self.widget     = self.obj.widget
+        self.parent = parent
+        self.obj    = Top(parent=self.parent)
+        self.widget = self.obj.widget
         self.icon()
         self.frames()
         self.picture()
-        self.txt = TextBox (parent_obj = self.top_right
-                           ,Composite  = True
+        self.txt = TextBox (parent    = self.top_right
+                           ,Composite = True
                            )
         self.buttons()
         self.bindings()
-        Geometry(parent_obj=self.obj).set('400x250')
+        Geometry(parent=self.obj).set('400x250')
         self.close()
 
     def bindings(self):
@@ -2667,8 +2668,8 @@ class MessageBuilder: # Requires 'constants'
              ,bindings = ['<Control-q>','<Control-w>','<Escape>']
              ,action   = self.close_no
              )
-        if hasattr(self.parent_obj,'type') \
-        and self.parent_obj.type == 'Toplevel':
+        if hasattr(self.parent,'type') \
+        and self.parent.type == 'Toplevel':
             self.widget.protocol("WM_DELETE_WINDOW",self.close)
 
     def paths(self):
@@ -2699,32 +2700,32 @@ class MessageBuilder: # Requires 'constants'
             self.obj.icon(path=self.path)
 
     def frames(self):
-        frame = Frame (parent_obj = self.obj
-                      ,expand     = 1
+        frame = Frame (parent = self.obj
+                      ,expand = 1
                       )
-        top = Frame (parent_obj = frame
-                    ,expand     = 1
-                    ,side       = 'top'
+        top = Frame (parent = frame
+                    ,expand = 1
+                    ,side   = 'top'
                     )
-        bottom = Frame (parent_obj = frame
-                       ,expand     = 0
-                       ,side       = 'bottom'
+        bottom = Frame (parent = frame
+                       ,expand = 0
+                       ,side   = 'bottom'
                        )
-        self.top_left = Frame (parent_obj = top
-                              ,expand     = 0
-                              ,side       = 'left'
+        self.top_left = Frame (parent = top
+                              ,expand = 0
+                              ,side   = 'left'
                               )
-        self.top_right = Frame (parent_obj = top
-                               ,expand     = 1
-                               ,side       = 'right'
+        self.top_right = Frame (parent = top
+                               ,expand = 1
+                               ,side   = 'right'
                                )
-        self.bottom_left = Frame (parent_obj = bottom
-                                 ,expand     = 1
-                                 ,side       = 'left'
+        self.bottom_left = Frame (parent = bottom
+                                 ,expand = 1
+                                 ,side   = 'left'
                                  )
-        self.bottom_right = Frame (parent_obj = bottom
-                                  ,expand     = 1
-                                  ,side       = 'right'
+        self.bottom_right = Frame (parent = bottom
+                                  ,expand = 1
+                                  ,side   = 'right'
                                   )
 
     def buttons(self):
@@ -2735,26 +2736,26 @@ class MessageBuilder: # Requires 'constants'
             YesName = 'OK'
             NoName  = _('Cancel')
         if self.Single and self.level != _('QUESTION'):
-            Button (parent_obj = self.bottom_left
-                   ,action     = self.close_yes
-                   ,hint       = _('Accept and close')
-                   ,text       = YesName
-                   ,TakeFocus  = 1
-                   ,side       = 'right'
+            Button (parent    = self.bottom_left
+                   ,action    = self.close_yes
+                   ,hint      = _('Accept and close')
+                   ,text      = YesName
+                   ,TakeFocus = 1
+                   ,side      = 'right'
                    )
         else:
-            Button (parent_obj = self.bottom_left
-                   ,action     = self.close_no
-                   ,hint       = _('Reject and close')
-                   ,text       = NoName
-                   ,side       = 'left'
+            Button (parent = self.bottom_left
+                   ,action = self.close_no
+                   ,hint   = _('Reject and close')
+                   ,text   = NoName
+                   ,side   = 'left'
                    )
-            Button (parent_obj = self.bottom_right
-                   ,action     = self.close_yes
-                   ,hint       = _('Accept and close')
-                   ,text       = YesName
-                   ,TakeFocus  = 1
-                   ,side       = 'right'
+            Button (parent    = self.bottom_right
+                   ,action    = self.close_yes
+                   ,hint      = _('Accept and close')
+                   ,text      = YesName
+                   ,TakeFocus = 1
+                   ,side      = 'right'
                    )
 
     def title(self,text=None):
@@ -2763,7 +2764,7 @@ class MessageBuilder: # Requires 'constants'
         self.obj.title(text=text)
 
     def update(self,text=_('Message')):
-        # todo: Control-c does not work with 'ReadOnly=True'
+        #todo: Control-c does not work with 'ReadOnly=True'
         # Otherwise, updating text will not work
         #self.txt.read_only(ReadOnly=False)
         self.txt.clear_text()
@@ -2797,10 +2798,11 @@ class MessageBuilder: # Requires 'constants'
                 Without explicitly indicating 'master', we get
                 "image pyimage1 doesn't exist".
             '''
-            self.label = Label (parent_obj = self.top_left
-                               ,image      = tk.PhotoImage(master = self.top_left.widget
-                                                          ,file   = self.path
-                                                          )
+            self.label = Label (parent = self.top_left
+                               ,image  = \
+                         tk.PhotoImage (master = self.top_left.widget
+                                       ,file   = self.path
+                                       )
                                )
         else:
             sh.log.append ('MessageBuilder.picture'
@@ -2824,7 +2826,7 @@ class Clipboard: # Requires 'objs'
                 objs._root.widget.clipboard_clear()
                 objs._root.widget.clipboard_append(text)
             except tk.TclError:
-                # todo: Show a window to manually copy from
+                #todo: Show a window to manually copy from
                 Message (func    = 'Clipboard.copy'
                         ,level   = _('ERROR')
                         ,message = _('A clipboard error has occurred!')
@@ -2880,12 +2882,12 @@ class Clipboard: # Requires 'objs'
 
 class Canvas:
     
-    def __init__(self,parent_obj,expand=True
+    def __init__(self,parent,expand=True
                 ,side=None,scrollregion=None
                 ,width=None,height=None,fill='both'
                 ):
         self.type         = 'Canvas'
-        self.parent_obj   = parent_obj
+        self.parent       = parent
         self.expand       = expand
         self.side         = side
         self.scrollregion = scrollregion
@@ -2895,7 +2897,7 @@ class Canvas:
         self.gui()
         
     def gui(self):
-        self.widget = tk.Canvas (master       = self.parent_obj.widget
+        self.widget = tk.Canvas (master       = self.parent.widget
                                 ,scrollregion = self.scrollregion
                                 ,width        = self.width
                                 ,height       = self.height
@@ -2919,10 +2921,10 @@ class Canvas:
         self.widget.focus_set()
     
     def show(self,*args):
-        self.parent_obj.show()
+        self.parent.show()
         
     def close(self,*args):
-        self.parent_obj.close()
+        self.parent.close()
 
 
 
@@ -2986,32 +2988,32 @@ class Objects:
 
     def warning(self):
         if not self._warning:
-            self._warning = MessageBuilder (parent_obj = self.root()
-                                           ,level      = _('WARNING')
+            self._warning = MessageBuilder (parent = self.root()
+                                           ,level  = _('WARNING')
                                            )
             self._lst.append(self._warning)
         return self._warning
 
     def error(self):
         if not self._error:
-            self._error = MessageBuilder (parent_obj = self.root()
-                                         ,level      = _('ERROR')
+            self._error = MessageBuilder (parent = self.root()
+                                         ,level  = _('ERROR')
                                          )
             self._lst.append(self._error)
         return self._error
 
     def question(self):
         if not self._question:
-            self._question = MessageBuilder (parent_obj = self.root()
-                                            ,level      = _('QUESTION')
+            self._question = MessageBuilder (parent = self.root()
+                                            ,level  = _('QUESTION')
                                             )
             self._lst.append(self._question)
         return self._question
 
     def info(self):
         if not self._info:
-            self._info = MessageBuilder (parent_obj = self.root()
-                                        ,level      = _('INFO')
+            self._info = MessageBuilder (parent = self.root()
+                                        ,level  = _('INFO')
                                         )
             self._lst.append(self._info)
         return self._info
@@ -3032,7 +3034,7 @@ class Objects:
                               )
 
     def new_top(self,Maximize=1,AutoCenter=1):
-        return Top (parent_obj = self.root()
+        return Top (parent     = self.root()
                    ,Maximize   = Maximize
                    ,AutoCenter = AutoCenter
                    )
@@ -3040,11 +3042,11 @@ class Objects:
     # It is better to use this for temporary widgets only
     def txt(self,Maximize=True,words=None):
         if not self._txt:
-            h_top = Top (parent_obj = self.root()
-                        ,Maximize   = Maximize
+            h_top = Top (parent   = self.root()
+                        ,Maximize = Maximize
                         )
-            self._txt = TextBox (parent_obj = h_top
-                                ,words      = words
+            self._txt = TextBox (parent = h_top
+                                ,words  = words
                                 )
             self._txt.focus()
             self._lst.append(self._txt)
@@ -3052,15 +3054,15 @@ class Objects:
 
     def entry(self):
         if not self._entry:
-            h_top = Top(parent_obj=self.root())
-            self._entry = Entry(parent_obj=h_top)
+            h_top = Top(parent=self.root())
+            self._entry = Entry(parent=h_top)
             self._entry.focus()
             self._lst.append(self._entry)
         return self._entry
 
     def waitbox(self):
         if not self._waitbox:
-            self._waitbox = WaitBox(parent_obj=self.root())
+            self._waitbox = WaitBox(parent=self.root())
             self._lst.append(self._waitbox)
         return self._waitbox
 
@@ -3069,8 +3071,8 @@ class Objects:
 # A read-only widget for displaying texts with numbered lines
 class TextIndex:
     
-    def __init__(self,parent_obj):
-        self.parent_obj = parent_obj
+    def __init__(self,parent):
+        self.parent = parent
         self.gui()
         
     ''' Redraw line numbers. This is a simplified version,
@@ -3097,12 +3099,12 @@ class TextIndex:
              ,action   = self.update
              )
         if sh.oss.win() or sh.oss.mac():
-            bind (obj      = self.parent_obj
+            bind (obj      = self.parent
                  ,bindings = '<MouseWheel>'
                  ,action   = self.update
                  )
         else:
-            bind (obj      = self.parent_obj
+            bind (obj      = self.parent
                  ,bindings = ['<Button 4>'
                              ,'<Button 5>'
                              ]
@@ -3110,15 +3112,15 @@ class TextIndex:
                  )
     
     def gui(self):
-        self.canvas = Canvas (parent_obj = self.parent_obj
-                             ,expand     = False
-                             ,width      = 30
-                             ,side       = 'left'
+        self.canvas = Canvas (parent = self.parent
+                             ,expand = False
+                             ,width  = 30
+                             ,side   = 'left'
                              )
-        self.obj = TextBox (parent_obj = self.parent_obj
-                           ,Composite  = True
-                           ,side       = 'left'
-                           ,state      = 'disabled'
+        self.obj = TextBox (parent        = self.parent
+                           ,Composite     = True
+                           ,side          = 'left'
+                           ,state         = 'disabled'
                            ,SpecialReturn = False
                            )
         self.widget = self.obj.widget
@@ -3126,10 +3128,10 @@ class TextIndex:
         self.obj.focus()
                                    
     def show(self,*args):
-        self.parent_obj.show()
+        self.parent.show()
         
     def close(self,*args):
-        self.parent_obj.close()
+        self.parent.close()
         
     def reset_logic(self,words=None):
         self.obj.words = words
@@ -3176,27 +3178,27 @@ class SimpleCompare:
         self.fill()
         
     def frames(self):
-        self.frame1 = Frame (parent_obj = self.obj
-                            ,side       = 'top'
-                            ,expand     = False
-                            ,fill       = 'both'
+        self.frame1 = Frame (parent = self.obj
+                            ,side   = 'top'
+                            ,expand = False
+                            ,fill   = 'both'
                             )
-        self.frame2 = Frame (parent_obj = self.obj
-                            ,side       = 'bottom'
-                            ,expand     = True
-                            ,fill       = 'both'
+        self.frame2 = Frame (parent = self.obj
+                            ,side   = 'bottom'
+                            ,expand = True
+                            ,fill   = 'both'
                             )
                                
     def panes(self):
-        self.pane1 = TextIndex(parent_obj=self.frame1)
-        self.pane2 = TextIndex(parent_obj=self.frame1)
-        self.pane3 = TextBox (parent_obj = self.frame2
-                             ,Composite  = True
-                             ,side       = 'left'
+        self.pane1 = TextIndex (parent = self.frame1)
+        self.pane2 = TextIndex (parent = self.frame1)
+        self.pane3 = TextBox (parent    = self.frame2
+                             ,Composite = True
+                             ,side      = 'left'
                              )
-        self.pane4 = TextBox (parent_obj = self.frame2
-                             ,Composite  = True
-                             ,side       = 'left'
+        self.pane4 = TextBox (parent    = self.frame2
+                             ,Composite = True
+                             ,side      = 'left'
                              )
     
     def gui(self):
@@ -3231,7 +3233,7 @@ class SimpleCompare:
              )
         bind (obj      = self
              ,bindings = '<Escape>'
-             ,action   = Geometry(parent_obj=self.obj).minimize
+             ,action   = Geometry(parent=self.obj).minimize
              )
         bind (obj      = self
              ,bindings = ['<Alt-Key-1>','<Control-Key-1>']
@@ -3249,7 +3251,7 @@ class SimpleCompare:
              ,bindings = ['<Alt-Key-4>','<Control-Key-4>']
              ,action   = self.select4
              )
-        # cur # todo: avoid conflicts
+        # cur #todo: avoid conflicts
         bind (obj      = self.pane1
              ,bindings = '<ButtonRelease-1>'
              ,action   = self.select1
@@ -3311,16 +3313,16 @@ class SimpleCompare:
 
 class SimpleTop:
     
-    def __init__(self,parent_obj):
-        self.type = 'Toplevel'
-        self.parent_obj = parent_obj
+    def __init__(self,parent):
+        self.type   = 'Toplevel'
+        self.parent = parent
         self.gui()
         
     def title(self,text=_('Title:')):
         WidgetShared.title(self,text=text)
     
     def gui(self):
-        self.widget = tk.Toplevel(self.parent_obj.widget)
+        self.widget = tk.Toplevel(self.parent.widget)
         
     def close(self,*args):
         # 'Label' will trigger closing with unwanted results
@@ -3337,15 +3339,15 @@ class SimpleTop:
 
 class Scrollbar:
     
-    def __init__(self,parent_obj,scroll_obj,Horizontal=False):
+    def __init__(self,parent,scroll_obj,Horizontal=False):
         self.type       = 'Scrollbar'
-        self.parent_obj = parent_obj
+        self.parent     = parent
         self.scroll_obj = scroll_obj
         self.Horizontal = Horizontal
         self.gui()
         
     def gui(self):
-        if hasattr(self.parent_obj,'widget'):
+        if hasattr(self.parent,'widget'):
             if self.Horizontal:
                 orient = tk.HORIZONTAL
                 fill   = 'x'
@@ -3354,7 +3356,7 @@ class Scrollbar:
                 orient = tk.VERTICAL
                 fill   = 'y'
                 side   = 'right'
-            self.widget = tk.Scrollbar (master = self.parent_obj.widget
+            self.widget = tk.Scrollbar (master = self.parent.widget
                                        ,orient = orient
                                        )
             self.widget.pack (expand = True
@@ -3427,7 +3429,7 @@ class Image:
 
 class TextBoxNotes:
     
-    def __init__ (self,parent_obj=None,NotesTop=True
+    def __init__ (self,parent=None,NotesTop=True
                  ,ExpandNotes=True,text='',notes=''
                  ,title=_('Text with instructions:')
                  ):
@@ -3437,7 +3439,7 @@ class TextBoxNotes:
             break) will be shown.
         '''
         self.ExpandNotes = ExpandNotes
-        self.parent_obj  = parent_obj
+        self.parent      = parent
         self.set_parent()
         self.gui()
         self.title(text=self._title)
@@ -3449,14 +3451,14 @@ class TextBoxNotes:
             
     def title(self,text=None):
         if text:
-            self.parent_obj.title(text)
+            self.parent.title(text)
         else:
-            self.parent_obj.title()
+            self.parent.title()
             
     def set_parent(self):
-        if self.parent_obj:
-            if hasattr(self.parent_obj,'type') \
-                and self.parent_obj.type == 'Toplevel':
+        if self.parent:
+            if hasattr(self.parent,'type') \
+                and self.parent.type == 'Toplevel':
                 pass
             else:
                 sh.log.append ('TextBoxNotes.set_parent'
@@ -3468,8 +3470,8 @@ class TextBoxNotes:
             self.default_parent()
     
     def default_parent(self):
-        self.parent_obj = objs.new_top(Maximize=False)
-        Geometry(parent_obj=self.parent_obj).set('700x500')
+        self.parent = objs.new_top(Maximize=False)
+        Geometry(parent=self.parent).set('700x500')
     
     def show(self,*args):
         self.obj.show()
@@ -3490,61 +3492,61 @@ class TextBoxNotes:
             side1, side2 = 'top', 'top'
         else:
             side1, side2 = 'bottom', 'top'
-        self.frame1 = Frame (parent_obj = self.parent_obj
-                            ,side       = side1
-                            ,expand     = self.ExpandNotes
+        self.frame1 = Frame (parent = self.parent
+                            ,side   = side1
+                            ,expand = self.ExpandNotes
                             )
-        self.frame2 = Frame (parent_obj = self.parent_obj
-                            ,side       = side2
+        self.frame2 = Frame (parent = self.parent
+                            ,side   = side2
                             )
-        self.frame3 = Frame (parent_obj = self.parent_obj
-                            ,expand     = False
-                            ,side       = 'bottom'
+        self.frame3 = Frame (parent = self.parent
+                            ,expand = False
+                            ,side   = 'bottom'
                             )
-        self.frame4 = Frame (parent_obj = self.frame3
-                            ,side       = 'left'
+        self.frame4 = Frame (parent = self.frame3
+                            ,side   = 'left'
                             )
-        self.frame5 = Frame (parent_obj = self.frame3
-                            ,side       = 'right'
+        self.frame5 = Frame (parent = self.frame3
+                            ,side   = 'right'
                             )
     
     def buttons(self):
-        Button (parent_obj = self.frame4
-               ,text       = _('Cancel')
-               ,side       = 'left'
-               ,hint       = _('Reject and close')
-               ,action     = self.interrupt
+        Button (parent = self.frame4
+               ,text   = _('Cancel')
+               ,side   = 'left'
+               ,hint   = _('Reject and close')
+               ,action = self.interrupt
                )
-        Button (parent_obj = self.frame4
-               ,text       = _('Clear')
-               ,side       = 'right'
-               ,hint       = _('Delete all text')
-               ,action     = self.obj.reset_data
+        Button (parent = self.frame4
+               ,text   = _('Clear')
+               ,side   = 'right'
+               ,hint   = _('Delete all text')
+               ,action = self.obj.reset_data
                )
-        Button (parent_obj = self.frame5
-               ,text       = 'OK'
-               ,side       = 'right'
-               ,hint       = _('Accept and close')
-               ,action     = self.close
+        Button (parent = self.frame5
+               ,text   = 'OK'
+               ,side   = 'right'
+               ,hint   = _('Accept and close')
+               ,action = self.close
                )
     
     def txts(self):
-        self.notes = TextBox (parent_obj = self.frame1
-                             ,Composite  = True
-                             ,state      = 'disabled'
-                             ,ScrollY    = False
+        self.notes = TextBox (parent    = self.frame1
+                             ,Composite = True
+                             ,state     = 'disabled'
+                             ,ScrollY   = False
                              )
-        self.obj = TextBox (parent_obj    = self.frame2
+        self.obj = TextBox (parent        = self.frame2
                            ,Composite     = True
                            ,SpecialReturn = False
                            )
     
     def bindings(self):
-        bind (obj      = self.parent_obj
+        bind (obj      = self.parent
              ,bindings = ['<Escape>','<Control-w>','<Control-q>']
              ,action   = self.interrupt
              )
-        bind (obj      = self.parent_obj
+        bind (obj      = self.parent
              ,bindings = ['<F2>','<Control-s>']
              ,action   = self.close
              )
@@ -3584,29 +3586,29 @@ class Manage:
         return self.obj.lst
     
     def gui(self):
-        self.parent_obj = objs.new_top(Maximize=False)
-        self.lb_frame  = Frame (parent_obj = self.parent_obj
-                               ,side       = 'left'
+        self.parent = objs.new_top(Maximize=False)
+        self.lb_frame  = Frame (parent = self.parent
+                               ,side   = 'left'
                                )
-        self.but_frame = Frame (parent_obj = self.parent_obj
-                               ,side       = 'right'
-                               ,expand     = False
+        self.but_frame = Frame (parent = self.parent
+                               ,side   = 'right'
+                               ,expand = False
                                )
-        Geometry(parent_obj=self.parent_obj).set('350x350')
-        self.obj = ListBox (parent_obj      = self.lb_frame
+        Geometry(parent=self.parent).set('350x350')
+        self.obj = ListBox (parent          = self.lb_frame
                            ,icon            = self._icon
                            ,SelectionCloses = False
                            ,Composite       = True
                            ,title           = self._title
                            )
-        Button (parent_obj = self.but_frame
+        Button (parent = self.but_frame
                ,action     = self.add
                ,text       = _('Add')
                ,side       = 'top'
                ,width      = None
                ,height     = None
                )
-        Button (parent_obj = self.but_frame
+        Button (parent = self.but_frame
                ,action     = self.obj.delete
                ,text       = _('Remove')
                ,side       = 'top'
@@ -3629,10 +3631,10 @@ class Manage:
                     self.obj.insert(string=item)
     
     def show(self,*args):
-        self.parent_obj.show()
+        self.parent.show()
         
     def close(self,*args):
-        self.parent_obj.close()
+        self.parent.close()
 
 
 ''' If there are problems with import or tkinter's wait_variable, put
