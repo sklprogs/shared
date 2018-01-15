@@ -2490,9 +2490,9 @@ class CheckBox:
                  ,side=None,action=None
                  ):
         self.parent_obj = parent_obj
-        self.side = side
-        self.action = action
-        self.status = tk.IntVar()
+        self.side       = side
+        self.action     = action
+        self.status     = tk.IntVar()
         self.gui()
         self.reset(Active=Active)
 
@@ -2503,7 +2503,7 @@ class CheckBox:
             self.disable()
 
     def gui(self):
-        self.widget = tk.Checkbutton (self.parent_obj.widget
+        self.widget = tk.Checkbutton (master   = self.parent_obj.widget
                                      ,variable = self.status
                                      ,command  = self.action
                                      )
