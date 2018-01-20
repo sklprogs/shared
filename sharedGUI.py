@@ -12,7 +12,8 @@ import shared as sh
 
 
 # Привязать горячие клавиши или кнопки мыши к действию
-def bind(obj,bindings,action): # object, str/list, function
+# object, str/list, function
+def bind(obj,bindings,action):
     if hasattr(obj,'widget'):
         if isinstance(bindings,str) or isinstance(bindings,list):
             if isinstance(bindings,str):
@@ -24,7 +25,7 @@ def bind(obj,bindings,action): # object, str/list, function
                     Message (func    = 'bind'
                             ,level   = _('ERROR')
                             ,message = _('Failed to enable key combination "%s"!') \
-                            % binding
+                                       % binding
                             )
         else:
             Message (func    = 'bind'
@@ -109,7 +110,8 @@ class Root:
 
 
 
-class WidgetShared: # Do not use graphical logging there
+# Do not use graphical logging there
+class WidgetShared:
 
     def focus(object,*args):
         object.widget.focus()
@@ -133,7 +135,7 @@ class WidgetShared: # Do not use graphical logging there
                 sh.log.append (func    = 'WidgetShared.insert'
                               ,level   = _('ERROR')
                               ,message = _('A logic error: unknown object type: "%s"!') \
-                              % str(object.type)
+                                         % str(object.type)
                               )
         # Too frequent
         '''
@@ -152,7 +154,7 @@ class WidgetShared: # Do not use graphical logging there
             sh.log.append (func    = 'WidgetShared.font'
                           ,level   = _('ERROR')
                           ,message = _('A logic error: unknown object type: "%s"!') \
-                          % str(object.type)
+                                     % str(object.type)
                           )
 
     def set_state(object,ReadOnly=False):
@@ -167,7 +169,7 @@ class WidgetShared: # Do not use graphical logging there
             sh.log.append (func    = 'WidgetShared.set_state'
                           ,level   = _('ERROR')
                           ,message = _('A logic error: unknown object type: "%s"!') \
-                          % str(object.type)
+                                     % str(object.type)
                           )
 
     # Родительский виджет
@@ -178,7 +180,7 @@ class WidgetShared: # Do not use graphical logging there
             sh.log.append (func    = 'WidgetShared.title'
                           ,level   = _('ERROR')
                           ,message = _('A logic error: unknown object type: "%s"!') \
-                          % str(object.type)
+                                     % str(object.type)
                           )
 
     def custom_buttons(object):
@@ -193,7 +195,7 @@ class WidgetShared: # Do not use graphical logging there
                 sh.log.append (func    = 'WidgetShared.custom_buttons'
                               ,level   = _('ERROR')
                               ,message = _('A logic error: unknown object type: "%s"!') \
-                              % str(object.type)
+                                         % str(object.type)
                               )
 
     def icon(object,file): # Родительский объект
@@ -209,13 +211,13 @@ class WidgetShared: # Do not use graphical logging there
                 sh.log.append (func    = 'WidgetShared.icon'
                               ,level   = _('ERROR')
                               ,message = _('File "%s" has not been found!') \
-                              % str(file)
+                                         % str(file)
                               )
         else:
             sh.log.append (func    = 'WidgetShared.icon'
                           ,level   = _('ERROR')
                           ,message = _('A logic error: unknown object type: "%s"!') \
-                          % str(object.type)
+                                     % str(object.type)
                           )
 
 
@@ -312,7 +314,8 @@ class SearchBox:
     # Strict: case-sensitive, with punctuation
     def reset_logic(self,words=None,Strict=False):
         self.Success    = True
-        self._prev_loop = self._next_loop = self._search = self._pos1 = self._pos2 = self._text = None
+        self._prev_loop = self._next_loop = self._search = self._pos1 \
+                        = self._pos2 = self._text = None
         self.i          = 0
         self.words      = words
         self.Strict     = Strict
@@ -434,8 +437,12 @@ class SearchBox:
                 self.h_entry.show()
                 self._search = self.h_entry.get()
                 if self._search and not self.Strict:
-                    self._search = sh.Text(text=self._search,Auto=False).delete_punctuation()
-                    self._search = sh.Text(text=self._search,Auto=False).delete_duplicate_spaces()
+                    self._search = sh.Text (text = self._search
+                                           ,Auto = False
+                                           ).delete_punctuation()
+                    self._search = sh.Text (text = self._search
+                                           ,Auto = False
+                                           ).delete_duplicate_spaces()
                     self._search = self._search.lower()
             return self._search
         else:
@@ -491,7 +498,8 @@ class SearchBox:
                                 ,level   = _('INFO')
                                 ,message = _('No more matches, continuing from the bottom!')
                                 )
-                        self.i = len(_loop) - 1 # Not just -1
+                        # Not just -1
+                        self.i = len(_loop) - 1
                 self.select()
             else:
                 Message (func    = 'SearchBox.prev'
@@ -764,7 +772,8 @@ class TextBox:
     def insert(self,text='text',pos='1.0',MoveTop=True):
         WidgetShared.insert(self,text=text,pos=pos)
         if MoveTop:
-            self.mark_add() # Move to the beginning
+            # Move to the beginning
+            self.mark_add()
         else:
             self.scroll(mark='insert')
 
@@ -1592,7 +1601,8 @@ class ListBox:
                  ,action   = self.move_up
                  )
             bind(self,'<Down>',self.move_down)
-        if not self.Composite: #todo: test
+        #todo: test
+        if not self.Composite:
             bind (obj      = self
                  ,bindings = ['<Escape>','<Control-q>','<Control-w>']
                  ,action   = self.interrupt
@@ -1799,10 +1809,10 @@ class ListBox:
 
 class OptionMenu:
 
-    ''' tk.OptionMenu will convert integers to strings, but we better do this
-        here to avoid problems with iterating ("in requires int as the left
-        operand") later (this happens when we pass a sequence of chars instead
-        of a list of strings).
+    ''' tk.OptionMenu will convert integers to strings, but we better do
+        this here to avoid problems with iterating ("in requires int as
+        the left operand") later (this happens when we pass a sequence
+        of chars instead of a list of strings).
     '''
     def __init__ (self
                  ,parent
@@ -2018,7 +2028,8 @@ class Selection: # Selecting words only
             '''
             sh.log.append ('Selection.get'
                           ,_('WARNING')
-                          ,_('Nothing is selected in window %d, therefore, it is not possible to return coordinates!') % 1
+                          ,_('Nothing is selected in window %d, therefore, it is not possible to return coordinates!') \
+                          % 1
                           )
             '''
         # Too frequent
@@ -2076,7 +2087,8 @@ class Selection: # Selecting words only
             self.h_widget.widget.tag_config (tagName    = self._tag
                                             ,foreground = self._fg
                                             )
-        if AutoScroll: #todo: select either 'see' or 'autoscroll'
+        #todo: select either 'see' or 'autoscroll'
+        if AutoScroll:
             #self.h_widget.see(mark)
             self.h_widget.autoscroll(mark)
 
