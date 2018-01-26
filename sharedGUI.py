@@ -3080,92 +3080,6 @@ class Objects:
 
 
 
-# A read-only widget for displaying texts with numbered lines
-class TextIndex:
-    
-    def __init__(self,parent):
-        self.parent = parent
-        self.gui()
-        
-    ''' Redraw line numbers. This is a simplified version,
-        preferably for read-only text widgets. See the full version:
-        https://stackoverflow.com/questions/16369470/tkinter-adding-line-number-to-text-widget
-    '''
-    def update(self,*args):
-        self.canvas.widget.delete("all")
-        i = self.obj.widget.index("@0,0")
-        while True:
-            dline = self.obj.widget.dlineinfo(i)
-            if dline is None:
-                break
-            y = dline[1]
-            linenum = str(i).split(".")[0]
-            self.canvas.widget.create_text(2,y,anchor="nw",text=linenum)
-            i = self.obj.widget.index("%s+1line" % i)
-    
-    def bindings(self):
-        bind (obj      = self.obj
-             ,bindings = ['<ButtonRelease-1>','<ButtonRelease-2>'
-                         ,'<Up>','<Down>','<Prior>','<Next>'
-                         ]
-             ,action   = self.update
-             )
-        if sh.oss.win() or sh.oss.mac():
-            bind (obj      = self.parent
-                 ,bindings = '<MouseWheel>'
-                 ,action   = self.update
-                 )
-        else:
-            bind (obj      = self.parent
-                 ,bindings = ['<Button 4>'
-                             ,'<Button 5>'
-                             ]
-                 ,action   = self.update
-                 )
-    
-    def gui(self):
-        self.canvas = Canvas (parent = self.parent
-                             ,expand = False
-                             ,width  = 30
-                             ,side   = 'left'
-                             )
-        self.obj = TextBox (parent        = self.parent
-                           ,Composite     = True
-                           ,side          = 'left'
-                           ,state         = 'disabled'
-                           ,SpecialReturn = False
-                           )
-        self.widget = self.obj.widget
-        self.bindings()
-        self.obj.focus()
-                                   
-    def show(self,*args):
-        self.parent.show()
-        
-    def close(self,*args):
-        self.parent.close()
-        
-    def reset_logic(self,words=None):
-        self.obj.words = words
-        self.obj.search_box.reset_logic(words=self.obj.words)
-        self.obj.selection.reset_data()
-        self.obj.selection.reset_logic(words=self.obj.words)
-
-    # Delete text, tags, marks
-    def reset_data(self,*args):
-        self.obj.clear_text()
-        self.obj.clear_tags()
-        self.obj.clear_marks()
-        
-    def fill(self,text):
-        self.obj.read_only(ReadOnly=False)
-        self.reset_data()
-        self.obj.insert(text=text)
-        self.obj.read_only(ReadOnly=True)
-        self.update()
-
-
-
 class SimpleCompare:
     
     def __init__(self):
@@ -3192,18 +3106,22 @@ class SimpleCompare:
     def frames(self):
         self.frame1 = Frame (parent = self.obj
                             ,side   = 'top'
-                            ,expand = False
                             ,fill   = 'both'
                             )
         self.frame2 = Frame (parent = self.obj
                             ,side   = 'bottom'
-                            ,expand = True
                             ,fill   = 'both'
                             )
                                
     def panes(self):
-        self.pane1 = TextIndex (parent = self.frame1)
-        self.pane2 = TextIndex (parent = self.frame1)
+        self.pane1 = TextBox (parent    = self.frame1
+                             ,Composite = True
+                             ,side      = 'left'
+                             )
+        self.pane2 = TextBox (parent    = self.frame1
+                             ,Composite = True
+                             ,side      = 'left'
+                             )
         self.pane3 = TextBox (parent    = self.frame2
                              ,Composite = True
                              ,side      = 'left'
@@ -3218,7 +3136,7 @@ class SimpleCompare:
         self.widget = self.obj.widget
         self.frames()
         self.panes()
-        self.pane1.obj.focus()
+        self.pane1.focus()
         self.icon()
         self.title()
         self.bindings()
@@ -3233,8 +3151,8 @@ class SimpleCompare:
         self.obj.close()
         
     def fill(self):
-        self.pane1.fill(text=self.w1._text_orig)
-        self.pane2.fill(text=self.w2._text_orig)
+        self.pane1.insert(text=self.w1._text_orig)
+        self.pane2.insert(text=self.w2._text_orig)
         self.pane3.insert(text=self.w3._text_orig)
         self.pane4.insert(text=self.w4._text_orig)
         
@@ -3282,22 +3200,22 @@ class SimpleCompare:
              )
              
     def decolorize(self):
-        self.pane1.obj.widget.config(bg='white')
-        self.pane2.obj.widget.config(bg='white')
+        self.pane1.widget.config(bg='white')
+        self.pane2.widget.config(bg='white')
         self.pane3.widget.config(bg='white')
         self.pane4.widget.config(bg='white')
     
     def select1(self,*args):
         # Without this the search doesn't work (the pane is inactive)
-        self.pane1.obj.focus()
+        self.pane1.focus()
         self.decolorize()
-        self.pane1.obj.widget.config(bg=self._bg)
+        self.pane1.widget.config(bg=self._bg)
         
     def select2(self,*args):
         # Without this the search doesn't work (the pane is inactive)
-        self.pane2.obj.focus()
+        self.pane2.focus()
         self.decolorize()
-        self.pane2.obj.widget.config(bg=self._bg)
+        self.pane2.widget.config(bg=self._bg)
         
     def select3(self,*args):
         # Without this the search doesn't work (the pane is inactive)
