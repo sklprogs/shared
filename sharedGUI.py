@@ -3112,7 +3112,7 @@ class SimpleCompare:
                             ,side   = 'bottom'
                             ,fill   = 'both'
                             )
-                               
+
     def panes(self):
         self.pane1 = TextBox (parent    = self.frame1
                              ,Composite = True

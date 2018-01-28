@@ -202,6 +202,10 @@ class Launch:
     
     def _launch(self):
         if self.custom_args:
+            log.append ('Launch._launch'
+                       ,_('DEBUG')
+                       ,_('Custom arguments: "%s"') % ';'.join(self.custom_args)
+                       )
             try:
                 ''' Block the script till the called program is closed
                 '''
@@ -213,7 +217,7 @@ class Launch:
                 Message (func    = 'Launch._launch'
                         ,level   = _('ERROR')
                         ,message = _('Failed to run "%s"!') \
-                        % str(self.custom_args)
+                                   % str(self.custom_args)
                         )
         else:
             log.append ('Launch._launch'
@@ -256,7 +260,7 @@ class Launch:
         self.custom_args = custom_args
         if self.custom_app:
             if self.custom_args and len(self.custom_args) > 0:
-                self.custom_args = [self.custom_app,self.custom_args[0]]
+                self.custom_args.insert(0,self.custom_app)
             else:
                 self.custom_args = [self.custom_app]
         self._launch()
