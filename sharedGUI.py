@@ -1076,6 +1076,7 @@ class Entry:
     def __init__(self,parent,Composite=False
                 ,side=None,ipadx=None,ipady=None
                 ,fill=None,width=None,expand=None
+                ,font='Sans 11',bg=None,fg=None
                 ):
         self.type      = 'Entry'
         self.Composite = Composite
@@ -1084,7 +1085,9 @@ class Entry:
         self.Save      = False
         self.parent    = parent
         self.widget    = tk.Entry (master = self.parent.widget
-                                  ,font   = 'Sans 11'
+                                  ,font   = font
+                                  ,bg     = bg
+                                  ,fg     = fg
                                   ,width  = width
                                   )
         bind (obj      = self
