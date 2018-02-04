@@ -1236,7 +1236,7 @@ class Button:
 
     def __init__ (self
                  ,parent
-                 ,action
+                 ,action              = None
                  ,hint                = None
                  ,inactive_image_path = None
                  ,active_image_path   = None
@@ -1291,9 +1291,7 @@ class Button:
         
     def bindings(self):
         bind (obj      = self
-             ,bindings = ['<ButtonRelease-1>'
-                         ,'<space>'
-                         ,'<Return>'
+             ,bindings = ['<ButtonRelease-1>','<space>','<Return>'
                          ,'<KP_Enter>'
                          ]
              ,action   = self.click
@@ -1361,10 +1359,16 @@ class Button:
         return button_image
 
     def click(self,*args):
-        if len(args) > 0:
-            self.action(args)
+        if self.action:
+            if len(args) > 0:
+                self.action(args)
+            else:
+                self.action()
         else:
-            self.action()
+            sh.log.append ('Button.click'
+                          ,_('INFO')
+                          ,_('Nothing to do!')
+                          )
 
     def active(self):
         if not self.Status:
@@ -1850,6 +1854,11 @@ class OptionMenu:
         self._get()
         if self.command:
             self.command()
+        else:
+            sh.log.append ('OptionMenu.trigger'
+                          ,_('INFO')
+                          ,_('Nothing to do!')
+                          )
 
     def _default_set(self):
         if len(self.items) > 0:
@@ -1893,13 +1902,19 @@ class OptionMenu:
     def fill(self):
         self.widget['menu'].delete(0,'end')
         for item in self.items:
-            self.widget['menu'].add_command (label   = item
-                                            ,command = lambda v=self.var
-                                            ,l       = item:v.set(l)
+            self.widget["menu"].add_command (label   = item
+                                            ,command = tk._setit (self.var
+                                                                 ,item
+                                                                 ,self.trigger
+                                                                 )
                                             )
 
-    def reset(self,items=('1','2','3','4','5'),default=None):
+    def reset (self,items=('1','2','3','4','5')
+              ,default=None,command=None
+              ):
         self.items = items
+        if command:
+            self.command = command
         # An error is thrown if 'items' is ()
         if not self.items:
             self.items = ('1','2','3','4','5')

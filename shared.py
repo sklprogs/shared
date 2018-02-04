@@ -2573,7 +2573,8 @@ class Online:
             self.bytes_common()
         return self._bytes
 
-    def browse(self): # Open a URL in a default browser
+    # Open a URL in a default browser
+    def browse(self):
         try:
             webbrowser.open(self.url(),new=2,autoraise=True)
         except:
@@ -2587,7 +2588,10 @@ class Online:
     def url(self):
         if not self._url:
             self._url = self.base_str % urllib.parse.quote(self.bytes())
-            log.append('Online.url',_('DEBUG'),str(self._url))
+            log.append ('Online.url'
+                       ,_('DEBUG')
+                       ,str(self._url)
+                       )
         return self._url
 
     def reset (self,base_str='',search_str=''
