@@ -2135,6 +2135,11 @@ class Dic:
         self.orig   = []
         self.transl = []
         self._list  = self.get().splitlines()
+        # Delete empty and commented lines
+        self._list  = [line for line in self._list if line \
+                       and not line.startswith('#')
+                      ]
+        self.text   = '\n'.join(self._list)
         self._lines = len(self._list)
         self._split()
 
