@@ -7,6 +7,7 @@ gettext.install('shared','./locale')
 
 import tkinter as tk
 import tkinter.filedialog as dialog
+import tkinter.ttk as ttk
 import sys, os
 import shared as sh
 
@@ -1829,22 +1830,34 @@ class OptionMenu:
                  ,command   = None
                  ,takefocus = 1
                  ,default   = None
+                 ,Combo     = False
                  ):
         self.parent  = parent
         self.items   = items
         self.command = command
         self.default = default
+        self.Combo   = Combo
         self.choice  = None
         self.index   = 0
         self.var     = tk.StringVar(self.parent.widget)
         # An error is thrown if 'items' is ()
         if not self.items:
             self.items = ('1','2','3','4','5')
-        self.widget    = tk.OptionMenu (self.parent.widget
-                                       ,self.var
-                                       ,*self.items
-                                       ,command = self.trigger
+        if self.Combo:
+            self.widget = ttk.Combobox (master       = self.parent.widget
+                                       ,textvariable = self.var
+                                       ,values       = self.items
                                        )
+            bind (obj      = self
+                 ,bindings = '<<ComboboxSelected>>'
+                 ,action   = self.trigger
+                 )
+        else:
+            self.widget = tk.OptionMenu (master   = self.parent.widget
+                                        ,variable = self.var
+                                        ,value    = self.items
+                                        ,command  = self.trigger
+                                        )
         self.widget.pack(side=side,anchor=anchor)
         # Must be 1/True to be operational from keyboard
         self.widget.configure(takefocus=takefocus)
@@ -1899,7 +1912,7 @@ class OptionMenu:
                     ,message = _('Wrong input data: "%s"') % str(item)
                     )
 
-    def fill(self):
+    def _fill_menu(self):
         self.widget['menu'].delete(0,'end')
         for item in self.items:
             self.widget["menu"].add_command (label   = item
@@ -1908,6 +1921,15 @@ class OptionMenu:
                                                                  ,self.trigger
                                                                  )
                                             )
+                                            
+    def _fill_combo(self):
+        self.widget.config(values=self.items)
+    
+    def fill(self):
+        if self.Combo:
+            self._fill_combo()
+        else:
+            self._fill_menu()
 
     def reset (self,items=('1','2','3','4','5')
               ,default=None,command=None

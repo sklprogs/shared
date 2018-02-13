@@ -984,7 +984,7 @@ class Text:
         self.text = self.text.replace('[[','').replace(']]','').replace('{','').replace('}','').replace('_','')
         return self.text
 
-    def delete_embraced_text(self,opening_sym='{',closing_sym='}'):
+    def delete_embraced_text(self,opening_sym='(',closing_sym=')'):
         if self.text.count(opening_sym) == self.text.count(closing_sym):
             opening_parentheses = []
             closing_parentheses = []
