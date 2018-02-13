@@ -1865,6 +1865,8 @@ class OptionMenu:
 
     def trigger(self,*args):
         self._get()
+        if self.Combo:
+            self.widget.selection_clear()
         if self.command:
             self.command()
         else:
