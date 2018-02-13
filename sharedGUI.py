@@ -1853,10 +1853,11 @@ class OptionMenu:
                  ,action   = self.trigger
                  )
         else:
-            self.widget = tk.OptionMenu (master   = self.parent.widget
-                                        ,variable = self.var
-                                        ,value    = self.items
-                                        ,command  = self.trigger
+            # Cannot use a starred expression as a keyword argument
+            self.widget = tk.OptionMenu (self.parent.widget
+                                        ,self.var
+                                        ,*self.items
+                                        ,command = self.trigger
                                         )
         self.widget.pack(side=side,anchor=anchor)
         # Must be 1/True to be operational from keyboard
