@@ -4146,7 +4146,6 @@ class References:
         self.text1 = text1
         self.text2 = text2
         self.words()
-        self.refs()
         
     def words(self):
         self.words1 = Words (text    = self.text1
@@ -4159,14 +4158,8 @@ class References:
                             )
         self.words1.sent_nos()
         self.words2.sent_nos()
+        self.words1.refs()
         
-    def refs(self):
-        for word in self.words1.words:
-            if word.lat() or word.digit() or word.greek():
-                word._ref = True
-            else:
-                word._ref = False
-    
     def ref_before(self,word_no):
         while word_no >= 0:
             if self.words1.words[word_no]._ref:
