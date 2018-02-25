@@ -4141,6 +4141,95 @@ class Get:
 
 
 
+class Stones:
+    
+    def __init__(self,text1,text2):
+        self.text1 = text1
+        self.text2 = text2
+        self.words()
+        self.stones()
+        
+    def words(self):
+        self.words1 = Words (text    = self.text1
+                            ,OrigCyr = True
+                            ,Auto    = False
+                            )
+        self.words2 = Words (text    = self.text2
+                            ,OrigCyr = False
+                            ,Auto    = False
+                            )
+        self.words1.sent_nos()
+        self.words2.sent_nos()
+        
+    def stones(self):
+        for word in self.words1.words:
+            if word.lat() or word.digit() or word.greek():
+                word._stone = True
+            else:
+                word._stone = False
+    
+    def stone_before(self,word_no):
+        while word_no >= 0:
+            if self.words1.words[word_no]._stone:
+                break
+            else:
+                word_no -= 1
+        return word_no
+        
+    def stone_after(self,word_no):
+        while word_no < len(self.words1.words):
+            if self.words1.words[word_no]._stone:
+                break
+            else:
+                word_no += 1
+        return word_no
+    
+    def nearest_stone(self,word_no):
+        word_no1 = self.stone_before(word_no)
+        word_no2 = self.stone_after(word_no)
+        if word_no1 == -1 and word_no2 == -1:
+            log.append ('Stones.nearest_stone'
+                       ,_('INFO')
+                       ,_('No stones have been found!')
+                       )
+            return word_no
+        elif word_no1 >= 0 and word_no2 == -1:
+            log.append ('Stones.nearest_stone'
+                       ,_('INFO')
+                       ,_('No stones to the right!')
+                       )
+            return word_no1
+        elif word_no2 >= 0 and word_no1 == -1:
+            log.append ('Stones.nearest_stone'
+                       ,_('INFO')
+                       ,_('No stones to the left!')
+                       )
+            return word_no2
+        else:
+            delta_before = word_no - word_no1
+            delta_after  = word_no2 - word_no
+            if min(delta_before,delta_after) == delta_before:
+                return word_no1
+            else:
+                return word_no2
+                
+    def repeated(self,word_no):
+        count = 0
+        for i in range(word_no+1):
+            if self.words1.words[i]._n == self.words1.words[word_no]._n:
+                count += 1
+        return count
+        
+    def repeated2(self,word_n,count):
+        tmp = 0
+        for i in range(len(self.words2.words)):
+            if self.words2.words[i]._n == word_n:
+               tmp += 1
+               if tmp == count:
+                   return i
+
+
+
 ''' If there are problems with import or tkinter's wait_variable, put
     this beneath 'if __name__'
 '''
