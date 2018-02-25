@@ -3006,7 +3006,7 @@ class Word:
         self.OrigCyr = self._nm = self._nmf = self._nml = self._pf \
                      = self._pl = self._nf = self._nl = self._cyr \
                      = self._lat = self._greek = self._digit \
-                     = self._empty = self._stone = self._sent_no \
+                     = self._empty = self._ref = self._sent_no \
                      = self._spell_ru = self._sents_len = self._tf \
                      = self._tl = None
 
@@ -3059,12 +3059,12 @@ class Word:
     def print(self,no=0):
         log.append ('Word.print'
                    ,_('DEBUG')
-                   ,'no: %d; OrigCyr: %s; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _stone: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s; _nmf: %s; _nml: %s' \
+                   ,'no: %d; OrigCyr: %s; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _ref: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s; _nmf: %s; _nml: %s' \
                    % (no,str(self.OrigCyr),str(self._p),str(self._n)
                      ,str(self._nm),str(self._pf),str(self._pl)
                      ,str(self._nf),str(self._nl),str(self._cyr)
                      ,str(self._lat),str(self._greek),str(self._digit)
-                     ,str(self._empty),str(self._stone)
+                     ,str(self._empty),str(self._ref)
                      ,str(self._sent_no),str(self._sents_len)
                      ,str(self._spell_ru),str(self._nmf),str(self._nml)
                      )
@@ -3072,9 +3072,9 @@ class Word:
 
     def nm(self):
         if self._nm is None:
-            if self.stone():
+            if self.ref():
                 ''' #note: Setting '_nm' to '' allows to find longer
-                    matches (without stones), but requires replacing
+                    matches (without references), but requires replacing
                     duplicate spaces in 'text_nm' with ordinary ones and
                     using another word numbering for '_nm'.
                 '''
@@ -3088,23 +3088,22 @@ class Word:
                     self._nm = self._n
         return self._nm
 
-    def stone(self):
-        ''' Criteria for setting the 'stone' mark:
+    def ref(self):
+        ''' Criteria for setting the 'reference' mark:
             - The word has digits
             - The word has Greek characters (that are treated as
               variables. Greek should NOT be a predominant language)
             - The word has Latin characters in the predominantly Russian
               text (inexact)
             - The word has '-' (inexact) (#note: when finding matches,
-              set the condition of ''.join(set(stone)) != '-')
+              set the condition of ''.join(set(ref)) != '-')
         '''
-        if self._stone is None:
-            self._stone = ''.join ([x for x in self._n if x in digits \
-                                    or x == '-' or x \
-                                    in greek_alphabet_low
-                                   ]
-                                  )
-        return self._stone
+        if self._ref is None:
+            if self.lat() or self.digit() or self.greek():
+                self._ref = True
+            else:
+                self._ref = False
+        return self._ref
 
     ''' Enchant:
         1) Lower-case, upper-case and words where the first letter is
@@ -3304,12 +3303,12 @@ class Words: # Requires Search, Text
                        ,_('Operation has been canceled.')
                        )
 
-    def next_stone(self):
+    def next_ref(self):
         if self.Success:
             old = self._no
             Found = False
             while self._no < self.len():
-                if self.words[self._no].stone():
+                if self.words[self._no].ref():
                     Found = True
                     break
                 else:
@@ -3318,17 +3317,17 @@ class Words: # Requires Search, Text
                 self._no = old
             return self._no
         else:
-            log.append ('Words.next_stone'
+            log.append ('Words.next_ref'
                        ,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
-    def prev_stone(self):
+    def prev_ref(self):
         if self.Success:
             old = self._no
             Found = False
             while self._no >= 0:
-                if self.words[self._no].stone():
+                if self.words[self._no].ref():
                     Found = True
                     break
                 else:
@@ -3337,7 +3336,7 @@ class Words: # Requires Search, Text
                 self._no = old
             return self._no
         else:
-            log.append ('Words.prev_stone'
+            log.append ('Words.prev_ref'
                        ,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
@@ -3357,17 +3356,17 @@ class Words: # Requires Search, Text
                        ,_('Operation has been canceled.')
                        )
 
-    def _stones(self):
+    def _refs(self):
         for i in range(self.len()):
-            self.words[i].stone()
+            self.words[i].ref()
 
-    def stones(self):
+    def refs(self):
         if self.Success:
             if self.len() > 0:
-                if self.words[0]._stone is None:
-                    self._stones()
+                if self.words[0]._ref is None:
+                    self._refs()
         else:
-            log.append ('Words.stones'
+            log.append ('Words.refs'
                        ,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
@@ -3521,7 +3520,7 @@ class Words: # Requires Search, Text
             self.sent_nos()
             for i in range(self.len()):
                 self.words[i].empty()
-                self.words[i].stone()
+                self.words[i].ref()
                 self.words[i].nm()
                 self.words[i].spell_ru()
                 self.words[i].tf()
@@ -4141,13 +4140,13 @@ class Get:
 
 
 
-class Stones:
+class References:
     
     def __init__(self,text1,text2):
         self.text1 = text1
         self.text2 = text2
         self.words()
-        self.stones()
+        self.refs()
         
     def words(self):
         self.words1 = Words (text    = self.text1
@@ -4161,48 +4160,48 @@ class Stones:
         self.words1.sent_nos()
         self.words2.sent_nos()
         
-    def stones(self):
+    def refs(self):
         for word in self.words1.words:
             if word.lat() or word.digit() or word.greek():
-                word._stone = True
+                word._ref = True
             else:
-                word._stone = False
+                word._ref = False
     
-    def stone_before(self,word_no):
+    def ref_before(self,word_no):
         while word_no >= 0:
-            if self.words1.words[word_no]._stone:
+            if self.words1.words[word_no]._ref:
                 break
             else:
                 word_no -= 1
         return word_no
         
-    def stone_after(self,word_no):
+    def ref_after(self,word_no):
         while word_no < len(self.words1.words):
-            if self.words1.words[word_no]._stone:
+            if self.words1.words[word_no]._ref:
                 break
             else:
                 word_no += 1
         return word_no
     
-    def nearest_stone(self,word_no):
-        word_no1 = self.stone_before(word_no)
-        word_no2 = self.stone_after(word_no)
+    def nearest_ref(self,word_no):
+        word_no1 = self.ref_before(word_no)
+        word_no2 = self.ref_after(word_no)
         if word_no1 == -1 and word_no2 == -1:
-            log.append ('Stones.nearest_stone'
+            log.append ('References.nearest_ref'
                        ,_('INFO')
-                       ,_('No stones have been found!')
+                       ,_('No references have been found!')
                        )
             return word_no
         elif word_no1 >= 0 and word_no2 == -1:
-            log.append ('Stones.nearest_stone'
+            log.append ('References.nearest_ref'
                        ,_('INFO')
-                       ,_('No stones to the right!')
+                       ,_('No references to the right!')
                        )
             return word_no1
         elif word_no2 >= 0 and word_no1 == -1:
-            log.append ('Stones.nearest_stone'
+            log.append ('References.nearest_ref'
                        ,_('INFO')
-                       ,_('No stones to the left!')
+                       ,_('No references to the left!')
                        )
             return word_no2
         else:
