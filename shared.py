@@ -3003,7 +3003,7 @@ class Word:
             _nmf: position of the 1st symbol of _nm  # 'matches'
             _nml: position of the last symbol of _nm # 'matches'
         '''
-        self.OrigCyr = self._nm = self._nmf = self._nml = self._pf \
+        self._nm = self._nmf = self._nml = self._pf \
                      = self._pl = self._nf = self._nl = self._cyr \
                      = self._lat = self._greek = self._digit \
                      = self._empty = self._ref = self._sent_no \
@@ -3059,8 +3059,8 @@ class Word:
     def print(self,no=0):
         log.append ('Word.print'
                    ,_('DEBUG')
-                   ,'no: %d; OrigCyr: %s; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _ref: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s; _nmf: %s; _nml: %s' \
-                   % (no,str(self.OrigCyr),str(self._p),str(self._n)
+                   ,'no: %d; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _ref: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s; _nmf: %s; _nml: %s' \
+                   % (no,str(self._p),str(self._n)
                      ,str(self._nm),str(self._pf),str(self._pl)
                      ,str(self._nf),str(self._nl),str(self._cyr)
                      ,str(self._lat),str(self._greek),str(self._digit)
@@ -3081,7 +3081,9 @@ class Word:
                 #self._nm = ''
                 self._nm = self._n
             else:
-                result = Decline(text=self._n,Auto=False).normal().get()
+                result = Decline (text = self._n
+                                 ,Auto = False
+                                 ).normal().get()
                 if result:
                     self._nm = result.replace('ё','е')
                 else:
@@ -3114,11 +3116,7 @@ class Word:
     def spell_ru(self):
         if self._spell_ru is None:
             self._spell_ru = True
-            ''' #todo: del OrigCyr: Cyrillic text can have words in
-                foreign languages, we should define the language
-                word-by-word anyway
-            '''
-            if self.OrigCyr and self._n:
+            if self._n:
                 self._spell_ru = objs.enchant().check(self._n)
         return self._spell_ru
 
@@ -3164,12 +3162,11 @@ class Word:
 
 
 # Use cases: case-insensitive search; spellchecking; text comparison
-class Words: # Requires Search, Text
+# Requires Search, Text
+class Words:
 
-    def __init__(self,text,OrigCyr=False,Auto=False):
+    def __init__(self,text,Auto=False):
         self.Success = True
-        #todo: Do we really need this?
-        self.OrigCyr = OrigCyr
         self.Auto    = Auto
         self.values()
         if text:
@@ -3215,7 +3212,6 @@ class Words: # Requires Search, Text
                         cur_len_p += 2
                         cur_len_n += 2
                     cur_word = Word()
-                    cur_word.OrigCyr = self.OrigCyr
                     cur_word._p = lst_p[i]
                     cur_word._n = lst_n[i]
                     cur_word._pf = cur_len_p
@@ -4148,13 +4144,11 @@ class References:
         self.words()
         
     def words(self):
-        self.words1 = Words (text    = self.text1
-                            ,OrigCyr = True
-                            ,Auto    = False
+        self.words1 = Words (text = self.text1
+                            ,Auto = False
                             )
-        self.words2 = Words (text    = self.text2
-                            ,OrigCyr = False
-                            ,Auto    = False
+        self.words2 = Words (text = self.text2
+                            ,Auto = False
                             )
         self.words1.sent_nos()
         self.words2.sent_nos()
