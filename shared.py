@@ -123,7 +123,9 @@ SectionWindowsSettings = 'Windows settings'
 punc_array      = ['.',',','!','?',':',';']
 #todo: why there were no opening brackets?
 #punc_ext_array = ['"','”','»',']','}',')']
-punc_ext_array  = ['"','“','”','','«','»','[',']','{','}','(',')']
+punc_ext_array  = ['"','“','”','','«','»','[',']'
+                  ,'{','}','(',')','’',"'"
+                  ]
 
 forbidden_win = '/\?%*:|"<>'
 forbidden_lin = '/'
@@ -3167,7 +3169,8 @@ class Words: # Requires Search, Text
 
     def __init__(self,text,OrigCyr=False,Auto=False):
         self.Success = True
-        self.OrigCyr = OrigCyr #todo: Do we really need this?
+        #todo: Do we really need this?
+        self.OrigCyr = OrigCyr
         self.Auto    = Auto
         self.values()
         if text:
@@ -3852,6 +3855,18 @@ class OCR:
         self._text = re.sub(r'(\d+)е',r'\1e',self._text)
         # 106Ь => 106b
         self._text = re.sub(r'(\d+)Ь',r'\1b',self._text)
+        # А1 => A1 (Cyrillic)
+        self._text = re.sub(r'А(\d+)',r'A\1',self._text)
+        # 1А => 1A (Cyrillic)
+        self._text = re.sub(r'(\d+)А',r'\1A',self._text)
+        # В1 => B1 (Cyrillic)
+        self._text = re.sub(r'В(\d+)',r'B\1',self._text)
+        # 1В => 1B (Cyrillic)
+        self._text = re.sub(r'(\d+)В',r'\1B',self._text)
+        # С1 => C1 (Cyrillic)
+        self._text = re.sub(r'С(\d+)',r'C\1',self._text)
+        # 1С => 1C (Cyrillic)
+        self._text = re.sub(r'(\d+)С',r'\1C',self._text)
         #fix a degree sign
         self._text = re.sub (r'[\s]{0,1}[°o][\s]{0,1}[CС](\W)'
                             ,r'°C',self._text
