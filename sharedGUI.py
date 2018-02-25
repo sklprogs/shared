@@ -3449,6 +3449,150 @@ class Manage:
         self.parent.close()
 
 
+
+class Panes:
+    
+    def __init__(self,background='old lace',Extended=False):
+        self._bg      = background
+        self.Extended = Extended
+        self.gui()
+        
+    def frames(self):
+        self.frame1 = Frame (parent = self.obj
+                            ,side   = 'top'
+                            ,fill   = 'both'
+                            )
+        if self.Extended:
+            self.frame2 = Frame (parent = self.obj
+                                ,side   = 'bottom'
+                                ,fill   = 'both'
+                                )
+
+    def panes(self):
+        self.pane1 = TextBox (parent    = self.frame1
+                             ,Composite = True
+                             ,side      = 'left'
+                             )
+        self.pane2 = TextBox (parent    = self.frame1
+                             ,Composite = True
+                             ,side      = 'left'
+                             )
+        if self.Extended:
+            self.pane3 = TextBox (parent    = self.frame2
+                                 ,Composite = True
+                                 ,side      = 'left'
+                                 )
+            self.pane4 = TextBox (parent    = self.frame2
+                                 ,Composite = True
+                                 ,side      = 'left'
+                                 )
+    
+    def gui(self):
+        self.obj = objs.new_top()
+        self.widget = self.obj.widget
+        self.frames()
+        self.panes()
+        self.pane1.focus()
+        self.pane1.widget.config(bg=self._bg)
+        self.icon()
+        self.title()
+        self.bindings()
+        
+    def title(self,text=_('Compare texts:')):
+        self.obj.title(text=text)
+        
+    def show(self,*args):
+        self.obj.show()
+        
+    def close(self,*args):
+        self.obj.close()
+        
+    def bindings(self):
+        bind (obj      = self
+             ,bindings = ['<Control-q>','<Control-w>']
+             ,action   = self.close
+             )
+        bind (obj      = self
+             ,bindings = '<Escape>'
+             ,action   = Geometry(parent=self.obj).minimize
+             )
+        bind (obj      = self
+             ,bindings = ['<Alt-Key-1>','<Control-Key-1>']
+             ,action   = self.select1
+             )
+        bind (obj      = self
+             ,bindings = ['<Alt-Key-2>','<Control-Key-2>']
+             ,action   = self.select2
+             )
+        bind (obj      = self.pane1
+             ,bindings = '<ButtonRelease-1>'
+             ,action   = self.select1
+             )
+        bind (obj      = self.pane2
+             ,bindings = '<ButtonRelease-1>'
+             ,action   = self.select2
+             )
+        if self.Extended:
+            bind (obj      = self
+                 ,bindings = ['<Alt-Key-3>','<Control-Key-3>']
+                 ,action   = self.select3
+                 )
+            bind (obj      = self
+                 ,bindings = ['<Alt-Key-4>','<Control-Key-4>']
+                 ,action   = self.select4
+                 )
+            bind (obj      = self.pane3
+                 ,bindings = '<ButtonRelease-1>'
+                 ,action   = self.select3
+                 )
+            bind (obj      = self.pane4
+                 ,bindings = '<ButtonRelease-1>'
+                 ,action   = self.select4
+                 )
+             
+    def decolorize(self):
+        self.pane1.widget.config(bg='white')
+        self.pane2.widget.config(bg='white')
+        if self.Extended:
+            self.pane3.widget.config(bg='white')
+            self.pane4.widget.config(bg='white')
+    
+    def select1(self,*args):
+        # Without this the search doesn't work (the pane is inactive)
+        self.pane1.focus()
+        self.decolorize()
+        self.pane1.widget.config(bg=self._bg)
+        
+    def select2(self,*args):
+        # Without this the search doesn't work (the pane is inactive)
+        self.pane2.focus()
+        self.decolorize()
+        self.pane2.widget.config(bg=self._bg)
+        
+    def select3(self,*args):
+        # Without this the search doesn't work (the pane is inactive)
+        self.pane3.focus()
+        self.decolorize()
+        self.pane3.widget.config(bg=self._bg)
+        
+    def select4(self,*args):
+        # Without this the search doesn't work (the pane is inactive)
+        self.pane4.focus()
+        self.decolorize()
+        self.pane4.widget.config(bg=self._bg)
+        
+    def icon(self,path=None):
+        if path:
+            self.obj.icon(path)
+        else:
+            self.obj.icon (os.path.join (sys.path[0]
+                                        ,'resources'
+                                        ,'icon_64x64_cpt.gif'
+                                        )
+                          )
+
+
+
 ''' If there are problems with import or tkinter's wait_variable, put
     this beneath 'if __name__'
 '''
