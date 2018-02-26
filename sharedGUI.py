@@ -3491,8 +3491,9 @@ class Panes:
         self.frames()
         self.panes()
         self.pane1.focus()
-        #todo: reenable after GUI glitches are fixed
-        #self.pane1.widget.config(bg=self._bg)
+        #todo: reenable for 4 panes after GUI glitches are fixed
+        if not self.Extended:
+            self.pane1.widget.config(bg=self._bg)
         self.icon()
         self.title()
         self.bindings()
@@ -3556,16 +3557,18 @@ class Panes:
     def select1(self,*args):
         # Without this the search doesn't work (the pane is inactive)
         self.pane1.focus()
-        #fix: GUI glitches when doing this
-        #self.decolorize()
-        #self.pane1.widget.config(bg=self._bg)
+        #todo: reenable for 4 panes after GUI glitches are fixed
+        if not self.Extended:
+            self.decolorize()
+            self.pane1.widget.config(bg=self._bg)
         
     def select2(self,*args):
         # Without this the search doesn't work (the pane is inactive)
         self.pane2.focus()
-        #fix: GUI glitches when doing this
-        #self.decolorize()
-        #self.pane2.widget.config(bg=self._bg)
+        #todo: reenable for 4 panes after GUI glitches are fixed
+        if not self.Extended:
+            self.decolorize()
+            self.pane2.widget.config(bg=self._bg)
         
     def select3(self,*args):
         # Without this the search doesn't work (the pane is inactive)
