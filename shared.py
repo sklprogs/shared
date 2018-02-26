@@ -4138,12 +4138,30 @@ class Get:
 
 class References:
     
-    def __init__(self,words1,words2):
+    def __init__(self,words1,words2,words3=None,words4=None):
         self.words1 = words1
         self.words2 = words2
-        self.words1.sent_nos()
-        self.words2.sent_nos()
-        self.words1.refs()
+        self.words3 = words3
+        self.words4 = words4
+        if self.words1 and self.words2 and len(self.words1.words) \
+        and len(self.words2.words):
+            self.Success = True
+        else:
+            self.Success = False
+        if self.Success:
+            self.words1.sent_nos()
+            self.words2.sent_nos()
+        if self.words3 and self.words4:
+            if len(self.words3.words) and len(self.words4.words):
+                self.Success = True
+                self.words3.sent_nos()
+                self.words4.sent_nos()
+            else:
+                self.Success = False
+        if self.Success:
+            self.words1.refs()
+            if self.words3:
+                self.words3.refs()
         
     def ref_before(self,word_no):
         while word_no >= 0:
