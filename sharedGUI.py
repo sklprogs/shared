@@ -3491,7 +3491,8 @@ class Panes:
         self.frames()
         self.panes()
         self.pane1.focus()
-        self.pane1.widget.config(bg=self._bg)
+        #todo: reenable after GUI glitches are fixed
+        #self.pane1.widget.config(bg=self._bg)
         self.icon()
         self.title()
         self.bindings()
@@ -3506,6 +3507,11 @@ class Panes:
         self.obj.close()
         
     def bindings(self):
+        ''' We do not bind 'select1' to 'pane1' and 'select2' to 'pane3'
+            since we need to further synchronize references by LMB
+            anyway, and this further binding will rewrite the current
+            binging.
+        '''
         bind (obj      = self
              ,bindings = ['<Control-q>','<Control-w>']
              ,action   = self.close
@@ -3522,10 +3528,6 @@ class Panes:
              ,bindings = ['<Alt-Key-2>','<Control-Key-2>']
              ,action   = self.select2
              )
-        bind (obj      = self.pane1
-             ,bindings = '<ButtonRelease-1>'
-             ,action   = self.select1
-             )
         bind (obj      = self.pane2
              ,bindings = '<ButtonRelease-1>'
              ,action   = self.select2
@@ -3538,10 +3540,6 @@ class Panes:
             bind (obj      = self
                  ,bindings = ['<Alt-Key-4>','<Control-Key-4>']
                  ,action   = self.select4
-                 )
-            bind (obj      = self.pane3
-                 ,bindings = '<ButtonRelease-1>'
-                 ,action   = self.select3
                  )
             bind (obj      = self.pane4
                  ,bindings = '<ButtonRelease-1>'
@@ -3558,26 +3556,30 @@ class Panes:
     def select1(self,*args):
         # Without this the search doesn't work (the pane is inactive)
         self.pane1.focus()
-        self.decolorize()
-        self.pane1.widget.config(bg=self._bg)
+        #fix: GUI glitches when doing this
+        #self.decolorize()
+        #self.pane1.widget.config(bg=self._bg)
         
     def select2(self,*args):
         # Without this the search doesn't work (the pane is inactive)
         self.pane2.focus()
-        self.decolorize()
-        self.pane2.widget.config(bg=self._bg)
+        #fix: GUI glitches when doing this
+        #self.decolorize()
+        #self.pane2.widget.config(bg=self._bg)
         
     def select3(self,*args):
         # Without this the search doesn't work (the pane is inactive)
         self.pane3.focus()
-        self.decolorize()
-        self.pane3.widget.config(bg=self._bg)
+        #fix: GUI glitches when doing this
+        #self.decolorize()
+        #self.pane3.widget.config(bg=self._bg)
         
     def select4(self,*args):
         # Without this the search doesn't work (the pane is inactive)
         self.pane4.focus()
-        self.decolorize()
-        self.pane4.widget.config(bg=self._bg)
+        #fix: GUI glitches when doing this
+        #self.decolorize()
+        #self.pane4.widget.config(bg=self._bg)
         
     def icon(self,path=None):
         if path:

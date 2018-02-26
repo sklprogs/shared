@@ -4161,12 +4161,19 @@ class References:
         
     def ref_before(self,word_no):
         if self.Success:
-            while word_no >= 0:
-                if self.words1.words[word_no]._ref:
-                    break
-                else:
-                    word_no -= 1
-            return word_no
+            if word_no < len(self.words1.words):
+                while word_no >= 0:
+                    if self.words1.words[word_no]._ref:
+                        break
+                    else:
+                        word_no -= 1
+                return word_no
+            else:
+                Message ('References.ref_before'
+                        ,_('ERROR')
+                        ,_('The condition "%s" is not observed!') \
+                        % '%d < %d' % (word_no,len(self.words1.words))
+                        )
         else:
             log.append ('References.ref_before'
                        ,_('WARNING')
@@ -4175,12 +4182,19 @@ class References:
         
     def ref_after(self,word_no):
         if self.Success:
-            while word_no < len(self.words1.words):
-                if self.words1.words[word_no]._ref:
-                    break
-                else:
-                    word_no += 1
-            return word_no
+            if word_no < len(self.words1.words):
+                while word_no < len(self.words1.words):
+                    if self.words1.words[word_no]._ref:
+                        return word_no
+                    else:
+                        word_no += 1
+                return -1
+            else:
+                Message ('References.ref_after'
+                        ,_('ERROR')
+                        ,_('The condition "%s" is not observed!') \
+                        % '%d < %d' % (word_no,len(self.words1.words))
+                        )
         else:
             log.append ('References.ref_after'
                        ,_('WARNING')
@@ -4224,11 +4238,18 @@ class References:
                 
     def repeated(self,word_no):
         if self.Success:
-            count = 0
-            for i in range(word_no+1):
-                if self.words1.words[i]._n == self.words1.words[word_no]._n:
-                    count += 1
-            return count
+            if word_no < len(self.words1.words):
+                count = 0
+                for i in range(word_no+1):
+                    if self.words1.words[i]._n == self.words1.words[word_no]._n:
+                        count += 1
+                return count
+            else:
+                Message ('References.repeated'
+                        ,_('ERROR')
+                        ,_('The condition "%s" is not observed!') \
+                        % '%d < %d' % (word_no,len(self.words1.words))
+                        )
         else:
             log.append ('References.repeated'
                        ,_('WARNING')
