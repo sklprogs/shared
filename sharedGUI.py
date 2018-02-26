@@ -640,11 +640,9 @@ class TextBox:
         WidgetShared.custom_buttons(self)
         self.bindings()
 
-    def reset(self,mode='data',words=None):
-        if mode == 'data':
-            self.reset_data()
-        else:
-            self.reset_logic(words=words)
+    def reset(self,words=None):
+        self.reset_data()
+        self.reset_logic(words=words)
 
     def reset_logic(self,words=None):
         self.words = words
@@ -3590,6 +3588,13 @@ class Panes:
                                         ,'icon_64x64_cpt.gif'
                                         )
                           )
+                          
+    def reset(self,words1,words2,words3=None,words4=None):
+        self.pane1.reset(words=words1)
+        self.pane2.reset(words=words2)
+        if self.Extended:
+            self.pane3.reset(words=words3)
+            self.pane4.reset(words=words4)
 
 
 

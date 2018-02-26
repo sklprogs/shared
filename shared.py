@@ -4138,18 +4138,9 @@ class Get:
 
 class References:
     
-    def __init__(self,text1,text2):
-        self.text1 = text1
-        self.text2 = text2
-        self.words()
-        
-    def words(self):
-        self.words1 = Words (text = self.text1
-                            ,Auto = False
-                            )
-        self.words2 = Words (text = self.text2
-                            ,Auto = False
-                            )
+    def __init__(self,words1,words2):
+        self.words1 = words1
+        self.words2 = words2
         self.words1.sent_nos()
         self.words2.sent_nos()
         self.words1.refs()
