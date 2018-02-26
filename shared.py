@@ -915,6 +915,11 @@ class Text:
         self.text   = Input(val=self.text).not_none()
         # This can be useful in many cases, e.g. after OCR
         if Auto:
+            ''' This will remove symbols that cannot be shown in Tcl/Tk.
+                Since in many cases we build 'Words' from the text, we
+                need to synchronize this.
+            '''
+            self.delete_unsupported()
             self.convert_line_breaks()
             self.strip_lines()
             self.delete_duplicate_line_breaks()
@@ -4138,90 +4143,111 @@ class Get:
 
 class References:
     
-    def __init__(self,words1,words2,words3=None,words4=None):
+    def __init__(self,words1,words2):
         self.words1 = words1
         self.words2 = words2
-        self.words3 = words3
-        self.words4 = words4
         if self.words1 and self.words2 and len(self.words1.words) \
         and len(self.words2.words):
             self.Success = True
-        else:
-            self.Success = False
-        if self.Success:
             self.words1.sent_nos()
             self.words2.sent_nos()
-        if self.words3 and self.words4:
-            if len(self.words3.words) and len(self.words4.words):
-                self.Success = True
-                self.words3.sent_nos()
-                self.words4.sent_nos()
-            else:
-                self.Success = False
-        if self.Success:
             self.words1.refs()
-            if self.words3:
-                self.words3.refs()
+        else:
+            self.Success = False
+            log.append ('References.__init__'
+                       ,_('WARNING')
+                       ,_('Empty input is not allowed!')
+                       )
         
     def ref_before(self,word_no):
-        while word_no >= 0:
-            if self.words1.words[word_no]._ref:
-                break
-            else:
-                word_no -= 1
-        return word_no
+        if self.Success:
+            while word_no >= 0:
+                if self.words1.words[word_no]._ref:
+                    break
+                else:
+                    word_no -= 1
+            return word_no
+        else:
+            log.append ('References.ref_before'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         
     def ref_after(self,word_no):
-        while word_no < len(self.words1.words):
-            if self.words1.words[word_no]._ref:
-                break
-            else:
-                word_no += 1
-        return word_no
+        if self.Success:
+            while word_no < len(self.words1.words):
+                if self.words1.words[word_no]._ref:
+                    break
+                else:
+                    word_no += 1
+            return word_no
+        else:
+            log.append ('References.ref_after'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
     
     def nearest_ref(self,word_no):
-        word_no1 = self.ref_before(word_no)
-        word_no2 = self.ref_after(word_no)
-        if word_no1 == -1 and word_no2 == -1:
-            log.append ('References.nearest_ref'
-                       ,_('INFO')
-                       ,_('No references have been found!')
-                       )
-            return word_no
-        elif word_no1 >= 0 and word_no2 == -1:
-            log.append ('References.nearest_ref'
-                       ,_('INFO')
-                       ,_('No references to the right!')
-                       )
-            return word_no1
-        elif word_no2 >= 0 and word_no1 == -1:
-            log.append ('References.nearest_ref'
-                       ,_('INFO')
-                       ,_('No references to the left!')
-                       )
-            return word_no2
-        else:
-            delta_before = word_no - word_no1
-            delta_after  = word_no2 - word_no
-            if min(delta_before,delta_after) == delta_before:
+        if self.Success:
+            word_no1 = self.ref_before(word_no)
+            word_no2 = self.ref_after(word_no)
+            if word_no1 == -1 and word_no2 == -1:
+                log.append ('References.nearest_ref'
+                           ,_('INFO')
+                           ,_('No references have been found!')
+                           )
+                return word_no
+            elif word_no1 >= 0 and word_no2 == -1:
+                log.append ('References.nearest_ref'
+                           ,_('INFO')
+                           ,_('No references to the right!')
+                           )
                 return word_no1
-            else:
+            elif word_no2 >= 0 and word_no1 == -1:
+                log.append ('References.nearest_ref'
+                           ,_('INFO')
+                           ,_('No references to the left!')
+                           )
                 return word_no2
+            else:
+                delta_before = word_no - word_no1
+                delta_after  = word_no2 - word_no
+                if min(delta_before,delta_after) == delta_before:
+                    return word_no1
+                else:
+                    return word_no2
+        else:
+            log.append ('References.nearest_ref'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
                 
     def repeated(self,word_no):
-        count = 0
-        for i in range(word_no+1):
-            if self.words1.words[i]._n == self.words1.words[word_no]._n:
-                count += 1
-        return count
+        if self.Success:
+            count = 0
+            for i in range(word_no+1):
+                if self.words1.words[i]._n == self.words1.words[word_no]._n:
+                    count += 1
+            return count
+        else:
+            log.append ('References.repeated'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
         
     def repeated2(self,word_n,count):
-        tmp = 0
-        for i in range(len(self.words2.words)):
-            if self.words2.words[i]._n == word_n:
-               tmp += 1
-               if tmp == count:
-                   return i
+        if self.Success:
+            tmp = 0
+            for i in range(len(self.words2.words)):
+                if self.words2.words[i]._n == word_n:
+                   tmp += 1
+                   if tmp == count:
+                       return i
+        else:
+            log.append ('References.repeated2'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
 
 
 
