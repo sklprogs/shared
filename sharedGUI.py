@@ -1825,14 +1825,14 @@ class OptionMenu:
                  ,items     = ('1','2','3','4','5')
                  ,side      = 'left'
                  ,anchor    = 'center'
-                 ,command   = None
+                 ,action    = None
                  ,takefocus = 1
                  ,default   = None
                  ,Combo     = False
                  ):
         self.parent  = parent
         self.items   = items
-        self.command = command
+        self.action  = action
         self.default = default
         self.Combo   = Combo
         self.choice  = None
@@ -1866,8 +1866,8 @@ class OptionMenu:
         self._get()
         if self.Combo:
             self.widget.selection_clear()
-        if self.command:
-            self.command()
+        if self.action:
+            self.action()
         else:
             sh.log.append ('OptionMenu.trigger'
                           ,_('INFO')
@@ -1933,11 +1933,11 @@ class OptionMenu:
             self._fill_menu()
 
     def reset (self,items=('1','2','3','4','5')
-              ,default=None,command=None
+              ,default=None,action=None
               ):
         self.items = items
-        if command:
-            self.command = command
+        if action:
+            self.action = action
         # An error is thrown if 'items' is ()
         if not self.items:
             self.items = ('1','2','3','4','5')
