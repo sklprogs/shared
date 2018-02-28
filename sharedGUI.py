@@ -2549,11 +2549,14 @@ class CheckBox:
         self.gui()
         self.reset(Active=Active)
 
-    def reset(self,Active=False):
+    def reset(self,Active=False,action=None):
         if Active:
             self.enable()
         else:
             self.disable()
+        if action:
+            self.action = action
+            self.widget.config(command=self.action)
 
     def gui(self):
         self.widget = tk.Checkbutton (master   = self.parent.widget
