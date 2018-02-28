@@ -31,7 +31,7 @@ def bind(obj,bindings,action):
         else:
             Message (func    = 'bind'
                     ,level   = _('ERROR')
-                    ,message =_('Wrong input data: "%s"') \
+                    ,message = _('Wrong input data: "%s"') \
                     % str(bindings)
                     )
     else:
@@ -1235,56 +1235,56 @@ class Button:
 
     def __init__ (self
                  ,parent
-                 ,action              = None
-                 ,hint                = None
-                 ,inactive_image_path = None
-                 ,active_image_path   = None
-                 ,text                = 'Press me'
-                 ,height              = 36
-                 ,width               = 36
-                 ,side                = 'left'
-                 ,expand              = 0
-                 ,bg                  = None
-                 ,bg_focus            = None
-                 ,fg                  = None
-                 ,fg_focus            = None
-                 ,bd                  = 0
-                 ,hint_delay          = 800
-                 ,hint_width          = 280
-                 ,hint_height         = 40
-                 ,hint_background     = '#ffffe0'
-                 ,hint_direction      = 'top'
-                 ,hint_border_width   = 1
-                 ,hint_border_color   = 'navy'
-                 ,bindings            = []
-                 ,fill                = 'both'
-                 ,TakeFocus           = False
+                 ,action      = None
+                 ,hint        = None
+                 ,inactive    = None
+                 ,active      = None
+                 ,text        = 'Press me'
+                 ,height      = 36
+                 ,width       = 36
+                 ,side        = 'left'
+                 ,expand      = 0
+                 ,bg          = None
+                 ,bg_focus    = None
+                 ,fg          = None
+                 ,fg_focus    = None
+                 ,bd          = 0
+                 ,hint_delay  = 800
+                 ,hint_width  = 280
+                 ,hint_height = 40
+                 ,hint_bg     = '#ffffe0'
+                 ,hint_dir    = 'top'
+                 ,hint_bwidth = 1
+                 ,hint_bcolor = 'navy'
+                 ,bindings    = []
+                 ,fill        = 'both'
+                 ,TakeFocus   = False
                  ):
-        self.Status          = False
-        self.parent          = parent
-        self.action          = action
-        self.height          = height
-        self.width           = width
-        self.side            = side
-        self.expand          = expand
-        self.fill            = fill
-        self.text            = text
-        self._bindings       = bindings
-        self.TakeFocus       = TakeFocus
-        self.bd              = bd
-        self.bg              = bg
-        self.bg_focus        = bg_focus
-        self.fg              = fg
-        self.fg_focus        = fg_focus
-        self.hint            = hint
-        self.hint_delay      = hint_delay
-        self.hint_width      = hint_width
-        self.hint_height     = hint_height
-        self.hint_background = hint_background
-        self.hint_direction  = hint_direction
-        self.side            = side
-        self.inactive_image  = self.image(inactive_image_path)
-        self.active_image    = self.image(active_image_path)
+        self.Status         = False
+        self.parent         = parent
+        self.action         = action
+        self.height         = height
+        self.width          = width
+        self.side           = side
+        self.expand         = expand
+        self.fill           = fill
+        self.text           = text
+        self._bindings      = bindings
+        self.TakeFocus      = TakeFocus
+        self.bd             = bd
+        self.bg             = bg
+        self.bg_focus       = bg_focus
+        self.fg             = fg
+        self.fg_focus       = fg_focus
+        self.hint           = hint
+        self.hint_delay     = hint_delay
+        self.hint_width     = hint_width
+        self.hint_height    = hint_height
+        self.hint_bg        = hint_bg
+        self.hint_dir       = hint_dir
+        self.side           = side
+        self.inactive_image = self.image(inactive)
+        self.active_image   = self.image(active)
         
         self.gui()
         
@@ -1327,14 +1327,14 @@ class Button:
                 self.hint_extended = self.hint + '\n' + str(self._bindings).replace('[','').replace(']','').replace('<','').replace('>','').replace("'",'')
             else:
                 self.hint_extended = self.hint
-            self.tip = ToolTip (button          = self.widget
-                               ,text            = self.hint_extended
-                               ,hint_delay      = self.hint_delay
-                               ,hint_width      = self.hint_width
-                               ,hint_height     = self.hint_height
-                               ,hint_background = self.hint_background
-                               ,hint_direction  = self.hint_direction
-                               ,button_side     = self.side
+            self.tip = ToolTip (button      = self.widget
+                               ,text        = self.hint_extended
+                               ,hint_delay  = self.hint_delay
+                               ,hint_width  = self.hint_width
+                               ,hint_height = self.hint_height
+                               ,hint_bg     = self.hint_bg
+                               ,hint_dir    = self.hint_dir
+                               ,button_side = self.side
                                )
         self.show()
         self.bindings()
@@ -1444,16 +1444,16 @@ class ToolTipBase:
         '''
         x = self.button.winfo_rootx() + self.button.winfo_width()/2 \
                                       - self.hint_width/2
-        if self.hint_direction == 'bottom':
+        if self.hint_dir == 'bottom':
             y = self.button.winfo_rooty() + self.button.winfo_height() \
                                           + 1
-        elif self.hint_direction == 'top':
+        elif self.hint_dir == 'top':
             y = self.button.winfo_rooty() - self.hint_height - 1
         else:
             Message (func    = 'ToolTipBase.showtip'
                     ,level   = _('ERROR')
                     ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
-                    % (str(self.hint_direction),'top, bottom')
+                    % (str(self.hint_dir),'top, bottom')
                     )
         self.tipwindow = tw = tk.Toplevel(self.button)
         tw.wm_overrideredirect(1)
@@ -1481,30 +1481,30 @@ class ToolTipBase:
 class ToolTip(ToolTipBase):
 
     def __init__(self,button,text='Sample text',hint_delay=800
-                ,hint_width=280,hint_height=40,hint_background='#ffffe0'
-                ,hint_direction='top',hint_border_width=1
-                ,hint_border_color='navy',button_side='left'):
-        self.text              = text
-        self.hint_delay        = hint_delay
-        self.hint_direction    = hint_direction
-        self.hint_background   = hint_background
-        self.hint_border_color = hint_border_color
-        self.hint_height       = hint_height
-        self.hint_width        = hint_width
-        self.hint_border_width = hint_border_width
-        self.button_side       = button_side
+                ,hint_width=280,hint_height=40,hint_bg='#ffffe0'
+                ,hint_dir='top',hint_bwidth=1
+                ,hint_bcolor='navy',button_side='left'):
+        self.text        = text
+        self.hint_delay  = hint_delay
+        self.hint_dir    = hint_dir
+        self.hint_bg     = hint_bg
+        self.hint_bcolor = hint_bcolor
+        self.hint_height = hint_height
+        self.hint_width  = hint_width
+        self.hint_bwidth = hint_bwidth
+        self.button_side = button_side
         ToolTipBase.__init__(self,button)
 
     def showcontents(self):
         frame = tk.Frame (self.tipwindow
-                         ,background  = self.hint_border_color
-                         ,borderwidth = self.hint_border_width
+                         ,background  = self.hint_bcolor
+                         ,borderwidth = self.hint_bwidth
                          )
         frame.pack()
         self.label = tk.Label (frame
                               ,text       = self.text
                               ,justify    = 'center'
-                              ,background = self.hint_background
+                              ,background = self.hint_bg
                               ,width      = self.hint_width
                               ,height     = self.hint_height
                               )
