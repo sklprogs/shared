@@ -114,7 +114,7 @@ class Root:
 # Do not use graphical logging there
 class WidgetShared:
 
-    def focus(object,*args):
+    def focus(object,event=None):
         object.widget.focus()
 
     def insert(object,text,pos):
@@ -248,7 +248,7 @@ class Top:
         self.Lock  = False
         self.count = 0
 
-    def close(self,*args):
+    def close(self,event=None):
         self.widget.withdraw()
         if self.Lock:
             self.tk_trigger.set(True)
@@ -291,7 +291,7 @@ class Top:
             y = height/2 - size[1]/2
             self.widget.geometry("%dx%d+%d+%d" % (size + (x, y)))
 
-    def focus(self,*args):
+    def focus(self,event=None):
         self.widget.focus_set()
 
 
@@ -399,7 +399,7 @@ class SearchBox:
                           ,_('Operation has been canceled.')
                           )
 
-    def new(self,*args):
+    def new(self,event=None):
         self.reset_data()
         self.next()
 
@@ -452,7 +452,7 @@ class SearchBox:
                           ,_('Operation has been canceled.')
                           )
 
-    def next(self,*args):
+    def next(self,event=None):
         if self.Success:
             _loop = self.loop()
             if _loop:
@@ -482,7 +482,7 @@ class SearchBox:
                           ,_('Operation has been canceled.')
                           )
 
-    def prev(self,*args):
+    def prev(self,event=None):
         if self.Success:
             _loop = self.loop()
             if _loop:
@@ -651,7 +651,7 @@ class TextBox:
         self.selection.reset_logic(words=self.words)
 
     # Delete text, tags, marks
-    def reset_data(self,*args):
+    def reset_data(self,event=None):
         self.clear_text()
         self.clear_tags()
         self.clear_marks()
@@ -666,7 +666,7 @@ class TextBox:
         self.Active = True
         self.parent.show()
 
-    def close(self,*args):
+    def close(self,event=None):
         self.Save   = True
         self.Active = False
         self.parent.close()
@@ -731,7 +731,7 @@ class TextBox:
                                             ,self.close
                                             )
 
-    def toggle_case(self,*args):
+    def toggle_case(self,event=None):
         text = sh.Text(text=self.selection.text()).toggle_case()
         pos1, pos2 = self.selection.get()
         self.clear_selection()
@@ -780,14 +780,14 @@ class TextBox:
         1) Fix weird scrolling
         2) Delete selected text before pasting
     '''
-    def insert_clipboard(self,*args):
+    def insert_clipboard(self,event=None):
         self.clear_selection()
         # For some reason, 'self.insert' does not work here with 'break'
         #self.insert(text=Clipboard().paste(),MoveTop=False)
         self.widget.insert(self.cursor(),Clipboard().paste())
         return 'break'
 
-    def select_all(self,*args):
+    def select_all(self,event=None):
         self.tag_add()
         self.mark_add()
         return 'break'
@@ -926,7 +926,7 @@ class TextBox:
                 '''
                 self.clear_selection()
 
-    def clear_selection(self,*args):
+    def clear_selection(self,event=None):
         pos1tk, pos2tk = self.selection.get()
         if pos1tk and pos2tk:
             self.clear_text(pos1=pos1tk,pos2=pos2tk)
@@ -1004,7 +1004,7 @@ class TextBox:
         if self.widget.bbox(tk_pos):
             return True
 
-    def cursor(self,*args):
+    def cursor(self,event=None):
         try:
             self._pos = self.widget.index('insert')
             sh.log.append ('TextBox.cursor'
@@ -1019,10 +1019,10 @@ class TextBox:
                           )
         return self._pos
 
-    def focus_set(self,*args):
+    def focus_set(self,event=None):
         self.focus()
 
-    def focus(self,*args):
+    def focus(self,event=None):
         self.widget.focus_set()
 
     ''' Tags can be marked only after text in inserted; thus, call this
@@ -1131,10 +1131,10 @@ class Entry:
                  ,action   = self.parent.close
                  )
 
-    def show(self,*args):
+    def show(self,event=None):
         self.parent.show()
 
-    def close(self,*args):
+    def close(self,event=None):
         self.Save = True
         self.parent.close()
 
@@ -1159,7 +1159,7 @@ class Entry:
     def insert(self,text='text',pos=0):
         WidgetShared.insert(self,text=text,pos=pos)
 
-    def select_all(self,*args):
+    def select_all(self,event=None):
         self.widget.select_clear()
         self.widget.select_range(0,'end')
         return 'break'
@@ -1181,11 +1181,11 @@ class Entry:
     def title(self,text='Title:'):
         WidgetShared.title(self.parent,text)
 
-    def focus_set(self,*args):
+    def focus_set(self,event=None):
         self.focus()
         return 'break' # Manual Tab focus (left to right widget)
 
-    def focus(self,*args):
+    def focus(self,event=None):
         self.widget.focus_set()
         return 'break' # Manual Tab focus (left to right widget)
 
@@ -1394,7 +1394,7 @@ class Button:
     def close(self):
         self.widget.pack_forget()
 
-    def focus(self,*args):
+    def focus(self,event=None):
         self.widget.focus_set()
 
 
@@ -1548,7 +1548,7 @@ class ListBox:
         self.gui()
         self.reset(lst=lst,title=title)
 
-    def delete(self,*args):
+    def delete(self,event=None):
         self.index() # Set an actual value
         try:
             del self.lst[self._index]
@@ -1728,10 +1728,10 @@ class ListBox:
                           ,_('Empty input is not allowed!')
                           )
 
-    def show(self,*args):
+    def show(self,event=None):
         self.parent.show()
 
-    def interrupt(self,*args):
+    def interrupt(self,event=None):
         ''' Do not set '_index' to 0, because we need 'self.interrupt'.
             Other functions use 'self.index()', which returns an actual
             value.
@@ -1739,7 +1739,7 @@ class ListBox:
         self._get, self._index = '', None
         self.parent.close()
 
-    def close(self,*args):
+    def close(self,event=None):
         self.index()
         self.get()
         self.parent.close()
@@ -1799,13 +1799,13 @@ class ListBox:
             self._get = result[0]
         return self._get
 
-    def move_down(self,*args):
+    def move_down(self,event=None):
         self.index_add()
         self.select()
         if self.user_function:
             self.user_function()
 
-    def move_up(self,*args):
+    def move_up(self,event=None):
         self.index_subtract()
         self.select()
         if self.user_function:
@@ -1862,7 +1862,7 @@ class OptionMenu:
         self.widget.configure(takefocus=takefocus)
         self.default_set()
 
-    def trigger(self,*args):
+    def trigger(self,event=None):
         self._get()
         if self.Combo:
             self.widget.selection_clear()
@@ -1902,7 +1902,7 @@ class OptionMenu:
                         )
                 self._default_set()
 
-    def set(self,item,*args):
+    def set(self,item,event=None):
         if item in self.items:
             self.var.set(item)
             self.choice = item
@@ -1953,7 +1953,7 @@ class OptionMenu:
             self.widget.config(state='normal')
 
     # Auto updated (after selecting an item)
-    def _get(self,*args):
+    def _get(self,event=None):
         self.choice = self.var.get()
         # 'OptionMenu' always returns a string
         if self.choice not in self.items:
@@ -1969,21 +1969,21 @@ class OptionMenu:
                     % str(self.choice)
                     )
 
-    def set_prev(self,*args):
+    def set_prev(self,event=None):
         if self.index == 0:
             self.index = len(self.items) - 1
         else:
             self.index -= 1
         self.var.set(self.items[self.index])
 
-    def set_next(self,*args):
+    def set_next(self,event=None):
         if self.index == len(self.items) - 1:
             self.index = 0
         else:
             self.index += 1
         self.var.set(self.items[self.index])
 
-    def focus(self,*args):
+    def focus(self,event=None):
         self.widget.focus_set()
 
 
@@ -1991,7 +1991,7 @@ class OptionMenu:
 ''' Usage:
     bind(h_txt.widget,'<ButtonRelease-1>',action)
 
-def action(*args):
+def action(event=None):
     """ Refresh coordinates (or set h_selection._pos1tk,
     h_selection._pos2tk manually)
     """
@@ -2059,7 +2059,7 @@ class Selection: # Selecting words only
             self.get()
         return self._pos2tk
 
-    def get(self,*args):
+    def get(self,event=None):
         try:
             self._pos1tk = self.h_widget.widget.index('sel.first')
             self._pos2tk = self.h_widget.widget.index('sel.last')
@@ -2173,18 +2173,18 @@ class SymbolMap:
              ,action   = self.close
              )
     
-    def set(self,sym,*args):
+    def set(self,sym,event=None):
         self.symbol = sym
         self.close()
 
-    def get(self,*args):
+    def get(self,event=None):
         self.show()
         return self.symbol
 
-    def show(self,*args):
+    def show(self,event=None):
         self.obj.show()
 
-    def close(self,*args):
+    def close(self,event=None):
         self.obj.close()
 
 
@@ -2237,7 +2237,7 @@ class Geometry: # Requires sh.oss, objs
                     ,message = _('Wrong input data!')
                     )
 
-    def foreground(self,*args):
+    def foreground(self,event=None):
         if sh.oss.win():
             if self.hwnd():
                 ''' 'pywintypes.error', but needs to import this for
@@ -2266,7 +2266,7 @@ class Geometry: # Requires sh.oss, objs
                     ,message = _('Wrong input data!')
                     )
 
-    def minimize(self,*args):
+    def minimize(self,event=None):
         if self.parent:
             ''' # Does not always work
             if sh.oss.win():
@@ -2280,7 +2280,7 @@ class Geometry: # Requires sh.oss, objs
                     ,message = _('Wrong input data!')
                     )
 
-    def maximize(self,*args):
+    def maximize(self,event=None):
         if sh.oss.win():
             #win32gui.ShowWindow(self.hwnd(),win32con.SW_MAXIMIZE)
             self.parent.widget.wm_state(newstate='zoomed')
@@ -2292,7 +2292,7 @@ class Geometry: # Requires sh.oss, objs
                     ,message = _('Wrong input data!')
                     )
 
-    def focus(self,*args):
+    def focus(self,event=None):
         if sh.oss.win():
             win32gui.SetActiveWindow(self.hwnd())
         elif self.parent:
@@ -2303,7 +2303,7 @@ class Geometry: # Requires sh.oss, objs
                     ,message = _('Wrong input data!')
                     )
 
-    def lift(self,*args):
+    def lift(self,event=None):
         if self.parent:
             self.parent.widget.lift()
         else:
@@ -2323,7 +2323,7 @@ class Geometry: # Requires sh.oss, objs
                     ,message = _('Wrong input data!')
                     )
 
-    def activate(self,MouseClicked=False,*args):
+    def activate(self,event=None,MouseClicked=False):
         self._activate()
         if sh.oss.win():
             #todo: learn how to properly import modules
@@ -2344,7 +2344,7 @@ class Geometry: # Requires sh.oss, objs
                 # left mouse button up
                 ctypes.windll.user32.mouse_event(4, 0, 0, 0, 0)
 
-    def hwnd(self,*args):
+    def hwnd(self,event=None):
         if not self._hwnd:
             if self._title:
                 try:
@@ -2385,9 +2385,10 @@ class WaitBox:
         self.label.pack(expand=True)
         self.close()
 
+    # Use tuple for 'args' to pass multiple arguments
     def reset (self,func_title=None,func=None
               ,args=None,message=None
-              ): # Use tuple for 'args' to pass multiple arguments
+              ):
         self._func    = func
         self._title   = func_title
         self._args    = args
@@ -2572,7 +2573,7 @@ class CheckBox:
     def close(self):
         self.parent.close()
 
-    def focus(self,*args):
+    def focus(self,event=None):
         self.widget.focus_set()
 
     def enable(self):
@@ -2581,10 +2582,10 @@ class CheckBox:
     def disable(self):
         self.widget.deselect()
 
-    def get(self,*args):
+    def get(self,event=None):
         return self.status.get()
 
-    def toggle(self,*args):
+    def toggle(self,event=None):
         self.widget.toggle()
 
 
@@ -2833,21 +2834,21 @@ class MessageBuilder:
         self.icon(path=icon)
         return self
 
-    def show(self,Lock=False,*args):
+    def show(self,event=None,Lock=False):
         self.obj.show()
 
-    def close(self,*args):
+    def close(self,event=None):
         self.obj.close()
 
-    def close_yes(self,*args):
+    def close_yes(self,event=None):
         self.Yes = True
         self.close()
 
-    def close_no(self,*args):
+    def close_no(self,event=None):
         self.Yes = False
         self.close()
 
-    def picture(self,*args):
+    def picture(self,event=None):
         if os.path.exists(self.path):
             ''' We need to assign self.variable to Label, otherwise, it
                 gets destroyed.
@@ -2973,13 +2974,13 @@ class Canvas:
                     ,Silent  = False
                     )
         
-    def focus(self,*args):
+    def focus(self,event=None):
         self.widget.focus_set()
     
-    def show(self,*args):
+    def show(self,event=None):
         self.parent.show()
         
-    def close(self,*args):
+    def close(self,event=None):
         self.parent.close()
 
 
@@ -3137,7 +3138,7 @@ class SimpleTop:
     def gui(self):
         self.widget = tk.Toplevel(self.parent.widget)
         
-    def close(self,*args):
+    def close(self,event=None):
         # 'Label' will trigger closing with unwanted results
         #self.widget.destroy()
         sh.log.append ('SimpleTop.close'
@@ -3145,7 +3146,7 @@ class SimpleTop:
                       ,_('Nothing to do.')
                       )
         
-    def show(self,Lock=False,*args):
+    def show(self,event=None,Lock=False):
         self.widget.wait_window()
 
 
@@ -3286,17 +3287,17 @@ class TextBoxNotes:
         self.parent = objs.new_top(Maximize=False)
         Geometry(parent=self.parent).set('700x500')
     
-    def show(self,*args):
+    def show(self,event=None):
         self.obj.show()
     
-    def close(self,*args):
+    def close(self,event=None):
         self.obj.close()
         
-    def interrupt(self,*args):
+    def interrupt(self,event=None):
         self.obj.clear_text()
         self.obj.close()
         
-    def get(self,*args):
+    def get(self,event=None):
         self.close()
         return self.obj.get()
         
@@ -3432,7 +3433,7 @@ class Manage:
     def fill(self,lst=[]):
         self.obj.reset(lst=lst,title=self._title)
     
-    def add(self,*args):
+    def add(self,event=None):
         notes = objs.txtnotes(notes=self._notes)
         notes.show()
         result = notes.get()
@@ -3443,10 +3444,10 @@ class Manage:
                 if not item in self.obj.lst:
                     self.obj.insert(string=item)
     
-    def show(self,*args):
+    def show(self,event=None):
         self.parent.show()
         
-    def close(self,*args):
+    def close(self,event=None):
         self.parent.close()
 
 
@@ -3504,10 +3505,10 @@ class Panes:
     def title(self,text=_('Compare texts:')):
         self.obj.title(text=text)
         
-    def show(self,*args):
+    def show(self,event=None):
         self.obj.show()
         
-    def close(self,*args):
+    def close(self,event=None):
         self.obj.close()
         
     def bindings(self):
@@ -3557,7 +3558,7 @@ class Panes:
             self.pane3.widget.config(bg='white')
             self.pane4.widget.config(bg='white')
     
-    def select1(self,*args):
+    def select1(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
         self.pane1.focus()
         #todo: reenable for 4 panes after GUI glitches are fixed
@@ -3565,7 +3566,7 @@ class Panes:
             self.decolorize()
             self.pane1.widget.config(bg=self._bg)
         
-    def select2(self,*args):
+    def select2(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
         self.pane2.focus()
         #todo: reenable for 4 panes after GUI glitches are fixed
@@ -3573,14 +3574,14 @@ class Panes:
             self.decolorize()
             self.pane2.widget.config(bg=self._bg)
         
-    def select3(self,*args):
+    def select3(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
         self.pane3.focus()
         #fix: GUI glitches when doing this
         #self.decolorize()
         #self.pane3.widget.config(bg=self._bg)
         
-    def select4(self,*args):
+    def select4(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
         self.pane4.focus()
         #fix: GUI glitches when doing this
