@@ -363,7 +363,7 @@ class WriteTextFile:
                 Message (func    = 'WriteTextFile._write'
                         ,level   = _('ERROR')
                         ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
-                        % (str(mode),'a, w')
+                                   % (str(mode),'a, w')
                         ,Silent  = False
                         )
             else:
