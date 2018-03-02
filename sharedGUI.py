@@ -32,7 +32,7 @@ def bind(obj,bindings,action):
             Message (func    = 'bind'
                     ,level   = _('ERROR')
                     ,message = _('Wrong input data: "%s"') \
-                    % str(bindings)
+                               % str(bindings)
                     )
     else:
         Message (func    = 'bind'
@@ -1164,7 +1164,7 @@ class Entry:
         self.widget.select_range(0,'end')
         return 'break'
 
-    def clear_text(self,pos1=0,pos2='end'):
+    def clear_text(self,event=None,pos1=0,pos2='end'):
         try:
             self.widget.selection_clear()
             self.widget.delete(pos1,pos2)
@@ -1183,11 +1183,13 @@ class Entry:
 
     def focus_set(self,event=None):
         self.focus()
-        return 'break' # Manual Tab focus (left to right widget)
+        # Manual Tab focus (left to right widget)
+        return 'break'
 
     def focus(self,event=None):
         self.widget.focus_set()
-        return 'break' # Manual Tab focus (left to right widget)
+        # Manual Tab focus (left to right widget)
+        return 'break'
 
 
 

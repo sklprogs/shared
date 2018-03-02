@@ -5,7 +5,6 @@ import sre_constants
 import shared as sh
 import sharedGUI as sg
 
-
 import gettext, gettext_windows
 gettext_windows.setup_env()
 gettext.install('shared','./locale')
