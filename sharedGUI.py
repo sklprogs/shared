@@ -118,6 +118,7 @@ class WidgetShared:
         object.widget.focus()
 
     def insert(object,text,pos):
+        # Do not allow None
         if text:
             if object.type == 'TextBox' or object.type == 'Entry':
                 try:
@@ -1324,6 +1325,13 @@ class Button:
                                     ,activeforeground = self.fg_focus
                                     )
         self.title(button_text=self.text)
+        self.set_hint()
+        self.show()
+        self.bindings()
+        if self.TakeFocus:
+            self.widget.focus_set()
+
+    def set_hint(self):
         if self.hint:
             if self._bindings:
                 self.hint_extended = self.hint + '\n' + str(self._bindings).replace('[','').replace(']','').replace('<','').replace('>','').replace("'",'')
@@ -1338,11 +1346,7 @@ class Button:
                                ,hint_dir    = self.hint_dir
                                ,button_side = self.side
                                )
-        self.show()
-        self.bindings()
-        if self.TakeFocus:
-            self.widget.focus_set()
-
+    
     def title(self,button_text='Press me'):
         if button_text:
             self.widget.config(text=button_text)
@@ -3155,10 +3159,10 @@ class SimpleTop:
 
 class Scrollbar:
     
-    def __init__(self,parent,scroll_obj,Horizontal=False):
+    def __init__(self,parent,scroll,Horizontal=False):
         self.type       = 'Scrollbar'
         self.parent     = parent
-        self.scroll_obj = scroll_obj
+        self.scroll     = scroll
         self.Horizontal = Horizontal
         self.gui()
         
@@ -3180,11 +3184,11 @@ class Scrollbar:
                              ,side   = side
                              )
             if self.Horizontal:
-                self.scroll_obj.widget.config(xscrollcommand=self.widget.set)
-                self.widget.config(command=self.scroll_obj.widget.xview)
+                self.scroll.widget.config(xscrollcommand=self.widget.set)
+                self.widget.config(command=self.scroll.widget.xview)
             else:
-                self.scroll_obj.widget.config(yscrollcommand=self.widget.set)
-                self.widget.config(command=self.scroll_obj.widget.yview)
+                self.scroll.widget.config(yscrollcommand=self.widget.set)
+                self.widget.config(command=self.scroll.widget.yview)
         else:
             Message (func  = 'Scrollbar.gui'
                     ,level = _('ERROR')
