@@ -1066,9 +1066,6 @@ class TextBox:
                     ,Silent  = True
                     )
 
-    def zzz(self):
-        pass
-
 
 
 class Entry:

@@ -1230,9 +1230,6 @@ class Text:
                              ]
                             )
         return self.text
-    
-    def zzz(self):
-        pass
 
 
 
