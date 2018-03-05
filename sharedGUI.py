@@ -3171,7 +3171,7 @@ class Scrollbar:
             if self.Horizontal:
                 orient = tk.HORIZONTAL
                 fill   = 'x'
-                side   = 'bottom'
+                side   = None
             else:
                 orient = tk.VERTICAL
                 fill   = 'y'
