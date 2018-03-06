@@ -3093,7 +3093,7 @@ class Objects:
                               % type(self._lst[i])
                               )
 
-    def new_top(self,Maximize=1,AutoCenter=1):
+    def new_top(self,Maximize=0,AutoCenter=1):
         return Top (parent     = self.root()
                    ,Maximize   = Maximize
                    ,AutoCenter = AutoCenter
@@ -3287,7 +3287,7 @@ class TextBoxNotes:
             self.default_parent()
     
     def default_parent(self):
-        self.parent = objs.new_top(Maximize=False)
+        self.parent = objs.new_top()
         Geometry(parent=self.parent).set('700x500')
     
     def show(self,event=None):
@@ -3403,7 +3403,7 @@ class Manage:
         return self.obj.lst
     
     def gui(self):
-        self.parent = objs.new_top(Maximize=False)
+        self.parent = objs.new_top()
         self.lb_frame  = Frame (parent = self.parent
                                ,side   = 'left'
                                )
@@ -3493,7 +3493,7 @@ class Panes:
                                  )
     
     def gui(self):
-        self.obj = objs.new_top()
+        self.obj = objs.new_top(Maximize=1)
         self.widget = self.obj.widget
         self.frames()
         self.panes()
