@@ -1562,7 +1562,8 @@ class ListBox:
             self.user_function()
     
     def delete(self,event=None):
-        self.index() # Set an actual value
+        # Set an actual value
+        self.index()
         try:
             del self.lst[self._index]
             # Set this after 'del' to be triggered only on success
@@ -1589,7 +1590,7 @@ class ListBox:
     
     def bindings(self):
         bind (obj      = self
-             ,bindings = ['<<ListboxSelect>>','<Up>','<Down>']
+             ,bindings = '<<ListboxSelect>>'
              ,action   = self.trigger
              )
         if self.SelectionCloses:
@@ -1683,13 +1684,15 @@ class ListBox:
     def clear_selection(self):
         self.widget.selection_clear(0,tk.END)
 
-    def reset(self,lst=[],title=None):
+    def reset(self,lst=[],title=None,user_function=None):
         self._title = title
         self.clear()
         if lst is None:
             self.lst = []
         else:
             self.lst = list(lst)
+        if user_function:
+            self.user_function = user_function
         self.title(text=self._title)
         self.fill()
         self._resize()
@@ -1809,14 +1812,12 @@ class ListBox:
     def move_down(self,event=None):
         self.index_add()
         self.select()
-        if self.user_function:
-            self.user_function()
+        self.trigger()
 
     def move_up(self,event=None):
         self.index_subtract()
         self.select()
-        if self.user_function:
-            self.user_function()
+        self.trigger()
 
 
 
