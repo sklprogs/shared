@@ -1532,7 +1532,8 @@ class ListBox:
                 ,expand          = 1
                 ,fill            = 'both'
                 ):
-        self.state = 'normal' # See 'WidgetShared'
+        # See 'WidgetShared'
+        self.state = 'normal'
         ''' 'user_function': A user-defined function that is run when
             pressing Up/Down arrow keys and LMB. There is a problem
             binding it externally, so we bind it here.
@@ -1551,6 +1552,15 @@ class ListBox:
         self.gui()
         self.reset(lst=lst,title=title)
 
+    def trigger(self,event=None):
+        if self.user_function:
+            ''' Binding just to '<Button-1>' does not work. We do not
+                need binding Return/space/etc. because the function will
+                be called each time the selection is changed. However,
+                we still need to bind Up/Down.
+            '''
+            self.user_function()
+    
     def delete(self,event=None):
         self.index() # Set an actual value
         try:
@@ -1578,17 +1588,11 @@ class ListBox:
         self.reset(lst=self.lst,title=self._title)
     
     def bindings(self):
-        if self.user_function:
-            ''' Binding just to '<Button-1>' does not work. We do not
-                need binding Return/space/etc. because the function will
-                be called each time the selection is changed. However,
-                we still need to bind Up/Down.
-            '''
-            bind (obj      = self
-                 ,bindings = '<<ListboxSelect>>'
-                 ,action   = self.user_function
-                 )
-        elif self.SelectionCloses:
+        bind (obj      = self
+             ,bindings = ['<<ListboxSelect>>','<Up>','<Down>']
+             ,action   = self.trigger
+             )
+        if self.SelectionCloses:
             #todo: test <KP_Enter> in Windows
             bind (obj      = self
                  ,bindings = ['<Return>','<KP_Enter>'
