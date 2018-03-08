@@ -1548,6 +1548,8 @@ class ListBox:
         self.SelectionCloses = SelectionCloses
         self.SingleClick     = SingleClick
         self._icon           = icon
+        # Set an initial value
+        self.action          = action
         self.gui()
         self.reset (lst    = lst
                    ,title  = title
