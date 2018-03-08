@@ -1526,7 +1526,7 @@ class ListBox:
                 ,SelectionCloses = True
                 ,Composite       = False
                 ,SingleClick     = True
-                ,user_function   = None
+                ,action          = None
                 ,side            = None
                 ,Scrollbar       = True
                 ,expand          = 1
@@ -1534,7 +1534,7 @@ class ListBox:
                 ):
         # See 'WidgetShared'
         self.state = 'normal'
-        ''' 'user_function': A user-defined function that is run when
+        ''' 'action': A user-defined function that is run when
             pressing Up/Down arrow keys and LMB. There is a problem
             binding it externally, so we bind it here.
         '''
@@ -1545,7 +1545,7 @@ class ListBox:
         self.Scrollbar       = Scrollbar
         self.side            = side
         self._fill           = fill
-        self.user_function   = user_function
+        self.action          = action
         self.SelectionCloses = SelectionCloses
         self.SingleClick     = SingleClick
         self._icon           = icon
@@ -1553,13 +1553,13 @@ class ListBox:
         self.reset(lst=lst,title=title)
 
     def trigger(self,event=None):
-        if self.user_function:
+        if self.action:
             ''' Binding just to '<Button-1>' does not work. We do not
                 need binding Return/space/etc. because the function will
                 be called each time the selection is changed. However,
                 we still need to bind Up/Down.
             '''
-            self.user_function()
+            self.action()
     
     def delete(self,event=None):
         # Set an actual value
@@ -1684,15 +1684,14 @@ class ListBox:
     def clear_selection(self):
         self.widget.selection_clear(0,tk.END)
 
-    def reset(self,lst=[],title=None,user_function=None):
+    def reset(self,lst=[],title=None,action=None):
         self._title = title
         self.clear()
         if lst is None:
             self.lst = []
         else:
             self.lst = list(lst)
-        if user_function:
-            self.user_function = user_function
+        self.action = action
         self.title(text=self._title)
         self.fill()
         self._resize()
