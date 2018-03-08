@@ -1545,12 +1545,14 @@ class ListBox:
         self.Scrollbar       = Scrollbar
         self.side            = side
         self._fill           = fill
-        self.action          = action
         self.SelectionCloses = SelectionCloses
         self.SingleClick     = SingleClick
         self._icon           = icon
         self.gui()
-        self.reset(lst=lst,title=title)
+        self.reset (lst    = lst
+                   ,title  = title
+                   ,action = action
+                   )
 
     def trigger(self,event=None):
         if self.action:
@@ -1691,7 +1693,9 @@ class ListBox:
             self.lst = []
         else:
             self.lst = list(lst)
-        self.action = action
+        # Checking for None allows to keep an old function
+        if action:
+            self.action = action
         self.title(text=self._title)
         self.fill()
         self._resize()
