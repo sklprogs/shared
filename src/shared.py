@@ -7,7 +7,7 @@ email     = 'skl.progs@gmail.com'
 
 import gettext, gettext_windows
 gettext_windows.setup_env()
-gettext.install('shared','./resources/locale')
+gettext.install('shared','../resources/locale')
 
 import re
 import os, sys

@@ -1,15 +1,15 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-import tkinter as tk
-import tkinter.filedialog as dialog
-import tkinter.ttk as ttk
 import sys, os
-import shared as sh
+import tkinter            as tk
+import tkinter.filedialog as dialog
+import tkinter.ttk        as ttk
+import shared             as sh
 
 import gettext, gettext_windows
 gettext_windows.setup_env()
-gettext.install('shared','./resources/locale')
+gettext.install('shared','../resources/locale')
 
 
 
@@ -2736,13 +2736,25 @@ class MessageBuilder:
 
     def paths(self):
         if self.level == _('WARNING'):
-            self.path = sh.objs.pdir().add('resources','warning.gif')
+            self.path = sh.objs.pdir().add ('..'
+                                           ,'resources'
+                                           ,'warning.gif'
+                                           )
         elif self.level == _('INFO'):
-            self.path = sh.objs.pdir().add('resources','info.gif')
+            self.path = sh.objs.pdir().add ('..'
+                                           ,'resources'
+                                           ,'info.gif'
+                                           )
         elif self.level == _('QUESTION'):
-            self.path = sh.objs.pdir().add('resources','question.gif')
+            self.path = sh.objs.pdir().add ('..'
+                                           ,'resources'
+                                           ,'question.gif'
+                                           )
         elif self.level == _('ERROR'):
-            self.path = sh.objs.pdir().add('resources','error.gif')
+            self.path = sh.objs.pdir().add ('..'
+                                           ,'resources'
+                                           ,'error.gif'
+                                           )
         else:
             sh.log.append ('MessageBuilder.paths'
                           ,_('ERROR')
@@ -3595,10 +3607,10 @@ class Panes:
         if path:
             self.obj.icon(path)
         else:
-            self.obj.icon (os.path.join (sys.path[0]
-                                        ,'resources'
-                                        ,'icon_64x64_cpt.gif'
-                                        )
+            self.obj.icon (sh.objs.pdir().add ('..'
+                                              ,'resources'
+                                              ,'icon_64x64_cpt.gif'
+                                              )
                           )
                           
     def reset(self,words1,words2,words3=None,words4=None):

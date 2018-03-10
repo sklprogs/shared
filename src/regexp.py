@@ -6,7 +6,7 @@ import shared as sh
 
 import gettext, gettext_windows
 gettext_windows.setup_env()
-gettext.install('shared','./resources/locale')
+gettext.install('shared','../resources/locale')
 
 
 ''' This class is for both checking a regular expression and replacing
@@ -47,10 +47,10 @@ class Record:
         self._what   = self._with = ''
         if not self._orig or not self._final:
             self.Success = False
-            objs.mes ('Record.__init__'
-                     ,_('WARNING')
-                     ,_('Not enough input data!')
-                     )
+            sh.objs.mes ('Record.__init__'
+                        ,_('WARNING')
+                        ,_('Not enough input data!')
+                        )
     
     def apply(self,text):
         if self.Success:
