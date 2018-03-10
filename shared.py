@@ -152,11 +152,12 @@ def rewrite(dest,AskRewrite=True):
         ''' We don't actually need to force rewriting or delete the file
             before rewriting
         '''
-        return Message (func    = 'rewrite'
-                       ,level   = _('QUESTION')
-                       ,message = _('ATTENTION: Do yo really want to rewrite file "%s"?') \
-                       % dest
-                       ).Yes
+        return objs.mes (func    = 'rewrite'
+                        ,level   = _('QUESTION')
+                        ,message = _('ATTENTION: Do yo really want to rewrite file "%s"?') \
+                                   % dest
+                        ,Silent  = False
+                        ).Yes
     else:
         ''' We return True so we may proceed with writing if the file
             has not been found
@@ -202,11 +203,11 @@ class Launch:
                 else:
                     subprocess.Popen(self.custom_args)
             except:
-                Message (func    = 'Launch._launch'
-                        ,level   = _('ERROR')
-                        ,message = _('Failed to run "%s"!') \
-                                   % str(self.custom_args)
-                        )
+                objs.mes (func    = 'Launch._launch'
+                         ,level   = _('ERROR')
+                         ,message = _('Failed to run "%s"!') \
+                                    % str(self.custom_args)
+                         )
         else:
             log.append ('Launch._launch'
                        ,_('ERROR')
@@ -217,31 +218,31 @@ class Launch:
         try:
             os.system("xdg-open " + self.h_path.escape() + "&")
         except OSError:
-            Message (func    = 'Launch._lin'
-                    ,level   = _('ERROR')
-                    ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'Launch._lin'
+                     ,level   = _('ERROR')
+                     ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
+                     ,Silent  = self.Silent
+                     )
 
     def _mac(self):
         try:
             os.system("open " + self.target)
         except:
-            Message (func    = 'Launch._mac'
-                    ,level   = _('ERROR')
-                    ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'Launch._mac'
+                     ,level   = _('ERROR')
+                     ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
+                     ,Silent  = self.Silent
+                     )
 
     def _win(self):
         try:
             os.startfile(self.target)
         except:
-            Message (func    = 'Launch._win'
-                    ,level   = _('ERROR')
-                    ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'Launch._win'
+                     ,level   = _('ERROR')
+                     ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
+                     ,Silent  = self.Silent
+                     )
 
     def app(self,custom_app='',custom_args=[]):
         self.custom_app  = custom_app
@@ -314,11 +315,11 @@ class WriteTextFile:
         self.Success = True
         if not self.file:
             if self.UseLog:
-                Message (func    = 'WriteTextFile.__init__'
-                        ,level   = _('ERROR')
-                        ,message = _('Not enough input data!')
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'WriteTextFile.__init__'
+                         ,level   = _('ERROR')
+                         ,message = _('Not enough input data!')
+                         ,Silent  = self.Silent
+                         )
             else:
                 print('WriteTextFile.__init__: Not enough input data!')
             self.Success = False
@@ -336,22 +337,22 @@ class WriteTextFile:
             except:
                 self.Success = False
                 if self.UseLog:
-                    Message (func    = 'WriteTextFile._write'
-                            ,level   = _('ERROR')
-                            ,message = _('Unable to write file "%s"!') \
-                            % self.file
-                            ,Silent  = self.Silent
-                            )
+                    objs.mes (func    = 'WriteTextFile._write'
+                             ,level   = _('ERROR')
+                             ,message = _('Unable to write file "%s"!') \
+                                        % self.file
+                             ,Silent  = self.Silent
+                             )
                 else:
                     print('WriteTextFile._write: Unable to write the file!')
         else:
             if self.UseLog:
-                Message (func    = 'WriteTextFile._write'
-                        ,level   = _('ERROR')
-                        ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
-                                   % (str(mode),'a, w')
-                        ,Silent  = False
-                        )
+                objs.mes (func    = 'WriteTextFile._write'
+                         ,level   = _('ERROR')
+                         ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+                                    % (str(mode),'a, w')
+                         ,Silent  = False
+                         )
             else:
                 print('WriteTextFile._write: An unknown mode!')
 
@@ -366,11 +367,11 @@ class WriteTextFile:
                 self._write('a')
             else:
                 if self.UseLog:
-                    Message (func    = 'WriteTextFile.append'
-                            ,level   = _('ERROR')
-                            ,message = _('Not enough input data!')
-                            ,Silent  = self.Silent
-                            )
+                    objs.mes (func    = 'WriteTextFile.append'
+                             ,level   = _('ERROR')
+                             ,message = _('Not enough input data!')
+                             ,Silent  = self.Silent
+                             )
                 else:
                     print('WriteTextFile.append: Not enough input data!')
         else:
@@ -388,11 +389,11 @@ class WriteTextFile:
                     self._write('w')
             else:
                 if self.UseLog:
-                    Message (func    = 'WriteTextFile.write'
-                            ,level   = _('ERROR')
-                            ,message = _('Not enough input data!')
-                            ,Silent  = self.Silent
-                            )
+                    objs.mes (func    = 'WriteTextFile.write'
+                             ,level   = _('ERROR')
+                             ,message = _('Not enough input data!')
+                             ,Silent  = self.Silent
+                             )
                 else:
                     print('WriteTextFile.write: Not enough input data!')
         else:
@@ -465,23 +466,31 @@ class Log:
                                )
               )
 
-    def append(self,func='Log.append',level=_('INFO'),message='Test'):
+    def append (self,func='Log.append'
+               ,level=_('INFO'),message='Test'
+               ):
         if self.Success:
             if func and level and message:
-                self.func = func
-                self.level = level
+                self.func    = func
+                self.level   = level
                 self.message = message
                 self.print()
                 self.write()
                 self.count += 1
 
 if oss.win():
-    log = Log (Use=True,Write=False,Print=True
-              ,Short=False,file=r'C:\Users\pete\AppData\Local\Temp\log'
+    log = Log (Use   = True
+              ,Write = False
+              ,Print = True
+              ,Short = False
+              ,file  = r'C:\Users\pete\AppData\Local\Temp\log'
               )
 else:
-    log = Log (Use=True,Write=False,Print=True
-              ,Short=False,file='/tmp/log'
+    log = Log (Use   = True
+              ,Write = False
+              ,Print = True
+              ,Short = False
+              ,file  = '/tmp/log'
               )
 
 
@@ -519,12 +528,12 @@ class TextDic:
                 # After using set(), the original order was lost
                 self.sort()
             else:
-                Message (func    = 'TextDic._delete_duplicates'
-                        ,level   = _('WARNING')
-                        ,message = _('File "%s" is not sortable!') \
-                                   % self.file
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'TextDic._delete_duplicates'
+                         ,level   = _('WARNING')
+                         ,message = _('File "%s" is not sortable!') \
+                                    % self.file
+                         ,Silent  = self.Silent
+                         )
         else:
             log.append ('TextDic._delete_duplicates'
                        ,_('WARNING')
@@ -540,11 +549,11 @@ class TextDic:
                 self._list.append(self.orig[i]+'\t'+self.transl[i])
             self.text = '\n'.join(self._list)
         else:
-            Message (func    = 'TextDic._join'
-                    ,level   = _('WARNING')
-                    ,message = _('Wrong input data!')
-                    ,Silent  = False
-                    )
+            objs.mes (func    = 'TextDic._join'
+                     ,level   = _('WARNING')
+                     ,message = _('Wrong input data!')
+                     ,Silent  = False
+                     )
 
     ''' We can use this to check integrity and/or update original and
         translation lists
@@ -565,12 +574,12 @@ class TextDic:
                 else:
                     self.Success = False
                     # i+1: Count from 1
-                    Message (func    = 'TextDic._split'
-                            ,level   = _('WARNING')
-                            ,message = _('Dictionary "%s": Incorrect line #%d: "%s"!') \
-                                       % (self.file,i+1,self._list[i])
-                            ,Silent  = self.Silent
-                            )
+                    objs.mes (func    = 'TextDic._split'
+                             ,level   = _('WARNING')
+                             ,message = _('Dictionary "%s": Incorrect line #%d: "%s"!') \
+                                        % (self.file,i+1,self._list[i])
+                             ,Silent  = self.Silent
+                             )
         else:
             self.Success = False
 
@@ -585,11 +594,11 @@ class TextDic:
                 self.transl.append(translation)
                 self._join()
             else:
-                Message (func    = 'TextDic.append'
-                        ,level   = _('WARNING')
-                        ,message = _('Empty input is not allowed!')
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'TextDic.append'
+                         ,level   = _('WARNING')
+                         ,message = _('Empty input is not allowed!')
+                         ,Silent  = self.Silent
+                         )
         else:
             log.append ('TextDic.append'
                        ,_('WARNING')
@@ -607,14 +616,14 @@ class TextDic:
                 del self.transl[entry_no]
                 self._join()
             else:
-                Message (func    = 'TextDic.delete_entry'
-                        ,level   = _('ERROR')
-                        ,message = _('The condition "%s" is not observed!') \
-                                   % ('0 <= ' + str(entry_no) + ' < %d'\
-                                     % self.lines()
-                                     )
-                        ,Silent  = False
-                        )
+                objs.mes (func    = 'TextDic.delete_entry'
+                         ,level   = _('ERROR')
+                         ,message = _('The condition "%s" is not observed!') \
+                                    % ('0 <= ' + str(entry_no) + ' < %d'\
+                                      % self.lines()
+                                      )
+                         ,Silent  = False
+                         )
         else:
             log.append ('TextDic.append'
                        ,_('WARNING')
@@ -632,14 +641,14 @@ class TextDic:
                 self.transl[entry_no] = transl
                 self._join()
             else:
-                Message (func    = 'TextDic.delete_entry'
-                        ,level   = _('ERROR')
-                        ,message = _('The condition "%s" is not observed!') \
-                                   % ('0 <= ' + str(entry_no) + ' < %d'\
-                                     % self.lines()
-                                     )
-                        ,Silent  = False
-                        )
+                objs.mes (func    = 'TextDic.delete_entry'
+                         ,level   = _('ERROR')
+                         ,message = _('The condition "%s" is not observed!') \
+                                    % ('0 <= ' + str(entry_no) + ' < %d'\
+                                      % self.lines()
+                                      )
+                         ,Silent  = False
+                         )
         else:
             log.append ('TextDic.append'
                        ,_('WARNING')
@@ -688,12 +697,12 @@ class TextDic:
                                                   + self.transl[i]
                 self.text = '\n'.join(self._list)
             else:
-                Message (func    = 'TextDic.sort'
-                        ,level   = _('WARNING')
-                        ,message = _('File "%s" is not sortable!') \
-                                   % self.file
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'TextDic.sort'
+                         ,level   = _('WARNING')
+                         ,message = _('File "%s" is not sortable!') \
+                                    % self.file
+                         ,Silent  = self.Silent
+                         )
         else:
             log.append ('TextDic.sort'
                        ,_('WARNING')
@@ -745,26 +754,26 @@ class ReadTextFile:
             pass
         elif not self.file:
             self.Success = False
-            Message (func    = 'ReadTextFile.__init__'
-                    ,level   = _('ERROR')
-                    ,message = _('Not enough input data!')
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'ReadTextFile.__init__'
+                     ,level   = _('ERROR')
+                     ,message = _('Not enough input data!')
+                     ,Silent  = self.Silent
+                     )
         elif not os.path.exists(self.file):
             self.Success = False
-            Message (func    = 'ReadTextFile.__init__'
-                    ,level   = _('WARNING')
-                    ,message = _('File "%s" has not been found!') \
-                               % self.file
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'ReadTextFile.__init__'
+                     ,level   = _('WARNING')
+                     ,message = _('File "%s" has not been found!') \
+                                % self.file
+                     ,Silent  = self.Silent
+                     )
         else:
             self.Success = False
-            Message (func    = 'ReadTextFile.__init__'
-                    ,level   = _('ERROR')
-                    ,message = _('Wrong input data!')
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'ReadTextFile.__init__'
+                     ,level   = _('ERROR')
+                     ,message = _('Wrong input data!')
+                     ,Silent  = self.Silent
+                     )
 
     def _read(self,encoding):
         try:
@@ -839,12 +848,12 @@ class ReadTextFile:
                     #todo: Update the message
                 '''
                 self.Success = False
-                Message (func    = 'ReadTextFile.load'
-                        ,level   = _('ERROR')
-                        ,message = _('Unable to read file "%s"!') \
-                                   % self.file
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'ReadTextFile.load'
+                         ,level   = _('ERROR')
+                         ,message = _('Unable to read file "%s"!') \
+                                    % self.file
+                         ,Silent  = self.Silent
+                         )
             self.delete_bom()
         else:
             log.append ('ReadTextFile.load'
@@ -876,12 +885,12 @@ class Input:
                        ,_('Convert "%s" to an integer') % str(self.val)
                        )
         else:
-            Message (func    = self.func_title
-                    ,level   = _('ERROR')
-                    ,message = _('Integer is required at input, but found "%s"! Return 0') \
-                               % str(type(self.val))
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = self.func_title
+                     ,level   = _('ERROR')
+                     ,message = _('Integer is required at input, but found "%s"! Return 0') \
+                                % str(type(self.val))
+                     ,Silent  = self.Silent
+                     )
             self.val = 0
         return self.val
 
@@ -1013,15 +1022,15 @@ class Text:
                 self.text.strip()
             '''
         else:
-            Message (func    = 'Text.delete_embraced_text'
-                    ,level   = _('WARNING')
-                    ,message = _('Different number of opening and closing brackets: "%s": %d; "%s": %d!') \
-                               % (opening_sym
-                                 ,self.text.count(opening_sym)
-                                 ,closing_sym
-                                 ,self.text.count(closing_sym)
-                                 )
-                    )
+            objs.mes (func    = 'Text.delete_embraced_text'
+                     ,level   = _('WARNING')
+                     ,message = _('Different number of opening and closing brackets: "%s": %d; "%s": %d!') \
+                                % (opening_sym
+                                  ,self.text.count(opening_sym)
+                                  ,closing_sym
+                                  ,self.text.count(closing_sym)
+                                  )
+                     )
         return self.text
 
     def convert_line_breaks(self):
@@ -1110,11 +1119,11 @@ class Text:
             hash += self.str2int()
         '''
         else:
-           Message (func    = 'Text.extract_date_hash'
-                   ,level   = _('WARNING')
-                   ,message = _('Wrong input data!')
-                   ,Silent  = self.Silent
-                   )
+           objs.mes (func    = 'Text.extract_date_hash'
+                    ,level   = _('WARNING')
+                    ,message = _('Wrong input data!')
+                    ,Silent  = self.Silent
+                    )
         '''
         return hash
 
@@ -1131,11 +1140,11 @@ class Text:
     '''
     def split_by_comma(self):
         if (';' in self.text or ',' in self.text) and '\n' in self.text:
-            Message (func    = 'Text.split_by_comma'
-                    ,level   = _('WARNING')
-                    ,message = _('Commas and/or semicolons or line breaks can be used, but not altogether!')
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'Text.split_by_comma'
+                     ,level   = _('WARNING')
+                     ,message = _('Commas and/or semicolons or line breaks can be used, but not altogether!')
+                     ,Silent  = self.Silent
+                     )
         elif ';' in self.text or ',' in self.text:
             self.text = self.text.replace(',','\n')
             self.text = self.text.replace(';','\n')
@@ -1330,10 +1339,10 @@ class Time:
                 self._instance += datetime.timedelta(days=days_delta)
             except:
                 self.Success = False
-                Message (func    = 'Time.instance'
-                        ,level   = _('WARNING')
-                        ,message = _('Set time parameters are incorrect or not supported.')
-                        )
+                objs.mes (func    = 'Time.instance'
+                         ,level   = _('WARNING')
+                         ,message = _('Set time parameters are incorrect or not supported.')
+                         )
             self.monday_warning()
         else:
             log.append ('Time.add_days'
@@ -1349,10 +1358,10 @@ class Time:
                 self._date = self._instance.strftime(self.pattern)
             except:
                 self.Success = False
-                Message (func    = 'Time.instance'
-                        ,level   = _('WARNING')
-                        ,message = _('Set time parameters are incorrect or not supported.')
-                        )
+                objs.mes (func    = 'Time.instance'
+                         ,level   = _('WARNING')
+                         ,message = _('Set time parameters are incorrect or not supported.')
+                         )
         else:
             log.append ('Time.date'
                        ,_('WARNING')
@@ -1368,10 +1377,10 @@ class Time:
                 self._instance = datetime.datetime.fromtimestamp(self._timestamp)
             except:
                 self.Success = False
-                Message (func    = 'Time.instance'
-                        ,level   = _('WARNING')
-                        ,message = _('Set time parameters are incorrect or not supported.')
-                        )
+                objs.mes (func    = 'Time.instance'
+                         ,level   = _('WARNING')
+                         ,message = _('Set time parameters are incorrect or not supported.')
+                         )
         else:
             log.append ('Time.instance'
                        ,_('WARNING')
@@ -1387,10 +1396,10 @@ class Time:
                 self._timestamp = time.mktime(datetime.datetime.strptime(self._date,self.pattern).timetuple())
             except:
                 self.Success = False
-                Message (func    = 'Time.timestamp'
-                        ,level   = _('WARNING')
-                        ,message = _('Set time parameters are incorrect or not supported.')
-                        )
+                objs.mes (func    = 'Time.timestamp'
+                         ,level   = _('WARNING')
+                         ,message = _('Set time parameters are incorrect or not supported.')
+                         )
         else:
             log.append ('Time.timestamp'
                        ,_('WARNING')
@@ -1404,11 +1413,11 @@ class Time:
                 self.instance()
             if self.MondayWarning \
             and datetime.datetime.weekday(self._instance) == 0:
-                Message (func    = 'Time.monday_warning'
-                        ,level   = _('INFO')
-                        ,message = _('Note: it will be Monday!')
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'Time.monday_warning'
+                         ,level   = _('INFO')
+                         ,message = _('Note: it will be Monday!')
+                         ,Silent  = self.Silent
+                         )
         else:
             log.append ('Time.monday_warning'
                        ,_('WARNING')
@@ -1490,10 +1499,10 @@ class Time:
                 self._year = self._instance.strftime("%Y")
             except:
                 self.Success = False
-                Message (func    = 'Time.instance'
-                        ,level   = _('WARNING')
-                        ,message = _('Set time parameters are incorrect or not supported.')
-                        )
+                objs.mes (func    = 'Time.instance'
+                         ,level   = _('WARNING')
+                         ,message = _('Set time parameters are incorrect or not supported.')
+                         )
         else:
             log.append ('Time.year'
                        ,_('WARNING')
@@ -1529,27 +1538,27 @@ class File:
                                          )
         elif not self.file:
             self.Success = False
-            Message (func    = 'File.__init__'
-                    ,level   = _('ERROR')
-                    ,message = _('Empty input is not allowed!')
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'File.__init__'
+                     ,level   = _('ERROR')
+                     ,message = _('Empty input is not allowed!')
+                     ,Silent  = self.Silent
+                     )
         elif not os.path.exists(self.file):
             self.Success = False
-            Message (func    = 'File.__init__'
-                    ,level   = _('WARNING')
-                    ,message = _('File "%s" has not been found!') \
-                               % self.file
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'File.__init__'
+                     ,level   = _('WARNING')
+                     ,message = _('File "%s" has not been found!') \
+                                % self.file
+                     ,Silent  = self.Silent
+                     )
         else:
             self.Success = False
-            Message (func    = 'File.__init__'
-                    ,level   = _('WARNING')
-                    ,message = _('The object "%s" is not a file!') \
-                               % self.file
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'File.__init__'
+                     ,level   = _('WARNING')
+                     ,message = _('The object "%s" is not a file!') \
+                                % self.file
+                     ,Silent  = self.Silent
+                     )
 
     def _copy(self):
         Success = True
@@ -1561,12 +1570,12 @@ class File:
             shutil.copyfile(self.file,self.dest)
         except:
             Success = False
-            Message (func    = 'File._copy'
-                    ,level   = _('ERROR')
-                    ,message = _('Failed to copy file "%s" to "%s"!') \
-                               % (self.file,self.dest)
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'File._copy'
+                     ,level   = _('ERROR')
+                     ,message = _('Failed to copy file "%s" to "%s"!') \
+                                % (self.file,self.dest)
+                     ,Silent  = self.Silent
+                     )
         return Success
 
     def _move(self):
@@ -1579,12 +1588,12 @@ class File:
             shutil.move(self.file,self.dest)
         except:
             Success = False
-            Message (func    = 'File._move'
-                    ,level   = _('ERROR')
-                    ,message = _('Failed to move "%s" to "%s"!') \
-                               % (self.file,self.dest)
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'File._move'
+                     ,level   = _('ERROR')
+                     ,message = _('Failed to move "%s" to "%s"!') \
+                                % (self.file,self.dest)
+                     ,Silent  = self.Silent
+                     )
         return Success
 
     def access_time(self):
@@ -1593,12 +1602,12 @@ class File:
                 self.atime = os.path.getatime(self.file)
                 # Further steps: datetime.date.fromtimestamp(self.atime).strftime(self.pattern)
             except:
-                Message (func    = 'File.access_time'
-                        ,level   = _('WARNING')
-                        ,message = _('Failed to get the date of the file "%s"!') \
-                                   % self.file
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'File.access_time'
+                         ,level   = _('WARNING')
+                         ,message = _('Failed to get the date of the file "%s"!') \
+                                    % self.file
+                         ,Silent  = self.Silent
+                         )
         else:
             log.append ('File.access_time'
                        ,_('WARNING')
@@ -1609,12 +1618,12 @@ class File:
         Success = True
         if self.Success:
             if self.file.lower() == self.dest.lower():
-                Message (func    = 'File.copy'
-                        ,level   = _('ERROR')
-                        ,message = _('Unable to copy the file "%s" to iself!') \
-                                   % self.file
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'File.copy'
+                         ,level   = _('ERROR')
+                         ,message = _('Unable to copy the file "%s" to iself!') \
+                                    % self.file
+                         ,Silent  = self.Silent
+                         )
             elif rewrite(self.dest,AskRewrite=self.AskRewrite):
                 Success = self._copy()
             else:
@@ -1640,12 +1649,12 @@ class File:
                 os.remove(self.file)
             except:
                 Success = False
-                Message (func    = 'File.delete'
-                        ,level   = _('WARNING')
-                        ,message = _('Failed to delete file "%s"!') \
-                                   % self.file
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'File.delete'
+                         ,level   = _('WARNING')
+                         ,message = _('Failed to delete file "%s"!') \
+                                    % self.file
+                         ,Silent  = self.Silent
+                         )
         else:
             log.append ('File.delete'
                        ,_('WARNING')
@@ -1669,12 +1678,12 @@ class File:
                 self.mtime = os.path.getmtime(self.file)
                 # Further steps: datetime.date.fromtimestamp(self.mtime).strftime(self.pattern)
             except:
-                Message (func    = 'File.modification_time'
-                        ,level   = _('WARNING')
-                        ,message = _('Failed to get the date of the file "%s"!') \
-                                   % self.file
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'File.modification_time'
+                         ,level   = _('WARNING')
+                         ,message = _('Failed to get the date of the file "%s"!') \
+                                    % self.file
+                         ,Silent  = self.Silent
+                         )
         else:
             log.append ('File.modification_time'
                        ,_('WARNING')
@@ -1685,11 +1694,11 @@ class File:
         Success = True
         if self.Success:
             if self.file.lower() == self.dest.lower():
-                Message (func    = 'File.move'
-                        ,level   = _('ERROR')
-                        ,message = _('Moving is not necessary, because the source and destination are identical.')
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'File.move'
+                         ,level   = _('ERROR')
+                         ,message = _('Moving is not necessary, because the source and destination are identical.')
+                         ,Silent  = self.Silent
+                         )
             elif rewrite(self.dest,AskRewrite=self.AskRewrite):
                 Success = self._move()
             else:
@@ -1715,14 +1724,14 @@ class File:
                 try:
                     os.utime(self.file,(self.atime,self.mtime))
                 except:
-                    Message (func    = 'File.set_time'
-                            ,level   = _('WARNING')
-                            ,message = _('Failed to change the time of the file "%s" to "%s"!') \
-                                       % (self.file
-                                         ,str((self.atime,self.mtime))
-                                         )
-                            ,Silent  = self.Silent
-                            )
+                    objs.mes (func    = 'File.set_time'
+                             ,level   = _('WARNING')
+                             ,message = _('Failed to change the time of the file "%s" to "%s"!') \
+                                        % (self.file
+                                          ,str((self.atime,self.mtime))
+                                          )
+                             ,Silent  = self.Silent
+                             )
         else:
             log.append ('File.set_time'
                        ,_('WARNING')
@@ -1760,11 +1769,11 @@ class Path:
                                )
                 else:
                     Success = False
-                    Message (func    = 'Path.create'
-                            ,level   = _('WARNING')
-                            ,message = _('The path "%s" is invalid!') \
-                                       % self.path
-                            )
+                    objs.mes (func    = 'Path.create'
+                             ,level   = _('WARNING')
+                             ,message = _('The path "%s" is invalid!') \
+                                        % self.path
+                             )
             else:
                 log.append ('Path.create'
                            ,_('INFO')
@@ -1775,17 +1784,17 @@ class Path:
                     os.makedirs(self.path)
                 except:
                     Success = False
-                    Message (func    = 'Path.create'
-                            ,level   = _('ERROR')
-                            ,message = _('Failed to create directory "%s"!') \
-                                       % self.path
-                            )
+                    objs.mes (func    = 'Path.create'
+                             ,level   = _('ERROR')
+                             ,message = _('Failed to create directory "%s"!') \
+                                        % self.path
+                             )
         else:
             Success = False
-            Message (func    = 'Path.create'
-                    ,level   = _('ERROR')
-                    ,message = _('Not enough input data!')
-                    )
+            objs.mes (func    = 'Path.create'
+                     ,level   = _('ERROR')
+                     ,message = _('Not enough input data!')
+                     )
         return Success
 
     ''' These symbols may pose a problem while opening files
@@ -1885,19 +1894,19 @@ class WriteBinary:
                         pickle.dump(self.fragm,f)
             except:
                 self.Success = False
-                Message (func    = 'WriteBinary._write'
-                        ,level   = _('ERROR')
-                        ,message = _('Unable to write file "%s"!') \
-                                   % self.file
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'WriteBinary._write'
+                         ,level   = _('ERROR')
+                         ,message = _('Unable to write file "%s"!') \
+                                    % self.file
+                         ,Silent  = self.Silent
+                         )
         else:
-            Message (func    = 'WriteTextFile._write'
-                    ,level   = _('ERROR')
-                    ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
-                               % (str(mode),'w+b, a+b')
-                    ,Silent  = False
-                    )
+            objs.mes (func    = 'WriteTextFile._write'
+                     ,level   = _('ERROR')
+                     ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+                                % (str(mode),'w+b, a+b')
+                     ,Silent  = False
+                     )
 
     def append(self,fragm):
         if self.Success:
@@ -1905,11 +1914,11 @@ class WriteBinary:
             if self.fragm:
                 self._write(mode='a+b')
             else:
-                Message (func    = 'WriteBinary.append'
-                        ,level   = _('ERROR')
-                        ,message = _('Empty input is not allowed!')
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'WriteBinary.append'
+                         ,level   = _('ERROR')
+                         ,message = _('Empty input is not allowed!')
+                         ,Silent  = self.Silent
+                         )
         else:
             log.append ('WriteBinary.append'
                        ,_('WARNING')
@@ -1967,12 +1976,12 @@ class Dic:
                 # After using set(), the original order was lost
                 self.sort()
             else:
-                Message (func    = 'Dic._delete_duplicates'
-                        ,level   = _('WARNING')
-                        ,message = _('File "%s" is not sortable!') \
-                                   % self.file
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'Dic._delete_duplicates'
+                         ,level   = _('WARNING')
+                         ,message = _('File "%s" is not sortable!') \
+                                    % self.file
+                         ,Silent  = self.Silent
+                         )
         else:
             log.append ('Dic._delete_duplicates'
                        ,_('WARNING')
@@ -1988,11 +1997,11 @@ class Dic:
                 self._list.append(self.orig[i]+'\t'+self.transl[i])
             self.text = '\n'.join(self._list)
         else:
-            Message (func    = 'Dic._join'
-                    ,level   = _('WARNING')
-                    ,message = _('Wrong input data!')
-                    ,Silent  = False
-                    )
+            objs.mes (func    = 'Dic._join'
+                     ,level   = _('WARNING')
+                     ,message = _('Wrong input data!')
+                     ,Silent  = False
+                     )
 
     ''' We can use this to check integrity and/or update original and
         translation lists
@@ -2025,11 +2034,11 @@ class Dic:
     def warn(self):
         if self.errors:
             message = ', '.join(self.errors)
-            Message (func    = 'Dic.warn'
-                    ,level   = _('WARNING')
-                    ,message = _('The following lines cannot be parsed:') \
-                               + '\n' + message
-                    )
+            objs.mes (func    = 'Dic.warn'
+                     ,level   = _('WARNING')
+                     ,message = _('The following lines cannot be parsed:') \
+                                + '\n' + message
+                     )
 
     ''' #todo: write a dictionary in an append mode after appending to
         memory
@@ -2042,11 +2051,11 @@ class Dic:
                 self.transl.append(translation)
                 self._join()
             else:
-                Message (func    = 'Dic.append'
-                        ,level   = _('WARNING')
-                        ,message = _('Empty input is not allowed!')
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'Dic.append'
+                         ,level   = _('WARNING')
+                         ,message = _('Empty input is not allowed!')
+                         ,Silent  = self.Silent
+                         )
         else:
             log.append ('Dic.append'
                        ,_('WARNING')
@@ -2065,14 +2074,14 @@ class Dic:
                 del self.transl[entry_no]
                 self._join()
             else:
-                Message (func    = 'Dic.delete_entry'
-                        ,level   = _('ERROR')
-                        ,message = _('The condition "%s" is not observed!') \
-                                   % ('0 <= ' + str(entry_no) + ' < %d'\
-                                     % self.lines()
-                                     )
-                        ,Silent  = False
-                        )
+                objs.mes (func    = 'Dic.delete_entry'
+                         ,level   = _('ERROR')
+                         ,message = _('The condition "%s" is not observed!') \
+                                    % ('0 <= ' + str(entry_no) + ' < %d'\
+                                      % self.lines()
+                                      )
+                         ,Silent  = False
+                         )
         else:
             log.append ('Dic.append'
                        ,_('WARNING')
@@ -2091,14 +2100,14 @@ class Dic:
                 self.transl[entry_no] = transl
                 self._join()
             else:
-                Message (func    = 'Dic.delete_entry'
-                        ,level   = _('ERROR')
-                        ,message = _('The condition "%s" is not observed!') \
-                                   % ('0 <= ' + str(entry_no) + ' < %d'\
-                                     % self.lines()
-                                     )
-                        ,Silent  = False
-                        )
+                objs.mes (func    = 'Dic.delete_entry'
+                         ,level   = _('ERROR')
+                         ,message = _('The condition "%s" is not observed!') \
+                                    % ('0 <= ' + str(entry_no) + ' < %d'\
+                                      % self.lines()
+                                      )
+                         ,Silent  = False
+                         )
         else:
             log.append ('Dic.append'
                        ,_('WARNING')
@@ -2151,12 +2160,12 @@ class Dic:
                     self._list[i] = self.orig[i] + '\t' + self.transl[i]
                 self.text = '\n'.join(self._list)
             else:
-                Message (func    = 'Dic.sort'
-                        ,level   = _('WARNING')
-                        ,message = _('File "%s" is not sortable!') \
-                                   % self.file
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'Dic.sort'
+                         ,level   = _('WARNING')
+                         ,message = _('File "%s" is not sortable!') \
+                                    % self.file
+                         ,Silent  = self.Silent
+                         )
         else:
             log.append ('Dic.sort'
                        ,_('WARNING')
@@ -2220,12 +2229,12 @@ class ReadBinary:
                 self.obj = pickle.load(f)
         except:
             self.Success = False
-            Message (func    = 'ReadBinary._load'
-                    ,level   = _('ERROR')
-                    ,message = _('Unable to read file "%s"!') \
-                               % self.file
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'ReadBinary._load'
+                     ,level   = _('ERROR')
+                     ,message = _('Unable to read file "%s"!') \
+                                % self.file
+                     ,Silent  = self.Silent
+                     )
 
     #todo: load fragments appended to a binary
     def load(self):
@@ -2277,11 +2286,11 @@ class Directory:
         self._extensions_low = []
         if not os.path.isdir(self.dir):
             self.Success = False
-            Message (func    = 'Directory.__init__'
-                    ,level   = _('WARNING')
-                    ,message = _('Wrong input data: "%s"') % self.dir
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'Directory.__init__'
+                     ,level   = _('WARNING')
+                     ,message = _('Wrong input data: "%s"') % self.dir
+                     ,Silent  = self.Silent
+                     )
 
     def extensions(self): # with a dot
         if self.Success:
@@ -2317,11 +2326,11 @@ class Directory:
             try:
                 shutil.rmtree(self.dir)
             except:
-                Message (func    = 'Directory.delete'
-                        ,level   = _('WARNING')
-                        ,message = _('Failed to delete directory "%s"! Delete it manually.') \
-                                   % str(self.dir)
-                        )
+                objs.mes (func    = 'Directory.delete'
+                         ,level   = _('WARNING')
+                         ,message = _('Failed to delete directory "%s"! Delete it manually.') \
+                                    % str(self.dir)
+                         )
         else:
             log.append ('Directory.delete'
                        ,_('WARNING')
@@ -2393,19 +2402,19 @@ class Directory:
     def copy(self):
         if self.Success:
             if self.dir.lower() == self.dest.lower():
-                Message (func    = 'Directory.copy'
-                        ,level   = _('ERROR')
-                        ,message = _('Unable to copy "%s" to iself!') \
-                                   % self.dir
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'Directory.copy'
+                         ,level   = _('ERROR')
+                         ,message = _('Unable to copy "%s" to iself!') \
+                                    % self.dir
+                         ,Silent  = self.Silent
+                         )
             elif os.path.isdir(self.dest):
-                Message (func    = 'Directory.copy'
-                        ,level   = _('INFO')
-                        ,message = _('Directory "%s" already exists.') \
-                                   % self.dest
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'Directory.copy'
+                         ,level   = _('INFO')
+                         ,message = _('Directory "%s" already exists.') \
+                                    % self.dest
+                         ,Silent  = self.Silent
+                         )
             else:
                 self._copy()
         else:
@@ -2423,12 +2432,12 @@ class Directory:
             shutil.copytree(self.dir,self.dest)
         except:
             self.Success = False
-            Message (func    = 'Directory._copy'
-                    ,level   = _('ERROR')
-                    ,message = _('Failed to copy "%s" to "%s"!') \
-                               % (self.dir,self.dest)
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'Directory._copy'
+                     ,level   = _('ERROR')
+                     ,message = _('Failed to copy "%s" to "%s"!') \
+                                % (self.dir,self.dest)
+                     ,Silent  = self.Silent
+                     )
 
 
 
@@ -2495,10 +2504,10 @@ class Config:
                 self.message += '\n' + _('Missing keys: %d') \
                                 % self.missing_keys
                 self.message += '\n' + _('The default configuration has been loaded.')
-                Message (func    = 'Config.check'
-                        ,level   = _('WARNING')
-                        ,message = self.message
-                        )
+                objs.mes (func    = 'Config.check'
+                         ,level   = _('WARNING')
+                         ,message = self.message
+                         )
                 self._default()
         else:
             log.append ('Config.check'
@@ -2512,12 +2521,12 @@ class Config:
                 config_parser.read(self.path,'utf-8')
             except:
                 Success = False
-                Message (func    = 'Config.open'
-                        ,level   = _('WARNING')
-                        ,message = _('Failed to read the configuration file "%s". This file must share the same directory with the program and have UTF-8 encoding (no BOM) and UNIX line break type.') \
-                        % self.path
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'Config.open'
+                         ,level   = _('WARNING')
+                         ,message = _('Failed to read the configuration file "%s". This file must share the same directory with the program and have UTF-8 encoding (no BOM) and UNIX line break type.') \
+                                    % self.path
+                         ,Silent  = self.Silent
+                         )
         else:
             log.append ('Config.open'
                        ,_('WARNING')
@@ -2573,11 +2582,11 @@ class Online:
         try:
             webbrowser.open(self.url(),new=2,autoraise=True)
         except:
-            Message (func    = 'Online.browse'
-                    ,level   = _('ERROR')
-                    ,message = _('Failed to open URL "%s" in a default browser!') \
-                               % self._url
-                    )
+            objs.mes (func    = 'Online.browse'
+                     ,level   = _('ERROR')
+                     ,message = _('Failed to open URL "%s" in a default browser!') \
+                                % self._url
+                     )
 
     # Create a correct online link (URI => URL)
     def url(self):
@@ -2651,10 +2660,10 @@ class Diff:
     def compare(self):
         if self.text1 and self.text2:
             if self.text1 == self.text2:
-                Message (func    = 'Diff.compare'
-                        ,level   = _('INFO')
-                        ,message = _('Texts are identical!')
-                        )
+                objs.mes (func    = 'Diff.compare'
+                         ,level   = _('INFO')
+                         ,message = _('Texts are identical!')
+                         )
             else:
                 self.diff()
                 self.header()
@@ -2665,10 +2674,10 @@ class Diff:
                     '''
                     Launch(target=self.file).default()
         else:
-            Message (func    = 'Diff.compare'
-                    ,level   = _('WARNING')
-                    ,message = _('Empty input is not allowed!')
-                    )
+            objs.mes (func    = 'Diff.compare'
+                     ,level   = _('WARNING')
+                     ,message = _('Empty input is not allowed!')
+                     )
 
 
 
@@ -2681,11 +2690,11 @@ class Shortcut:
         self.symlink = symlink
         if not self.path and not self.symlink:
             self.Success = False
-            Message (func    = 'Shortcut.__init__'
-                    ,level   = _('WARNING')
-                    ,message = _('Wrong input data!')
-                    ,Silent  = self.Silent
-                    )
+            objs.mes (func    = 'Shortcut.__init__'
+                     ,level   = _('WARNING')
+                     ,message = _('Wrong input data!')
+                     ,Silent  = self.Silent
+                     )
 
     # http://timgolden.me.uk/python/win32_how_do_i/read-a-shortcut.html
     def _get_win(self):
@@ -2721,11 +2730,11 @@ class Shortcut:
         try:
             os.unlink(self.symlink)
         except:
-            Message (func    = 'Shortcut._delete'
-                    ,level   = _('WARNING')
-                    ,message = _('Failed to remove shortcut "%s". Remove it manually and press OK.') \
-                               % self.symlink
-                    )
+            objs.mes (func    = 'Shortcut._delete'
+                     ,level   = _('WARNING')
+                     ,message = _('Failed to remove shortcut "%s". Remove it manually and press OK.') \
+                                % self.symlink
+                     )
 
     def delete(self):
         if self.Success:
@@ -2745,11 +2754,11 @@ class Shortcut:
         try:
             os.symlink(self.path,self.symlink)
         except:
-            Message (func    = 'Shortcut._create_unix'
-                    ,level   = _('ERROR')
-                    ,message = _('Failed to create shortcut "%s". Create it manually and press OK.') \
-                               % self.symlink
-                    )
+            objs.mes (func    = 'Shortcut._create_unix'
+                     ,level   = _('ERROR')
+                     ,message = _('Failed to create shortcut "%s". Create it manually and press OK.') \
+                                % self.symlink
+                     )
 
     def create_unix(self):
         self.delete()
@@ -2761,11 +2770,11 @@ class Shortcut:
                            )
             else:
                 self.Success = False
-                Message (func    = 'Shortcut.create_unix'
-                        ,level   = _('WARNING')
-                        ,message = _('Wrong input data!')
-                        ,Silent  = self.Silent
-                        )
+                objs.mes (func    = 'Shortcut.create_unix'
+                         ,level   = _('WARNING')
+                         ,message = _('Wrong input data!')
+                         ,Silent  = self.Silent
+                         )
         else:
             self._create_unix()
 
@@ -2781,11 +2790,11 @@ class Shortcut:
             shortcut.Targetpath = self.path
             shortcut.save()
         except:
-            Message (func    = 'Shortcut._create_win'
-                    ,level   = _('ERROR')
-                    ,message = _('Failed to create shortcut "%s". Create it manually and press OK.') \
-                               % self.symlink
-                    )
+            objs.mes (func    = 'Shortcut._create_win'
+                     ,level   = _('ERROR')
+                     ,message = _('Failed to create shortcut "%s". Create it manually and press OK.') \
+                                % self.symlink
+                     )
 
     def create_win(self):
         ''' Using python 3 and windows (since 2009) it is possible to
@@ -2874,10 +2883,10 @@ class Email:
                                       )
                                     )
             except:
-                Message (func    = 'TkinterHtmlMod.response_back'
-                        ,level   = _('ERROR')
-                        ,message = _('Failed to load an e-mail client.')
-                        )
+                objs.mes (func    = 'TkinterHtmlMod.response_back'
+                         ,level   = _('ERROR')
+                         ,message = _('Failed to load an e-mail client.')
+                         )
         else:
             log.append ('Email.create'
                        ,_('WARNING')
@@ -3454,17 +3463,17 @@ class Words:
                                    )
                         return self.no_by_pos_p(pos=result)
                 else:
-                    Message (func    = 'Words.no_by_tk'
-                            ,level   = _('WARNING')
-                            ,message = _('Wrong input data: "%s"') \
-                                       % str(lst)
-                            )
+                    objs.mes (func    = 'Words.no_by_tk'
+                             ,level   = _('WARNING')
+                             ,message = _('Wrong input data: "%s"') \
+                                        % str(lst)
+                             )
             else:
-                Message (func    = 'Words.no_by_tk'
-                        ,level   = _('WARNING')
-                        ,message = _('Wrong input data: "%s"') \
-                                   % str(lst)
-                        )
+                objs.mes (func    = 'Words.no_by_tk'
+                         ,level   = _('WARNING')
+                         ,message = _('Wrong input data: "%s"') \
+                                    % str(lst)
+                         )
         else:
             log.append ('Words.no_by_tk'
                        ,_('WARNING')
@@ -3535,10 +3544,10 @@ class Search:
         self._text = text
         self._search = search
         if not self._search or not self._text:
-            Message (func    = 'Search.__init__'
-                    ,level   = _('WARNING')
-                    ,message = _('Wrong input data!')
-                    )
+            objs.mes (func    = 'Search.__init__'
+                     ,level   = _('WARNING')
+                     ,message = _('Wrong input data!')
+                     )
             self.Success = False
 
     def add(self):
@@ -3798,12 +3807,14 @@ class Objects:
                 self._mes = sg.Message
         if message:
             ''' Passing an empty message is useful for just setting
-                GUI/non-GUI logging
+                GUI/non-GUI logging.
+                Returning the function results may be useful if, for
+                example, we need 'sg.Message.Yes' value
             '''
-            self._mes (func    = func
-                      ,level   = level
-                      ,message = message
-                      )
+            return self._mes (func    = func
+                             ,level   = level
+                             ,message = message
+                             )
     
     def tmpfile(self,suffix='.htm',Delete=0):
         if not self._tmpfile:
@@ -4170,11 +4181,11 @@ class References:
                         word_no -= 1
                 return word_no
             else:
-                Message ('References.ref_before'
-                        ,_('ERROR')
-                        ,_('The condition "%s" is not observed!') \
-                        % '%d < %d' % (word_no,len(self.words1.words))
-                        )
+                objs.mes ('References.ref_before'
+                         ,_('ERROR')
+                         ,_('The condition "%s" is not observed!') \
+                         % '%d < %d' % (word_no,len(self.words1.words))
+                         )
         else:
             log.append ('References.ref_before'
                        ,_('WARNING')
@@ -4191,11 +4202,11 @@ class References:
                         word_no += 1
                 return -1
             else:
-                Message ('References.ref_after'
-                        ,_('ERROR')
-                        ,_('The condition "%s" is not observed!') \
-                        % '%d < %d' % (word_no,len(self.words1.words))
-                        )
+                objs.mes ('References.ref_after'
+                         ,_('ERROR')
+                         ,_('The condition "%s" is not observed!') \
+                         % '%d < %d' % (word_no,len(self.words1.words))
+                         )
         else:
             log.append ('References.ref_after'
                        ,_('WARNING')
@@ -4246,11 +4257,11 @@ class References:
                         count += 1
                 return count
             else:
-                Message ('References.repeated'
-                        ,_('ERROR')
-                        ,_('The condition "%s" is not observed!') \
-                        % '%d < %d' % (word_no,len(self.words1.words))
-                        )
+                objs.mes ('References.repeated'
+                         ,_('ERROR')
+                         ,_('The condition "%s" is not observed!') \
+                         % '%d < %d' % (word_no,len(self.words1.words))
+                         )
         else:
             log.append ('References.repeated'
                        ,_('WARNING')
