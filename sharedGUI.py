@@ -1,15 +1,16 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-import gettext, gettext_windows
-gettext_windows.setup_env()
-gettext.install('shared','./resources/locale')
-
 import tkinter as tk
 import tkinter.filedialog as dialog
 import tkinter.ttk as ttk
 import sys, os
 import shared as sh
+
+import gettext, gettext_windows
+gettext_windows.setup_env()
+gettext.install('shared','./resources/locale')
+
 
 
 # Привязать горячие клавиши или кнопки мыши к действию
@@ -331,14 +332,6 @@ class SearchBox:
             self.h_search = sh.Search(text=self._text)
         else:
             self.Success = False
-            # Too frequent
-            '''
-            Message (func    = 'SearchBox.reset_logic'
-                    ,level   = _('WARNING')
-                    ,message = _('Not enough input data!')
-                    ,Silent  = True
-                    )
-            '''
 
     def reset_data(self):
         self.Success    = True
@@ -1060,11 +1053,10 @@ class TextBox:
                               ,_('Spelling seems to be correct.')
                               )
         else:
-            Message (func    = 'TextBox.spelling'
-                    ,level   = _('WARNING')
-                    ,message = _('Not enough input data!')
-                    ,Silent  = True
-                    )
+            sh.log.append (func    = 'TextBox.spelling'
+                          ,level   = _('WARNING')
+                          ,message = _('Not enough input data!')
+                          )
 
 
 
@@ -2882,7 +2874,7 @@ class MessageBuilder:
 
 
 
-class Clipboard: # Requires 'objs'
+class Clipboard:
 
     def __init__(self,Silent=False):
         self.Silent = Silent
@@ -2905,7 +2897,7 @@ class Clipboard: # Requires 'objs'
             except tk._tkinter.TclError:
                 # Do not use GUI
                 sh.log.append ('Clipboard.copy'
-                              ,_('WARNING')
+                              ,_('ERROR')
                               ,_('The parent has already been destroyed.')
                               )
             except:
@@ -2984,7 +2976,6 @@ class Canvas:
             Message (func    = 'Canvas.embed'
                     ,level   = _('WARNING')
                     ,message = _('Wrong input data!')
-                    ,Silent  = False
                     )
         
     def focus(self,event=None):
@@ -3211,12 +3202,11 @@ class Scrollbar:
 '''
 class Image:
     
-    def __init__(self,Silent=False):
+    def __init__(self):
         self._image = self._bytes = self._loader = None
-        self.Silent = Silent
         
     def open(self,path):
-        if sh.File(file=path,Silent=self.Silent).Success:
+        if sh.File(file=path).Success:
             self._loader = objs.ig().open(path)
             self._image = objs.it().PhotoImage(self._loader)
         return self._image

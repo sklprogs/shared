@@ -488,7 +488,7 @@ class TextDic:
     def __init__(self,file,Sortable=False):
         self.file     = file
         self.Sortable = Sortable
-        self.h_read   = ReadTextFile(self.file,Silent=self.Silent)
+        self.h_read   = ReadTextFile(self.file)
         self.reset()
 
     ''' This is might be needed only for those dictionaries that
@@ -3712,8 +3712,13 @@ class Objects:
         self._enchant = self._morph = self._pretty_table = self._diff \
                       = self._pdir = self._tmpfile = self._mes = None
 
+    ''' Call this externally for each GUI module like that:
+        sh.objs.mes(Silent=False)
+        Do not call this directly in 'sharedGUI' because cross-module
+        import will fail ('sharedGUI' uses 'shared').
+    '''
     def mes (self,func='MAIN',level=_('DEBUG')
-            ,message='',Silent=True
+            ,message='',Silent=False
             ):
         if not self._mes:
             if Silent:
@@ -4210,7 +4215,6 @@ if __name__ == '__main__':
     ''' #note: Focusing on the widget is lost randomly (is assigned to
         root). This could be a Tkinter/DM bug.
     '''
-    '''
     Silent = False
     if not Silent:
         import sharedGUI as sg
@@ -4221,15 +4225,5 @@ if __name__ == '__main__':
              ,message = _('Nothing to do!')
              ,Silent  = Silent
              )
-    if not Silent:
-        sg.objs.end()
-    '''
-    Silent = False
-    if not Silent:
-        import sharedGUI as sg
-        sg.objs.start()
-    objs = Objects()
-    objs.mes(Silent=Silent)
-    ReadTextFile(file='/tmp/000.txt').get()
     if not Silent:
         sg.objs.end()

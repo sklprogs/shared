@@ -3,7 +3,6 @@
 import re
 import sre_constants
 import shared as sh
-import sharedGUI as sg
 
 import gettext, gettext_windows
 gettext_windows.setup_env()
@@ -60,11 +59,11 @@ class Record:
             except sre_constants.error:
                 result = ''
                 self.Success = False
-                sg.Message ('Record.apply'
-                           ,_('WARNING')
-                           ,_('A syntax error in the regular expression (id: %s)!') \
-                           % str(self._id)
-                           )
+                sh.objs.mes ('Record.apply'
+                            ,_('WARNING')
+                            ,_('A syntax error in the regular expression (id: %s)!') \
+                            % str(self._id)
+                            )
             return result
         else:
             sh.log.append ('Record.apply'
@@ -77,11 +76,11 @@ class Record:
             result = self.apply(text=self._what)
             if self.Success and result != self._with:
                 self.Success = False
-                sg.Message ('Record._check'
-                           ,_('WARNING')
-                           ,_('Regular expression %s has failed: we were expecting\n"%s",\nbut received\n"%s".') \
-                           % (str(self._id),str(self._with),str(result))
-                           )
+                sh.objs.mes ('Record._check'
+                            ,_('WARNING')
+                            ,_('Regular expression %s has failed: we were expecting\n"%s",\nbut received\n"%s".') \
+                            % (str(self._id),str(self._with),str(result))
+                            )
         else:
             sh.log.append ('Record.check'
                           ,_('WARNING')
@@ -119,10 +118,10 @@ class Record:
                     self._check()
             else:
                 self.Success = False
-                sg.Message ('Record.check'
-                           ,_('WARNING')
-                           ,_('Not enough input data!')
-                           )
+                sh.objs.mes ('Record.check'
+                            ,_('WARNING')
+                            ,_('Not enough input data!')
+                            )
         else:
             sh.log.append ('Record.check'
                           ,_('WARNING')
