@@ -3,7 +3,7 @@
 
 import gettext, gettext_windows
 gettext_windows.setup_env()
-gettext.install('shared','./locale')
+gettext.install('shared','./resources/locale')
 
 import tkinter as tk
 import tkinter.filedialog as dialog

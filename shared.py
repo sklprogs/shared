@@ -7,7 +7,7 @@ email     = 'skl.progs@gmail.com'
 
 import gettext, gettext_windows
 gettext_windows.setup_env()
-gettext.install('shared','./locale')
+gettext.install('shared','./resources/locale')
 
 import re
 import os, sys
@@ -139,20 +139,6 @@ oss = OSSpecific()
 # Load last due to problems with TZ (see 'oss.win_import')
 import datetime
 
-
-
-''' Cannot cross-import 2 modules, therefore, we need to have a local
-    procedure.
-'''
-def Message (func='MAIN',level=_('WARNING')
-            ,message='Message',Silent=False
-            ):
-    import sharedGUI as sg
-    return sg.Message (func    = func
-                      ,level   = level
-                      ,message = message
-                      ,Silent  = Silent
-                      ) # pass 'Yes'
 
 
 ''' We do not put this into File class because we do not need to check
@@ -3799,8 +3785,26 @@ class Objects:
 
     def __init__(self):
         self._enchant = self._morph = self._pretty_table = self._diff \
-                      = self._pdir = self._tmpfile = None
+                      = self._pdir = self._tmpfile = self._mes = None
 
+    def mes (self,func='MAIN',level=_('DEBUG')
+            ,message='',Silent=True
+            ):
+        if not self._mes:
+            if Silent:
+                self._mes = log.append
+            else:
+                import sharedGUI as sg
+                self._mes = sg.Message
+        if message:
+            ''' Passing an empty message is useful for just setting
+                GUI/non-GUI logging
+            '''
+            self._mes (func    = func
+                      ,level   = level
+                      ,message = message
+                      )
+    
     def tmpfile(self,suffix='.htm',Delete=0):
         if not self._tmpfile:
             self._tmpfile = tempfile.NamedTemporaryFile (mode     = 'w'
@@ -4279,7 +4283,15 @@ if __name__ == '__main__':
     ''' #note: Focusing on the widget is lost randomly (is assigned to
         root). This could be a Tkinter/DM bug.
     '''
-    Message (func    = 'shared.__main__'
-            ,level   = _('INFO')
-            ,message = 'Все прошло удачно!'
-            )
+    Silent = False
+    if not Silent:
+        import sharedGUI as sg
+        sg.objs.start()
+    objs = Objects()
+    objs.mes (func    = 'logic'
+             ,level   = _('INFO')
+             ,message = _('Nothing to do!')
+             ,Silent  = Silent
+             )
+    if not Silent:
+        sg.objs.end()
