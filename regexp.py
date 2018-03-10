@@ -7,7 +7,7 @@ import sharedGUI as sg
 
 import gettext, gettext_windows
 gettext_windows.setup_env()
-gettext.install('shared','./locale')
+gettext.install('shared','./resources/locale')
 
 
 ''' This class is for both checking a regular expression and replacing
@@ -29,7 +29,7 @@ class Record:
                 ,with1=None,what2=None,with2=None
                 ,what3=None,with3=None,what4=None
                 ,with4=None,what5=None,with5=None
-                ,_id='Unknown id',Silent=False
+                ,_id='Unknown id'
                 ):
         self.Success = True
         self._orig   = orig
@@ -46,14 +46,12 @@ class Record:
         self._with5  = with5
         self._id     = _id
         self._what   = self._with = ''
-        self.Silent  = Silent
         if not self._orig or not self._final:
             self.Success = False
-            sg.Message ('Record.__init__'
-                       ,_('WARNING')
-                       ,_('Not enough input data!')
-                       ,Silent=self.Silent
-                       )
+            objs.mes ('Record.__init__'
+                     ,_('WARNING')
+                     ,_('Not enough input data!')
+                     )
     
     def apply(self,text):
         if self.Success:
@@ -140,6 +138,10 @@ if __name__ == '__main__':
     #text = 'Records 200 - 300 have undergone a regular procedure...'
     what1 = 'pages 1-2'
     with1 = 'pages 1-2'
-    rec = Record(orig=orig,final=final,what1=what1,with1=with1)
+    rec = Record (orig  = orig
+                 ,final = final
+                 ,what1 = what1
+                 ,with1 = with1
+                 )
     print(rec.check())
     #print(rec.apply(text=what1))
