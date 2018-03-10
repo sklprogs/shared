@@ -156,7 +156,6 @@ def rewrite(dest,AskRewrite=True):
                         ,level   = _('QUESTION')
                         ,message = _('ATTENTION: Do yo really want to rewrite file "%s"?') \
                                    % dest
-                        ,Silent  = False
                         ).Yes
     else:
         ''' We return True so we may proceed with writing if the file
@@ -169,11 +168,10 @@ def rewrite(dest,AskRewrite=True):
 class Launch:
 
     #note: 'Block' works only a 'custom_app' is set
-    def __init__(self,target='',Block=False,Silent=False):
+    def __init__(self,target='',Block=False):
         self.values()
         self.target = target
         self.Block  = Block
-        self.Silent = Silent
         # Do not shorten, Path is used further
         self.h_path = Path(self.target)
         self.ext    = self.h_path.extension().lower()
@@ -221,7 +219,6 @@ class Launch:
             objs.mes (func    = 'Launch._lin'
                      ,level   = _('ERROR')
                      ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
-                     ,Silent  = self.Silent
                      )
 
     def _mac(self):
@@ -231,7 +228,6 @@ class Launch:
             objs.mes (func    = 'Launch._mac'
                      ,level   = _('ERROR')
                      ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
-                     ,Silent  = self.Silent
                      )
 
     def _win(self):
@@ -241,7 +237,6 @@ class Launch:
             objs.mes (func    = 'Launch._win'
                      ,level   = _('ERROR')
                      ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
-                     ,Silent  = self.Silent
                      )
 
     def app(self,custom_app='',custom_args=[]):
@@ -304,21 +299,17 @@ class Launch:
 
 class WriteTextFile:
 
-    def __init__ (self,file,Silent=False
-                 ,AskRewrite=True,UseLog=True
-                 ):
-        self.file = file
-        self.text = ''
-        self.Silent = Silent
+    def __init__(self,file,AskRewrite=True,UseLog=True):
+        self.file       = file
+        self.text       = ''
         self.AskRewrite = AskRewrite
-        self.UseLog = UseLog
-        self.Success = True
+        self.UseLog     = UseLog
+        self.Success    = True
         if not self.file:
             if self.UseLog:
                 objs.mes (func    = 'WriteTextFile.__init__'
                          ,level   = _('ERROR')
                          ,message = _('Not enough input data!')
-                         ,Silent  = self.Silent
                          )
             else:
                 print('WriteTextFile.__init__: Not enough input data!')
@@ -341,7 +332,6 @@ class WriteTextFile:
                              ,level   = _('ERROR')
                              ,message = _('Unable to write file "%s"!') \
                                         % self.file
-                             ,Silent  = self.Silent
                              )
                 else:
                     print('WriteTextFile._write: Unable to write the file!')
@@ -351,7 +341,6 @@ class WriteTextFile:
                          ,level   = _('ERROR')
                          ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
                                     % (str(mode),'a, w')
-                         ,Silent  = False
                          )
             else:
                 print('WriteTextFile._write: An unknown mode!')
@@ -370,7 +359,6 @@ class WriteTextFile:
                     objs.mes (func    = 'WriteTextFile.append'
                              ,level   = _('ERROR')
                              ,message = _('Not enough input data!')
-                             ,Silent  = self.Silent
                              )
                 else:
                     print('WriteTextFile.append: Not enough input data!')
@@ -392,7 +380,6 @@ class WriteTextFile:
                     objs.mes (func    = 'WriteTextFile.write'
                              ,level   = _('ERROR')
                              ,message = _('Not enough input data!')
-                             ,Silent  = self.Silent
                              )
                 else:
                     print('WriteTextFile.write: Not enough input data!')
@@ -498,11 +485,10 @@ else:
 #todo: Do we really need this?
 class TextDic:
 
-    def __init__(self,file,Silent=False,Sortable=False):
-        self.file = file
-        self.Silent = Silent
+    def __init__(self,file,Sortable=False):
+        self.file     = file
         self.Sortable = Sortable
-        self.h_read = ReadTextFile(self.file,Silent=self.Silent)
+        self.h_read   = ReadTextFile(self.file,Silent=self.Silent)
         self.reset()
 
     ''' This is might be needed only for those dictionaries that
@@ -532,7 +518,6 @@ class TextDic:
                          ,level   = _('WARNING')
                          ,message = _('File "%s" is not sortable!') \
                                     % self.file
-                         ,Silent  = self.Silent
                          )
         else:
             log.append ('TextDic._delete_duplicates'
@@ -552,7 +537,6 @@ class TextDic:
             objs.mes (func    = 'TextDic._join'
                      ,level   = _('WARNING')
                      ,message = _('Wrong input data!')
-                     ,Silent  = False
                      )
 
     ''' We can use this to check integrity and/or update original and
@@ -578,7 +562,6 @@ class TextDic:
                              ,level   = _('WARNING')
                              ,message = _('Dictionary "%s": Incorrect line #%d: "%s"!') \
                                         % (self.file,i+1,self._list[i])
-                             ,Silent  = self.Silent
                              )
         else:
             self.Success = False
@@ -597,7 +580,6 @@ class TextDic:
                 objs.mes (func    = 'TextDic.append'
                          ,level   = _('WARNING')
                          ,message = _('Empty input is not allowed!')
-                         ,Silent  = self.Silent
                          )
         else:
             log.append ('TextDic.append'
@@ -622,7 +604,6 @@ class TextDic:
                                     % ('0 <= ' + str(entry_no) + ' < %d'\
                                       % self.lines()
                                       )
-                         ,Silent  = False
                          )
         else:
             log.append ('TextDic.append'
@@ -647,7 +628,6 @@ class TextDic:
                                     % ('0 <= ' + str(entry_no) + ' < %d'\
                                       % self.lines()
                                       )
-                         ,Silent  = False
                          )
         else:
             log.append ('TextDic.append'
@@ -701,7 +681,6 @@ class TextDic:
                          ,level   = _('WARNING')
                          ,message = _('File "%s" is not sortable!') \
                                     % self.file
-                         ,Silent  = self.Silent
                          )
         else:
             log.append ('TextDic.sort'
@@ -731,9 +710,9 @@ class TextDic:
 
     def write(self):
         if self.Success:
-            WriteTextFile (self.file,self.get(),Silent=self.Silent
-                          ,AskRewrite=False
-                          ).write()
+            WriteTextFile (file       = self.file
+                          ,AskRewrite = False
+                          ).write(self.get())
         else:
             log.append ('TextDic.write'
                        ,_('WARNING')
@@ -744,11 +723,10 @@ class TextDic:
 
 class ReadTextFile:
 
-    def __init__(self,file,Silent=False):
-        self.file = file
-        self._text = ''
-        self._list = []
-        self.Silent = Silent
+    def __init__(self,file):
+        self.file    = file
+        self._text   = ''
+        self._list   = []
         self.Success = True
         if self.file and os.path.isfile(self.file):
             pass
@@ -757,7 +735,6 @@ class ReadTextFile:
             objs.mes (func    = 'ReadTextFile.__init__'
                      ,level   = _('ERROR')
                      ,message = _('Not enough input data!')
-                     ,Silent  = self.Silent
                      )
         elif not os.path.exists(self.file):
             self.Success = False
@@ -765,14 +742,12 @@ class ReadTextFile:
                      ,level   = _('WARNING')
                      ,message = _('File "%s" has not been found!') \
                                 % self.file
-                     ,Silent  = self.Silent
                      )
         else:
             self.Success = False
             objs.mes (func    = 'ReadTextFile.__init__'
                      ,level   = _('ERROR')
                      ,message = _('Wrong input data!')
-                     ,Silent  = self.Silent
                      )
 
     def _read(self,encoding):
@@ -852,7 +827,6 @@ class ReadTextFile:
                          ,level   = _('ERROR')
                          ,message = _('Unable to read file "%s"!') \
                                     % self.file
-                         ,Silent  = self.Silent
                          )
             self.delete_bom()
         else:
@@ -866,14 +840,9 @@ class ReadTextFile:
 
 class Input:
 
-    def __init__(self,val,func_title='Input',Silent=False):
+    def __init__(self,val,func_title='Input'):
         self.func_title = func_title
         self.val = val
-        ''' In a few cases it is appropriate to set Silent=1, since None
-            is not necessarily an error (e.g., a subject fueld in an
-            email message)
-        '''
-        self.Silent = Silent
 
     def integer(self):
         if isinstance(self.val,int):
@@ -889,7 +858,6 @@ class Input:
                      ,level   = _('ERROR')
                      ,message = _('Integer is required at input, but found "%s"! Return 0') \
                                 % str(type(self.val))
-                     ,Silent  = self.Silent
                      )
             self.val = 0
         return self.val
@@ -904,10 +872,9 @@ class Input:
 
 class Text:
 
-    def __init__(self,text,Auto=False,Silent=False):
-        self.text   = text
-        self.Silent = Silent
-        self.text   = Input(val=self.text).not_none()
+    def __init__(self,text,Auto=False):
+        self.text = text
+        self.text = Input(val=self.text).not_none()
         # This can be useful in many cases, e.g. after OCR
         if Auto:
             ''' This will remove symbols that cannot be shown in Tcl/Tk.
@@ -1122,7 +1089,6 @@ class Text:
            objs.mes (func    = 'Text.extract_date_hash'
                     ,level   = _('WARNING')
                     ,message = _('Wrong input data!')
-                    ,Silent  = self.Silent
                     )
         '''
         return hash
@@ -1143,7 +1109,6 @@ class Text:
             objs.mes (func    = 'Text.split_by_comma'
                      ,level   = _('WARNING')
                      ,message = _('Commas and/or semicolons or line breaks can be used, but not altogether!')
-                     ,Silent  = self.Silent
                      )
         elif ';' in self.text or ',' in self.text:
             self.text = self.text.replace(',','\n')
@@ -1307,19 +1272,17 @@ class List:
 class Time:
 
     def __init__ (self,_timestamp=None,pattern='%Y-%m-%d'
-                 ,MondayWarning=True,Silent=False
+                 ,MondayWarning=True
                  ):
         self.reset (_timestamp    = _timestamp
                    ,pattern       = pattern
                    ,MondayWarning = MondayWarning
-                   ,Silent        = Silent
                    )
 
     def reset (self,_timestamp=None,pattern='%Y-%m-%d'
-              ,MondayWarning=True,Silent=False
+              ,MondayWarning=True
               ):
         self.Success       = True
-        self.Silent        = Silent
         self.pattern       = pattern
         self.MondayWarning = MondayWarning
         self._timestamp    = _timestamp
@@ -1416,7 +1379,6 @@ class Time:
                 objs.mes (func    = 'Time.monday_warning'
                          ,level   = _('INFO')
                          ,message = _('Note: it will be Monday!')
-                         ,Silent  = self.Silent
                          )
         else:
             log.append ('Time.monday_warning'
@@ -1514,14 +1476,11 @@ class Time:
 
 class File:
 
-    def __init__ (self,file,dest=None
-                 ,Silent=False,AskRewrite=True
-                 ):
-        self.Success = True
-        self.Silent = Silent
+    def __init__(self,file,dest=None,AskRewrite=True):
+        self.Success    = True
         self.AskRewrite = AskRewrite
-        self.file = file
-        self.dest = dest
+        self.file       = file
+        self.dest       = dest
         # This will allow to skip some checks for destination
         if not self.dest:
             self.dest = self.file
@@ -1541,7 +1500,6 @@ class File:
             objs.mes (func    = 'File.__init__'
                      ,level   = _('ERROR')
                      ,message = _('Empty input is not allowed!')
-                     ,Silent  = self.Silent
                      )
         elif not os.path.exists(self.file):
             self.Success = False
@@ -1549,7 +1507,6 @@ class File:
                      ,level   = _('WARNING')
                      ,message = _('File "%s" has not been found!') \
                                 % self.file
-                     ,Silent  = self.Silent
                      )
         else:
             self.Success = False
@@ -1557,7 +1514,6 @@ class File:
                      ,level   = _('WARNING')
                      ,message = _('The object "%s" is not a file!') \
                                 % self.file
-                     ,Silent  = self.Silent
                      )
 
     def _copy(self):
@@ -1574,7 +1530,6 @@ class File:
                      ,level   = _('ERROR')
                      ,message = _('Failed to copy file "%s" to "%s"!') \
                                 % (self.file,self.dest)
-                     ,Silent  = self.Silent
                      )
         return Success
 
@@ -1592,7 +1547,6 @@ class File:
                      ,level   = _('ERROR')
                      ,message = _('Failed to move "%s" to "%s"!') \
                                 % (self.file,self.dest)
-                     ,Silent  = self.Silent
                      )
         return Success
 
@@ -1606,7 +1560,6 @@ class File:
                          ,level   = _('WARNING')
                          ,message = _('Failed to get the date of the file "%s"!') \
                                     % self.file
-                         ,Silent  = self.Silent
                          )
         else:
             log.append ('File.access_time'
@@ -1622,7 +1575,6 @@ class File:
                          ,level   = _('ERROR')
                          ,message = _('Unable to copy the file "%s" to iself!') \
                                     % self.file
-                         ,Silent  = self.Silent
                          )
             elif rewrite(self.dest,AskRewrite=self.AskRewrite):
                 Success = self._copy()
@@ -1653,7 +1605,6 @@ class File:
                          ,level   = _('WARNING')
                          ,message = _('Failed to delete file "%s"!') \
                                     % self.file
-                         ,Silent  = self.Silent
                          )
         else:
             log.append ('File.delete'
@@ -1682,7 +1633,6 @@ class File:
                          ,level   = _('WARNING')
                          ,message = _('Failed to get the date of the file "%s"!') \
                                     % self.file
-                         ,Silent  = self.Silent
                          )
         else:
             log.append ('File.modification_time'
@@ -1697,7 +1647,6 @@ class File:
                 objs.mes (func    = 'File.move'
                          ,level   = _('ERROR')
                          ,message = _('Moving is not necessary, because the source and destination are identical.')
-                         ,Silent  = self.Silent
                          )
             elif rewrite(self.dest,AskRewrite=self.AskRewrite):
                 Success = self._move()
@@ -1730,7 +1679,6 @@ class File:
                                         % (self.file
                                           ,str((self.atime,self.mtime))
                                           )
-                             ,Silent  = self.Silent
                              )
         else:
             log.append ('File.set_time'
@@ -1742,8 +1690,8 @@ class File:
 
 class Path:
 
-    def __init__(self,path,Silent=False):
-        self.reset(path,Silent=Silent)
+    def __init__(self,path):
+        self.reset(path)
 
     def _splitpath(self):
         if not self._split:
@@ -1826,7 +1774,7 @@ class Path:
                 self._filename = self._splitpath()[0]
         return self._filename
 
-    def reset(self,path,Silent=False):
+    def reset(self,path):
         self.path = path
         ''' Building paths in Windows:
             - Use raw strings (e.g., set path as r'C:\1.txt')
@@ -1842,7 +1790,6 @@ class Path:
         self._basename = self._dirname = self._extension \
                        = self._filename = self._split = self._date = ''
         self.parts     = []
-        self.Silent    = Silent
 
     def split(self):
         if not self.parts:
@@ -1865,12 +1812,11 @@ class Path:
 
 class WriteBinary:
 
-    def __init__(self,file,obj,Silent=False,AskRewrite=False):
+    def __init__(self,file,obj,AskRewrite=False):
         self.Success = True
-        self.file = file
-        self.obj = obj
+        self.file    = file
+        self.obj     = obj
         if self.file and self.obj:
-            self.Silent = Silent
             self.AskRewrite = AskRewrite
             self.fragm = None
         else:
@@ -1898,14 +1844,12 @@ class WriteBinary:
                          ,level   = _('ERROR')
                          ,message = _('Unable to write file "%s"!') \
                                     % self.file
-                         ,Silent  = self.Silent
                          )
         else:
             objs.mes (func    = 'WriteTextFile._write'
                      ,level   = _('ERROR')
                      ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
                                 % (str(mode),'w+b, a+b')
-                     ,Silent  = False
                      )
 
     def append(self,fragm):
@@ -1917,7 +1861,6 @@ class WriteBinary:
                 objs.mes (func    = 'WriteBinary.append'
                          ,level   = _('ERROR')
                          ,message = _('Empty input is not allowed!')
-                         ,Silent  = self.Silent
                          )
         else:
             log.append ('WriteBinary.append'
@@ -1945,12 +1888,11 @@ class WriteBinary:
 #todo: fix: Reading 'largest_dic' fails without this class
 class Dic:
 
-    def __init__(self,file,Silent=False,Sortable=False):
+    def __init__(self,file,Sortable=False):
         self.file     = file
-        self.Silent   = Silent
         self.Sortable = Sortable
         self.errors   = []
-        self.h_read   = ReadTextFile(self.file,Silent=self.Silent)
+        self.h_read   = ReadTextFile(self.file)
         self.reset()
 
     ''' This is might be needed only for those dictionaries that already
@@ -1980,7 +1922,6 @@ class Dic:
                          ,level   = _('WARNING')
                          ,message = _('File "%s" is not sortable!') \
                                     % self.file
-                         ,Silent  = self.Silent
                          )
         else:
             log.append ('Dic._delete_duplicates'
@@ -2000,7 +1941,6 @@ class Dic:
             objs.mes (func    = 'Dic._join'
                      ,level   = _('WARNING')
                      ,message = _('Wrong input data!')
-                     ,Silent  = False
                      )
 
     ''' We can use this to check integrity and/or update original and
@@ -2054,7 +1994,6 @@ class Dic:
                 objs.mes (func    = 'Dic.append'
                          ,level   = _('WARNING')
                          ,message = _('Empty input is not allowed!')
-                         ,Silent  = self.Silent
                          )
         else:
             log.append ('Dic.append'
@@ -2080,7 +2019,6 @@ class Dic:
                                     % ('0 <= ' + str(entry_no) + ' < %d'\
                                       % self.lines()
                                       )
-                         ,Silent  = False
                          )
         else:
             log.append ('Dic.append'
@@ -2106,7 +2044,6 @@ class Dic:
                                     % ('0 <= ' + str(entry_no) + ' < %d'\
                                       % self.lines()
                                       )
-                         ,Silent  = False
                          )
         else:
             log.append ('Dic.append'
@@ -2164,7 +2101,6 @@ class Dic:
                          ,level   = _('WARNING')
                          ,message = _('File "%s" is not sortable!') \
                                     % self.file
-                         ,Silent  = self.Silent
                          )
         else:
             log.append ('Dic.sort'
@@ -2194,11 +2130,9 @@ class Dic:
 
     def write(self):
         if self.Success:
-            WriteTextFile (self.file
-                          ,self.get()
-                          ,Silent     = self.Silent
+            WriteTextFile (file       = self.file
                           ,AskRewrite = False
-                          ).write()
+                          ).write(self.get())
         else:
             log.append ('Dic.write'
                        ,_('WARNING')
@@ -2209,11 +2143,10 @@ class Dic:
 
 class ReadBinary:
 
-    def __init__(self,file,Silent=False):
+    def __init__(self,file):
         self.file    = file
-        self.Silent  = Silent
         self.obj     = None
-        h_file       = File(self.file,Silent=self.Silent)
+        h_file       = File(self.file)
         self.Success = h_file.Success
 
     def _load(self):
@@ -2233,7 +2166,6 @@ class ReadBinary:
                      ,level   = _('ERROR')
                      ,message = _('Unable to read file "%s"!') \
                                 % self.file
-                     ,Silent  = self.Silent
                      )
 
     #todo: load fragments appended to a binary
@@ -2263,9 +2195,8 @@ class CreateInstance:
 #todo: fix: does not work with a root dir ('/')
 class Directory:
 
-    def __init__(self,path,dest='',Silent=False):
+    def __init__(self,path,dest=''):
         self.Success = True
-        self.Silent = Silent
         if path:
             # Removes trailing slashes if necessary
             self.dir = Path(path).path
@@ -2289,7 +2220,6 @@ class Directory:
             objs.mes (func    = 'Directory.__init__'
                      ,level   = _('WARNING')
                      ,message = _('Wrong input data: "%s"') % self.dir
-                     ,Silent  = self.Silent
                      )
 
     def extensions(self): # with a dot
@@ -2406,14 +2336,12 @@ class Directory:
                          ,level   = _('ERROR')
                          ,message = _('Unable to copy "%s" to iself!') \
                                     % self.dir
-                         ,Silent  = self.Silent
                          )
             elif os.path.isdir(self.dest):
                 objs.mes (func    = 'Directory.copy'
                          ,level   = _('INFO')
                          ,message = _('Directory "%s" already exists.') \
                                     % self.dest
-                         ,Silent  = self.Silent
                          )
             else:
                 self._copy()
@@ -2436,15 +2364,13 @@ class Directory:
                      ,level   = _('ERROR')
                      ,message = _('Failed to copy "%s" to "%s"!') \
                                 % (self.dir,self.dest)
-                     ,Silent  = self.Silent
                      )
 
 
 
 class Config:
 
-    def __init__(self,Silent=False):
-        self.Silent = Silent
+    def __init__(self):
         self.values()
         
     def values(self):
@@ -2525,7 +2451,6 @@ class Config:
                          ,level   = _('WARNING')
                          ,message = _('Failed to read the configuration file "%s". This file must share the same directory with the program and have UTF-8 encoding (no BOM) and UNIX line break type.') \
                                     % self.path
-                         ,Silent  = self.Silent
                          )
         else:
             log.append ('Config.open'
@@ -2612,13 +2537,11 @@ class Online:
 
 class Diff:
 
-    def __init__(self,Silent=False):
-        self.Silent      = Silent
+    def __init__(self):
         self.Custom      = False
         self.wda_html    = objs.tmpfile(suffix='.htm',Delete=0)
         self.h_wda_write = WriteTextFile (file       = self.wda_html
                                          ,AskRewrite = False
-                                         ,Silent     = self.Silent
                                          )
 
     def reset(self,text1,text2,file=None):
@@ -2631,7 +2554,6 @@ class Diff:
             self._header = ''
             self.h_write = WriteTextFile (file       = self.file
                                          ,AskRewrite = True
-                                         ,Silent     = self.Silent
                                          )
             self.h_path  = Path(self.file)
         else:
@@ -2683,17 +2605,15 @@ class Diff:
 
 class Shortcut:
 
-    def __init__(self,symlink='',path='',Silent=False):
+    def __init__(self,symlink='',path=''):
         self.Success = True
-        self.Silent = Silent
-        self.path = path
+        self.path    = path
         self.symlink = symlink
         if not self.path and not self.symlink:
             self.Success = False
             objs.mes (func    = 'Shortcut.__init__'
                      ,level   = _('WARNING')
                      ,message = _('Wrong input data!')
-                     ,Silent  = self.Silent
                      )
 
     # http://timgolden.me.uk/python/win32_how_do_i/read-a-shortcut.html
@@ -2773,7 +2693,6 @@ class Shortcut:
                 objs.mes (func    = 'Shortcut.create_unix'
                          ,level   = _('WARNING')
                          ,message = _('Wrong input data!')
-                         ,Silent  = self.Silent
                          )
         else:
             self._create_unix()
@@ -2845,11 +2764,9 @@ class Email:
         self._email = email
         self._subject = Input (func_title = 'Email.__init__'
                               ,val        = subject
-                              ,Silent     = 1
                               ).not_none()
         self._message = Input (func_title = 'Email.__init__'
                               ,val        = message
-                              ,Silent     = 1
                               ).not_none()
         self._attachment = attachment
         self.Success = True
@@ -2914,15 +2831,14 @@ lang()
 
 class Grep:
 
-    def __init__(self,lst,start=[],middle=[],end=[],Silent=False):
-        self.Silent = Silent
-        self._lst = lst
-        self._start = start
+    def __init__(self,lst,start=[],middle=[],end=[]):
+        self._lst    = lst
+        self._start  = start
         self._middle = middle
-        self._end = end
+        self._end    = end
+        self._found  = []
+        self.i       = 0
         self.sanitize()
-        self._found = []
-        self.i = 0
 
     ''' Get rid of constructs like [None] instead of checking arguments
         when parameterizing
@@ -3809,7 +3725,7 @@ class Objects:
             ''' Passing an empty message is useful for just setting
                 GUI/non-GUI logging.
                 Returning the function results may be useful if, for
-                example, we need 'sg.Message.Yes' value
+                example, we need 'sg.Message.Yes' value.
             '''
             return self._mes (func    = func
                              ,level   = level
@@ -4294,6 +4210,7 @@ if __name__ == '__main__':
     ''' #note: Focusing on the widget is lost randomly (is assigned to
         root). This could be a Tkinter/DM bug.
     '''
+    '''
     Silent = False
     if not Silent:
         import sharedGUI as sg
@@ -4304,5 +4221,15 @@ if __name__ == '__main__':
              ,message = _('Nothing to do!')
              ,Silent  = Silent
              )
+    if not Silent:
+        sg.objs.end()
+    '''
+    Silent = False
+    if not Silent:
+        import sharedGUI as sg
+        sg.objs.start()
+    objs = Objects()
+    objs.mes(Silent=Silent)
+    ReadTextFile(file='/tmp/000.txt').get()
     if not Silent:
         sg.objs.end()
