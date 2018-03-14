@@ -3826,7 +3826,8 @@ class ProgramDir:
 
     def __init__(self):
         self.dir = sys.path[0]
-        if os.path.isfile(self.dir): # We run app, not interpreter
+        # We run app, not interpreter
+        if os.path.isfile(self.dir):
             self.dir = Path(path=self.dir).dirname()
 
     def add(self,*args):

@@ -2140,7 +2140,6 @@ class Selection: # Selecting words only
 
 
 
-# A modified mclient class
 class SymbolMap:
 
     def __init__(self,parent):
