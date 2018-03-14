@@ -2196,7 +2196,7 @@ class CreateInstance:
 class Directory:
 
     def __init__(self,path,dest=''):
-        self.Success = True
+        self.values()
         if path:
             # Removes trailing slashes if necessary
             self.dir = Path(path).path
@@ -2206,15 +2206,6 @@ class Directory:
             self.dest = Path(dest).path
         else:
             self.dest = self.dir
-        # Assigning lists must be one per line
-        self._list = []
-        self._rel_list = []
-        self._files = []
-        self._rel_files = []
-        self._dirs = []
-        self._rel_dirs = []
-        self._extensions = []
-        self._extensions_low = []
         if not os.path.isdir(self.dir):
             self.Success = False
             objs.mes (func    = 'Directory.__init__'
@@ -2222,6 +2213,18 @@ class Directory:
                      ,message = _('Wrong input data: "%s"') % self.dir
                      )
 
+    def values(self):
+        self.Success = True
+        # Assigning lists must be one per line
+        self._list           = []
+        self._rel_list       = []
+        self._files          = []
+        self._rel_files      = []
+        self._dirs           = []
+        self._rel_dirs       = []
+        self._extensions     = []
+        self._extensions_low = []
+    
     def extensions(self): # with a dot
         if self.Success:
             if not self._extensions:
