@@ -1971,7 +1971,7 @@ class OptionMenu:
             Message (func    = 'OptionMenu._get'
                     ,level   = _('ERROR')
                     ,message = _('Wrong input data: "%s"') \
-                    % str(self.choice)
+                               % str(self.choice)
                     )
 
     def set_prev(self,event=None):
