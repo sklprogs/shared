@@ -1272,7 +1272,7 @@ class List:
 class Time:
 
     def __init__ (self,_timestamp=None,pattern='%Y-%m-%d'
-                 ,MondayWarning=True
+                 ,MondayWarning=False
                  ):
         self.reset (_timestamp    = _timestamp
                    ,pattern       = pattern
@@ -1280,7 +1280,7 @@ class Time:
                    )
 
     def reset (self,_timestamp=None,pattern='%Y-%m-%d'
-              ,MondayWarning=True
+              ,MondayWarning=False
               ):
         self.Success       = True
         self.pattern       = pattern
