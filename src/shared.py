@@ -4003,9 +4003,10 @@ class FixBaseName:
 
 class Get:
     
-    def __init__(self,url,encoding='UTF-8'):
+    def __init__(self,url,encoding='UTF-8',Verbose=True):
         self._url      = url
         self._encoding = encoding
+        self.Verbose   = Verbose
         self._timeout  = 6
         self._html     = ''
         
@@ -4059,11 +4060,13 @@ class Get:
         if self._url:
             # Safely use URL as a string
             if isinstance(self._url,str):
-                timer = Timer(func_title='Get.run')
-                timer.start()
+                if self.Verbose:
+                    timer = Timer(func_title='Get.run')
+                    timer.start()
                 self._get()
                 self.decode()
-                timer.end()
+                if self.Verbose:
+                    timer.end()
                 return self._html
             else:
                 log.append ('Get.run'

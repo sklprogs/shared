@@ -2475,7 +2475,7 @@ class Label:
         self.gui()
         if Close:
             self.close()
-
+    
     def gui(self):
         self.widget = tk.Label (master = self.parent.widget
                                ,image  = self.image
@@ -2957,7 +2957,8 @@ class Canvas:
     
     def __init__(self,parent,expand=True
                 ,side=None,scrollregion=None
-                ,width=None,height=None,fill='both'
+                ,width=None,height=None
+                ,fill='both'
                 ):
         self.type         = 'Canvas'
         self.parent       = parent
@@ -2969,6 +2970,22 @@ class Canvas:
         self.fill         = fill
         self.gui()
         
+    def region(self,x=0,y=0):
+        if x and y:
+            self.widget.configure (scrollregion = (-x/2,-y/2
+                                                  , x/2, y/2
+                                                  )
+                                  )
+        else:
+            sh.log.append ('Canvas.region'
+                          ,_('WARNING')
+                          ,_('Empty input is not allowed!')
+                          )
+    
+    def scroll2start(self,event=None):
+        self.widget.xview_moveto(0)
+        self.widget.yview_moveto(0)
+    
     def gui(self):
         self.widget = tk.Canvas (master       = self.parent.widget
                                 ,scrollregion = self.scrollregion
@@ -3174,7 +3191,7 @@ class Scrollbar:
         self.scroll     = scroll
         self.Horizontal = Horizontal
         self.gui()
-        
+    
     def gui(self):
         if hasattr(self.parent,'widget'):
             if self.Horizontal:
