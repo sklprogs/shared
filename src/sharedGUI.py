@@ -2994,7 +2994,9 @@ class Canvas:
     def move_top(self,event=None):
         self.widget.yview_moveto(0)
     
-    def region(self,x=0,y=0):
+    def region (self,x=0,y=0
+               ,x_border=0,y_border=0
+               ):
         x = sh.Input (func_title = 'Canvas.region'
                      ,val        = x
                      ).integer()
@@ -3002,8 +3004,10 @@ class Canvas:
                      ,val        = y
                      ).integer()
         if x and y:
-            self.widget.configure (scrollregion = (-x/2,-y/2
-                                                  , x/2, y/2
+            self.widget.configure (scrollregion = (-x/2 - x_border
+                                                  ,-y/2 - y_border
+                                                  , x/2 + x_border
+                                                  , y/2 + y_border
                                                   )
                                   )
         else:
