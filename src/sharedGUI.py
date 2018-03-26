@@ -2970,6 +2970,30 @@ class Canvas:
         self.fill         = fill
         self.gui()
         
+    def move_up(self,event=None):
+        self.widget.yview_scroll(-1,'units')
+        
+    def move_down(self,event=None):
+        self.widget.yview_scroll(1,'units')
+    
+    def move_page_up(self,event=None):
+        self.widget.yview_scroll(-1,'pages')
+        
+    def move_page_down(self,event=None):
+        self.widget.yview_scroll(1,'pages')
+
+    def move_left(self,event=None):
+        self.widget.xview_scroll(-1,'units')
+        
+    def move_right(self,event=None):
+        self.widget.xview_scroll(1,'units')
+        
+    def move_bottom(self,event=None):
+        self.widget.yview_moveto('1.0')
+        
+    def move_top(self,event=None):
+        self.widget.yview_moveto(0)
+    
     def region(self,x=0,y=0):
         x = sh.Input (func_title = 'Canvas.region'
                      ,val        = x
