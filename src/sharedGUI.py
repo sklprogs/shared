@@ -2971,6 +2971,12 @@ class Canvas:
         self.gui()
         
     def region(self,x=0,y=0):
+        x = sh.Input (func_title = 'Canvas.region'
+                     ,val        = x
+                     ).integer()
+        y = sh.Input (func_title = 'Canvas.region'
+                     ,val        = y
+                     ).integer()
         if x and y:
             self.widget.configure (scrollregion = (-x/2,-y/2
                                                   , x/2, y/2
@@ -2982,9 +2988,9 @@ class Canvas:
                           ,_('Empty input is not allowed!')
                           )
     
-    def scroll2start(self,event=None):
-        self.widget.xview_moveto(0)
-        self.widget.yview_moveto(0)
+    def scroll(self,event=None,x=0,y=0):
+        self.widget.xview_moveto(x)
+        self.widget.yview_moveto(y)
     
     def gui(self):
         self.widget = tk.Canvas (master       = self.parent.widget
@@ -3635,6 +3641,53 @@ class Panes:
         if self.Extended:
             self.pane3.reset(words=words3)
             self.pane4.reset(words=words4)
+
+
+
+class ProgressBarItem:
+    
+    def __init__ (self,parent,orient='horizontal'
+                 ,length=100,mode='determinate'
+                 ):
+        self.parent = parent
+        self.orient = orient
+        self.length = length
+        self.mode   = mode
+        self.gui()
+        
+    def gui(self):
+        self.frames()
+        self.labels()
+        self.bar()
+        self.text()
+        
+    def frames(self):
+        self.frame  = Frame (parent = self.parent
+                            ,expand = False
+                            ,fill   = 'x'
+                            )
+        self.frame1 = Frame(parent=self.frame)
+        self.frame2 = Frame(parent=self.frame)
+        
+    def labels(self):
+        self.label = Label (parent = self.frame1
+                           ,side   = 'left'
+                           )
+
+    def text (self,file='',cur_size=0
+             ,total=0,rate=0,eta=0
+             ):
+        message = _('File: "%s"; %d/%d MB; Rate: %d kbps; ETA: %d s')\
+                  % (file,cur_size,total,rate,eta)
+        self.label.text(message)
+                              
+    def bar(self):
+        self.widget = ttk.Progressbar (master = self.frame2.widget
+                                      ,orient = self.orient
+                                      ,length = self.length
+                                      ,mode   = self.mode
+                                      )
+        self.widget.pack()
 
 
 
