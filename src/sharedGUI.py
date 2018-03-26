@@ -3719,6 +3719,136 @@ class ProgressBarItem:
 
 
 
+class ProgressBar:
+    
+    def __init__(self):
+        self.values()
+        self.gui()
+        
+    def values(self):
+        self._items  = []
+        self._item   = None
+        self._height = 400
+        self._width  = 600
+        self._border = 80
+    
+    def frames(self):
+        self.frm_prm = Frame (parent = self.obj)
+        self.frm_hor = Frame (parent = self.frm_prm
+                             ,expand = False
+                             ,fill   = 'x'
+                             ,side   = 'bottom'
+                             )
+        self.frm_ver = Frame (parent = self.frm_prm
+                             ,expand = False
+                             ,fill   = 'y'
+                             ,side   = 'right'
+                             )
+        # This frame must be created after the bottom frame
+        self.frm_sec = Frame (parent = self.frm_prm)
+    
+    def title(self,text=None):
+        if not text:
+            text = _('Download progress')
+        self.obj.title(text)
+        
+    def show(self,event=None):
+        self.obj.show()
+        
+    def close(self,event=None):
+        self.obj.close()
+    
+    def gui(self):
+        self.obj = Top(parent=objs.root())
+        Geometry(parent=self.obj).set ('%dx%d' % (self._width
+                                                 ,self._height
+                                                 )
+                                      )
+        self.title()
+        self.frames()
+        self.widgets()
+        self.canvas.region (x = self._width
+                           ,y = self._height
+                           )
+        self.canvas.scroll()
+        self.bindings()
+        
+    def bindings(self):
+        bind (obj      = self.obj
+             ,bindings = ['<Control-q>','<Control-w>','<Escape>']
+             ,action   = self.close
+             )
+        bind (obj      = self.obj
+             ,bindings = '<Down>'
+             ,action   = self.canvas.move_down
+             )
+        bind (obj      = self.obj
+             ,bindings = '<Up>'
+             ,action   = self.canvas.move_up
+             )
+        bind (obj      = self.obj
+             ,bindings = '<Left>'
+             ,action   = self.canvas.move_left
+             )
+        bind (obj      = self.obj
+             ,bindings = '<Right>'
+             ,action   = self.canvas.move_right
+             )
+        bind (obj      = self.obj
+             ,bindings = '<End>'
+             ,action   = self.canvas.move_bottom
+             )
+        bind (obj      = self.obj
+             ,bindings = '<Home>'
+             ,action   = self.canvas.move_top
+             )
+        bind (obj      = self.obj
+             ,bindings = '<Prior>'
+             ,action   = self.canvas.move_page_up
+             )
+        bind (obj      = self.obj
+             ,bindings = '<Next>'
+             ,action   = self.canvas.move_page_down
+             )
+    
+    def widgets(self):
+        self.canvas = Canvas(parent = self.frm_sec)
+        self.label  = Label (parent = self.frm_sec
+                            ,text   = 'ProgressBar'
+                            ,expand = True
+                            ,fill   = 'both'
+                            )
+        self.canvas.embed(self.label)
+        self.yscroll = Scrollbar (parent = self.frm_ver
+                                 ,scroll = self.canvas
+                                 )
+        self.canvas.focus()
+        
+    def add(self):
+        self._item = ProgressBarItem (parent = self.label
+                                     ,length = self._width - self._border
+                                     )
+        self._items.append(self._item)
+        objs.root().widget.update_idletasks()
+        max_x = self.label.widget.winfo_reqwidth()
+        max_y = self.label.widget.winfo_reqheight()
+        '''
+        sh.log.append ('ProgressBar.add'
+                      ,_('DEBUG')
+                      ,_('Widget sizes: %s') \
+                      % (str(max_x) + 'x' + str(max_y))
+                      )
+        '''
+        self.canvas.region (x        = max_x
+                           ,y        = max_y
+                           ,x_border = 50
+                           ,y_border = 20
+                           )
+        self.canvas.move_bottom()
+        return self._item
+
+
+
 ''' If there are problems with import or tkinter's wait_variable, put
     this beneath 'if __name__'
 '''
