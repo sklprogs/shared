@@ -3094,9 +3094,8 @@ class Objects:
                 self._root.close()
         return self._root
 
-    def start(self):
-        self.root()
-        self._root.close()
+    def start(self,Close=True):
+        self.root(Close=Close)
 
     def end(self):
         self.root().kill()
@@ -3700,6 +3699,7 @@ class ProgressBarItem:
     def labels(self):
         self.label = Label (parent = self.frame1
                            ,side   = 'left'
+                           ,Close  = False
                            )
 
     def text (self,file='',cur_size=0
@@ -3760,6 +3760,7 @@ class ProgressBar:
     
     def gui(self):
         self.obj = Top(parent=objs.root())
+        self.widget = self.obj.widget
         Geometry(parent=self.obj).set ('%dx%d' % (self._width
                                                  ,self._height
                                                  )
@@ -3824,7 +3825,7 @@ class ProgressBar:
                                  )
         self.canvas.focus()
         
-    def add(self):
+    def add(self,event=None):
         self._item = ProgressBarItem (parent = self.label
                                      ,length = self._width - self._border
                                      )
