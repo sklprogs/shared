@@ -3754,7 +3754,7 @@ class ProgressBar:
         self._items  = []
         self._item   = None
         self._height = 200
-        self._width  = 650
+        self._width  = 670
         self._border = 80
     
     def frames(self):
