@@ -4026,10 +4026,11 @@ class Get:
                                          )
             self._html = \
             urllib.request.urlopen(req,timeout=self._timeout).read()
-            log.append ('Get._get'
-                       ,_('INFO')
-                       ,_('[OK]: "%s"') % self._url
-                       )
+            if self.Verbose:
+                log.append ('Get._get'
+                           ,_('INFO')
+                           ,_('[OK]: "%s"') % self._url
+                           )
         # Too many possible exceptions
         except:
             log.append ('Get._get'
