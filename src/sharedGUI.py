@@ -2197,7 +2197,8 @@ class SymbolMap:
     through different Windows versions, so we bypass Tkinter's commands
     here
 '''
-class Geometry: # Requires sh.oss, objs
+# Requires sh.oss, objs
+class Geometry:
 
     def __init__(self,parent=None,title=None,hwnd=None):
         self.parent = parent
@@ -3194,25 +3195,49 @@ class SimpleTop:
     
     def __init__(self,parent):
         self.type   = 'Toplevel'
+        # Widget will be shown right after creation
+        self.Active = True
         self.parent = parent
         self.gui()
         
+    def icon(self,path):
+        WidgetShared.icon(self,path)
+    
     def title(self,text=_('Title:')):
         WidgetShared.title(self,text=text)
     
     def gui(self):
         self.widget = tk.Toplevel(self.parent.widget)
+        self.bindings()
+        
+    def bindings(self):
+        self.widget.protocol("WM_DELETE_WINDOW",self.close)
         
     def close(self,event=None):
-        # 'Label' will trigger closing with unwanted results
-        #self.widget.destroy()
-        sh.log.append ('SimpleTop.close'
-                      ,_('DEBUG')
-                      ,_('Nothing to do.')
-                      )
+        ''' Do not destroy widget: 'Label' may trigger closing with
+            unwanted results
+        '''
+        if self.Active:
+            self.Active = False
+            self.widget.withdraw()
+        else:
+            ''' This is a warning because, normally, closing this widget
+                should not be triggered when it is not active
+            '''
+            sh.log.append ('SimpleTop.close'
+                          ,_('WARNING')
+                          ,_('Nothing to do.')
+                          )
         
     def show(self,event=None,Lock=False):
-        self.widget.wait_window()
+        if self.Active:
+            sh.log.append ('SimpleTop.show'
+                          ,_('INFO')
+                          ,_('Nothing to do.')
+                          )
+        else:
+            self.Active = True
+            self.widget.deiconify()
 
 
 
@@ -3728,8 +3753,8 @@ class ProgressBar:
     def values(self):
         self._items  = []
         self._item   = None
-        self._height = 400
-        self._width  = 600
+        self._height = 200
+        self._width  = 650
         self._border = 80
     
     def frames(self):
@@ -3759,7 +3784,7 @@ class ProgressBar:
         self.obj.close()
     
     def gui(self):
-        self.obj = Top(parent=objs.root())
+        self.obj = SimpleTop(parent=objs.root())
         self.widget = self.obj.widget
         Geometry(parent=self.obj).set ('%dx%d' % (self._width
                                                  ,self._height
@@ -3857,18 +3882,8 @@ objs = Objects()
 
 
 if __name__ == '__main__':
-    objs.start()
-    patterns = ('https://www.youtube.com/user/AvtoKriminalist/videos'
-               ,'https://www.youtube.com/channel/UCIpvyH9GKI54X1Ww2BDnEgg/videos'
-               ,'AvtoKriminalist'
-               ,'UCIpvyH9GKI54X1Ww2BDnEgg'
-               )
-    notes = _('Enter a channel URL, one URL per a line:')
-    notes += '\n'
-    notes += _('Patterns: %s') % '\n'.join(patterns)
-    block = Manage (title = _('Manage blacklist')
-                   ,notes = notes
-                   )
-    block.show()
-    print(block.get())
-    objs.end()
+    objs.start(Close=0)
+    bar = ProgressBar()
+    bar.add()
+    bar.show()
+    objs.root().widget.wait_window()

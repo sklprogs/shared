@@ -1094,9 +1094,12 @@ class Text:
         return hash
 
     # Shorten a string up to a max length
-    def shorten(self,max_len=10,Enclose=False):
+    def shorten(self,max_len=10,Enclose=False,FromEnd=False):
         if len(self.text) > max_len:
-            self.text = self.text[0:max_len] + '...'
+            if FromEnd:
+                self.text = '...' + self.text[len(self.text)-max_len:]
+            else:
+                self.text = self.text[0:max_len] + '...'
         if Enclose:
             self.text = '"' + self.text + '"' #'[' + self.text + ']'
         return self.text
