@@ -844,6 +844,16 @@ class Input:
         self.func_title = func_title
         self.val = val
 
+    def list(self):
+        if isinstance(self.val,list):
+            return self.val
+        else:
+            log.append (self.func_title
+                       ,_('WARNING')
+                       ,_('Wrong input data!')
+                       )
+            return []
+    
     def integer(self):
         if isinstance(self.val,int):
             return self.val
