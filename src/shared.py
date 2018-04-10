@@ -2478,7 +2478,7 @@ class Config:
 
 class Online:
 
-    def __init__ (self,base_str='',search_str=''
+    def __init__ (self,base_str='%s',search_str=''
                  ,encoding='UTF-8',MTSpecific=False
                  ):
         self.reset (base_str   = base_str
@@ -2800,23 +2800,33 @@ class Email:
                            ,_('Operation has been canceled.')
                            )
 
+    # Screen symbols that may cause problems when composing 'mailto'
+    def sanitize(self,value):
+        return str(Online(search_str=value).url())
+    
     def create(self):
         if self.Success:
             try:
                 if self._attachment:
-                    webbrowser.open ('mailto:%s?subject=%s&body=%s&attach="%s"' \
-                                    % (self._email,self._subject
-                                      ,self._message,self._attachment
+                    ''' Quotes are necessary for attachments only, they
+                        will stay visible otherwise.
+                    '''
+                    webbrowser.open ('mailto:%s?subject=%s&body=%s&attach="%s"'\
+                                    % (self._email
+                                      ,self.sanitize(self._subject)
+                                      ,self.sanitize(self._message)
+                                      ,self.sanitize(self._attachment)
                                       )
                                     )
                 else:
-                    webbrowser.open ('mailto:%s?subject=%s&body=%s' \
-                                    % (self._email,self._subject
-                                      ,self._message
+                    webbrowser.open ('mailto:%s?subject=%s&body=%s'\
+                                    % (self._email
+                                      ,self.sanitize(self._subject)
+                                      ,self.sanitize(self._message)
                                       )
                                     )
             except:
-                objs.mes (func    = 'TkinterHtmlMod.response_back'
+                objs.mes (func    = 'Email.create'
                          ,level   = _('ERROR')
                          ,message = _('Failed to load an e-mail client.')
                          )
