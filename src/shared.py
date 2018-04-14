@@ -1898,7 +1898,6 @@ class WriteBinary:
 
 
 
-#todo: fix: Reading 'largest_dic' fails without this class
 class Dic:
 
     def __init__(self,file,Sortable=False):
@@ -3732,12 +3731,26 @@ class Decline:
 
 
 
+''' Values here will be kept through different modules (but not through
+    different programs both using 'shared.py').
+'''
 class Objects:
 
     def __init__(self):
         self._enchant = self._morph = self._pretty_table = self._diff \
-                      = self._pdir = self._tmpfile = self._mes = None
+                      = self._pdir = self._tmpfile = self._mes \
+                      = self._online_mt = self._online_other = None
 
+    def online_mt(self):
+        if self._online_mt is None:
+            self._online_mt = Online(MTSpecific=True)
+        return self._online_mt
+
+    def online_other(self):
+        if self._online_other is None:
+            self._online_other = Online(MTSpecific=False)
+        return self._online_other
+    
     ''' Call this externally for each GUI module like that:
         sh.objs.mes(Silent=False)
         Do not call this directly in 'sharedGUI' because cross-module
