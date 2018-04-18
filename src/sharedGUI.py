@@ -1140,7 +1140,9 @@ class Entry:
 
     def get(self,Strip=False):
         # None != 'None' != ''
-        result = sh.Input(val=self._get()).not_none()
+        result = sh.Input (title = 'Entry.get'
+                          ,value = self._get()
+                          ).not_none()
         if Strip:
             return result.strip()
         else:
@@ -1962,8 +1964,8 @@ class OptionMenu:
         self.choice = self.var.get()
         # 'OptionMenu' always returns a string
         if self.choice not in self.items:
-            self.choice = sh.Input (func_title = 'OptionMenu._get'
-                                   ,val        = self.choice
+            self.choice = sh.Input (title = 'OptionMenu._get'
+                                   ,value = self.choice
                                    ).integer()
         try:
             self.index = self.items.index(self.choice)
@@ -2893,7 +2895,10 @@ class Clipboard:
 
     def copy(self,text,CopyEmpty=True):
         if text or CopyEmpty:
-            text = str(sh.Input(val=text).not_none())
+            text = str(sh.Input (title = 'Clipboard.copy'
+                                ,value = text
+                                ).not_none()
+                      )
             objs.root().widget.clipboard_clear()
             objs._root.widget.clipboard_append(text)
             try:
@@ -2998,11 +3003,11 @@ class Canvas:
     def region (self,x=0,y=0
                ,x_border=0,y_border=0
                ):
-        x = sh.Input (func_title = 'Canvas.region'
-                     ,val        = x
+        x = sh.Input (title = 'Canvas.region'
+                     ,value = x
                      ).integer()
-        y = sh.Input (func_title = 'Canvas.region'
-                     ,val        = y
+        y = sh.Input (title = 'Canvas.region'
+                     ,value = y
                      ).integer()
         if x and y:
             self.widget.configure (scrollregion = (-x/2 - x_border

@@ -840,43 +840,43 @@ class ReadTextFile:
 
 class Input:
 
-    def __init__(self,val,func_title='Input'):
-        self.func_title = func_title
-        self.val = val
+    def __init__(self,value,title='Input'):
+        self.title = title
+        self.value = value
 
     def list(self):
-        if isinstance(self.val,list):
-            return self.val
+        if isinstance(self.value,list):
+            return self.value
         else:
-            log.append (self.func_title
+            log.append (self.title
                        ,_('WARNING')
                        ,_('Wrong input data!')
                        )
             return []
     
     def integer(self):
-        if isinstance(self.val,int):
-            return self.val
-        elif str(self.val).isdigit():
-            self.val = int(self.val)
-            log.append (self.func_title
+        if isinstance(self.value,int):
+            return self.value
+        elif str(self.value).isdigit():
+            self.value = int(self.value)
+            log.append (self.title
                        ,_('INFO')
-                       ,_('Convert "%s" to an integer') % str(self.val)
+                       ,_('Convert "%s" to an integer') % str(self.value)
                        )
         else:
-            objs.mes (func    = self.func_title
+            objs.mes (func    = self.title
                      ,level   = _('ERROR')
                      ,message = _('Integer is required at input, but found "%s"! Return 0') \
-                                % str(type(self.val))
+                                % str(type(self.value))
                      )
-            self.val = 0
-        return self.val
+            self.value = 0
+        return self.value
 
     # Insert '' instead of 'None' into text widgets
     def not_none(self):
-        if not self.val:
-            self.val = ''
-        return self.val
+        if not self.value:
+            self.value = ''
+        return self.value
 
 
 
@@ -884,7 +884,9 @@ class Text:
 
     def __init__(self,text,Auto=False):
         self.text = text
-        self.text = Input(val=self.text).not_none()
+        self.text = Input (title = 'Text.__init__'
+                          ,value = self.text
+                          ).not_none()
         # This can be useful in many cases, e.g. after OCR
         if Auto:
             ''' This will remove symbols that cannot be shown in Tcl/Tk.
@@ -2777,11 +2779,11 @@ class Email:
             all mail agents support ';')
         '''
         self._email = email
-        self._subject = Input (func_title = 'Email.__init__'
-                              ,val        = subject
+        self._subject = Input (title = 'Email.__init__'
+                              ,value = subject
                               ).not_none()
-        self._message = Input (func_title = 'Email.__init__'
-                              ,val        = message
+        self._message = Input (title = 'Email.__init__'
+                              ,value = message
                               ).not_none()
         self._attachment = attachment
         self.Success = True
@@ -3211,8 +3213,8 @@ class Words:
     def sent_p(self):
         if self.Success:
             sent_no = self.sent_no()
-            sent_no = Input (func_title = 'Words.sent_p'
-                            ,val        = sent_no
+            sent_no = Input (title = 'Words.sent_p'
+                            ,value = sent_no
                             ).integer()
             old = self._no
             result = []
@@ -3424,8 +3426,8 @@ class Words:
     def nos_by_sent_no(self,sent_no=0):
         result = (0,0)
         if self.Success:
-            sent_no = Input (func_title = 'Words.nos_by_sent_no'
-                            ,val        = sent_no
+            sent_no = Input (title = 'Words.nos_by_sent_no'
+                            ,value = sent_no
                             ).integer()
             old = self._no
             nos = []
