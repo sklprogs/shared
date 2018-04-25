@@ -3472,20 +3472,20 @@ class Words:
 class Search:
 
     def __init__(self,text=None,search=None):
-        self.Success = False
-        self.i = 0
+        self.Success    = False
+        self.i          = 0
         self._next_loop = []
         self._prev_loop = []
         if text and search:
             self.reset(text=text,search=search)
 
     def reset(self,text,search):
-        self.Success = True
-        self.i = 0
+        self.Success    = True
+        self.i          = 0
         self._next_loop = []
         self._prev_loop = []
-        self._text = text
-        self._search = search
+        self._text      = text
+        self._search    = search
         if not self._search or not self._text:
             objs.mes (func    = 'Search.__init__'
                      ,level   = _('WARNING')
@@ -4042,11 +4042,11 @@ class FixBaseName:
 class Get:
     
     def __init__(self,url,encoding='UTF-8',Verbose=True):
+        self._timeout  = 6
+        self._html     = ''
         self._url      = url
         self._encoding = encoding
         self.Verbose   = Verbose
-        self._timeout  = 6
-        self._html     = ''
         
     def _get(self):
         ''' Changing UA allows us to avoid a bot protection
