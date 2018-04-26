@@ -2674,6 +2674,7 @@ class Message:
                           ,level   = _('QUESTION')
                           ,message = self.message
                           )
+            return self.Yes
         else:
             sh.log.append ('Message.question'
                           ,_('QUESTION')

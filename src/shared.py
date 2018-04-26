@@ -965,6 +965,10 @@ class Text:
         self.text = self.text.replace('[[','').replace(']]','').replace('{','').replace('}','').replace('_','')
         return self.text
 
+    ''' If there are some brackets left after performing this operation,
+        ensure that all of them are in the right place (even when
+        the number of opening and closing brackets is the same).
+    '''
     def delete_embraced_text(self,opening_sym='(',closing_sym=')'):
         if self.text.count(opening_sym) == self.text.count(closing_sym):
             opening_parentheses = []
