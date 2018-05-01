@@ -284,6 +284,7 @@ class Top:
     def center(self,Force=False):
         ''' Make child widget always centered at the first time and up
             to a user's choice any other time (if the widget is reused).
+            Only 'tk.Tk' and 'tk.Toplevel' types are supported.
         '''
         if self.count == 1 or Force:
             width, height = self.resolution()
@@ -3205,6 +3206,29 @@ class SimpleTop:
         self.Active = True
         self.parent = parent
         self.gui()
+        
+    # Identical to 'Top.resolution'
+    def resolution(self):
+        self.widget.update_idletasks()
+        return (self.widget.winfo_screenwidth()
+               ,self.widget.winfo_screenheight()
+               )
+
+    def center(self):
+        ''' Make child widget always centered at the first time and up
+            to a user's choice any other time (if the widget is reused).
+            Basically the same as 'Top.center' (except for checking 
+            the count of showing the widget).
+            Only 'tk.Tk' and 'tk.Toplevel' types are supported.
+            Use this only after setting widget sizes (e.g., by using
+            'Geometry').
+        '''
+        width, height = self.resolution()
+        size = tuple(int(item) for item \
+               in self.widget.geometry().split('+')[0].split('x'))
+        x = width/2 - size[0]/2
+        y = height/2 - size[1]/2
+        self.widget.geometry("%dx%d+%d+%d" % (size + (x, y)))
         
     def icon(self,path):
         WidgetShared.icon(self,path)
