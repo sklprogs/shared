@@ -2336,7 +2336,8 @@ class Directory:
                        )
         return self._dirs
 
-    def files(self): # Needs absolute path
+    # Needs absolute path
+    def files(self):
         if self.Success:
             if not self._files:
                 for i in range(len(self.list())):

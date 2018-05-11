@@ -92,6 +92,9 @@ class Root:
         self.type = 'Root'
         self.widget = tk.Tk()
 
+    def idle(self):
+        self.widget.update_idletasks()
+    
     def run(self):
         self.widget.mainloop()
 
@@ -2978,23 +2981,23 @@ class Canvas:
         self.fill         = fill
         self.gui()
         
-    def move_up(self,event=None):
-        self.widget.yview_scroll(-1,'units')
+    def move_up(self,event=None,value=-1):
+        self.widget.yview_scroll(value,'units')
         
-    def move_down(self,event=None):
-        self.widget.yview_scroll(1,'units')
+    def move_down(self,event=None,value=1):
+        self.widget.yview_scroll(value,'units')
     
-    def move_page_up(self,event=None):
-        self.widget.yview_scroll(-1,'pages')
+    def move_page_up(self,event=None,value=-1):
+        self.widget.yview_scroll(value,'pages')
         
-    def move_page_down(self,event=None):
-        self.widget.yview_scroll(1,'pages')
+    def move_page_down(self,event=None,value=1):
+        self.widget.yview_scroll(value,'pages')
 
-    def move_left(self,event=None):
-        self.widget.xview_scroll(-1,'units')
+    def move_left(self,event=None,value=-1):
+        self.widget.xview_scroll(value,'units')
         
-    def move_right(self,event=None):
-        self.widget.xview_scroll(1,'units')
+    def move_right(self,event=None,value=1):
+        self.widget.xview_scroll(value,'units')
         
     def move_bottom(self,event=None):
         self.widget.yview_moveto('1.0')
@@ -3005,12 +3008,7 @@ class Canvas:
     def region (self,x=0,y=0
                ,x_border=0,y_border=0
                ):
-        x = sh.Input (title = 'Canvas.region'
-                     ,value = x
-                     ).integer()
-        y = sh.Input (title = 'Canvas.region'
-                     ,value = y
-                     ).integer()
+        # Both integer and float values are allowed at input
         if x and y:
             self.widget.configure (scrollregion = (-x/2 - x_border
                                                   ,-y/2 - y_border
@@ -3357,217 +3355,6 @@ class Image:
                 self._loader.save(self._bytes,format=ext)
                 self._bytes = self._bytes.getvalue()
         return self._bytes
-
-
-
-class TextBoxNotes:
-    
-    def __init__ (self,parent=None,NotesTop=True
-                 ,ExpandNotes=True,text='',notes=''
-                 ,title=_('Text with instructions:')
-                 ):
-        self._title      = title
-        self.NotesTop    = NotesTop
-        ''' If False, only the text of the 1st line (before the line 
-            break) will be shown.
-        '''
-        self.ExpandNotes = ExpandNotes
-        self.parent      = parent
-        self.set_parent()
-        self.gui()
-        self.title(text=self._title)
-        # Without this trick panes are not resized equally
-        self.obj.widget.config(width=0,height=0)
-        self.notes.widget.config(width=0,height=0)
-        if notes:
-            self.reset(text=text,notes=notes)
-            
-    def title(self,text=None):
-        if text:
-            self.parent.title(text)
-        else:
-            self.parent.title()
-            
-    def set_parent(self):
-        if self.parent:
-            if hasattr(self.parent,'type') \
-                and self.parent.type == 'Toplevel':
-                pass
-            else:
-                sh.log.append ('TextBoxNotes.set_parent'
-                              ,_('ERROR')
-                              ,_('Parent is not supported, using the default one.')
-                              )
-                self.default_parent()
-        else:
-            self.default_parent()
-    
-    def default_parent(self):
-        self.parent = objs.new_top()
-        Geometry(parent=self.parent).set('700x500')
-    
-    def show(self,event=None):
-        self.obj.show()
-    
-    def close(self,event=None):
-        self.obj.close()
-        
-    def interrupt(self,event=None):
-        self.obj.clear_text()
-        self.obj.close()
-        
-    def get(self,event=None):
-        self.close()
-        return self.obj.get()
-        
-    def frames(self):
-        if self.NotesTop:
-            side1, side2 = 'top', 'top'
-        else:
-            side1, side2 = 'bottom', 'top'
-        self.frame1 = Frame (parent = self.parent
-                            ,side   = side1
-                            ,expand = self.ExpandNotes
-                            )
-        self.frame2 = Frame (parent = self.parent
-                            ,side   = side2
-                            )
-        self.frame3 = Frame (parent = self.parent
-                            ,expand = False
-                            ,side   = 'bottom'
-                            )
-        self.frame4 = Frame (parent = self.frame3
-                            ,side   = 'left'
-                            )
-        self.frame5 = Frame (parent = self.frame3
-                            ,side   = 'right'
-                            )
-    
-    def buttons(self):
-        Button (parent = self.frame4
-               ,text   = _('Cancel')
-               ,side   = 'left'
-               ,hint   = _('Reject and close')
-               ,action = self.interrupt
-               )
-        Button (parent = self.frame4
-               ,text   = _('Clear')
-               ,side   = 'right'
-               ,hint   = _('Delete all text')
-               ,action = self.obj.reset_data
-               )
-        Button (parent = self.frame5
-               ,text   = 'OK'
-               ,side   = 'right'
-               ,hint   = _('Accept and close')
-               ,action = self.close
-               )
-    
-    def txts(self):
-        self.notes = TextBox (parent    = self.frame1
-                             ,Composite = True
-                             ,state     = 'disabled'
-                             ,ScrollY   = False
-                             )
-        self.obj = TextBox (parent        = self.frame2
-                           ,Composite     = True
-                           ,SpecialReturn = False
-                           )
-    
-    def bindings(self):
-        bind (obj      = self.parent
-             ,bindings = ['<Escape>','<Control-w>','<Control-q>']
-             ,action   = self.interrupt
-             )
-        bind (obj      = self.parent
-             ,bindings = ['<F2>','<Control-s>']
-             ,action   = self.close
-             )
-    
-    def gui(self):
-        self.frames()
-        self.txts()
-        self.buttons()
-        self.bindings()
-        self.obj.focus()
-                              
-    def reset(self,text='',notes=''):
-        self.notes.reset_data()
-        if notes:
-            self.notes.insert(text=notes)
-        self.obj.reset_data()
-        if text:
-            self.obj.insert(text=text)
-
-
-
-''' General: Editable ListBox
-    Yatube: Subscribe, unsubscribe, add a channel to or remove it from
-    the blocklist.
-'''
-class Manage:
-    
-    def __init__ (self,title=_('Manage subscriptions')
-                 ,notes='',icon=None
-                 ):
-        self._title = title
-        self._notes = notes
-        self._icon  = icon
-        self.gui()
-    
-    def get(self):
-        return self.obj.lst
-    
-    def gui(self):
-        self.parent = objs.new_top()
-        self.lb_frame  = Frame (parent = self.parent
-                               ,side   = 'left'
-                               )
-        self.but_frame = Frame (parent = self.parent
-                               ,side   = 'right'
-                               ,expand = False
-                               )
-        Geometry(parent=self.parent).set('350x350')
-        self.obj = ListBox (parent          = self.lb_frame
-                           ,icon            = self._icon
-                           ,SelectionCloses = False
-                           ,Composite       = True
-                           ,title           = self._title
-                           )
-        Button (parent = self.but_frame
-               ,action     = self.add
-               ,text       = _('Add')
-               ,side       = 'top'
-               ,width      = None
-               ,height     = None
-               )
-        Button (parent = self.but_frame
-               ,action     = self.obj.delete
-               ,text       = _('Remove')
-               ,side       = 'top'
-               ,width      = None
-               ,height     = None
-               )
-        
-    def fill(self,lst=[]):
-        self.obj.reset(lst=lst,title=self._title)
-    
-    def add(self,event=None):
-        notes = objs.txtnotes(notes=self._notes)
-        notes.show()
-        result = notes.get()
-        if result:
-            result = result.splitlines()
-            result = [item.strip() for item in result if item.strip()]
-            for item in result:
-                if not item in self.obj.lst:
-                    self.obj.insert(string=item)
-    
-    def show(self,event=None):
-        self.parent.show()
-        
-    def close(self,event=None):
-        self.parent.close()
 
 
 
