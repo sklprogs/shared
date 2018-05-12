@@ -2392,10 +2392,15 @@ class WaitBox:
         #self.obj.center(Force=1)
         self.widget = self.obj.widget
         self.widget.geometry('300x150')
-        self.label = tk.Label(self.widget,text=_('Please wait...'))
-        self.label.pack(expand=True)
-        self.close()
+        self.label = Label (parent = self
+                           ,text   = _('Please wait...')
+                           ,expand = True
+                           ,Close  = True
+                           )
 
+    def update(self):
+        self.label.widget.update()
+    
     # Use tuple for 'args' to pass multiple arguments
     def reset (self,func_title=None,func=None
               ,args=None,message=None
@@ -2424,6 +2429,7 @@ class WaitBox:
 
     def show(self):
         self.obj.show(Lock=False)
+        self.update()
         self.obj.center(Force=1) # cur
 
     def close(self):
@@ -2439,11 +2445,11 @@ class WaitBox:
         if message:
             self._message = message
         if self._message:
-            self.label.config (text=self._message + '\n\n' \
-                              + _('Please wait...')
-                              )
+            self.label.text (self._message + '\n\n' \
+                            + _('Please wait...')
+                            )
         else:
-            self.label.config(text=_('Please wait...'))
+            self.label.text(_('Please wait...'))
 
 
 
