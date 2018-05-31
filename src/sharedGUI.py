@@ -1648,9 +1648,9 @@ class ListBox:
         self._resize()
         self._scroll_config()
         self.icon(path=self._icon)
-        self.widget.focus_set()
         self.bindings()
         if not self.Composite:
+            self.widget.focus_set()
             # Тип родительского виджета может быть любым
             if not hasattr(self.parent,'close_button'):
                 self.parent.close_button = Button (
@@ -2430,7 +2430,7 @@ class WaitBox:
     def show(self):
         self.obj.show(Lock=False)
         self.update()
-        self.obj.center(Force=1) # cur
+        self.obj.center(Force=1)
 
     def close(self):
         self.obj.close()
