@@ -1554,6 +1554,9 @@ class ListBox:
                    ,action = action
                    )
 
+    def focus(self,event=None):
+        self.widget.focus_set()
+    
     def trigger(self,event=None):
         if self.action:
             ''' Binding just to '<Button-1>' does not work. We do not
