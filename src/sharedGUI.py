@@ -117,7 +117,7 @@ class Root:
 
 # Do not use graphical logging there
 class WidgetShared:
-
+    
     def focus(object,event=None):
         object.widget.focus()
 
@@ -1454,7 +1454,7 @@ class ToolTipBase:
             Message (func    = 'ToolTipBase.showtip'
                     ,level   = _('ERROR')
                     ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
-                    % (str(self.hint_dir),'top, bottom')
+                               % (str(self.hint_dir),'top, bottom')
                     )
         self.tipwindow = tw = tk.Toplevel(self.button)
         tw.wm_overrideredirect(1)
@@ -1532,6 +1532,7 @@ class ListBox:
                 ):
         # See 'WidgetShared'
         self.state = 'normal'
+        self.type  = 'ListBox'
         ''' 'action': A user-defined function that is run when
             pressing Up/Down arrow keys and LMB. There is a problem
             binding it externally, so we bind it here.
@@ -1761,8 +1762,8 @@ class ListBox:
         self.parent.close()
 
     def fill(self):
-        for i in range(len(self.lst)):
-            self.widget.insert(tk.END,self.lst[i])
+        for item in self.lst:
+            self.widget.insert(tk.END,item)
 
     def title(self,text=None):
         if text:
@@ -1824,6 +1825,18 @@ class ListBox:
         self.index_subtract()
         self.select()
         self.trigger()
+        
+    def move_top(self,event=None):
+        if self.lst:
+            self._index = 0
+            self.select()
+            self.trigger()
+    
+    def move_bottom(self,event=None):
+        if self.lst:
+            self._index = len(self.lst) - 1
+            self.select()
+            self.trigger()
 
 
 
