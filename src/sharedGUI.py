@@ -1228,7 +1228,6 @@ class Frame:
 
 
 
-#todo: Нужно ли на входе ,bindings=[]?
 class Button:
 
     def __init__ (self
@@ -1283,7 +1282,6 @@ class Button:
         self.side           = side
         self.inactive_image = self.image(inactive)
         self.active_image   = self.image(active)
-        
         self.gui()
         
     def bindings(self):
@@ -1321,7 +1319,10 @@ class Button:
                                     )
         self.title(button_text=self.text)
         self.set_hint()
-        self.show()
+        self.widget.pack (expand = self.expand
+                         ,side   = self.side
+                         ,fill   = self.fill
+                         )
         self.bindings()
         if self.TakeFocus:
             self.widget.focus_set()
@@ -1332,14 +1333,13 @@ class Button:
                 self.hint_extended = self.hint + '\n' + str(self._bindings).replace('[','').replace(']','').replace('<','').replace('>','').replace("'",'')
             else:
                 self.hint_extended = self.hint
-            self.tip = ToolTip (button      = self.widget
+            self.tip = ToolTip (obj         = self
                                ,text        = self.hint_extended
                                ,hint_delay  = self.hint_delay
                                ,hint_width  = self.hint_width
                                ,hint_height = self.hint_height
                                ,hint_bg     = self.hint_bg
                                ,hint_dir    = self.hint_dir
-                               ,button_side = self.side
                                )
     
     def title(self,button_text='Press me'):
@@ -1387,104 +1387,112 @@ class Button:
             #self.widget.config(text="I'm Inactive")
 
     def show(self):
-        self.widget.pack (expand = self.expand
-                         ,side   = self.side
-                         ,fill   = self.fill
-                         )
+        self.parent.show()
 
     def close(self):
-        self.widget.pack_forget()
+        self.parent.close()
 
     def focus(self,event=None):
         self.widget.focus_set()
 
 
 
-# Всплывающие подсказки для кнопок
-# see also 'calltips'
-# based on idlelib.ToolTip
+# Pop-up tips; see also 'calltips'; based on idlelib.ToolTip
 class ToolTipBase:
 
-    def __init__(self,button):
-        self.button = button
-        self.tipwindow = None
-        self.id = None
-        self.x = self.y = 0
-        self._id1 = self.button.bind("<Enter>",self.enter)
-        self._id2 = self.button.bind("<Leave>",self.leave)
-        self._id3 = self.button.bind("<ButtonPress>",self.leave)
+    def __init__(self,obj):
+        self.obj    = obj
+        self.widget = self.obj.widget
+        self.tip    = None
+        self.id     = None
+        self.x      = 0
+        self.y      = 0
+        self.bindings()
+    
+    def bindings(self):
+        self.bind_mouse()
+                    
+    def bind_mouse(self):
+        bind (obj      = self.obj
+             ,bindings = '<Enter>'
+             ,action   = self.enter
+             )
+        bind (obj      = self.obj
+             ,bindings = ['<Leave>','<ButtonPress>']
+             ,action   = self.leave
+             )
 
-    def enter(self, event=None):
+    def enter(self,event=None):
         self.schedule()
 
-    def leave(self, event=None):
+    def leave(self,event=None):
         self.unschedule()
         self.hidetip()
 
     def schedule(self):
         self.unschedule()
-        self.id = self.button.after(self.hint_delay,self.showtip)
+        self.id = self.widget.after(self.hint_delay,self.showtip)
 
     def unschedule(self):
         id = self.id
         self.id = None
         if id:
-            self.button.after_cancel(id)
+            self.widget.after_cancel(id)
 
     def showtip(self):
-        if self.tipwindow:
+        if self.tip:
             return
         ''' The tip window must be completely outside the button;
             otherwise, when the mouse enters the tip window we get
             a leave event and it disappears, and then we get an enter
             event and it reappears, and so on forever :-(
+            Tip coordinates are calculated such that, despite different
+            sizes, centers of a horizontal tip and button would match.
         '''
-        ''' Координаты подсказки рассчитываются так, чтобы по
-            горизонтали подсказка и кнопка, несмотря на разные размеры,
-            совпадали бы центрами.
-        '''
-        x = self.button.winfo_rootx() + self.button.winfo_width()/2 \
+        x = self.widget.winfo_rootx() + self.widget.winfo_width()/2 \
                                       - self.hint_width/2
         if self.hint_dir == 'bottom':
-            y = self.button.winfo_rooty() + self.button.winfo_height() \
+            y = self.widget.winfo_rooty() + self.widget.winfo_height() \
                                           + 1
         elif self.hint_dir == 'top':
-            y = self.button.winfo_rooty() - self.hint_height - 1
+            y = self.widget.winfo_rooty() - self.hint_height - 1
         else:
             Message (func    = 'ToolTipBase.showtip'
                     ,level   = _('ERROR')
                     ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
                                % (str(self.hint_dir),'top, bottom')
                     )
-        self.tipwindow = tw = tk.Toplevel(self.button)
-        tw.wm_overrideredirect(1)
+        self.tip = SimpleTop(parent=self.obj)
+        self.tip.widget.wm_overrideredirect(1)
         # "+%d+%d" is not enough!
         sh.log.append ('ToolTipBase.showtip'
                       ,_('INFO')
                       ,_('Changing "%s" widget geometry to "%dx%d+%d+%d"') \
                       % ('tw',self.hint_width,self.hint_height,x,y)
                       )
-        tw.wm_geometry ("%dx%d+%d+%d" % (self.hint_width
-                                        ,self.hint_height
-                                        ,x, y
-                                        )
-                       )
+        self.tip.widget.wm_geometry ("%dx%d+%d+%d" % (self.hint_width
+                                                     ,self.hint_height
+                                                     ,x, y
+                                                     )
+                                    )
         self.showcontents()
 
     def hidetip(self):
-        tw = self.tipwindow
-        self.tipwindow = None
+        tw = self.tip
+        self.tip = None
         if tw:
-            tw.destroy()
+            tw.widget.destroy()
 
 
 
 class ToolTip(ToolTipBase):
 
-    def __init__(self,button,text='Sample text',hint_delay=800
-                ,hint_width=280,hint_height=40,hint_bg='#ffffe0'
+    def __init__(self,obj,text='Sample text'
+                ,hint_delay=800,hint_width=280
+                ,hint_height=40,hint_bg='#ffffe0'
                 ,hint_dir='top',hint_bwidth=1
-                ,hint_bcolor='navy',button_side='left'):
+                ,hint_bcolor='navy'
+                ):
         self.text        = text
         self.hint_delay  = hint_delay
         self.hint_dir    = hint_dir
@@ -1493,23 +1501,22 @@ class ToolTip(ToolTipBase):
         self.hint_height = hint_height
         self.hint_width  = hint_width
         self.hint_bwidth = hint_bwidth
-        self.button_side = button_side
-        ToolTipBase.__init__(self,button)
+        ToolTipBase.__init__(self,obj=obj)
 
     def showcontents(self):
-        frame = tk.Frame (self.tipwindow
-                         ,background  = self.hint_bcolor
-                         ,borderwidth = self.hint_bwidth
+        self.frm = Frame (parent = self.tip
+                         ,bg     = self.hint_bcolor
+                         ,bd     = self.hint_bwidth
+                         ,expand = False
                          )
-        frame.pack()
-        self.label = tk.Label (frame
-                              ,text       = self.text
-                              ,justify    = 'center'
-                              ,background = self.hint_bg
-                              ,width      = self.hint_width
-                              ,height     = self.hint_height
-                              )
-        self.label.pack() #expand=1,fill='x'
+        self.lbl = Label (parent  = self.frm
+                         ,text    = self.text
+                         ,bg      = self.hint_bg
+                         ,width   = self.hint_width
+                         ,height  = self.hint_height
+                         ,justify = 'center'
+                         ,Close   = False
+                         )
 
 
 
@@ -2484,23 +2491,25 @@ class Label:
                  ,expand=False,ipadx=None,ipady=None
                  ,image=None,fg=None,bg=None
                  ,anchor=None,Close=True,width=None
-                 ,height=None
+                 ,height=None,justify=None
                  ):
-        self.type   = 'Label'
-        self.parent = parent
-        self.side   = side
-        self.fill   = fill
-        self.expand = expand
-        self._text  = text
-        self._font  = font
-        self.ipadx  = ipadx
-        self.ipady  = ipady
-        self.image  = image
-        self.bg     = bg
-        self.fg     = fg
-        self.anchor = anchor
-        self.width  = width
-        self.height = height
+        self.type    = 'Label'
+        self.parent  = parent
+        self.side    = side
+        self.fill    = fill
+        self.expand  = expand
+        self._text   = text
+        self._font   = font
+        self.ipadx   = ipadx
+        self.ipady   = ipady
+        self.image   = image
+        self.bg      = bg
+        self.fg      = fg
+        self.anchor  = anchor
+        self.width   = width
+        self.height  = height
+        # Usually the alignment is done by tuning the parent
+        self.justify = justify
         self.gui()
         if Close:
             self.close()
@@ -3711,6 +3720,13 @@ class ProgressBar:
                            )
         self.canvas.move_bottom()
         return self._item
+
+
+
+class WidgetObject:
+    
+    def __init__(self,widget):
+        self.widget = widget
 
 
 
