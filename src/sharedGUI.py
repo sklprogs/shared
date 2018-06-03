@@ -1467,8 +1467,8 @@ class ToolTipBase:
         # "+%d+%d" is not enough!
         sh.log.append ('ToolTipBase.showtip'
                       ,_('INFO')
-                      ,_('Changing "%s" widget geometry to "%dx%d+%d+%d"') \
-                      % ('tw',self.hint_width,self.hint_height,x,y)
+                      ,_('Set the geometry to "%dx%d+%d+%d"') \
+                      % (self.hint_width,self.hint_height,x,y)
                       )
         self.tip.widget.wm_geometry ("%dx%d+%d+%d" % (self.hint_width
                                                      ,self.hint_height
@@ -2032,7 +2032,8 @@ def action(event=None):
     h_selection.get()
     h_selection.set()
 '''
-class Selection: # Selecting words only
+# Selecting words only
+class Selection:
 
     def __init__(self,h_widget,words=None):
         self.h_widget = h_widget
@@ -2244,7 +2245,7 @@ class Geometry:
             self._geom = self.parent.widget.geometry()
             sh.log.append ('Geometry.save'
                           ,_('INFO')
-                          ,_('Saved geometry: %s') % self._geom
+                          ,_('Save geometry: %s') % self._geom
                           )
         else:
             Message (func    = 'Geometry.save'
@@ -2257,7 +2258,7 @@ class Geometry:
             if self._geom:
                 sh.log.append ('Geometry.restore'
                               ,_('INFO')
-                              ,_('Restoring geometry: %s') % self._geom
+                              ,_('Restore geometry: %s') % self._geom
                               )
                 self.parent.widget.geometry(self._geom)
             else:
@@ -3727,6 +3728,185 @@ class WidgetObject:
     
     def __init__(self,widget):
         self.widget = widget
+
+
+
+# Make widget 'obj2' immediately adjacent to 'obj1'
+class AttachWidget:
+    
+    def __init__ (self,obj1,obj2
+                 ,anchor='N'
+                 ):
+        self.values()
+        self.obj1   = obj1
+        self.obj2   = obj2
+        self.anchor = anchor
+        self.check()
+        
+    def values(self):
+        self.anchors = ('N','NE','NW','E','EN','ES','S','SE','SW','W'
+                       ,'WN','WS'
+                       )
+        self.Success = True
+        self.w1 = 0
+        self.h1 = 0
+        self.w2 = 0
+        self.h2 = 0
+        self.x1 = 0
+        self.y1 = 0
+        self.x2 = 0
+        self.y2 = 0
+    
+    def check(self):
+        if self.obj1 and self.obj2:
+            if hasattr(self.obj1,'widget') \
+            and hasattr(self.obj2,'widget'):
+                self.widget1 = self.obj1.widget
+                self.widget2 = self.obj2.widget
+            else:
+                self.Success = False
+                sh.log.append ('AttachWidget.__init__'
+                              ,_('WARNING')
+                              ,_('Wrong input data!')
+                              )
+        else:
+            self.Success = False
+            sh.log.append ('AttachWidget.__init__'
+                          ,_('WARNING')
+                          ,_('Empty input is not allowed!')
+                          )
+        if self.anchor not in self.anchors:
+            self.Success = False
+            Message (func    = 'AttachWidget.check'
+                    ,level   = _('ERROR')
+                    ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+                               % (str(self.anchor)
+                                 ,', '.join(self.anchors)
+                                 )
+                    )
+    
+    def _ne(self):
+        self.x2 = self.x1
+        self.y2 = self.y1 - self.h2
+    
+    def _n(self):
+        self.x2 = self.x1 + self.w1/2 - self.w2/2
+        self.y2 = self.y1 - self.h2
+    
+    def _nw(self):
+        self.x2 = self.x1 + self.w1 - self.w2
+        self.y2 = self.y1 - self.h2
+                      
+    def _en(self):
+        self.x2 = self.x1 - self.w2
+        self.y2 = self.y1
+    
+    def _e(self):
+        self.x2 = self.x1 - self.w2
+        self.y2 = self.y1 + self.h1/2 - self.h2/2
+    
+    def _es(self):
+        self.x2 = self.x1 - self.w2
+        self.y2 = self.y1 + self.h1 - self.h2
+    
+    def _se(self):
+        self.x2 = self.x1
+        self.y2 = self.y1 + self.h1
+
+    def _s(self):
+        self.x2 = self.x1 + self.w1/2 - self.w2/2
+        self.y2 = self.y1 + self.h1
+    
+    def _sw(self):
+        self.x2 = self.x1 + self.w1 - self.w2
+        self.y2 = self.y1 + self.h1
+    
+    def _wn(self):
+        self.x2 = self.x1 + self.w1
+        self.y2 = self.y1
+    
+    def _w(self):
+        self.x2 = self.x1 + self.w1
+        self.y2 = self.y1 + self.h1/2 - self.h2/2
+                      
+    def _ws(self):
+        self.x2 = self.x1 + self.w1
+        self.y2 = self.y1 + self.h1 - self.h2
+    
+    def set(self):
+        if self.Success:
+            if self.anchor == 'N':
+                self._n()
+            elif self.anchor == 'NE':
+                self._ne()
+            elif self.anchor == 'NW':
+                self._nw()
+            elif self.anchor == 'E':
+                self._e()
+            elif self.anchor == 'EN':
+                self._en()
+            elif self.anchor == 'ES':
+                self._es()
+            elif self.anchor == 'S':
+                self._s()
+            elif self.anchor == 'SE':
+                self._se()
+            elif self.anchor == 'SW':
+                self._sw()
+            elif self.anchor == 'W':
+                self._w()
+            elif self.anchor == 'WN':
+                self._wn()
+            elif self.anchor == 'WS':
+                self._ws()
+            else:
+                Message (func    = 'AttachWidget.set'
+                        ,level   = _('ERROR')
+                        ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+                                   % (str(self.anchor)
+                                     ,', '.join(self.anchors)
+                                     )
+                        )
+            geom = Geometry(parent=self.obj2)
+            geom._geom = '%dx%d+%d+%d' % (self.w2,self.h2
+                                         ,self.x2,self.y2
+                                         )
+            geom.restore()
+        else:
+            sh.log.append ('AttachWidget.set'
+                          ,_('WARNING')
+                          ,_('Operation has been canceled.')
+                          )
+    
+    def get(self):
+        if self.Success:
+            self.x1 = self.widget1.winfo_rootx()
+            self.y1 = self.widget1.winfo_rooty()
+            self.x2 = self.widget2.winfo_rootx()
+            self.y2 = self.widget2.winfo_rooty()
+            self.w1 = self.widget1.winfo_width()
+            self.h1 = self.widget1.winfo_height()
+            self.w2 = self.widget2.winfo_width()
+            self.h2 = self.widget2.winfo_height()
+            sh.log.append ('AttachWidget.get'
+                          ,_('DEBUG')
+                          ,_('Widget 1 geometry: %dx%d+%d+%d') \
+                          % (self.w1,self.h1,self.x1,self.y1)
+                          )
+            sh.log.append ('AttachWidget.get'
+                          ,_('DEBUG')
+                          ,_('Widget 2 geometry: %dx%d+%d+%d') \
+                          % (self.w2,self.h2,self.x2,self.y2)
+                          )
+        else:
+            sh.log.append ('AttachWidget.get'
+                          ,_('WARNING')
+                          ,_('Operation has been canceled.')
+                          )
+    
+    def run(self,event=None):
+        self.get()
+        self.set()
 
 
 
