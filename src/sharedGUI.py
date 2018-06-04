@@ -112,6 +112,9 @@ class Root:
 
     def update(self):
         self.widget.update()
+        
+    def wait(self):
+        self.widget.wait_window()
 
 
 
