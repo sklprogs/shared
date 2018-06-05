@@ -2411,12 +2411,10 @@ class WaitBox:
         self.type   = 'WaitBox'
         self.parent = parent
         self._func  = self._title = self._args = self._message = None
-        self.obj    = Top (parent = self.parent
-                          ,Maximize   = False
-                          ,AutoCenter = True
-                          )
-        #todo: fix centering in Top.center() when Lock=False
-        #self.obj.center(Force=1)
+        ''' For some reason, using common 'Top' may further cause
+            problems in Windows with focusing.
+        '''
+        self.obj    = SimpleTop(parent=self.parent)
         self.widget = self.obj.widget
         self.widget.geometry('300x150')
         self.label = Label (parent = self
@@ -2455,9 +2453,9 @@ class WaitBox:
         return func_res
 
     def show(self):
-        self.obj.show(Lock=False)
+        self.obj.show()
+        self.obj.center()
         self.update()
-        self.obj.center(Force=1)
 
     def close(self):
         self.obj.close()
@@ -3239,6 +3237,12 @@ class SimpleTop:
         self.Active = True
         self.parent = parent
         self.gui()
+        
+    def destroy(self):
+        self.kill()
+
+    def kill(self):
+        self.widget.destroy()
         
     # Identical to 'Top.resolution'
     def resolution(self):
