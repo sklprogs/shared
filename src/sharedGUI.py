@@ -1460,6 +1460,7 @@ class ToolTipBase:
         elif self.hint_dir == 'top':
             y = self.widget.winfo_rooty() - self.hint_height - 1
         else:
+            y = 0
             Message (func    = 'ToolTipBase.showtip'
                     ,level   = _('ERROR')
                     ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
