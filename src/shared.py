@@ -1089,6 +1089,7 @@ class Text:
             if match:
                 return match.group(1)
 
+    #todo: del
     def extract_date_hash(self):
         hash = -1
         # Only strings at input
@@ -1305,8 +1306,8 @@ class Time:
         self.pattern       = pattern
         self.MondayWarning = MondayWarning
         self._timestamp    = _timestamp
-        self._date = self._instance = self._date = self._year \
-                   = self._month_abbr = self._month_name = ''
+        self._instance = self._date = self._year = self._month_abbr \
+                       = self._month_name = ''
         # Prevent recursion
         if self._timestamp or self._timestamp == 0:
             self.instance()
@@ -1574,6 +1575,7 @@ class File:
             try:
                 self.atime = os.path.getatime(self.file)
                 # Further steps: datetime.date.fromtimestamp(self.atime).strftime(self.pattern)
+                return self.atime
             except:
                 objs.mes (func    = 'File.access_time'
                          ,level   = _('WARNING')
@@ -1647,6 +1649,7 @@ class File:
             try:
                 self.mtime = os.path.getmtime(self.file)
                 # Further steps: datetime.date.fromtimestamp(self.mtime).strftime(self.pattern)
+                return self.mtime
             except:
                 objs.mes (func    = 'File.modification_time'
                          ,level   = _('WARNING')
@@ -2322,7 +2325,8 @@ class Directory:
                 self.files()
         return self._rel_files
 
-    def dirs(self): # Needs absolute path
+    # Needs absolute path
+    def dirs(self):
         if self.Success:
             if not self._dirs:
                 for i in range(len(self.list())):
@@ -4253,7 +4257,6 @@ class References:
                        ,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
-
 
 
 ''' If there are problems with import or tkinter's wait_variable, put

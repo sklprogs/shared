@@ -3587,7 +3587,12 @@ class ProgressBarItem:
     def text (self,file='',cur_size=0
              ,total=0,rate=0,eta=0
              ):
-        message = _('File: "%s"; %d/%d MB; Rate: %d kbps; ETA: %d s')\
+        ''' Using a string here instead of an integer in the rate allows
+            to prevent resizing GUI each time when the rate constantly
+            fluctuates from a 3-digit value to a 4-digit value
+            (e.g., 999 kbps -> 1000 kbps and vice versa).
+        '''
+        message = _('File: "%s"; %d/%d MB; Rate: %s kbps; ETA: %d s')\
                   % (file,cur_size,total,rate,eta)
         self.label.text(message)
                               
