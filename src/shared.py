@@ -1110,15 +1110,64 @@ class Text:
         '''
         return hash
 
+    def enclose(self,sym='"'):
+        open_sym = close_sym = sym
+        if sym == '(':
+            close_sym = ')'
+        elif sym == '[':
+            close_sym = ']'
+        elif sym == '{':
+            close_sym = '}'
+        elif sym == '“':
+            close_sym = '”'
+        elif sym == '«':
+            close_sym = '»'
+        self.text = open_sym + self.text + close_sym
+        return self.text
+    
     # Shorten a string up to a max length
-    def shorten(self,max_len=10,Enclose=False,FromEnd=False):
+    def shorten (self,max_len=10,Enclose=False
+                ,FromEnd=False,ShowGap=True,sym='"'
+                ):
         if len(self.text) > max_len:
-            if FromEnd:
-                self.text = '...' + self.text[len(self.text)-max_len:]
+            if Enclose:
+                enc_len = 2 * len(sym)
+                if max_len > enc_len:
+                    max_len -= enc_len
+            if ShowGap:
+                if max_len > 3:
+                    gap = '...'
+                    max_len -= 3
+                else:
+                    gap = ''
             else:
-                self.text = self.text[0:max_len] + '...'
+                gap = ''
+            if FromEnd:
+                self.text = gap + self.text[len(self.text)-max_len:]
+            else:
+                self.text = self.text[0:max_len] + gap
         if Enclose:
-            self.text = '"' + self.text + '"' #'[' + self.text + ']'
+            self.enclose(sym=sym)
+        return self.text
+        
+    def grow(self,max_len=20,FromEnd=False,sym=' '):
+        delta = max_len - len(self.text)
+        if delta > 0:
+            if FromEnd:
+                self.text += delta * sym
+            else:
+                self.text = delta * sym + self.text
+        return self.text
+        
+    def fit(self,max_len=20,FromEnd=False,sym=' '):
+        self.shorten (max_len = max_len
+                     ,FromEnd = FromEnd
+                     ,ShowGap = False
+                     )
+        self.grow (max_len = max_len
+                  ,FromEnd = FromEnd
+                  ,sym     = sym
+                  )
         return self.text
 
     ''' Replace commas or semicolons with line breaks or line breaks
