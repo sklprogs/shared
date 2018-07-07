@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-03 14:27+0300\n"
-"PO-Revision-Date: 2018-06-03 14:29+0300\n"
+"POT-Creation-Date: 2018-07-07 11:18+0300\n"
+"PO-Revision-Date: 2018-07-07 11:19+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -23,64 +23,64 @@ msgstr ""
 #: /usr/local/bin/shared/src/sharedGUI.py:34
 #: /usr/local/bin/shared/src/sharedGUI.py:40
 #: /usr/local/bin/shared/src/sharedGUI.py:60
-#: /usr/local/bin/shared/src/sharedGUI.py:137
-#: /usr/local/bin/shared/src/sharedGUI.py:142
-#: /usr/local/bin/shared/src/sharedGUI.py:161
-#: /usr/local/bin/shared/src/sharedGUI.py:176
-#: /usr/local/bin/shared/src/sharedGUI.py:187
-#: /usr/local/bin/shared/src/sharedGUI.py:202
-#: /usr/local/bin/shared/src/sharedGUI.py:218
-#: /usr/local/bin/shared/src/sharedGUI.py:224
-#: /usr/local/bin/shared/src/sharedGUI.py:414
-#: /usr/local/bin/shared/src/sharedGUI.py:826
-#: /usr/local/bin/shared/src/sharedGUI.py:839
-#: /usr/local/bin/shared/src/sharedGUI.py:848
-#: /usr/local/bin/shared/src/sharedGUI.py:857
-#: /usr/local/bin/shared/src/sharedGUI.py:875
-#: /usr/local/bin/shared/src/sharedGUI.py:892
-#: /usr/local/bin/shared/src/sharedGUI.py:899
-#: /usr/local/bin/shared/src/sharedGUI.py:962
-#: /usr/local/bin/shared/src/sharedGUI.py:1461
-#: /usr/local/bin/shared/src/sharedGUI.py:1729
-#: /usr/local/bin/shared/src/sharedGUI.py:1746
-#: /usr/local/bin/shared/src/sharedGUI.py:1933
-#: /usr/local/bin/shared/src/sharedGUI.py:1946
-#: /usr/local/bin/shared/src/sharedGUI.py:2001
-#: /usr/local/bin/shared/src/sharedGUI.py:2126
-#: /usr/local/bin/shared/src/sharedGUI.py:2252
-#: /usr/local/bin/shared/src/sharedGUI.py:2271
-#: /usr/local/bin/shared/src/sharedGUI.py:2288
-#: /usr/local/bin/shared/src/sharedGUI.py:2293
-#: /usr/local/bin/shared/src/sharedGUI.py:2300
-#: /usr/local/bin/shared/src/sharedGUI.py:2314
-#: /usr/local/bin/shared/src/sharedGUI.py:2326
-#: /usr/local/bin/shared/src/sharedGUI.py:2337
-#: /usr/local/bin/shared/src/sharedGUI.py:2346
-#: /usr/local/bin/shared/src/sharedGUI.py:2357
-#: /usr/local/bin/shared/src/sharedGUI.py:2389
-#: /usr/local/bin/shared/src/sharedGUI.py:2394
-#: /usr/local/bin/shared/src/sharedGUI.py:2448
-#: /usr/local/bin/shared/src/sharedGUI.py:2548
-#: /usr/local/bin/shared/src/sharedGUI.py:2650
-#: /usr/local/bin/shared/src/sharedGUI.py:2657
-#: /usr/local/bin/shared/src/sharedGUI.py:2663
-#: /usr/local/bin/shared/src/sharedGUI.py:2667
-#: /usr/local/bin/shared/src/sharedGUI.py:2678
-#: /usr/local/bin/shared/src/sharedGUI.py:2683
-#: /usr/local/bin/shared/src/sharedGUI.py:2792
-#: /usr/local/bin/shared/src/sharedGUI.py:2799
-#: /usr/local/bin/shared/src/sharedGUI.py:2802
-#: /usr/local/bin/shared/src/sharedGUI.py:2922
-#: /usr/local/bin/shared/src/sharedGUI.py:2947
-#: /usr/local/bin/shared/src/sharedGUI.py:2954
-#: /usr/local/bin/shared/src/sharedGUI.py:2959
-#: /usr/local/bin/shared/src/sharedGUI.py:2975
-#: /usr/local/bin/shared/src/sharedGUI.py:2987
-#: /usr/local/bin/shared/src/sharedGUI.py:3160
-#: /usr/local/bin/shared/src/sharedGUI.py:3191
-#: /usr/local/bin/shared/src/sharedGUI.py:3338
-#: /usr/local/bin/shared/src/sharedGUI.py:3781
-#: /usr/local/bin/shared/src/sharedGUI.py:3864
+#: /usr/local/bin/shared/src/sharedGUI.py:140
+#: /usr/local/bin/shared/src/sharedGUI.py:145
+#: /usr/local/bin/shared/src/sharedGUI.py:164
+#: /usr/local/bin/shared/src/sharedGUI.py:179
+#: /usr/local/bin/shared/src/sharedGUI.py:190
+#: /usr/local/bin/shared/src/sharedGUI.py:205
+#: /usr/local/bin/shared/src/sharedGUI.py:221
+#: /usr/local/bin/shared/src/sharedGUI.py:227
+#: /usr/local/bin/shared/src/sharedGUI.py:417
+#: /usr/local/bin/shared/src/sharedGUI.py:829
+#: /usr/local/bin/shared/src/sharedGUI.py:842
+#: /usr/local/bin/shared/src/sharedGUI.py:851
+#: /usr/local/bin/shared/src/sharedGUI.py:860
+#: /usr/local/bin/shared/src/sharedGUI.py:878
+#: /usr/local/bin/shared/src/sharedGUI.py:895
+#: /usr/local/bin/shared/src/sharedGUI.py:902
+#: /usr/local/bin/shared/src/sharedGUI.py:965
+#: /usr/local/bin/shared/src/sharedGUI.py:1465
+#: /usr/local/bin/shared/src/sharedGUI.py:1733
+#: /usr/local/bin/shared/src/sharedGUI.py:1750
+#: /usr/local/bin/shared/src/sharedGUI.py:1937
+#: /usr/local/bin/shared/src/sharedGUI.py:1950
+#: /usr/local/bin/shared/src/sharedGUI.py:2005
+#: /usr/local/bin/shared/src/sharedGUI.py:2130
+#: /usr/local/bin/shared/src/sharedGUI.py:2256
+#: /usr/local/bin/shared/src/sharedGUI.py:2275
+#: /usr/local/bin/shared/src/sharedGUI.py:2292
+#: /usr/local/bin/shared/src/sharedGUI.py:2297
+#: /usr/local/bin/shared/src/sharedGUI.py:2304
+#: /usr/local/bin/shared/src/sharedGUI.py:2318
+#: /usr/local/bin/shared/src/sharedGUI.py:2330
+#: /usr/local/bin/shared/src/sharedGUI.py:2341
+#: /usr/local/bin/shared/src/sharedGUI.py:2350
+#: /usr/local/bin/shared/src/sharedGUI.py:2361
+#: /usr/local/bin/shared/src/sharedGUI.py:2393
+#: /usr/local/bin/shared/src/sharedGUI.py:2398
+#: /usr/local/bin/shared/src/sharedGUI.py:2450
+#: /usr/local/bin/shared/src/sharedGUI.py:2550
+#: /usr/local/bin/shared/src/sharedGUI.py:2652
+#: /usr/local/bin/shared/src/sharedGUI.py:2659
+#: /usr/local/bin/shared/src/sharedGUI.py:2665
+#: /usr/local/bin/shared/src/sharedGUI.py:2669
+#: /usr/local/bin/shared/src/sharedGUI.py:2680
+#: /usr/local/bin/shared/src/sharedGUI.py:2685
+#: /usr/local/bin/shared/src/sharedGUI.py:2794
+#: /usr/local/bin/shared/src/sharedGUI.py:2801
+#: /usr/local/bin/shared/src/sharedGUI.py:2804
+#: /usr/local/bin/shared/src/sharedGUI.py:2924
+#: /usr/local/bin/shared/src/sharedGUI.py:2949
+#: /usr/local/bin/shared/src/sharedGUI.py:2956
+#: /usr/local/bin/shared/src/sharedGUI.py:2961
+#: /usr/local/bin/shared/src/sharedGUI.py:2977
+#: /usr/local/bin/shared/src/sharedGUI.py:2989
+#: /usr/local/bin/shared/src/sharedGUI.py:3162
+#: /usr/local/bin/shared/src/sharedGUI.py:3193
+#: /usr/local/bin/shared/src/sharedGUI.py:3346
+#: /usr/local/bin/shared/src/sharedGUI.py:3794
+#: /usr/local/bin/shared/src/sharedGUI.py:3877
 #: /usr/local/bin/shared/src/shared.py:205
 #: /usr/local/bin/shared/src/shared.py:211
 #: /usr/local/bin/shared/src/shared.py:220
@@ -99,28 +99,28 @@ msgstr ""
 #: /usr/local/bin/shared/src/shared.py:749
 #: /usr/local/bin/shared/src/shared.py:827
 #: /usr/local/bin/shared/src/shared.py:868
-#: /usr/local/bin/shared/src/shared.py:1520
-#: /usr/local/bin/shared/src/shared.py:1549
-#: /usr/local/bin/shared/src/shared.py:1566
-#: /usr/local/bin/shared/src/shared.py:1594
-#: /usr/local/bin/shared/src/shared.py:1667
-#: /usr/local/bin/shared/src/shared.py:1755
-#: /usr/local/bin/shared/src/shared.py:1762
-#: /usr/local/bin/shared/src/shared.py:1863
-#: /usr/local/bin/shared/src/shared.py:1869
-#: /usr/local/bin/shared/src/shared.py:1881
-#: /usr/local/bin/shared/src/shared.py:2035
-#: /usr/local/bin/shared/src/shared.py:2060
-#: /usr/local/bin/shared/src/shared.py:2184
-#: /usr/local/bin/shared/src/shared.py:2358
-#: /usr/local/bin/shared/src/shared.py:2386
-#: /usr/local/bin/shared/src/shared.py:2533
-#: /usr/local/bin/shared/src/shared.py:2700
-#: /usr/local/bin/shared/src/shared.py:2735
-#: /usr/local/bin/shared/src/shared.py:2836
-#: /usr/local/bin/shared/src/shared.py:4157
-#: /usr/local/bin/shared/src/shared.py:4178
-#: /usr/local/bin/shared/src/shared.py:4233
+#: /usr/local/bin/shared/src/shared.py:1521
+#: /usr/local/bin/shared/src/shared.py:1550
+#: /usr/local/bin/shared/src/shared.py:1567
+#: /usr/local/bin/shared/src/shared.py:1596
+#: /usr/local/bin/shared/src/shared.py:1670
+#: /usr/local/bin/shared/src/shared.py:1758
+#: /usr/local/bin/shared/src/shared.py:1765
+#: /usr/local/bin/shared/src/shared.py:1866
+#: /usr/local/bin/shared/src/shared.py:1872
+#: /usr/local/bin/shared/src/shared.py:1884
+#: /usr/local/bin/shared/src/shared.py:2038
+#: /usr/local/bin/shared/src/shared.py:2063
+#: /usr/local/bin/shared/src/shared.py:2187
+#: /usr/local/bin/shared/src/shared.py:2362
+#: /usr/local/bin/shared/src/shared.py:2390
+#: /usr/local/bin/shared/src/shared.py:2537
+#: /usr/local/bin/shared/src/shared.py:2704
+#: /usr/local/bin/shared/src/shared.py:2739
+#: /usr/local/bin/shared/src/shared.py:2840
+#: /usr/local/bin/shared/src/shared.py:4161
+#: /usr/local/bin/shared/src/shared.py:4182
+#: /usr/local/bin/shared/src/shared.py:4237
 msgid "ERROR"
 msgstr "ОШИБКА"
 
@@ -130,39 +130,39 @@ msgid "Failed to enable key combination \"%s\"!"
 msgstr "Не удалось задействовать сочетание клавиш \"%s\"!"
 
 #: /usr/local/bin/shared/src/sharedGUI.py:35
-#: /usr/local/bin/shared/src/sharedGUI.py:1947
-#: /usr/local/bin/shared/src/sharedGUI.py:2002
-#: /usr/local/bin/shared/src/shared.py:2231
-#: /usr/local/bin/shared/src/shared.py:3416
-#: /usr/local/bin/shared/src/shared.py:3422
+#: /usr/local/bin/shared/src/sharedGUI.py:1951
+#: /usr/local/bin/shared/src/sharedGUI.py:2006
+#: /usr/local/bin/shared/src/shared.py:2234
+#: /usr/local/bin/shared/src/shared.py:3420
+#: /usr/local/bin/shared/src/shared.py:3426
 #, python-format
 msgid "Wrong input data: \"%s\""
 msgstr "Недопустимые входные данные: \"%s\""
 
 #: /usr/local/bin/shared/src/sharedGUI.py:41
-#: /usr/local/bin/shared/src/sharedGUI.py:415
-#: /usr/local/bin/shared/src/sharedGUI.py:2253
-#: /usr/local/bin/shared/src/sharedGUI.py:2272
-#: /usr/local/bin/shared/src/sharedGUI.py:2294
-#: /usr/local/bin/shared/src/sharedGUI.py:2301
-#: /usr/local/bin/shared/src/sharedGUI.py:2315
-#: /usr/local/bin/shared/src/sharedGUI.py:2327
-#: /usr/local/bin/shared/src/sharedGUI.py:2338
-#: /usr/local/bin/shared/src/sharedGUI.py:2347
-#: /usr/local/bin/shared/src/sharedGUI.py:2358
-#: /usr/local/bin/shared/src/sharedGUI.py:2449
-#: /usr/local/bin/shared/src/sharedGUI.py:3078
-#: /usr/local/bin/shared/src/sharedGUI.py:3339
-#: /usr/local/bin/shared/src/sharedGUI.py:3770
+#: /usr/local/bin/shared/src/sharedGUI.py:418
+#: /usr/local/bin/shared/src/sharedGUI.py:2257
+#: /usr/local/bin/shared/src/sharedGUI.py:2276
+#: /usr/local/bin/shared/src/sharedGUI.py:2298
+#: /usr/local/bin/shared/src/sharedGUI.py:2305
+#: /usr/local/bin/shared/src/sharedGUI.py:2319
+#: /usr/local/bin/shared/src/sharedGUI.py:2331
+#: /usr/local/bin/shared/src/sharedGUI.py:2342
+#: /usr/local/bin/shared/src/sharedGUI.py:2351
+#: /usr/local/bin/shared/src/sharedGUI.py:2362
+#: /usr/local/bin/shared/src/sharedGUI.py:2451
+#: /usr/local/bin/shared/src/sharedGUI.py:3080
+#: /usr/local/bin/shared/src/sharedGUI.py:3347
+#: /usr/local/bin/shared/src/sharedGUI.py:3783
 #: /usr/local/bin/shared/src/shared.py:539
 #: /usr/local/bin/shared/src/shared.py:750
 #: /usr/local/bin/shared/src/shared.py:853
-#: /usr/local/bin/shared/src/shared.py:1452
-#: /usr/local/bin/shared/src/shared.py:1961
-#: /usr/local/bin/shared/src/shared.py:2638
-#: /usr/local/bin/shared/src/shared.py:2717
-#: /usr/local/bin/shared/src/shared.py:3497
-#: /usr/local/bin/shared/src/shared.py:4118
+#: /usr/local/bin/shared/src/shared.py:1453
+#: /usr/local/bin/shared/src/shared.py:1964
+#: /usr/local/bin/shared/src/shared.py:2642
+#: /usr/local/bin/shared/src/shared.py:2721
+#: /usr/local/bin/shared/src/shared.py:3501
+#: /usr/local/bin/shared/src/shared.py:4122
 msgid "Wrong input data!"
 msgstr "Недопустимые входные данные!"
 
@@ -189,48 +189,55 @@ msgstr "Не удалось выбрать файл!"
 
 #: /usr/local/bin/shared/src/sharedGUI.py:76
 #: /usr/local/bin/shared/src/sharedGUI.py:81
-#: /usr/local/bin/shared/src/sharedGUI.py:359
-#: /usr/local/bin/shared/src/sharedGUI.py:375
-#: /usr/local/bin/shared/src/sharedGUI.py:386
-#: /usr/local/bin/shared/src/sharedGUI.py:396
-#: /usr/local/bin/shared/src/sharedGUI.py:427
-#: /usr/local/bin/shared/src/sharedGUI.py:449
-#: /usr/local/bin/shared/src/sharedGUI.py:479
-#: /usr/local/bin/shared/src/sharedGUI.py:510
-#: /usr/local/bin/shared/src/sharedGUI.py:525
-#: /usr/local/bin/shared/src/sharedGUI.py:536
-#: /usr/local/bin/shared/src/sharedGUI.py:746
-#: /usr/local/bin/shared/src/sharedGUI.py:757
-#: /usr/local/bin/shared/src/sharedGUI.py:798
-#: /usr/local/bin/shared/src/sharedGUI.py:910
-#: /usr/local/bin/shared/src/sharedGUI.py:973
-#: /usr/local/bin/shared/src/sharedGUI.py:989
-#: /usr/local/bin/shared/src/sharedGUI.py:1015
-#: /usr/local/bin/shared/src/sharedGUI.py:1061
-#: /usr/local/bin/shared/src/sharedGUI.py:1141
-#: /usr/local/bin/shared/src/sharedGUI.py:1170
-#: /usr/local/bin/shared/src/sharedGUI.py:1589
-#: /usr/local/bin/shared/src/sharedGUI.py:1751
-#: /usr/local/bin/shared/src/sharedGUI.py:2266
-#: /usr/local/bin/shared/src/sharedGUI.py:2638
-#: /usr/local/bin/shared/src/sharedGUI.py:2655
-#: /usr/local/bin/shared/src/sharedGUI.py:2666
-#: /usr/local/bin/shared/src/sharedGUI.py:2727
-#: /usr/local/bin/shared/src/sharedGUI.py:2732
-#: /usr/local/bin/shared/src/sharedGUI.py:2777
-#: /usr/local/bin/shared/src/sharedGUI.py:2802
-#: /usr/local/bin/shared/src/sharedGUI.py:2965
-#: /usr/local/bin/shared/src/sharedGUI.py:2982
-#: /usr/local/bin/shared/src/sharedGUI.py:3053
-#: /usr/local/bin/shared/src/sharedGUI.py:3077
-#: /usr/local/bin/shared/src/sharedGUI.py:3152
-#: /usr/local/bin/shared/src/sharedGUI.py:3288
-#: /usr/local/bin/shared/src/sharedGUI.py:3367
-#: /usr/local/bin/shared/src/sharedGUI.py:3378
-#: /usr/local/bin/shared/src/sharedGUI.py:3769
-#: /usr/local/bin/shared/src/sharedGUI.py:3775
-#: /usr/local/bin/shared/src/sharedGUI.py:3877
-#: /usr/local/bin/shared/src/sharedGUI.py:3903
+#: /usr/local/bin/shared/src/sharedGUI.py:362
+#: /usr/local/bin/shared/src/sharedGUI.py:378
+#: /usr/local/bin/shared/src/sharedGUI.py:389
+#: /usr/local/bin/shared/src/sharedGUI.py:399
+#: /usr/local/bin/shared/src/sharedGUI.py:430
+#: /usr/local/bin/shared/src/sharedGUI.py:452
+#: /usr/local/bin/shared/src/sharedGUI.py:482
+#: /usr/local/bin/shared/src/sharedGUI.py:513
+#: /usr/local/bin/shared/src/sharedGUI.py:528
+#: /usr/local/bin/shared/src/sharedGUI.py:539
+#: /usr/local/bin/shared/src/sharedGUI.py:749
+#: /usr/local/bin/shared/src/sharedGUI.py:760
+#: /usr/local/bin/shared/src/sharedGUI.py:801
+#: /usr/local/bin/shared/src/sharedGUI.py:913
+#: /usr/local/bin/shared/src/sharedGUI.py:976
+#: /usr/local/bin/shared/src/sharedGUI.py:992
+#: /usr/local/bin/shared/src/sharedGUI.py:1018
+#: /usr/local/bin/shared/src/sharedGUI.py:1064
+#: /usr/local/bin/shared/src/sharedGUI.py:1144
+#: /usr/local/bin/shared/src/sharedGUI.py:1173
+#: /usr/local/bin/shared/src/sharedGUI.py:1593
+#: /usr/local/bin/shared/src/sharedGUI.py:1755
+#: /usr/local/bin/shared/src/sharedGUI.py:2270
+#: /usr/local/bin/shared/src/sharedGUI.py:2640
+#: /usr/local/bin/shared/src/sharedGUI.py:2657
+#: /usr/local/bin/shared/src/sharedGUI.py:2668
+#: /usr/local/bin/shared/src/sharedGUI.py:2729
+#: /usr/local/bin/shared/src/sharedGUI.py:2734
+#: /usr/local/bin/shared/src/sharedGUI.py:2779
+#: /usr/local/bin/shared/src/sharedGUI.py:2804
+#: /usr/local/bin/shared/src/sharedGUI.py:2967
+#: /usr/local/bin/shared/src/sharedGUI.py:2984
+#: /usr/local/bin/shared/src/sharedGUI.py:3055
+#: /usr/local/bin/shared/src/sharedGUI.py:3079
+#: /usr/local/bin/shared/src/sharedGUI.py:3154
+#: /usr/local/bin/shared/src/sharedGUI.py:3296
+#: /usr/local/bin/shared/src/sharedGUI.py:3375
+#: /usr/local/bin/shared/src/sharedGUI.py:3386
+#: /usr/local/bin/shared/src/sharedGUI.py:3782
+#: /usr/local/bin/shared/src/sharedGUI.py:3788
+#: /usr/local/bin/shared/src/sharedGUI.py:3890
+#: /usr/local/bin/shared/src/sharedGUI.py:3916
+#: /usr/local/bin/shared/src/regexp.py:51
+#: /usr/local/bin/shared/src/regexp.py:63
+#: /usr/local/bin/shared/src/regexp.py:70
+#: /usr/local/bin/shared/src/regexp.py:80
+#: /usr/local/bin/shared/src/regexp.py:86
+#: /usr/local/bin/shared/src/regexp.py:122
+#: /usr/local/bin/shared/src/regexp.py:127
 #: /usr/local/bin/shared/src/shared.py:270
 #: /usr/local/bin/shared/src/shared.py:280
 #: /usr/local/bin/shared/src/shared.py:294
@@ -259,130 +266,123 @@ msgstr "Не удалось выбрать файл!"
 #: /usr/local/bin/shared/src/shared.py:852
 #: /usr/local/bin/shared/src/shared.py:1009
 #: /usr/local/bin/shared/src/shared.py:1052
-#: /usr/local/bin/shared/src/shared.py:1129
-#: /usr/local/bin/shared/src/shared.py:1154
-#: /usr/local/bin/shared/src/shared.py:1166
-#: /usr/local/bin/shared/src/shared.py:1325
-#: /usr/local/bin/shared/src/shared.py:1331
-#: /usr/local/bin/shared/src/shared.py:1344
-#: /usr/local/bin/shared/src/shared.py:1349
-#: /usr/local/bin/shared/src/shared.py:1363
-#: /usr/local/bin/shared/src/shared.py:1368
-#: /usr/local/bin/shared/src/shared.py:1382
-#: /usr/local/bin/shared/src/shared.py:1387
-#: /usr/local/bin/shared/src/shared.py:1404
-#: /usr/local/bin/shared/src/shared.py:1419
-#: /usr/local/bin/shared/src/shared.py:1451
-#: /usr/local/bin/shared/src/shared.py:1467
-#: /usr/local/bin/shared/src/shared.py:1484
-#: /usr/local/bin/shared/src/shared.py:1489
-#: /usr/local/bin/shared/src/shared.py:1526
-#: /usr/local/bin/shared/src/shared.py:1533
-#: /usr/local/bin/shared/src/shared.py:1579
-#: /usr/local/bin/shared/src/shared.py:1585
-#: /usr/local/bin/shared/src/shared.py:1607
-#: /usr/local/bin/shared/src/shared.py:1624
-#: /usr/local/bin/shared/src/shared.py:1630
-#: /usr/local/bin/shared/src/shared.py:1641
-#: /usr/local/bin/shared/src/shared.py:1652
-#: /usr/local/bin/shared/src/shared.py:1658
-#: /usr/local/bin/shared/src/shared.py:1679
-#: /usr/local/bin/shared/src/shared.py:1696
-#: /usr/local/bin/shared/src/shared.py:1704
-#: /usr/local/bin/shared/src/shared.py:1740
-#: /usr/local/bin/shared/src/shared.py:1844
-#: /usr/local/bin/shared/src/shared.py:1886
-#: /usr/local/bin/shared/src/shared.py:1901
-#: /usr/local/bin/shared/src/shared.py:1940
-#: /usr/local/bin/shared/src/shared.py:1946
-#: /usr/local/bin/shared/src/shared.py:1960
-#: /usr/local/bin/shared/src/shared.py:1996
-#: /usr/local/bin/shared/src/shared.py:2013
-#: /usr/local/bin/shared/src/shared.py:2018
-#: /usr/local/bin/shared/src/shared.py:2043
-#: /usr/local/bin/shared/src/shared.py:2068
-#: /usr/local/bin/shared/src/shared.py:2119
-#: /usr/local/bin/shared/src/shared.py:2125
-#: /usr/local/bin/shared/src/shared.py:2144
-#: /usr/local/bin/shared/src/shared.py:2156
-#: /usr/local/bin/shared/src/shared.py:2195
-#: /usr/local/bin/shared/src/shared.py:2230
-#: /usr/local/bin/shared/src/shared.py:2255
-#: /usr/local/bin/shared/src/shared.py:2266
-#: /usr/local/bin/shared/src/shared.py:2281
-#: /usr/local/bin/shared/src/shared.py:2287
-#: /usr/local/bin/shared/src/shared.py:2308
-#: /usr/local/bin/shared/src/shared.py:2334
-#: /usr/local/bin/shared/src/shared.py:2349
-#: /usr/local/bin/shared/src/shared.py:2372
-#: /usr/local/bin/shared/src/shared.py:2429
-#: /usr/local/bin/shared/src/shared.py:2456
-#: /usr/local/bin/shared/src/shared.py:2462
-#: /usr/local/bin/shared/src/shared.py:2473
-#: /usr/local/bin/shared/src/shared.py:2479
-#: /usr/local/bin/shared/src/shared.py:2622
-#: /usr/local/bin/shared/src/shared.py:2637
-#: /usr/local/bin/shared/src/shared.py:2676
-#: /usr/local/bin/shared/src/shared.py:2687
-#: /usr/local/bin/shared/src/shared.py:2716
-#: /usr/local/bin/shared/src/shared.py:2762
-#: /usr/local/bin/shared/src/shared.py:2774
-#: /usr/local/bin/shared/src/shared.py:2798
-#: /usr/local/bin/shared/src/shared.py:2805
-#: /usr/local/bin/shared/src/shared.py:2841
-#: /usr/local/bin/shared/src/shared.py:3075
-#: /usr/local/bin/shared/src/shared.py:3094
-#: /usr/local/bin/shared/src/shared.py:3134
-#: /usr/local/bin/shared/src/shared.py:3171
-#: /usr/local/bin/shared/src/shared.py:3181
-#: /usr/local/bin/shared/src/shared.py:3214
-#: /usr/local/bin/shared/src/shared.py:3233
-#: /usr/local/bin/shared/src/shared.py:3243
-#: /usr/local/bin/shared/src/shared.py:3262
-#: /usr/local/bin/shared/src/shared.py:3281
-#: /usr/local/bin/shared/src/shared.py:3296
-#: /usr/local/bin/shared/src/shared.py:3311
-#: /usr/local/bin/shared/src/shared.py:3330
-#: /usr/local/bin/shared/src/shared.py:3341
-#: /usr/local/bin/shared/src/shared.py:3355
-#: /usr/local/bin/shared/src/shared.py:3369
-#: /usr/local/bin/shared/src/shared.py:3383
-#: /usr/local/bin/shared/src/shared.py:3415
-#: /usr/local/bin/shared/src/shared.py:3421
-#: /usr/local/bin/shared/src/shared.py:3427
-#: /usr/local/bin/shared/src/shared.py:3448
-#: /usr/local/bin/shared/src/shared.py:3454
-#: /usr/local/bin/shared/src/shared.py:3471
-#: /usr/local/bin/shared/src/shared.py:3496
-#: /usr/local/bin/shared/src/shared.py:3507
-#: /usr/local/bin/shared/src/shared.py:3520
-#: /usr/local/bin/shared/src/shared.py:3535
-#: /usr/local/bin/shared/src/shared.py:3551
-#: /usr/local/bin/shared/src/shared.py:3568
-#: /usr/local/bin/shared/src/shared.py:3841
-#: /usr/local/bin/shared/src/shared.py:3850
-#: /usr/local/bin/shared/src/shared.py:3859
-#: /usr/local/bin/shared/src/shared.py:3918
-#: /usr/local/bin/shared/src/shared.py:3967
-#: /usr/local/bin/shared/src/shared.py:3980
-#: /usr/local/bin/shared/src/shared.py:4077
-#: /usr/local/bin/shared/src/shared.py:4093
-#: /usr/local/bin/shared/src/shared.py:4099
-#: /usr/local/bin/shared/src/shared.py:4117
-#: /usr/local/bin/shared/src/shared.py:4122
-#: /usr/local/bin/shared/src/shared.py:4142
-#: /usr/local/bin/shared/src/shared.py:4163
-#: /usr/local/bin/shared/src/shared.py:4184
-#: /usr/local/bin/shared/src/shared.py:4219
-#: /usr/local/bin/shared/src/shared.py:4239
-#: /usr/local/bin/shared/src/shared.py:4253
-#: /usr/local/bin/shared/src/regexp.py:51
-#: /usr/local/bin/shared/src/regexp.py:63
-#: /usr/local/bin/shared/src/regexp.py:70
-#: /usr/local/bin/shared/src/regexp.py:80
-#: /usr/local/bin/shared/src/regexp.py:86
-#: /usr/local/bin/shared/src/regexp.py:122
-#: /usr/local/bin/shared/src/regexp.py:127
+#: /usr/local/bin/shared/src/shared.py:1130
+#: /usr/local/bin/shared/src/shared.py:1155
+#: /usr/local/bin/shared/src/shared.py:1167
+#: /usr/local/bin/shared/src/shared.py:1326
+#: /usr/local/bin/shared/src/shared.py:1332
+#: /usr/local/bin/shared/src/shared.py:1345
+#: /usr/local/bin/shared/src/shared.py:1350
+#: /usr/local/bin/shared/src/shared.py:1364
+#: /usr/local/bin/shared/src/shared.py:1369
+#: /usr/local/bin/shared/src/shared.py:1383
+#: /usr/local/bin/shared/src/shared.py:1388
+#: /usr/local/bin/shared/src/shared.py:1405
+#: /usr/local/bin/shared/src/shared.py:1420
+#: /usr/local/bin/shared/src/shared.py:1452
+#: /usr/local/bin/shared/src/shared.py:1468
+#: /usr/local/bin/shared/src/shared.py:1485
+#: /usr/local/bin/shared/src/shared.py:1490
+#: /usr/local/bin/shared/src/shared.py:1527
+#: /usr/local/bin/shared/src/shared.py:1534
+#: /usr/local/bin/shared/src/shared.py:1581
+#: /usr/local/bin/shared/src/shared.py:1587
+#: /usr/local/bin/shared/src/shared.py:1609
+#: /usr/local/bin/shared/src/shared.py:1626
+#: /usr/local/bin/shared/src/shared.py:1632
+#: /usr/local/bin/shared/src/shared.py:1643
+#: /usr/local/bin/shared/src/shared.py:1655
+#: /usr/local/bin/shared/src/shared.py:1661
+#: /usr/local/bin/shared/src/shared.py:1682
+#: /usr/local/bin/shared/src/shared.py:1699
+#: /usr/local/bin/shared/src/shared.py:1707
+#: /usr/local/bin/shared/src/shared.py:1743
+#: /usr/local/bin/shared/src/shared.py:1847
+#: /usr/local/bin/shared/src/shared.py:1889
+#: /usr/local/bin/shared/src/shared.py:1904
+#: /usr/local/bin/shared/src/shared.py:1943
+#: /usr/local/bin/shared/src/shared.py:1949
+#: /usr/local/bin/shared/src/shared.py:1963
+#: /usr/local/bin/shared/src/shared.py:1999
+#: /usr/local/bin/shared/src/shared.py:2016
+#: /usr/local/bin/shared/src/shared.py:2021
+#: /usr/local/bin/shared/src/shared.py:2046
+#: /usr/local/bin/shared/src/shared.py:2071
+#: /usr/local/bin/shared/src/shared.py:2122
+#: /usr/local/bin/shared/src/shared.py:2128
+#: /usr/local/bin/shared/src/shared.py:2147
+#: /usr/local/bin/shared/src/shared.py:2159
+#: /usr/local/bin/shared/src/shared.py:2198
+#: /usr/local/bin/shared/src/shared.py:2233
+#: /usr/local/bin/shared/src/shared.py:2258
+#: /usr/local/bin/shared/src/shared.py:2269
+#: /usr/local/bin/shared/src/shared.py:2284
+#: /usr/local/bin/shared/src/shared.py:2290
+#: /usr/local/bin/shared/src/shared.py:2311
+#: /usr/local/bin/shared/src/shared.py:2338
+#: /usr/local/bin/shared/src/shared.py:2353
+#: /usr/local/bin/shared/src/shared.py:2376
+#: /usr/local/bin/shared/src/shared.py:2433
+#: /usr/local/bin/shared/src/shared.py:2460
+#: /usr/local/bin/shared/src/shared.py:2466
+#: /usr/local/bin/shared/src/shared.py:2477
+#: /usr/local/bin/shared/src/shared.py:2483
+#: /usr/local/bin/shared/src/shared.py:2626
+#: /usr/local/bin/shared/src/shared.py:2641
+#: /usr/local/bin/shared/src/shared.py:2680
+#: /usr/local/bin/shared/src/shared.py:2691
+#: /usr/local/bin/shared/src/shared.py:2720
+#: /usr/local/bin/shared/src/shared.py:2766
+#: /usr/local/bin/shared/src/shared.py:2778
+#: /usr/local/bin/shared/src/shared.py:2802
+#: /usr/local/bin/shared/src/shared.py:2809
+#: /usr/local/bin/shared/src/shared.py:2845
+#: /usr/local/bin/shared/src/shared.py:3079
+#: /usr/local/bin/shared/src/shared.py:3098
+#: /usr/local/bin/shared/src/shared.py:3138
+#: /usr/local/bin/shared/src/shared.py:3175
+#: /usr/local/bin/shared/src/shared.py:3185
+#: /usr/local/bin/shared/src/shared.py:3218
+#: /usr/local/bin/shared/src/shared.py:3237
+#: /usr/local/bin/shared/src/shared.py:3247
+#: /usr/local/bin/shared/src/shared.py:3266
+#: /usr/local/bin/shared/src/shared.py:3285
+#: /usr/local/bin/shared/src/shared.py:3300
+#: /usr/local/bin/shared/src/shared.py:3315
+#: /usr/local/bin/shared/src/shared.py:3334
+#: /usr/local/bin/shared/src/shared.py:3345
+#: /usr/local/bin/shared/src/shared.py:3359
+#: /usr/local/bin/shared/src/shared.py:3373
+#: /usr/local/bin/shared/src/shared.py:3387
+#: /usr/local/bin/shared/src/shared.py:3419
+#: /usr/local/bin/shared/src/shared.py:3425
+#: /usr/local/bin/shared/src/shared.py:3431
+#: /usr/local/bin/shared/src/shared.py:3452
+#: /usr/local/bin/shared/src/shared.py:3458
+#: /usr/local/bin/shared/src/shared.py:3475
+#: /usr/local/bin/shared/src/shared.py:3500
+#: /usr/local/bin/shared/src/shared.py:3511
+#: /usr/local/bin/shared/src/shared.py:3524
+#: /usr/local/bin/shared/src/shared.py:3539
+#: /usr/local/bin/shared/src/shared.py:3555
+#: /usr/local/bin/shared/src/shared.py:3572
+#: /usr/local/bin/shared/src/shared.py:3845
+#: /usr/local/bin/shared/src/shared.py:3854
+#: /usr/local/bin/shared/src/shared.py:3863
+#: /usr/local/bin/shared/src/shared.py:3922
+#: /usr/local/bin/shared/src/shared.py:3971
+#: /usr/local/bin/shared/src/shared.py:3984
+#: /usr/local/bin/shared/src/shared.py:4081
+#: /usr/local/bin/shared/src/shared.py:4097
+#: /usr/local/bin/shared/src/shared.py:4103
+#: /usr/local/bin/shared/src/shared.py:4121
+#: /usr/local/bin/shared/src/shared.py:4126
+#: /usr/local/bin/shared/src/shared.py:4146
+#: /usr/local/bin/shared/src/shared.py:4167
+#: /usr/local/bin/shared/src/shared.py:4188
+#: /usr/local/bin/shared/src/shared.py:4223
+#: /usr/local/bin/shared/src/shared.py:4243
+#: /usr/local/bin/shared/src/shared.py:4257
 msgid "WARNING"
 msgstr "ПРЕДУПРЕЖДЕНИЕ"
 
@@ -394,154 +394,157 @@ msgstr "Неизвестный цвет \"%s\"!"
 #: /usr/local/bin/shared/src/sharedGUI.py:82
 #: /usr/local/bin/shared/src/shared.py:603
 #: /usr/local/bin/shared/src/shared.py:627
-#: /usr/local/bin/shared/src/shared.py:2036
-#: /usr/local/bin/shared/src/shared.py:2061
-#: /usr/local/bin/shared/src/shared.py:4158
-#: /usr/local/bin/shared/src/shared.py:4179
-#: /usr/local/bin/shared/src/shared.py:4234
+#: /usr/local/bin/shared/src/shared.py:2039
+#: /usr/local/bin/shared/src/shared.py:2064
+#: /usr/local/bin/shared/src/shared.py:4162
+#: /usr/local/bin/shared/src/shared.py:4183
+#: /usr/local/bin/shared/src/shared.py:4238
 #, python-format
 msgid "The condition \"%s\" is not observed!"
 msgstr "Условие \"%s\" не выполнено!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:133
-#: /usr/local/bin/shared/src/sharedGUI.py:138
+#: /usr/local/bin/shared/src/sharedGUI.py:136
+#: /usr/local/bin/shared/src/sharedGUI.py:141
 msgid "Failed to insert the text!"
 msgstr "Не удалось вставить текст!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:143
-#: /usr/local/bin/shared/src/sharedGUI.py:162
-#: /usr/local/bin/shared/src/sharedGUI.py:177
-#: /usr/local/bin/shared/src/sharedGUI.py:188
-#: /usr/local/bin/shared/src/sharedGUI.py:203
-#: /usr/local/bin/shared/src/sharedGUI.py:225
+#: /usr/local/bin/shared/src/sharedGUI.py:146
+#: /usr/local/bin/shared/src/sharedGUI.py:165
+#: /usr/local/bin/shared/src/sharedGUI.py:180
+#: /usr/local/bin/shared/src/sharedGUI.py:191
+#: /usr/local/bin/shared/src/sharedGUI.py:206
+#: /usr/local/bin/shared/src/sharedGUI.py:228
 #, python-format
 msgid "A logic error: unknown object type: \"%s\"!"
 msgstr "Логическая ошибка: неизвестный тип объекта: \"%s\"!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:182
+#: /usr/local/bin/shared/src/sharedGUI.py:185
 msgid "Text:"
 msgstr "Текст:"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:197
-#: /usr/local/bin/shared/src/sharedGUI.py:631
-#: /usr/local/bin/shared/src/sharedGUI.py:632
-#: /usr/local/bin/shared/src/sharedGUI.py:1100
-#: /usr/local/bin/shared/src/sharedGUI.py:1101
-#: /usr/local/bin/shared/src/sharedGUI.py:1669
-#: /usr/local/bin/shared/src/sharedGUI.py:1670
+#: /usr/local/bin/shared/src/sharedGUI.py:200
+#: /usr/local/bin/shared/src/sharedGUI.py:634
+#: /usr/local/bin/shared/src/sharedGUI.py:635
+#: /usr/local/bin/shared/src/sharedGUI.py:1103
+#: /usr/local/bin/shared/src/sharedGUI.py:1104
+#: /usr/local/bin/shared/src/sharedGUI.py:1673
+#: /usr/local/bin/shared/src/sharedGUI.py:1674
 msgid "Quit"
 msgstr "Выйти"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:199
+#: /usr/local/bin/shared/src/sharedGUI.py:202
 msgid "Save and close"
 msgstr "Запомнить и выйти"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:219
+#: /usr/local/bin/shared/src/sharedGUI.py:222
 #: /usr/local/bin/shared/src/shared.py:743
-#: /usr/local/bin/shared/src/shared.py:1527
+#: /usr/local/bin/shared/src/shared.py:1528
 #, python-format
 msgid "File \"%s\" has not been found!"
 msgstr "Файл \"%s\" не найден!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:274
-#: /usr/local/bin/shared/src/sharedGUI.py:995
-#: /usr/local/bin/shared/src/sharedGUI.py:2876
-#: /usr/local/bin/shared/src/sharedGUI.py:2887
-#: /usr/local/bin/shared/src/sharedGUI.py:3266
+#: /usr/local/bin/shared/src/sharedGUI.py:277
+#: /usr/local/bin/shared/src/sharedGUI.py:998
+#: /usr/local/bin/shared/src/sharedGUI.py:2878
+#: /usr/local/bin/shared/src/sharedGUI.py:2889
+#: /usr/local/bin/shared/src/sharedGUI.py:3274
 msgid "Title:"
 msgstr "Заголовок:"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:317
+#: /usr/local/bin/shared/src/sharedGUI.py:320
 msgid "Find:"
 msgstr "Найти:"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:352
-#: /usr/local/bin/shared/src/sharedGUI.py:462
-#: /usr/local/bin/shared/src/sharedGUI.py:467
-#: /usr/local/bin/shared/src/sharedGUI.py:474
-#: /usr/local/bin/shared/src/sharedGUI.py:492
-#: /usr/local/bin/shared/src/sharedGUI.py:497
-#: /usr/local/bin/shared/src/sharedGUI.py:505
-#: /usr/local/bin/shared/src/sharedGUI.py:1056
-#: /usr/local/bin/shared/src/sharedGUI.py:1369
-#: /usr/local/bin/shared/src/sharedGUI.py:1469
-#: /usr/local/bin/shared/src/sharedGUI.py:1907
-#: /usr/local/bin/shared/src/sharedGUI.py:2247
-#: /usr/local/bin/shared/src/sharedGUI.py:2260
-#: /usr/local/bin/shared/src/sharedGUI.py:2653
-#: /usr/local/bin/shared/src/sharedGUI.py:2666
-#: /usr/local/bin/shared/src/sharedGUI.py:2694
-#: /usr/local/bin/shared/src/sharedGUI.py:2699
-#: /usr/local/bin/shared/src/sharedGUI.py:2782
-#: /usr/local/bin/shared/src/sharedGUI.py:2803
-#: /usr/local/bin/shared/src/sharedGUI.py:3144
-#: /usr/local/bin/shared/src/sharedGUI.py:3176
-#: /usr/local/bin/shared/src/sharedGUI.py:3183
-#: /usr/local/bin/shared/src/sharedGUI.py:3295
+#: /usr/local/bin/shared/src/sharedGUI.py:355
+#: /usr/local/bin/shared/src/sharedGUI.py:465
+#: /usr/local/bin/shared/src/sharedGUI.py:470
+#: /usr/local/bin/shared/src/sharedGUI.py:477
+#: /usr/local/bin/shared/src/sharedGUI.py:495
+#: /usr/local/bin/shared/src/sharedGUI.py:500
+#: /usr/local/bin/shared/src/sharedGUI.py:508
+#: /usr/local/bin/shared/src/sharedGUI.py:1059
+#: /usr/local/bin/shared/src/sharedGUI.py:1372
+#: /usr/local/bin/shared/src/sharedGUI.py:1473
+#: /usr/local/bin/shared/src/sharedGUI.py:1911
+#: /usr/local/bin/shared/src/sharedGUI.py:2251
+#: /usr/local/bin/shared/src/sharedGUI.py:2264
+#: /usr/local/bin/shared/src/sharedGUI.py:2655
+#: /usr/local/bin/shared/src/sharedGUI.py:2668
+#: /usr/local/bin/shared/src/sharedGUI.py:2696
+#: /usr/local/bin/shared/src/sharedGUI.py:2701
+#: /usr/local/bin/shared/src/sharedGUI.py:2784
+#: /usr/local/bin/shared/src/sharedGUI.py:2805
+#: /usr/local/bin/shared/src/sharedGUI.py:3146
+#: /usr/local/bin/shared/src/sharedGUI.py:3178
+#: /usr/local/bin/shared/src/sharedGUI.py:3185
+#: /usr/local/bin/shared/src/sharedGUI.py:3303
 #: /usr/local/bin/shared/src/shared.py:322
 #: /usr/local/bin/shared/src/shared.py:403
 #: /usr/local/bin/shared/src/shared.py:457
 #: /usr/local/bin/shared/src/shared.py:505
 #: /usr/local/bin/shared/src/shared.py:808
 #: /usr/local/bin/shared/src/shared.py:863
-#: /usr/local/bin/shared/src/shared.py:1399
-#: /usr/local/bin/shared/src/shared.py:1541
-#: /usr/local/bin/shared/src/shared.py:1558
-#: /usr/local/bin/shared/src/shared.py:1602
-#: /usr/local/bin/shared/src/shared.py:1616
-#: /usr/local/bin/shared/src/shared.py:1674
-#: /usr/local/bin/shared/src/shared.py:1688
-#: /usr/local/bin/shared/src/shared.py:1733
-#: /usr/local/bin/shared/src/shared.py:1746
-#: /usr/local/bin/shared/src/shared.py:1850
-#: /usr/local/bin/shared/src/shared.py:1896
-#: /usr/local/bin/shared/src/shared.py:1927
-#: /usr/local/bin/shared/src/shared.py:2172
-#: /usr/local/bin/shared/src/shared.py:2274
-#: /usr/local/bin/shared/src/shared.py:2364
-#: /usr/local/bin/shared/src/shared.py:2378
-#: /usr/local/bin/shared/src/shared.py:2416
-#: /usr/local/bin/shared/src/shared.py:2423
-#: /usr/local/bin/shared/src/shared.py:2608
-#: /usr/local/bin/shared/src/shared.py:2669
-#: /usr/local/bin/shared/src/shared.py:2693
-#: /usr/local/bin/shared/src/shared.py:2710
-#: /usr/local/bin/shared/src/shared.py:2724
-#: /usr/local/bin/shared/src/shared.py:2755
-#: /usr/local/bin/shared/src/shared.py:3119
-#: /usr/local/bin/shared/src/shared.py:3895
-#: /usr/local/bin/shared/src/shared.py:3940
-#: /usr/local/bin/shared/src/shared.py:4071
-#: /usr/local/bin/shared/src/shared.py:4194
-#: /usr/local/bin/shared/src/shared.py:4200
-#: /usr/local/bin/shared/src/shared.py:4206
-#: /usr/local/bin/shared/src/shared.py:4275
+#: /usr/local/bin/shared/src/shared.py:1400
+#: /usr/local/bin/shared/src/shared.py:1542
+#: /usr/local/bin/shared/src/shared.py:1559
+#: /usr/local/bin/shared/src/shared.py:1604
+#: /usr/local/bin/shared/src/shared.py:1618
+#: /usr/local/bin/shared/src/shared.py:1677
+#: /usr/local/bin/shared/src/shared.py:1691
+#: /usr/local/bin/shared/src/shared.py:1736
+#: /usr/local/bin/shared/src/shared.py:1749
+#: /usr/local/bin/shared/src/shared.py:1853
+#: /usr/local/bin/shared/src/shared.py:1899
+#: /usr/local/bin/shared/src/shared.py:1930
+#: /usr/local/bin/shared/src/shared.py:2175
+#: /usr/local/bin/shared/src/shared.py:2277
+#: /usr/local/bin/shared/src/shared.py:2368
+#: /usr/local/bin/shared/src/shared.py:2382
+#: /usr/local/bin/shared/src/shared.py:2420
+#: /usr/local/bin/shared/src/shared.py:2427
+#: /usr/local/bin/shared/src/shared.py:2612
+#: /usr/local/bin/shared/src/shared.py:2673
+#: /usr/local/bin/shared/src/shared.py:2697
+#: /usr/local/bin/shared/src/shared.py:2714
+#: /usr/local/bin/shared/src/shared.py:2728
+#: /usr/local/bin/shared/src/shared.py:2759
+#: /usr/local/bin/shared/src/shared.py:3123
+#: /usr/local/bin/shared/src/shared.py:3899
+#: /usr/local/bin/shared/src/shared.py:3944
+#: /usr/local/bin/shared/src/shared.py:4075
+#: /usr/local/bin/shared/src/shared.py:4198
+#: /usr/local/bin/shared/src/shared.py:4204
+#: /usr/local/bin/shared/src/shared.py:4210
+#: /usr/local/bin/shared/src/shared.py:4278
 #: /usr/local/bin/shared/src/tests.py:46
 msgid "INFO"
 msgstr "ИНФОРМАЦИЯ"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:353
-#: /usr/local/bin/shared/src/sharedGUI.py:475
-#: /usr/local/bin/shared/src/sharedGUI.py:506
+#: /usr/local/bin/shared/src/sharedGUI.py:356
+#: /usr/local/bin/shared/src/sharedGUI.py:478
+#: /usr/local/bin/shared/src/sharedGUI.py:509
 msgid "No matches!"
 msgstr "Совпадений нет!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:360
-#: /usr/local/bin/shared/src/sharedGUI.py:376
-#: /usr/local/bin/shared/src/sharedGUI.py:387
-#: /usr/local/bin/shared/src/sharedGUI.py:397
-#: /usr/local/bin/shared/src/sharedGUI.py:428
-#: /usr/local/bin/shared/src/sharedGUI.py:450
-#: /usr/local/bin/shared/src/sharedGUI.py:480
-#: /usr/local/bin/shared/src/sharedGUI.py:511
-#: /usr/local/bin/shared/src/sharedGUI.py:526
-#: /usr/local/bin/shared/src/sharedGUI.py:537
-#: /usr/local/bin/shared/src/sharedGUI.py:2684
-#: /usr/local/bin/shared/src/sharedGUI.py:2700
-#: /usr/local/bin/shared/src/sharedGUI.py:2717
-#: /usr/local/bin/shared/src/sharedGUI.py:2733
-#: /usr/local/bin/shared/src/sharedGUI.py:3878
-#: /usr/local/bin/shared/src/sharedGUI.py:3904
+#: /usr/local/bin/shared/src/sharedGUI.py:363
+#: /usr/local/bin/shared/src/sharedGUI.py:379
+#: /usr/local/bin/shared/src/sharedGUI.py:390
+#: /usr/local/bin/shared/src/sharedGUI.py:400
+#: /usr/local/bin/shared/src/sharedGUI.py:431
+#: /usr/local/bin/shared/src/sharedGUI.py:453
+#: /usr/local/bin/shared/src/sharedGUI.py:483
+#: /usr/local/bin/shared/src/sharedGUI.py:514
+#: /usr/local/bin/shared/src/sharedGUI.py:529
+#: /usr/local/bin/shared/src/sharedGUI.py:540
+#: /usr/local/bin/shared/src/sharedGUI.py:2686
+#: /usr/local/bin/shared/src/sharedGUI.py:2702
+#: /usr/local/bin/shared/src/sharedGUI.py:2719
+#: /usr/local/bin/shared/src/sharedGUI.py:2735
+#: /usr/local/bin/shared/src/sharedGUI.py:3891
+#: /usr/local/bin/shared/src/sharedGUI.py:3917
+#: /usr/local/bin/shared/src/regexp.py:71
+#: /usr/local/bin/shared/src/regexp.py:87
+#: /usr/local/bin/shared/src/regexp.py:128
 #: /usr/local/bin/shared/src/shared.py:271
 #: /usr/local/bin/shared/src/shared.py:281
 #: /usr/local/bin/shared/src/shared.py:295
@@ -559,243 +562,240 @@ msgstr "Совпадений нет!"
 #: /usr/local/bin/shared/src/shared.py:791
 #: /usr/local/bin/shared/src/shared.py:801
 #: /usr/local/bin/shared/src/shared.py:835
-#: /usr/local/bin/shared/src/shared.py:1332
-#: /usr/local/bin/shared/src/shared.py:1350
-#: /usr/local/bin/shared/src/shared.py:1369
-#: /usr/local/bin/shared/src/shared.py:1388
-#: /usr/local/bin/shared/src/shared.py:1405
-#: /usr/local/bin/shared/src/shared.py:1420
-#: /usr/local/bin/shared/src/shared.py:1468
-#: /usr/local/bin/shared/src/shared.py:1490
-#: /usr/local/bin/shared/src/shared.py:1586
-#: /usr/local/bin/shared/src/shared.py:1608
-#: /usr/local/bin/shared/src/shared.py:1631
-#: /usr/local/bin/shared/src/shared.py:1642
-#: /usr/local/bin/shared/src/shared.py:1659
-#: /usr/local/bin/shared/src/shared.py:1680
-#: /usr/local/bin/shared/src/shared.py:1705
-#: /usr/local/bin/shared/src/shared.py:1845
-#: /usr/local/bin/shared/src/shared.py:1887
-#: /usr/local/bin/shared/src/shared.py:1902
-#: /usr/local/bin/shared/src/shared.py:1947
-#: /usr/local/bin/shared/src/shared.py:2019
-#: /usr/local/bin/shared/src/shared.py:2044
-#: /usr/local/bin/shared/src/shared.py:2069
-#: /usr/local/bin/shared/src/shared.py:2126
-#: /usr/local/bin/shared/src/shared.py:2145
-#: /usr/local/bin/shared/src/shared.py:2157
-#: /usr/local/bin/shared/src/shared.py:2196
-#: /usr/local/bin/shared/src/shared.py:2256
-#: /usr/local/bin/shared/src/shared.py:2267
-#: /usr/local/bin/shared/src/shared.py:2288
-#: /usr/local/bin/shared/src/shared.py:2309
-#: /usr/local/bin/shared/src/shared.py:2335
-#: /usr/local/bin/shared/src/shared.py:2350
-#: /usr/local/bin/shared/src/shared.py:2373
-#: /usr/local/bin/shared/src/shared.py:2430
-#: /usr/local/bin/shared/src/shared.py:2463
-#: /usr/local/bin/shared/src/shared.py:2480
-#: /usr/local/bin/shared/src/shared.py:2688
-#: /usr/local/bin/shared/src/shared.py:2763
-#: /usr/local/bin/shared/src/shared.py:2775
-#: /usr/local/bin/shared/src/shared.py:2806
-#: /usr/local/bin/shared/src/shared.py:2842
-#: /usr/local/bin/shared/src/shared.py:3135
-#: /usr/local/bin/shared/src/shared.py:3172
-#: /usr/local/bin/shared/src/shared.py:3182
-#: /usr/local/bin/shared/src/shared.py:3215
-#: /usr/local/bin/shared/src/shared.py:3234
-#: /usr/local/bin/shared/src/shared.py:3244
-#: /usr/local/bin/shared/src/shared.py:3263
-#: /usr/local/bin/shared/src/shared.py:3282
-#: /usr/local/bin/shared/src/shared.py:3297
-#: /usr/local/bin/shared/src/shared.py:3312
-#: /usr/local/bin/shared/src/shared.py:3331
-#: /usr/local/bin/shared/src/shared.py:3342
-#: /usr/local/bin/shared/src/shared.py:3356
-#: /usr/local/bin/shared/src/shared.py:3370
-#: /usr/local/bin/shared/src/shared.py:3384
-#: /usr/local/bin/shared/src/shared.py:3428
-#: /usr/local/bin/shared/src/shared.py:3455
-#: /usr/local/bin/shared/src/shared.py:3472
-#: /usr/local/bin/shared/src/shared.py:3508
-#: /usr/local/bin/shared/src/shared.py:3521
-#: /usr/local/bin/shared/src/shared.py:3536
-#: /usr/local/bin/shared/src/shared.py:3552
-#: /usr/local/bin/shared/src/shared.py:3569
-#: /usr/local/bin/shared/src/shared.py:3968
-#: /usr/local/bin/shared/src/shared.py:3981
-#: /usr/local/bin/shared/src/shared.py:4164
-#: /usr/local/bin/shared/src/shared.py:4185
-#: /usr/local/bin/shared/src/shared.py:4220
-#: /usr/local/bin/shared/src/shared.py:4240
-#: /usr/local/bin/shared/src/shared.py:4254
-#: /usr/local/bin/shared/src/regexp.py:71
-#: /usr/local/bin/shared/src/regexp.py:87
-#: /usr/local/bin/shared/src/regexp.py:128
+#: /usr/local/bin/shared/src/shared.py:1333
+#: /usr/local/bin/shared/src/shared.py:1351
+#: /usr/local/bin/shared/src/shared.py:1370
+#: /usr/local/bin/shared/src/shared.py:1389
+#: /usr/local/bin/shared/src/shared.py:1406
+#: /usr/local/bin/shared/src/shared.py:1421
+#: /usr/local/bin/shared/src/shared.py:1469
+#: /usr/local/bin/shared/src/shared.py:1491
+#: /usr/local/bin/shared/src/shared.py:1588
+#: /usr/local/bin/shared/src/shared.py:1610
+#: /usr/local/bin/shared/src/shared.py:1633
+#: /usr/local/bin/shared/src/shared.py:1644
+#: /usr/local/bin/shared/src/shared.py:1662
+#: /usr/local/bin/shared/src/shared.py:1683
+#: /usr/local/bin/shared/src/shared.py:1708
+#: /usr/local/bin/shared/src/shared.py:1848
+#: /usr/local/bin/shared/src/shared.py:1890
+#: /usr/local/bin/shared/src/shared.py:1905
+#: /usr/local/bin/shared/src/shared.py:1950
+#: /usr/local/bin/shared/src/shared.py:2022
+#: /usr/local/bin/shared/src/shared.py:2047
+#: /usr/local/bin/shared/src/shared.py:2072
+#: /usr/local/bin/shared/src/shared.py:2129
+#: /usr/local/bin/shared/src/shared.py:2148
+#: /usr/local/bin/shared/src/shared.py:2160
+#: /usr/local/bin/shared/src/shared.py:2199
+#: /usr/local/bin/shared/src/shared.py:2259
+#: /usr/local/bin/shared/src/shared.py:2270
+#: /usr/local/bin/shared/src/shared.py:2291
+#: /usr/local/bin/shared/src/shared.py:2312
+#: /usr/local/bin/shared/src/shared.py:2339
+#: /usr/local/bin/shared/src/shared.py:2354
+#: /usr/local/bin/shared/src/shared.py:2377
+#: /usr/local/bin/shared/src/shared.py:2434
+#: /usr/local/bin/shared/src/shared.py:2467
+#: /usr/local/bin/shared/src/shared.py:2484
+#: /usr/local/bin/shared/src/shared.py:2692
+#: /usr/local/bin/shared/src/shared.py:2767
+#: /usr/local/bin/shared/src/shared.py:2779
+#: /usr/local/bin/shared/src/shared.py:2810
+#: /usr/local/bin/shared/src/shared.py:2846
+#: /usr/local/bin/shared/src/shared.py:3139
+#: /usr/local/bin/shared/src/shared.py:3176
+#: /usr/local/bin/shared/src/shared.py:3186
+#: /usr/local/bin/shared/src/shared.py:3219
+#: /usr/local/bin/shared/src/shared.py:3238
+#: /usr/local/bin/shared/src/shared.py:3248
+#: /usr/local/bin/shared/src/shared.py:3267
+#: /usr/local/bin/shared/src/shared.py:3286
+#: /usr/local/bin/shared/src/shared.py:3301
+#: /usr/local/bin/shared/src/shared.py:3316
+#: /usr/local/bin/shared/src/shared.py:3335
+#: /usr/local/bin/shared/src/shared.py:3346
+#: /usr/local/bin/shared/src/shared.py:3360
+#: /usr/local/bin/shared/src/shared.py:3374
+#: /usr/local/bin/shared/src/shared.py:3388
+#: /usr/local/bin/shared/src/shared.py:3432
+#: /usr/local/bin/shared/src/shared.py:3459
+#: /usr/local/bin/shared/src/shared.py:3476
+#: /usr/local/bin/shared/src/shared.py:3512
+#: /usr/local/bin/shared/src/shared.py:3525
+#: /usr/local/bin/shared/src/shared.py:3540
+#: /usr/local/bin/shared/src/shared.py:3556
+#: /usr/local/bin/shared/src/shared.py:3573
+#: /usr/local/bin/shared/src/shared.py:3972
+#: /usr/local/bin/shared/src/shared.py:3985
+#: /usr/local/bin/shared/src/shared.py:4168
+#: /usr/local/bin/shared/src/shared.py:4189
+#: /usr/local/bin/shared/src/shared.py:4224
+#: /usr/local/bin/shared/src/shared.py:4244
+#: /usr/local/bin/shared/src/shared.py:4258
 msgid "Operation has been canceled."
 msgstr "Операция отменена."
 
-#: /usr/local/bin/shared/src/sharedGUI.py:463
-#: /usr/local/bin/shared/src/sharedGUI.py:493
+#: /usr/local/bin/shared/src/sharedGUI.py:466
+#: /usr/local/bin/shared/src/sharedGUI.py:496
 msgid "Only one match has been found!"
 msgstr "Найдено 1 совпадение!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:468
+#: /usr/local/bin/shared/src/sharedGUI.py:471
 msgid "No more matches, continuing from the top!"
 msgstr "Совпадений больше нет, поиск продолжен с начала!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:498
+#: /usr/local/bin/shared/src/sharedGUI.py:501
 msgid "No more matches, continuing from the bottom!"
 msgstr "Совпадений больше нет, поиск продолжен с конца!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:747
-#: /usr/local/bin/shared/src/sharedGUI.py:990
-#: /usr/local/bin/shared/src/sharedGUI.py:1730
-#: /usr/local/bin/shared/src/sharedGUI.py:1752
-#: /usr/local/bin/shared/src/sharedGUI.py:2966
-#: /usr/local/bin/shared/src/sharedGUI.py:3054
-#: /usr/local/bin/shared/src/sharedGUI.py:3368
-#: /usr/local/bin/shared/src/sharedGUI.py:3379
-#: /usr/local/bin/shared/src/sharedGUI.py:3776
+#: /usr/local/bin/shared/src/sharedGUI.py:750
+#: /usr/local/bin/shared/src/sharedGUI.py:993
+#: /usr/local/bin/shared/src/sharedGUI.py:1734
+#: /usr/local/bin/shared/src/sharedGUI.py:1756
+#: /usr/local/bin/shared/src/sharedGUI.py:2968
+#: /usr/local/bin/shared/src/sharedGUI.py:3056
+#: /usr/local/bin/shared/src/sharedGUI.py:3376
+#: /usr/local/bin/shared/src/sharedGUI.py:3387
+#: /usr/local/bin/shared/src/sharedGUI.py:3789
 #: /usr/local/bin/shared/src/shared.py:582
-#: /usr/local/bin/shared/src/shared.py:1521
-#: /usr/local/bin/shared/src/shared.py:1882
-#: /usr/local/bin/shared/src/shared.py:2014
-#: /usr/local/bin/shared/src/shared.py:2623
-#: /usr/local/bin/shared/src/shared.py:2799
-#: /usr/local/bin/shared/src/shared.py:3842
-#: /usr/local/bin/shared/src/shared.py:3919
-#: /usr/local/bin/shared/src/shared.py:4100
-#: /usr/local/bin/shared/src/shared.py:4123
-#: /usr/local/bin/shared/src/shared.py:4143
+#: /usr/local/bin/shared/src/shared.py:1522
+#: /usr/local/bin/shared/src/shared.py:1885
+#: /usr/local/bin/shared/src/shared.py:2017
+#: /usr/local/bin/shared/src/shared.py:2627
+#: /usr/local/bin/shared/src/shared.py:2803
+#: /usr/local/bin/shared/src/shared.py:3846
+#: /usr/local/bin/shared/src/shared.py:3923
+#: /usr/local/bin/shared/src/shared.py:4104
+#: /usr/local/bin/shared/src/shared.py:4127
+#: /usr/local/bin/shared/src/shared.py:4147
 msgid "Empty input is not allowed!"
 msgstr "Пустые входные данные не допускаются!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:758
-#: /usr/local/bin/shared/src/sharedGUI.py:911
-#: /usr/local/bin/shared/src/sharedGUI.py:1142
-#: /usr/local/bin/shared/src/sharedGUI.py:1171
-#: /usr/local/bin/shared/src/sharedGUI.py:2955
-#: /usr/local/bin/shared/src/sharedGUI.py:2983
+#: /usr/local/bin/shared/src/sharedGUI.py:761
+#: /usr/local/bin/shared/src/sharedGUI.py:914
+#: /usr/local/bin/shared/src/sharedGUI.py:1145
+#: /usr/local/bin/shared/src/sharedGUI.py:1174
+#: /usr/local/bin/shared/src/sharedGUI.py:2957
+#: /usr/local/bin/shared/src/sharedGUI.py:2985
 msgid "The parent has already been destroyed."
 msgstr "Родительский виджет уже был разрушен."
 
-#: /usr/local/bin/shared/src/sharedGUI.py:799
+#: /usr/local/bin/shared/src/sharedGUI.py:802
 #, python-format
 msgid "Failed to remove the tag %s in the widget %s in positions %s-%s!"
 msgstr "Не удалось удалить тэг %s в виджете %s для позиций %s-%s!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:811
+#: /usr/local/bin/shared/src/sharedGUI.py:814
 msgid "DEBUG-ERROR"
 msgstr "ОШИБКА ПРИ ОТЛАДКЕ"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:812
-#: /usr/local/bin/shared/src/sharedGUI.py:900
+#: /usr/local/bin/shared/src/sharedGUI.py:815
+#: /usr/local/bin/shared/src/sharedGUI.py:903
 #, python-format
 msgid "Element \"%s\" has not been found in fragment \"%s\"!"
 msgstr "Элемент \"%s\" не был найден во фрагменте \"%s\"!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:827
+#: /usr/local/bin/shared/src/sharedGUI.py:830
 #, python-format
 msgid "Failed to add tag \"%s\" for positions %s-%s!"
 msgstr "Не удалось добавить тэг \"%s\" для позиций %s-%s!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:840
+#: /usr/local/bin/shared/src/sharedGUI.py:843
 #, python-format
 msgid "Failed to configure tag \"%s\" to have the background of color \"%s\"!"
 msgstr "Не удалось назначить тэгу \"%s\" фон \"%s\"!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:849
+#: /usr/local/bin/shared/src/sharedGUI.py:852
 #, python-format
 msgid "Failed to configure tag \"%s\" to have the foreground of color \"%s\"!"
 msgstr "Не удалось назначить тэгу \"%s\" цвет \"%s\"!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:858
+#: /usr/local/bin/shared/src/sharedGUI.py:861
 #, python-format
 msgid "Failed to configure tag \"%s\" to have the font \"%s\"!"
 msgstr "Не удалось назначить тэгу \"%s\" шрифт \"%s\"!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:876
+#: /usr/local/bin/shared/src/sharedGUI.py:879
 #, python-format
 msgid "Failed to insert mark \"%s\" in position \"%s\"!"
 msgstr "Не удается вставить метку \"%s\" для позиции \"%s\"!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:893
+#: /usr/local/bin/shared/src/sharedGUI.py:896
 #, python-format
 msgid "Failed to remove mark \"%s\"!"
 msgstr "Не удалось удалить метку \"%s\"!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:963
-#: /usr/local/bin/shared/src/sharedGUI.py:974
+#: /usr/local/bin/shared/src/sharedGUI.py:966
+#: /usr/local/bin/shared/src/sharedGUI.py:977
 #, python-format
 msgid "Failed to shift screen to label \"%s\"!"
 msgstr "Не удалось сдвинуть экран до метки \"%s\"!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:1009
-#: /usr/local/bin/shared/src/sharedGUI.py:1050
-#: /usr/local/bin/shared/src/sharedGUI.py:1584
-#: /usr/local/bin/shared/src/sharedGUI.py:2962
-#: /usr/local/bin/shared/src/sharedGUI.py:2992
-#: /usr/local/bin/shared/src/sharedGUI.py:3892
-#: /usr/local/bin/shared/src/sharedGUI.py:3897
+#: /usr/local/bin/shared/src/sharedGUI.py:1012
+#: /usr/local/bin/shared/src/sharedGUI.py:1053
+#: /usr/local/bin/shared/src/sharedGUI.py:1588
+#: /usr/local/bin/shared/src/sharedGUI.py:2964
+#: /usr/local/bin/shared/src/sharedGUI.py:2994
+#: /usr/local/bin/shared/src/sharedGUI.py:3905
+#: /usr/local/bin/shared/src/sharedGUI.py:3910
 #: /usr/local/bin/shared/src/shared.py:193
-#: /usr/local/bin/shared/src/shared.py:2543
-#: /usr/local/bin/shared/src/shared.py:3006
-#: /usr/local/bin/shared/src/shared.py:3409
-#: /usr/local/bin/shared/src/shared.py:3734
-#: /usr/local/bin/shared/src/shared.py:3766
+#: /usr/local/bin/shared/src/shared.py:2547
+#: /usr/local/bin/shared/src/shared.py:3010
+#: /usr/local/bin/shared/src/shared.py:3413
+#: /usr/local/bin/shared/src/shared.py:3738
+#: /usr/local/bin/shared/src/shared.py:3770
 msgid "DEBUG"
 msgstr "ОТЛАДКА"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:1010
+#: /usr/local/bin/shared/src/sharedGUI.py:1013
 #, python-format
 msgid "Got position: \"%s\""
 msgstr "Получена позиция: \"%s\""
 
-#: /usr/local/bin/shared/src/sharedGUI.py:1016
+#: /usr/local/bin/shared/src/sharedGUI.py:1019
 msgid "Cannot return a cursor position!"
 msgstr "Не удалось вернуть позицию курсора!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:1051
+#: /usr/local/bin/shared/src/sharedGUI.py:1054
 #, python-format
 msgid "%d tags to assign"
 msgstr "Создание %d тэгов"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:1057
+#: /usr/local/bin/shared/src/sharedGUI.py:1060
 msgid "Spelling seems to be correct."
 msgstr "Ошибок правописания не обнаружено."
 
-#: /usr/local/bin/shared/src/sharedGUI.py:1062
-#: /usr/local/bin/shared/src/sharedGUI.py:2395
-#: /usr/local/bin/shared/src/sharedGUI.py:2651
+#: /usr/local/bin/shared/src/sharedGUI.py:1065
+#: /usr/local/bin/shared/src/sharedGUI.py:2399
+#: /usr/local/bin/shared/src/sharedGUI.py:2653
+#: /usr/local/bin/shared/src/regexp.py:52
+#: /usr/local/bin/shared/src/regexp.py:123
 #: /usr/local/bin/shared/src/shared.py:212
 #: /usr/local/bin/shared/src/shared.py:312
 #: /usr/local/bin/shared/src/shared.py:361
 #: /usr/local/bin/shared/src/shared.py:382
 #: /usr/local/bin/shared/src/shared.py:737
-#: /usr/local/bin/shared/src/shared.py:1763
-#: /usr/local/bin/shared/src/shared.py:3076
-#: /usr/local/bin/shared/src/shared.py:3095
-#: /usr/local/bin/shared/src/regexp.py:52
-#: /usr/local/bin/shared/src/regexp.py:123
+#: /usr/local/bin/shared/src/shared.py:1766
+#: /usr/local/bin/shared/src/shared.py:3080
+#: /usr/local/bin/shared/src/shared.py:3099
 msgid "Not enough input data!"
 msgstr "Недостаточно входных данных!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:1370
-#: /usr/local/bin/shared/src/sharedGUI.py:1908
-#: /usr/local/bin/shared/src/shared.py:4276
+#: /usr/local/bin/shared/src/sharedGUI.py:1373
+#: /usr/local/bin/shared/src/sharedGUI.py:1912
+#: /usr/local/bin/shared/src/shared.py:4279
 msgid "Nothing to do!"
 msgstr "Действие не требуется."
 
-#: /usr/local/bin/shared/src/sharedGUI.py:1462
-#: /usr/local/bin/shared/src/sharedGUI.py:1934
-#: /usr/local/bin/shared/src/sharedGUI.py:2664
-#: /usr/local/bin/shared/src/sharedGUI.py:2800
-#: /usr/local/bin/shared/src/sharedGUI.py:3782
-#: /usr/local/bin/shared/src/sharedGUI.py:3865
+#: /usr/local/bin/shared/src/sharedGUI.py:1466
+#: /usr/local/bin/shared/src/sharedGUI.py:1938
+#: /usr/local/bin/shared/src/sharedGUI.py:2666
+#: /usr/local/bin/shared/src/sharedGUI.py:2802
+#: /usr/local/bin/shared/src/sharedGUI.py:3795
+#: /usr/local/bin/shared/src/sharedGUI.py:3878
 #: /usr/local/bin/shared/src/shared.py:342
-#: /usr/local/bin/shared/src/shared.py:1870
+#: /usr/local/bin/shared/src/shared.py:1873
 #, python-format
 msgid ""
 "An unknown mode \"%s\"!\n"
@@ -806,173 +806,191 @@ msgstr ""
 "\n"
 "Поддерживаются следующие режимы: \"%s\"."
 
-#: /usr/local/bin/shared/src/sharedGUI.py:1470
+#: /usr/local/bin/shared/src/sharedGUI.py:1474
 #, python-format
 msgid "Set the geometry to \"%dx%d+%d+%d\""
 msgstr "Изменение геометрии виджета на \"%dx%d+%d+%d\""
 
-#: /usr/local/bin/shared/src/sharedGUI.py:1585
+#: /usr/local/bin/shared/src/sharedGUI.py:1589
 #, python-format
 msgid "Remove item #%d"
 msgstr "Удаление элемента №%d"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:1590
+#: /usr/local/bin/shared/src/sharedGUI.py:1594
 #, python-format
 msgid "No item #%d!"
 msgstr "Элемент №%d не существует!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:1747
+#: /usr/local/bin/shared/src/sharedGUI.py:1751
 #, python-format
 msgid "Item \"%s\" is not in list!"
 msgstr "Элемент \"%s\" не в списке!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2127
+#: /usr/local/bin/shared/src/sharedGUI.py:2131
 msgid "Failed to return selection in the Tkinter widget!"
 msgstr "Не удается вернуть диапазон выделения в виджете Tkinter!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2185
+#: /usr/local/bin/shared/src/sharedGUI.py:2189
 msgid "Paste a special symbol"
 msgstr "Вставить специальный символ"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2248
+#: /usr/local/bin/shared/src/sharedGUI.py:2252
 #, python-format
 msgid "Save geometry: %s"
 msgstr "Сохранение геометрии: %s"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2261
+#: /usr/local/bin/shared/src/sharedGUI.py:2265
 #, python-format
 msgid "Restore geometry: %s"
 msgstr "Восстановление геометрии: %s"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2267
+#: /usr/local/bin/shared/src/sharedGUI.py:2271
 msgid "Failed to restore geometry!"
 msgstr "Не удалось восстановить геометрию!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2289
+#: /usr/local/bin/shared/src/sharedGUI.py:2293
 msgid "Failed to change window properties!"
 msgstr "Не удалось изменить свойства окна!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2390
+#: /usr/local/bin/shared/src/sharedGUI.py:2394
 msgid "Failed to get the window handle!"
 msgstr "Не удалось получить дескриптор окна!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2420
-#: /usr/local/bin/shared/src/sharedGUI.py:2473
-#: /usr/local/bin/shared/src/sharedGUI.py:2476
+#: /usr/local/bin/shared/src/sharedGUI.py:2422
+#: /usr/local/bin/shared/src/sharedGUI.py:2475
+#: /usr/local/bin/shared/src/sharedGUI.py:2478
 msgid "Please wait..."
 msgstr "Подождите..."
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2549
+#: /usr/local/bin/shared/src/sharedGUI.py:2551
 #, python-format
 msgid "Wrong font: \"%s\"!"
 msgstr "Неправильный шрифт: \"%s\"!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2639
-#: /usr/local/bin/shared/src/sharedGUI.py:2879
-#: /usr/local/bin/shared/src/sharedGUI.py:2887
+#: /usr/local/bin/shared/src/sharedGUI.py:2641
+#: /usr/local/bin/shared/src/sharedGUI.py:2881
+#: /usr/local/bin/shared/src/sharedGUI.py:2889
 msgid "Message"
 msgstr "Сообщение"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2657
+#: /usr/local/bin/shared/src/sharedGUI.py:2659
 msgid "CRITICAL"
 msgstr "КРИТИЧЕСКАЯ ОШИБКА"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2659
-#: /usr/local/bin/shared/src/sharedGUI.py:2667
-#: /usr/local/bin/shared/src/sharedGUI.py:2710
-#: /usr/local/bin/shared/src/sharedGUI.py:2716
-#: /usr/local/bin/shared/src/sharedGUI.py:2787
-#: /usr/local/bin/shared/src/sharedGUI.py:2803
-#: /usr/local/bin/shared/src/sharedGUI.py:2845
-#: /usr/local/bin/shared/src/sharedGUI.py:2851
-#: /usr/local/bin/shared/src/sharedGUI.py:3168
+#: /usr/local/bin/shared/src/sharedGUI.py:2661
+#: /usr/local/bin/shared/src/sharedGUI.py:2669
+#: /usr/local/bin/shared/src/sharedGUI.py:2712
+#: /usr/local/bin/shared/src/sharedGUI.py:2718
+#: /usr/local/bin/shared/src/sharedGUI.py:2789
+#: /usr/local/bin/shared/src/sharedGUI.py:2805
+#: /usr/local/bin/shared/src/sharedGUI.py:2847
+#: /usr/local/bin/shared/src/sharedGUI.py:2853
+#: /usr/local/bin/shared/src/sharedGUI.py:3170
 #: /usr/local/bin/shared/src/shared.py:156
 msgid "QUESTION"
 msgstr "ВОПРОС"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2846
+#: /usr/local/bin/shared/src/sharedGUI.py:2848
 msgid "Yes"
 msgstr "Да"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2847
+#: /usr/local/bin/shared/src/sharedGUI.py:2849
 msgid "No"
 msgstr "Нет"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2850
+#: /usr/local/bin/shared/src/sharedGUI.py:2852
 msgid "Cancel"
 msgstr "Отмена"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2854
-#: /usr/local/bin/shared/src/sharedGUI.py:2868
+#: /usr/local/bin/shared/src/sharedGUI.py:2856
+#: /usr/local/bin/shared/src/sharedGUI.py:2870
 msgid "Accept and close"
 msgstr "Принять и закрыть"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2862
+#: /usr/local/bin/shared/src/sharedGUI.py:2864
 msgid "Reject and close"
 msgstr "Отказаться и закрыть"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2923
+#: /usr/local/bin/shared/src/sharedGUI.py:2925
 #, python-format
 msgid "Picture \"%s\" was not found!"
 msgstr "Изображение \"%s\" не найдено!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2948
+#: /usr/local/bin/shared/src/sharedGUI.py:2950
 msgid "A clipboard error has occurred!"
 msgstr "Ошибка буфера обмена!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2960
-#: /usr/local/bin/shared/src/sharedGUI.py:2988
+#: /usr/local/bin/shared/src/sharedGUI.py:2962
+#: /usr/local/bin/shared/src/sharedGUI.py:2990
 msgid "An unknown error has occurred."
 msgstr "Произошла неизвестная ошибка."
 
-#: /usr/local/bin/shared/src/sharedGUI.py:2976
+#: /usr/local/bin/shared/src/sharedGUI.py:2978
 msgid "Failed to paste the clipboard contents!"
 msgstr "Ошибка вставки из буфера обмена."
 
-#: /usr/local/bin/shared/src/sharedGUI.py:3145
+#: /usr/local/bin/shared/src/sharedGUI.py:3147
 #, python-format
 msgid "Add %s"
 msgstr "Добавить %s"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:3184
+#: /usr/local/bin/shared/src/sharedGUI.py:3186
 #, python-format
 msgid "Close %d objs"
 msgstr "Закрыть %d объектов"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:3192
+#: /usr/local/bin/shared/src/sharedGUI.py:3194
 #, python-format
 msgid "Widget \"%s\" does not have a \"close\" action!"
 msgstr "У виджета \"%s\" нет действия \"close\"!"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:3289
-#: /usr/local/bin/shared/src/sharedGUI.py:3296
-#: /usr/local/bin/shared/src/shared.py:2711
-#: /usr/local/bin/shared/src/shared.py:2756
+#: /usr/local/bin/shared/src/sharedGUI.py:3297
+#: /usr/local/bin/shared/src/sharedGUI.py:3304
+#: /usr/local/bin/shared/src/shared.py:2715
+#: /usr/local/bin/shared/src/shared.py:2760
 msgid "Nothing to do."
 msgstr "Действие не требуется."
 
-#: /usr/local/bin/shared/src/sharedGUI.py:3443
+#: /usr/local/bin/shared/src/sharedGUI.py:3451
 msgid "Compare texts:"
 msgstr "Сравните тексты:"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:3582
+#: /usr/local/bin/shared/src/sharedGUI.py:3595
 #, python-format
-msgid "File: \"%s\"; %d/%d MB; Rate: %d kbps; ETA: %d s"
-msgstr "Файл: \"%s\"; %d/%d Мб; Скорость: %d Кб/с; Осталось: %d с"
+msgid "File: \"%s\"; %d/%d MB; Rate: %s kbps; ETA: %d s"
+msgstr "Файл: \"%s\"; %d/%d Мб; Скорость: %s Кб/с; Осталось: %d с"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:3626
+#: /usr/local/bin/shared/src/sharedGUI.py:3639
 msgid "Download progress"
 msgstr "Ход загрузок"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:3893
+#: /usr/local/bin/shared/src/sharedGUI.py:3906
 #, python-format
 msgid "Widget 1 geometry: %dx%d+%d+%d"
 msgstr "Геометрия виджета 1: %dx%d+%d+%d"
 
-#: /usr/local/bin/shared/src/sharedGUI.py:3898
+#: /usr/local/bin/shared/src/sharedGUI.py:3911
 #, python-format
 msgid "Widget 2 geometry: %dx%d+%d+%d"
 msgstr "Геометрия виджета 2: %dx%d+%d+%d"
+
+#: /usr/local/bin/shared/src/regexp.py:64
+#, python-format
+msgid "A syntax error in the regular expression (id: %s)!"
+msgstr "Синтаксическая ошибка в регулярном выражении (запись: %s)!"
+
+#: /usr/local/bin/shared/src/regexp.py:81
+#, python-format
+msgid ""
+"Regular expression %s has failed: we were expecting\n"
+"\"%s\",\n"
+"but received\n"
+"\"%s\"."
+msgstr ""
+"Неудачное вычисление регулярного выражения %s: ожидалось\n"
+"\"%s\",\n"
+"получили\n"
+"\"%s\"."
 
 #: /usr/local/bin/shared/src/shared.py:157
 #, python-format
@@ -996,13 +1014,13 @@ msgid "Unable to open the file in an external program. You should probably check
 msgstr "Не удается открыть файл во внешней программе. Возможно, Вам стоит проверить ассоциации файлов."
 
 #: /usr/local/bin/shared/src/shared.py:323
-#: /usr/local/bin/shared/src/shared.py:1851
+#: /usr/local/bin/shared/src/shared.py:1854
 #, python-format
 msgid "Write file \"%s\""
 msgstr "Запись файла \"%s\""
 
 #: /usr/local/bin/shared/src/shared.py:333
-#: /usr/local/bin/shared/src/shared.py:1864
+#: /usr/local/bin/shared/src/shared.py:1867
 #, python-format
 msgid "Unable to write file \"%s\"!"
 msgstr "Не удается записать файл \"%s\"!"
@@ -1012,15 +1030,15 @@ msgid "***** Start of log. *****"
 msgstr "***** Начало записи лога. *****"
 
 #: /usr/local/bin/shared/src/shared.py:506
-#: /usr/local/bin/shared/src/shared.py:1928
+#: /usr/local/bin/shared/src/shared.py:1931
 #, python-format
 msgid "Entries deleted: %d (%d-%d)"
 msgstr "Удалено вхождений: %d (%d-%d)"
 
 #: /usr/local/bin/shared/src/shared.py:519
 #: /usr/local/bin/shared/src/shared.py:682
-#: /usr/local/bin/shared/src/shared.py:1941
-#: /usr/local/bin/shared/src/shared.py:2120
+#: /usr/local/bin/shared/src/shared.py:1944
+#: /usr/local/bin/shared/src/shared.py:2123
 #, python-format
 msgid "File \"%s\" is not sortable!"
 msgstr "Файл \"%s\" не подлежит сортировке!"
@@ -1031,13 +1049,13 @@ msgid "Dictionary \"%s\": Incorrect line #%d: \"%s\"!"
 msgstr "Словарь \"%s\": Неправильная строка №%d: \"%s\"!"
 
 #: /usr/local/bin/shared/src/shared.py:809
-#: /usr/local/bin/shared/src/shared.py:2173
+#: /usr/local/bin/shared/src/shared.py:2176
 #, python-format
 msgid "Load file \"%s\""
 msgstr "Загрузка файла \"%s\""
 
 #: /usr/local/bin/shared/src/shared.py:828
-#: /usr/local/bin/shared/src/shared.py:2185
+#: /usr/local/bin/shared/src/shared.py:2188
 #, python-format
 msgid "Unable to read file \"%s\"!"
 msgstr "Не удается прочитать файл \"%s\"!"
@@ -1061,328 +1079,310 @@ msgstr "Разное число открывающих и закрывающих
 msgid "Empty strings are not supported!"
 msgstr "Поддерживаются только непустые строки!"
 
-#: /usr/local/bin/shared/src/shared.py:1130
+#: /usr/local/bin/shared/src/shared.py:1131
 msgid "Commas and/or semicolons or line breaks can be used, but not altogether!"
 msgstr "Можно использовать запятые и/или точки с запятой или переносы строк, но не все сразу!"
 
-#: /usr/local/bin/shared/src/shared.py:1155
+#: /usr/local/bin/shared/src/shared.py:1156
 #, python-format
 msgid "Failed to convert \"%s\" to an integer!"
 msgstr "Не удалось конвертировать \"%s\" в целое число!"
 
-#: /usr/local/bin/shared/src/shared.py:1167
+#: /usr/local/bin/shared/src/shared.py:1168
 #, python-format
 msgid "Failed to convert \"%s\" to a floating-point number!"
 msgstr "Не удалось конвертировать \"%s\" в число с плавающей точкой!"
 
-#: /usr/local/bin/shared/src/shared.py:1326
-#: /usr/local/bin/shared/src/shared.py:1345
-#: /usr/local/bin/shared/src/shared.py:1364
-#: /usr/local/bin/shared/src/shared.py:1383
-#: /usr/local/bin/shared/src/shared.py:1485
+#: /usr/local/bin/shared/src/shared.py:1327
+#: /usr/local/bin/shared/src/shared.py:1346
+#: /usr/local/bin/shared/src/shared.py:1365
+#: /usr/local/bin/shared/src/shared.py:1384
+#: /usr/local/bin/shared/src/shared.py:1486
 msgid "Set time parameters are incorrect or not supported."
 msgstr "Заданные параметры времени неверны или не поддерживаются."
 
-#: /usr/local/bin/shared/src/shared.py:1400
+#: /usr/local/bin/shared/src/shared.py:1401
 msgid "Note: it will be Monday!"
 msgstr "Обратите внимание: указанная дата - понедельник!"
 
-#: /usr/local/bin/shared/src/shared.py:1426
+#: /usr/local/bin/shared/src/shared.py:1427
 msgid "Jan"
 msgstr "янв"
 
-#: /usr/local/bin/shared/src/shared.py:1428
+#: /usr/local/bin/shared/src/shared.py:1429
 msgid "Feb"
 msgstr "фев"
 
-#: /usr/local/bin/shared/src/shared.py:1430
+#: /usr/local/bin/shared/src/shared.py:1431
 msgid "Mar"
 msgstr "мар"
 
-#: /usr/local/bin/shared/src/shared.py:1432
+#: /usr/local/bin/shared/src/shared.py:1433
 msgid "Apr"
 msgstr "апр"
 
-#: /usr/local/bin/shared/src/shared.py:1434
+#: /usr/local/bin/shared/src/shared.py:1435
 msgid "May"
 msgstr "май"
 
-#: /usr/local/bin/shared/src/shared.py:1436
+#: /usr/local/bin/shared/src/shared.py:1437
 msgid "Jun"
 msgstr "июн"
 
-#: /usr/local/bin/shared/src/shared.py:1438
+#: /usr/local/bin/shared/src/shared.py:1439
 msgid "Jul"
 msgstr "июл"
 
-#: /usr/local/bin/shared/src/shared.py:1440
+#: /usr/local/bin/shared/src/shared.py:1441
 msgid "Aug"
 msgstr "ав"
 
-#: /usr/local/bin/shared/src/shared.py:1442
+#: /usr/local/bin/shared/src/shared.py:1443
 msgid "Sep"
 msgstr "сен"
 
-#: /usr/local/bin/shared/src/shared.py:1444
+#: /usr/local/bin/shared/src/shared.py:1445
 msgid "Oct"
 msgstr "окт"
 
-#: /usr/local/bin/shared/src/shared.py:1446
+#: /usr/local/bin/shared/src/shared.py:1447
 msgid "Nov"
 msgstr "ноя"
 
-#: /usr/local/bin/shared/src/shared.py:1448
+#: /usr/local/bin/shared/src/shared.py:1449
 msgid "Dec"
 msgstr "дек"
 
-#: /usr/local/bin/shared/src/shared.py:1534
+#: /usr/local/bin/shared/src/shared.py:1535
 #, python-format
 msgid "The object \"%s\" is not a file!"
 msgstr "Объект \"%s\" не является файлом!"
 
-#: /usr/local/bin/shared/src/shared.py:1542
-#: /usr/local/bin/shared/src/shared.py:2379
+#: /usr/local/bin/shared/src/shared.py:1543
+#: /usr/local/bin/shared/src/shared.py:2383
 #, python-format
 msgid "Copy \"%s\" to \"%s\""
 msgstr "Копирование \"%s\" в \"%s\""
 
-#: /usr/local/bin/shared/src/shared.py:1550
+#: /usr/local/bin/shared/src/shared.py:1551
 #, python-format
 msgid "Failed to copy file \"%s\" to \"%s\"!"
 msgstr "Не удалось скопировать файл \"%s\" в \"%s\"!"
 
-#: /usr/local/bin/shared/src/shared.py:1559
+#: /usr/local/bin/shared/src/shared.py:1560
 #, python-format
 msgid "Move \"%s\" to \"%s\""
 msgstr "Перемещение \"%s\" в \"%s\""
 
-#: /usr/local/bin/shared/src/shared.py:1567
+#: /usr/local/bin/shared/src/shared.py:1568
 #, python-format
 msgid "Failed to move \"%s\" to \"%s\"!"
 msgstr "Не удалось переместить \"%s\" в \"%s\"!"
 
-#: /usr/local/bin/shared/src/shared.py:1580
-#: /usr/local/bin/shared/src/shared.py:1653
+#: /usr/local/bin/shared/src/shared.py:1582
+#: /usr/local/bin/shared/src/shared.py:1656
 #, python-format
 msgid "Failed to get the date of the file \"%s\"!"
 msgstr "Не удалось определить дату файла \"%s\"!"
 
-#: /usr/local/bin/shared/src/shared.py:1595
+#: /usr/local/bin/shared/src/shared.py:1597
 #, python-format
 msgid "Unable to copy the file \"%s\" to iself!"
 msgstr "Нельзя скопировать файл \"%s\" сам в себя!"
 
-#: /usr/local/bin/shared/src/shared.py:1603
-#: /usr/local/bin/shared/src/shared.py:1675
-#: /usr/local/bin/shared/src/shared.py:1897
+#: /usr/local/bin/shared/src/shared.py:1605
+#: /usr/local/bin/shared/src/shared.py:1678
+#: /usr/local/bin/shared/src/shared.py:1900
 msgid "Operation has been canceled by the user."
 msgstr "Операция отменена пользователем."
 
-#: /usr/local/bin/shared/src/shared.py:1617
-#: /usr/local/bin/shared/src/shared.py:2275
+#: /usr/local/bin/shared/src/shared.py:1619
+#: /usr/local/bin/shared/src/shared.py:2278
 #, python-format
 msgid "Delete \"%s\""
 msgstr "Удаление \"%s\""
 
-#: /usr/local/bin/shared/src/shared.py:1625
+#: /usr/local/bin/shared/src/shared.py:1627
 #, python-format
 msgid "Failed to delete file \"%s\"!"
 msgstr "Не удается удалить файл \"%s\"!"
 
-#: /usr/local/bin/shared/src/shared.py:1668
+#: /usr/local/bin/shared/src/shared.py:1671
 msgid "Moving is not necessary, because the source and destination are identical."
 msgstr "Перемещение не требуется, поскольку на входе и выходе указан один и тот же объект."
 
-#: /usr/local/bin/shared/src/shared.py:1689
+#: /usr/local/bin/shared/src/shared.py:1692
 #, python-format
 msgid "Change the time of the file \"%s\" to %s"
 msgstr "Изменение времени файла \"%s\" на %s"
 
-#: /usr/local/bin/shared/src/shared.py:1697
+#: /usr/local/bin/shared/src/shared.py:1700
 #, python-format
 msgid "Failed to change the time of the file \"%s\" to \"%s\"!"
 msgstr "Не удалось изменить время файла \"%s\" на \"%s\"!"
 
-#: /usr/local/bin/shared/src/shared.py:1734
-#: /usr/local/bin/shared/src/shared.py:2365
+#: /usr/local/bin/shared/src/shared.py:1737
+#: /usr/local/bin/shared/src/shared.py:2369
 #, python-format
 msgid "Directory \"%s\" already exists."
 msgstr "Каталог \"%s\" уже существует."
 
-#: /usr/local/bin/shared/src/shared.py:1741
+#: /usr/local/bin/shared/src/shared.py:1744
 #, python-format
 msgid "The path \"%s\" is invalid!"
 msgstr "Путь \"%s\" неверен!"
 
-#: /usr/local/bin/shared/src/shared.py:1747
+#: /usr/local/bin/shared/src/shared.py:1750
 #, python-format
 msgid "Create directory \"%s\""
 msgstr "Создание каталога \"%s\""
 
-#: /usr/local/bin/shared/src/shared.py:1756
+#: /usr/local/bin/shared/src/shared.py:1759
 #, python-format
 msgid "Failed to create directory \"%s\"!"
 msgstr "Не удается создать каталог \"%s\"!"
 
-#: /usr/local/bin/shared/src/shared.py:1997
+#: /usr/local/bin/shared/src/shared.py:2000
 msgid "The following lines cannot be parsed:"
 msgstr "Не удается обработать следующие строки:"
 
-#: /usr/local/bin/shared/src/shared.py:2282
+#: /usr/local/bin/shared/src/shared.py:2285
 #, python-format
 msgid "Failed to delete directory \"%s\"! Delete it manually."
 msgstr "Не удается удалить каталог \"%s\"! Удалите его вручную."
 
-#: /usr/local/bin/shared/src/shared.py:2359
+#: /usr/local/bin/shared/src/shared.py:2363
 #, python-format
 msgid "Unable to copy \"%s\" to iself!"
 msgstr "Нельзя скопировать \"%s\" сам в себя!"
 
-#: /usr/local/bin/shared/src/shared.py:2387
+#: /usr/local/bin/shared/src/shared.py:2391
 #, python-format
 msgid "Failed to copy \"%s\" to \"%s\"!"
 msgstr "Не удалось скопировать \"%s\" в \"%s\"!"
 
-#: /usr/local/bin/shared/src/shared.py:2403
+#: /usr/local/bin/shared/src/shared.py:2407
 msgid "The following sections and/or keys are missing:"
 msgstr "ОШИБКА"
 
-#: /usr/local/bin/shared/src/shared.py:2417
+#: /usr/local/bin/shared/src/shared.py:2421
 #, python-format
 msgid "New value of the key \"%s\" has been loaded."
 msgstr "Загружено новое значение ключа \"%s\"."
 
-#: /usr/local/bin/shared/src/shared.py:2424
+#: /usr/local/bin/shared/src/shared.py:2428
 #, python-format
 msgid "Keys loaded in total: %d, whereas %d are modified."
 msgstr "Всего загружено ключей: %d, из них измененных: %d"
 
-#: /usr/local/bin/shared/src/shared.py:2450
+#: /usr/local/bin/shared/src/shared.py:2454
 #, python-format
 msgid "Missing sections: %d"
 msgstr "Отсутствующих разделов: %d"
 
-#: /usr/local/bin/shared/src/shared.py:2452
+#: /usr/local/bin/shared/src/shared.py:2456
 #, python-format
 msgid "Missing keys: %d"
 msgstr "Отсутствующих ключей: %d"
 
-#: /usr/local/bin/shared/src/shared.py:2454
+#: /usr/local/bin/shared/src/shared.py:2458
 msgid "The default configuration has been loaded."
 msgstr "Загружена конфигурация по умолчанию."
 
-#: /usr/local/bin/shared/src/shared.py:2474
+#: /usr/local/bin/shared/src/shared.py:2478
 #, python-format
 msgid "Failed to read the configuration file \"%s\". This file must share the same directory with the program and have UTF-8 encoding (no BOM) and UNIX line break type."
 msgstr "Не удается прочитать конфигурационный файл \"%s\". Этот файл должен находиться в одном каталоге с программой и иметь кодировку utf-8 (без BOM), тип разрыва строки - UNIX."
 
-#: /usr/local/bin/shared/src/shared.py:2534
+#: /usr/local/bin/shared/src/shared.py:2538
 #, python-format
 msgid "Failed to open URL \"%s\" in a default browser!"
 msgstr "Не удалось открыть адрес \"%s\" в браузере по умолчанию!"
 
-#: /usr/local/bin/shared/src/shared.py:2584
+#: /usr/local/bin/shared/src/shared.py:2588
 msgid "Differences:"
 msgstr "Различия:"
 
-#: /usr/local/bin/shared/src/shared.py:2609
+#: /usr/local/bin/shared/src/shared.py:2613
 msgid "Texts are identical!"
 msgstr "Различий нет!"
 
-#: /usr/local/bin/shared/src/shared.py:2670
+#: /usr/local/bin/shared/src/shared.py:2674
 #, python-format
 msgid "Delete the symbolic link \"%s\""
 msgstr "Удаление ярлыка \"%s\""
 
-#: /usr/local/bin/shared/src/shared.py:2677
+#: /usr/local/bin/shared/src/shared.py:2681
 #, python-format
 msgid "Failed to remove shortcut \"%s\". Remove it manually and press OK."
 msgstr "Не удается удалить ярлык \"%s\". Удалите его вручную и нажмите OK."
 
-#: /usr/local/bin/shared/src/shared.py:2694
-#: /usr/local/bin/shared/src/shared.py:2725
+#: /usr/local/bin/shared/src/shared.py:2698
+#: /usr/local/bin/shared/src/shared.py:2729
 #, python-format
 msgid "Create a symbolic link \"%s\""
 msgstr "Создание ярлыка \"%s\""
 
-#: /usr/local/bin/shared/src/shared.py:2701
-#: /usr/local/bin/shared/src/shared.py:2736
+#: /usr/local/bin/shared/src/shared.py:2705
+#: /usr/local/bin/shared/src/shared.py:2740
 #, python-format
 msgid "Failed to create shortcut \"%s\". Create it manually and press OK."
 msgstr "Не удается создать ярлык \"%s\". Создайте его вручную и нажмите OK."
 
-#: /usr/local/bin/shared/src/shared.py:2837
+#: /usr/local/bin/shared/src/shared.py:2841
 msgid "Failed to load an e-mail client."
 msgstr "Не удалось загрузить почтовый клиент."
 
-#: /usr/local/bin/shared/src/shared.py:3120
+#: /usr/local/bin/shared/src/shared.py:3124
 msgid "Analyze the text"
 msgstr "Анализ текста"
 
-#: /usr/local/bin/shared/src/shared.py:3449
+#: /usr/local/bin/shared/src/shared.py:3453
 #, python-format
 msgid "Failed to find words of paragraph #%d!"
 msgstr "Не удалось найти слова абзаца #%d!"
 
-#: /usr/local/bin/shared/src/shared.py:3851
-#: /usr/local/bin/shared/src/shared.py:3860
+#: /usr/local/bin/shared/src/shared.py:3855
+#: /usr/local/bin/shared/src/shared.py:3864
 msgid "The pool is empty!"
 msgstr "Пул пуст!"
 
-#: /usr/local/bin/shared/src/shared.py:3896
+#: /usr/local/bin/shared/src/shared.py:3900
 #, python-format
 msgid "The operation has taken %f s."
 msgstr "Операция завершена за %f с."
 
-#: /usr/local/bin/shared/src/shared.py:3941
+#: /usr/local/bin/shared/src/shared.py:3945
 #, python-format
 msgid "Set the max number of rows to %d"
 msgstr "Задать максимальное число столбцов: %d"
 
-#: /usr/local/bin/shared/src/shared.py:4072
+#: /usr/local/bin/shared/src/shared.py:4076
 #, python-format
 msgid "[OK]: \"%s\""
 msgstr "[Успешно]: \"%s\""
 
-#: /usr/local/bin/shared/src/shared.py:4078
+#: /usr/local/bin/shared/src/shared.py:4082
 #, python-format
 msgid "[FAILED]: \"%s\""
 msgstr "[ОШИБКА]: \"%s\""
 
-#: /usr/local/bin/shared/src/shared.py:4094
+#: /usr/local/bin/shared/src/shared.py:4098
 #, python-format
 msgid "Unable to decode \"%s\"!"
 msgstr "Не удается изменить кодировку \"%s\"!"
 
-#: /usr/local/bin/shared/src/shared.py:4195
+#: /usr/local/bin/shared/src/shared.py:4199
 msgid "No references have been found!"
 msgstr "Ориентиры не найдены!"
 
-#: /usr/local/bin/shared/src/shared.py:4201
+#: /usr/local/bin/shared/src/shared.py:4205
 msgid "No references to the right!"
 msgstr "Справа ориентиров нет!"
 
-#: /usr/local/bin/shared/src/shared.py:4207
+#: /usr/local/bin/shared/src/shared.py:4211
 msgid "No references to the left!"
 msgstr "Слева ориентиров нет!"
-
-#: /usr/local/bin/shared/src/regexp.py:64
-#, python-format
-msgid "A syntax error in the regular expression (id: %s)!"
-msgstr "Синтаксическая ошибка в регулярном выражении (запись: %s)!"
-
-#: /usr/local/bin/shared/src/regexp.py:81
-#, python-format
-msgid ""
-"Regular expression %s has failed: we were expecting\n"
-"\"%s\",\n"
-"but received\n"
-"\"%s\"."
-msgstr ""
-"Неудачное вычисление регулярного выражения %s: ожидалось\n"
-"\"%s\",\n"
-"получили\n"
-"\"%s\"."
 
 #~ msgid "Text with instructions:"
 #~ msgstr "Текст с инструкциями:"
