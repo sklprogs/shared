@@ -136,6 +136,9 @@ reserved_win  = ['CON','PRN','AUX','NUL','COM1','COM2','COM3','COM4'
                 ]
 
 oss = OSSpecific()
+if oss.win():
+    import win32com
+    import pythoncom
 # Load last due to problems with TZ (see 'oss.win_import')
 import datetime
 
@@ -2693,10 +2696,10 @@ class Shortcut:
 
     # http://timgolden.me.uk/python/win32_how_do_i/read-a-shortcut.html
     def _get_win(self):
-        link = pythoncom.CoCreateInstance (shell.CLSID_ShellLink
+        link = pythoncom.CoCreateInstance (win32com.shell.shell.CLSID_ShellLink
                                           ,None
                                           ,pythoncom.CLSCTX_INPROC_SERVER
-                                          ,shell.IID_IShellLink
+                                          ,win32com.shell.shell.IID_IShellLink
                                           )
         link.QueryInterface(pythoncom.IID_IPersistFile).Load(self.symlink)
         ''' GetPath returns the name and a WIN32_FIND_DATA structure
@@ -2704,7 +2707,7 @@ class Shortcut:
             shortname, UNC or the "raw path" are to be returned.
             Bizarrely, the docs indicate that the flags can be combined.
         '''
-        self.path,_=link.GetPath(shell.SLGP_UNCPRIORITY)
+        self.path,_=link.GetPath(win32com.shell.shell.SLGP_UNCPRIORITY)
 
     def _get_unix(self):
         self.path = os.path.realpath(self.symlink)
@@ -4306,6 +4309,78 @@ class References:
                        ,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
+
+
+
+class Links:
+    
+    def __init__(self,text,root='href="'):
+        self.values()
+        self._text = text
+        self._root = root
+        
+    def redirection(self):
+        for i in range(len(self._links)):
+            if '?url' in self._links[i]:
+                self._links[i] = re.sub('.*\?url=','',self._links[i])
+                # Replace '%3A%2F%2F' with '://' and so on
+                self._links[i] = urllib.parse.unquote(self._links[i])
+    
+    def values(self):
+        self._pos   = 0
+        self._links = []
+    
+    def poses(self):
+        text = self._text
+        search = Search (text   = self._text
+                        ,search = self._root
+                        )
+        loop = search.next_loop()
+        for self._pos in loop:
+            self.link()
+            
+    def link(self):
+        pos = self._pos + len(self._root)
+        if pos >= len(self._text):
+            log.append ('Links.link'
+                       ,_('WARNING')
+                       ,_('Unexpected end of text!')
+                       )
+        else:
+            text = self._text[pos:]
+            try:
+                pos = text.index('"')
+                self._links.append(text[:pos])
+            except ValueError:
+                log.append ('Links.link'
+                           ,_('WARNING')
+                           ,_('Wrong input data!')
+                           )
+                              
+    def duplicates(self):
+        ''' Sometimes there are duplicate URLs on a page - we delete
+            them there. We may need to preserve an original sorting so
+            do not use 'set'.
+        '''
+        i = len(self._links) - 1
+        while i >= 0:
+            ind = self._links.index(self._links[i])
+            if ind < i:
+                del self._links[i]
+            i -= 1
+        return self._links
+    
+    def add_root(self,root):
+        for i in range(len(self._links)):
+            if self._links[i].startswith('/'):
+                self._links[i] = root + self._links[i]
+        return self._links
+        
+    def valid(self):
+        self._links = [link for link in self._links \
+                       if link.startswith('http')
+                      ]
+        return self._links
 
 
 ''' If there are problems with import or tkinter's wait_variable, put
