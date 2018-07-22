@@ -3919,6 +3919,218 @@ class AttachWidget:
 
 
 
+class MultCBoxes:
+
+    def __init__(self,lst=[],width=350,height=300):
+        self._width  = width
+        self._height = height
+        self.values()
+        self.parent = Top(parent=objs.root())
+        Geometry(parent=self.parent).set ('%dx%d' % (self._width
+                                                    ,self._height
+                                                    )
+                                         )
+        self.gui()
+        self.reset(lst=lst)
+        
+    def selected(self,event=None):
+        active = []
+        for i in range(len(self._cboxes)):
+            if self._cboxes[i].get():
+                active.append(self._lbls[i]._text)
+        return active
+    
+    def title(self,text=None):
+        if not text:
+            text = _('Select files:')
+        self.parent.title(text)
+    
+    def region(self):
+        if self._frms:
+            self.cvs.region (x        = self._width
+                            ,y        = 22 * len(self._frms)
+                            ,x_border = 10
+                            ,y_border = 20
+                            )
+            self.cvs.scroll()
+        else:
+            sh.log.append ('MultCBoxes.region'
+                          ,_('INFO')
+                          ,_('Nothing to do!')
+                          )
+        
+    def values(self):
+        self._frms   = []
+        self._cboxes = []
+        self._lbls   = []
+        
+    
+    def widgets(self):
+        self.cvs = Canvas(parent = self.frm1)
+        self.lbl = Label (parent = self.frm1
+                         ,expand = True
+                         ,fill   = 'both'
+                         )
+        self.cvs.embed(self.lbl)
+        self.btn1 = Button (parent = self.frmb
+                           ,text   = _('Toggle all')
+                           ,hint   = _('Mark/unmark all checkboxes')
+                           ,side   = 'left'
+                           ,action = self.toggle
+                           )
+        self.btn2 = Button (parent = self.frmb
+                           ,text   = _('Close')
+                           ,hint   = _('Close this window')
+                           ,side   = 'right'
+                           ,action = self.close
+                           )
+        
+    def add_row(self,text):
+        frm = Frame (parent = self.lbl
+                    ,expand = False
+                    )
+        cbox = CheckBox (parent = frm
+                        ,side   = 'left'
+                        )
+        lbl = Label (parent = frm
+                    ,text   = text
+                    ,side   = 'left'
+                    ,Close  = False
+                    )
+        bind (obj      = lbl
+             ,bindings = '<ButtonRelease-1>'
+             ,action   = cbox.toggle
+             )
+        self._frms.append(frm)
+        self._cboxes.append(cbox)
+        self._lbls.append(lbl)
+        
+    def toggle(self,event=None):
+        Marked = False
+        for cbox in self._cboxes:
+            if cbox.get():
+                Marked = True
+                break
+        if Marked:
+            for cbox in self._cboxes:
+                cbox.disable()
+        else:
+            for cbox in self._cboxes:
+                cbox.enable()
+    
+    def reset(self,lst=[]):
+        lst = [str(item) for item in lst]
+        for frame in self._frms:
+            frame.widget.destroy()
+        self.values()
+        for item in lst:
+            self.add_row(item)
+        self.region()
+    
+    def bindings(self):
+        bind (obj      = self.parent
+             ,bindings = ['<Control-q>','<Control-w>','<Escape>']
+             ,action   = self.close
+             )
+        bind (obj      = self.parent
+             ,bindings = '<Down>'
+             ,action   = self.cvs.move_down
+             )
+        bind (obj      = self.parent
+             ,bindings = '<Up>'
+             ,action   = self.cvs.move_up
+             )
+        bind (obj      = self.parent
+             ,bindings = '<Left>'
+             ,action   = self.cvs.move_left
+             )
+        bind (obj      = self.parent
+             ,bindings = '<Right>'
+             ,action   = self.cvs.move_right
+             )
+        bind (obj      = self.parent
+             ,bindings = '<Next>'
+             ,action   = self.cvs.move_page_down
+             )
+        bind (obj      = self.parent
+             ,bindings = '<Prior>'
+             ,action   = self.cvs.move_page_up
+             )
+        bind (obj      = self.parent
+             ,bindings = '<End>'
+             ,action   = self.cvs.move_bottom
+             )
+        bind (obj      = self.parent
+             ,bindings = '<Home>'
+             ,action   = self.cvs.move_top
+             )
+        if sh.oss.win() or sh.oss.mac():
+            bind (obj      = self.parent
+                 ,bindings = '<MouseWheel>'
+                 ,action   = self.mouse_wheel
+                 )
+        else:
+            bind (obj      = self.parent
+                 ,bindings = ['<Button 4>'
+                             ,'<Button 5>'
+                             ]
+                 ,action   = self.mouse_wheel
+                 )
+    
+    def mouse_wheel(self,event):
+        ''' In Windows XP delta == -120 for scrolling up and 120
+            for scrolling down, however, this value varies for different
+            versions.
+        '''
+        if event.num == 5 or event.delta < 0:
+            self.cvs.move_down()
+        elif event.num == 4 or event.delta > 0:
+            self.cvs.move_up()
+        return 'break'
+    
+    def gui(self):
+        self.frames()
+        self.widgets()
+        self.scrollbars()
+        self.btn2.focus()
+        self.bindings()
+        self.title()
+        
+    def frames(self):
+        self.frm  = Frame (parent = self.parent)
+        self.frmy = Frame (parent = self.frm
+                          ,expand = False
+                          ,fill   = 'y'
+                          ,side   = 'right'
+                          )
+        self.frmb = Frame (parent = self.parent
+                          ,expand = False
+                          ,fill   = 'both'
+                          )
+        self.frmx = Frame (parent = self.frm
+                          ,expand = False
+                          ,fill   = 'x'
+                          ,side   = 'bottom'
+                          )
+        self.frm1 = Frame (parent = self.frm)
+        
+    def scrollbars(self):
+        self.xscr = Scrollbar (parent     = self.frmx
+                              ,scroll     = self.cvs
+                              ,Horizontal = True
+                              )
+        self.yscr = Scrollbar (parent     = self.frmy
+                              ,scroll     = self.cvs
+                              )
+                                 
+    def show(self,event=None):
+        self.parent.show()
+        
+    def close(self,event=None):
+        self.parent.close()
+
+
+
 ''' If there are problems with import or tkinter's wait_variable, put
     this beneath 'if __name__'
 '''
