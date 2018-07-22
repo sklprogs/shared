@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-22 20:17+0300\n"
-"PO-Revision-Date: 2018-07-22 20:17+0300\n"
+"POT-Creation-Date: 2018-07-23 00:15+0300\n"
+"PO-Revision-Date: 2018-07-23 00:19+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -481,6 +481,7 @@ msgstr "Найти:"
 #: /usr/local/bin/shared/src/sharedGUI.py:3178
 #: /usr/local/bin/shared/src/sharedGUI.py:3185
 #: /usr/local/bin/shared/src/sharedGUI.py:3303
+#: /usr/local/bin/shared/src/sharedGUI.py:3958
 #: /usr/local/bin/shared/src/shared.py:325
 #: /usr/local/bin/shared/src/shared.py:406
 #: /usr/local/bin/shared/src/shared.py:460
@@ -787,6 +788,7 @@ msgstr "Недостаточно входных данных!"
 
 #: /usr/local/bin/shared/src/sharedGUI.py:1373
 #: /usr/local/bin/shared/src/sharedGUI.py:1912
+#: /usr/local/bin/shared/src/sharedGUI.py:3959
 #: /usr/local/bin/shared/src/shared.py:4403
 msgid "Nothing to do!"
 msgstr "Действие не требуется."
@@ -976,6 +978,26 @@ msgstr "Геометрия виджета 1: %dx%d+%d+%d"
 #, python-format
 msgid "Widget 2 geometry: %dx%d+%d+%d"
 msgstr "Геометрия виджета 2: %dx%d+%d+%d"
+
+#: /usr/local/bin/shared/src/sharedGUI.py:3945
+msgid "Select files:"
+msgstr "Выберите файлы:"
+
+#: /usr/local/bin/shared/src/sharedGUI.py:3976
+msgid "Toggle all"
+msgstr "Переключить все"
+
+#: /usr/local/bin/shared/src/sharedGUI.py:3977
+msgid "Mark/unmark all checkboxes"
+msgstr "Добавить/убрать все пометы"
+
+#: /usr/local/bin/shared/src/sharedGUI.py:3982
+msgid "Close"
+msgstr "Закрыть"
+
+#: /usr/local/bin/shared/src/sharedGUI.py:3983
+msgid "Close this window"
+msgstr "Закрыть это окно"
 
 #: /usr/local/bin/shared/src/regexp.py:64
 #, python-format
@@ -1397,8 +1419,6 @@ msgstr "Неожиданный конец текста!"
 #~ msgstr ""
 #~ "Родительский виджет не поддерживается, будет использован виджет по "
 #~ "умолчанию."
-#~ msgid "Clear"
-#~ msgstr "Очистить"
 #~ msgid "Delete all text"
 #~ msgstr "Удалить весь текст"
 #~ msgid "Manage subscriptions"
