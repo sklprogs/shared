@@ -4130,6 +4130,12 @@ class MultCBoxes:
         self.parent.close()
 
 
+def fast_txt(text):
+    objs.txt().reset()
+    objs._txt.insert(text)
+    objs._txt.show()
+
+
 
 ''' If there are problems with import or tkinter's wait_variable, put
     this beneath 'if __name__'
@@ -4138,8 +4144,10 @@ objs = Objects()
 
 
 if __name__ == '__main__':
-    objs.start(Close=0)
-    bar = ProgressBar()
-    bar.add()
-    bar.show()
-    objs.root().widget.wait_window()
+    objs.start()
+    files = sh.Directory('/home/pete').rel_files()
+    files.sort(key=lambda s:s.lower())
+    cboxes = MultCBoxes(lst=files)
+    cboxes.show()
+    print('\n'.join(cboxes.selected()))
+    objs.end()
