@@ -1198,7 +1198,7 @@ class Frame:
                  ,fill='both',side=None,padx=None
                  ,pady=None,ipadx=None,ipady=None
                  ,bd=None,bg=None,width=None
-                 ,height=None
+                 ,height=None,propag=True
                  ):
         self.type   = 'Frame'
         self.parent = parent
@@ -1208,6 +1208,14 @@ class Frame:
                                ,width  = width
                                ,height = height
                                )
+        ''' 'pack_propagate' should be set before 'pack' to 'False'
+            if you want to set widget sizes manually. 'height' and
+            'width' options will not work otherwise. If there are two
+            frames packed one after another, and we need to set sizes
+            of the second frame, then we should apply 'pack_propagate',
+            'width' and 'height' to the first frame too.
+        '''
+        self.widget.pack_propagate(propag)
         self.widget.pack (expand = expand
                          ,fill   = fill
                          ,side   = side
