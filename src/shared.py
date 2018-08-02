@@ -912,6 +912,14 @@ class Text:
             '''
             self.text = self.text.strip()
 
+    def delete_comments(self):
+        self.text = self.text.splitlines()
+        self.text = [line for line in self.text \
+                     if not line.startswith('#')
+                    ]
+        self.text = '\n'.join(self.text)
+        return self.text
+    
     # Getting rid of some useless symbols
     def trash(self):
         self.text = self.text.replace('· ','').replace('• ','').replace('¬','')
