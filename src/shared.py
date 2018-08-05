@@ -4325,6 +4325,8 @@ class Links:
     def __init__(self,text,root='href="'):
         self.values()
         self._text = text
+        # Some sites omit 'http(s):' for their links
+        self._text = self._text.replace('"//www.','"http://www.')
         self._root = root
         
     def redirection(self):
