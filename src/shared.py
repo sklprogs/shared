@@ -1728,7 +1728,8 @@ class File:
             if self.file.lower() == self.dest.lower():
                 objs.mes (func    = 'File.move'
                          ,level   = _('ERROR')
-                         ,message = _('Moving is not necessary, because the source and destination are identical.')
+                         ,message = _('Moving is not necessary, because the source and destination are identical (%s).') \
+                         % self.file
                          )
             elif rewrite(self.dest,AskRewrite=self.AskRewrite):
                 Success = self._move()
@@ -2331,6 +2332,17 @@ class Directory:
                        )
         return self._extensions_low
 
+    def delete_empty(self):
+        if self.Success:
+            # Do not delete nested folders
+            if not os.listdir(self.dir):
+                self.delete()
+        else:
+            log.append ('Directory.delete_empty'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
+    
     def delete(self):
         if self.Success:
             log.append ('Directory.delete'
