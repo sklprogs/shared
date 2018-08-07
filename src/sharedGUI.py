@@ -2433,7 +2433,13 @@ class WaitBox:
                            )
 
     def update(self):
-        self.label.widget.update()
+        ''' Tkinter works differently in Linux in Windows. This allows
+            to evade focus problems in 'mclient'.
+        '''
+        if sh.oss.win():
+            objs.root().idle()
+        else:
+            self.label.widget.update()
     
     # Use tuple for 'args' to pass multiple arguments
     def reset (self,func_title=None,func=None
