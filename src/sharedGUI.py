@@ -3980,12 +3980,9 @@ class MultCBoxes:
         
     
     def widgets(self):
-        self.cvs = Canvas(parent = self.frm1)
-        self.lbl = Label (parent = self.frm1
-                         ,expand = True
-                         ,fill   = 'both'
-                         )
-        self.cvs.embed(self.lbl)
+        self.cvs  = Canvas(parent=self.frm1)
+        self.frme = Frame(parent=self.frm1)
+        self.cvs.embed(self.frme)
         self.btn1 = Button (parent = self.frmb
                            ,text   = _('Toggle all')
                            ,hint   = _('Mark/unmark all checkboxes')
@@ -4000,17 +3997,17 @@ class MultCBoxes:
                            )
         
     def add_row(self,text):
-        frm = Frame (parent = self.lbl
-                    ,expand = False
-                    )
+        frm  = Frame (parent = self.frme
+                     ,expand = False
+                     )
         cbox = CheckBox (parent = frm
                         ,side   = 'left'
                         )
-        lbl = Label (parent = frm
-                    ,text   = text
-                    ,side   = 'left'
-                    ,Close  = False
-                    )
+        lbl  = Label (parent = frm
+                     ,text   = text
+                     ,side   = 'left'
+                     ,Close  = False
+                     )
         bind (obj      = lbl
              ,bindings = '<ButtonRelease-1>'
              ,action   = cbox.toggle
