@@ -1285,6 +1285,16 @@ class List:
         else:
             self.lst2 = list(lst2)
 
+    # Remove duplicate items (positioned after original items)
+    def duplicates(self):
+        i = len(self.lst1) - 1
+        while i >= 0:
+            ind = self.lst1.index(self.lst1[i])
+            if ind < i:
+                del self.lst1[i]
+            i -= 1
+        return self.lst1
+    
     # Add a space where necessary and convert to a string
     def space_items(self,MultSpaces=False):
         text = ''
