@@ -1285,6 +1285,13 @@ class List:
         else:
             self.lst2 = list(lst2)
 
+    # Check if 'lst1' fully comprises 'lst2'
+    def eats(self):
+        for item in self.lst2:
+            if not item in self.lst1:
+                return False
+        return True
+    
     # Remove duplicate items (positioned after original items)
     def duplicates(self):
         i = len(self.lst1) - 1
