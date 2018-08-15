@@ -1285,6 +1285,9 @@ class List:
         else:
             self.lst2 = list(lst2)
 
+    def shared(self):
+        return [item for item in self.lst2 if item in self.lst1]
+    
     # Check if 'lst1' fully comprises 'lst2'
     def eats(self):
         for item in self.lst2:
