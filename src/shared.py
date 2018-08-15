@@ -91,7 +91,7 @@ class OSSpecific:
 config_parser = configparser.SafeConfigParser()
 
 gpl3_url_en = 'http://www.gnu.org/licenses/gpl.html'
-gpl3_url_ru = 'http://rusgpl.ru/rusgpl.html'
+gpl3_url_ru = 'http://antirao.ru/gpltrans/gplru.pdf'
 
 globs = {'int':{},'bool':{},'var':{}}
 
