@@ -3029,6 +3029,70 @@ class Canvas:
         self.fill         = fill
         self.gui()
         
+    def mouse_wheel(self,event=None):
+        ''' Windows XP has the delta of -120, however, it differs
+            depending on the version.
+        '''
+        if event.num == 5 or event.delta < 0:
+            self.move_down()
+        if event.num == 4 or event.delta > 0:
+            self.move_up()
+        return 'break'
+    
+    # These bindings are not enabled by default
+    def top_bindings(self,top):
+        if top:
+            if hasattr(top,'type') and top.type == 'Toplevel':
+                bind (obj      = top
+                     ,bindings = '<Down>'
+                     ,action   = self.move_down
+                     )
+                bind (obj      = top
+                     ,bindings = '<Up>'
+                     ,action   = self.move_up
+                     )
+                bind (obj      = top
+                     ,bindings = '<Left>'
+                     ,action   = self.move_left
+                     )
+                bind (obj      = top
+                     ,bindings = '<Right>'
+                     ,action   = self.move_right
+                     )
+                bind (obj      = top
+                     ,bindings = '<Next>'
+                     ,action   = self.move_page_down
+                     )
+                bind (obj      = top
+                     ,bindings = '<Prior>'
+                     ,action   = self.move_page_up
+                     )
+                bind (obj      = top
+                     ,bindings = '<End>'
+                     ,action   = self.move_bottom
+                     )
+                bind (obj      = top
+                     ,bindings = '<Home>'
+                     ,action   = self.move_top
+                     )
+                bind (obj      = top
+                     ,bindings = ['<MouseWheel>'
+                                 ,'<Button 4>'
+                                 ,'<Button 5>'
+                                 ]
+                     ,action   = self.mouse_wheel
+                     )
+            else:
+                sh.log.append ('Canvas.top_bindings'
+                              ,_('WARNING')
+                              ,_('Wrong input data!')
+                              )
+        else:
+            sh.log.append ('Canvas.top_bindings'
+                          ,_('WARNING')
+                          ,_('Empty input is not allowed!')
+                          )
+    
     def move_up(self,event=None,value=-1):
         self.widget.yview_scroll(value,'units')
         
