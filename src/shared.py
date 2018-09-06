@@ -4168,10 +4168,11 @@ class Get:
                            ,_('[OK]: "%s"') % self._url
                            )
         # Too many possible exceptions
-        except:
+        except Exception as e:
             log.append ('Get._get'
                        ,_('WARNING')
-                       ,_('[FAILED]: "%s"') % self._url
+                       ,_('[FAILED]: "%s". Details: %s') \
+                       % (self._url,str(e))
                        )
     
     def decode(self):
