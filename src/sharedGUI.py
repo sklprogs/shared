@@ -62,14 +62,17 @@ def dialog_save_file(filetypes=()):
                 )
     return file
     
-''' Make a color (a color name (/usr/share/X11/rgb.txt) or a hex value)
-    brighter (positive delta) or darker (negative delta)
-'''
 def mod_color(color,delta=76): # ~30%
+    ''' Make a color (a color name (/usr/share/X11/rgb.txt) or
+        a hex value) brighter (positive delta) or darker
+        (negative delta).
+    '''
     if -255 <= delta <= 255:
         try:
             rgb = objs.root().widget.winfo_rgb(color=color)
-            rgb = tuple(max(min(255,x/256+delta),0) for x in rgb)
+            rgb = list(max(min(255,x/256+delta),0) for x in rgb)
+            # We need to have integers here. I had a float once.
+            rgb = tuple(int(item) for item in rgb)
             return '#%02x%02x%02x' % rgb
         except tk._tkinter.TclError:
             Message (func    = 'mod_color'
