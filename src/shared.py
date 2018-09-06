@@ -4465,9 +4465,8 @@ class FilterList:
         if self.Success:
             match = []
             for item in self._list:
-                item = item.lower()
                 for pattern in self._block:
-                    if pattern in item:
+                    if pattern in item.lower():
                         match.append(item)
                         break
             # This allows us to return matches as well if necessary
