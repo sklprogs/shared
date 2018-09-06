@@ -4426,6 +4426,66 @@ class Links:
         return self._links
 
 
+
+class FilterList:
+    ''' Filter base names (case-ignorant) of files and folders in a path
+        Blacklist is a list of patterns, not obligatory full names
+    '''
+
+    def __init__(self,path,blacklist=[]):
+        self._list   = []
+        self._path   = path
+        self._block  = blacklist
+        self.Success = Directory(self._path).Success \
+                       and isinstance(blacklist,list)
+    
+    def block(self):
+        if self.Success:
+            # Actually, there is no reason to use 'strip' here
+            self._block = [item.lower() for item in self._block if item]
+        else:
+            log.append ('FilterList.block'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
+    
+    def list(self):
+        if self.Success:
+            if not self._list:
+                # Those are base names
+                self._list = os.listdir(self._path)
+            return self._list
+        else:
+            log.append ('FilterList.list'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
+    
+    def filter(self):
+        if self.Success:
+            match = []
+            for item in self._list:
+                item = item.lower()
+                for pattern in self._block:
+                    if pattern in item:
+                        match.append(item)
+                        break
+            # This allows us to return matches as well if necessary
+            mismatch = list(set(self._list) - set(match))
+            mismatch.sort()
+            return [os.path.join(self._path,item) for item in mismatch]
+        else:
+            log.append ('FilterList.filter'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
+        
+    def run(self):
+        self.block()
+        self.list()
+        return self.filter()
+
+
 ''' If there are problems with import or tkinter's wait_variable, put
     this beneath 'if __name__'
 '''
