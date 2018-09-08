@@ -4148,6 +4148,20 @@ class Get:
         self._url      = url
         self._encoding = encoding
         self.Verbose   = Verbose
+        self.unverified()
+        
+    def unverified(self):
+        ''' On *some* systems we can get urllib.error.URLError: 
+            <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED].
+            To get rid of this error, we use this small workaround.
+        '''
+        if hasattr(ssl,'_create_unverified_context'):
+            ssl._create_default_https_context = ssl._create_unverified_context
+        else:
+            sh.log.append ('Welcome.online'
+                          ,_('WARNING')
+                          ,_('Unable to use unverified certificates!')
+                          )
         
     def _get(self):
         ''' Changing UA allows us to avoid a bot protection
