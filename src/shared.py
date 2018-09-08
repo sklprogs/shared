@@ -18,6 +18,7 @@ import pickle
 import re
 import shlex
 import shutil
+import ssl
 import subprocess
 import sys
 import tempfile
@@ -4142,12 +4143,13 @@ class FixBaseName:
 
 class Get:
     
-    def __init__(self,url,encoding='UTF-8',Verbose=True):
+    def __init__(self,url,encoding='UTF-8',Verbose=True,Verify=False):
         self._timeout  = 6
         self._html     = ''
         self._url      = url
         self._encoding = encoding
         self.Verbose   = Verbose
+        self.Verify    = Verify
         self.unverified()
         
     def unverified(self):
@@ -4155,13 +4157,14 @@ class Get:
             <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED].
             To get rid of this error, we use this small workaround.
         '''
-        if hasattr(ssl,'_create_unverified_context'):
-            ssl._create_default_https_context = ssl._create_unverified_context
-        else:
-            sh.log.append ('Welcome.online'
-                          ,_('WARNING')
-                          ,_('Unable to use unverified certificates!')
-                          )
+        if not self.Verify:
+            if hasattr(ssl,'_create_unverified_context'):
+                ssl._create_default_https_context = ssl._create_unverified_context
+            else:
+                sh.log.append ('Welcome.online'
+                              ,_('WARNING')
+                              ,_('Unable to use unverified certificates!')
+                              )
         
     def _get(self):
         ''' Changing UA allows us to avoid a bot protection
