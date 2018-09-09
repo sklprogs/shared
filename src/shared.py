@@ -4161,10 +4161,10 @@ class Get:
             if hasattr(ssl,'_create_unverified_context'):
                 ssl._create_default_https_context = ssl._create_unverified_context
             else:
-                sh.log.append ('Welcome.online'
-                              ,_('WARNING')
-                              ,_('Unable to use unverified certificates!')
-                              )
+                log.append ('Get.unverified'
+                           ,_('WARNING')
+                           ,_('Unable to use unverified certificates!')
+                           )
         
     def _get(self):
         ''' Changing UA allows us to avoid a bot protection
