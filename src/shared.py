@@ -2899,7 +2899,8 @@ class Email:
     def reset(self,email,subject='',message='',attachment=''):
         self.Success = True
         ''' A single address or multiple comma-separated addresses (not
-            all mail agents support ';')
+            all mail agents support ';'). Note that, however, Outlook
+            supports ONLY ';'!
         '''
         self._email   = email
         self._subject = Input (title = 'Email.reset'
@@ -2972,7 +2973,7 @@ class Email:
     
     def create(self):
         if self.Success:
-            if not self.thunderbird():
+            if not self.thunderbird() and not self.outlook():
                 self._subject    = self.sanitize(self._subject)
                 self._message    = self.sanitize(self._message)
                 self._attachment = self.sanitize(self._attachment)
@@ -2983,6 +2984,33 @@ class Email:
                        ,_('Operation has been canceled.')
                        )
                        
+    #note: this does not work in wine!
+    def outlook(self):
+        if oss.win():
+            try:
+                import win32com.client
+                #https://stackoverflow.com/a/51993450
+                outlook       = win32com.client.dynamic.Dispatch('outlook.application')
+                mail          = outlook.CreateItem(0)
+                mail.To       = self._email.replace(',',';')
+                mail.Subject  = self._subject
+                mail.HtmlBody = '<html><body><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">%s</body></html>'\
+                                % self._message
+                if self._attachment:
+                    mail.Attachments.Add(self._attachment)
+                mail.Display(True)
+                return True
+            except Exception as e:
+                objs.mes ('Email.outlook'
+                         ,_('WARNING')
+                         ,_('Operation has failed!\nDetails: %s') % str(e)
+                         )
+        else:
+            log.append ('Email.outlook'
+                       ,_('INFO')
+                       ,_('This operation cannot be executed on your operating system.')
+                       )
+    
     def thunderbird(self):
         if self.Success:
             app = '/usr/bin/thunderbird'
