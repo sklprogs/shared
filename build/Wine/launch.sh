@@ -1,0 +1,3 @@
+#!/bin/bash
+
+wine $HOME/.wine/drive_c/Python34/python.exe ./shared.py

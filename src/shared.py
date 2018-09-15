@@ -2875,57 +2875,88 @@ class Shortcut:
 
 
 class Email:
-
-    def __init__(self,email,subject='',message='',attachment=''):
+    ''' Invoke a default email client with the required input.
+        Since there is no conventional way to programatically add
+        an attachment in the default email client, we attempt to call
+        Thunderbird, then Outlook, and finally mailto.
+        Using 'webbrowser.open' has the following shortcomings:
+        - A web browser is used to parse 'mailto' (we need to launch it
+          first)
+        - Instead of passing arguments to a mail agent, the web browser
+          can search all input online which is a security breach
+        - (AFAIK) Using this method, there is no standard way to add
+          an attachment. Currently, I managed to add attachments only
+          using CentOS6 + Palemoon + Thunderbird.
+    '''
+    def __init__(self,email='',subject='',message='',attachment=''):
+        if email:
+            self.reset (email      = email
+                       ,subject    = subject
+                       ,message    = message
+                       ,attachment = attachment
+                       )
+    
+    def reset(self,email,subject='',message='',attachment=''):
+        self.Success = True
         ''' A single address or multiple comma-separated addresses (not
             all mail agents support ';')
         '''
-        self._email = email
-        self._subject = Input (title = 'Email.__init__'
+        self._email   = email
+        self._subject = Input (title = 'Email.reset'
                               ,value = subject
                               ).not_none()
-        self._message = Input (title = 'Email.__init__'
+        self._message = Input (title = 'Email.reset'
                               ,value = message
                               ).not_none()
         self._attachment = attachment
-        self.Success = True
         if not self._email:
             self.Success = False
-            log.append ('Email.__init__'
+            log.append ('Email.reset'
                        ,_('WARNING')
                        ,_('Empty input is not allowed!')
                        )
         if self._attachment:
             self.Success = File(file=self._attachment).Success
             if not self.Success:
-                log.append ('Email.__init__'
+                log.append ('Email.reset'
                            ,_('WARNING')
                            ,_('Operation has been canceled.')
                            )
 
     # Screen symbols that may cause problems when composing 'mailto'
     def sanitize(self,value):
-        return str(Online(search_str=value).url())
+        if self.Success:
+            return str(Online(search_str=value).url())
+        else:
+            log.append ('Email.sanitize'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
     
-    def create(self):
+    def browser(self):
         if self.Success:
             try:
                 if self._attachment:
-                    ''' Quotes are necessary for attachments only, they
-                        will stay visible otherwise.
+                    ''' - This is the last resort. Attaching a file
+                          worked for me only with CentOS6 + Palemoon +
+                          Thunderbird. Using another OS/browser/email
+                          client will probably call a default email
+                          client without the attachment.
+                        - Quotes are necessary for attachments only,
+                          they will stay visible otherwise.
                     '''
                     webbrowser.open ('mailto:%s?subject=%s&body=%s&attach="%s"'\
                                     % (self._email
-                                      ,self.sanitize(self._subject)
-                                      ,self.sanitize(self._message)
-                                      ,self.sanitize(self._attachment)
+                                      ,self._subject
+                                      ,self._message
+                                      ,self._attachment
                                       )
                                     )
                 else:
-                    webbrowser.open ('mailto:%s?subject=%s&body=%s'\
+                    webbrowser.open ('mailto:%s?subject=%s&body=%s' \
                                     % (self._email
-                                      ,self.sanitize(self._subject)
-                                      ,self.sanitize(self._message)
+                                      ,self._subject
+                                      ,self._message
                                       )
                                     )
             except:
@@ -2934,7 +2965,53 @@ class Email:
                          ,message = _('Failed to load an e-mail client.')
                          )
         else:
+            log.append ('Email.browser'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
+    
+    def create(self):
+        if self.Success:
+            if not self.thunderbird():
+                self._subject    = self.sanitize(self._subject)
+                self._message    = self.sanitize(self._message)
+                self._attachment = self.sanitize(self._attachment)
+                self.browser()
+        else:
             log.append ('Email.create'
+                       ,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
+                       
+    def thunderbird(self):
+        if self.Success:
+            app = '/usr/bin/thunderbird'
+            if os.path.isfile(app):
+                if self._attachment:
+                    self.custom_args = [app,'-compose'
+                                       ,"to='%s',subject='%s',body='%s',attachment='%s'" \
+                                       % (self._email,self._subject
+                                         ,self._message,self._attachment
+                                         )
+                                       ]
+                else:
+                    self.custom_args = [app,'-compose'
+                                       ,"to='%s',subject='%s',body='%s'" \
+                                       % (self._email,self._subject
+                                         ,self._message
+                                         )
+                                       ]
+                try:
+                    subprocess.Popen(self.custom_args)
+                    return True
+                except:
+                    objs.mes ('Email.thunderbird'
+                             ,_('ERROR')
+                             ,_('Failed to run "%s"!') \
+                             % str(self.custom_args)
+                             )
+        else:
+            log.append ('Email.thunderbird'
                        ,_('WARNING')
                        ,_('Operation has been canceled.')
                        )

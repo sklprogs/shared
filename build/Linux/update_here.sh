@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Do not use "verbose" in order to spot errors easily
 
@@ -16,4 +16,4 @@ cp -u /usr/local/bin/shared/src/{gettext_windows,regexp,shared,sharedGUI}.py .
 # (Linux-only) Copy build scripts
 cp -u /usr/local/bin/shared/build/Linux/{build.sh,clean_up.sh,setup.py} .
 
-ls .
+ls --color=always .
