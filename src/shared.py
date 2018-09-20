@@ -804,7 +804,8 @@ class ReadTextFile:
                        ,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
-        return self._list # len(None) causes an error
+        # len(None) causes an error
+        return self._list
 
     def load(self):
         if self.Success:
@@ -4605,6 +4606,34 @@ class FilterList:
         self.block()
         self.list()
         return self.filter()
+
+
+
+class Home:
+
+    def __init__(self,app_name='myapp'):
+        self._app_name = app_name
+        self._conf_dir = ''
+        
+    def create_conf(self):
+        return Path(path=self.conf_dir()).create()
+    
+    def home(self):
+        return os.path.expanduser('~')
+        
+    def conf_dir(self):
+        if not self._conf_dir:
+            self._conf_dir = os.path.join (self.home()
+                                          ,'.config'
+                                          ,self._app_name
+                                          )
+        return self._conf_dir
+    
+    def add(self,*args):
+        return os.path.join(self.home(),*args)
+    
+    def add_config(self,*args):
+        return os.path.join(self.conf_dir(),*args)
 
 
 ''' If there are problems with import or tkinter's wait_variable, put
