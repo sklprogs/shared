@@ -256,24 +256,13 @@ class Launch:
         self._launch()
 
     def auto(self):
-        if self.TargetExists:
-            if self.ext == '.txt' and globs['bool']['ForceAltTXTApp']:
-                self.custom_app = globs[oss.name()]['txt_app']
-                self.custom()
-            elif self.ext == '.pdf' and globs['bool']['ForceAltPDFApp']:
-                self.custom_app = globs[oss.name()]['pdf_app']
-                self.custom()
-            elif os.path.isdir(self.target) \
-            and globs['bool']['ForceAltFileMan']:
-                self.custom_app = globs[oss.name()]['dir_app']
-                self.custom()
-            else:
-                self.default()
-        else:
-            log.append ('Launch.auto'
-                       ,_('WARNING')
-                       ,_('Operation has been canceled.')
-                       )
+        ''' Starting third-party apps instead of default ones is no
+            longer supported - it introduces an excessive complexity
+            and is a potential security breach (programs run by default
+            are usually installed with admin rights and cannot be
+            compromised).
+        '''
+        self.default()
 
     def custom(self):
         if self.TargetExists:
