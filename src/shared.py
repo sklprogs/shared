@@ -5,10 +5,6 @@ copyright = 'Copyright 2015-2018, Peter Sklyar'
 license   = 'GPL v.3'
 email     = 'skl.progs@gmail.com'
 
-import gettext, gettext_windows
-gettext_windows.setup_env()
-gettext.install('shared','../resources/locale')
-
 import re
 import os, sys
 import configparser
@@ -30,6 +26,10 @@ import webbrowser
 import urllib.request, urllib.parse
 import difflib
 import locale
+
+import gettext, gettext_windows
+gettext_windows.setup_env()
+gettext.install('shared','../resources/locale')
 
 
 
@@ -4625,9 +4625,32 @@ class Home:
         return os.path.join(self.conf_dir(),*args)
 
 
+
+class Commands:
+    ''' This class should be located in the same module that needs
+        localization. Do not put it in 'shared', otherwise, 'gettext'
+        will revert to a default locale.
+    '''
+    def __init__(self):
+        pass
+    
+    def cancel(self,func):
+        log.append (func
+                   ,_('WARNING')
+                   ,_('Operation has been canceled.')
+                   )
+    
+    def empty(self,func):
+        log.append (func
+                   ,_('WARNING')
+                   ,_('Empty input is not allowed!')
+                   )
+
+
 ''' If there are problems with import or tkinter's wait_variable, put
     this beneath 'if __name__'
 '''
+com  = Commands()
 objs = Objects()
 
 

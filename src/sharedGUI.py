@@ -12,7 +12,6 @@ gettext_windows.setup_env()
 gettext.install('shared','../resources/locale')
 
 
-
 # Привязать горячие клавиши или кнопки мыши к действию
 # object, str/list, function
 def bind(obj,bindings,action):
