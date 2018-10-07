@@ -1505,7 +1505,7 @@ class ToolTip(ToolTipBase):
                 ,hint_delay=800,hint_width=280
                 ,hint_height=40,hint_bg='#ffffe0'
                 ,hint_dir='top',hint_bwidth=1
-                ,hint_bcolor='navy'
+                ,hint_bcolor='navy',hint_font='Sans 11'
                 ):
         self.text        = text
         self.hint_delay  = hint_delay
@@ -1515,6 +1515,7 @@ class ToolTip(ToolTipBase):
         self.hint_height = hint_height
         self.hint_width  = hint_width
         self.hint_bwidth = hint_bwidth
+        self.hint_font   = hint_font
         ToolTipBase.__init__(self,obj=obj)
 
     def showcontents(self):
@@ -1530,6 +1531,7 @@ class ToolTip(ToolTipBase):
                          ,height  = self.hint_height
                          ,justify = 'center'
                          ,Close   = False
+                         ,font    = self.hint_font
                          )
 
 
