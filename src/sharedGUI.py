@@ -1455,7 +1455,7 @@ class ToolTipBase:
     def showtip(self):
         if self.tip:
             return
-        ''' The tip window must be completely outside the button;
+        ''' The tip window must be completely outside the widget;
             otherwise, when the mouse enters the tip window we get
             a leave event and it disappears, and then we get an enter
             event and it reappears, and so on forever :-(
@@ -1471,10 +1471,10 @@ class ToolTipBase:
             y = self.widget.winfo_rooty() - self.hint_height - 1
         else:
             y = 0
-            Message (func    = 'ToolTipBase.showtip'
-                    ,level   = _('ERROR')
-                    ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
-                               % (str(self.hint_dir),'top, bottom')
+            Message ('ToolTipBase.showtip'
+                    ,_('ERROR')
+                    ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+                    % (str(self.hint_dir),'top, bottom')
                     )
         self.tip = SimpleTop(parent=self.obj)
         self.tip.widget.wm_overrideredirect(1)
