@@ -2386,6 +2386,7 @@ class Directory:
         if self.Success:
             if not self._list:
                 self._list = os.listdir(self.dir)
+                self._list.sort()
                 self._rel_list = list(self._list)
                 for i in range(len(self._list)):
                     self._list[i] = os.path.join(self.dir,self._list[i])
