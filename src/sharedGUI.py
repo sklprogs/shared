@@ -123,6 +123,12 @@ class Root:
 # Do not use graphical logging there
 class WidgetShared:
     
+    def disable(object):
+        object.widget.config(state='disabled')
+    
+    def enable(object):
+        object.widget.config(state='normal')
+    
     def focus(object,event=None):
         object.widget.focus()
 
@@ -209,7 +215,8 @@ class WidgetShared:
                                          % str(object.type)
                               )
 
-    def icon(object,file): # Родительский объект
+    # Parent widget
+    def icon(object,file):
         if object.type == 'Toplevel' or object.type == 'Root':
             if file and os.path.exists(file):
                 object.widget.tk.call ('wm','iconphoto'
@@ -1407,6 +1414,12 @@ class Button:
 
     def focus(self,event=None):
         self.widget.focus_set()
+    
+    def enable(self):
+        WidgetShared.enable(self)
+    
+    def disable(self):
+        WidgetShared.disable(self)
 
 
 
@@ -1912,6 +1925,12 @@ class OptionMenu:
         self.widget.configure(takefocus=takefocus)
         self.default_set()
 
+    def enable(self):
+        WidgetShared.enable(self)
+    
+    def disable(self):
+        WidgetShared.disable(self)
+    
     def trigger(self,event=None):
         self._get()
         if self.Combo:
