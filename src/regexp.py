@@ -9,27 +9,25 @@ gettext_windows.setup_env()
 gettext.install('shared','../resources/locale')
 
 
-''' This class is for both checking a regular expression and replacing
-    matches through text (these actions require different arguments and
-    are not necessarily interconnected)
-'''
 class Record:
-    
-    ''' Example:
-            # Expressions must be raw strings, otherwise, there will be
-              no match
-            orig:       r'(\d+)[\s]{0,1}[–-][\s]{0,1}(\d+)'
-            final:      r'\1-\2'
-            what1:      'Figures 1 - 2 show that...'
-            with1:      'Figures 1-2 show that...'
-        '''
-    
+    ''' - This class is for both checking a regular expression and
+          replacing matches through text (these actions require
+          different arguments and are not necessarily interconnected).
+        - Example:
+          # Expressions must be raw strings, otherwise, there will be
+            no match
+          orig:       r'(\d+)[\s]{0,1}[–-][\s]{0,1}(\d+)'
+          final:      r'\1-\2'
+          what1:      'Figures 1 - 2 show that...'
+          with1:      'Figures 1-2 show that...'
+    '''
     def __init__(self,orig,final,what1=None
                 ,with1=None,what2=None,with2=None
                 ,what3=None,with3=None,what4=None
                 ,with4=None,what5=None,with5=None
                 ,_id='Unknown id'
                 ):
+        f = 'regexp.Record.__init__'
         self.Success = True
         self._orig   = orig
         self._final  = final
@@ -47,48 +45,42 @@ class Record:
         self._what   = self._with = ''
         if not self._orig or not self._final:
             self.Success = False
-            sh.objs.mes ('Record.__init__'
-                        ,_('WARNING')
+            sh.objs.mes (f,_('WARNING')
                         ,_('Not enough input data!')
                         )
     
     def apply(self,text):
+        f = 'regexp.Record.apply'
         if self.Success:
             try:
                 result = re.sub(self._orig,self._final,text)
             except sre_constants.error:
                 result = ''
                 self.Success = False
-                sh.objs.mes ('Record.apply'
-                            ,_('WARNING')
+                sh.objs.mes (f,_('WARNING')
                             ,_('A syntax error in the regular expression (id: %s)!') \
                             % str(self._id)
                             )
             return result
         else:
-            sh.log.append ('Record.apply'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
+            sh.com.cancel(f)
     
     def _check(self):
+        f = 'regexp.Record._check'
         if self.Success:
             result = self.apply(text=self._what)
             if self.Success and result != self._with:
                 self.Success = False
-                sh.objs.mes ('Record._check'
-                            ,_('WARNING')
+                sh.objs.mes (f,_('WARNING')
                             ,_('Regular expression %s has failed: we were expecting\n"%s",\nbut received\n"%s".') \
                             % (str(self._id),str(self._with),str(result))
                             )
         else:
-            sh.log.append ('Record.check'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
+            sh.com.cancel(f)
         return self.Success
     
     def check(self):
+        f = 'regexp.Record.check'
         if self.Success:
             cond1 = self._what1 and self._with1
             cond2 = self._what2 and self._with2
@@ -118,15 +110,11 @@ class Record:
                     self._check()
             else:
                 self.Success = False
-                sh.objs.mes ('Record.check'
-                            ,_('WARNING')
+                sh.objs.mes (f,_('WARNING')
                             ,_('Not enough input data!')
                             )
         else:
-            sh.log.append ('Record.check'
-                          ,_('WARNING')
-                          ,_('Operation has been canceled.')
-                          )
+            sh.com.cancel(f)
         return self.Success
 
 
