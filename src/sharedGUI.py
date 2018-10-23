@@ -1901,9 +1901,7 @@ class OptionMenu:
         self.choice  = None
         self.index   = 0
         self.var     = tk.StringVar(self.parent.widget)
-        # An error is thrown if 'items' is ()
-        if not self.items:
-            self.items = ('1','2','3','4','5')
+        self.convert2str()
         if self.Combo:
             self.widget = ttk.Combobox (master       = self.parent.widget
                                        ,textvariable = self.var
@@ -1925,6 +1923,16 @@ class OptionMenu:
         self.widget.configure(takefocus=takefocus)
         self.default_set()
 
+    # Allow to use digits at input
+    def convert2str(self):
+        if self.items:
+            self.items = tuple(str(item) for item in self.items)
+        else:
+            # An error is thrown if 'items' is ()
+            self.items = ('1','2','3','4','5')
+        if self.default is not None:
+            self.default = str(self.default)
+    
     def enable(self):
         WidgetShared.enable(self)
     
@@ -1972,6 +1980,7 @@ class OptionMenu:
                 self._default_set()
 
     def set(self,item,event=None):
+        item = str(item)
         if item in self.items:
             self.var.set(item)
             self.choice = item
@@ -2007,14 +2016,12 @@ class OptionMenu:
         self.items = items
         if action:
             self.action = action
-        # An error is thrown if 'items' is ()
-        if not self.items:
-            self.items = ('1','2','3','4','5')
+        self.convert2str()
         self.fill()
         if default is None:
             if self.choice in self.items:
                 default = self.choice
-        self.default = default
+        self.default = str(default)
         self.default_set()
         if len(items) == 1:
             self.widget.config(state='disabled')
