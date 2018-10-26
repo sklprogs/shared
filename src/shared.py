@@ -4613,8 +4613,12 @@ class Home:
         
     def conf_dir(self):
         if not self._conf_dir:
+            if oss.win():
+                os_folder = 'Application Data'
+            else:
+                os_folder = '.config'
             self._conf_dir = os.path.join (self.home()
-                                          ,'.config'
+                                          ,os_folder
                                           ,self._app_name
                                           )
         return self._conf_dir
