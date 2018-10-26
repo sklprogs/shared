@@ -1877,7 +1877,6 @@ class ListBox:
 
 
 class OptionMenu:
-
     ''' tk.OptionMenu will convert integers to strings, but we better do
         this here to avoid problems with iterating ("in requires int as
         the left operand") later (this happens when we pass a sequence
@@ -2021,7 +2020,8 @@ class OptionMenu:
         if default is None:
             if self.choice in self.items:
                 default = self.choice
-        self.default = str(default)
+        if default is not None:
+            self.default = str(default)
         self.default_set()
         if len(items) == 1:
             self.widget.config(state='disabled')
