@@ -2815,8 +2815,8 @@ class Email:
         f = 'shared.Email.reset'
         self.Success = True
         ''' A single address or multiple comma-separated addresses (not
-            all mail agents support ';'). Note that, however, Outlook
-            supports ONLY ';'!
+            all mail agents support ';'). #note that, however, Outlook
+            supports ONLY ';' and Evolution - only ','!
         '''
         self._email   = email
         self._subject = Input (title = f
@@ -2887,7 +2887,8 @@ class Email:
     def create(self):
         f = 'shared.Email.create'
         if self.Success:
-            if not self.thunderbird() and not self.outlook():
+            if not self.evolution() and not self.thunderbird() \
+            and not self.outlook():
                 self._subject    = self.sanitize(self._subject)
                 self._message    = self.sanitize(self._message)
                 self._attachment = self.sanitize(self._attachment)
@@ -2930,16 +2931,47 @@ class Email:
             if os.path.isfile(app):
                 if self._attachment:
                     self.custom_args = [app,'-compose'
-                                       ,"to='%s',subject='%s',body='%s',attachment='%s'" \
+                                       ,"to='%s',subject='%s',body='%s',attachment='%s'"\
                                        % (self._email,self._subject
                                          ,self._message,self._attachment
                                          )
                                        ]
                 else:
                     self.custom_args = [app,'-compose'
-                                       ,"to='%s',subject='%s',body='%s'" \
+                                       ,"to='%s',subject='%s',body='%s'"\
                                        % (self._email,self._subject
                                          ,self._message
+                                         )
+                                       ]
+                try:
+                    subprocess.Popen(self.custom_args)
+                    return True
+                except:
+                    objs.mes (f,_('WARNING')
+                             ,_('Failed to run "%s"!') \
+                             % str(self.custom_args)
+                             )
+        else:
+            log.append (f,_('WARNING')
+                       ,_('Operation has been canceled.')
+                       )
+    
+    def evolution(self):
+        f = 'shared.Email.evolution'
+        if self.Success:
+            app = '/usr/bin/evolution'
+            if os.path.isfile(app):
+                if self._attachment:
+                    self.custom_args = [app,'mailto:%s?subject=%s&body=%s&attach=%s'\
+                                       % (self._email.replace(';',',')
+                                         ,self._subject,self._message
+                                         ,self._attachment
+                                         )
+                                       ]
+                else:
+                    self.custom_args = [app,'mailto:%s?subject=%s&body=%s'\
+                                       % (self._email.replace(';',',')
+                                         ,self._subject,self._message
                                          )
                                        ]
                 try:
