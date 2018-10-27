@@ -145,21 +145,20 @@ import datetime
 
 
 
-''' We do not put this into File class because we do not need to check
-    existence.
-'''
 def rewrite(dest,AskRewrite=True):
-    ''' We use AskRewrite just to shorten other procedures (to be able
-        to use 'rewrite' silently in the code without ifs)
+    f = 'shared.rewrite'
+    ''' - We do not put this into File class because we do not need to
+          check existence.
+        - We use AskRewrite just to shorten other procedures (to be able
+          to use 'rewrite' silently in the code without ifs)
     '''
     if AskRewrite and os.path.isfile(dest):
         ''' We don't actually need to force rewriting or delete the file
             before rewriting
         '''
-        return objs.mes (func    = 'rewrite'
-                        ,level   = _('QUESTION')
-                        ,message = _('ATTENTION: Do yo really want to rewrite file "%s"?') \
-                                   % dest
+        return objs.mes (f,_('QUESTION')
+                        ,_('ATTENTION: Do yo really want to rewrite file "%s"?')\
+                        % dest
                         ).Yes
     else:
         ''' We return True so we may proceed with writing if the file
@@ -192,9 +191,9 @@ class Launch:
         self.custom_args = []
     
     def _launch(self):
+        f = 'shared.Launch._launch'
         if self.custom_args:
-            log.append ('Launch._launch'
-                       ,_('DEBUG')
+            log.append (f,_('DEBUG')
                        ,_('Custom arguments: "%s"') % ';'.join(self.custom_args)
                        )
             try:
@@ -205,42 +204,40 @@ class Launch:
                 else:
                     subprocess.Popen(self.custom_args)
             except:
-                objs.mes (func    = 'Launch._launch'
-                         ,level   = _('ERROR')
-                         ,message = _('Failed to run "%s"!') \
-                                    % str(self.custom_args)
+                objs.mes (f,_('ERROR')
+                         ,_('Failed to run "%s"!') \
+                         % str(self.custom_args)
                          )
         else:
-            log.append ('Launch._launch'
-                       ,_('ERROR')
+            log.append (f,_('ERROR')
                        ,_('Not enough input data!')
                        )
 
     def _lin(self):
+        f = 'shared.Launch._lin'
         try:
             os.system("xdg-open " + self.h_path.escape() + "&")
         except OSError:
-            objs.mes (func    = 'Launch._lin'
-                     ,level   = _('ERROR')
-                     ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
+            objs.mes (f,_('ERROR')
+                     ,_('Unable to open the file in an external program. You should probably check the file associations.')
                      )
 
     def _mac(self):
+        f = 'shared.Launch._mac'
         try:
             os.system("open " + self.target)
         except:
-            objs.mes (func    = 'Launch._mac'
-                     ,level   = _('ERROR')
-                     ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
+            objs.mes (f,_('ERROR')
+                     ,_('Unable to open the file in an external program. You should probably check the file associations.')
                      )
 
     def _win(self):
+        f = 'shared.Launch._win'
         try:
             os.startfile(self.target)
         except:
-            objs.mes (func    = 'Launch._win'
-                     ,level   = _('ERROR')
-                     ,message = _('Unable to open the file in an external program. You should probably check the file associations.')
+            objs.mes (f,_('ERROR')
+                     ,_('Unable to open the file in an external program. You should probably check the file associations.')
                      )
 
     def app(self,custom_app='',custom_args=[]):
@@ -265,16 +262,17 @@ class Launch:
         self.default()
 
     def custom(self):
+        f = 'shared.Launch.custom'
         if self.TargetExists:
             self.custom_args = [self.custom_app,self.target]
             self._launch()
         else:
-            log.append ('Launch.custom'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def default(self):
+        f = 'shared.Launch.default'
         if self.TargetExists:
             if oss.lin():
                 self._lin()
@@ -283,8 +281,7 @@ class Launch:
             elif oss.win():
                 self._win()
         else:
-            log.append ('Launch.default'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -293,6 +290,7 @@ class Launch:
 class WriteTextFile:
 
     def __init__(self,file,AskRewrite=True,UseLog=True):
+        f = 'shared.WriteTextFile.__init__'
         self.file       = file
         self.text       = ''
         self.AskRewrite = AskRewrite
@@ -300,45 +298,43 @@ class WriteTextFile:
         self.Success    = True
         if not self.file:
             if self.UseLog:
-                objs.mes (func    = 'WriteTextFile.__init__'
-                         ,level   = _('ERROR')
-                         ,message = _('Not enough input data!')
+                objs.mes (f,_('ERROR')
+                         ,_('Not enough input data!')
                          )
             else:
-                print('WriteTextFile.__init__: Not enough input data!')
+                print(f+': Not enough input data!')
             self.Success = False
 
     def _write(self,mode='w'):
+        f = 'shared.WriteTextFile._write'
         if mode == 'w' or mode == 'a':
             if self.UseLog:
-                log.append ('WriteTextFile._write'
-                           ,_('INFO')
+                log.append (f,_('INFO')
                            ,_('Write file "%s"') % self.file
                            )
             try:
-                with open(self.file,mode,encoding='UTF-8') as f:
-                    f.write(self.text)
+                with open(self.file,mode,encoding='UTF-8') as fl:
+                    fl.write(self.text)
             except:
                 self.Success = False
                 if self.UseLog:
-                    objs.mes (func    = 'WriteTextFile._write'
-                             ,level   = _('ERROR')
-                             ,message = _('Unable to write file "%s"!') \
-                                        % self.file
+                    objs.mes (f,_('ERROR')
+                             ,_('Unable to write file "%s"!') \
+                             % self.file
                              )
                 else:
-                    print('WriteTextFile._write: Unable to write the file!')
+                    print(f+': Unable to write the file!')
         else:
             if self.UseLog:
-                objs.mes (func    = 'WriteTextFile._write'
-                         ,level   = _('ERROR')
-                         ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
-                                    % (str(mode),'a, w')
+                objs.mes (f,_('ERROR')
+                         ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".')\
+                         % (str(mode),'a, w')
                          )
             else:
-                print('WriteTextFile._write: An unknown mode!')
+                print(f+': An unknown mode!')
 
     def append(self,text=''):
+        f = 'shared.WriteTextFile.append'
         if self.Success:
             self.text = text
             if self.text:
@@ -349,20 +345,19 @@ class WriteTextFile:
                 self._write('a')
             else:
                 if self.UseLog:
-                    objs.mes (func    = 'WriteTextFile.append'
-                             ,level   = _('ERROR')
-                             ,message = _('Not enough input data!')
+                    objs.mes (f,_('ERROR')
+                             ,_('Not enough input data!')
                              )
                 else:
-                    print('WriteTextFile.append: Not enough input data!')
+                    print(f+': Not enough input data!')
         else:
             if self.UseLog:
-                log.append ('WriteTextFile.append'
-                           ,_('WARNING')
+                log.append (f,_('WARNING')
                            ,_('Operation has been canceled.')
                            )
 
     def write(self,text=''):
+        f = 'shared.WriteTextFile.write'
         if self.Success:
             self.text = text
             if self.text:
@@ -370,16 +365,14 @@ class WriteTextFile:
                     self._write('w')
             else:
                 if self.UseLog:
-                    objs.mes (func    = 'WriteTextFile.write'
-                             ,level   = _('ERROR')
-                             ,message = _('Not enough input data!')
+                    objs.mes (f,_('ERROR')
+                             ,_('Not enough input data!')
                              )
                 else:
-                    print('WriteTextFile.write: Not enough input data!')
+                    print(f+': Not enough input data!')
         else:
             if self.UseLog:
-                log.append ('WriteTextFile.write'
-                           ,_('WARNING')
+                log.append (f,_('WARNING')
                            ,_('Operation has been canceled.')
                            )
 
@@ -390,9 +383,9 @@ class Log:
     def __init__(self,Use=True,Write=False
                 ,Print=True,Short=False,file=None
                 ):
+        f = self.func = 'shared.Log.__init__'
         self.Success = True
         self.file    = file
-        self.func    = 'Log.__init__'
         self.level   = _('INFO')
         self.message = 'Test'
         self.count   = 0
@@ -446,7 +439,7 @@ class Log:
                                )
               )
 
-    def append (self,func='Log.append'
+    def append (self,func='shared.Log.append'
                ,level=_('INFO'),message='Test'
                ):
         if self.Success:
@@ -489,13 +482,13 @@ class TextDic:
         entries do not have duplicates due to new algorithms)
     '''
     def _delete_duplicates(self):
+        f = 'shared.TextDic._delete_duplicates'
         if self.Success:
             if self.Sortable:
                 old = self.lines()
                 self._list = list(set(self.list()))
                 new = self._lines = len(self._list)
-                log.append ('TextDic._delete_duplicates'
-                           ,_('INFO')
+                log.append (f,_('INFO')
                            ,_('Entries deleted: %d (%d-%d)') % (old-new
                                                                ,old
                                                                ,new
@@ -507,19 +500,18 @@ class TextDic:
                 # After using set(), the original order was lost
                 self.sort()
             else:
-                objs.mes (func    = 'TextDic._delete_duplicates'
-                         ,level   = _('WARNING')
-                         ,message = _('File "%s" is not sortable!') \
-                                    % self.file
+                objs.mes (f,_('WARNING')
+                         ,_('File "%s" is not sortable!') \
+                         % self.file
                          )
         else:
-            log.append ('TextDic._delete_duplicates'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     # We can use this as an updater, even without relying on Success
     def _join(self):
+        f = 'shared.TextDic._join'
         if len(self.orig) == len(self.transl):
             self._lines = len(self.orig)
             self._list = []
@@ -527,15 +519,15 @@ class TextDic:
                 self._list.append(self.orig[i]+'\t'+self.transl[i])
             self.text = '\n'.join(self._list)
         else:
-            objs.mes (func    = 'TextDic._join'
-                     ,level   = _('WARNING')
-                     ,message = _('Wrong input data!')
+            objs.mes (f,_('WARNING')
+                     ,_('Wrong input data!')
                      )
 
-    ''' We can use this to check integrity and/or update original and
-        translation lists
-    '''
     def _split(self):
+        ''' We can use this to check integrity and/or update original
+            and translation lists.
+        '''
+        f = 'shared.TextDic._split'
         if self.get():
             self.Success = True
             self.orig = []
@@ -551,39 +543,38 @@ class TextDic:
                 else:
                     self.Success = False
                     # i+1: Count from 1
-                    objs.mes (func    = 'TextDic._split'
-                             ,level   = _('WARNING')
-                             ,message = _('Dictionary "%s": Incorrect line #%d: "%s"!') \
-                                        % (self.file,i+1,self._list[i])
+                    objs.mes (f,_('WARNING')
+                             ,_('Dictionary "%s": Incorrect line #%d: "%s"!')\
+                             % (self.file,i+1,self._list[i])
                              )
         else:
             self.Success = False
 
-    ''' #todo: write a dictionary in an append mode after appending to
-        memory
-    '''
-    #todo: skip repetitions
     def append(self,original,translation):
+        ''' #todo: skip repetitions
+            #todo: write a dictionary in an append mode after appending
+            to memory.
+        '''
+        f = 'shared.TextDic.append'
         if self.Success:
             if original and translation:
                 self.orig.append(original)
                 self.transl.append(translation)
                 self._join()
             else:
-                objs.mes (func    = 'TextDic.append'
-                         ,level   = _('WARNING')
-                         ,message = _('Empty input is not allowed!')
+                objs.mes (f,_('WARNING')
+                         ,_('Empty input is not allowed!')
                          )
         else:
-            log.append ('TextDic.append'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
-    ''' #todo: #fix: an entry which is only one in a dictionary is not
-        deleted
-    '''
     def delete_entry(self,entry_no): # Count from 1
+        ''' #todo: #fix: an entry which is only one in a dictionary is
+            not deleted.
+        '''
+        f = 'shared.TextDic.delete_entry'
         if self.Success:
             entry_no -= 1
             if entry_no >= 0 and entry_no < self.lines():
@@ -591,23 +582,22 @@ class TextDic:
                 del self.transl[entry_no]
                 self._join()
             else:
-                objs.mes (func    = 'TextDic.delete_entry'
-                         ,level   = _('ERROR')
-                         ,message = _('The condition "%s" is not observed!') \
-                                    % ('0 <= ' + str(entry_no) + ' < %d'\
-                                      % self.lines()
-                                      )
+                objs.mes (f,_('ERROR')
+                         ,_('The condition "%s" is not observed!') \
+                         % ('0 <= ' + str(entry_no) + ' < %d' \
+                           % self.lines()
+                           )
                          )
         else:
-            log.append ('TextDic.append'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
-    ''' #todo: Add checking orig and transl (where needed) for a wrapper
-        function
-    '''
     def edit_entry(self,entry_no,orig,transl): # Count from 1
+        ''' #todo: Add checking orig and transl (where needed) for
+            a wrapper function.
+        '''
+        f = 'shared.TextDic.edit_entry'
         if self.Success:
             entry_no -= 1
             if entry_no >= 0 and entry_no < self.lines():
@@ -615,16 +605,14 @@ class TextDic:
                 self.transl[entry_no] = transl
                 self._join()
             else:
-                objs.mes (func    = 'TextDic.delete_entry'
-                         ,level   = _('ERROR')
-                         ,message = _('The condition "%s" is not observed!') \
-                                    % ('0 <= ' + str(entry_no) + ' < %d'\
-                                      % self.lines()
-                                      )
+                objs.mes (f,_('ERROR')
+                         ,_('The condition "%s" is not observed!') \
+                         % ('0 <= ' + str(entry_no) + ' < %d' \
+                           % self.lines()
+                           )
                          )
         else:
-            log.append ('TextDic.append'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -653,6 +641,7 @@ class TextDic:
 
     # Sort a dictionary with the longest lines going first
     def sort(self):
+        f = 'shared.TextDic.sort'
         if self.Success:
             if self.Sortable:
                 tmp_list = []
@@ -670,18 +659,16 @@ class TextDic:
                                                   + self.transl[i]
                 self.text = '\n'.join(self._list)
             else:
-                objs.mes (func    = 'TextDic.sort'
-                         ,level   = _('WARNING')
-                         ,message = _('File "%s" is not sortable!') \
-                                    % self.file
+                objs.mes (f,_('WARNING')
+                         ,_('File "%s" is not sortable!') % self.file
                          )
         else:
-            log.append ('TextDic.sort'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def tail(self):
+        f = 'shared.TextDic.tail'
         tail_text = ''
         if self.Success:
             tail_len = globs['int']['tail_len']
@@ -695,20 +682,19 @@ class TextDic:
                                       + '"\n'
                 i += 1
         else:
-            log.append ('TextDic.tail'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return tail_text
 
     def write(self):
+        f = 'shared.TextDic.write'
         if self.Success:
             WriteTextFile (file       = self.file
                           ,AskRewrite = False
                           ).write(self.get())
         else:
-            log.append ('TextDic.write'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -717,6 +703,7 @@ class TextDic:
 class ReadTextFile:
 
     def __init__(self,file):
+        f = 'shared.ReadTextFile.__init__'
         self.file    = file
         self._text   = ''
         self._list   = []
@@ -725,28 +712,24 @@ class ReadTextFile:
             pass
         elif not self.file:
             self.Success = False
-            objs.mes (func    = 'ReadTextFile.__init__'
-                     ,level   = _('ERROR')
-                     ,message = _('Not enough input data!')
+            objs.mes (f,_('ERROR')
+                     ,_('Not enough input data!')
                      )
         elif not os.path.exists(self.file):
             self.Success = False
-            objs.mes (func    = 'ReadTextFile.__init__'
-                     ,level   = _('WARNING')
-                     ,message = _('File "%s" has not been found!') \
-                                % self.file
+            objs.mes (f,_('WARNING')
+                     ,_('File "%s" has not been found!') % self.file
                      )
         else:
             self.Success = False
-            objs.mes (func    = 'ReadTextFile.__init__'
-                     ,level   = _('ERROR')
-                     ,message = _('Wrong input data!')
+            objs.mes (f,_('ERROR')
+                     ,_('Wrong input data!')
                      )
 
     def _read(self,encoding):
         try:
-            with open(self.file,'r',encoding=encoding) as f:
-                self._text = f.read()
+            with open(self.file,'r',encoding=encoding) as fl:
+                self._text = fl.read()
         except:
             ''' We can handle UnicodeDecodeError here, however, we just
                 handle them all (there could be access errors, etc.)
@@ -754,52 +737,52 @@ class ReadTextFile:
             pass
 
     def delete_bom(self):
+        f = 'shared.ReadTextFile.delete_bom'
         if self.Success:
             self._text = self._text.replace('\N{ZERO WIDTH NO-BREAK SPACE}','')
         else:
-            log.append ('ReadTextFile.delete_bom'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     # Return the text from memory (or load the file first)
     def get(self):
+        f = 'shared.ReadTextFile.get'
         if self.Success:
             if not self._text:
                 self.load()
         else:
-            log.append ('ReadTextFile.get'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._text
 
     # Return a number of lines in the file. Returns 0 for an empty file.
     def lines(self):
+        f = 'shared.ReadTextFile.lines'
         if self.Success:
             return len(self.list())
         else:
-            log.append ('ReadTextFile.lines'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def list(self):
+        f = 'shared.ReadTextFile.list'
         if self.Success:
             if not self._list:
                 self._list = self.get().splitlines()
         else:
-            log.append ('ReadTextFile.list'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         # len(None) causes an error
         return self._list
 
     def load(self):
+        f = 'shared.ReadTextFile.load'
         if self.Success:
-            log.append ('ReadTextFile.load'
-                       ,_('INFO')
+            log.append (f,_('INFO')
                        ,_('Load file "%s"') % self.file
                        )
             ''' We can try to define an encoding automatically, however,
@@ -817,15 +800,12 @@ class ReadTextFile:
                     #todo: Update the message
                 '''
                 self.Success = False
-                objs.mes (func    = 'ReadTextFile.load'
-                         ,level   = _('ERROR')
-                         ,message = _('Unable to read file "%s"!') \
-                                    % self.file
+                objs.mes (f,_('ERROR')
+                         ,_('Unable to read file "%s"!') % self.file
                          )
             self.delete_bom()
         else:
-            log.append ('ReadTextFile.load'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._text
@@ -858,10 +838,10 @@ class Input:
                        ,_('Convert "%s" to an integer') % str(self.value)
                        )
         else:
-            objs.mes (func    = self.title
-                     ,level   = _('ERROR')
-                     ,message = _('Integer is required at input, but found "%s"! Return 0') \
-                                % str(type(self.value))
+            objs.mes (self.title
+                     ,_('ERROR')
+                     ,_('Integer is required at input, but found "%s"! Return 0')\
+                     % str(type(self.value))
                      )
             self.value = 0
         return self.value
@@ -967,11 +947,13 @@ class Text:
         self.text = self.text.replace('[[','').replace(']]','').replace('{','').replace('}','').replace('_','')
         return self.text
 
-    ''' If there are some brackets left after performing this operation,
-        ensure that all of them are in the right place (even when
-        the number of opening and closing brackets is the same).
-    '''
     def delete_embraced_text(self,opening_sym='(',closing_sym=')'):
+        ''' If there are some brackets left after performing this
+            operation, ensure that all of them are in the right place
+            (even when the number of opening and closing brackets is
+            the same).
+        '''
+        f = 'shared.Text.delete_embraced_text'
         if self.text.count(opening_sym) == self.text.count(closing_sym):
             opening_parentheses = []
             closing_parentheses = []
@@ -1007,14 +989,13 @@ class Text:
                 self.text.strip()
             '''
         else:
-            objs.mes (func    = 'Text.delete_embraced_text'
-                     ,level   = _('WARNING')
-                     ,message = _('Different number of opening and closing brackets: "%s": %d; "%s": %d!') \
-                                % (opening_sym
-                                  ,self.text.count(opening_sym)
-                                  ,closing_sym
-                                  ,self.text.count(closing_sym)
-                                  )
+            objs.mes (f,_('WARNING')
+                     ,_('Different number of opening and closing brackets: "%s": %d; "%s": %d!')\
+                     % (opening_sym
+                       ,self.text.count(opening_sym)
+                       ,closing_sym
+                       ,self.text.count(closing_sym)
+                       )
                      )
         return self.text
 
@@ -1022,7 +1003,8 @@ class Text:
         self.text = self.text.replace('\r\n','\n').replace('\r','\n')
         return self.text
 
-    def delete_line_breaks(self): # Apply 'convert_line_breaks' first
+    # Apply 'convert_line_breaks' first
+    def delete_line_breaks(self):
         self.text = self.text.replace('\n',' ')
         return self.text
 
@@ -1036,10 +1018,11 @@ class Text:
             self.text = self.text.replace('  ',' ')
         return self.text
 
-    ''' Delete a space and punctuation marks in the end of a line
-        (useful when extracting features with CompareField)
-    '''
     def delete_end_punc(self,Extended=False):
+        ''' Delete a space and punctuation marks in the end of a line
+            (useful when extracting features with CompareField).
+        '''
+        f = 'shared.Text.delete_end_punc'
         if len(self.text) > 0:
             if Extended:
                 while self.text[-1] == ' ' or self.text[-1] \
@@ -1050,8 +1033,7 @@ class Text:
                 in punc_array:
                     self.text = self.text[:-1]
         else:
-            log.append ('Text.delete_end_punc'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Empty strings are not supported!')
                        )
         return self.text
@@ -1093,6 +1075,7 @@ class Text:
 
     #todo: del
     def extract_date_hash(self):
+        f = 'shared.Text.extract_date_hash'
         hash = -1
         # Only strings at input
         result = self.text.split('-')
@@ -1105,9 +1088,8 @@ class Text:
             hash += self.str2int()
         '''
         else:
-           objs.mes (func    = 'Text.extract_date_hash'
-                    ,level   = _('WARNING')
-                    ,message = _('Wrong input data!')
+           objs.mes (f,_('WARNING')
+                    ,_('Wrong input data!')
                     )
         '''
         return hash
@@ -1172,14 +1154,14 @@ class Text:
                   )
         return self.text
 
-    ''' Replace commas or semicolons with line breaks or line breaks
-        with commas
-    '''
     def split_by_comma(self):
+        ''' Replace commas or semicolons with line breaks or line breaks
+            with commas.
+        '''
+        f = 'shared.Text.split_by_comma'
         if (';' in self.text or ',' in self.text) and '\n' in self.text:
-            objs.mes (func    = 'Text.split_by_comma'
-                     ,level   = _('WARNING')
-                     ,message = _('Commas and/or semicolons or line breaks can be used, but not altogether!')
+            objs.mes (f,_('WARNING')
+                     ,_('Commas and/or semicolons or line breaks can be used, but not altogether!')
                      )
         elif ';' in self.text or ',' in self.text:
             self.text = self.text.replace(',','\n')
@@ -1198,25 +1180,25 @@ class Text:
         return self.text
 
     def str2int(self):
+        f = 'shared.Text.str2int'
         par = 0
         try:
             par = int(self.text)
         except(ValueError,TypeError):
-            log.append ('Text.str2int'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Failed to convert "%s" to an integer!') \
                        % str(self.text)
                        )
         return par
 
     def str2float(self):
+        f = 'shared.Text.str2float'
         par = 0.0
         try:
             par = float(self.text)
         except(ValueError,TypeError):
-            log.append ('Text.str2float'
-                       ,_('WARNING')
-                       ,_('Failed to convert "%s" to a floating-point number!') \
+            log.append (f,_('WARNING')
+                       ,_('Failed to convert "%s" to a floating-point number!')\
                        % str(self.text)
                        )
         return par
@@ -1252,10 +1234,10 @@ class Text:
             if sym in ru_alphabet:
                 return True
                 
-    ''' Remove characters from a range not supported by Tcl 
-        (and causing a Tkinter error).
-    '''
     def delete_unsupported(self):
+        ''' Remove characters from a range not supported by Tcl 
+            (and causing a Tkinter error).
+        '''
         self.text = ''.join ([char for char in self.text if ord(char) \
                               in range(65536)
                              ]
@@ -1357,11 +1339,10 @@ class List:
 
 
 
-''' We constantly recalculate each value because they depend on each
-    other.
-'''
 class Time:
-
+    ''' We constantly recalculate each value because they depend on each
+        other.
+    '''
     def __init__ (self,_timestamp=None,pattern='%Y-%m-%d'
                  ,MondayWarning=False
                  ):
@@ -1386,6 +1367,7 @@ class Time:
             self.todays_date()
 
     def add_days(self,days_delta):
+        f = 'shared.Time.add_days'
         if self.Success:
             if not self._instance:
                 self.instance()
@@ -1393,18 +1375,17 @@ class Time:
                 self._instance += datetime.timedelta(days=days_delta)
             except:
                 self.Success = False
-                objs.mes (func    = 'Time.instance'
-                         ,level   = _('WARNING')
-                         ,message = _('Set time parameters are incorrect or not supported.')
+                objs.mes (f,_('WARNING')
+                         ,_('Set time parameters are incorrect or not supported.')
                          )
             self.monday_warning()
         else:
-            log.append ('Time.add_days'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def date(self):
+        f = 'shared.Time.date'
         if self.Success:
             if not self._instance:
                 self.instance()
@@ -1412,18 +1393,17 @@ class Time:
                 self._date = self._instance.strftime(self.pattern)
             except:
                 self.Success = False
-                objs.mes (func    = 'Time.instance'
-                         ,level   = _('WARNING')
-                         ,message = _('Set time parameters are incorrect or not supported.')
+                objs.mes (f,_('WARNING')
+                         ,_('Set time parameters are incorrect or not supported.')
                          )
         else:
-            log.append ('Time.date'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._date
 
     def instance(self):
+        f = 'shared.Time.instance'
         if self.Success:
             if not self._timestamp:
                 self.timestamp()
@@ -1431,18 +1411,17 @@ class Time:
                 self._instance = datetime.datetime.fromtimestamp(self._timestamp)
             except:
                 self.Success = False
-                objs.mes (func    = 'Time.instance'
-                         ,level   = _('WARNING')
-                         ,message = _('Set time parameters are incorrect or not supported.')
+                objs.mes (f,_('WARNING')
+                         ,_('Set time parameters are incorrect or not supported.')
                          )
         else:
-            log.append ('Time.instance'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._instance
 
     def timestamp(self):
+        f = 'shared.Time.timestamp'
         if self.Success:
             if not self._date:
                 self.date()
@@ -1450,34 +1429,32 @@ class Time:
                 self._timestamp = time.mktime(datetime.datetime.strptime(self._date,self.pattern).timetuple())
             except:
                 self.Success = False
-                objs.mes (func    = 'Time.timestamp'
-                         ,level   = _('WARNING')
-                         ,message = _('Set time parameters are incorrect or not supported.')
+                objs.mes (f,_('WARNING')
+                         ,_('Set time parameters are incorrect or not supported.')
                          )
         else:
-            log.append ('Time.timestamp'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._timestamp
 
     def monday_warning(self):
+        f = 'shared.Time.monday_warning'
         if self.Success:
             if not self._instance:
                 self.instance()
             if self.MondayWarning \
             and datetime.datetime.weekday(self._instance) == 0:
-                objs.mes (func    = 'Time.monday_warning'
-                         ,level   = _('INFO')
-                         ,message = _('Note: it will be Monday!')
+                objs.mes (f,_('INFO')
+                         ,_('Note: it will be Monday!')
                          )
         else:
-            log.append ('Time.monday_warning'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def month_name(self):
+        f = 'shared.Time.month_name'
         if self.Success:
             if not self._instance:
                 self.instance()
@@ -1487,13 +1464,13 @@ class Time:
                                    ).str2int()
                              ]
         else:
-            log.append ('Time.month_local'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._month_name
 
     def localize_month_abbr(self):
+        f = 'shared.Time.localize_month_abbr'
         if self._month_abbr == 'Jan':
             self._month_abbr = _('Jan')
         elif self._month_abbr == 'Feb':
@@ -1519,13 +1496,13 @@ class Time:
         elif self._month_abbr == 'Dec':
             self._month_abbr = _('Dec')
         else:
-            log.append ('Time.localize_month_abbr'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Wrong input data!')
                        )
         return self._month_abbr
     
     def month_abbr(self):
+        f = 'shared.Time.month_abbr'
         if self.Success:
             if not self._instance:
                 self.instance()
@@ -1535,8 +1512,7 @@ class Time:
                                    ).str2int()
                              ]
         else:
-            log.append ('Time.month_abbr'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._month_abbr
@@ -1545,6 +1521,7 @@ class Time:
         self._instance = datetime.datetime.today()
 
     def year(self):
+        f = 'shared.Time.year'
         if self.Success:
             if not self._instance:
                 self.instance()
@@ -1552,13 +1529,11 @@ class Time:
                 self._year = self._instance.strftime("%Y")
             except:
                 self.Success = False
-                objs.mes (func    = 'Time.instance'
-                         ,level   = _('WARNING')
-                         ,message = _('Set time parameters are incorrect or not supported.')
+                objs.mes (f,_('WARNING')
+                         ,_('Set time parameters are incorrect or not supported.')
                          )
         else:
-            log.append ('Time.year'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._year
@@ -1568,6 +1543,7 @@ class Time:
 class File:
 
     def __init__(self,file,dest=None,AskRewrite=True):
+        f = 'shared.File.__init__'
         self.Success    = True
         self.AskRewrite = AskRewrite
         self.file       = file
@@ -1588,195 +1564,178 @@ class File:
                                          )
         elif not self.file:
             self.Success = False
-            objs.mes (func    = 'File.__init__'
-                     ,level   = _('ERROR')
-                     ,message = _('Empty input is not allowed!')
+            objs.mes (f,_('ERROR')
+                     ,_('Empty input is not allowed!')
                      )
         elif not os.path.exists(self.file):
             self.Success = False
-            objs.mes (func    = 'File.__init__'
-                     ,level   = _('WARNING')
-                     ,message = _('File "%s" has not been found!') \
-                                % self.file
+            objs.mes (f,_('WARNING')
+                     ,_('File "%s" has not been found!') % self.file
                      )
         else:
             self.Success = False
-            objs.mes (func    = 'File.__init__'
-                     ,level   = _('WARNING')
-                     ,message = _('The object "%s" is not a file!') \
-                                % self.file
+            objs.mes (f,_('WARNING')
+                     ,_('The object "%s" is not a file!') % self.file
                      )
 
     def _copy(self):
+        f = 'shared.File._copy'
         Success = True
-        log.append ('File._copy'
-                   ,_('INFO')
+        log.append (f,_('INFO')
                    ,_('Copy "%s" to "%s"') % (self.file,self.dest)
                    )
         try:
             shutil.copyfile(self.file,self.dest)
         except:
             Success = False
-            objs.mes (func    = 'File._copy'
-                     ,level   = _('ERROR')
-                     ,message = _('Failed to copy file "%s" to "%s"!') \
-                                % (self.file,self.dest)
+            objs.mes (f,_('ERROR')
+                     ,_('Failed to copy file "%s" to "%s"!') \
+                     % (self.file,self.dest)
                      )
         return Success
 
     def _move(self):
+        f = 'shared.File._move'
         Success = True
-        log.append ('File._move'
-                   ,_('INFO')
+        log.append (f,_('INFO')
                    ,_('Move "%s" to "%s"') % (self.file,self.dest)
                    )
         try:
             shutil.move(self.file,self.dest)
         except:
             Success = False
-            objs.mes (func    = 'File._move'
-                     ,level   = _('ERROR')
-                     ,message = _('Failed to move "%s" to "%s"!') \
-                                % (self.file,self.dest)
+            objs.mes (f,_('ERROR')
+                     ,_('Failed to move "%s" to "%s"!') \
+                     % (self.file,self.dest)
                      )
         return Success
 
     def access_time(self):
+        f = 'shared.File.access_time'
         if self.Success:
             try:
                 self.atime = os.path.getatime(self.file)
                 # Further steps: datetime.date.fromtimestamp(self.atime).strftime(self.pattern)
                 return self.atime
             except:
-                objs.mes (func    = 'File.access_time'
-                         ,level   = _('WARNING')
-                         ,message = _('Failed to get the date of the file "%s"!') \
-                                    % self.file
+                objs.mes (f,_('WARNING')
+                         ,_('Failed to get the date of the file "%s"!') \
+                         % self.file
                          )
         else:
-            log.append ('File.access_time'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def copy(self):
+        f = 'shared.File.copy'
         Success = True
         if self.Success:
             if self.file.lower() == self.dest.lower():
-                objs.mes (func    = 'File.copy'
-                         ,level   = _('ERROR')
-                         ,message = _('Unable to copy the file "%s" to iself!') \
-                                    % self.file
+                objs.mes (f,_('ERROR')
+                         ,_('Unable to copy the file "%s" to iself!') \
+                         % self.file
                          )
             elif rewrite(self.dest,AskRewrite=self.AskRewrite):
                 Success = self._copy()
             else:
-                log.append ('File.copy'
-                           ,_('INFO')
+                log.append (f,_('INFO')
                            ,_('Operation has been canceled by the user.')
                            )
         else:
-            log.append ('File.copy'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return Success
 
     def delete(self):
+        f = 'shared.File.delete'
         Success = True
         if self.Success:
-            log.append ('File.delete'
-                       ,_('INFO')
+            log.append (f,_('INFO')
                        ,_('Delete "%s"') % self.file
                        )
             try:
                 os.remove(self.file)
             except:
                 Success = False
-                objs.mes (func    = 'File.delete'
-                         ,level   = _('WARNING')
-                         ,message = _('Failed to delete file "%s"!') \
-                                    % self.file
+                objs.mes (f,_('WARNING')
+                         ,_('Failed to delete file "%s"!') % self.file
                          )
         else:
-            log.append ('File.delete'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return Success
 
+    #todo: del
     def delete_wait(self):
+        f = 'shared.File.delete_wait'
         if self.Success:
             while os.path.exists(self.file) and not self.delete():
                 time.sleep(0.3)
         else:
-            log.append ('File.delete_wait'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def modification_time(self):
+        f = 'shared.File.modification_time'
         if self.Success:
             try:
                 self.mtime = os.path.getmtime(self.file)
                 # Further steps: datetime.date.fromtimestamp(self.mtime).strftime(self.pattern)
                 return self.mtime
             except:
-                objs.mes (func    = 'File.modification_time'
-                         ,level   = _('WARNING')
-                         ,message = _('Failed to get the date of the file "%s"!') \
-                                    % self.file
+                objs.mes (f,_('WARNING')
+                         ,_('Failed to get the date of the file "%s"!')\
+                         % self.file
                          )
         else:
-            log.append ('File.modification_time'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def move(self):
+        f = 'shared.File.move'
         Success = True
         if self.Success:
             if self.file.lower() == self.dest.lower():
-                objs.mes (func    = 'File.move'
-                         ,level   = _('ERROR')
-                         ,message = _('Moving is not necessary, because the source and destination are identical (%s).') \
+                objs.mes (f,_('WARNING')
+                         ,_('Moving is not necessary, because the source and destination are identical (%s).')\
                          % self.file
                          )
             elif rewrite(self.dest,AskRewrite=self.AskRewrite):
                 Success = self._move()
             else:
-                log.append ('File.move'
-                           ,_('INFO')
+                log.append (f,_('INFO')
                            ,_('Operation has been canceled by the user.')
                            )
         else:
-            log.append ('File.move'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return Success
 
     def set_time(self):
+        f = 'shared.File.set_time'
         if self.Success:
             if self.atime and self.mtime:
-                log.append ('File.set_time'
-                           ,_('INFO')
-                           ,_('Change the time of the file "%s" to %s') \
+                log.append (f,_('INFO')
+                           ,_('Change the time of the file "%s" to %s')\
                            % (self.file,str((self.atime,self.mtime)))
                            )
                 try:
                     os.utime(self.file,(self.atime,self.mtime))
                 except:
-                    objs.mes (func    = 'File.set_time'
-                             ,level   = _('WARNING')
-                             ,message = _('Failed to change the time of the file "%s" to "%s"!') \
-                                        % (self.file
-                                          ,str((self.atime,self.mtime))
-                                          )
+                    objs.mes (f,_('WARNING')
+                             ,_('Failed to change the time of the file "%s" to "%s"!')\
+                             % (self.file
+                               ,str((self.atime,self.mtime))
+                               )
                              )
         else:
-            log.append ('File.set_time'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -1799,26 +1758,23 @@ class Path:
 
     # This will recursively (by design) create self.path
     def create(self):
+        f = 'shared.Path.create'
         # We actually don't need to fail the class globally
         Success = True
         if self.path:
             if os.path.exists(self.path):
                 if os.path.isdir(self.path):
-                    log.append ('Path.create'
-                               ,_('INFO')
+                    log.append (f,_('INFO')
                                ,_('Directory "%s" already exists.') \
                                % self.path
                                )
                 else:
                     Success = False
-                    objs.mes (func    = 'Path.create'
-                             ,level   = _('WARNING')
-                             ,message = _('The path "%s" is invalid!') \
-                                        % self.path
+                    objs.mes (f,_('WARNING')
+                             ,_('The path "%s" is invalid!') % self.path
                              )
             else:
-                log.append ('Path.create'
-                           ,_('INFO')
+                log.append (f,_('INFO')
                            ,_('Create directory "%s"') % self.path
                            )
                 try:
@@ -1826,23 +1782,21 @@ class Path:
                     os.makedirs(self.path)
                 except:
                     Success = False
-                    objs.mes (func    = 'Path.create'
-                             ,level   = _('ERROR')
-                             ,message = _('Failed to create directory "%s"!') \
-                                        % self.path
+                    objs.mes (f,_('ERROR')
+                             ,_('Failed to create directory "%s"!') \
+                             % self.path
                              )
         else:
             Success = False
-            objs.mes (func    = 'Path.create'
-                     ,level   = _('ERROR')
-                     ,message = _('Not enough input data!')
+            objs.mes (f,_('ERROR')
+                     ,_('Not enough input data!')
                      )
         return Success
 
-    ''' These symbols may pose a problem while opening files
-        #todo: check whether this is really necessary
-    '''
     def delete_inappropriate_symbols(self):
+        ''' These symbols may pose a problem while opening files
+            #todo: check whether this is really necessary
+        '''
         return self.filename().replace("'",'').replace("&",'')
 
     def dirname(self):
@@ -1907,6 +1861,7 @@ class Path:
 class WriteBinary:
 
     def __init__(self,file,obj,AskRewrite=False):
+        f = 'shared.WriteBinary.__init__'
         self.Success = True
         self.file    = file
         self.obj     = obj
@@ -1915,65 +1870,59 @@ class WriteBinary:
             self.fragm = None
         else:
             self.Success = False
-            log.append ('WriteBinary.__init__'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def _write(self,mode='w+b'):
-        log.append ('WriteBinary._write'
-                   ,_('INFO')
+        f = 'shared.WriteBinary._write'
+        log.append (f,_('INFO')
                    ,_('Write file "%s"') % self.file
                    )
         if mode == 'w+b' or mode == 'a+b':
             try:
-                with open(self.file,mode) as f:
+                with open(self.file,mode) as fl:
                     if mode == 'w+b':
-                        pickle.dump(self.obj,f)
+                        pickle.dump(self.obj,fl)
                     elif mode == 'a+b':
-                        pickle.dump(self.fragm,f)
+                        pickle.dump(self.fragm,fl)
             except:
                 self.Success = False
-                objs.mes (func    = 'WriteBinary._write'
-                         ,level   = _('ERROR')
-                         ,message = _('Unable to write file "%s"!') \
-                                    % self.file
+                objs.mes (f,_('ERROR')
+                         ,_('Unable to write file "%s"!') % self.file
                          )
         else:
-            objs.mes (func    = 'WriteTextFile._write'
-                     ,level   = _('ERROR')
-                     ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
-                                % (str(mode),'w+b, a+b')
+            objs.mes (f,_('ERROR')
+                     ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".')\
+                     % (str(mode),'w+b, a+b')
                      )
 
     def append(self,fragm):
+        f = 'shared.WriteBinary.append'
         if self.Success:
             self.fragm = fragm
             if self.fragm:
                 self._write(mode='a+b')
             else:
-                objs.mes (func    = 'WriteBinary.append'
-                         ,level   = _('ERROR')
-                         ,message = _('Empty input is not allowed!')
+                objs.mes (f,_('ERROR')
+                         ,_('Empty input is not allowed!')
                          )
         else:
-            log.append ('WriteBinary.append'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def write(self):
+        f = 'shared.WriteBinary.write'
         if self.Success:
             if rewrite(self.file,AskRewrite=self.AskRewrite):
                 self._write(mode='w+b')
             else:
-                log.append ('WriteBinary.write'
-                           ,_('INFO')
+                log.append (f,_('INFO')
                            ,_('Operation has been canceled by the user.')
                            )
         else:
-            log.append ('WriteBinary.write'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -1988,18 +1937,18 @@ class Dic:
         self.h_read   = ReadTextFile(self.file)
         self.reset()
 
-    ''' This is might be needed only for those dictionaries that already
-        may contain duplicates (dictionaries with newly added entries do
-        not have duplicates due to new algorithms)
-    '''
     def _delete_duplicates(self):
+        ''' This is might be needed only for those dictionaries that
+            already may contain duplicates (dictionaries with newly
+            added entries do not have duplicates due to new algorithms).
+        '''
+        f = 'shared.Dic._delete_duplicates'
         if self.Success:
             if self.Sortable:
                 old = self.lines()
                 self._list = list(set(self.list()))
                 new = self._lines = len(self._list)
-                log.append ('Dic._delete_duplicates'
-                           ,_('INFO')
+                log.append (f,_('INFO')
                            ,_('Entries deleted: %d (%d-%d)') % (old-new
                                                                ,old
                                                                ,new
@@ -2011,19 +1960,17 @@ class Dic:
                 # After using set(), the original order was lost
                 self.sort()
             else:
-                objs.mes (func    = 'Dic._delete_duplicates'
-                         ,level   = _('WARNING')
-                         ,message = _('File "%s" is not sortable!') \
-                                    % self.file
+                objs.mes (f,_('WARNING')
+                         ,_('File "%s" is not sortable!') % self.file
                          )
         else:
-            log.append ('Dic._delete_duplicates'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     # We can use this as an updater, even without relying on Success
     def _join(self):
+        f = 'shared.Dic._join'
         if len(self.orig) == len(self.transl):
             self._lines = len(self.orig)
             self._list = []
@@ -2031,15 +1978,14 @@ class Dic:
                 self._list.append(self.orig[i]+'\t'+self.transl[i])
             self.text = '\n'.join(self._list)
         else:
-            objs.mes (func    = 'Dic._join'
-                     ,level   = _('WARNING')
-                     ,message = _('Wrong input data!')
+            objs.mes (f,_('WARNING')
+                     ,_('Wrong input data!')
                      )
 
-    ''' We can use this to check integrity and/or update original and
-        translation lists
-    '''
     def _split(self):
+        ''' We can use this to check integrity and/or update original
+            and translation lists.
+        '''
         if self.get():
             self.Success = True
             self.orig    = []
@@ -2065,40 +2011,40 @@ class Dic:
             self.Success = False
             
     def warn(self):
+        f = 'shared.Dic.warn'
         if self.errors:
             message = ', '.join(self.errors)
-            objs.mes (func    = 'Dic.warn'
-                     ,level   = _('WARNING')
-                     ,message = _('The following lines cannot be parsed:') \
-                                + '\n' + message
+            objs.mes (f,_('WARNING')
+                     ,_('The following lines cannot be parsed:') \
+                     + '\n' + message
                      )
 
-    ''' #todo: write a dictionary in an append mode after appending to
-        memory
-    '''
-    #todo: skip repetitions
     def append(self,original,translation):
+        ''' #todo: write a dictionary in an append mode after appending
+                   to memory.
+            #todo: skip repetitions
+        '''
+        f = 'shared.Dic.append'
         if self.Success:
             if original and translation:
                 self.orig.append(original)
                 self.transl.append(translation)
                 self._join()
             else:
-                objs.mes (func    = 'Dic.append'
-                         ,level   = _('WARNING')
-                         ,message = _('Empty input is not allowed!')
+                objs.mes (f,_('WARNING')
+                         ,_('Empty input is not allowed!')
                          )
         else:
-            log.append ('Dic.append'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
-    ''' #todo: fix: an entry which is only one in a dictionary is not
-        deleted
-    '''
     # Count from 1
     def delete_entry(self,entry_no):
+        ''' #todo: fix: an entry which is only one in a dictionary is
+            not deleted.
+        '''
+        f = 'shared.Dic.delete_entry'
         if self.Success:
             entry_no -= 1
             if entry_no >= 0 and entry_no < self.lines():
@@ -2106,24 +2052,23 @@ class Dic:
                 del self.transl[entry_no]
                 self._join()
             else:
-                objs.mes (func    = 'Dic.delete_entry'
-                         ,level   = _('ERROR')
-                         ,message = _('The condition "%s" is not observed!') \
-                                    % ('0 <= ' + str(entry_no) + ' < %d'\
-                                      % self.lines()
-                                      )
+                objs.mes (f,_('ERROR')
+                         ,_('The condition "%s" is not observed!') \
+                         % ('0 <= ' + str(entry_no) + ' < %d' \
+                           % self.lines()
+                           )
                          )
         else:
-            log.append ('Dic.append'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
-    ''' #todo: Add checking orig and transl (where needed) for a wrapper
-        function
-    '''
     # Count from 1
     def edit_entry(self,entry_no,orig,transl):
+        ''' #todo: Add checking orig and transl (where needed) for
+            a wrapper function.
+        '''
+        f = 'shared.Dic.edit_entry'
         if self.Success:
             entry_no -= 1
             if entry_no >= 0 and entry_no < self.lines():
@@ -2131,16 +2076,14 @@ class Dic:
                 self.transl[entry_no] = transl
                 self._join()
             else:
-                objs.mes (func    = 'Dic.delete_entry'
-                         ,level   = _('ERROR')
-                         ,message = _('The condition "%s" is not observed!') \
-                                    % ('0 <= ' + str(entry_no) + ' < %d'\
-                                      % self.lines()
-                                      )
+                objs.mes (f,_('ERROR')
+                         ,_('The condition "%s" is not observed!') \
+                         % ('0 <= ' + str(entry_no) + ' < %d' \
+                           % self.lines()
+                           )
                          )
         else:
-            log.append ('Dic.append'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -2174,6 +2117,7 @@ class Dic:
 
     # Sort a dictionary with the longest lines going first
     def sort(self):
+        f = 'shared.Dic.sort'
         if self.Success:
             if self.Sortable:
                 tmp_list = []
@@ -2190,18 +2134,16 @@ class Dic:
                     self._list[i] = self.orig[i] + '\t' + self.transl[i]
                 self.text = '\n'.join(self._list)
             else:
-                objs.mes (func    = 'Dic.sort'
-                         ,level   = _('WARNING')
-                         ,message = _('File "%s" is not sortable!') \
-                                    % self.file
+                objs.mes (f,_('WARNING')
+                         ,_('File "%s" is not sortable!') % self.file
                          )
         else:
-            log.append ('Dic.sort'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def tail(self):
+        f = 'shared.Dic.tail'
         tail_text = ''
         if self.Success:
             tail_len = globs['int']['tail_len']
@@ -2215,20 +2157,19 @@ class Dic:
                              + '"\n'
                 i += 1
         else:
-            log.append ('Dic.tail'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return tail_text
 
     def write(self):
+        f = 'shared.Dic.write'
         if self.Success:
             WriteTextFile (file       = self.file
                           ,AskRewrite = False
                           ).write(self.get())
         else:
-            log.append ('Dic.write'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -2243,31 +2184,29 @@ class ReadBinary:
         self.Success = h_file.Success
 
     def _load(self):
-        log.append ('ReadBinary._load'
-                   ,_('INFO')
+        f = 'shared.ReadBinary._load'
+        log.append (f,_('INFO')
                    ,_('Load file "%s"') % self.file
                    )
         try:
             ''' AttributeError means that a module using _load does not
                 have a class that was defined while creating the binary
             '''
-            with open(self.file,'r+b') as f:
-                self.obj = pickle.load(f)
+            with open(self.file,'r+b') as fl:
+                self.obj = pickle.load(fl)
         except:
             self.Success = False
-            objs.mes (func    = 'ReadBinary._load'
-                     ,level   = _('ERROR')
-                     ,message = _('Unable to read file "%s"!') \
-                                % self.file
+            objs.mes (f,_('WARNING')
+                     ,_('Unable to read file "%s"!') % self.file
                      )
 
     #todo: load fragments appended to a binary
     def load(self):
+        f = 'shared.ReadBinary.load'
         if self.Success:
             self._load()
         else:
-            log.append ('ReadBinary.load'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self.obj
@@ -2289,6 +2228,7 @@ class CreateInstance:
 class Directory:
 
     def __init__(self,path,dest=''):
+        f = 'shared.Directory.__init__'
         self.values()
         if path:
             # Removes trailing slashes if necessary
@@ -2301,9 +2241,8 @@ class Directory:
             self.dest = self.dir
         if not os.path.isdir(self.dir):
             self.Success = False
-            objs.mes (func    = 'Directory.__init__'
-                     ,level   = _('WARNING')
-                     ,message = _('Wrong input data: "%s"') % self.dir
+            objs.mes (f,_('WARNING')
+                     ,_('Wrong input data: "%s"') % self.dir
                      )
 
     def values(self):
@@ -2319,6 +2258,7 @@ class Directory:
         self._extensions_low = []
     
     def extensions(self): # with a dot
+        f = 'shared.Directory.extensions'
         if self.Success:
             if not self._extensions:
                 for file in self.rel_files():
@@ -2326,51 +2266,48 @@ class Directory:
                     self._extensions.append(ext)
                     self._extensions_low.append(ext.lower())
         else:
-            log.append ('Directory.extensions'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._extensions
 
     def extensions_low(self): # with a dot
+        f = 'shared.Directory.extensions_low'
         if self.Success:
             if not self._extensions_low:
                 self.extensions()
         else:
-            log.append ('Directory.extensions_low'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._extensions_low
 
     def delete_empty(self):
+        f = 'shared.Directory.delete_empty'
         if self.Success:
             # Do not delete nested folders
             if not os.listdir(self.dir):
                 self.delete()
         else:
-            log.append ('Directory.delete_empty'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
     
     def delete(self):
+        f = 'shared.Directory.delete'
         if self.Success:
-            log.append ('Directory.delete'
-                       ,_('INFO')
+            log.append (f,_('INFO')
                        ,_('Delete "%s"') % self.dir
                        )
             try:
                 shutil.rmtree(self.dir)
             except:
-                objs.mes (func    = 'Directory.delete'
-                         ,level   = _('WARNING')
-                         ,message = _('Failed to delete directory "%s"! Delete it manually.') \
-                                    % str(self.dir)
+                objs.mes (f,_('WARNING')
+                         ,_('Failed to delete directory "%s"! Delete it manually.')\
+                         % str(self.dir)
                          )
         else:
-            log.append ('Directory.delete'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -2383,6 +2320,7 @@ class Directory:
 
     # Create a list of objects with an absolute path
     def list(self):
+        f = 'shared.Directory.list'
         if self.Success:
             if not self._list:
                 self._list = os.listdir(self.dir)
@@ -2391,8 +2329,7 @@ class Directory:
                 for i in range(len(self._list)):
                     self._list[i] = os.path.join(self.dir,self._list[i])
         else:
-            log.append ('Directory.list'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._list
@@ -2411,6 +2348,7 @@ class Directory:
 
     # Needs absolute path
     def dirs(self):
+        f = 'shared.Directory.dirs'
         if self.Success:
             if not self._dirs:
                 for i in range(len(self.list())):
@@ -2418,14 +2356,14 @@ class Directory:
                         self._dirs.append(self._list[i])
                         self._rel_dirs.append(self._rel_list[i])
         else:
-            log.append ('Directory.dirs'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._dirs
 
     # Needs absolute path
     def files(self):
+        f = 'shared.Directory.files'
         if self.Success:
             if not self._files:
                 for i in range(len(self.list())):
@@ -2433,47 +2371,42 @@ class Directory:
                         self._files.append(self._list[i])
                         self._rel_files.append(self._rel_list[i])
         else:
-            log.append ('Directory.files'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._files
 
     def copy(self):
+        f = 'shared.Directory.copy'
         if self.Success:
             if self.dir.lower() == self.dest.lower():
-                objs.mes (func    = 'Directory.copy'
-                         ,level   = _('ERROR')
-                         ,message = _('Unable to copy "%s" to iself!') \
-                                    % self.dir
+                objs.mes (f,_('ERROR')
+                         ,_('Unable to copy "%s" to iself!') % self.dir
                          )
             elif os.path.isdir(self.dest):
-                objs.mes (func    = 'Directory.copy'
-                         ,level   = _('INFO')
-                         ,message = _('Directory "%s" already exists.') \
-                                    % self.dest
+                objs.mes (f,_('INFO')
+                         ,_('Directory "%s" already exists.') \
+                         % self.dest
                          )
             else:
                 self._copy()
         else:
-            log.append ('Directory.copy'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def _copy(self):
-        log.append ('Directory._copy'
-                   ,_('INFO')
+        f = 'shared.Directory._copy'
+        log.append (f,_('INFO')
                    ,_('Copy "%s" to "%s"') % (self.dir,self.dest)
                    )
         try:
             shutil.copytree(self.dir,self.dest)
         except:
             self.Success = False
-            objs.mes (func    = 'Directory._copy'
-                     ,level   = _('ERROR')
-                     ,message = _('Failed to copy "%s" to "%s"!') \
-                                % (self.dir,self.dest)
+            objs.mes (f,_('WARNING')
+                     ,_('Failed to copy "%s" to "%s"!') \
+                     % (self.dir,self.dest)
                      )
 
 
@@ -2495,30 +2428,29 @@ class Config:
         self.missing_sections = 0
 
     def load(self):
+        f = 'shared.Config.load'
         if self.Success:
             for i in range(len(self.sections)):
                 for option in globs[self.sections_abbr[i]]:
                     new_val = self.sections_func[i](self.sections[i],option)
                     if globs[self.sections_abbr[i]][option] != new_val:
-                        log.append ('Config.load_section'
-                                   ,_('INFO')
-                                   ,_('New value of the key "%s" has been loaded.') \
+                        log.append (f,_('INFO')
+                                   ,_('New value of the key "%s" has been loaded.')\
                                    % option
                                    )
                         self.changed_keys += 1
                         globs[self.sections_abbr[i]][option] = new_val
-            log.append ('Config.load'
-                       ,_('INFO')
+            log.append (f,_('INFO')
                        ,_('Keys loaded in total: %d, whereas %d are modified.') \
                        % (self.total_keys,self.changed_keys)
                        )
         else:
-            log.append ('Config.load'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def check(self):
+        f = 'shared.Config.check'
         if self.Success:
             for i in range(len(self.sections)):
                 if config_parser.has_section(self.sections[i]):
@@ -2546,25 +2478,23 @@ class Config:
                          )
                 self._default()
         else:
-            log.append ('Config.check'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def open(self):
+        f = 'shared.Config.open'
         if self.Success:
             try:
                 config_parser.read(self.path,'utf-8')
             except:
                 Success = False
-                objs.mes (func    = 'Config.open'
-                         ,level   = _('WARNING')
-                         ,message = _('Failed to read the configuration file "%s". This file must share the same directory with the program and have UTF-8 encoding (no BOM) and UNIX line break type.') \
-                                    % self.path
+                objs.mes (f,_('WARNING')
+                         ,_('Failed to read the configuration file "%s". This file must share the same directory with the program and have UTF-8 encoding (no BOM) and UNIX line break type.')\
+                         % self.path
                          )
         else:
-            log.append ('Config.open'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -2614,21 +2544,21 @@ class Online:
 
     # Open a URL in a default browser
     def browse(self):
+        f = 'shared.Online.browse'
         try:
             webbrowser.open(self.url(),new=2,autoraise=True)
         except:
-            objs.mes (func    = 'Online.browse'
-                     ,level   = _('ERROR')
-                     ,message = _('Failed to open URL "%s" in a default browser!') \
-                                % self._url
+            objs.mes (f,_('ERROR')
+                     ,_('Failed to open URL "%s" in a default browser!')\
+                     % self._url
                      )
 
     # Create a correct online link (URI => URL)
     def url(self):
+        f = 'shared.Online.url'
         if not self._url:
             self._url = self.base_str % urllib.parse.quote(self.bytes())
-            log.append ('Online.url'
-                       ,_('DEBUG')
+            log.append (f,_('DEBUG')
                        ,str(self._url)
                        )
         return self._url
@@ -2690,11 +2620,11 @@ class Diff:
                      + '\n'
 
     def compare(self):
+        f = 'shared.Diff.compare'
         if self.text1 and self.text2:
             if self.text1 == self.text2:
-                objs.mes (func    = 'Diff.compare'
-                         ,level   = _('INFO')
-                         ,message = _('Texts are identical!')
+                objs.mes (f,_('INFO')
+                         ,_('Texts are identical!')
                          )
             else:
                 self.diff()
@@ -2706,9 +2636,8 @@ class Diff:
                     '''
                     Launch(target=self.file).default()
         else:
-            objs.mes (func    = 'Diff.compare'
-                     ,level   = _('WARNING')
-                     ,message = _('Empty input is not allowed!')
+            objs.mes (f,_('WARNING')
+                     ,_('Empty input is not allowed!')
                      )
 
 
@@ -2716,14 +2645,14 @@ class Diff:
 class Shortcut:
 
     def __init__(self,symlink='',path=''):
+        f = 'shared.Shortcut.__init__'
         self.Success = True
         self.path    = path
         self.symlink = symlink
         if not self.path and not self.symlink:
             self.Success = False
-            objs.mes (func    = 'Shortcut.__init__'
-                     ,level   = _('WARNING')
-                     ,message = _('Wrong input data!')
+            objs.mes (f,_('WARNING')
+                     ,_('Wrong input data!')
                      )
 
     # http://timgolden.me.uk/python/win32_how_do_i/read-a-shortcut.html
@@ -2753,63 +2682,60 @@ class Shortcut:
         return self.path
 
     def _delete(self):
-        log.append ('Shortcut._delete'
-                   ,_('INFO')
+        f = 'shared.Shortcut._delete'
+        log.append (f,_('INFO')
                    ,_('Delete the symbolic link "%s"') % self.symlink
                    )
         try:
             os.unlink(self.symlink)
         except:
-            objs.mes (func    = 'Shortcut._delete'
-                     ,level   = _('WARNING')
-                     ,message = _('Failed to remove shortcut "%s". Remove it manually and press OK.') \
-                                % self.symlink
+            objs.mes (f,_('WARNING')
+                     ,_('Failed to remove shortcut "%s". Remove it manually and press OK.')\
+                     % self.symlink
                      )
 
     def delete(self):
+        f = 'shared.Shortcut.delete'
         if self.Success:
             if os.path.islink(self.symlink):
                 self._delete()
         else:
-            log.append ('Shortcut.delete'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def _create_unix(self):
-        log.append ('Shortcut._create_unix'
-                   ,_('INFO')
+        f = 'shared.Shortcut._create_unix'
+        log.append (f,_('INFO')
                    ,_('Create a symbolic link "%s"') % self.symlink
                    )
         try:
             os.symlink(self.path,self.symlink)
         except:
-            objs.mes (func    = 'Shortcut._create_unix'
-                     ,level   = _('ERROR')
-                     ,message = _('Failed to create shortcut "%s". Create it manually and press OK.') \
-                                % self.symlink
+            objs.mes (f,_('ERROR')
+                     ,_('Failed to create shortcut "%s". Create it manually and press OK.')\
+                     % self.symlink
                      )
 
     def create_unix(self):
+        f = 'shared.Shortcut.create_unix'
         self.delete()
         if os.path.exists(self.symlink):
             if os.path.islink(self.symlink):
-                log.append ('Shortcut.create_unix'
-                           ,_('INFO')
+                log.append (f,_('INFO')
                            ,_('Nothing to do.')
                            )
             else:
                 self.Success = False
-                objs.mes (func    = 'Shortcut.create_unix'
-                         ,level   = _('WARNING')
-                         ,message = _('Wrong input data!')
+                objs.mes (f,_('WARNING')
+                         ,_('Wrong input data!')
                          )
         else:
             self._create_unix()
 
     def _create_win(self):
-        log.append ('Shortcut._create_win'
-                   ,_('INFO')
+        f = 'shared.Shortcut._create_win'
+        log.append (f,_('INFO')
                    ,_('Create a symbolic link "%s"') % self.symlink
                    )
         try:
@@ -2819,10 +2745,9 @@ class Shortcut:
             shortcut.Targetpath = self.path
             shortcut.save()
         except:
-            objs.mes (func    = 'Shortcut._create_win'
-                     ,level   = _('ERROR')
-                     ,message = _('Failed to create shortcut "%s". Create it manually and press OK.') \
-                                % self.symlink
+            objs.mes (f,_('ERROR')
+                     ,_('Failed to create shortcut "%s". Create it manually and press OK.')\
+                     % self.symlink
                      )
 
     def create_win(self):
@@ -2834,32 +2759,31 @@ class Shortcut:
             will work as expected.
         '''
         # Do not forget: windows paths must have a double backslash!
+        f = 'shared.Shortcut.create_win'
         if self.Success:
             if not Path(self.symlink).extension().lower() == '.lnk':
                 self.symlink += '.lnk'
             self.delete()
             if os.path.exists(self.symlink):
-                log.append ('Shortcut.create_win'
-                           ,_('INFO')
+                log.append (f,_('INFO')
                            ,_('Nothing to do.')
                            )
             else:
                 self._create_win()
         else:
-            log.append ('Shortcut.create_win'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def create(self):
+        f = 'shared.Shortcut.create'
         if self.Success:
             if oss.win():
                 self.create_win()
             else:
                 self.create_unix()
         else:
-            log.append ('Shortcut.create'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -2888,44 +2812,44 @@ class Email:
                        )
     
     def reset(self,email,subject='',message='',attachment=''):
+        f = 'shared.Email.reset'
         self.Success = True
         ''' A single address or multiple comma-separated addresses (not
             all mail agents support ';'). Note that, however, Outlook
             supports ONLY ';'!
         '''
         self._email   = email
-        self._subject = Input (title = 'Email.reset'
+        self._subject = Input (title = f
                               ,value = subject
                               ).not_none()
-        self._message = Input (title = 'Email.reset'
+        self._message = Input (title = f
                               ,value = message
                               ).not_none()
         self._attachment = attachment
         if not self._email:
             self.Success = False
-            log.append ('Email.reset'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Empty input is not allowed!')
                        )
         if self._attachment:
             self.Success = File(file=self._attachment).Success
             if not self.Success:
-                log.append ('Email.reset'
-                           ,_('WARNING')
+                log.append (f,_('WARNING')
                            ,_('Operation has been canceled.')
                            )
 
     # Screen symbols that may cause problems when composing 'mailto'
     def sanitize(self,value):
+        f = 'shared.Email.sanitize'
         if self.Success:
             return str(Online(search_str=value).url())
         else:
-            log.append ('Email.sanitize'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
     
     def browser(self):
+        f = 'shared.Email.browser'
         if self.Success:
             try:
                 if self._attachment:
@@ -2952,17 +2876,16 @@ class Email:
                                       )
                                     )
             except:
-                objs.mes (func    = 'Email.create'
-                         ,level   = _('ERROR')
-                         ,message = _('Failed to load an e-mail client.')
+                objs.mes (f,_('WARNING')
+                         ,_('Failed to load an e-mail client.')
                          )
         else:
-            log.append ('Email.browser'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
     
     def create(self):
+        f = 'shared.Email.create'
         if self.Success:
             if not self.thunderbird() and not self.outlook():
                 self._subject    = self.sanitize(self._subject)
@@ -2970,13 +2893,13 @@ class Email:
                 self._attachment = self.sanitize(self._attachment)
                 self.browser()
         else:
-            log.append ('Email.create'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
                        
     #note: this does not work in wine!
     def outlook(self):
+        f = 'shared.Email.outlook'
         if oss.win():
             try:
                 import win32com.client
@@ -2992,17 +2915,16 @@ class Email:
                 mail.Display(True)
                 return True
             except Exception as e:
-                objs.mes ('Email.outlook'
-                         ,_('WARNING')
+                objs.mes (f,_('WARNING')
                          ,_('Operation has failed!\nDetails: %s') % str(e)
                          )
         else:
-            log.append ('Email.outlook'
-                       ,_('INFO')
+            log.append (f,_('INFO')
                        ,_('This operation cannot be executed on your operating system.')
                        )
     
     def thunderbird(self):
+        f = 'shared.Email.thunderbird'
         if self.Success:
             app = '/usr/bin/thunderbird'
             if os.path.isfile(app):
@@ -3024,14 +2946,12 @@ class Email:
                     subprocess.Popen(self.custom_args)
                     return True
                 except:
-                    objs.mes ('Email.thunderbird'
-                             ,_('ERROR')
+                    objs.mes (f,_('WARNING')
                              ,_('Failed to run "%s"!') \
                              % str(self.custom_args)
                              )
         else:
-            log.append ('Email.thunderbird'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -3065,10 +2985,10 @@ class Grep:
         self.i       = 0
         self.sanitize()
 
-    ''' Get rid of constructs like [None] instead of checking arguments
-        when parameterizing
-    '''
     def sanitize(self):
+        ''' Get rid of constructs like [None] instead of checking
+            arguments when parameterizing.
+        '''
         if len(self._lst) == 1:
             if not self._lst[0]:
                 self._lst = []
@@ -3195,8 +3115,8 @@ class Word:
 
     # Do only after Words.sent_nos
     def print(self,no=0):
-        log.append ('Word.print'
-                   ,_('DEBUG')
+        f = 'shared.Word.print'
+        log.append (f,_('DEBUG')
                    ,'no: %d; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _ref: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s; _nmf: %s; _nml: %s' \
                    % (no,str(self._p),str(self._n)
                      ,str(self._nm),str(self._pf),str(self._pl)
@@ -3245,13 +3165,13 @@ class Word:
                 self._ref = False
         return self._ref
 
-    ''' Enchant:
-        1) Lower-case, upper-case and words where the first letter is
-           capital, are all accepted. Mixed case is not accepted
-        2) Punctuation is not accepted
-        3) Empty input raises an exception
-    '''
     def spell_ru(self):
+        ''' Enchant:
+            1) Lower-case, upper-case and words where the first letter
+               is capital, are all accepted. Mixed case is not accepted.
+            2) Punctuation is not accepted
+            3) Empty input raises an exception
+        '''
         if self._spell_ru is None:
             self._spell_ru = True
             if self._n:
@@ -3260,12 +3180,12 @@ class Word:
 
     # Wrong selection upon search: see an annotation to SearchBox
     def tf(self):
+        f = 'shared.Word.tf'
         if self._tf is None:
             self._tf = '1.0'
             # This could happen if double line breaks were not deleted
             if self._sent_no is None:
-                log.append ('Words.tf'
-                           ,_('WARNING')
+                log.append (f,_('WARNING')
                            ,_('Not enough input data!')
                            )
             else:
@@ -3279,12 +3199,12 @@ class Word:
         return self._tf
 
     def tl(self):
+        f = 'shared.Word.tl'
         if self._tl is None:
             self._tl = '1.1'
             # This could happen if double line breaks were not deleted
             if self._sent_no is None:
-                log.append ('Words.tl'
-                           ,_('WARNING')
+                log.append (f,_('WARNING')
                            ,_('Not enough input data!')
                            )
             else:
@@ -3294,7 +3214,7 @@ class Word:
                 if self._sent_no > 0 and result > 0:
                     result -= 1
                 self._tl = '%d.%d' % (self._sent_no + 1,result + 1)
-                #log.append('Word.tl',_('DEBUG'),self._tl)
+                #log.append(f,_('DEBUG'),self._tl)
         return self._tl
 
 
@@ -3304,12 +3224,12 @@ class Word:
 class Words:
 
     def __init__(self,text,Auto=False):
+        f = 'shared.Words.__init__'
         self.Success = True
         self.Auto    = Auto
         self.values()
         if text:
-            log.append ('Words.__init__'
-                       ,_('INFO')
+            log.append (f,_('INFO')
                        ,_('Analyze the text')
                        )
             ''' This is MUCH faster than using old symbol-per-symbol
@@ -3323,8 +3243,7 @@ class Words:
             self.split()
         else:
             self.Success = False
-            log.append ('Words.__init__'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
                        
@@ -3339,6 +3258,7 @@ class Words:
         self._text_n      = ''
 
     def split(self):
+        f = 'shared.Words.split'
         if self.Success:
             if not self.len():
                 lst_p = self._text_p.split(' ')
@@ -3360,18 +3280,17 @@ class Words:
                                                + len(cur_word._n) - 1
                     self.words.append(cur_word)
         else:
-            log.append ('Words.split'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def print(self):
+        f = 'shared.Words.print'
         if self.Success:
             for i in range(self.len()):
                 self.words[i].print(no=i)
         else:
-            log.append ('Words.print'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -3398,20 +3317,21 @@ class Words:
             self.words[i]._sents_len = sents_len
 
     def sent_nos(self):
+        f = 'shared.Words.sent_nos'
         if self.Success:
             if self.len() > 0:
                 if self.words[self._no]._sent_no is None:
                     self._sent_nos()
         else:
-            log.append ('Words.sent_nos'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def sent_p(self):
+        f = 'shared.Words.sent_p'
         if self.Success:
             sent_no = self.sent_no()
-            sent_no = Input (title = 'Words.sent_p'
+            sent_no = Input (title = f
                             ,value = sent_no
                             ).integer()
             old = self._no
@@ -3422,22 +3342,22 @@ class Words:
             self._no = old
             return ' '.join(result)
         else:
-            log.append ('Words.sent_p'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def sent_no(self):
+        f = 'shared.Words.sent_no'
         if self.Success:
             self.sent_nos()
             return self.words[self._no]._sent_no
         else:
-            log.append ('Words.sent_no'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def next_ref(self):
+        f = 'shared.Words.next_ref'
         if self.Success:
             old = self._no
             Found = False
@@ -3451,12 +3371,12 @@ class Words:
                 self._no = old
             return self._no
         else:
-            log.append ('Words.next_ref'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def prev_ref(self):
+        f = 'shared.Words.prev_ref'
         if self.Success:
             old = self._no
             Found = False
@@ -3470,8 +3390,7 @@ class Words:
                 self._no = old
             return self._no
         else:
-            log.append ('Words.prev_ref'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -3480,13 +3399,13 @@ class Words:
             self.words[i].spell_ru()
 
     def spellcheck_ru(self):
+        f = 'shared.Words.spellcheck_ru'
         if self.Success:
             if self.len() > 0:
                 if self.words[0]._spell_ru is None:
                     self._spellcheck_ru()
         else:
-            log.append ('Words.spellcheck_ru'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -3495,17 +3414,19 @@ class Words:
             self.words[i].ref()
 
     def refs(self):
+        f = 'shared.Words.refs'
         if self.Success:
             if self.len() > 0:
                 if self.words[0]._ref is None:
                     self._refs()
         else:
-            log.append ('Words.refs'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
-    def list_nm(self): # Needed for text comparison
+    # Needed for text comparison
+    def list_nm(self):
+        f = 'shared.Words.list_nm'
         if self.Success:
             if not self._list_nm:
                 cur_len_nm = 0
@@ -3519,23 +3440,24 @@ class Words:
                                                + len(cur_word._nm) - 1
             return self._list_nm
         else:
-            log.append ('Words.list_nm'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
-    def text_nm(self): # Needed for text comparison
+    # Needed for text comparison
+    def text_nm(self):
+        f = 'shared.Words.text_nm'
         if self.Success:
             if not self._text_nm:
                 self._text_nm = ' '.join(self.list_nm())
             return self._text_nm
         else:
-            log.append ('Words.text_nm'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def no_by_pos_p(self,pos):
+        f = 'shared.Words.no_by_pos_p'
         if self.Success:
             result = self._no
             for i in range(self.len()):
@@ -3544,12 +3466,12 @@ class Words:
                     break
             return result
         else:
-            log.append ('Words.no_by_pos_p'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def no_by_pos_n(self,pos):
+        f = 'shared.Words.no_by_pos_n'
         if self.Success:
             result = self._no
             for i in range(self.len()):
@@ -3558,12 +3480,13 @@ class Words:
                     break
             return result
         else:
-            log.append ('Words.no_by_pos_n'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
-    def no_by_pos_nm(self,pos): # Call 'list_nm()' first
+    # Call 'list_nm()' first
+    def no_by_pos_nm(self,pos):
+        f = 'shared.Words.no_by_pos_nm'
         if self.Success:
             result = self._no
             for i in range(self.len()):
@@ -3572,12 +3495,12 @@ class Words:
                     break
             return result
         else:
-            log.append ('Words.no_by_pos_nm'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def no_by_tk(self,tkpos):
+        f = 'shared.Words.no_by_tk'
         if self.Success:
             if tkpos:
                 lst = tkpos.split('.')
@@ -3598,33 +3521,28 @@ class Words:
                             result += lst[1]
                         else:
                             result += lst[1] + 1
-                        log.append ('Words.no_by_tk'
-                                   ,_('DEBUG')
+                        log.append (f,_('DEBUG')
                                    ,'%s -> %d' % (tkpos,result)
                                    )
                         return self.no_by_pos_p(pos=result)
                 else:
-                    objs.mes (func    = 'Words.no_by_tk'
-                             ,level   = _('WARNING')
-                             ,message = _('Wrong input data: "%s"') \
-                                        % str(lst)
+                    objs.mes (f,_('WARNING')
+                             ,_('Wrong input data: "%s"') % str(lst)
                              )
             else:
-                objs.mes (func    = 'Words.no_by_tk'
-                         ,level   = _('WARNING')
-                         ,message = _('Wrong input data: "%s"') \
-                                    % str(lst)
+                objs.mes (f,_('WARNING')
+                         ,_('Wrong input data: "%s"') % str(lst)
                          )
         else:
-            log.append ('Words.no_by_tk'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def nos_by_sent_no(self,sent_no=0):
+        f = 'shared.Words.nos_by_sent_no'
         result = (0,0)
         if self.Success:
-            sent_no = Input (title = 'Words.nos_by_sent_no'
+            sent_no = Input (title = f
                             ,value = sent_no
                             ).integer()
             old = self._no
@@ -3637,19 +3555,18 @@ class Words:
                 # Valid for one-word paragraph
                 result = (min(nos),max(nos))
             else:
-                log.append ('Words.nos_by_sent_no'
-                           ,_('WARNING')
+                log.append (f,_('WARNING')
                            ,_('Failed to find words of paragraph #%d!')\
                            % sent_no
                            )
         else:
-            log.append ('Words.nos_by_sent_no'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return result
 
     def complete(self):
+        f = 'shared.Words.complete'
         if self.Success:
             self.sent_nos()
             for i in range(self.len()):
@@ -3660,8 +3577,7 @@ class Words:
                 self.words[i].tf()
                 self.words[i].tl()
         else:
-            log.append ('Words.complete'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -3678,6 +3594,7 @@ class Search:
             self.reset(text=text,search=search)
 
     def reset(self,text,search):
+        f = 'shared.Search.reset'
         self.Success    = True
         self.i          = 0
         self._next_loop = []
@@ -3685,23 +3602,23 @@ class Search:
         self._text      = text
         self._search    = search
         if not self._search or not self._text:
-            objs.mes (func    = 'Search.__init__'
-                     ,level   = _('WARNING')
-                     ,message = _('Wrong input data!')
+            objs.mes (f,_('WARNING')
+                     ,_('Wrong input data!')
                      )
             self.Success = False
 
     def add(self):
+        f = 'shared.Search.add'
         if self.Success:
             if len(self._text) > self.i + len(self._search) - 1:
                 self.i += len(self._search)
         else:
-            log.append ('Search.add'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def next(self):
+        f = 'shared.Search.next'
         if self.Success:
             result = self._text.find(self._search,self.i)
             if result != -1:
@@ -3709,12 +3626,12 @@ class Search:
                 self.add()
             return result
         else:
-            log.append ('Search.next'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def prev(self):
+        f = 'shared.Search.prev'
         if self.Success:
             ''' rfind, unlike find, does not include limits, so we can
                 use it to search backwards
@@ -3724,12 +3641,12 @@ class Search:
                 self.i = result
             return result
         else:
-            log.append ('Search.prev'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def next_loop(self):
+        f = 'shared.Search.next_loop'
         if self.Success:
             if not self._next_loop:
                 self.i = 0
@@ -3740,13 +3657,13 @@ class Search:
                     else:
                         self._next_loop.append(result)
         else:
-            log.append ('Search.next_loop'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._next_loop
 
     def prev_loop(self):
+        f = 'shared.Search.prev_loop'
         if self.Success:
             if not self._prev_loop:
                 self.i = len(self._text)
@@ -3757,8 +3674,7 @@ class Search:
                     else:
                         self._prev_loop.append(result)
         else:
-            log.append ('Search.prev_loop'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         return self._prev_loop
@@ -3785,7 +3701,8 @@ class OCR:
             self._text = self._text.replace(cyr[i],lat[i])
         return self._text
 
-    def letter2digit(self): # Digits only
+    # Digits only
+    def letter2digit(self):
         self._text = self._text.replace('З','3').replace('з','3').replace('O','0').replace('О','0').replace('б','6')
         return self._text
 
@@ -3818,16 +3735,15 @@ class OCR:
 
 
 
-''' NOTE ABOUT PYMORPHY2:
-    1) Input must be stripped of punctuation, otherwise, the program
-       fails.
-    2) Output keeps unstripped spaces to the left, however, spaces to
-       the right fail the program.
-    3) Input can have any register. The output is lower-case.
-    4) Output can have 'ё' irrespectively of input.
-'''
 class Decline:
-
+    ''' #note ABOUT PYMORPHY2:
+        1) Input must be stripped of punctuation, otherwise, the program
+           fails.
+        2) Output keeps unstripped spaces to the left, however, spaces
+           to the right fail the program.
+        3) Input can have any register. The output is lower-case.
+        4) Output can have 'ё' irrespectively of input.
+    '''
     def __init__ (self,text='',number=''
                  ,case='',Auto=True):
         if text:
@@ -3843,11 +3759,11 @@ class Decline:
             self._case = 'nomn'
             self._list = []
 
-    ''' #todo:
-        1) Restore punctuation
-        2) Optional leading/trailing spaces
-    '''
     def reset(self,text,number='',case='',Auto=True):
+        ''' #todo:
+            1) Restore punctuation
+            2) Optional leading/trailing spaces
+        '''
         self._orig = text
         self._number = number
         # 'nomn', 'gent', 'datv', 'accs', 'ablt', 'loct'
@@ -3870,11 +3786,11 @@ class Decline:
         return result
 
     def decline(self):
+        f = 'shared.Decline.decline'
         for i in range(len(self._list)):
             # Inflecting '', None, digits and Latin words *only* fails
-            ''' log.append ('Decline.decline'
-                           ,_('DEBUG')
-                           ,_('Decline "%s" in "%s" number and "%s" case') \
+            ''' log.append (f,_('DEBUG')
+                           ,_('Decline "%s" in "%s" number and "%s" case')\
                            % (str(self._list[i])
                              ,str(self.number())
                              ,str(self.case())
@@ -3894,9 +3810,11 @@ class Decline:
         return self
 
     def number(self):
+        f = 'shared.Decline.number'
         if not self._number:
             self._number = 'sing'
-            if self._list: # Needed by 'max'
+            # Needed by 'max'
+            if self._list:
                 tmp = []
                 for i in range(len(self._list)):
                     if self._list[i]:
@@ -3904,14 +3822,14 @@ class Decline:
                         tmp.append(objs.morph().parse(self._list[i])[0].tag.number)
                 if tmp and max(tmp,key=tmp.count) == 'plur':
                     self._number = 'plur'
-            ''' log.append ('Decline.number'
-                           ,_('DEBUG')
+            ''' log.append (f,_('DEBUG')
                            ,str(self._number)
                            )
             '''
         return self._number
 
     def case(self):
+        f = 'shared.Decline.case'
         if not self._case:
             self._case = 'nomn'
             # Needed by 'max'
@@ -3923,19 +3841,17 @@ class Decline:
                 result = max(tmp,key=tmp.count)
                 if result:
                     self._case = result
-            log.append ('Decline.case'
-                       ,_('DEBUG')
+            log.append (f,_('DEBUG')
                        ,str(self._case)
                        )
         return self._case
 
 
 
-''' Values here will be kept through different modules (but not through
-    different programs both using 'shared.py').
-'''
 class Objects:
-
+    ''' Values here will be kept through different modules (but not
+        through different programs both using 'shared.py').
+    '''
     def __init__(self):
         self._enchant = self._morph = self._pretty_table = self._diff \
                       = self._pdir = self._tmpfile = self._mes \
@@ -3951,14 +3867,14 @@ class Objects:
             self._online_other = Online(MTSpecific=False)
         return self._online_other
     
-    ''' Call this externally for each GUI module like that:
-        sh.objs.mes(Silent=False)
-        Do not call this directly in 'sharedGUI' because cross-module
-        import will fail ('sharedGUI' uses 'shared').
-    '''
     def mes (self,func='MAIN',level=_('DEBUG')
             ,message='',Silent=False
             ):
+        ''' Call this externally for each GUI module like that:
+            sh.objs.mes(Silent=False)
+            Do not call this directly in 'sharedGUI' because
+            cross-module import will fail ('sharedGUI' uses 'shared').
+        '''
         if not self._mes:
             if Silent:
                 self._mes = log.append
@@ -4026,30 +3942,30 @@ class MessagePool:
             self.delete_first()
 
     def add(self,message):
+        f = 'shared.MessagePool.add'
         if message:
             self.free()
             self.pool.append(message)
         else:
-            log.append ('MessagePool.add'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Empty input is not allowed!')
                        )
 
     def delete_first(self):
+        f = 'shared.MessagePool.delete_first'
         if len(self.pool) > 0:
             del self.pool[0]
         else:
-            log.append ('MessagePool.delete_first'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('The pool is empty!')
                        )
 
     def delete_last(self):
+        f = 'shared.MessagePool.delete_last'
         if len(self.pool) > 0:
             del self.pool[-1]
         else:
-            log.append ('MessagePool.delete_last'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('The pool is empty!')
                        )
 
@@ -4098,6 +4014,7 @@ class Table:
                  ,Shorten=True,MaxRow=18
                  ,MaxRows=20
                  ):
+        f = 'shared.Table.__init__'
         self._headers = headers
         self._rows    = rows
         self.Shorten  = Shorten
@@ -4107,8 +4024,7 @@ class Table:
             self.Success = True
         else:
             self.Success = False
-            log.append ('Table.__init__'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Empty input is not allowed!')
                        )
 
@@ -4127,10 +4043,10 @@ class Table:
                 self._headers = result[0]
 
     def _shorten_rows(self):
+        f = 'shared.Table._shorten_rows'
         if self.MaxRows < 2 or self.MaxRows > len(self._rows):
             self.MaxRows = len(self._rows)
-            log.append ('Table._shorten_rows'
-                       ,_('INFO')
+            log.append (f,_('INFO')
                        ,_('Set the max number of rows to %d') \
                        % self.MaxRows
                        )
@@ -4150,18 +4066,19 @@ class Table:
                         self._rows[i][j] = self._rows[i][j][0:self.MaxRow]
 
     def shorten(self):
+        f = 'shared.Table.shorten'
         if self.Success:
             if self.Shorten:
                 self._shorten_headers()
                 self._shorten_rows   ()
                 self._shorten_row    ()
         else:
-            log.append ('Table.shorten'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
     def print(self):
+        f = 'shared.Table.print'
         if self.Success:
             self.shorten()
             obj = objs.pretty_table()(self._headers)
@@ -4169,20 +4086,18 @@ class Table:
                 obj.add_row(row)
             print(obj)
         else:
-            log.append ('Table.print'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
 
 
-''' Return a path base name that would comply with OS-specific rules. 
-    We should not use absolute paths at input because we cannot tell for
-    sure that the path separator is actually a separator and not an
-    illegal character.
-'''
 class FixBaseName:
-    
+    ''' Return a path base name that would comply with OS-specific
+        rules. We should not use absolute paths at input because we
+        cannot tell for sure that the path separator is actually
+        a separator and not an illegal character.
+    '''
     def __init__(self,basename,AllOS=False,max_len=0):
         self.AllOS    = AllOS
         self._name    = basename
@@ -4253,12 +4168,12 @@ class Get:
             <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED].
             To get rid of this error, we use this small workaround.
         '''
+        f = 'shared.Get.unverified'
         if not self.Verify:
             if hasattr(ssl,'_create_unverified_context'):
                 ssl._create_default_https_context = ssl._create_unverified_context
             else:
-                log.append ('Get.unverified'
-                           ,_('WARNING')
+                log.append (f,_('WARNING')
                            ,_('Unable to use unverified certificates!')
                            )
         
@@ -4266,6 +4181,7 @@ class Get:
         ''' Changing UA allows us to avoid a bot protection
             ('Error 403: Forbidden').
         '''
+        f = 'shared.Get._get'
         try:
             req = urllib.request.Request (url     = self._url
                                          ,data    = None
@@ -4276,14 +4192,12 @@ class Get:
             self._html = \
             urllib.request.urlopen(req,timeout=self._timeout).read()
             if self.Verbose:
-                log.append ('Get._get'
-                           ,_('INFO')
+                log.append (f,_('INFO')
                            ,_('[OK]: "%s"') % self._url
                            )
         # Too many possible exceptions
         except Exception as e:
-            log.append ('Get._get'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('[FAILED]: "%s". Details: %s') \
                        % (self._url,str(e))
                        )
@@ -4292,6 +4206,7 @@ class Get:
         ''' Set 'encoding' to None to cancel decoding. This is useful
             if we are downloading a non-text content.
         '''
+        f = 'shared.Get.decode'
         if self._encoding:
             if self._html:
                 try:
@@ -4299,23 +4214,22 @@ class Get:
                     self._html.decode(encoding=self._encoding)
                 except UnicodeDecodeError:
                     self._html = str(self._html)
-                    log.append ('Get.decode'
-                               ,_('WARNING')
+                    log.append (f,_('WARNING')
                                ,_('Unable to decode "%s"!') \
                                 % str(self._url)
                                )
             else:
-                log.append ('Get.decode'
-                           ,_('WARNING')
+                log.append (f,_('WARNING')
                            ,_('Empty input is not allowed!')
                            )
     
     def run(self):
+        f = 'shared.Get.run'
         if self._url:
             # Safely use URL as a string
             if isinstance(self._url,str):
                 if self.Verbose:
-                    timer = Timer(func_title='Get.run')
+                    timer = Timer(func_title=f)
                     timer.start()
                 self._get()
                 self.decode()
@@ -4323,13 +4237,11 @@ class Get:
                     timer.end()
                 return self._html
             else:
-                log.append ('Get.run'
-                           ,_('WARNING')
+                log.append (f,_('WARNING')
                            ,_('Wrong input data!')
                            )
         else:
-            log.append ('Get.run'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Empty input is not allowed!')
                        )
 
@@ -4338,6 +4250,7 @@ class Get:
 class References:
     
     def __init__(self,words1,words2):
+        f = 'shared.References.__init__'
         self.words1 = words1
         self.words2 = words2
         if self.words1 and self.words2 and len(self.words1.words) \
@@ -4348,12 +4261,12 @@ class References:
             self.words1.refs()
         else:
             self.Success = False
-            log.append ('References.__init__'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Empty input is not allowed!')
                        )
         
     def ref_before(self,word_no):
+        f = 'shared.References.ref_before'
         if self.Success:
             if word_no < len(self.words1.words):
                 while word_no >= 0:
@@ -4363,18 +4276,17 @@ class References:
                         word_no -= 1
                 return word_no
             else:
-                objs.mes ('References.ref_before'
-                         ,_('ERROR')
+                objs.mes (f,_('ERROR')
                          ,_('The condition "%s" is not observed!') \
                          % '%d < %d' % (word_no,len(self.words1.words))
                          )
         else:
-            log.append ('References.ref_before'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         
     def ref_after(self,word_no):
+        f = 'shared.References.ref_after'
         if self.Success:
             if word_no < len(self.words1.words):
                 while word_no < len(self.words1.words):
@@ -4384,36 +4296,32 @@ class References:
                         word_no += 1
                 return -1
             else:
-                objs.mes ('References.ref_after'
-                         ,_('ERROR')
+                objs.mes (f,_('ERROR')
                          ,_('The condition "%s" is not observed!') \
                          % '%d < %d' % (word_no,len(self.words1.words))
                          )
         else:
-            log.append ('References.ref_after'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
     
     def nearest_ref(self,word_no):
+        f = 'shared.References.nearest_ref'
         if self.Success:
             word_no1 = self.ref_before(word_no)
             word_no2 = self.ref_after(word_no)
             if word_no1 == -1 and word_no2 == -1:
-                log.append ('References.nearest_ref'
-                           ,_('INFO')
+                log.append (f,_('INFO')
                            ,_('No references have been found!')
                            )
                 return word_no
             elif word_no1 >= 0 and word_no2 == -1:
-                log.append ('References.nearest_ref'
-                           ,_('INFO')
+                log.append (f,_('INFO')
                            ,_('No references to the right!')
                            )
                 return word_no1
             elif word_no2 >= 0 and word_no1 == -1:
-                log.append ('References.nearest_ref'
-                           ,_('INFO')
+                log.append (f,_('INFO')
                            ,_('No references to the left!')
                            )
                 return word_no2
@@ -4425,12 +4333,12 @@ class References:
                 else:
                     return word_no2
         else:
-            log.append ('References.nearest_ref'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
                 
     def repeated(self,word_no):
+        f = 'shared.References.repeated'
         if self.Success:
             if word_no < len(self.words1.words):
                 count = 0
@@ -4439,18 +4347,17 @@ class References:
                         count += 1
                 return count
             else:
-                objs.mes ('References.repeated'
-                         ,_('ERROR')
+                objs.mes (f,_('ERROR')
                          ,_('The condition "%s" is not observed!') \
                          % '%d < %d' % (word_no,len(self.words1.words))
                          )
         else:
-            log.append ('References.repeated'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         
     def repeated2(self,word_n,count):
+        f = 'shared.References.repeated2'
         if self.Success:
             tmp = 0
             for i in range(len(self.words2.words)):
@@ -4459,8 +4366,7 @@ class References:
                    if tmp == count:
                        return i
         else:
-            log.append ('References.repeated2'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
 
@@ -4496,10 +4402,10 @@ class Links:
             self.link()
             
     def link(self):
+        f = 'shared.Links.link'
         pos = self._pos + len(self._root)
         if pos >= len(self._text):
-            log.append ('Links.link'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Unexpected end of text!')
                        )
         else:
@@ -4508,8 +4414,7 @@ class Links:
                 pos = text.index('"')
                 self._links.append(text[:pos])
             except ValueError:
-                log.append ('Links.link'
-                           ,_('WARNING')
+                log.append (f,_('WARNING')
                            ,_('Wrong input data!')
                            )
                               
@@ -4553,28 +4458,29 @@ class FilterList:
                        and isinstance(blacklist,list)
     
     def block(self):
+        f = 'shared.FilterList.block'
         if self.Success:
             # Actually, there is no reason to use 'strip' here
             self._block = [item.lower() for item in self._block if item]
         else:
-            log.append ('FilterList.block'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
     
     def list(self):
+        f = 'shared.FilterList.list'
         if self.Success:
             if not self._list:
                 # Those are base names
                 self._list = os.listdir(self._path)
             return self._list
         else:
-            log.append ('FilterList.list'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
     
     def filter(self):
+        f = 'shared.FilterList.filter'
         if self.Success:
             match = []
             for item in self._list:
@@ -4587,8 +4493,7 @@ class FilterList:
             mismatch.sort()
             return [os.path.join(self._path,item) for item in mismatch]
         else:
-            log.append ('FilterList.filter'
-                       ,_('WARNING')
+            log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
         
@@ -4632,10 +4537,7 @@ class Home:
 
 
 class Commands:
-    ''' This class should be located in the same module that needs
-        localization. Do not put it in 'shared', otherwise, 'gettext'
-        will revert to a default locale.
-    '''
+
     def __init__(self):
         pass
     
@@ -4663,12 +4565,13 @@ if __name__ == '__main__':
     ''' #note: Focusing on the widget is lost randomly (is assigned to
         root). This could be a Tkinter/DM bug.
     '''
+    f = 'shared.__main__'
     Silent = False
     if not Silent:
         import sharedGUI as sg
         sg.objs.start()
     objs = Objects()
-    objs.mes (func    = 'logic'
+    objs.mes (func    = f
              ,level   = _('INFO')
              ,message = _('Nothing to do!')
              ,Silent  = Silent

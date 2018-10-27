@@ -15,6 +15,7 @@ gettext.install('shared','../resources/locale')
 # Привязать горячие клавиши или кнопки мыши к действию
 # object, str/list, function
 def bind(obj,bindings,action):
+    f = 'sharedGUI.bind'
     if hasattr(obj,'widget'):
         if isinstance(bindings,str) or isinstance(bindings,list):
             if isinstance(bindings,str):
@@ -23,24 +24,22 @@ def bind(obj,bindings,action):
                 try:
                     obj.widget.bind(binding,action)
                 except tk.TclError:
-                    Message (func    = 'bind'
-                            ,level   = _('ERROR')
-                            ,message = _('Failed to enable key combination "%s"!') \
-                                       % binding
+                    Message (f,_('ERROR')
+                            ,_('Failed to enable key combination "%s"!')\
+                            % binding
                             )
         else:
-            Message (func    = 'bind'
-                    ,level   = _('ERROR')
-                    ,message = _('Wrong input data: "%s"') \
-                               % str(bindings)
+            Message (f,_('ERROR')
+                    ,_('Wrong input data: "%s"') \
+                    % str(bindings)
                     )
     else:
-        Message (func    = 'bind'
-                ,level   = _('ERROR')
-                ,message = _('Wrong input data!')
+        Message (f,_('ERROR')
+                ,_('Wrong input data!')
                 )
 
 def dialog_save_file(filetypes=()):
+    f = 'sharedGUI.dialog_save_file'
     file = ''
     if not filetypes:
         filetypes = ((_('Plain text (UTF-8)'),'.txt' )
@@ -55,9 +54,8 @@ def dialog_save_file(filetypes=()):
     try:
         file = dialog.asksaveasfilename(**options)
     except:
-        Message (func    = 'dialog_save_file'
-                ,level   = _('ERROR')
-                ,message = _('Failed to select a file!')
+        Message (f,_('ERROR')
+                ,_('Failed to select a file!')
                 )
     return file
     
@@ -66,6 +64,7 @@ def mod_color(color,delta=76): # ~30%
         a hex value) brighter (positive delta) or darker
         (negative delta).
     '''
+    f = 'sharedGUI.mod_color'
     if -255 <= delta <= 255:
         try:
             rgb = objs.root().widget.winfo_rgb(color=color)
@@ -74,20 +73,17 @@ def mod_color(color,delta=76): # ~30%
             rgb = tuple(int(item) for item in rgb)
             return '#%02x%02x%02x' % rgb
         except tk._tkinter.TclError:
-            Message (func    = 'mod_color'
-                    ,level   = _('WARNING')
-                    ,message = _('An unknown color "%s"!') % str(color)
+            Message (f,_('WARNING')
+                    ,_('An unknown color "%s"!') % str(color)
                     )
     else:
-        Message (func    = 'mod_color'
-                ,level   = _('WARNING')
-                ,message = _('The condition "%s" is not observed!') \
-                           % ('-255 <= %d <= 255' % delta)
+        Message (f,_('WARNING')
+                ,_('The condition "%s" is not observed!') \
+                % ('-255 <= %d <= 255' % delta)
                 )
 
 
 
-# Класс для оформления root как виджета
 class Root:
 
     def __init__(self):
@@ -133,6 +129,7 @@ class WidgetShared:
         object.widget.focus()
 
     def insert(object,text,pos):
+        f = 'sharedGUI.WidgetShared.insert'
         # Do not allow None
         if text:
             if object.type == 'TextBox' or object.type == 'Entry':
@@ -144,37 +141,35 @@ class WidgetShared:
                                              ,_('Failed to insert the text!')
                                              )
                     except tk.TclError:
-                        sh.log.append (func    = 'WidgetShared.insert'
-                                      ,level   = _('ERROR')
-                                      ,message = _('Failed to insert the text!')
+                        sh.log.append (f,_('ERROR')
+                                      ,_('Failed to insert the text!')
                                       )
             else:
-                sh.log.append (func    = 'WidgetShared.insert'
-                              ,level   = _('ERROR')
-                              ,message = _('A logic error: unknown object type: "%s"!') \
-                                         % str(object.type)
+                sh.log.append (f,_('ERROR')
+                              ,_('A logic error: unknown object type: "%s"!') \
+                              % str(object.type)
                               )
         # Too frequent
         '''
         else:
-            sh.log.append ('WidgetShared.insert'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Empty input is not allowed!')
                           )
         '''
 
     # font_style, sh.globs['var']['menu_font']
     def font(object,font='Sans 11'):
+        f = 'sharedGUI.WidgetShared.font'
         if object.type == 'TextBox' or object.type == 'Entry':
             object.widget.config(font=font)
         else:
-            sh.log.append (func    = 'WidgetShared.font'
-                          ,level   = _('ERROR')
-                          ,message = _('A logic error: unknown object type: "%s"!') \
-                                     % str(object.type)
+            sh.log.append (f,_('ERROR')
+                          ,_('A logic error: unknown object type: "%s"!')\
+                          % str(object.type)
                           )
 
     def set_state(object,ReadOnly=False):
+        f = 'sharedGUI.WidgetShared.set_state'
         if object.type == 'TextBox' or object.type == 'Entry':
             if ReadOnly:
                 object.widget.config(state='disabled')
@@ -183,24 +178,24 @@ class WidgetShared:
                 object.widget.config(state='normal')
                 object.state = 'normal'
         else:
-            sh.log.append (func    = 'WidgetShared.set_state'
-                          ,level   = _('ERROR')
-                          ,message = _('A logic error: unknown object type: "%s"!') \
-                                     % str(object.type)
+            sh.log.append (f,_('ERROR')
+                          ,_('A logic error: unknown object type: "%s"!')\
+                          % str(object.type)
                           )
 
     # Родительский виджет
     def title(object,text=_('Text:'),my_program_title=''):
+        f = 'sharedGUI.WidgetShared.title'
         if object.type == 'Toplevel' or object.type == 'Root':
             object.widget.title(text + my_program_title)
         else:
-            sh.log.append (func    = 'WidgetShared.title'
-                          ,level   = _('ERROR')
-                          ,message = _('A logic error: unknown object type: "%s"!') \
-                                     % str(object.type)
+            sh.log.append (f,_('ERROR')
+                          ,_('A logic error: unknown object type: "%s"!')\
+                          % str(object.type)
                           )
 
     def custom_buttons(object):
+        f = 'sharedGUI.WidgetShared.custom_buttons'
         if not object.Composite:
             if object.parent.type == 'Toplevel' \
             or object.parent.type == 'Root':
@@ -209,14 +204,14 @@ class WidgetShared:
                 else:
                     object.parent.close_button.widget.config(text=_('Save and close'))
             else:
-                sh.log.append (func    = 'WidgetShared.custom_buttons'
-                              ,level   = _('ERROR')
-                              ,message = _('A logic error: unknown object type: "%s"!') \
-                                         % str(object.type)
+                sh.log.append (f,_('ERROR')
+                              ,_('A logic error: unknown object type: "%s"!')\
+                              % str(object.type)
                               )
 
     # Parent widget
     def icon(object,file):
+        f = 'sharedGUI.WidgetShared.icon'
         if object.type == 'Toplevel' or object.type == 'Root':
             if file and os.path.exists(file):
                 object.widget.tk.call ('wm','iconphoto'
@@ -226,16 +221,14 @@ class WidgetShared:
                                                      )
                                       )
             else:
-                sh.log.append (func    = 'WidgetShared.icon'
-                              ,level   = _('ERROR')
-                              ,message = _('File "%s" has not been found!') \
-                                         % str(file)
+                sh.log.append (f,_('ERROR')
+                              ,_('File "%s" has not been found!') \
+                              % str(file)
                               )
         else:
-            sh.log.append (func    = 'WidgetShared.icon'
-                          ,level   = _('ERROR')
-                          ,message = _('A logic error: unknown object type: "%s"!') \
-                                     % str(object.type)
+            sh.log.append (f,_('ERROR')
+                          ,_('A logic error: unknown object type: "%s"!')\
+                          % str(object.type)
                           )
 
 
@@ -314,12 +307,12 @@ class Top:
 
 
 
-''' #todo (?): fix: if duplicate spaces/line breaks are not deleted,
-    text with and without punctuation will have a different number of
-    words; thus, tkinter will be supplied wrong positions upon Search.
-'''
 class SearchBox:
-
+    ''' #todo (?): fix: if duplicate spaces/line breaks are not deleted,
+        text with and without punctuation will have a different number
+        of words; thus, tkinter will be supplied wrong positions upon
+        Search.
+    '''
     def __init__(self,obj):
         self.type    = 'SearchBox'
         self.obj     = obj
@@ -350,6 +343,7 @@ class SearchBox:
             self.Success = False
 
     def reset_data(self):
+        f = 'sharedGUI.SearchBox.reset_data'
         self.Success    = True
         self._prev_loop = self._next_loop = self._search = self._pos1 \
                         = self._pos2 = None
@@ -360,15 +354,13 @@ class SearchBox:
             self.h_search.next_loop()
             # Prevents from calling self.search() once again
             if not self.h_search._next_loop:
-                Message (func    = 'SearchBox.reset_data'
-                        ,level   = _('INFO')
-                        ,message = _('No matches!')
+                Message (f,_('INFO')
+                        ,_('No matches!')
                         )
                 self.Success = False
         else:
             self.Success = False
-            sh.log.append ('SearchBox.reset_data'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Operation has been canceled.')
                           )
 
@@ -379,33 +371,33 @@ class SearchBox:
             self.reset_logic(words=words,Strict=Strict)
 
     def loop(self):
+        f = 'sharedGUI.SearchBox.loop'
         if self.Success:
             if not self.h_search._next_loop:
                 self.reset()
         else:
-            sh.log.append ('SearchBox.loop'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Operation has been canceled.')
                           )
         return self.h_search._next_loop
 
     def add(self):
+        f = 'sharedGUI.SearchBox.add'
         if self.Success:
             if self.i < len(self.loop()) - 1:
                 self.i += 1
         else:
-            sh.log.append ('SearchBox.add'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Operation has been canceled.')
                           )
 
     def subtract(self):
+        f = 'sharedGUI.SearchBox.subtract'
         if self.Success:
             if self.i > 0:
                 self.i -= 1
         else:
-            sh.log.append ('SearchBox.subtract'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Operation has been canceled.')
                           )
 
@@ -414,6 +406,7 @@ class SearchBox:
         self.next()
 
     def select(self):
+        f = 'sharedGUI.SearchBox.select'
         if self.Success:
             if self.Strict:
                 result1 = self.words.no_by_pos_p(pos=self.pos1())
@@ -422,8 +415,7 @@ class SearchBox:
                 result1 = self.words.no_by_pos_n(pos=self.pos1())
                 result2 = self.words.no_by_pos_n(pos=self.pos2())
             if result1 is None or result2 is None:
-                sh.log.append ('SearchBox.select'
-                              ,_('ERROR')
+                sh.log.append (f,_('ERROR')
                               ,_('Wrong input data!')
                               )
             else:
@@ -435,12 +427,12 @@ class SearchBox:
                                  )
                 self.h_sel.set()
         else:
-            sh.log.append ('SearchBox.select'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Operation has been canceled.')
                           )
 
     def search(self):
+        f = 'sharedGUI.SearchBox.search'
         if self.Success:
             if self.words and not self._search:
                 self.h_entry.focus()
@@ -457,12 +449,12 @@ class SearchBox:
                     self._search = self._search.lower()
             return self._search
         else:
-            sh.log.append ('SearchBox.search'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Operation has been canceled.')
                           )
 
     def next(self,event=None):
+        f = 'sharedGUI.SearchBox.next'
         if self.Success:
             _loop = self.loop()
             if _loop:
@@ -470,29 +462,26 @@ class SearchBox:
                 self.add()
                 if old_i == self.i:
                     if len(_loop) == 1:
-                        Message (func    = 'SearchBox.next'
-                                ,level   = _('INFO')
-                                ,message = _('Only one match has been found!')
+                        Message (f,_('INFO')
+                                ,_('Only one match has been found!')
                                 )
                     else:
-                        Message (func    = 'SearchBox.next'
-                                ,level   = _('INFO')
-                                ,message = _('No more matches, continuing from the top!')
+                        Message (f,_('INFO')
+                                ,_('No more matches, continuing from the top!')
                                 )
                         self.i = 0
                 self.select()
             else:
-                Message (func    = 'SearchBox.next'
-                        ,level   = _('INFO')
-                        ,message = _('No matches!')
+                Message (f,_('INFO')
+                        ,_('No matches!')
                         )
         else:
-            sh.log.append ('SearchBox.next'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Operation has been canceled.')
                           )
 
     def prev(self,event=None):
+        f = 'sharedGUI.SearchBox.prev'
         if self.Success:
             _loop = self.loop()
             if _loop:
@@ -500,30 +489,27 @@ class SearchBox:
                 self.subtract()
                 if old_i == self.i:
                     if len(_loop) == 1:
-                        Message (func    = 'SearchBox.prev'
-                                ,level   = _('INFO')
-                                ,message = _('Only one match has been found!')
+                        Message (f,_('INFO')
+                                ,_('Only one match has been found!')
                                 )
                     else:
-                        Message (func    = 'SearchBox.prev'
-                                ,level   = _('INFO')
-                                ,message = _('No more matches, continuing from the bottom!')
+                        Message (f,_('INFO')
+                                ,_('No more matches, continuing from the bottom!')
                                 )
                         # Not just -1
                         self.i = len(_loop) - 1
                 self.select()
             else:
-                Message (func    = 'SearchBox.prev'
-                        ,level   = _('INFO')
-                        ,message = _('No matches!')
+                Message (f,_('INFO')
+                        ,_('No matches!')
                         )
         else:
-            sh.log.append ('SearchBox.prev'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Operation has been canceled.')
                           )
 
     def pos1(self):
+        f = 'sharedGUI.SearchBox.pos1'
         if self.Success:
             if self._pos1 is None:
                 self.loop()
@@ -533,19 +519,18 @@ class SearchBox:
                 self._pos1 = _loop[self.i]
             return self._pos1
         else:
-            sh.log.append ('SearchBox.pos1'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Operation has been canceled.')
                           )
 
     def pos2(self):
+        f = 'sharedGUI.SearchBox.pos2'
         if self.Success:
             if self.pos1() is not None:
                 self._pos2 = self._pos1 + len(self.search())
             return self._pos2
         else:
-            sh.log.append ('SearchBox.pos2'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Operation has been canceled.')
                           )
 
@@ -742,6 +727,7 @@ class TextBox:
                                             )
 
     def toggle_case(self,event=None):
+        f = 'sharedGUI.TextBox.toggle_case'
         text = sh.Text(text=self.selection.text()).toggle_case()
         pos1, pos2 = self.selection.get()
         self.clear_selection()
@@ -754,19 +740,18 @@ class TextBox:
                                  )
             self.selection.set(DeletePrevious=0,AutoScroll=0)
         else:
-            sh.log.append ('TextBox.toggle_case'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Empty input is not allowed!')
                           )
         return 'break'
 
     def _get(self):
+        f = 'sharedGUI.TextBox._get'
         try:
             return self.widget.get('1.0','end')
         except tk._tkinter.TclError:
             # Do not use GUI
-            sh.log.append ('TextBox._get'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('The parent has already been destroyed.')
                           )
 
@@ -786,11 +771,11 @@ class TextBox:
         else:
             self.scroll(mark='insert')
 
-    ''' Fix (probable) Tkinter bug(s) after pressing '<Control-v>':
-        1) Fix weird scrolling
-        2) Delete selected text before pasting
-    '''
     def insert_clipboard(self,event=None):
+        ''' Fix (probable) Tkinter bug(s) after pressing '<Control-v>':
+            1) Fix weird scrolling
+            2) Delete selected text before pasting
+        '''
         self.clear_selection()
         # For some reason, 'self.insert' does not work here with 'break'
         #self.insert(text=Clipboard().paste(),MoveTop=False)
@@ -803,25 +788,26 @@ class TextBox:
         return 'break'
 
     def _tag_remove(self,tag_name='sel',pos1tk='1.0',pos2tk='end'):
+        f = 'sharedGUI.TextBox._tag_remove'
         try:
             self.widget.tag_remove(tag_name,pos1tk,pos2tk)
         except tk.TclError:
-            sh.log.append ('TextBox.tag_remove'
-                          ,_('WARNING')
-                          ,_('Failed to remove the tag %s in the widget %s in positions %s-%s!') \
+            sh.log.append (f,_('WARNING')
+                          ,_('Failed to remove the tag %s in the widget %s in positions %s-%s!')\
                           % (tag_name,str(widget),pos1tk,pos2tk)
                           )
 
+    #todo: simplify
     def tag_remove(self,tag_name='sel',pos1tk='1.0',pos2tk='end'):
+        f = 'sharedGUI.TextBox.tag_remove'
         self._tag_remove(tag_name=tag_name,pos1tk=pos1tk,pos2tk=pos2tk)
         if self.tags:
             try:
                 self.tags.remove(tag_name)
             except ValueError:
                 #todo: Что тут не работает?
-                sh.log.append ('TextBox.tag_remove'
-                              ,_('DEBUG-ERROR')
-                              ,_('Element "%s" has not been found in fragment "%s"!') \
+                sh.log.append (f,_('DEBUG-ERROR')
+                              ,_('Element "%s" has not been found in fragment "%s"!')\
                               % (tag_name,str(self.tags))
                               )
 
@@ -829,97 +815,92 @@ class TextBox:
     def tag_add (self,tag_name='sel',pos1tk='1.0'
                 ,pos2tk='end',DeletePrevious=True
                 ):
+        f = 'sharedGUI.TextBox.tag_add'
         if DeletePrevious:
             self.tag_remove(tag_name)
         try:
             self.widget.tag_add(tag_name,pos1tk,pos2tk)
         except tk.TclError:
-            sh.log.append ('TextBox.tag_add'
-                          ,_('ERROR')
-                          ,_('Failed to add tag "%s" for positions %s-%s!') \
+            sh.log.append (f,_('ERROR')
+                          ,_('Failed to add tag "%s" for positions %s-%s!')\
                           % (tag_name,pos1tk,pos2tk)
                           )
         self.tags.append(tag_name)
 
     def tag_config (self,tag_name='sel',background=None
                    ,foreground=None,font=None):
+        f = 'sharedGUI.TextBox.tag_config'
         if background:
             try:
                 self.widget.tag_config(tag_name,background=background)
             except tk.TclError:
-                sh.log.append ('TextBox.tag_config'
-                              ,_('ERROR')
-                              ,_('Failed to configure tag "%s" to have the background of color "%s"!') \
+                sh.log.append (f,_('ERROR')
+                              ,_('Failed to configure tag "%s" to have the background of color "%s"!')\
                               % (str(tag_name),str(background))
                               )
         if foreground:
             try:
                 self.widget.tag_config(tag_name,foreground=foreground)
             except tk.TclError:
-                sh.log.append ('TextBox.tag_config'
-                              ,_('ERROR')
-                              ,_('Failed to configure tag "%s" to have the foreground of color "%s"!') \
+                sh.log.append (f,_('ERROR')
+                              ,_('Failed to configure tag "%s" to have the foreground of color "%s"!')\
                               % (str(tag_name),str(foreground))
                               )
         if font:
             try:
                 self.widget.tag_config(tag_name,font=font)
             except tk.TclError:
-                sh.log.append ('TextBox.tag_config'
-                              ,_('ERROR')
-                              ,_('Failed to configure tag "%s" to have the font "%s"!') \
+                sh.log.append (f,_('ERROR')
+                              ,_('Failed to configure tag "%s" to have the font "%s"!')\
                               % (str(tag_name),str(font))
                               )
 
     # Tk.Entry не поддерживает тэги и метки
     def mark_add(self,mark_name='insert',postk='1.0'):
+        f = 'sharedGUI.TextBox.mark_add'
         try:
             self.widget.mark_set(mark_name,postk)
             '''
-            sh.log.append ('TextBox.mark_add'
-                          ,_('DEBUG')
-                          ,_('Mark "%s" has been inserted in position "%s".') \
+            sh.log.append (f,_('DEBUG')
+                          ,_('Mark "%s" has been inserted in position "%s".')\
                           % (mark_name,postk)
                           )
             '''
         except tk.TclError:
-            sh.log.append ('TextBox.tag_add'
-                          ,_('ERROR')
-                          ,_('Failed to insert mark "%s" in position "%s"!') \
+            sh.log.append (f,_('ERROR')
+                          ,_('Failed to insert mark "%s" in position "%s"!')\
                           % (mark_name,postk)
                           )
         self.marks.append(mark_name)
 
     def mark_remove(self,mark_name='insert'):
+        f = 'sharedGUI.TextBox.mark_remove'
         try:
             self.widget.mark_unset(mark_name)
             '''
-            sh.log.append ('TextBox.mark_remove'
-                          ,_('DEBUG')
+            sh.log.append (f,_('DEBUG')
                           ,_('Mark "%s" has been removed.') % (mark_name)
                           )
             '''
         except tk.TclError:
-            sh.log.append ('TextBox.mark_remove'
-                          ,_('ERROR')
+            sh.log.append (f,_('ERROR')
                           ,_('Failed to remove mark "%s"!') % mark_name
                           )
         try:
             self.marks.remove(mark_name)
         except ValueError:
-            sh.log.append ('TextBox.mark_remove'
-                          ,_('ERROR')
-                          ,_('Element "%s" has not been found in fragment "%s"!') \
+            sh.log.append (f,_('ERROR')
+                          ,_('Element "%s" has not been found in fragment "%s"!')\
                           % (mark_name,str(self.marks))
                           )
 
     def clear_text(self,pos1='1.0',pos2='end'):
+        f = 'sharedGUI.TextBox.clear_text'
         try:
             self.widget.delete(pos1,pos2)
         except tk._tkinter.TclError:
             # Do not use GUI
-            sh.log.append ('TextBox.clear_text'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('The parent has already been destroyed.')
                           )
 
@@ -937,6 +918,7 @@ class TextBox:
                 self.clear_selection()
 
     def clear_selection(self,event=None):
+        f = 'sharedGUI.TextBox.clear_selection'
         pos1tk, pos2tk = self.selection.get()
         if pos1tk and pos2tk:
             self.clear_text(pos1=pos1tk,pos2=pos2tk)
@@ -944,8 +926,7 @@ class TextBox:
         # Too frequent
         '''
         else:
-            sh.log.append ('TextBox.clear_selection'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Empty input is not allowed!')
                           )
         '''
@@ -963,6 +944,7 @@ class TextBox:
             i -= 1
 
     def goto(self,GoTo=''):
+        f = 'sharedGUI.TextBox.goto'
         if GoTo:
             try:
                 goto_pos = self.widget.search(GoTo,'1.0','end')
@@ -970,35 +952,34 @@ class TextBox:
                 self.mark_add('insert',goto_pos)
                 self.widget.yview('goto')
             except:
-                sh.log.append ('TextBox.goto'
-                              ,_('ERROR')
-                              ,_('Failed to shift screen to label "%s"!') \
+                sh.log.append (f,_('ERROR')
+                              ,_('Failed to shift screen to label "%s"!')\
                               % 'goto'
                               )
 
-    # Сместить экран до позиции tkinter или до метки (тэги не работают)
+    # Scroll screen to a tkinter position or a mark (tags do not work)
     def scroll(self,mark):
+        f = 'sharedGUI.TextBox.scroll'
         try:
             self.widget.yview(mark)
         except tk.TclError:
-            sh.log.append ('TextBox.scroll'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Failed to shift screen to label "%s"!') \
                           % str(mark)
                           )
 
-    ''' Сместить экран до позиции tkinter или до метки, если они не
-        видны (тэги не работают)
-    '''
     def autoscroll(self,mark='1.0'):
+        ''' Scroll screen to a tkinter position or a mark if they
+            are not visible (tags do not work).
+        '''
         if not self.visible(mark):
             self.scroll(mark)
 
     #todo: select either 'see' or 'autoscroll'
     def see(self,mark):
+        f = 'sharedGUI.TextBox.see'
         if mark is None:
-            sh.log.append ('TextBox.see'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Empty input is not allowed!')
                           )
         else:
@@ -1015,16 +996,15 @@ class TextBox:
             return True
 
     def cursor(self,event=None):
+        f = 'sharedGUI.TextBox.cursor'
         try:
             self._pos = self.widget.index('insert')
-            sh.log.append ('TextBox.cursor'
-                          ,_('DEBUG')
+            sh.log.append (f,_('DEBUG')
                           ,_('Got position: "%s"') % str(self._pos)
                           )
         except tk.TclError:
             self._pos = '1.0'
-            sh.log.append ('TextBox.cursor'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Cannot return a cursor position!')
                           )
         return self._pos
@@ -1035,10 +1015,11 @@ class TextBox:
     def focus(self,event=None):
         self.widget.focus_set()
 
-    ''' Tags can be marked only after text in inserted; thus, call this
-        procedure separately before '.show'
-    '''
     def spelling(self):
+        ''' Tags can be marked only after text in inserted; thus, call
+            this procedure separately before '.show'.
+        '''
+        f = 'sharedGUI.TextBox.spelling'
         if self.words:
             self.words.sent_nos()
             result = []
@@ -1058,20 +1039,17 @@ class TextBox:
                                      ,pos2tk         = pos2tk
                                      ,DeletePrevious = False
                                      )
-                sh.log.append ('TextBox.spelling'
-                              ,_('DEBUG')
+                sh.log.append (f,_('DEBUG')
                               ,_('%d tags to assign') % len(result)
                               )
                 self.tag_config(tag_name='spell',background='red')
             else:
-                sh.log.append ('TextBox.spelling'
-                              ,_('INFO')
+                sh.log.append (f,_('INFO')
                               ,_('Spelling seems to be correct.')
                               )
         else:
-            sh.log.append (func    = 'TextBox.spelling'
-                          ,level   = _('WARNING')
-                          ,message = _('Not enough input data!')
+            sh.log.append (f,_('WARNING')
+                          ,_('Not enough input data!')
                           )
 
 
@@ -1085,7 +1063,7 @@ class Entry:
                 ):
         self.type      = 'Entry'
         self.Composite = Composite
-        # 'disabled' - отключить редактирование
+        # 'disabled' - disable editing
         self.state     = 'normal'
         self.Save      = False
         self.parent    = parent
@@ -1106,7 +1084,7 @@ class Entry:
                          ,expand = expand
                          )
         if not self.Composite:
-            # Тип родительского виджета может быть любым
+            # Parent widget type can be any
             if not hasattr(self.parent,'close_button'):
                 self.parent.close_button = Button (parent = self.parent
                                                   ,text   = _('Quit')
@@ -1118,10 +1096,10 @@ class Entry:
             WidgetShared.custom_buttons(self)
         self.bindings()
 
-    ''' Setting ReadOnly state works only after filling text. Only
-        tk.Text, tk.Entry and not tk.Toplevel are supported.
-    '''
     def read_only(self,ReadOnly=True):
+        ''' Setting ReadOnly state works only after filling text. Only
+            tk.Text, tk.Entry and not tk.Toplevel are supported.
+        '''
         WidgetShared.set_state(self,ReadOnly=ReadOnly)
 
     def bindings(self):
@@ -1145,18 +1123,19 @@ class Entry:
         self.parent.close()
 
     def _get(self):
+        f = 'sharedGUI.Entry._get'
         try:
             return self.widget.get()
         except tk._tkinter.TclError:
             # Do not use GUI
-            sh.log.append ('Entry.clear_text'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('The parent has already been destroyed.')
                           )
 
     def get(self,Strip=False):
+        f = 'sharedGUI.Entry.get'
         # None != 'None' != ''
-        result = sh.Input (title = 'Entry.get'
+        result = sh.Input (title = f
                           ,value = self._get()
                           ).not_none()
         if Strip:
@@ -1173,13 +1152,13 @@ class Entry:
         return 'break'
 
     def clear_text(self,event=None,pos1=0,pos2='end'):
+        f = 'sharedGUI.Entry.clear_text'
         try:
             self.widget.selection_clear()
             self.widget.delete(pos1,pos2)
         except tk._tkinter.TclError:
             # Do not use GUI
-            sh.log.append ('Entry.clear_text'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('The parent has already been destroyed.')
                           )
 
@@ -1325,10 +1304,10 @@ class Button:
                                     ,activeforeground = self.fg_focus
                                     )
         else:
-            ''' В большинстве случаев текстовая кнопка не требует
-                задания высоты и ширины по умолчанию, они определяются
-                автоматически. Также в большинстве случаев для текстовых
-                кнопок следует использовать рамку.
+            ''' A text button does not require setting a default width
+                and height in most cases, they are defined
+                automatically. Moreover, a border should be used for
+                text buttons in a majority of cases.
             '''
             self.widget = tk.Button (master           = self.parent.widget
                                     ,bd               = 1
@@ -1379,14 +1358,14 @@ class Button:
         return button_image
 
     def click(self,*args):
+        f = 'sharedGUI.Button.click'
         if self.action:
             if len(args) > 0:
                 self.action(args)
             else:
                 self.action()
         else:
-            sh.log.append ('Button.click'
-                          ,_('INFO')
+            sh.log.append (f,_('INFO')
                           ,_('Nothing to do!')
                           )
 
@@ -1466,6 +1445,7 @@ class ToolTipBase:
             self.widget.after_cancel(id)
 
     def showtip(self):
+        f = 'sharedGUI.ToolTipBase.showtip'
         if self.tip:
             return
         ''' The tip window must be completely outside the widget;
@@ -1484,16 +1464,14 @@ class ToolTipBase:
             y = self.widget.winfo_rooty() - self.hint_height - 1
         else:
             y = 0
-            Message ('ToolTipBase.showtip'
-                    ,_('ERROR')
+            Message (f,_('ERROR')
                     ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
                     % (str(self.hint_dir),'top, bottom')
                     )
         self.tip = SimpleTop(parent=self.obj)
         self.tip.widget.wm_overrideredirect(1)
         # "+%d+%d" is not enough!
-        sh.log.append ('ToolTipBase.showtip'
-                      ,_('INFO')
+        sh.log.append (f,_('INFO')
                       ,_('Set the geometry to "%dx%d+%d+%d"') \
                       % (self.hint_width,self.hint_height,x,y)
                       )
@@ -1604,18 +1582,17 @@ class ListBox:
             self.action()
     
     def delete(self,event=None):
+        f = 'sharedGUI.ListBox.delete'
         # Set an actual value
         self.index()
         try:
             del self.lst[self._index]
             # Set this after 'del' to be triggered only on success
-            sh.log.append ('ListBox.delete'
-                          ,_('DEBUG')
+            sh.log.append (f,_('DEBUG')
                           ,_('Remove item #%d') % self._index
                           )
         except IndexError:
-            sh.log.append ('ListBox.delete'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('No item #%d!') % self._index
                           )
         else:
@@ -1691,7 +1668,7 @@ class ListBox:
         self.bindings()
         if not self.Composite:
             self.widget.focus_set()
-            # Тип родительского виджета может быть любым
+            # Parent widget type can be any
             if not hasattr(self.parent,'close_button'):
                 self.parent.close_button = Button (
                     parent = self.parent
@@ -1747,6 +1724,7 @@ class ListBox:
         self.select()
 
     def select(self):
+        f = 'sharedGUI.ListBox.select'
         self.clear_selection()
         ''' Use an index changed with keyboard arrows. If it is not set,
             use current index (returned by 'self.index()').
@@ -1754,9 +1732,8 @@ class ListBox:
         if self._index is None:
             self.index()
         if self._index is None:
-            Message (func    = 'ListBox.select'
-                    ,level   = _('ERROR')
-                    ,message = _('Empty input is not allowed!')
+            Message (f,_('ERROR')
+                    ,_('Empty input is not allowed!')
                     )
         else:
             self._select()
@@ -1766,18 +1743,17 @@ class ListBox:
         self.widget.see(self._index)
 
     def set(self,item):
+        f = 'sharedGUI.ListBox.set'
         if item:
             if item in self.lst:
                 self._index = self.lst.index(item)
                 self._select()
             else:
-                Message ('ListBox.set'
-                        ,_('ERROR')
+                Message (f,_('ERROR')
                         ,_('Item "%s" is not in list!') % str(item)
                         )
         else:
-            sh.log.append ('ListBox.set'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Empty input is not allowed!')
                           )
 
@@ -1809,11 +1785,11 @@ class ListBox:
         if path:
             WidgetShared.icon(self.parent,path)
 
-    ''' Read 'self._index' instead of calling this because we need 0
-        in case of 'self.interrupt', and this always returns an actual
-        value
-    '''
     def index(self):
+        ''' Read 'self._index' instead of calling this because we need 0
+            in case of 'self.interrupt', and this always returns
+            an actual value.
+        '''
         selection = self.widget.curselection()
         if selection and len(selection) > 0:
             ''' #note: selection[0] is a number in Python 3.4, however,
@@ -1838,11 +1814,11 @@ class ListBox:
         else:
             self._index = len(self.lst) - 1
 
-    ''' Read 'self._get' instead of calling this because we need '' in
-        case of 'self.interrupt', and this always returns an actual
-        value
-    '''
     def get(self):
+        ''' Read 'self._get' instead of calling this because we need ''
+            in case of 'self.interrupt', and this always returns
+            an actual value.
+        '''
         result = [self.widget.get(idx) for idx \
                   in self.widget.curselection()
                  ]
@@ -1939,14 +1915,14 @@ class OptionMenu:
         WidgetShared.disable(self)
     
     def trigger(self,event=None):
+        f = 'sharedGUI.OptionMenu.trigger'
         self._get()
         if self.Combo:
             self.widget.selection_clear()
         if self.action:
             self.action()
         else:
-            sh.log.append ('OptionMenu.trigger'
-                          ,_('INFO')
+            sh.log.append (f,_('INFO')
                           ,_('Nothing to do!')
                           )
 
@@ -1960,6 +1936,7 @@ class OptionMenu:
             self.index  = 0
 
     def default_set(self):
+        f = 'sharedGUI.OptionMenu.default_set'
         if self.default is None:
             self._default_set()
         else:
@@ -1971,23 +1948,22 @@ class OptionMenu:
                 self.choice = self.default
                 self.index  = self.items.index(self.choice)
             else:
-                Message ('OptionMenu.default_set'
-                        ,_('ERROR')
-                        ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+                Message (f,_('ERROR')
+                        ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".')\
                         % (str(self.default),';'.join(self.items))
                         )
                 self._default_set()
 
     def set(self,item,event=None):
+        f = 'sharedGUI.OptionMenu.set'
         item = str(item)
         if item in self.items:
             self.var.set(item)
             self.choice = item
             self.index  = self.items.index(self.choice)
         else:
-            Message (func    = 'OptionMenu.set'
-                    ,level   = _('ERROR')
-                    ,message = _('Wrong input data: "%s"') % str(item)
+            Message (f,_('ERROR')
+                    ,_('Wrong input data: "%s"') % str(item)
                     )
 
     def _fill_menu(self):
@@ -2030,19 +2006,18 @@ class OptionMenu:
 
     # Auto updated (after selecting an item)
     def _get(self,event=None):
+        f = 'sharedGUI.OptionMenu._get'
         self.choice = self.var.get()
         # 'OptionMenu' always returns a string
         if self.choice not in self.items:
-            self.choice = sh.Input (title = 'OptionMenu._get'
+            self.choice = sh.Input (title = f
                                    ,value = self.choice
                                    ).integer()
         try:
             self.index = self.items.index(self.choice)
         except ValueError:
-            Message (func    = 'OptionMenu._get'
-                    ,level   = _('ERROR')
-                    ,message = _('Wrong input data: "%s"') \
-                               % str(self.choice)
+            Message (f,_('ERROR')
+                    ,_('Wrong input data: "%s"') % str(self.choice)
                     )
 
     def set_prev(self,event=None):
@@ -2064,19 +2039,18 @@ class OptionMenu:
 
 
 
-''' Usage:
-    bind(h_txt.widget,'<ButtonRelease-1>',action)
-
-def action(event=None):
-    """ Refresh coordinates (or set h_selection._pos1tk,
-    h_selection._pos2tk manually)
-    """
-    h_selection.get()
-    h_selection.set()
-'''
 # Selecting words only
 class Selection:
+    ''' Usage:
+        bind(h_txt.widget,'<ButtonRelease-1>',action)
 
+    def action(event=None):
+        """ Refresh coordinates (or set h_selection._pos1tk,
+        h_selection._pos2tk manually)
+        """
+        h_selection.get()
+        h_selection.set()
+    '''
     def __init__(self,h_widget,words=None):
         self.h_widget = h_widget
         self.reset_logic(words=words)
@@ -2137,6 +2111,7 @@ class Selection:
         return self._pos2tk
 
     def get(self,event=None):
+        f = 'sharedGUI.Selection.get'
         try:
             self._pos1tk = self.h_widget.widget.index('sel.first')
             self._pos2tk = self.h_widget.widget.index('sel.last')
@@ -2144,28 +2119,26 @@ class Selection:
             self._pos1tk, self._pos2tk = None, None
             # Too frequent
             '''
-            sh.log.append ('Selection.get'
-                          ,_('WARNING')
-                          ,_('Nothing is selected in window %d, therefore, it is not possible to return coordinates!') \
+            sh.log.append (f,_('WARNING')
+                          ,_('Nothing is selected in window %d, therefore, it is not possible to return coordinates!')\
                           % 1
                           )
             '''
         # Too frequent
         '''
-        sh.log.append ('Selection.get'
-                      ,_('DEBUG')
+        sh.log.append (f,_('DEBUG')
                       ,str((self._pos1tk,self._pos2tk))
                       )
         '''
         return(self._pos1tk,self._pos2tk)
 
     def text(self):
+        f = 'sharedGUI.Selection.text'
         try:
             self._text = self.h_widget.widget.get('sel.first','sel.last').replace('\r','').replace('\n','')
         except tk.TclError:
             self._text = ''
-            sh.log.append ('Selection.text'
-                          ,_('ERROR')
+            sh.log.append (f,_('ERROR')
                           ,_('Failed to return selection in the Tkinter widget!')
                           )
         return self._text
@@ -2228,15 +2201,15 @@ class SymbolMap:
         for i in range(len(sh.globs['var']['spec_syms'])):
             if i % 10 == 0:
                 self.frame = Frame(self.obj,expand=1)
-            ''' lambda сработает правильно только при моментальной
-                упаковке, которая не поддерживается create_button
-                (моментальная упаковка возвращает None вместо виджета),
-                поэтому не используем эту функцию. По этой же причине
-                нельзя привязать кнопкам '<Return>' и '<KP_Enter>',
-                сработают только встроенные '<space>' и
-                '<ButtonRelease-1>'.
+            ''' lambda will work properly only in case of an instant
+                packing which is not supported by 'create_button'
+                (the instant packing returns 'None' instead of a
+                widget), therefore, we do not use this function.
+                By the same reason, '<Return>' and '<KP_Enter>' cannot
+                be bound to the buttons, only '<space>' and
+                '<ButtonRelease-1>' that are bound by default will work.
             '''
-            # width и height нужны для Windows
+            # width and height are required for Windows
             self.button = tk.Button (self.frame.widget
                                     ,text=sh.globs['var']['spec_syms'][i]
                                     ,command=lambda i=i:self.set(sh.globs['var']['spec_syms'][i])
@@ -2265,13 +2238,11 @@ class SymbolMap:
 
 
 
-''' Window behavior is not uniform through different platforms or even
-    through different Windows versions, so we bypass Tkinter's commands
-    here
-'''
-# Requires sh.oss, objs
 class Geometry:
-
+    ''' Window behavior is not uniform through different platforms or
+        even through different Windows versions, so we bypass Tkinter's
+        commands here.
+    '''
     def __init__(self,parent=None,title=None,hwnd=None):
         self.parent = parent
         self._title = title
@@ -2282,39 +2253,37 @@ class Geometry:
         objs.root().widget.update_idletasks()
 
     def save(self):
+        f = 'sharedGUI.Geometry.save'
         if self.parent:
             self.update()
             self._geom = self.parent.widget.geometry()
-            sh.log.append ('Geometry.save'
-                          ,_('INFO')
+            sh.log.append (f,_('INFO')
                           ,_('Save geometry: %s') % self._geom
                           )
         else:
-            Message (func    = 'Geometry.save'
-                    ,level   = _('ERROR')
-                    ,message = _('Wrong input data!')
+            Message (f,_('ERROR')
+                    ,_('Wrong input data!')
                     )
 
     def restore(self):
+        f = 'sharedGUI.Geometry.restore'
         if self.parent:
             if self._geom:
-                sh.log.append ('Geometry.restore'
-                              ,_('INFO')
+                sh.log.append (f,_('INFO')
                               ,_('Restore geometry: %s') % self._geom
                               )
                 self.parent.widget.geometry(self._geom)
             else:
-                Message (func    = 'Geometry.update'
-                        ,level   = _('WARNING')
-                        ,message = _('Failed to restore geometry!')
+                Message (f,_('WARNING')
+                        ,_('Failed to restore geometry!')
                         )
         else:
-            Message (func    = 'Geometry.restore'
-                    ,level   = _('ERROR')
-                    ,message = _('Wrong input data!')
+            Message (f,_('ERROR')
+                    ,_('Wrong input data!')
                     )
 
     def foreground(self,event=None):
+        f = 'sharedGUI.Geometry.foreground'
         if sh.oss.win():
             if self.hwnd():
                 ''' 'pywintypes.error', but needs to import this for
@@ -2326,24 +2295,22 @@ class Geometry:
                     ''' In Windows 'Message' can be raised foreground,
                         so we just log it
                     '''
-                    sh.log.append ('Geometry.foreground'
-                                  ,_('ERROR')
+                    sh.log.append (f,_('ERROR')
                                   ,_('Failed to change window properties!')
                                   )
             else:
-                Message (func    = 'Geometry.foreground'
-                        ,level   = _('ERROR')
-                        ,message = _('Wrong input data!')
+                Message (f,_('ERROR')
+                        ,_('Wrong input data!')
                         )
         elif self.parent:
             self.parent.widget.lift()
         else:
-            Message (func    = 'Geometry.foreground'
-                    ,level   = _('ERROR')
-                    ,message = _('Wrong input data!')
+            Message (f,_('ERROR')
+                    ,_('Wrong input data!')
                     )
 
     def minimize(self,event=None):
+        f = 'sharedGUI.Geometry.minimize'
         if self.parent:
             ''' # Does not always work
             if sh.oss.win():
@@ -2352,52 +2319,51 @@ class Geometry:
             '''
             self.parent.widget.iconify()
         else:
-            Message (func    = 'Geometry.minimize'
-                    ,level   = _('ERROR')
-                    ,message = _('Wrong input data!')
+            Message (f,_('ERROR')
+                    ,_('Wrong input data!')
                     )
 
     def maximize(self,event=None):
+        f = 'sharedGUI.Geometry.maximize'
         if sh.oss.win():
             #win32gui.ShowWindow(self.hwnd(),win32con.SW_MAXIMIZE)
             self.parent.widget.wm_state(newstate='zoomed')
         elif self.parent:
             self.parent.widget.wm_attributes('-zoomed',True)
         else:
-            Message (func    = 'Geometry.maximize'
-                    ,level   = _('ERROR')
-                    ,message = _('Wrong input data!')
+            Message (f,_('ERROR')
+                    ,_('Wrong input data!')
                     )
 
     def focus(self,event=None):
+        f = 'sharedGUI.Geometry.focus'
         if sh.oss.win():
             win32gui.SetActiveWindow(self.hwnd())
         elif self.parent:
             self.parent.widget.focus_set()
         else:
-            Message (func    = 'Geometry.focus'
-                    ,level   = _('ERROR')
-                    ,message = _('Wrong input data!')
+            Message (f,_('ERROR')
+                    ,_('Wrong input data!')
                     )
 
     def lift(self,event=None):
+        f = 'sharedGUI.Geometry.lift'
         if self.parent:
             self.parent.widget.lift()
         else:
-            Message (func    = 'Geometry.list'
-                    ,level   = _('ERROR')
-                    ,message = _('Wrong input data!')
+            Message (f,_('ERROR')
+                    ,_('Wrong input data!')
                     )
 
     def _activate(self):
+        f = 'sharedGUI.Geometry._activate'
         if self.parent:
             self.parent.widget.deiconify()
             #self.parent.widget.focus_set()
             self.parent.widget.lift()
         else:
-            Message (func    = 'Geometry._activate'
-                    ,level   = _('ERROR')
-                    ,message = _('Wrong input data!')
+            Message (f,_('ERROR')
+                    ,_('Wrong input data!')
                     )
 
     def activate(self,event=None,MouseClicked=False):
@@ -2407,34 +2373,34 @@ class Geometry:
             import ctypes
             self.parent.widget.wm_attributes('-topmost',1)
             self.parent.widget.wm_attributes('-topmost',0)
-            ''' Иначе нажатие кнопки будет вызывать переход по ссылке
-                там, где это не надо
+            ''' Without this, a button click will fire a button action
+                where it is not needed.
             '''
             if MouseClicked:
-                ''' Уродливый хак, но иначе никак не поставить фокус
-                    на виджет (в Linux/Windows XP обходимся без этого,
-                    в Windows 7/8 - необходимо)
+                ''' It's an ugly hack, but we cannot set a focus on
+                    a widget without this (we manage without this
+                    in Linux/Windows XP, however, this is required in
+                    Windows 7/8).
                 '''
-                # Cимулируем нажатие кнопки мыши
+                # Emulate a mouse button click
                 # left mouse button down
                 ctypes.windll.user32.mouse_event(2, 0, 0, 0, 0)
                 # left mouse button up
                 ctypes.windll.user32.mouse_event(4, 0, 0, 0, 0)
 
     def hwnd(self,event=None):
+        f = 'sharedGUI.Geometry.hwnd'
         if not self._hwnd:
             if self._title:
                 try:
                     self._hwnd = win32gui.FindWindow(None,self._title)
                 except win32ui.error:
-                    Message (func    = 'Geometry.hwnd'
-                            ,level   = _('ERROR')
-                            ,message = _('Failed to get the window handle!')
+                    Message (f,_('ERROR')
+                            ,_('Failed to get the window handle!')
                             )
             else:
-                Message (func    = 'Geometry.hwnd'
-                        ,level   = _('ERROR')
-                        ,message = _('Not enough input data!')
+                Message (f,_('ERROR')
+                        ,_('Not enough input data!')
                         )
         return self._hwnd
 
@@ -2483,6 +2449,7 @@ class WaitBox:
         self.message()
 
     def run(self):
+        f = 'sharedGUI.WaitBox.run'
         self.show()
         if self._func:
             if self._args:
@@ -2490,9 +2457,8 @@ class WaitBox:
             else:
                 func_res = self._func()
         else:
-            Message (func    = 'WaitBox.run'
-                    ,level   = _('ERROR')
-                    ,message = _('Wrong input data!')
+            Message (f,_('ERROR')
+                    ,_('Wrong input data!')
                     )
         self.close()
         return func_res
@@ -2524,7 +2490,6 @@ class WaitBox:
 
 
 class Label:
-
     ''' 1) Use fill='both' with 'expand=1', otherwise, 'expand' does
            not work
         2) Use 'anchor="w"' to left align text
@@ -2585,14 +2550,14 @@ class Label:
         self.widget.config(text=self._text)
 
     def font(self,arg=None):
+        f = 'sharedGUI.Label.font'
         if arg:
             self._font = arg
         try:
             self.widget.config(font=self._font)
         except tk.TclError:
-            Message (func    = 'Label.font'
-                    ,level   = _('ERROR')
-                    ,message = _('Wrong font: "%s"!') % str(self._font)
+            Message (f,_('ERROR')
+                    ,_('Wrong font: "%s"!') % str(self._font)
                     )
             self._font = 'Sans 11'
 
@@ -2605,16 +2570,16 @@ class Label:
     def title(self,text='Title:'):
         self.parent.title(text=text)
         
-    ''' #note #todo For some reason, using 'config' externally may 
-        reset config options. Use them altogether to prevent such 
-        behavior.
-    '''
     def reset(self):
+        ''' #note #todo For some reason, using 'config' externally may 
+            reset config options. Use them altogether to prevent such 
+            behavior.
+        '''
         self.widget.config (text   = self._text
                            ,font   = self._font
                            ,ipadx  = self.ipadx
                            ,ipady  = self.ipady
-                           #,image  = self.image
+                           #,image = self.image
                            ,bg     = self.bg
                            ,fg     = self.fg
                            ,anchor = self.anchor
@@ -2625,7 +2590,6 @@ class Label:
 
 
 class CheckBox:
-
     ''' #note: For some reason, CheckBox that should be Active must be
         assigned to a variable (var = CheckBox(parent,Active=1))
     '''
@@ -2684,6 +2648,7 @@ class Message:
     def __init__ (self,func='MAIN',level=_('WARNING')
                  ,message=_('Message'),Silent=False
                  ):
+        f = 'sharedGUI.Message.__init__'
         self.Success = True
         self.Yes     = False
         self.func    = func
@@ -2692,8 +2657,7 @@ class Message:
         self.Silent  = Silent
         if not self.func or not self.message:
             self.Success = False
-            sh.log.append ('Message.__init__'
-                          ,_('ERROR')
+            sh.log.append (f,_('ERROR')
                           ,_('Not enough input data!')
                           )
         if self.level == _('INFO'):
@@ -2705,8 +2669,7 @@ class Message:
         elif self.level == _('QUESTION'):
             self.question()
         else:
-            sh.log.append ('Message.__init__'
-                          ,_('ERROR')
+            sh.log.append (f,_('ERROR')
                           ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
                           % (str(self.level)
                             ,_('INFO') + ', ' + _('WARNING') + ', ' \
@@ -2715,77 +2678,76 @@ class Message:
                           )
 
     def error(self):
+        f = 'sharedGUI.Message.error'
         if self.Success:
             if not self.Silent:
                 objs.error().reset (title = self.func + ':'
                                    ,text  = self.message
                                    ).show()
-            sh.log.append (func    = self.func
-                          ,level   = _('ERROR')
-                          ,message = self.message
+            sh.log.append (self.func
+                          ,_('ERROR')
+                          ,self.message
                           )
         else:
-            sh.log.append ('Message.error'
-                          ,_('ERROR')
+            sh.log.append (f,_('ERROR')
                           ,_('Operation has been canceled.')
                           )
 
     def info(self):
+        f = 'sharedGUI.Message.info'
         if self.Success:
             if not self.Silent:
                 objs.info().reset (title = self.func + ':'
                                   ,text  = self.message
                                   ).show()
-            sh.log.append (func    = self.func
-                          ,level   = _('INFO')
-                          ,message = self.message
+            sh.log.append (self.func
+                          ,_('INFO')
+                          ,self.message
                           )
         else:
-            sh.log.append ('Message.info'
-                          ,_('INFO')
+            sh.log.append (f,_('INFO')
                           ,_('Operation has been canceled.')
                           )
 
     def question(self):
+        f = 'sharedGUI.Message.question'
         if self.Success:
             objs.question().reset (title = self.func + ':'
                                   ,text  = self.message
                                   ).show()
             self.Yes = objs._question.Yes
-            sh.log.append (func    = self.func
-                          ,level   = _('QUESTION')
-                          ,message = self.message
+            sh.log.append (self.func
+                          ,_('QUESTION')
+                          ,self.message
                           )
             return self.Yes
         else:
-            sh.log.append ('Message.question'
-                          ,_('QUESTION')
+            sh.log.append (f,_('QUESTION')
                           ,_('Operation has been canceled.')
                           )
 
     def warning(self):
+        f = 'sharedGUI.Message.warning'
         if self.Success:
             if not self.Silent:
                 objs.warning().reset (title = self.func + ':'
                                      ,text  = self.message
                                      ).show()
-            sh.log.append (func    = self.func
-                          ,level   = _('WARNING')
-                          ,message = self.message
+            sh.log.append (self.func
+                          ,_('WARNING')
+                          ,self.message
                           )
         else:
-            sh.log.append ('Message.warning'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Operation has been canceled.')
                           )
 
 
 
-''' Not using tkinter.messagebox because it blocks main GUI (even if we
-    specify a non-root parent)
-'''
 class MessageBuilder:
-
+    ''' Not using tkinter.messagebox because it blocks main GUI (even
+        if we specify a non-root parent).
+    '''
     # Parent is root
     def __init__ (self,parent,level
                  ,Single=True,YesNo=False
@@ -2820,6 +2782,7 @@ class MessageBuilder:
             self.widget.protocol("WM_DELETE_WINDOW",self.close)
 
     def paths(self):
+        f = 'sharedGUI.MessageBuilder.paths'
         if self.level == _('WARNING'):
             self.path = sh.objs.pdir().add ('..'
                                            ,'resources'
@@ -2841,9 +2804,8 @@ class MessageBuilder:
                                            ,'error.gif'
                                            )
         else:
-            sh.log.append ('MessageBuilder.paths'
-                          ,_('ERROR')
-                          ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+            sh.log.append (f,_('ERROR')
+                          ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".')\
                           % (str(self.path)
                             ,', '.join ([_('WARNING'),_('ERROR')
                                         ,_('QUESTION'),_('INFO')
@@ -2951,6 +2913,7 @@ class MessageBuilder:
         self.close()
 
     def picture(self,event=None):
+        f = 'sharedGUI.MessageBuilder.picture'
         if os.path.exists(self.path):
             ''' We need to assign self.variable to Label, otherwise, it
                 gets destroyed.
@@ -2964,8 +2927,7 @@ class MessageBuilder:
                                        )
                                )
         else:
-            sh.log.append ('MessageBuilder.picture'
-                          ,_('ERROR')
+            sh.log.append (f,_('ERROR')
                           ,_('Picture "%s" was not found!') % self.path
                           )
 
@@ -2977,8 +2939,9 @@ class Clipboard:
         self.Silent = Silent
 
     def copy(self,text,CopyEmpty=True):
+        f = 'sharedGUI.Clipboard.copy'
         if text or CopyEmpty:
-            text = str(sh.Input (title = 'Clipboard.copy'
+            text = str(sh.Input (title = f
                                 ,value = text
                                 ).not_none()
                       )
@@ -2989,55 +2952,56 @@ class Clipboard:
                 objs._root.widget.clipboard_append(text)
             except tk.TclError:
                 #todo: Show a window to manually copy from
-                Message (func    = 'Clipboard.copy'
+                Message (func    = f
                         ,level   = _('ERROR')
                         ,message = _('A clipboard error has occurred!')
                         ,Silent  = self.Silent
                         )
             except tk._tkinter.TclError:
                 # Do not use GUI
-                sh.log.append ('Clipboard.copy'
-                              ,_('ERROR')
+                sh.log.append (f,_('ERROR')
                               ,_('The parent has already been destroyed.')
                               )
             except:
-                sh.log.append ('Clipboard.copy'
-                              ,_('ERROR')
+                sh.log.append (f,_('ERROR')
                               ,_('An unknown error has occurred.')
                               )
-            sh.log.append('Clipboard.copy',_('DEBUG'),text)
+            '''
+            sh.log.append (f,_('DEBUG')
+                          ,text
+                          )
+            '''
         else:
-            sh.log.append ('Clipboard.copy'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Empty input is not allowed!')
                           )
 
     def paste(self):
+        f = 'sharedGUI.Clipboard.paste'
         text = ''
         try:
             text = str(objs.root().widget.clipboard_get())
         except tk.TclError:
-            Message (func    = 'Clipboard.paste'
+            Message (func    = f
                     ,level   = _('ERROR')
                     ,message = _('Failed to paste the clipboard contents!')
                     ,Silent  = self.Silent
                     )
         except tk._tkinter.TclError:
             # Do not use GUI
-            sh.log.append ('Clipboard.paste'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('The parent has already been destroyed.')
                           )
         except:
-            sh.log.append ('Clipboard.paste'
-                          ,_('ERROR')
+            sh.log.append (f,_('ERROR')
                           ,_('An unknown error has occurred.')
                           )
-        # Further actions: strip, delete double line breaks
-        sh.log.append ('Clipboard.paste'
-                      ,_('DEBUG')
+        # Further possible actions: strip, delete double line breaks
+        '''
+        sh.log.append (f,_('DEBUG')
                       ,text
                       )
+        '''
         return text
 
 
@@ -3071,6 +3035,7 @@ class Canvas:
     
     # These bindings are not enabled by default
     def top_bindings(self,top):
+        f = 'sharedGUI.Canvas.top_bindings'
         if top:
             if hasattr(top,'type') and top.type == 'Toplevel':
                 bind (obj      = top
@@ -3113,13 +3078,11 @@ class Canvas:
                      ,action   = self.mouse_wheel
                      )
             else:
-                sh.log.append ('Canvas.top_bindings'
-                              ,_('WARNING')
+                sh.log.append (f,_('WARNING')
                               ,_('Wrong input data!')
                               )
         else:
-            sh.log.append ('Canvas.top_bindings'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Empty input is not allowed!')
                           )
     
@@ -3150,6 +3113,7 @@ class Canvas:
     def region (self,x=0,y=0
                ,x_border=0,y_border=0
                ):
+        f = 'sharedGUI.Canvas.region'
         # Both integer and float values are allowed at input
         if x and y:
             self.widget.configure (scrollregion = (-x/2 - x_border
@@ -3159,8 +3123,7 @@ class Canvas:
                                                   )
                                   )
         else:
-            sh.log.append ('Canvas.region'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Empty input is not allowed!')
                           )
     
@@ -3180,12 +3143,12 @@ class Canvas:
                          )
         
     def embed(self,obj):
+        f = 'sharedGUI.Canvas.embed'
         if hasattr(obj,'widget'):
             self.widget.create_window(0,0,window=obj.widget)
         else:
-            Message (func    = 'Canvas.embed'
-                    ,level   = _('WARNING')
-                    ,message = _('Wrong input data!')
+            Message (f,_('ERROR')
+                    ,_('Wrong input data!')
                     )
         
     def focus(self,event=None):
@@ -3250,8 +3213,8 @@ class Objects:
         self._root.run()
 
     def add(self,obj):
-        sh.log.append ('Objects.add'
-                      ,_('INFO')
+        f = 'sharedGUI.Objects.add'
+        sh.log.append (f,_('INFO')
                       ,_('Add %s') % type(obj)
                       )
         self._lst.append(obj)
@@ -3289,17 +3252,16 @@ class Objects:
         return self._info
 
     def close_all(self):
-        sh.log.append ('Objects.close_all'
-                      ,_('INFO')
+        f = 'sharedGUI.Objects.close_all'
+        sh.log.append (f,_('INFO')
                       ,_('Close %d objs') % len(self._lst)
                       )
         for i in range(len(self._lst)):
             if hasattr(self._lst[i],'close'):
                 self._lst[i].close()
             else:
-                sh.log.append ('Objects.close_all'
-                              ,_('ERROR')
-                              ,_('Widget "%s" does not have a "close" action!') \
+                sh.log.append (f,_('ERROR')
+                              ,_('Widget "%s" does not have a "close" action!')\
                               % type(self._lst[i])
                               )
 
@@ -3393,6 +3355,7 @@ class SimpleTop:
         ''' Do not destroy widget: 'Label' may trigger closing with
             unwanted results
         '''
+        f = 'sharedGUI.SimpleTop.close'
         if self.Active:
             self.Active = False
             self.widget.withdraw()
@@ -3400,15 +3363,14 @@ class SimpleTop:
             ''' This is a warning because, normally, closing this widget
                 should not be triggered when it is not active
             '''
-            sh.log.append ('SimpleTop.close'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Nothing to do.')
                           )
         
     def show(self,event=None,Lock=False):
+        f = 'sharedGUI.SimpleTop.show'
         if self.Active:
-            sh.log.append ('SimpleTop.show'
-                          ,_('INFO')
+            sh.log.append (f,_('INFO')
                           ,_('Nothing to do.')
                           )
         else:
@@ -3427,6 +3389,7 @@ class Scrollbar:
         self.gui()
     
     def gui(self):
+        f = 'sharedGUI.Scrollbar.gui'
         if hasattr(self.parent,'widget'):
             if self.Horizontal:
                 orient = tk.HORIZONTAL
@@ -3450,20 +3413,18 @@ class Scrollbar:
                 self.scroll.widget.config(yscrollcommand=self.widget.set)
                 self.widget.config(command=self.scroll.widget.yview)
         else:
-            Message (func  = 'Scrollbar.gui'
-                    ,level = _('ERROR')
-                    ,title = _('Wrong input data!')
+            Message (f,_('ERROR')
+                    ,_('Wrong input data!')
                     )
 
 
 
-''' Load an image from a file, convert this image to bytes and convert
-    bytes back to the image.
-    'it.PhotoImage' needs the 'tkinter' to be preloaded, so this class
-    should be included in 'sharedGUI'.
-'''
 class Image:
-    
+    ''' Load an image from a file, convert this image to bytes and
+        convert bytes back to the image.
+        'it.PhotoImage' needs the 'tkinter' to be preloaded, so this
+        class should be included in 'sharedGUI'.
+    '''
     def __init__(self):
         self._image = self._bytes = self._loader = None
         
@@ -3474,24 +3435,24 @@ class Image:
         return self._image
             
     def loader(self):
+        f = 'sharedGUI.Image.loader'
         if not self._loader:
             if self._bytes:
                 self._loader = \
                 objs.ig().open(objs.io().BytesIO(self._bytes))
             else:
-                sh.log.append ('Image.loader'
-                              ,_('WARNING')
+                sh.log.append (f,_('WARNING')
                               ,_('Empty input is not allowed!')
                               )
         return self._loader
         
     def image(self):
+        f = 'sharedGUI.Image.image'
         if not self._image:
             if self._loader:
                 self._image = objs.it().PhotoImage(self._loader)
             else:
-                sh.log.append ('Image.image'
-                              ,_('WARNING')
+                sh.log.append (f,_('WARNING')
                               ,_('Empty input is not allowed!')
                               )
         return self._image
@@ -3817,6 +3778,7 @@ class ProgressBar:
         self.canvas.focus()
         
     def add(self,event=None):
+        f = 'sharedGUI.ProgressBar.add'
         self._item = ProgressBarItem (parent = self.label
                                      ,length = self._width - self._border
                                      )
@@ -3825,8 +3787,7 @@ class ProgressBar:
         max_x = self.label.widget.winfo_reqwidth()
         max_y = self.label.widget.winfo_reqheight()
         '''
-        sh.log.append ('ProgressBar.add'
-                      ,_('DEBUG')
+        sh.log.append (f,_('DEBUG')
                       ,_('Widget sizes: %s') \
                       % (str(max_x) + 'x' + str(max_y))
                       )
@@ -3875,6 +3836,7 @@ class AttachWidget:
         self.y2 = 0
     
     def check(self):
+        f = 'sharedGUI.AttachWidget.check'
         if self.obj1 and self.obj2:
             if hasattr(self.obj1,'widget') \
             and hasattr(self.obj2,'widget'):
@@ -3882,24 +3844,21 @@ class AttachWidget:
                 self.widget2 = self.obj2.widget
             else:
                 self.Success = False
-                sh.log.append ('AttachWidget.__init__'
-                              ,_('WARNING')
+                sh.log.append (f,_('WARNING')
                               ,_('Wrong input data!')
                               )
         else:
             self.Success = False
-            sh.log.append ('AttachWidget.__init__'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Empty input is not allowed!')
                           )
         if self.anchor not in self.anchors:
             self.Success = False
-            Message (func    = 'AttachWidget.check'
-                    ,level   = _('ERROR')
-                    ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
-                               % (str(self.anchor)
-                                 ,', '.join(self.anchors)
-                                 )
+            Message (f,_('ERROR')
+                    ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".')\
+                    % (str(self.anchor)
+                      ,', '.join(self.anchors)
+                      )
                     )
     
     def _ne(self):
@@ -3951,6 +3910,7 @@ class AttachWidget:
         self.y2 = self.y1 + self.h1 - self.h2
     
     def set(self):
+        f = 'sharedGUI.AttachWidget.set'
         if self.Success:
             if self.anchor == 'N':
                 self._n()
@@ -3977,12 +3937,9 @@ class AttachWidget:
             elif self.anchor == 'WS':
                 self._ws()
             else:
-                Message (func    = 'AttachWidget.set'
-                        ,level   = _('ERROR')
-                        ,message = _('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
-                                   % (str(self.anchor)
-                                     ,', '.join(self.anchors)
-                                     )
+                Message (f,_('ERROR')
+                        ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".') \
+                        % (str(self.anchor),', '.join(self.anchors))
                         )
             geom = Geometry(parent=self.obj2)
             geom._geom = '%dx%d+%d+%d' % (self.w2,self.h2
@@ -3990,12 +3947,12 @@ class AttachWidget:
                                          )
             geom.restore()
         else:
-            sh.log.append ('AttachWidget.set'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Operation has been canceled.')
                           )
     
     def get(self):
+        f = 'sharedGUI.AttachWidget.get'
         if self.Success:
             self.x1 = self.widget1.winfo_rootx()
             self.y1 = self.widget1.winfo_rooty()
@@ -4005,19 +3962,16 @@ class AttachWidget:
             self.h1 = self.widget1.winfo_height()
             self.w2 = self.widget2.winfo_width()
             self.h2 = self.widget2.winfo_height()
-            sh.log.append ('AttachWidget.get'
-                          ,_('DEBUG')
+            sh.log.append (f,_('DEBUG')
                           ,_('Widget 1 geometry: %dx%d+%d+%d') \
                           % (self.w1,self.h1,self.x1,self.y1)
                           )
-            sh.log.append ('AttachWidget.get'
-                          ,_('DEBUG')
+            sh.log.append (f,_('DEBUG')
                           ,_('Widget 2 geometry: %dx%d+%d+%d') \
                           % (self.w2,self.h2,self.x2,self.y2)
                           )
         else:
-            sh.log.append ('AttachWidget.get'
-                          ,_('WARNING')
+            sh.log.append (f,_('WARNING')
                           ,_('Operation has been canceled.')
                           )
     
@@ -4054,6 +4008,7 @@ class MultCBoxes:
         self.parent.title(text)
     
     def region(self):
+        f = 'sharedGUI.MultCBoxes.region'
         if self._frms:
             self.cvs.region (x        = self._width
                             ,y        = 22 * len(self._frms)
@@ -4062,8 +4017,7 @@ class MultCBoxes:
                             )
             self.cvs.scroll()
         else:
-            sh.log.append ('MultCBoxes.region'
-                          ,_('INFO')
+            sh.log.append (f,_('INFO')
                           ,_('Nothing to do!')
                           )
         
