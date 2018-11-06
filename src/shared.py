@@ -2194,10 +2194,11 @@ class ReadBinary:
             '''
             with open(self.file,'r+b') as fl:
                 self.obj = pickle.load(fl)
-        except:
+        except Exception as e:
             self.Success = False
             objs.mes (f,_('WARNING')
-                     ,_('Unable to read file "%s"!') % self.file
+                     ,_('Unable to read file "%s"!\n\nDetails: %s') \
+                     % (self.file,str(e))
                      )
 
     #todo: load fragments appended to a binary
