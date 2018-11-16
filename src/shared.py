@@ -1327,7 +1327,7 @@ class List:
                 self.lst1.append('')
         return(self.lst1,self.lst2)
 
-    # Find shared elements (strict order)
+    # Find different elements (strict order)
     # Based on http://stackoverflow.com/a/788780
     def diff(self):
         seqm = difflib.SequenceMatcher(a=self.lst1,b=self.lst2)
@@ -3609,6 +3609,7 @@ class Words:
                 self.words[i].spell_ru()
                 self.words[i].tf()
                 self.words[i].tl()
+            self.text_nm()
         else:
             log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
@@ -3786,11 +3787,11 @@ class Decline:
                        ,Auto   = Auto
                        )
         else:
-            self.Auto = Auto
-            self._orig = ''
+            self.Auto    = Auto
+            self._orig   = ''
             self._number = 'sing'
-            self._case = 'nomn'
-            self._list = []
+            self._case   = 'nomn'
+            self._list   = []
 
     def reset(self,text,number='',case='',Auto=True):
         ''' #todo:
