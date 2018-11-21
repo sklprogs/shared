@@ -423,7 +423,7 @@ class SearchBox:
                 _pos2tk = self.words.words[result2].tl()
                 self.h_sel.reset (pos1tk     = _pos1tk
                                  ,pos2tk     = _pos2tk
-                                 ,background = 'green'
+                                 ,background = 'green2'
                                  )
                 self.h_sel.set()
         else:
