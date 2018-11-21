@@ -549,7 +549,7 @@ class TextBox:
         self.ScrollX   = ScrollX
         self.ScrollY   = ScrollY
         self.font      = font
-        ''' 'normal' - обычный режим
+        ''' 'normal'   - обычный режим
             'disabled' - отключить редактирование
             выберите 'disabled', чтобы надпись на кнопке была другой
         '''
@@ -651,10 +651,10 @@ class TextBox:
         self.clear_tags()
         self.clear_marks()
 
-    ''' Setting ReadOnly state works only after filling text.
-        Only tk.Text, tk.Entry and not tk.Toplevel are supported.
-    '''
     def read_only(self,ReadOnly=True):
+        ''' Setting ReadOnly state works only after filling text.
+            Only tk.Text, tk.Entry and not tk.Toplevel are supported.
+        '''
         WidgetShared.set_state(self,ReadOnly=ReadOnly)
 
     def show(self):
