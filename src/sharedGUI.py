@@ -2857,27 +2857,27 @@ class MessageBuilder:
             YesName = 'OK'
             NoName  = _('Cancel')
         if self.Single and self.level != _('QUESTION'):
-            Button (parent    = self.bottom_left
-                   ,action    = self.close_yes
-                   ,hint      = _('Accept and close')
-                   ,text      = YesName
-                   ,TakeFocus = 1
-                   ,side      = 'right'
-                   )
+            self.btn_yes = Button (parent    = self.bottom_left
+                                  ,action    = self.close_yes
+                                  ,hint      = _('Accept and close')
+                                  ,text      = YesName
+                                  ,TakeFocus = 1
+                                  ,side      = 'right'
+                                  )
         else:
-            Button (parent = self.bottom_left
-                   ,action = self.close_no
-                   ,hint   = _('Reject and close')
-                   ,text   = NoName
-                   ,side   = 'left'
-                   )
-            Button (parent    = self.bottom_right
-                   ,action    = self.close_yes
-                   ,hint      = _('Accept and close')
-                   ,text      = YesName
-                   ,TakeFocus = 1
-                   ,side      = 'right'
-                   )
+            self.btn_no  = Button (parent = self.bottom_left
+                                  ,action = self.close_no
+                                  ,hint   = _('Reject and close')
+                                  ,text   = NoName
+                                  ,side   = 'left'
+                                  )
+            self.btn_yes = Button (parent    = self.bottom_right
+                                  ,action    = self.close_yes
+                                  ,hint      = _('Accept and close')
+                                  ,text      = YesName
+                                  ,TakeFocus = 1
+                                  ,side      = 'right'
+                                  )
 
     def title(self,text=None):
         if not text:
@@ -2899,6 +2899,7 @@ class MessageBuilder:
         return self
 
     def show(self,event=None,Lock=False):
+        self.btn_yes.focus()
         self.obj.show()
 
     def close(self,event=None):
