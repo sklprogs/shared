@@ -818,6 +818,18 @@ class Input:
         self.title = title
         self.value = value
 
+    def check_float(self):
+        if isinstance(self.value,float):
+            return self.value
+        else:
+            objs.mes (self.title
+                     ,_('ERROR')
+                     ,_('Float is required at input, but found "%s"! Return 0.0')\
+                     % str(type(self.value))
+                     )
+            self.value = 0.0
+        return self.value
+    
     def list(self):
         if isinstance(self.value,list):
             return self.value
@@ -4034,11 +4046,13 @@ class Timer:
         self._start = time.time()
 
     def end(self):
+        delta = float(time.time()-self._start)
         log.append (self._func_title
                    ,_('INFO')
                    ,_('The operation has taken %f s.') \
-                   % float(time.time()-self._start)
+                   % delta
                    )
+        return delta
 
 
 
@@ -4574,6 +4588,23 @@ class Commands:
 
     def __init__(self):
         pass
+    
+    def human_time(self,delta):
+        f = 'Commands.human_time'
+        delta = Input (title = f
+                      ,value = delta
+                      ).check_float()
+        hours   = delta // 3600
+        minutes = (delta - hours * 3600) // 60
+        seconds = delta - minutes * 60
+        if hours:
+            return '%d %s %d %s %d %s' % (hours,_('hrs'),minutes
+                                         ,_('min'),seconds,_('sec')
+                                         )
+        elif minutes:
+            return '%d %s %d %s' % (minutes,_('min'),seconds,_('sec'))
+        else:
+            return '%d %s' % (seconds,_('sec'))
     
     def cancel(self,func):
         log.append (func
