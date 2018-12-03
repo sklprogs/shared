@@ -4591,20 +4591,26 @@ class Commands:
     
     def human_time(self,delta):
         f = 'Commands.human_time'
-        delta = Input (title = f
-                      ,value = delta
-                      ).check_float()
-        hours   = delta // 3600
-        minutes = (delta - hours * 3600) // 60
-        seconds = delta - minutes * 60
-        if hours:
-            return '%d %s %d %s %d %s' % (hours,_('hrs'),minutes
-                                         ,_('min'),seconds,_('sec')
-                                         )
-        elif minutes:
-            return '%d %s %d %s' % (minutes,_('min'),seconds,_('sec'))
+        if isinstance(delta,int) or isinstance(delta,float):
+            hours   = delta // 3600
+            minutes = (delta - hours * 3600) // 60
+            seconds = delta - hours * 3600 - minutes * 60
+            mes = []
+            if hours:
+                mes.append('%d %s' % (hours,_('hrs')))
+            if minutes:
+                mes.append('%d %s' % (minutes,_('min')))
+            if seconds:
+                mes.append('%d %s' % (seconds,_('sec')))
+            if mes:
+                return ' '.join(mes)
+            else:
+                return '%d %s' % (0,_('sec'))
         else:
-            return '%d %s' % (seconds,_('sec'))
+            objs.mes (f,_('WARNING')
+                     ,_('Wrong input data: "%s"!') % str(delta)
+                     )
+            return '%d %s' % (0,_('sec'))
     
     def cancel(self,func):
         log.append (func
