@@ -1255,6 +1255,7 @@ class Button:
                  ,bindings    = []
                  ,fill        = 'both'
                  ,TakeFocus   = False
+                 ,font        = None
                  ):
         self.Status         = False
         self.parent         = parent
@@ -1281,6 +1282,7 @@ class Button:
         self.side           = side
         self.inactive_image = self.image(inactive)
         self.active_image   = self.image(active)
+        self.font           = font
         self.gui()
         
     def bindings(self):
@@ -1302,6 +1304,7 @@ class Button:
                                     ,fg               = self.fg
                                     ,activebackground = self.bg_focus
                                     ,activeforeground = self.fg_focus
+                                    ,font             = self.font
                                     )
         else:
             ''' A text button does not require setting a default width
@@ -1315,6 +1318,7 @@ class Button:
                                     ,fg               = self.fg
                                     ,activebackground = self.bg_focus
                                     ,activeforeground = self.fg_focus
+                                    ,font             = self.font
                                     )
         self.title(button_text=self.text)
         self.set_hint()
@@ -3432,7 +3436,7 @@ class Image:
     def open(self,path):
         if sh.File(file=path).Success:
             self._loader = objs.ig().open(path)
-            self._image = objs.it().PhotoImage(self._loader)
+            self._image  = objs.it().PhotoImage(self._loader)
         return self._image
             
     def loader(self):
@@ -3447,6 +3451,25 @@ class Image:
                               )
         return self._loader
         
+    def thumbnail(self,x,y):
+        ''' Resize an image to x,y limits. PIL will keep an original
+            aspect ratio.
+        '''
+        f = 'sharedGUI.Image.thumbnail'
+        if self._loader:
+            try:
+                self._loader.thumbnail([x,y])
+            except Exception as e:
+                sh.log.append (f,_('WARNING')
+                              ,_('Third-party module has failed!\n\nDetails: %s')\
+                              % str(e)
+                              )
+        else:
+            sh.log.append (f,_('WARNING')
+                          ,_('Empty input is not allowed!')
+                          )
+        return self._loader
+    
     def image(self):
         f = 'sharedGUI.Image.image'
         if not self._image:

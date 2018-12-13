@@ -4556,8 +4556,26 @@ class Home:
 
     def __init__(self,app_name='myapp'):
         self._app_name = app_name
-        self._conf_dir = ''
+        self._conf_dir = self._share_dir = ''
         
+    def add_share(self,*args):
+        return os.path.join(self.share_dir(),*args)
+    
+    def create_share(self):
+        return Path(path=self.share_dir()).create()
+    
+    def share_dir(self):
+        if not self._share_dir:
+            if oss.win():
+                os_folder = 'Application Data'
+            else:
+                os_folder = os.path.join('.local','share')
+            self._share_dir = os.path.join (self.home()
+                                           ,os_folder
+                                           ,self._app_name
+                                           )
+        return self._share_dir
+    
     def create_conf(self):
         return Path(path=self.conf_dir()).create()
     
