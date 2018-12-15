@@ -156,10 +156,13 @@ def rewrite(dest,AskRewrite=True):
         ''' We don't actually need to force rewriting or delete the file
             before rewriting
         '''
-        return objs.mes (f,_('QUESTION')
+        obj = objs.mes (f,_('QUESTION')
                         ,_('ATTENTION: Do yo really want to rewrite file "%s"?')\
                         % dest
-                        ).Yes
+                        )
+        # We do not have 'Yes' in a Silent mode
+        if hasattr(obj,'Yes'):
+            return obj.Yes
     else:
         ''' We return True so we may proceed with writing if the file
             has not been found
@@ -434,10 +437,23 @@ class Log:
                     self._print()
 
     def _print(self):
-        print ('%d:%s:%s:%s' % (self.count,self.func,self.level
-                               ,self.message
-                               )
-              )
+        f = 'shared.Log._print'
+        try:
+            print ('%d:%s:%s:%s' % (self.count,self.func,self.level
+                                   ,self.message
+                                   )
+                  )
+        except:
+            ''' Rarely somehing like "UnicodeEncodeError: 'utf-8' codec
+                can't encode character '\udce9' in position 175:
+                surrogates not allowed" occurs. Since there are to many
+                Unicode exceptions to except, we do not specify
+                an exception type.
+            '''
+            print ('%s:%s:%s' % (f,_('WARNING')
+                                ,_('Cannot print the message!')
+                                )
+                  )
 
     def append (self,func='shared.Log.append'
                ,level=_('INFO'),message='Test'
