@@ -27,7 +27,7 @@ class Record:
                 ,with4=None,what5=None,with5=None
                 ,_id='Unknown id'
                 ):
-        f = 'regexp.Record.__init__'
+        f = '[shared] regexp.Record.__init__'
         self.Success = True
         self._orig   = orig
         self._final  = final
@@ -50,7 +50,7 @@ class Record:
                         )
     
     def apply(self,text):
-        f = 'regexp.Record.apply'
+        f = '[shared] regexp.Record.apply'
         if self.Success:
             try:
                 result = re.sub(self._orig,self._final,text)
@@ -66,7 +66,7 @@ class Record:
             sh.com.cancel(f)
     
     def _check(self):
-        f = 'regexp.Record._check'
+        f = '[shared] regexp.Record._check'
         if self.Success:
             result = self.apply(text=self._what)
             if self.Success and result != self._with:
@@ -80,7 +80,7 @@ class Record:
         return self.Success
     
     def check(self):
-        f = 'regexp.Record.check'
+        f = '[shared] regexp.Record.check'
         if self.Success:
             cond1 = self._what1 and self._with1
             cond2 = self._what2 and self._with2

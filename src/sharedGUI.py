@@ -15,7 +15,7 @@ gettext.install('shared','../resources/locale')
 # Привязать горячие клавиши или кнопки мыши к действию
 # object, str/list, function
 def bind(obj,bindings,action):
-    f = 'sharedGUI.bind'
+    f = '[shared] sharedGUI.bind'
     if hasattr(obj,'widget'):
         if isinstance(bindings,str) or isinstance(bindings,list):
             if isinstance(bindings,str):
@@ -39,7 +39,7 @@ def bind(obj,bindings,action):
                 )
 
 def dialog_save_file(filetypes=()):
-    f = 'sharedGUI.dialog_save_file'
+    f = '[shared] sharedGUI.dialog_save_file'
     file = ''
     if not filetypes:
         filetypes = ((_('Plain text (UTF-8)'),'.txt' )
@@ -64,7 +64,7 @@ def mod_color(color,delta=76): # ~30%
         a hex value) brighter (positive delta) or darker
         (negative delta).
     '''
-    f = 'sharedGUI.mod_color'
+    f = '[shared] sharedGUI.mod_color'
     if -255 <= delta <= 255:
         try:
             rgb = objs.root().widget.winfo_rgb(color=color)
@@ -129,7 +129,7 @@ class WidgetShared:
         object.widget.focus()
 
     def insert(object,text,pos):
-        f = 'sharedGUI.WidgetShared.insert'
+        f = '[shared] sharedGUI.WidgetShared.insert'
         # Do not allow None
         if text:
             if object.type == 'TextBox' or object.type == 'Entry':
@@ -159,7 +159,7 @@ class WidgetShared:
 
     # font_style, sh.globs['var']['menu_font']
     def font(object,font='Sans 11'):
-        f = 'sharedGUI.WidgetShared.font'
+        f = '[shared] sharedGUI.WidgetShared.font'
         if object.type == 'TextBox' or object.type == 'Entry':
             object.widget.config(font=font)
         else:
@@ -169,7 +169,7 @@ class WidgetShared:
                           )
 
     def set_state(object,ReadOnly=False):
-        f = 'sharedGUI.WidgetShared.set_state'
+        f = '[shared] sharedGUI.WidgetShared.set_state'
         if object.type == 'TextBox' or object.type == 'Entry':
             if ReadOnly:
                 object.widget.config(state='disabled')
@@ -185,7 +185,7 @@ class WidgetShared:
 
     # Родительский виджет
     def title(object,text=_('Text:'),my_program_title=''):
-        f = 'sharedGUI.WidgetShared.title'
+        f = '[shared] sharedGUI.WidgetShared.title'
         if object.type == 'Toplevel' or object.type == 'Root':
             object.widget.title(text + my_program_title)
         else:
@@ -195,7 +195,7 @@ class WidgetShared:
                           )
 
     def custom_buttons(object):
-        f = 'sharedGUI.WidgetShared.custom_buttons'
+        f = '[shared] sharedGUI.WidgetShared.custom_buttons'
         if not object.Composite:
             if object.parent.type == 'Toplevel' \
             or object.parent.type == 'Root':
@@ -211,7 +211,7 @@ class WidgetShared:
 
     # Parent widget
     def icon(object,file):
-        f = 'sharedGUI.WidgetShared.icon'
+        f = '[shared] sharedGUI.WidgetShared.icon'
         if object.type == 'Toplevel' or object.type == 'Root':
             if file and os.path.exists(file):
                 object.widget.tk.call ('wm','iconphoto'
@@ -343,7 +343,7 @@ class SearchBox:
             self.Success = False
 
     def reset_data(self):
-        f = 'sharedGUI.SearchBox.reset_data'
+        f = '[shared] sharedGUI.SearchBox.reset_data'
         self.Success    = True
         self._prev_loop = self._next_loop = self._search = self._pos1 \
                         = self._pos2 = None
@@ -371,7 +371,7 @@ class SearchBox:
             self.reset_logic(words=words,Strict=Strict)
 
     def loop(self):
-        f = 'sharedGUI.SearchBox.loop'
+        f = '[shared] sharedGUI.SearchBox.loop'
         if self.Success:
             if not self.h_search._next_loop:
                 self.reset()
@@ -382,7 +382,7 @@ class SearchBox:
         return self.h_search._next_loop
 
     def add(self):
-        f = 'sharedGUI.SearchBox.add'
+        f = '[shared] sharedGUI.SearchBox.add'
         if self.Success:
             if self.i < len(self.loop()) - 1:
                 self.i += 1
@@ -392,7 +392,7 @@ class SearchBox:
                           )
 
     def subtract(self):
-        f = 'sharedGUI.SearchBox.subtract'
+        f = '[shared] sharedGUI.SearchBox.subtract'
         if self.Success:
             if self.i > 0:
                 self.i -= 1
@@ -406,7 +406,7 @@ class SearchBox:
         self.next()
 
     def select(self):
-        f = 'sharedGUI.SearchBox.select'
+        f = '[shared] sharedGUI.SearchBox.select'
         if self.Success:
             if self.Strict:
                 result1 = self.words.no_by_pos_p(pos=self.pos1())
@@ -432,7 +432,7 @@ class SearchBox:
                           )
 
     def search(self):
-        f = 'sharedGUI.SearchBox.search'
+        f = '[shared] sharedGUI.SearchBox.search'
         if self.Success:
             if self.words and not self._search:
                 self.h_entry.focus()
@@ -454,7 +454,7 @@ class SearchBox:
                           )
 
     def next(self,event=None):
-        f = 'sharedGUI.SearchBox.next'
+        f = '[shared] sharedGUI.SearchBox.next'
         if self.Success:
             _loop = self.loop()
             if _loop:
@@ -481,7 +481,7 @@ class SearchBox:
                           )
 
     def prev(self,event=None):
-        f = 'sharedGUI.SearchBox.prev'
+        f = '[shared] sharedGUI.SearchBox.prev'
         if self.Success:
             _loop = self.loop()
             if _loop:
@@ -509,7 +509,7 @@ class SearchBox:
                           )
 
     def pos1(self):
-        f = 'sharedGUI.SearchBox.pos1'
+        f = '[shared] sharedGUI.SearchBox.pos1'
         if self.Success:
             if self._pos1 is None:
                 self.loop()
@@ -524,7 +524,7 @@ class SearchBox:
                           )
 
     def pos2(self):
-        f = 'sharedGUI.SearchBox.pos2'
+        f = '[shared] sharedGUI.SearchBox.pos2'
         if self.Success:
             if self.pos1() is not None:
                 self._pos2 = self._pos1 + len(self.search())
@@ -727,7 +727,7 @@ class TextBox:
                                             )
 
     def toggle_case(self,event=None):
-        f = 'sharedGUI.TextBox.toggle_case'
+        f = '[shared] sharedGUI.TextBox.toggle_case'
         text = sh.Text(text=self.selection.text()).toggle_case()
         pos1, pos2 = self.selection.get()
         self.clear_selection()
@@ -746,7 +746,7 @@ class TextBox:
         return 'break'
 
     def _get(self):
-        f = 'sharedGUI.TextBox._get'
+        f = '[shared] sharedGUI.TextBox._get'
         try:
             return self.widget.get('1.0','end')
         except tk._tkinter.TclError:
@@ -788,7 +788,7 @@ class TextBox:
         return 'break'
 
     def _tag_remove(self,tag_name='sel',pos1tk='1.0',pos2tk='end'):
-        f = 'sharedGUI.TextBox._tag_remove'
+        f = '[shared] sharedGUI.TextBox._tag_remove'
         try:
             self.widget.tag_remove(tag_name,pos1tk,pos2tk)
         except tk.TclError:
@@ -799,7 +799,7 @@ class TextBox:
 
     #todo: simplify
     def tag_remove(self,tag_name='sel',pos1tk='1.0',pos2tk='end'):
-        f = 'sharedGUI.TextBox.tag_remove'
+        f = '[shared] sharedGUI.TextBox.tag_remove'
         self._tag_remove(tag_name=tag_name,pos1tk=pos1tk,pos2tk=pos2tk)
         if self.tags:
             try:
@@ -815,7 +815,7 @@ class TextBox:
     def tag_add (self,tag_name='sel',pos1tk='1.0'
                 ,pos2tk='end',DeletePrevious=True
                 ):
-        f = 'sharedGUI.TextBox.tag_add'
+        f = '[shared] sharedGUI.TextBox.tag_add'
         if DeletePrevious:
             self.tag_remove(tag_name)
         try:
@@ -829,7 +829,7 @@ class TextBox:
 
     def tag_config (self,tag_name='sel',background=None
                    ,foreground=None,font=None):
-        f = 'sharedGUI.TextBox.tag_config'
+        f = '[shared] sharedGUI.TextBox.tag_config'
         if background:
             try:
                 self.widget.tag_config(tag_name,background=background)
@@ -857,7 +857,7 @@ class TextBox:
 
     # Tk.Entry не поддерживает тэги и метки
     def mark_add(self,mark_name='insert',postk='1.0'):
-        f = 'sharedGUI.TextBox.mark_add'
+        f = '[shared] sharedGUI.TextBox.mark_add'
         try:
             self.widget.mark_set(mark_name,postk)
             '''
@@ -874,7 +874,7 @@ class TextBox:
         self.marks.append(mark_name)
 
     def mark_remove(self,mark_name='insert'):
-        f = 'sharedGUI.TextBox.mark_remove'
+        f = '[shared] sharedGUI.TextBox.mark_remove'
         try:
             self.widget.mark_unset(mark_name)
             '''
@@ -895,7 +895,7 @@ class TextBox:
                           )
 
     def clear_text(self,pos1='1.0',pos2='end'):
-        f = 'sharedGUI.TextBox.clear_text'
+        f = '[shared] sharedGUI.TextBox.clear_text'
         try:
             self.widget.delete(pos1,pos2)
         except tk._tkinter.TclError:
@@ -918,7 +918,7 @@ class TextBox:
                 self.clear_selection()
 
     def clear_selection(self,event=None):
-        f = 'sharedGUI.TextBox.clear_selection'
+        f = '[shared] sharedGUI.TextBox.clear_selection'
         pos1tk, pos2tk = self.selection.get()
         if pos1tk and pos2tk:
             self.clear_text(pos1=pos1tk,pos2=pos2tk)
@@ -944,7 +944,7 @@ class TextBox:
             i -= 1
 
     def goto(self,GoTo=''):
-        f = 'sharedGUI.TextBox.goto'
+        f = '[shared] sharedGUI.TextBox.goto'
         if GoTo:
             try:
                 goto_pos = self.widget.search(GoTo,'1.0','end')
@@ -959,7 +959,7 @@ class TextBox:
 
     # Scroll screen to a tkinter position or a mark (tags do not work)
     def scroll(self,mark):
-        f = 'sharedGUI.TextBox.scroll'
+        f = '[shared] sharedGUI.TextBox.scroll'
         try:
             self.widget.yview(mark)
         except tk.TclError:
@@ -977,7 +977,7 @@ class TextBox:
 
     #todo: select either 'see' or 'autoscroll'
     def see(self,mark):
-        f = 'sharedGUI.TextBox.see'
+        f = '[shared] sharedGUI.TextBox.see'
         if mark is None:
             sh.log.append (f,_('WARNING')
                           ,_('Empty input is not allowed!')
@@ -996,7 +996,7 @@ class TextBox:
             return True
 
     def cursor(self,event=None):
-        f = 'sharedGUI.TextBox.cursor'
+        f = '[shared] sharedGUI.TextBox.cursor'
         try:
             self._pos = self.widget.index('insert')
             sh.log.append (f,_('DEBUG')
@@ -1019,7 +1019,7 @@ class TextBox:
         ''' Tags can be marked only after text in inserted; thus, call
             this procedure separately before '.show'.
         '''
-        f = 'sharedGUI.TextBox.spelling'
+        f = '[shared] sharedGUI.TextBox.spelling'
         if self.words:
             self.words.sent_nos()
             result = []
@@ -1123,7 +1123,7 @@ class Entry:
         self.parent.close()
 
     def _get(self):
-        f = 'sharedGUI.Entry._get'
+        f = '[shared] sharedGUI.Entry._get'
         try:
             return self.widget.get()
         except tk._tkinter.TclError:
@@ -1133,7 +1133,7 @@ class Entry:
                           )
 
     def get(self,Strip=False):
-        f = 'sharedGUI.Entry.get'
+        f = '[shared] sharedGUI.Entry.get'
         # None != 'None' != ''
         result = sh.Input (title = f
                           ,value = self._get()
@@ -1152,7 +1152,7 @@ class Entry:
         return 'break'
 
     def clear_text(self,event=None,pos1=0,pos2='end'):
-        f = 'sharedGUI.Entry.clear_text'
+        f = '[shared] sharedGUI.Entry.clear_text'
         try:
             self.widget.selection_clear()
             self.widget.delete(pos1,pos2)
@@ -1362,7 +1362,7 @@ class Button:
         return button_image
 
     def click(self,*args):
-        f = 'sharedGUI.Button.click'
+        f = '[shared] sharedGUI.Button.click'
         if self.action:
             if len(args) > 0:
                 self.action(args)
@@ -1449,7 +1449,7 @@ class ToolTipBase:
             self.widget.after_cancel(id)
 
     def showtip(self):
-        f = 'sharedGUI.ToolTipBase.showtip'
+        f = '[shared] sharedGUI.ToolTipBase.showtip'
         if self.tip:
             return
         ''' The tip window must be completely outside the widget;
@@ -1586,7 +1586,7 @@ class ListBox:
             self.action()
     
     def delete(self,event=None):
-        f = 'sharedGUI.ListBox.delete'
+        f = '[shared] sharedGUI.ListBox.delete'
         # Set an actual value
         self.index()
         try:
@@ -1728,7 +1728,7 @@ class ListBox:
         self.select()
 
     def select(self):
-        f = 'sharedGUI.ListBox.select'
+        f = '[shared] sharedGUI.ListBox.select'
         self.clear_selection()
         ''' Use an index changed with keyboard arrows. If it is not set,
             use current index (returned by 'self.index()').
@@ -1747,7 +1747,7 @@ class ListBox:
         self.widget.see(self._index)
 
     def set(self,item):
-        f = 'sharedGUI.ListBox.set'
+        f = '[shared] sharedGUI.ListBox.set'
         if item:
             if item in self.lst:
                 self._index = self.lst.index(item)
@@ -1919,7 +1919,7 @@ class OptionMenu:
         WidgetShared.disable(self)
     
     def trigger(self,event=None):
-        f = 'sharedGUI.OptionMenu.trigger'
+        f = '[shared] sharedGUI.OptionMenu.trigger'
         self._get()
         if self.Combo:
             self.widget.selection_clear()
@@ -1940,7 +1940,7 @@ class OptionMenu:
             self.index  = 0
 
     def default_set(self):
-        f = 'sharedGUI.OptionMenu.default_set'
+        f = '[shared] sharedGUI.OptionMenu.default_set'
         if self.default is None:
             self._default_set()
         else:
@@ -1959,7 +1959,7 @@ class OptionMenu:
                 self._default_set()
 
     def set(self,item,event=None):
-        f = 'sharedGUI.OptionMenu.set'
+        f = '[shared] sharedGUI.OptionMenu.set'
         item = str(item)
         if item in self.items:
             self.var.set(item)
@@ -2010,7 +2010,7 @@ class OptionMenu:
 
     # Auto updated (after selecting an item)
     def _get(self,event=None):
-        f = 'sharedGUI.OptionMenu._get'
+        f = '[shared] sharedGUI.OptionMenu._get'
         self.choice = self.var.get()
         # 'OptionMenu' always returns a string
         if self.choice not in self.items:
@@ -2115,7 +2115,7 @@ class Selection:
         return self._pos2tk
 
     def get(self,event=None):
-        f = 'sharedGUI.Selection.get'
+        f = '[shared] sharedGUI.Selection.get'
         try:
             self._pos1tk = self.h_widget.widget.index('sel.first')
             self._pos2tk = self.h_widget.widget.index('sel.last')
@@ -2137,7 +2137,7 @@ class Selection:
         return(self._pos1tk,self._pos2tk)
 
     def text(self):
-        f = 'sharedGUI.Selection.text'
+        f = '[shared] sharedGUI.Selection.text'
         try:
             self._text = self.h_widget.widget.get('sel.first','sel.last').replace('\r','').replace('\n','')
         except tk.TclError:
@@ -2257,7 +2257,7 @@ class Geometry:
         objs.root().widget.update_idletasks()
 
     def save(self):
-        f = 'sharedGUI.Geometry.save'
+        f = '[shared] sharedGUI.Geometry.save'
         if self.parent:
             self.update()
             self._geom = self.parent.widget.geometry()
@@ -2270,7 +2270,7 @@ class Geometry:
                     )
 
     def restore(self):
-        f = 'sharedGUI.Geometry.restore'
+        f = '[shared] sharedGUI.Geometry.restore'
         if self.parent:
             if self._geom:
                 sh.log.append (f,_('INFO')
@@ -2287,7 +2287,7 @@ class Geometry:
                     )
 
     def foreground(self,event=None):
-        f = 'sharedGUI.Geometry.foreground'
+        f = '[shared] sharedGUI.Geometry.foreground'
         if sh.oss.win():
             if self.hwnd():
                 ''' 'pywintypes.error', but needs to import this for
@@ -2314,7 +2314,7 @@ class Geometry:
                     )
 
     def minimize(self,event=None):
-        f = 'sharedGUI.Geometry.minimize'
+        f = '[shared] sharedGUI.Geometry.minimize'
         if self.parent:
             ''' # Does not always work
             if sh.oss.win():
@@ -2328,7 +2328,7 @@ class Geometry:
                     )
 
     def maximize(self,event=None):
-        f = 'sharedGUI.Geometry.maximize'
+        f = '[shared] sharedGUI.Geometry.maximize'
         if sh.oss.win():
             #win32gui.ShowWindow(self.hwnd(),win32con.SW_MAXIMIZE)
             self.parent.widget.wm_state(newstate='zoomed')
@@ -2340,7 +2340,7 @@ class Geometry:
                     )
 
     def focus(self,event=None):
-        f = 'sharedGUI.Geometry.focus'
+        f = '[shared] sharedGUI.Geometry.focus'
         if sh.oss.win():
             win32gui.SetActiveWindow(self.hwnd())
         elif self.parent:
@@ -2351,7 +2351,7 @@ class Geometry:
                     )
 
     def lift(self,event=None):
-        f = 'sharedGUI.Geometry.lift'
+        f = '[shared] sharedGUI.Geometry.lift'
         if self.parent:
             self.parent.widget.lift()
         else:
@@ -2360,7 +2360,7 @@ class Geometry:
                     )
 
     def _activate(self):
-        f = 'sharedGUI.Geometry._activate'
+        f = '[shared] sharedGUI.Geometry._activate'
         if self.parent:
             self.parent.widget.deiconify()
             #self.parent.widget.focus_set()
@@ -2393,7 +2393,7 @@ class Geometry:
                 ctypes.windll.user32.mouse_event(4, 0, 0, 0, 0)
 
     def hwnd(self,event=None):
-        f = 'sharedGUI.Geometry.hwnd'
+        f = '[shared] sharedGUI.Geometry.hwnd'
         if not self._hwnd:
             if self._title:
                 try:
@@ -2453,7 +2453,7 @@ class WaitBox:
         self.message()
 
     def run(self):
-        f = 'sharedGUI.WaitBox.run'
+        f = '[shared] sharedGUI.WaitBox.run'
         self.show()
         if self._func:
             if self._args:
@@ -2554,7 +2554,7 @@ class Label:
         self.widget.config(text=self._text)
 
     def font(self,arg=None):
-        f = 'sharedGUI.Label.font'
+        f = '[shared] sharedGUI.Label.font'
         if arg:
             self._font = arg
         try:
@@ -2652,7 +2652,7 @@ class Message:
     def __init__ (self,func='MAIN',level=_('WARNING')
                  ,message=_('Message'),Silent=False
                  ):
-        f = 'sharedGUI.Message.__init__'
+        f = '[shared] sharedGUI.Message.__init__'
         self.Success = True
         self.Yes     = False
         self.func    = func
@@ -2682,7 +2682,7 @@ class Message:
                           )
 
     def error(self):
-        f = 'sharedGUI.Message.error'
+        f = '[shared] sharedGUI.Message.error'
         if self.Success:
             if not self.Silent:
                 objs.error().reset (title = self.func + ':'
@@ -2698,7 +2698,7 @@ class Message:
                           )
 
     def info(self):
-        f = 'sharedGUI.Message.info'
+        f = '[shared] sharedGUI.Message.info'
         if self.Success:
             if not self.Silent:
                 objs.info().reset (title = self.func + ':'
@@ -2714,7 +2714,7 @@ class Message:
                           )
 
     def question(self):
-        f = 'sharedGUI.Message.question'
+        f = '[shared] sharedGUI.Message.question'
         if self.Success:
             objs.question().reset (title = self.func + ':'
                                   ,text  = self.message
@@ -2731,7 +2731,7 @@ class Message:
                           )
 
     def warning(self):
-        f = 'sharedGUI.Message.warning'
+        f = '[shared] sharedGUI.Message.warning'
         if self.Success:
             if not self.Silent:
                 objs.warning().reset (title = self.func + ':'
@@ -2786,7 +2786,7 @@ class MessageBuilder:
             self.widget.protocol("WM_DELETE_WINDOW",self.close)
 
     def paths(self):
-        f = 'sharedGUI.MessageBuilder.paths'
+        f = '[shared] sharedGUI.MessageBuilder.paths'
         if self.level == _('WARNING'):
             self.path = sh.objs.pdir().add ('..'
                                            ,'resources'
@@ -2918,7 +2918,7 @@ class MessageBuilder:
         self.close()
 
     def picture(self,event=None):
-        f = 'sharedGUI.MessageBuilder.picture'
+        f = '[shared] sharedGUI.MessageBuilder.picture'
         if os.path.exists(self.path):
             ''' We need to assign self.variable to Label, otherwise, it
                 gets destroyed.
@@ -2944,7 +2944,7 @@ class Clipboard:
         self.Silent = Silent
 
     def copy(self,text,CopyEmpty=True):
-        f = 'sharedGUI.Clipboard.copy'
+        f = '[shared] sharedGUI.Clipboard.copy'
         if text or CopyEmpty:
             text = str(sh.Input (title = f
                                 ,value = text
@@ -2982,7 +2982,7 @@ class Clipboard:
                           )
 
     def paste(self):
-        f = 'sharedGUI.Clipboard.paste'
+        f = '[shared] sharedGUI.Clipboard.paste'
         text = ''
         try:
             text = str(objs.root().widget.clipboard_get())
@@ -3040,7 +3040,7 @@ class Canvas:
     
     # These bindings are not enabled by default
     def top_bindings(self,top):
-        f = 'sharedGUI.Canvas.top_bindings'
+        f = '[shared] sharedGUI.Canvas.top_bindings'
         if top:
             if hasattr(top,'type') and top.type == 'Toplevel':
                 bind (obj      = top
@@ -3118,7 +3118,7 @@ class Canvas:
     def region (self,x=0,y=0
                ,x_border=0,y_border=0
                ):
-        f = 'sharedGUI.Canvas.region'
+        f = '[shared] sharedGUI.Canvas.region'
         # Both integer and float values are allowed at input
         if x and y:
             self.widget.configure (scrollregion = (-x/2 - x_border
@@ -3148,7 +3148,7 @@ class Canvas:
                          )
         
     def embed(self,obj):
-        f = 'sharedGUI.Canvas.embed'
+        f = '[shared] sharedGUI.Canvas.embed'
         if hasattr(obj,'widget'):
             self.widget.create_window(0,0,window=obj.widget)
         else:
@@ -3218,7 +3218,7 @@ class Objects:
         self._root.run()
 
     def add(self,obj):
-        f = 'sharedGUI.Objects.add'
+        f = '[shared] sharedGUI.Objects.add'
         sh.log.append (f,_('INFO')
                       ,_('Add %s') % type(obj)
                       )
@@ -3257,7 +3257,7 @@ class Objects:
         return self._info
 
     def close_all(self):
-        f = 'sharedGUI.Objects.close_all'
+        f = '[shared] sharedGUI.Objects.close_all'
         sh.log.append (f,_('INFO')
                       ,_('Close %d objs') % len(self._lst)
                       )
@@ -3360,7 +3360,7 @@ class SimpleTop:
         ''' Do not destroy widget: 'Label' may trigger closing with
             unwanted results
         '''
-        f = 'sharedGUI.SimpleTop.close'
+        f = '[shared] sharedGUI.SimpleTop.close'
         if self.Active:
             self.Active = False
             self.widget.withdraw()
@@ -3373,7 +3373,7 @@ class SimpleTop:
                           )
         
     def show(self,event=None,Lock=False):
-        f = 'sharedGUI.SimpleTop.show'
+        f = '[shared] sharedGUI.SimpleTop.show'
         if self.Active:
             sh.log.append (f,_('INFO')
                           ,_('Nothing to do.')
@@ -3394,7 +3394,7 @@ class Scrollbar:
         self.gui()
     
     def gui(self):
-        f = 'sharedGUI.Scrollbar.gui'
+        f = '[shared] sharedGUI.Scrollbar.gui'
         if hasattr(self.parent,'widget'):
             if self.Horizontal:
                 orient = tk.HORIZONTAL
@@ -3440,7 +3440,7 @@ class Image:
         return self._image
             
     def loader(self):
-        f = 'sharedGUI.Image.loader'
+        f = '[shared] sharedGUI.Image.loader'
         if not self._loader:
             if self._bytes:
                 self._loader = \
@@ -3455,7 +3455,7 @@ class Image:
         ''' Resize an image to x,y limits. PIL will keep an original
             aspect ratio.
         '''
-        f = 'sharedGUI.Image.thumbnail'
+        f = '[shared] sharedGUI.Image.thumbnail'
         if self._loader:
             try:
                 self._loader.thumbnail([x,y])
@@ -3471,7 +3471,7 @@ class Image:
         return self._loader
     
     def image(self):
-        f = 'sharedGUI.Image.image'
+        f = '[shared] sharedGUI.Image.image'
         if not self._image:
             if self._loader:
                 self._image = objs.it().PhotoImage(self._loader)
@@ -3802,7 +3802,7 @@ class ProgressBar:
         self.canvas.focus()
         
     def add(self,event=None):
-        f = 'sharedGUI.ProgressBar.add'
+        f = '[shared] sharedGUI.ProgressBar.add'
         self._item = ProgressBarItem (parent = self.label
                                      ,length = self._width - self._border
                                      )
@@ -3860,7 +3860,7 @@ class AttachWidget:
         self.y2 = 0
     
     def check(self):
-        f = 'sharedGUI.AttachWidget.check'
+        f = '[shared] sharedGUI.AttachWidget.check'
         if self.obj1 and self.obj2:
             if hasattr(self.obj1,'widget') \
             and hasattr(self.obj2,'widget'):
@@ -3934,7 +3934,7 @@ class AttachWidget:
         self.y2 = self.y1 + self.h1 - self.h2
     
     def set(self):
-        f = 'sharedGUI.AttachWidget.set'
+        f = '[shared] sharedGUI.AttachWidget.set'
         if self.Success:
             if self.anchor == 'N':
                 self._n()
@@ -3976,7 +3976,7 @@ class AttachWidget:
                           )
     
     def get(self):
-        f = 'sharedGUI.AttachWidget.get'
+        f = '[shared] sharedGUI.AttachWidget.get'
         if self.Success:
             self.x1 = self.widget1.winfo_rootx()
             self.y1 = self.widget1.winfo_rooty()
@@ -4032,7 +4032,7 @@ class MultCBoxes:
         self.parent.title(text)
     
     def region(self):
-        f = 'sharedGUI.MultCBoxes.region'
+        f = '[shared] sharedGUI.MultCBoxes.region'
         if self._frms:
             self.cvs.region (x        = self._width
                             ,y        = 22 * len(self._frms)

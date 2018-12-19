@@ -146,7 +146,7 @@ import datetime
 
 
 def rewrite(dest,AskRewrite=True):
-    f = 'shared.rewrite'
+    f = '[shared] shared.rewrite'
     ''' - We do not put this into File class because we do not need to
           check existence.
         - We use AskRewrite just to shorten other procedures (to be able
@@ -194,7 +194,7 @@ class Launch:
         self.custom_args = []
     
     def _launch(self):
-        f = 'shared.Launch._launch'
+        f = '[shared] shared.Launch._launch'
         if self.custom_args:
             log.append (f,_('DEBUG')
                        ,_('Custom arguments: "%s"') % ';'.join(self.custom_args)
@@ -217,7 +217,7 @@ class Launch:
                        )
 
     def _lin(self):
-        f = 'shared.Launch._lin'
+        f = '[shared] shared.Launch._lin'
         try:
             os.system("xdg-open " + self.h_path.escape() + "&")
         except OSError:
@@ -226,7 +226,7 @@ class Launch:
                      )
 
     def _mac(self):
-        f = 'shared.Launch._mac'
+        f = '[shared] shared.Launch._mac'
         try:
             os.system("open " + self.target)
         except:
@@ -235,7 +235,7 @@ class Launch:
                      )
 
     def _win(self):
-        f = 'shared.Launch._win'
+        f = '[shared] shared.Launch._win'
         try:
             os.startfile(self.target)
         except:
@@ -265,7 +265,7 @@ class Launch:
         self.default()
 
     def custom(self):
-        f = 'shared.Launch.custom'
+        f = '[shared] shared.Launch.custom'
         if self.TargetExists:
             self.custom_args = [self.custom_app,self.target]
             self._launch()
@@ -275,7 +275,7 @@ class Launch:
                        )
 
     def default(self):
-        f = 'shared.Launch.default'
+        f = '[shared] shared.Launch.default'
         if self.TargetExists:
             if oss.lin():
                 self._lin()
@@ -293,7 +293,7 @@ class Launch:
 class WriteTextFile:
 
     def __init__(self,file,AskRewrite=True,UseLog=True):
-        f = 'shared.WriteTextFile.__init__'
+        f = '[shared] shared.WriteTextFile.__init__'
         self.file       = file
         self.text       = ''
         self.AskRewrite = AskRewrite
@@ -309,7 +309,7 @@ class WriteTextFile:
             self.Success = False
 
     def _write(self,mode='w'):
-        f = 'shared.WriteTextFile._write'
+        f = '[shared] shared.WriteTextFile._write'
         if mode == 'w' or mode == 'a':
             if self.UseLog:
                 log.append (f,_('INFO')
@@ -337,7 +337,7 @@ class WriteTextFile:
                 print(f+': An unknown mode!')
 
     def append(self,text=''):
-        f = 'shared.WriteTextFile.append'
+        f = '[shared] shared.WriteTextFile.append'
         if self.Success:
             self.text = text
             if self.text:
@@ -360,7 +360,7 @@ class WriteTextFile:
                            )
 
     def write(self,text=''):
-        f = 'shared.WriteTextFile.write'
+        f = '[shared] shared.WriteTextFile.write'
         if self.Success:
             self.text = text
             if self.text:
@@ -437,7 +437,7 @@ class Log:
                     self._print()
 
     def _print(self):
-        f = 'shared.Log._print'
+        f = '[shared] shared.Log._print'
         try:
             print ('%d:%s:%s:%s' % (self.count,self.func,self.level
                                    ,self.message
@@ -498,7 +498,7 @@ class TextDic:
         entries do not have duplicates due to new algorithms)
     '''
     def _delete_duplicates(self):
-        f = 'shared.TextDic._delete_duplicates'
+        f = '[shared] shared.TextDic._delete_duplicates'
         if self.Success:
             if self.Sortable:
                 old = self.lines()
@@ -527,7 +527,7 @@ class TextDic:
 
     # We can use this as an updater, even without relying on Success
     def _join(self):
-        f = 'shared.TextDic._join'
+        f = '[shared] shared.TextDic._join'
         if len(self.orig) == len(self.transl):
             self._lines = len(self.orig)
             self._list = []
@@ -543,7 +543,7 @@ class TextDic:
         ''' We can use this to check integrity and/or update original
             and translation lists.
         '''
-        f = 'shared.TextDic._split'
+        f = '[shared] shared.TextDic._split'
         if self.get():
             self.Success = True
             self.orig = []
@@ -571,7 +571,7 @@ class TextDic:
             #todo: write a dictionary in an append mode after appending
             to memory.
         '''
-        f = 'shared.TextDic.append'
+        f = '[shared] shared.TextDic.append'
         if self.Success:
             if original and translation:
                 self.orig.append(original)
@@ -590,7 +590,7 @@ class TextDic:
         ''' #todo: #fix: an entry which is only one in a dictionary is
             not deleted.
         '''
-        f = 'shared.TextDic.delete_entry'
+        f = '[shared] shared.TextDic.delete_entry'
         if self.Success:
             entry_no -= 1
             if entry_no >= 0 and entry_no < self.lines():
@@ -613,7 +613,7 @@ class TextDic:
         ''' #todo: Add checking orig and transl (where needed) for
             a wrapper function.
         '''
-        f = 'shared.TextDic.edit_entry'
+        f = '[shared] shared.TextDic.edit_entry'
         if self.Success:
             entry_no -= 1
             if entry_no >= 0 and entry_no < self.lines():
@@ -657,7 +657,7 @@ class TextDic:
 
     # Sort a dictionary with the longest lines going first
     def sort(self):
-        f = 'shared.TextDic.sort'
+        f = '[shared] shared.TextDic.sort'
         if self.Success:
             if self.Sortable:
                 tmp_list = []
@@ -684,7 +684,7 @@ class TextDic:
                        )
 
     def tail(self):
-        f = 'shared.TextDic.tail'
+        f = '[shared] shared.TextDic.tail'
         tail_text = ''
         if self.Success:
             tail_len = globs['int']['tail_len']
@@ -704,7 +704,7 @@ class TextDic:
         return tail_text
 
     def write(self):
-        f = 'shared.TextDic.write'
+        f = '[shared] shared.TextDic.write'
         if self.Success:
             WriteTextFile (file       = self.file
                           ,AskRewrite = False
@@ -719,7 +719,7 @@ class TextDic:
 class ReadTextFile:
 
     def __init__(self,file):
-        f = 'shared.ReadTextFile.__init__'
+        f = '[shared] shared.ReadTextFile.__init__'
         self.file    = file
         self._text   = ''
         self._list   = []
@@ -753,7 +753,7 @@ class ReadTextFile:
             pass
 
     def delete_bom(self):
-        f = 'shared.ReadTextFile.delete_bom'
+        f = '[shared] shared.ReadTextFile.delete_bom'
         if self.Success:
             self._text = self._text.replace('\N{ZERO WIDTH NO-BREAK SPACE}','')
         else:
@@ -763,7 +763,7 @@ class ReadTextFile:
 
     # Return the text from memory (or load the file first)
     def get(self):
-        f = 'shared.ReadTextFile.get'
+        f = '[shared] shared.ReadTextFile.get'
         if self.Success:
             if not self._text:
                 self.load()
@@ -775,7 +775,7 @@ class ReadTextFile:
 
     # Return a number of lines in the file. Returns 0 for an empty file.
     def lines(self):
-        f = 'shared.ReadTextFile.lines'
+        f = '[shared] shared.ReadTextFile.lines'
         if self.Success:
             return len(self.list())
         else:
@@ -784,7 +784,7 @@ class ReadTextFile:
                        )
 
     def list(self):
-        f = 'shared.ReadTextFile.list'
+        f = '[shared] shared.ReadTextFile.list'
         if self.Success:
             if not self._list:
                 self._list = self.get().splitlines()
@@ -796,7 +796,7 @@ class ReadTextFile:
         return self._list
 
     def load(self):
-        f = 'shared.ReadTextFile.load'
+        f = '[shared] shared.ReadTextFile.load'
         if self.Success:
             log.append (f,_('INFO')
                        ,_('Load file "%s"') % self.file
@@ -981,7 +981,7 @@ class Text:
             (even when the number of opening and closing brackets is
             the same).
         '''
-        f = 'shared.Text.delete_embraced_text'
+        f = '[shared] shared.Text.delete_embraced_text'
         if self.text.count(opening_sym) == self.text.count(closing_sym):
             opening_parentheses = []
             closing_parentheses = []
@@ -1050,7 +1050,7 @@ class Text:
         ''' Delete a space and punctuation marks in the end of a line
             (useful when extracting features with CompareField).
         '''
-        f = 'shared.Text.delete_end_punc'
+        f = '[shared] shared.Text.delete_end_punc'
         if len(self.text) > 0:
             if Extended:
                 while self.text[-1] == ' ' or self.text[-1] \
@@ -1103,7 +1103,7 @@ class Text:
 
     #todo: del
     def extract_date_hash(self):
-        f = 'shared.Text.extract_date_hash'
+        f = '[shared] shared.Text.extract_date_hash'
         hash = -1
         # Only strings at input
         result = self.text.split('-')
@@ -1186,7 +1186,7 @@ class Text:
         ''' Replace commas or semicolons with line breaks or line breaks
             with commas.
         '''
-        f = 'shared.Text.split_by_comma'
+        f = '[shared] shared.Text.split_by_comma'
         if (';' in self.text or ',' in self.text) and '\n' in self.text:
             objs.mes (f,_('WARNING')
                      ,_('Commas and/or semicolons or line breaks can be used, but not altogether!')
@@ -1208,7 +1208,7 @@ class Text:
         return self.text
 
     def str2int(self):
-        f = 'shared.Text.str2int'
+        f = '[shared] shared.Text.str2int'
         par = 0
         try:
             par = int(self.text)
@@ -1220,7 +1220,7 @@ class Text:
         return par
 
     def str2float(self):
-        f = 'shared.Text.str2float'
+        f = '[shared] shared.Text.str2float'
         par = 0.0
         try:
             par = float(self.text)
@@ -1395,7 +1395,7 @@ class Time:
             self.todays_date()
 
     def add_days(self,days_delta):
-        f = 'shared.Time.add_days'
+        f = '[shared] shared.Time.add_days'
         if self.Success:
             if not self._instance:
                 self.instance()
@@ -1413,7 +1413,7 @@ class Time:
                        )
 
     def date(self):
-        f = 'shared.Time.date'
+        f = '[shared] shared.Time.date'
         if self.Success:
             if not self._instance:
                 self.instance()
@@ -1431,7 +1431,7 @@ class Time:
         return self._date
 
     def instance(self):
-        f = 'shared.Time.instance'
+        f = '[shared] shared.Time.instance'
         if self.Success:
             if not self._timestamp:
                 self.timestamp()
@@ -1449,7 +1449,7 @@ class Time:
         return self._instance
 
     def timestamp(self):
-        f = 'shared.Time.timestamp'
+        f = '[shared] shared.Time.timestamp'
         if self.Success:
             if not self._date:
                 self.date()
@@ -1467,7 +1467,7 @@ class Time:
         return self._timestamp
 
     def monday_warning(self):
-        f = 'shared.Time.monday_warning'
+        f = '[shared] shared.Time.monday_warning'
         if self.Success:
             if not self._instance:
                 self.instance()
@@ -1482,7 +1482,7 @@ class Time:
                        )
 
     def month_name(self):
-        f = 'shared.Time.month_name'
+        f = '[shared] shared.Time.month_name'
         if self.Success:
             if not self._instance:
                 self.instance()
@@ -1498,7 +1498,7 @@ class Time:
         return self._month_name
 
     def localize_month_abbr(self):
-        f = 'shared.Time.localize_month_abbr'
+        f = '[shared] shared.Time.localize_month_abbr'
         if self._month_abbr == 'Jan':
             self._month_abbr = _('Jan')
         elif self._month_abbr == 'Feb':
@@ -1530,7 +1530,7 @@ class Time:
         return self._month_abbr
     
     def month_abbr(self):
-        f = 'shared.Time.month_abbr'
+        f = '[shared] shared.Time.month_abbr'
         if self.Success:
             if not self._instance:
                 self.instance()
@@ -1549,7 +1549,7 @@ class Time:
         self._instance = datetime.datetime.today()
 
     def year(self):
-        f = 'shared.Time.year'
+        f = '[shared] shared.Time.year'
         if self.Success:
             if not self._instance:
                 self.instance()
@@ -1571,7 +1571,7 @@ class Time:
 class File:
 
     def __init__(self,file,dest=None,AskRewrite=True):
-        f = 'shared.File.__init__'
+        f = '[shared] shared.File.__init__'
         self.Success    = True
         self.AskRewrite = AskRewrite
         self.file       = file
@@ -1607,7 +1607,7 @@ class File:
                      )
 
     def _copy(self):
-        f = 'shared.File._copy'
+        f = '[shared] shared.File._copy'
         Success = True
         log.append (f,_('INFO')
                    ,_('Copy "%s" to "%s"') % (self.file,self.dest)
@@ -1623,7 +1623,7 @@ class File:
         return Success
 
     def _move(self):
-        f = 'shared.File._move'
+        f = '[shared] shared.File._move'
         Success = True
         log.append (f,_('INFO')
                    ,_('Move "%s" to "%s"') % (self.file,self.dest)
@@ -1639,7 +1639,7 @@ class File:
         return Success
 
     def access_time(self):
-        f = 'shared.File.access_time'
+        f = '[shared] shared.File.access_time'
         if self.Success:
             try:
                 self.atime = os.path.getatime(self.file)
@@ -1656,7 +1656,7 @@ class File:
                        )
 
     def copy(self):
-        f = 'shared.File.copy'
+        f = '[shared] shared.File.copy'
         Success = True
         if self.Success:
             if self.file.lower() == self.dest.lower():
@@ -1677,7 +1677,7 @@ class File:
         return Success
 
     def delete(self):
-        f = 'shared.File.delete'
+        f = '[shared] shared.File.delete'
         Success = True
         if self.Success:
             log.append (f,_('INFO')
@@ -1698,7 +1698,7 @@ class File:
 
     #todo: del
     def delete_wait(self):
-        f = 'shared.File.delete_wait'
+        f = '[shared] shared.File.delete_wait'
         if self.Success:
             while os.path.exists(self.file) and not self.delete():
                 time.sleep(0.3)
@@ -1708,7 +1708,7 @@ class File:
                        )
 
     def modification_time(self):
-        f = 'shared.File.modification_time'
+        f = '[shared] shared.File.modification_time'
         if self.Success:
             try:
                 self.mtime = os.path.getmtime(self.file)
@@ -1725,7 +1725,7 @@ class File:
                        )
 
     def move(self):
-        f = 'shared.File.move'
+        f = '[shared] shared.File.move'
         Success = True
         if self.Success:
             if self.file.lower() == self.dest.lower():
@@ -1746,7 +1746,7 @@ class File:
         return Success
 
     def set_time(self):
-        f = 'shared.File.set_time'
+        f = '[shared] shared.File.set_time'
         if self.Success:
             if self.atime and self.mtime:
                 log.append (f,_('INFO')
@@ -1786,7 +1786,7 @@ class Path:
 
     # This will recursively (by design) create self.path
     def create(self):
-        f = 'shared.Path.create'
+        f = '[shared] shared.Path.create'
         # We actually don't need to fail the class globally
         Success = True
         if self.path:
@@ -1889,7 +1889,7 @@ class Path:
 class WriteBinary:
 
     def __init__(self,file,obj,AskRewrite=False):
-        f = 'shared.WriteBinary.__init__'
+        f = '[shared] shared.WriteBinary.__init__'
         self.Success = True
         self.file    = file
         self.obj     = obj
@@ -1903,7 +1903,7 @@ class WriteBinary:
                        )
 
     def _write(self,mode='w+b'):
-        f = 'shared.WriteBinary._write'
+        f = '[shared] shared.WriteBinary._write'
         log.append (f,_('INFO')
                    ,_('Write file "%s"') % self.file
                    )
@@ -1926,7 +1926,7 @@ class WriteBinary:
                      )
 
     def append(self,fragm):
-        f = 'shared.WriteBinary.append'
+        f = '[shared] shared.WriteBinary.append'
         if self.Success:
             self.fragm = fragm
             if self.fragm:
@@ -1941,7 +1941,7 @@ class WriteBinary:
                        )
 
     def write(self):
-        f = 'shared.WriteBinary.write'
+        f = '[shared] shared.WriteBinary.write'
         if self.Success:
             if rewrite(self.file,AskRewrite=self.AskRewrite):
                 self._write(mode='w+b')
@@ -1970,7 +1970,7 @@ class Dic:
             already may contain duplicates (dictionaries with newly
             added entries do not have duplicates due to new algorithms).
         '''
-        f = 'shared.Dic._delete_duplicates'
+        f = '[shared] shared.Dic._delete_duplicates'
         if self.Success:
             if self.Sortable:
                 old = self.lines()
@@ -1998,7 +1998,7 @@ class Dic:
 
     # We can use this as an updater, even without relying on Success
     def _join(self):
-        f = 'shared.Dic._join'
+        f = '[shared] shared.Dic._join'
         if len(self.orig) == len(self.transl):
             self._lines = len(self.orig)
             self._list = []
@@ -2039,7 +2039,7 @@ class Dic:
             self.Success = False
             
     def warn(self):
-        f = 'shared.Dic.warn'
+        f = '[shared] shared.Dic.warn'
         if self.errors:
             message = ', '.join(self.errors)
             objs.mes (f,_('WARNING')
@@ -2052,7 +2052,7 @@ class Dic:
                    to memory.
             #todo: skip repetitions
         '''
-        f = 'shared.Dic.append'
+        f = '[shared] shared.Dic.append'
         if self.Success:
             if original and translation:
                 self.orig.append(original)
@@ -2072,7 +2072,7 @@ class Dic:
         ''' #todo: fix: an entry which is only one in a dictionary is
             not deleted.
         '''
-        f = 'shared.Dic.delete_entry'
+        f = '[shared] shared.Dic.delete_entry'
         if self.Success:
             entry_no -= 1
             if entry_no >= 0 and entry_no < self.lines():
@@ -2096,7 +2096,7 @@ class Dic:
         ''' #todo: Add checking orig and transl (where needed) for
             a wrapper function.
         '''
-        f = 'shared.Dic.edit_entry'
+        f = '[shared] shared.Dic.edit_entry'
         if self.Success:
             entry_no -= 1
             if entry_no >= 0 and entry_no < self.lines():
@@ -2145,7 +2145,7 @@ class Dic:
 
     # Sort a dictionary with the longest lines going first
     def sort(self):
-        f = 'shared.Dic.sort'
+        f = '[shared] shared.Dic.sort'
         if self.Success:
             if self.Sortable:
                 tmp_list = []
@@ -2171,7 +2171,7 @@ class Dic:
                        )
 
     def tail(self):
-        f = 'shared.Dic.tail'
+        f = '[shared] shared.Dic.tail'
         tail_text = ''
         if self.Success:
             tail_len = globs['int']['tail_len']
@@ -2191,7 +2191,7 @@ class Dic:
         return tail_text
 
     def write(self):
-        f = 'shared.Dic.write'
+        f = '[shared] shared.Dic.write'
         if self.Success:
             WriteTextFile (file       = self.file
                           ,AskRewrite = False
@@ -2212,7 +2212,7 @@ class ReadBinary:
         self.Success = h_file.Success
 
     def _load(self):
-        f = 'shared.ReadBinary._load'
+        f = '[shared] shared.ReadBinary._load'
         log.append (f,_('INFO')
                    ,_('Load file "%s"') % self.file
                    )
@@ -2231,7 +2231,7 @@ class ReadBinary:
 
     #todo: load fragments appended to a binary
     def load(self):
-        f = 'shared.ReadBinary.load'
+        f = '[shared] shared.ReadBinary.load'
         if self.Success:
             self._load()
         else:
@@ -2257,7 +2257,7 @@ class CreateInstance:
 class Directory:
 
     def __init__(self,path,dest=''):
-        f = 'shared.Directory.__init__'
+        f = '[shared] shared.Directory.__init__'
         self.values()
         if path:
             # Removes trailing slashes if necessary
@@ -2287,7 +2287,7 @@ class Directory:
         self._extensions_low = []
     
     def extensions(self): # with a dot
-        f = 'shared.Directory.extensions'
+        f = '[shared] shared.Directory.extensions'
         if self.Success:
             if not self._extensions:
                 for file in self.rel_files():
@@ -2301,7 +2301,7 @@ class Directory:
         return self._extensions
 
     def extensions_low(self): # with a dot
-        f = 'shared.Directory.extensions_low'
+        f = '[shared] shared.Directory.extensions_low'
         if self.Success:
             if not self._extensions_low:
                 self.extensions()
@@ -2312,7 +2312,7 @@ class Directory:
         return self._extensions_low
 
     def delete_empty(self):
-        f = 'shared.Directory.delete_empty'
+        f = '[shared] shared.Directory.delete_empty'
         if self.Success:
             # Do not delete nested folders
             if not os.listdir(self.dir):
@@ -2323,7 +2323,7 @@ class Directory:
                        )
     
     def delete(self):
-        f = 'shared.Directory.delete'
+        f = '[shared] shared.Directory.delete'
         if self.Success:
             log.append (f,_('INFO')
                        ,_('Delete "%s"') % self.dir
@@ -2349,7 +2349,7 @@ class Directory:
 
     # Create a list of objects with an absolute path
     def list(self):
-        f = 'shared.Directory.list'
+        f = '[shared] shared.Directory.list'
         if self.Success:
             if not self._list:
                 self._list = os.listdir(self.dir)
@@ -2377,7 +2377,7 @@ class Directory:
 
     # Needs absolute path
     def dirs(self):
-        f = 'shared.Directory.dirs'
+        f = '[shared] shared.Directory.dirs'
         if self.Success:
             if not self._dirs:
                 for i in range(len(self.list())):
@@ -2392,7 +2392,7 @@ class Directory:
 
     # Needs absolute path
     def files(self):
-        f = 'shared.Directory.files'
+        f = '[shared] shared.Directory.files'
         if self.Success:
             if not self._files:
                 for i in range(len(self.list())):
@@ -2406,7 +2406,7 @@ class Directory:
         return self._files
 
     def copy(self):
-        f = 'shared.Directory.copy'
+        f = '[shared] shared.Directory.copy'
         if self.Success:
             if self.dir.lower() == self.dest.lower():
                 objs.mes (f,_('ERROR')
@@ -2425,7 +2425,7 @@ class Directory:
                        )
 
     def _copy(self):
-        f = 'shared.Directory._copy'
+        f = '[shared] shared.Directory._copy'
         log.append (f,_('INFO')
                    ,_('Copy "%s" to "%s"') % (self.dir,self.dest)
                    )
@@ -2457,7 +2457,7 @@ class Config:
         self.missing_sections = 0
 
     def load(self):
-        f = 'shared.Config.load'
+        f = '[shared] shared.Config.load'
         if self.Success:
             for i in range(len(self.sections)):
                 for option in globs[self.sections_abbr[i]]:
@@ -2479,7 +2479,7 @@ class Config:
                        )
 
     def check(self):
-        f = 'shared.Config.check'
+        f = '[shared] shared.Config.check'
         if self.Success:
             for i in range(len(self.sections)):
                 if config_parser.has_section(self.sections[i]):
@@ -2512,7 +2512,7 @@ class Config:
                        )
 
     def open(self):
-        f = 'shared.Config.open'
+        f = '[shared] shared.Config.open'
         if self.Success:
             try:
                 config_parser.read(self.path,'utf-8')
@@ -2573,7 +2573,7 @@ class Online:
 
     # Open a URL in a default browser
     def browse(self):
-        f = 'shared.Online.browse'
+        f = '[shared] shared.Online.browse'
         try:
             webbrowser.open(self.url(),new=2,autoraise=True)
         except:
@@ -2584,7 +2584,7 @@ class Online:
 
     # Create a correct online link (URI => URL)
     def url(self):
-        f = 'shared.Online.url'
+        f = '[shared] shared.Online.url'
         if not self._url:
             self._url = self.base_str % urllib.parse.quote(self.bytes())
             log.append (f,_('DEBUG')
@@ -2649,7 +2649,7 @@ class Diff:
                      + '\n'
 
     def compare(self):
-        f = 'shared.Diff.compare'
+        f = '[shared] shared.Diff.compare'
         if self.text1 and self.text2:
             if self.text1 == self.text2:
                 objs.mes (f,_('INFO')
@@ -2674,7 +2674,7 @@ class Diff:
 class Shortcut:
 
     def __init__(self,symlink='',path=''):
-        f = 'shared.Shortcut.__init__'
+        f = '[shared] shared.Shortcut.__init__'
         self.Success = True
         self.path    = path
         self.symlink = symlink
@@ -2711,7 +2711,7 @@ class Shortcut:
         return self.path
 
     def _delete(self):
-        f = 'shared.Shortcut._delete'
+        f = '[shared] shared.Shortcut._delete'
         log.append (f,_('INFO')
                    ,_('Delete the symbolic link "%s"') % self.symlink
                    )
@@ -2724,7 +2724,7 @@ class Shortcut:
                      )
 
     def delete(self):
-        f = 'shared.Shortcut.delete'
+        f = '[shared] shared.Shortcut.delete'
         if self.Success:
             if os.path.islink(self.symlink):
                 self._delete()
@@ -2734,7 +2734,7 @@ class Shortcut:
                        )
 
     def _create_unix(self):
-        f = 'shared.Shortcut._create_unix'
+        f = '[shared] shared.Shortcut._create_unix'
         log.append (f,_('INFO')
                    ,_('Create a symbolic link "%s"') % self.symlink
                    )
@@ -2747,7 +2747,7 @@ class Shortcut:
                      )
 
     def create_unix(self):
-        f = 'shared.Shortcut.create_unix'
+        f = '[shared] shared.Shortcut.create_unix'
         self.delete()
         if os.path.exists(self.symlink):
             if os.path.islink(self.symlink):
@@ -2763,7 +2763,7 @@ class Shortcut:
             self._create_unix()
 
     def _create_win(self):
-        f = 'shared.Shortcut._create_win'
+        f = '[shared] shared.Shortcut._create_win'
         log.append (f,_('INFO')
                    ,_('Create a symbolic link "%s"') % self.symlink
                    )
@@ -2788,7 +2788,7 @@ class Shortcut:
             will work as expected.
         '''
         # Do not forget: windows paths must have a double backslash!
-        f = 'shared.Shortcut.create_win'
+        f = '[shared] shared.Shortcut.create_win'
         if self.Success:
             if not Path(self.symlink).extension().lower() == '.lnk':
                 self.symlink += '.lnk'
@@ -2805,7 +2805,7 @@ class Shortcut:
                        )
 
     def create(self):
-        f = 'shared.Shortcut.create'
+        f = '[shared] shared.Shortcut.create'
         if self.Success:
             if oss.win():
                 self.create_win()
@@ -2841,7 +2841,7 @@ class Email:
                        )
     
     def reset(self,email,subject='',message='',attachment=''):
-        f = 'shared.Email.reset'
+        f = '[shared] shared.Email.reset'
         self.Success = True
         ''' A single address or multiple comma-separated addresses (not
             all mail agents support ';'). #note that, however, Outlook
@@ -2869,7 +2869,7 @@ class Email:
 
     # Screen symbols that may cause problems when composing 'mailto'
     def sanitize(self,value):
-        f = 'shared.Email.sanitize'
+        f = '[shared] shared.Email.sanitize'
         if self.Success:
             return str(Online(search_str=value).url())
         else:
@@ -2878,7 +2878,7 @@ class Email:
                        )
     
     def browser(self):
-        f = 'shared.Email.browser'
+        f = '[shared] shared.Email.browser'
         if self.Success:
             try:
                 if self._attachment:
@@ -2914,7 +2914,7 @@ class Email:
                        )
     
     def create(self):
-        f = 'shared.Email.create'
+        f = '[shared] shared.Email.create'
         if self.Success:
             if not self.evolution() and not self.thunderbird() \
             and not self.outlook():
@@ -2929,7 +2929,7 @@ class Email:
                        
     #note: this does not work in wine!
     def outlook(self):
-        f = 'shared.Email.outlook'
+        f = '[shared] shared.Email.outlook'
         if oss.win():
             try:
                 import win32com.client
@@ -2954,7 +2954,7 @@ class Email:
                        )
     
     def thunderbird(self):
-        f = 'shared.Email.thunderbird'
+        f = '[shared] shared.Email.thunderbird'
         if self.Success:
             app = '/usr/bin/thunderbird'
             if os.path.isfile(app):
@@ -2986,7 +2986,7 @@ class Email:
                        )
     
     def evolution(self):
-        f = 'shared.Email.evolution'
+        f = '[shared] shared.Email.evolution'
         if self.Success:
             app = '/usr/bin/evolution'
             if os.path.isfile(app):
@@ -3176,7 +3176,7 @@ class Word:
 
     # Do only after Words.sent_nos
     def print(self,no=0):
-        f = 'shared.Word.print'
+        f = '[shared] shared.Word.print'
         log.append (f,_('DEBUG')
                    ,'no: %d; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _ref: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s; _nmf: %s; _nml: %s' \
                    % (no,str(self._p),str(self._n)
@@ -3241,7 +3241,7 @@ class Word:
 
     # Wrong selection upon search: see an annotation to SearchBox
     def tf(self):
-        f = 'shared.Word.tf'
+        f = '[shared] shared.Word.tf'
         if self._tf is None:
             self._tf = '1.0'
             # This could happen if double line breaks were not deleted
@@ -3260,7 +3260,7 @@ class Word:
         return self._tf
 
     def tl(self):
-        f = 'shared.Word.tl'
+        f = '[shared] shared.Word.tl'
         if self._tl is None:
             self._tl = '1.1'
             # This could happen if double line breaks were not deleted
@@ -3285,7 +3285,7 @@ class Word:
 class Words:
 
     def __init__(self,text,Auto=False):
-        f = 'shared.Words.__init__'
+        f = '[shared] shared.Words.__init__'
         self.Success = True
         self.Auto    = Auto
         self.values()
@@ -3319,7 +3319,7 @@ class Words:
         self._text_n      = ''
 
     def split(self):
-        f = 'shared.Words.split'
+        f = '[shared] shared.Words.split'
         if self.Success:
             if not self.len():
                 lst_p = self._text_p.split(' ')
@@ -3346,7 +3346,7 @@ class Words:
                        )
 
     def print(self):
-        f = 'shared.Words.print'
+        f = '[shared] shared.Words.print'
         if self.Success:
             for i in range(self.len()):
                 self.words[i].print(no=i)
@@ -3378,7 +3378,7 @@ class Words:
             self.words[i]._sents_len = sents_len
 
     def sent_nos(self):
-        f = 'shared.Words.sent_nos'
+        f = '[shared] shared.Words.sent_nos'
         if self.Success:
             if self.len() > 0:
                 if self.words[self._no]._sent_no is None:
@@ -3389,7 +3389,7 @@ class Words:
                        )
 
     def sent_p(self):
-        f = 'shared.Words.sent_p'
+        f = '[shared] shared.Words.sent_p'
         if self.Success:
             sent_no = self.sent_no()
             sent_no = Input (title = f
@@ -3408,7 +3408,7 @@ class Words:
                        )
 
     def sent_no(self):
-        f = 'shared.Words.sent_no'
+        f = '[shared] shared.Words.sent_no'
         if self.Success:
             self.sent_nos()
             return self.words[self._no]._sent_no
@@ -3418,7 +3418,7 @@ class Words:
                        )
 
     def next_ref(self):
-        f = 'shared.Words.next_ref'
+        f = '[shared] shared.Words.next_ref'
         if self.Success:
             old = self._no
             Found = False
@@ -3437,7 +3437,7 @@ class Words:
                        )
 
     def prev_ref(self):
-        f = 'shared.Words.prev_ref'
+        f = '[shared] shared.Words.prev_ref'
         if self.Success:
             old = self._no
             Found = False
@@ -3460,7 +3460,7 @@ class Words:
             self.words[i].spell_ru()
 
     def spellcheck_ru(self):
-        f = 'shared.Words.spellcheck_ru'
+        f = '[shared] shared.Words.spellcheck_ru'
         if self.Success:
             if self.len() > 0:
                 if self.words[0]._spell_ru is None:
@@ -3475,7 +3475,7 @@ class Words:
             self.words[i].ref()
 
     def refs(self):
-        f = 'shared.Words.refs'
+        f = '[shared] shared.Words.refs'
         if self.Success:
             if self.len() > 0:
                 if self.words[0]._ref is None:
@@ -3487,7 +3487,7 @@ class Words:
 
     # Needed for text comparison
     def list_nm(self):
-        f = 'shared.Words.list_nm'
+        f = '[shared] shared.Words.list_nm'
         if self.Success:
             if not self._list_nm:
                 cur_len_nm = 0
@@ -3507,7 +3507,7 @@ class Words:
 
     # Needed for text comparison
     def text_nm(self):
-        f = 'shared.Words.text_nm'
+        f = '[shared] shared.Words.text_nm'
         if self.Success:
             if not self._text_nm:
                 self._text_nm = ' '.join(self.list_nm())
@@ -3518,7 +3518,7 @@ class Words:
                        )
 
     def no_by_pos_p(self,pos):
-        f = 'shared.Words.no_by_pos_p'
+        f = '[shared] shared.Words.no_by_pos_p'
         if self.Success:
             result = self._no
             for i in range(self.len()):
@@ -3532,7 +3532,7 @@ class Words:
                        )
 
     def no_by_pos_n(self,pos):
-        f = 'shared.Words.no_by_pos_n'
+        f = '[shared] shared.Words.no_by_pos_n'
         if self.Success:
             result = self._no
             for i in range(self.len()):
@@ -3547,7 +3547,7 @@ class Words:
 
     # Call 'list_nm()' first
     def no_by_pos_nm(self,pos):
-        f = 'shared.Words.no_by_pos_nm'
+        f = '[shared] shared.Words.no_by_pos_nm'
         if self.Success:
             result = self._no
             for i in range(self.len()):
@@ -3561,7 +3561,7 @@ class Words:
                        )
 
     def no_by_tk(self,tkpos):
-        f = 'shared.Words.no_by_tk'
+        f = '[shared] shared.Words.no_by_tk'
         if self.Success:
             if tkpos:
                 lst = tkpos.split('.')
@@ -3600,7 +3600,7 @@ class Words:
                        )
 
     def nos_by_sent_no(self,sent_no=0):
-        f = 'shared.Words.nos_by_sent_no'
+        f = '[shared] shared.Words.nos_by_sent_no'
         result = (0,0)
         if self.Success:
             sent_no = Input (title = f
@@ -3627,7 +3627,7 @@ class Words:
         return result
 
     def complete(self):
-        f = 'shared.Words.complete'
+        f = '[shared] shared.Words.complete'
         if self.Success:
             self.sent_nos()
             for i in range(self.len()):
@@ -3656,7 +3656,7 @@ class Search:
             self.reset(text=text,search=search)
 
     def reset(self,text,search):
-        f = 'shared.Search.reset'
+        f = '[shared] shared.Search.reset'
         self.Success    = True
         self.i          = 0
         self._next_loop = []
@@ -3670,7 +3670,7 @@ class Search:
             self.Success = False
 
     def add(self):
-        f = 'shared.Search.add'
+        f = '[shared] shared.Search.add'
         if self.Success:
             if len(self._text) > self.i + len(self._search) - 1:
                 self.i += len(self._search)
@@ -3680,7 +3680,7 @@ class Search:
                        )
 
     def next(self):
-        f = 'shared.Search.next'
+        f = '[shared] shared.Search.next'
         if self.Success:
             result = self._text.find(self._search,self.i)
             if result != -1:
@@ -3693,7 +3693,7 @@ class Search:
                        )
 
     def prev(self):
-        f = 'shared.Search.prev'
+        f = '[shared] shared.Search.prev'
         if self.Success:
             ''' rfind, unlike find, does not include limits, so we can
                 use it to search backwards
@@ -3708,7 +3708,7 @@ class Search:
                        )
 
     def next_loop(self):
-        f = 'shared.Search.next_loop'
+        f = '[shared] shared.Search.next_loop'
         if self.Success:
             if not self._next_loop:
                 self.i = 0
@@ -3725,7 +3725,7 @@ class Search:
         return self._next_loop
 
     def prev_loop(self):
-        f = 'shared.Search.prev_loop'
+        f = '[shared] shared.Search.prev_loop'
         if self.Success:
             if not self._prev_loop:
                 self.i = len(self._text)
@@ -3848,7 +3848,7 @@ class Decline:
         return result
 
     def decline(self):
-        f = 'shared.Decline.decline'
+        f = '[shared] shared.Decline.decline'
         for i in range(len(self._list)):
             # Inflecting '', None, digits and Latin words *only* fails
             ''' log.append (f,_('DEBUG')
@@ -3872,7 +3872,7 @@ class Decline:
         return self
 
     def number(self):
-        f = 'shared.Decline.number'
+        f = '[shared] shared.Decline.number'
         if not self._number:
             self._number = 'sing'
             # Needed by 'max'
@@ -3891,7 +3891,7 @@ class Decline:
         return self._number
 
     def case(self):
-        f = 'shared.Decline.case'
+        f = '[shared] shared.Decline.case'
         if not self._case:
             self._case = 'nomn'
             # Needed by 'max'
@@ -4004,7 +4004,7 @@ class MessagePool:
             self.delete_first()
 
     def add(self,message):
-        f = 'shared.MessagePool.add'
+        f = '[shared] shared.MessagePool.add'
         if message:
             self.free()
             self.pool.append(message)
@@ -4014,7 +4014,7 @@ class MessagePool:
                        )
 
     def delete_first(self):
-        f = 'shared.MessagePool.delete_first'
+        f = '[shared] shared.MessagePool.delete_first'
         if len(self.pool) > 0:
             del self.pool[0]
         else:
@@ -4023,7 +4023,7 @@ class MessagePool:
                        )
 
     def delete_last(self):
-        f = 'shared.MessagePool.delete_last'
+        f = '[shared] shared.MessagePool.delete_last'
         if len(self.pool) > 0:
             del self.pool[-1]
         else:
@@ -4078,7 +4078,7 @@ class Table:
                  ,Shorten=True,MaxRow=18
                  ,MaxRows=20
                  ):
-        f = 'shared.Table.__init__'
+        f = '[shared] shared.Table.__init__'
         self._headers = headers
         self._rows    = rows
         self.Shorten  = Shorten
@@ -4107,7 +4107,7 @@ class Table:
                 self._headers = result[0]
 
     def _shorten_rows(self):
-        f = 'shared.Table._shorten_rows'
+        f = '[shared] shared.Table._shorten_rows'
         if self.MaxRows < 2 or self.MaxRows > len(self._rows):
             self.MaxRows = len(self._rows)
             log.append (f,_('INFO')
@@ -4130,7 +4130,7 @@ class Table:
                         self._rows[i][j] = self._rows[i][j][0:self.MaxRow]
 
     def shorten(self):
-        f = 'shared.Table.shorten'
+        f = '[shared] shared.Table.shorten'
         if self.Success:
             if self.Shorten:
                 self._shorten_headers()
@@ -4142,7 +4142,7 @@ class Table:
                        )
 
     def print(self):
-        f = 'shared.Table.print'
+        f = '[shared] shared.Table.print'
         if self.Success:
             self.shorten()
             obj = objs.pretty_table()(self._headers)
@@ -4232,7 +4232,7 @@ class Get:
             <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED].
             To get rid of this error, we use this small workaround.
         '''
-        f = 'shared.Get.unverified'
+        f = '[shared] shared.Get.unverified'
         if not self.Verify:
             if hasattr(ssl,'_create_unverified_context'):
                 ssl._create_default_https_context = ssl._create_unverified_context
@@ -4245,7 +4245,7 @@ class Get:
         ''' Changing UA allows us to avoid a bot protection
             ('Error 403: Forbidden').
         '''
-        f = 'shared.Get._get'
+        f = '[shared] shared.Get._get'
         try:
             req = urllib.request.Request (url     = self._url
                                          ,data    = None
@@ -4270,7 +4270,7 @@ class Get:
         ''' Set 'encoding' to None to cancel decoding. This is useful
             if we are downloading a non-text content.
         '''
-        f = 'shared.Get.decode'
+        f = '[shared] shared.Get.decode'
         if self._encoding:
             if self._html:
                 try:
@@ -4288,7 +4288,7 @@ class Get:
                            )
     
     def run(self):
-        f = 'shared.Get.run'
+        f = '[shared] shared.Get.run'
         if self._url:
             # Safely use URL as a string
             if isinstance(self._url,str):
@@ -4314,7 +4314,7 @@ class Get:
 class References:
     
     def __init__(self,words1,words2):
-        f = 'shared.References.__init__'
+        f = '[shared] shared.References.__init__'
         self.words1 = words1
         self.words2 = words2
         if self.words1 and self.words2 and len(self.words1.words) \
@@ -4330,7 +4330,7 @@ class References:
                        )
         
     def ref_before(self,word_no):
-        f = 'shared.References.ref_before'
+        f = '[shared] shared.References.ref_before'
         if self.Success:
             if word_no < len(self.words1.words):
                 while word_no >= 0:
@@ -4350,7 +4350,7 @@ class References:
                        )
         
     def ref_after(self,word_no):
-        f = 'shared.References.ref_after'
+        f = '[shared] shared.References.ref_after'
         if self.Success:
             if word_no < len(self.words1.words):
                 while word_no < len(self.words1.words):
@@ -4370,7 +4370,7 @@ class References:
                        )
     
     def nearest_ref(self,word_no):
-        f = 'shared.References.nearest_ref'
+        f = '[shared] shared.References.nearest_ref'
         if self.Success:
             word_no1 = self.ref_before(word_no)
             word_no2 = self.ref_after(word_no)
@@ -4402,7 +4402,7 @@ class References:
                        )
                 
     def repeated(self,word_no):
-        f = 'shared.References.repeated'
+        f = '[shared] shared.References.repeated'
         if self.Success:
             if word_no < len(self.words1.words):
                 count = 0
@@ -4421,7 +4421,7 @@ class References:
                        )
         
     def repeated2(self,word_n,count):
-        f = 'shared.References.repeated2'
+        f = '[shared] shared.References.repeated2'
         if self.Success:
             tmp = 0
             for i in range(len(self.words2.words)):
@@ -4466,7 +4466,7 @@ class Links:
             self.link()
             
     def link(self):
-        f = 'shared.Links.link'
+        f = '[shared] shared.Links.link'
         pos = self._pos + len(self._root)
         if pos >= len(self._text):
             log.append (f,_('WARNING')
@@ -4522,7 +4522,7 @@ class FilterList:
                        and isinstance(blacklist,list)
     
     def block(self):
-        f = 'shared.FilterList.block'
+        f = '[shared] shared.FilterList.block'
         if self.Success:
             # Actually, there is no reason to use 'strip' here
             self._block = [item.lower() for item in self._block if item]
@@ -4532,7 +4532,7 @@ class FilterList:
                        )
     
     def list(self):
-        f = 'shared.FilterList.list'
+        f = '[shared] shared.FilterList.list'
         if self.Success:
             if not self._list:
                 # Those are base names
@@ -4544,7 +4544,7 @@ class FilterList:
                        )
     
     def filter(self):
-        f = 'shared.FilterList.filter'
+        f = '[shared] shared.FilterList.filter'
         if self.Success:
             match = []
             for item in self._list:
@@ -4670,7 +4670,7 @@ if __name__ == '__main__':
     ''' #note: Focusing on the widget is lost randomly (is assigned to
         root). This could be a Tkinter/DM bug.
     '''
-    f = 'shared.__main__'
+    f = '[shared] shared.__main__'
     Silent = False
     if not Silent:
         import sharedGUI as sg
