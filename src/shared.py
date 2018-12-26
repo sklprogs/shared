@@ -145,32 +145,6 @@ import datetime
 
 
 
-def rewrite(dest,AskRewrite=True):
-    f = '[shared] shared.rewrite'
-    ''' - We do not put this into File class because we do not need to
-          check existence.
-        - We use AskRewrite just to shorten other procedures (to be able
-          to use 'rewrite' silently in the code without ifs)
-    '''
-    if AskRewrite and os.path.isfile(dest):
-        ''' We don't actually need to force rewriting or delete the file
-            before rewriting
-        '''
-        obj = objs.mes (f,_('QUESTION')
-                        ,_('ATTENTION: Do yo really want to rewrite file "%s"?')\
-                        % dest
-                        )
-        # We do not have 'Yes' in a Silent mode
-        if hasattr(obj,'Yes'):
-            return obj.Yes
-    else:
-        ''' We return True so we may proceed with writing if the file
-            has not been found
-        '''
-        return True
-
-
-
 class Launch:
 
     #note: 'Block' works only a 'custom_app' is set
@@ -292,13 +266,13 @@ class Launch:
 
 class WriteTextFile:
 
-    def __init__(self,file,AskRewrite=True,UseLog=True):
+    def __init__(self,file,Rewrite=False,UseLog=True):
         f = '[shared] shared.WriteTextFile.__init__'
-        self.file       = file
-        self.text       = ''
-        self.AskRewrite = AskRewrite
-        self.UseLog     = UseLog
-        self.Success    = True
+        self.file    = file
+        self.text    = ''
+        self.Rewrite = Rewrite
+        self.UseLog  = UseLog
+        self.Success = True
         if not self.file:
             if self.UseLog:
                 objs.mes (f,_('ERROR')
@@ -364,7 +338,9 @@ class WriteTextFile:
         if self.Success:
             self.text = text
             if self.text:
-                if rewrite(self.file,AskRewrite=self.AskRewrite):
+                if com.rewrite (file    = self.file
+                               ,Rewrite = self.Rewrite
+                               ):
                     self._write('w')
             else:
                 if self.UseLog:
@@ -398,9 +374,9 @@ class Log:
         if not Use:
             self.Success = False
         if self.Write:
-            self.h_write = WriteTextFile (file       = self.file
-                                         ,AskRewrite = False
-                                         ,UseLog     = False
+            self.h_write = WriteTextFile (file    = self.file
+                                         ,Rewrite = True
+                                         ,UseLog  = False
                                          )
             self.Success = self.h_write.Success
             self.clear()
@@ -706,8 +682,8 @@ class TextDic:
     def write(self):
         f = '[shared] shared.TextDic.write'
         if self.Success:
-            WriteTextFile (file       = self.file
-                          ,AskRewrite = False
+            WriteTextFile (file    = self.file
+                          ,Rewrite = True
                           ).write(self.get())
         else:
             log.append (f,_('WARNING')
@@ -1570,12 +1546,12 @@ class Time:
 
 class File:
 
-    def __init__(self,file,dest=None,AskRewrite=True):
+    def __init__(self,file,dest=None,Rewrite=False):
         f = '[shared] shared.File.__init__'
-        self.Success    = True
-        self.AskRewrite = AskRewrite
-        self.file       = file
-        self.dest       = dest
+        self.Success = True
+        self.Rewrite = Rewrite
+        self.file    = file
+        self.dest    = dest
         # This will allow to skip some checks for destination
         if not self.dest:
             self.dest = self.file
@@ -1664,7 +1640,9 @@ class File:
                          ,_('Unable to copy the file "%s" to iself!') \
                          % self.file
                          )
-            elif rewrite(self.dest,AskRewrite=self.AskRewrite):
+            elif com.rewrite (file    = self.dest
+                             ,Rewrite = self.Rewrite
+                             ):
                 Success = self._copy()
             else:
                 log.append (f,_('INFO')
@@ -1696,17 +1674,6 @@ class File:
                        )
         return Success
 
-    #todo: del
-    def delete_wait(self):
-        f = '[shared] shared.File.delete_wait'
-        if self.Success:
-            while os.path.exists(self.file) and not self.delete():
-                time.sleep(0.3)
-        else:
-            log.append (f,_('WARNING')
-                       ,_('Operation has been canceled.')
-                       )
-
     def modification_time(self):
         f = '[shared] shared.File.modification_time'
         if self.Success:
@@ -1733,7 +1700,9 @@ class File:
                          ,_('Moving is not necessary, because the source and destination are identical (%s).')\
                          % self.file
                          )
-            elif rewrite(self.dest,AskRewrite=self.AskRewrite):
+            elif com.rewrite (file    = self.dest
+                             ,Rewrite = self.Rewrite
+                             ):
                 Success = self._move()
             else:
                 log.append (f,_('INFO')
@@ -1888,14 +1857,14 @@ class Path:
 
 class WriteBinary:
 
-    def __init__(self,file,obj,AskRewrite=False):
+    def __init__(self,file,obj,Rewrite=True):
         f = '[shared] shared.WriteBinary.__init__'
         self.Success = True
         self.file    = file
         self.obj     = obj
         if self.file and self.obj:
-            self.AskRewrite = AskRewrite
-            self.fragm = None
+            self.Rewrite = Rewrite
+            self.fragm   = None
         else:
             self.Success = False
             log.append (f,_('WARNING')
@@ -1943,7 +1912,9 @@ class WriteBinary:
     def write(self):
         f = '[shared] shared.WriteBinary.write'
         if self.Success:
-            if rewrite(self.file,AskRewrite=self.AskRewrite):
+            if com.rewrite (file    = self.file
+                           ,Rewrite = self.Rewrite
+                           ):
                 self._write(mode='w+b')
             else:
                 log.append (f,_('INFO')
@@ -2193,8 +2164,8 @@ class Dic:
     def write(self):
         f = '[shared] shared.Dic.write'
         if self.Success:
-            WriteTextFile (file       = self.file
-                          ,AskRewrite = False
+            WriteTextFile (file    = self.file
+                          ,Rewrite = True
                           ).write(self.get())
         else:
             log.append (f,_('WARNING')
@@ -2608,9 +2579,13 @@ class Diff:
 
     def __init__(self):
         self.Custom      = False
-        self.wda_html    = objs.tmpfile(suffix='.htm',Delete=0)
-        self.h_wda_write = WriteTextFile (file       = self.wda_html
-                                         ,AskRewrite = False
+        ''' Some browsers update web-page as soon as we rewrite it, and
+            some even do not open the same file again. So, we have to
+            create a new temporary file each time.
+        '''
+        self.wda_html    = com.tmpfile(suffix='.htm',Delete=0)
+        self.h_wda_write = WriteTextFile (file    = self.wda_html
+                                         ,Rewrite = True
                                          )
 
     def reset(self,text1,text2,file=None):
@@ -2621,8 +2596,8 @@ class Diff:
             self.Custom  = True
             self.file    = file
             self._header = ''
-            self.h_write = WriteTextFile (file       = self.file
-                                         ,AskRewrite = True
+            self.h_write = WriteTextFile (file    = self.file
+                                         ,Rewrite = False
                                          )
             self.h_path  = Path(self.file)
         else:
@@ -3015,23 +2990,6 @@ class Email:
             log.append (f,_('WARNING')
                        ,_('Operation has been canceled.')
                        )
-
-
-
-def lang():
-    result = locale.getdefaultlocale()
-    if result and len(result) > 0 and result[0]:
-        if 'ru' in result[0]:
-            globs['ui_lang'] = 'ru'
-            globs['license_url'] = gpl3_url_ru
-        else:
-            globs['ui_lang'] = 'en'
-            globs['license_url'] = gpl3_url_en
-    else:
-        globs['ui_lang'] = 'en'
-
-
-lang()
 
 
 
@@ -3916,9 +3874,16 @@ class Objects:
     '''
     def __init__(self):
         self._enchant = self._morph = self._pretty_table = self._diff \
-                      = self._pdir = self._tmpfile = self._mes \
-                      = self._online_mt = self._online_other = None
+                      = self._pdir = self._mes = self._online_mt \
+                      = self._online_other = self._tmpfile = None
 
+    def tmpfile(self,suffix='.htm',Delete=0):
+        if self._tmpfile is None:
+            self._tmpfile = com.tmpfile (suffix = suffix
+                                        ,Delete = Delete
+                                        )
+        return self._tmpfile
+    
     def online_mt(self):
         if self._online_mt is None:
             self._online_mt = Online(MTSpecific=True)
@@ -3954,15 +3919,6 @@ class Objects:
                              ,message = message
                              )
     
-    def tmpfile(self,suffix='.htm',Delete=0):
-        if not self._tmpfile:
-            self._tmpfile = tempfile.NamedTemporaryFile (mode     = 'w'
-                                                        ,encoding = 'UTF-8'
-                                                        ,suffix   = suffix
-                                                        ,delete   = Delete
-                                                        ).name
-        return self._tmpfile
-
     def pdir(self):
         if not self._pdir:
             self._pdir = ProgramDir()
@@ -4621,7 +4577,51 @@ class Home:
 class Commands:
 
     def __init__(self):
-        pass
+        self.lang()
+    
+    def rewrite(self,file,Rewrite=False):
+        ''' - We do not put this into File class because we do not need
+              to check existence.
+            - We use 'Rewrite' just to shorten other procedures (to be
+              able to use 'self.rewrite' silently in the code without
+              ifs).
+        '''
+        f = '[shared] shared.Commands.rewrite'
+        if not Rewrite and os.path.isfile(file):
+            ''' We don't actually need to force rewriting or delete
+                the file before rewriting.
+            '''
+            obj = objs.mes (f,_('QUESTION')
+                            ,_('ATTENTION: Do yo really want to rewrite file "%s"?')\
+                            % file
+                            )
+            # We do not have 'Yes' in a Silent mode
+            if hasattr(obj,'Yes'):
+                return obj.Yes
+        else:
+            ''' We return True so we may proceed with writing
+                if the file has not been found.
+            '''
+            return True
+    
+    def lang(self):
+        result = locale.getdefaultlocale()
+        if result and len(result) > 0 and result[0]:
+            if 'ru' in result[0]:
+                globs['ui_lang'] = 'ru'
+                globs['license_url'] = gpl3_url_ru
+            else:
+                globs['ui_lang'] = 'en'
+                globs['license_url'] = gpl3_url_en
+        else:
+            globs['ui_lang'] = 'en'
+    
+    def tmpfile(self,suffix='.htm',Delete=0):
+        return tempfile.NamedTemporaryFile (mode     = 'w'
+                                           ,encoding = 'UTF-8'
+                                           ,suffix   = suffix
+                                           ,delete   = Delete
+                                           ).name
     
     def human_time(self,delta):
         f = 'Commands.human_time'
