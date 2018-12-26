@@ -2577,7 +2577,7 @@ class Online:
 
 class Diff:
 
-    def __init__(self):
+    def __init__(self,text1='',text2='',file=None):
         self.Custom      = False
         ''' Some browsers update web-page as soon as we rewrite it, and
             some even do not open the same file again. So, we have to
@@ -2587,6 +2587,11 @@ class Diff:
         self.h_wda_write = WriteTextFile (file    = self.wda_html
                                          ,Rewrite = True
                                          )
+        if text1 or text2:
+            self.reset (text1 = text1
+                       ,text2 = text2
+                       ,file  = file
+                       )
 
     def reset(self,text1,text2,file=None):
         self._diff = ''
@@ -3873,8 +3878,8 @@ class Objects:
         through different programs both using 'shared.py').
     '''
     def __init__(self):
-        self._enchant = self._morph = self._pretty_table = self._diff \
-                      = self._pdir = self._mes = self._online_mt \
+        self._enchant = self._morph = self._pretty_table = self._pdir \
+                      = self._mes = self._online_mt \
                       = self._online_other = self._tmpfile = None
 
     def tmpfile(self,suffix='.htm',Delete=0):
@@ -3941,11 +3946,6 @@ class Objects:
             from prettytable import PrettyTable
             self._pretty_table = PrettyTable
         return self._pretty_table
-
-    def diff(self):
-        if not self._diff:
-            self._diff = Diff()
-        return self._diff
 
 
 
