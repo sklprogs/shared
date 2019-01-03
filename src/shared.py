@@ -9,6 +9,7 @@ import re
 import os, sys
 import configparser
 import calendar
+import datetime
 import os
 import pickle
 import re
@@ -1365,10 +1366,10 @@ class Time:
         self._instance = self._date = self._year = self._month_abbr \
                        = self._month_name = ''
         # Prevent recursion
-        if self._timestamp or self._timestamp == 0:
-            self.instance()
-        else:
+        if self._timestamp is None:
             self.todays_date()
+        else:
+            self.instance()
 
     def add_days(self,days_delta):
         f = '[shared] shared.Time.add_days'
@@ -1409,14 +1410,15 @@ class Time:
     def instance(self):
         f = '[shared] shared.Time.instance'
         if self.Success:
-            if not self._timestamp:
+            if self._timestamp is None:
                 self.timestamp()
             try:
                 self._instance = datetime.datetime.fromtimestamp(self._timestamp)
-            except:
+            except Exception as e:
                 self.Success = False
                 objs.mes (f,_('WARNING')
-                         ,_('Set time parameters are incorrect or not supported.')
+                         ,_('Set time parameters are incorrect or not supported.\n\nDetails: %s')\
+                         % str(e)
                          )
         else:
             log.append (f,_('WARNING')
@@ -4182,7 +4184,14 @@ class Get:
         self.Verbose   = Verbose
         self.Verify    = Verify
         self.unverified()
-        
+    
+    def read(self):
+        ''' This is a dummy function to return the final result.
+            It is needed merely to use 'json' which calls 'read'
+            for input object.
+        '''
+        return self._html
+    
     def unverified(self):
         ''' On *some* systems we can get urllib.error.URLError: 
             <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED].
@@ -4579,6 +4588,51 @@ class Commands:
     def __init__(self):
         self.lang()
     
+    def yt_date(self,date):
+        # Convert a date provided by Youtube API to a timestamp
+        f = '[shared] shared.Commands.yt_date'
+        if date:
+            itime = Time()
+            itime._instance = datetime.datetime.strptime(date,'%Y-%m-%dT%H:%M:%S')
+            return itime.timestamp()
+        else:
+            self.empty(f)
+    
+    def yt_length(self,length):
+        ''' Convert a length of a video provided by Youtube API (string)
+            to seconds.
+            Possible variants: PT%dM%dS, PT%dH%dM%dS, P%dDT%dH%dM%dS.
+        '''
+        f = '[shared] shared.Commands.yt_length'
+        result = 0
+        if length:
+            if isinstance(length,str) and length[0] == 'P':
+                days    = 0
+                hours   = 0
+                minutes = 0
+                seconds = 0
+                match = re.search(r'(\d+)D',length)
+                if match:
+                    days = int(match.group(1))
+                match = re.search(r'(\d+)H',length)
+                if match:
+                    hours = int(match.group(1))
+                match = re.search(r'(\d+)M',length)
+                if match:
+                    minutes = int(match.group(1))
+                match = re.search(r'(\d+)S',length)
+                if match:
+                    seconds = int(match.group(1))
+                result = days * 86400 + hours * 3600 + minutes * 60 \
+                         + seconds
+            else:
+                objs.mes (f,_('WARNING')
+                         ,_('Wrong input data: "%s"!') % str(length)
+                         )
+        else:
+            self.empty(f)
+        return result
+    
     def rewrite(self,file,Rewrite=False):
         ''' - We do not put this into File class because we do not need
               to check existence.
@@ -4624,8 +4678,10 @@ class Commands:
                                            ).name
     
     def human_time(self,delta):
-        f = 'Commands.human_time'
+        f = '[shared] shared.Commands.human_time'
+        result = '%d %s' % (0,_('sec'))
         if isinstance(delta,int) or isinstance(delta,float):
+            # 'datetime' will output years even for small integers
             hours   = delta // 3600
             minutes = (delta - hours * 3600) // 60
             seconds = delta - hours * 3600 - minutes * 60
@@ -4637,14 +4693,12 @@ class Commands:
             if seconds:
                 mes.append('%d %s' % (seconds,_('sec')))
             if mes:
-                return ' '.join(mes)
-            else:
-                return '%d %s' % (0,_('sec'))
+                result = ' '.join(mes)
         else:
             objs.mes (f,_('WARNING')
                      ,_('Wrong input data: "%s"!') % str(delta)
                      )
-            return '%d %s' % (0,_('sec'))
+        return result
     
     def cancel(self,func):
         log.append (func
