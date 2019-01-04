@@ -4592,8 +4592,14 @@ class Commands:
         # Convert a date provided by Youtube API to a timestamp
         f = '[shared] shared.Commands.yt_date'
         if date:
-            itime = Time()
-            itime._instance = datetime.datetime.strptime(date,'%Y-%m-%dT%H:%M:%S')
+            pattern = '%Y-%m-%dT%H:%M:%S'
+            itime = Time(pattern=pattern)
+            # Prevent errors caused by 'datetime' parsing microseconds
+            tmp = date.split('.')
+            if date != tmp[0]:
+                ind  = date.index('.'+tmp[-1])
+                date = date[0:ind]
+            itime._instance = datetime.datetime.strptime(date,pattern)
             return itime.timestamp()
         else:
             self.empty(f)
@@ -4682,10 +4688,13 @@ class Commands:
         result = '%d %s' % (0,_('sec'))
         if isinstance(delta,int) or isinstance(delta,float):
             # 'datetime' will output years even for small integers
-            hours   = delta // 3600
+            days    = delta // 86400
+            hours   = (delta - days * 86400) // 3600
             minutes = (delta - hours * 3600) // 60
             seconds = delta - hours * 3600 - minutes * 60
             mes = []
+            if days:
+                mes.append('%d %s' % (days,_('days')))
             if hours:
                 mes.append('%d %s' % (hours,_('hrs')))
             if minutes:
