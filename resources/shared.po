@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-04 21:56+0300\n"
-"PO-Revision-Date: 2019-01-04 21:57+0300\n"
+"POT-Creation-Date: 2019-01-04 22:51+0300\n"
+"PO-Revision-Date: 2019-01-04 22:53+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -51,7 +51,7 @@ msgstr ""
 #: shared.py:4229 shared.py:4246 shared.py:4251 shared.py:4269 shared.py:4273
 #: shared.py:4293 shared.py:4313 shared.py:4333 shared.py:4365 shared.py:4384
 #: shared.py:4398 shared.py:4437 shared.py:4446 shared.py:4495 shared.py:4507
-#: shared.py:4525 shared.py:4635 shared.py:4707 shared.py:4714 shared.py:4720
+#: shared.py:4525 shared.py:4635 shared.py:4723 shared.py:4730 shared.py:4736
 #: sharedGUI.py:76 sharedGUI.py:80 sharedGUI.py:363 sharedGUI.py:379
 #: sharedGUI.py:390 sharedGUI.py:400 sharedGUI.py:430 sharedGUI.py:452
 #: sharedGUI.py:479 sharedGUI.py:507 sharedGUI.py:522 sharedGUI.py:533
@@ -160,7 +160,7 @@ msgstr ""
 #: shared.py:3525 shared.py:3564 shared.py:3590 shared.py:3608 shared.py:3644
 #: shared.py:3657 shared.py:3672 shared.py:3688 shared.py:3705 shared.py:4099
 #: shared.py:4112 shared.py:4314 shared.py:4334 shared.py:4366 shared.py:4385
-#: shared.py:4399 shared.py:4496 shared.py:4508 shared.py:4526 shared.py:4715
+#: shared.py:4399 shared.py:4496 shared.py:4508 shared.py:4526 shared.py:4731
 #: sharedGUI.py:364 sharedGUI.py:380 sharedGUI.py:391 sharedGUI.py:401
 #: sharedGUI.py:431 sharedGUI.py:453 sharedGUI.py:480 sharedGUI.py:508
 #: sharedGUI.py:523 sharedGUI.py:534 sharedGUI.py:2697 sharedGUI.py:2713
@@ -175,7 +175,7 @@ msgstr "Операция отменена."
 #: shared.py:2389 shared.py:2402 shared.py:2439 shared.py:2445 shared.py:2637
 #: shared.py:2697 shared.py:2720 shared.py:2736 shared.py:2749 shared.py:2779
 #: shared.py:2934 shared.py:3258 shared.py:4025 shared.py:4071 shared.py:4224
-#: shared.py:4343 shared.py:4348 shared.py:4353 shared.py:4743 sharedGUI.py:357
+#: shared.py:4343 shared.py:4348 shared.py:4353 shared.py:4759 sharedGUI.py:357
 #: sharedGUI.py:465 sharedGUI.py:469 sharedGUI.py:475 sharedGUI.py:492
 #: sharedGUI.py:496 sharedGUI.py:503 sharedGUI.py:1047 sharedGUI.py:1372
 #: sharedGUI.py:1478 sharedGUI.py:1929 sharedGUI.py:2264 sharedGUI.py:2276
@@ -241,7 +241,7 @@ msgstr "Словарь \"%s\": Неправильная строка №%d: \"%s
 
 #: shared.py:559 shared.py:1574 shared.py:1907 shared.py:2036 shared.py:2651
 #: shared.py:2843 shared.py:3971 shared.py:4050 shared.py:4252 shared.py:4274
-#: shared.py:4294 shared.py:4721 sharedGUI.py:744 sharedGUI.py:983
+#: shared.py:4294 shared.py:4737 sharedGUI.py:744 sharedGUI.py:983
 #: sharedGUI.py:1740 sharedGUI.py:1761 sharedGUI.py:2981 sharedGUI.py:3091
 #: sharedGUI.py:3132 sharedGUI.py:3450 sharedGUI.py:3469 sharedGUI.py:3480
 #: sharedGUI.py:3877
@@ -655,7 +655,7 @@ msgstr "Слева ориентиров нет!"
 msgid "Unexpected end of text!"
 msgstr "Неожиданный конец текста!"
 
-#: shared.py:4636 shared.py:4708
+#: shared.py:4636 shared.py:4724
 #, python-format
 msgid "Wrong input data: \"%s\"!"
 msgstr "Недопустимые входные данные: \"%s\"!"
@@ -671,23 +671,35 @@ msgstr "ВОПРОС"
 msgid "ATTENTION: Do yo really want to rewrite file \"%s\"?"
 msgstr "ВНИМАНИЕ: Перезаписать файл \"%s\"?"
 
-#: shared.py:4688 shared.py:4703
+#: shared.py:4688 shared.py:4719
 msgid "sec"
 msgstr "сек"
 
-#: shared.py:4697
-msgid "days"
-msgstr "дней"
+#: shared.py:4707
+msgid "yrs"
+msgstr "лет"
 
-#: shared.py:4699
+#: shared.py:4709
+msgid "mths"
+msgstr "мес"
+
+#: shared.py:4711
+msgid "wks"
+msgstr "нед"
+
+#: shared.py:4713
+msgid "days"
+msgstr "дн"
+
+#: shared.py:4715
 msgid "hrs"
 msgstr "ч"
 
-#: shared.py:4701
+#: shared.py:4717
 msgid "min"
 msgstr "мин"
 
-#: shared.py:4744 sharedGUI.py:1373 sharedGUI.py:1930 sharedGUI.py:4045
+#: shared.py:4760 sharedGUI.py:1373 sharedGUI.py:1930 sharedGUI.py:4045
 msgid "Nothing to do!"
 msgstr "Действие не требуется."
 
