@@ -1858,10 +1858,14 @@ class ListBox:
 
 
 class OptionMenu:
-    ''' tk.OptionMenu will convert integers to strings, but we better do
-        this here to avoid problems with iterating ("in requires int as
-        the left operand") later (this happens when we pass a sequence
-        of chars instead of a list of strings).
+    ''' - 'action' parameter defines an action triggered any time we
+          select an OptionMenu item. Use 'sg.bind' to set an action each
+          time the entire OptionMenu (and not an item) is clicked. These
+          bindings do not interfere with each other.
+        - tk.OptionMenu will convert integers to strings, but we better
+          do this here to avoid problems with iterating ("in requires
+          int as the left operand") later (this happens when we pass
+          a sequence of chars instead of a list of strings).
     '''
     def __init__ (self
                  ,parent
