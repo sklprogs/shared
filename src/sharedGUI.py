@@ -12,6 +12,9 @@ gettext_windows.setup_env()
 gettext.install('shared','../resources/locale')
 
 
+SHOW_HINTS = True
+
+
 # Привязать горячие клавиши или кнопки мыши к действию
 # object, str/list, function
 def bind(obj,bindings,action):
@@ -713,18 +716,14 @@ class TextBox:
              ,action   = self.insert_clipboard
              )
         bind (obj      = self
-             ,bindings = '<Key>'
-             ,action   = self.clear_on_key
-             )
-        bind (obj      = self
              ,bindings = '<Control-Alt-u>'
              ,action   = self.toggle_case
              )
         if hasattr(self.parent,'type') \
-            and self.parent.type == 'Toplevel':
+        and self.parent.type == 'Toplevel':
             self.parent.widget.protocol ("WM_DELETE_WINDOW"
-                                            ,self.close
-                                            )
+                                        ,self.close
+                                        )
 
     def toggle_case(self,event=None):
         f = '[shared] sharedGUI.TextBox.toggle_case'
@@ -903,19 +902,6 @@ class TextBox:
             sh.log.append (f,_('WARNING')
                           ,_('The parent has already been destroyed.')
                           )
-
-    #fix Tkinter limitations
-    def clear_on_key(self,event=None):
-        if event and event.char:
-            if event.char.isspace() or event.char in sh.lat_alphabet \
-            or event.char in sh.ru_alphabet or event.char in sh.digits \
-            or event.char in sh.punc_array or event.char \
-            in sh.punc_ext_array:
-                ''' #todo: suppress excessive logging (Selection.get,
-                    TextBox.clear_selection, TextBox.cursor,
-                    Clipboard.paste, Words.no_by_tk)
-                '''
-                self.clear_selection()
 
     def clear_selection(self,event=None):
         f = '[shared] sharedGUI.TextBox.clear_selection'
@@ -1450,7 +1436,7 @@ class ToolTipBase:
 
     def showtip(self):
         f = '[shared] sharedGUI.ToolTipBase.showtip'
-        if self.tip:
+        if self.tip or not SHOW_HINTS:
             return
         ''' The tip window must be completely outside the widget;
             otherwise, when the mouse enters the tip window we get
@@ -1514,20 +1500,22 @@ class ToolTip(ToolTipBase):
         ToolTipBase.__init__(self,obj=obj)
 
     def showcontents(self):
-        self.frm = Frame (parent = self.tip
-                         ,bg     = self.hint_bcolor
-                         ,bd     = self.hint_bwidth
-                         ,expand = False
-                         )
-        self.lbl = Label (parent  = self.frm
-                         ,text    = self.text
-                         ,bg      = self.hint_bg
-                         ,width   = self.hint_width
-                         ,height  = self.hint_height
-                         ,justify = 'center'
-                         ,Close   = False
-                         ,font    = self.hint_font
-                         )
+        # Assign this boolean externally to stop showing hints
+        if SHOW_HINTS:
+            self.frm = Frame (parent = self.tip
+                             ,bg     = self.hint_bcolor
+                             ,bd     = self.hint_bwidth
+                             ,expand = False
+                             )
+            self.lbl = Label (parent  = self.frm
+                             ,text    = self.text
+                             ,bg      = self.hint_bg
+                             ,width   = self.hint_width
+                             ,height  = self.hint_height
+                             ,justify = 'center'
+                             ,Close   = False
+                             ,font    = self.hint_font
+                             )
 
 
 
