@@ -116,6 +116,6 @@ def test_anchors(event=None):
 
 if __name__ == '__main__':
     sg.objs.start()
-    test_anchors()
+    
     sg.objs.end()
     
