@@ -595,7 +595,9 @@ class TextBox:
                          )
 
     def frames(self):
-        self.frm_prm = Frame (parent = self.parent)
+        self.frm_prm = Frame (parent = self.parent
+                             ,propag = not self.Composite
+                             )
         self.frm_top = Frame (parent = self.frm_prm
                              ,side   = 'top'
                              ,expand = True
@@ -3530,7 +3532,6 @@ class Panes:
     def panes(self):
         self.pane1 = TextBox (parent    = self.frm_pn1
                              ,Composite = True
-                             ,ScrollY   = False
                              )
         self.pane2 = TextBox (parent    = self.frm_pn2
                              ,Composite = True
@@ -3538,7 +3539,6 @@ class Panes:
         if self.Extended:
             self.pane3 = TextBox (parent    = self.frm_pn3
                                  ,Composite = True
-                                 ,ScrollY   = False
                                  )
             self.pane4 = TextBox (parent    = self.frm_pn4
                                  ,Composite = True
@@ -3609,10 +3609,6 @@ class Panes:
                  )
             bind (obj      = self
                  ,bindings = ['<Alt-Key-4>','<Control-Key-4>']
-                 ,action   = self.select4
-                 )
-            bind (obj      = self.pane4
-                 ,bindings = '<ButtonRelease-1>'
                  ,action   = self.select4
                  )
             bind (obj      = self.pane3

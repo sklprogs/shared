@@ -121,6 +121,10 @@ if __name__ == '__main__':
     w = sh.Words(text=text,Auto=1)
     #w.complete()
     panes.reset(w,w,w,w)
+    panes.pane1.insert(w._text_orig)
+    panes.pane2.insert(w._text_orig)
+    panes.pane3.insert(w._text_orig)
+    panes.pane4.insert(w._text_orig)
     panes.show()
     sg.objs.end()
     
