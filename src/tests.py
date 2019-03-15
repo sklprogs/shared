@@ -116,6 +116,11 @@ def test_anchors(event=None):
 
 if __name__ == '__main__':
     sg.objs.start()
-    
+    panes = sg.Panes(Extended=1)
+    text = sh.ReadTextFile('/home/pete/downloads/10 видов просроченных продуктов, которые можно есть.txt').get()
+    w = sh.Words(text=text,Auto=1)
+    #w.complete()
+    panes.reset(w,w,w,w)
+    panes.show()
     sg.objs.end()
     
