@@ -3047,7 +3047,7 @@ class Canvas:
         return 'break'
     
     # These bindings are not enabled by default
-    def top_bindings(self,top):
+    def top_bindings(self,top,Control=True):
         f = '[shared] sharedGUI.Canvas.top_bindings'
         if top:
             if hasattr(top,'type') and top.type == 'Toplevel':
@@ -3076,20 +3076,30 @@ class Canvas:
                      ,action   = self.move_page_up
                      )
                 bind (obj      = top
-                     ,bindings = '<End>'
-                     ,action   = self.move_bottom
-                     )
-                bind (obj      = top
-                     ,bindings = '<Home>'
-                     ,action   = self.move_top
-                     )
-                bind (obj      = top
                      ,bindings = ['<MouseWheel>'
                                  ,'<Button 4>'
                                  ,'<Button 5>'
                                  ]
                      ,action   = self.mouse_wheel
                      )
+                if Control:
+                    bind (obj      = top
+                         ,bindings = '<Control-Home>'
+                         ,action   = self.move_top
+                         )
+                    bind (obj      = top
+                         ,bindings = '<Control-End>'
+                         ,action   = self.move_bottom
+                         )
+                else:
+                    bind (obj      = top
+                         ,bindings = '<Home>'
+                         ,action   = self.move_top
+                         )
+                    bind (obj      = top
+                         ,bindings = '<End>'
+                         ,action   = self.move_bottom
+                         )
             else:
                 sh.log.append (f,_('WARNING')
                               ,_('Wrong input data!')
