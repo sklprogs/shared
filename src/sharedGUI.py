@@ -3605,11 +3605,11 @@ class Panes:
              ,action   = self.select2
              )
         bind (obj      = self.pane1
-             ,bindings = '<Right>'
+             ,bindings = ['<Alt-Right>','<Control-Right>']
              ,action   = self.select2
              )
         bind (obj      = self.pane2
-             ,bindings = '<Left>'
+             ,bindings = ['<Alt-Left>','<Control-Left>']
              ,action   = self.select1
              )
         if self.Extended:
@@ -3630,44 +3630,44 @@ class Panes:
                  ,action   = self.select4
                  )
             bind (obj      = self.pane2
-                 ,bindings = '<Right>'
+                 ,bindings = ['<Alt-Right>','<Control-Right>']
                  ,action   = self.select3
                  )
             bind (obj      = self.pane3
-                 ,bindings = '<Right>'
+                 ,bindings = ['<Alt-Right>','<Control-Right>']
                  ,action   = self.select4
                  )
             bind (obj      = self.pane3
-                 ,bindings = '<Left>'
+                 ,bindings = ['<Alt-Left>','<Control-Left>']
                  ,action   = self.select2
                  )
             bind (obj      = self.pane4
-                 ,bindings = '<Left>'
+                 ,bindings = ['<Alt-Left>','<Control-Left>']
                  ,action   = self.select3
                  )
             bind (obj      = self.pane1
-                 ,bindings = '<Down>'
+                 ,bindings = ['<Alt-Down>','<Control-Down>']
                  ,action   = self.select3
                  )
             bind (obj      = self.pane2
-                 ,bindings = '<Down>'
+                 ,bindings = ['<Alt-Down>','<Control-Down>']
                  ,action   = self.select4
                  )
             bind (obj      = self.pane3
-                 ,bindings = '<Up>'
+                 ,bindings = ['<Alt-Up>','<Control-Up>']
                  ,action   = self.select1
                  )
             bind (obj      = self.pane4
-                 ,bindings = '<Up>'
+                 ,bindings = ['<Alt-Up>','<Control-Up>']
                  ,action   = self.select2
                  )
         else:
             bind (obj      = self.pane1
-                 ,bindings = '<Down>'
+                 ,bindings = ['<Alt-Down>','<Control-Down>']
                  ,action   = self.select2
                  )
             bind (obj      = self.pane2
-                 ,bindings = '<Up>'
+                 ,bindings = ['<Alt-Up>','<Control-Up>']
                  ,action   = self.select1
                  )
              
@@ -3684,6 +3684,8 @@ class Panes:
         if self.Extended:
             self.decolorize()
             self.pane1.widget.config(bg=self._bg)
+        # Ignore internal Tkinter bindings such as Ctrl-Up/Down
+        return 'break'
         
     def select2(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
@@ -3691,18 +3693,24 @@ class Panes:
         if self.Extended:
             self.decolorize()
             self.pane2.widget.config(bg=self._bg)
+        # Ignore internal Tkinter bindings such as Ctrl-Up/Down
+        return 'break'
         
     def select3(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
         self.pane3.focus()
         self.decolorize()
         self.pane3.widget.config(bg=self._bg)
+        # Ignore internal Tkinter bindings such as Ctrl-Up/Down
+        return 'break'
         
     def select4(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
         self.pane4.focus()
         self.decolorize()
         self.pane4.widget.config(bg=self._bg)
+        # Ignore internal Tkinter bindings such as Ctrl-Up/Down
+        return 'break'
         
     def icon(self,path=None):
         if path:
