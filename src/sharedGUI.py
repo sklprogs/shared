@@ -3575,10 +3575,19 @@ class Panes:
         self.parent.close()
         
     def bindings(self):
-        ''' We do not bind 'select1' to 'pane1' and 'select2' to 'pane3'
-            since we need to further synchronize references by LMB
-            anyway, and this further binding will rewrite the current
-            binging.
+        ''' - We do not bind 'select1' to 'pane1' and 'select2' to
+              'pane3' since we need to further synchronize references
+              by LMB anyway, and this further binding will rewrite
+              the current binging.
+            - We do not use 'Control' for bindings. If we use it,
+              Tkinter will execute its internal bindings for
+              '<Control-Down/Up>' and '<Control-Left/Right>' before
+              executing our own. Even though we can return 'break'
+              in 'select1'-4, we should not do that because we need
+              internal bindings for '<Control-Left>' and
+              '<Control-Right>'. Thus, we should not use 'Control' at
+              all because we cannot replace 'Alt' with 'Control'
+              for all actions.
         '''
         bind (obj      = self
              ,bindings = ['<Control-q>','<Control-w>']
@@ -3589,11 +3598,11 @@ class Panes:
              ,action   = Geometry(parent=self.parent).minimize
              )
         bind (obj      = self
-             ,bindings = ['<Alt-Key-1>','<Control-Key-1>']
+             ,bindings = '<Alt-Key-1>'
              ,action   = self.select1
              )
         bind (obj      = self
-             ,bindings = ['<Alt-Key-2>','<Control-Key-2>']
+             ,bindings = '<Alt-Key-2>'
              ,action   = self.select2
              )
         bind (obj      = self.pane1
@@ -3605,20 +3614,20 @@ class Panes:
              ,action   = self.select2
              )
         bind (obj      = self.pane1
-             ,bindings = ['<Alt-Right>','<Control-Right>']
+             ,bindings = '<Alt-Right>'
              ,action   = self.select2
              )
         bind (obj      = self.pane2
-             ,bindings = ['<Alt-Left>','<Control-Left>']
+             ,bindings = '<Alt-Left>'
              ,action   = self.select1
              )
         if self.Extended:
             bind (obj      = self
-                 ,bindings = ['<Alt-Key-3>','<Control-Key-3>']
+                 ,bindings = '<Alt-Key-3>'
                  ,action   = self.select3
                  )
             bind (obj      = self
-                 ,bindings = ['<Alt-Key-4>','<Control-Key-4>']
+                 ,bindings = '<Alt-Key-4>'
                  ,action   = self.select4
                  )
             bind (obj      = self.pane3
@@ -3630,44 +3639,44 @@ class Panes:
                  ,action   = self.select4
                  )
             bind (obj      = self.pane2
-                 ,bindings = ['<Alt-Right>','<Control-Right>']
+                 ,bindings = '<Alt-Right>'
                  ,action   = self.select3
                  )
             bind (obj      = self.pane3
-                 ,bindings = ['<Alt-Right>','<Control-Right>']
+                 ,bindings = '<Alt-Right>'
                  ,action   = self.select4
                  )
             bind (obj      = self.pane3
-                 ,bindings = ['<Alt-Left>','<Control-Left>']
+                 ,bindings = '<Alt-Left>'
                  ,action   = self.select2
                  )
             bind (obj      = self.pane4
-                 ,bindings = ['<Alt-Left>','<Control-Left>']
+                 ,bindings = '<Alt-Left>'
                  ,action   = self.select3
                  )
             bind (obj      = self.pane1
-                 ,bindings = ['<Alt-Down>','<Control-Down>']
+                 ,bindings = '<Alt-Down>'
                  ,action   = self.select3
                  )
             bind (obj      = self.pane2
-                 ,bindings = ['<Alt-Down>','<Control-Down>']
+                 ,bindings = '<Alt-Down>'
                  ,action   = self.select4
                  )
             bind (obj      = self.pane3
-                 ,bindings = ['<Alt-Up>','<Control-Up>']
+                 ,bindings = '<Alt-Up>'
                  ,action   = self.select1
                  )
             bind (obj      = self.pane4
-                 ,bindings = ['<Alt-Up>','<Control-Up>']
+                 ,bindings = '<Alt-Up>'
                  ,action   = self.select2
                  )
         else:
             bind (obj      = self.pane1
-                 ,bindings = ['<Alt-Down>','<Control-Down>']
+                 ,bindings = '<Alt-Down>'
                  ,action   = self.select2
                  )
             bind (obj      = self.pane2
-                 ,bindings = ['<Alt-Up>','<Control-Up>']
+                 ,bindings = '<Alt-Up>'
                  ,action   = self.select1
                  )
              
@@ -3684,7 +3693,7 @@ class Panes:
         if self.Extended:
             self.decolorize()
             self.pane1.widget.config(bg=self._bg)
-        # Ignore internal Tkinter bindings such as Ctrl-Up/Down
+        # Ignore 'Alt-Up/Down'
         return 'break'
         
     def select2(self,event=None):
@@ -3693,7 +3702,7 @@ class Panes:
         if self.Extended:
             self.decolorize()
             self.pane2.widget.config(bg=self._bg)
-        # Ignore internal Tkinter bindings such as Ctrl-Up/Down
+        # Ignore 'Alt-Up/Down'
         return 'break'
         
     def select3(self,event=None):
@@ -3701,7 +3710,7 @@ class Panes:
         self.pane3.focus()
         self.decolorize()
         self.pane3.widget.config(bg=self._bg)
-        # Ignore internal Tkinter bindings such as Ctrl-Up/Down
+        # Ignore 'Alt-Up/Down'
         return 'break'
         
     def select4(self,event=None):
@@ -3709,7 +3718,7 @@ class Panes:
         self.pane4.focus()
         self.decolorize()
         self.pane4.widget.config(bg=self._bg)
-        # Ignore internal Tkinter bindings such as Ctrl-Up/Down
+        # Ignore 'Alt-Up/Down'
         return 'break'
         
     def icon(self,path=None):
