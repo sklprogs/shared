@@ -1103,6 +1103,18 @@ class Entry:
             WidgetShared.custom_buttons(self)
         self.bindings()
 
+    def reset_data(self):
+        ''' This is added for compliance with 'TextBox' (especially
+            useful when the parent may be different).
+        '''
+        self.clear_text()
+    
+    def reset(self):
+        ''' This is added for compliance with 'TextBox' (especially
+            useful when the parent may be different).
+        '''
+        self.clear_text()
+    
     def read_only(self,ReadOnly=True):
         ''' Setting ReadOnly state works only after filling text. Only
             tk.Text, tk.Entry and not tk.Toplevel are supported.
