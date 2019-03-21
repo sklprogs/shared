@@ -20,7 +20,8 @@ SHOW_HINTS = True
 def bind(obj,bindings,action):
     f = '[shared] sharedGUI.bind'
     if hasattr(obj,'widget'):
-        if isinstance(bindings,str) or isinstance(bindings,list):
+        if isinstance(bindings,str) or isinstance(bindings,list) \
+        or isinstance(bindings,tuple):
             if isinstance(bindings,str):
                 bindings = [bindings]
             for binding in bindings:
@@ -3606,7 +3607,7 @@ class Panes:
               for all actions.
         '''
         bind (obj      = self
-             ,bindings = ['<Control-q>','<Control-w>']
+             ,bindings = ('<Control-q>','<Control-w>')
              ,action   = self.close
              )
         bind (obj      = self
@@ -3614,11 +3615,11 @@ class Panes:
              ,action   = Geometry(parent=self.parent).minimize
              )
         bind (obj      = self
-             ,bindings = '<Alt-Key-1>'
+             ,bindings = ('<Alt-Key-1>','<Control-Key-1>')
              ,action   = self.select1
              )
         bind (obj      = self
-             ,bindings = '<Alt-Key-2>'
+             ,bindings = ('<Alt-Key-2>','<Control-Key-2>')
              ,action   = self.select2
              )
         bind (obj      = self.pane1
@@ -3639,11 +3640,11 @@ class Panes:
              )
         if self.Extended:
             bind (obj      = self
-                 ,bindings = '<Alt-Key-3>'
+                 ,bindings = ('<Alt-Key-3>','<Control-Key-3>')
                  ,action   = self.select3
                  )
             bind (obj      = self
-                 ,bindings = '<Alt-Key-4>'
+                 ,bindings = ('<Alt-Key-4>','<Control-Key-4>')
                  ,action   = self.select4
                  )
             bind (obj      = self.pane3
