@@ -3048,6 +3048,10 @@ class Canvas:
         self.fill         = fill
         self.gui()
         
+    def move_left_corner(self,event=None):
+        self.move_top()
+        self.widget.xview_moveto(0)
+    
     def mouse_wheel(self,event=None):
         ''' Windows XP has the delta of -120, however, it differs
             depending on the version.
