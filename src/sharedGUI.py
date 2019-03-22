@@ -134,32 +134,31 @@ class WidgetShared:
 
     def insert(object,text,pos):
         f = '[shared] sharedGUI.WidgetShared.insert'
-        # Do not allow None
-        if text:
-            if object.type == 'TextBox' or object.type == 'Entry':
+        # The check is silent
+        text = sh.Input (title = f
+                        ,value = text
+                        ).not_none()
+        ''' Allows to input digits. Run 'sh.Input.not_none' first
+            (otherwise, we may get 'None' as a string).
+        '''
+        text = str(text)
+        if object.type == 'TextBox' or object.type == 'Entry':
+            try:
+                object.widget.insert(pos,text)
+            except tk.TclError:
                 try:
-                    object.widget.insert(pos,text)
+                    object.widget.insert (pos
+                                         ,_('Failed to insert the text!')
+                                         )
                 except tk.TclError:
-                    try:
-                        object.widget.insert (pos
-                                             ,_('Failed to insert the text!')
-                                             )
-                    except tk.TclError:
-                        sh.log.append (f,_('ERROR')
-                                      ,_('Failed to insert the text!')
-                                      )
-            else:
-                sh.log.append (f,_('ERROR')
-                              ,_('A logic error: unknown object type: "%s"!') \
-                              % str(object.type)
-                              )
-        # Too frequent
-        '''
+                    sh.log.append (f,_('ERROR')
+                                  ,_('Failed to insert the text!')
+                                  )
         else:
-            sh.log.append (f,_('WARNING')
-                          ,_('Empty input is not allowed!')
+            sh.log.append (f,_('ERROR')
+                          ,_('A logic error: unknown object type: "%s"!')\
+                          % str(object.type)
                           )
-        '''
 
     # font_style, sh.globs['var']['menu_font']
     def font(object,font='Sans 11'):
