@@ -134,12 +134,11 @@ class WidgetShared:
 
     def insert(object,text,pos):
         f = '[shared] sharedGUI.WidgetShared.insert'
-        # The check is silent
-        text = sh.Input (title = f
-                        ,value = text
-                        ).not_none()
-        ''' Allows to input digits. Run 'sh.Input.not_none' first
-            (otherwise, we may get 'None' as a string).
+        # We should allow zeros
+        if text is None:
+            text = ''
+        ''' Allows to input digits. Get rid of None first as we may
+            get 'None' as a string).
         '''
         text = str(text)
         if object.type == 'TextBox' or object.type == 'Entry':

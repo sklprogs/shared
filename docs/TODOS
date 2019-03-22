@@ -1,5 +1,6 @@
 (English)
-- Remove unnecessary files in the build
+- Delete 'sh.Input.not_none'
+- (?) Remove unnecessary files in the build
 
 (Russian)
 ! Text: не назначать self.text там, где это не нужно
