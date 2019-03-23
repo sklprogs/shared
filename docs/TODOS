@@ -1,4 +1,6 @@
 (English)
+- Elaborate 'sh.Input' error messages (since we always get a string
+  when reading TextBox/Entry)
 - Delete 'sh.Input.not_none'
 - (?) Remove unnecessary files in the build
 
