@@ -4473,16 +4473,19 @@ class Commands:
         f = '[shared] shared.Commands.human_binding'
         if bindings:
             bindings = str(bindings)
-            if '<Return>' in bindings:
-                bindings = bindings.replace('<KP_Enter>','')
-            if '<Home>' in bindings:
-                bindings = bindings.replace('<KP_Home>','')
-            if '<End>' in bindings:
-                bindings = bindings.replace('<KP_End>','')
-            if '<Delete>' in bindings:
-                bindings = bindings.replace('<KP_Delete>','')
-            if '<Insert>' in bindings:
-                bindings = bindings.replace('<KP_Insert>','')
+            ''' Do not use '<' and '>' signs here since the combination
+                can actually be '<Control-KP_Enter>'.
+            '''
+            if 'Return' in bindings:
+                bindings = bindings.replace('KP_Enter','')
+            if 'Home' in bindings:
+                bindings = bindings.replace('KP_Home','')
+            if 'End' in bindings:
+                bindings = bindings.replace('KP_End','')
+            if 'Delete' in bindings:
+                bindings = bindings.replace('KP_Delete','')
+            if 'Insert' in bindings:
+                bindings = bindings.replace('KP_Insert','')
             bindings = bindings.replace('[','').replace(']','')
             bindings = bindings.replace('<','').replace('>','')
             bindings = bindings.replace("'",'').replace('(','')
@@ -4515,7 +4518,27 @@ class Commands:
             bindings = bindings.replace('KP_Delete','Del (keypad)')
             bindings = bindings.replace('KP_Divide','/ (keypad)')
             bindings = bindings.replace('KP_Down','↓ (keypad)')
-            bindings = bindings.replace('-',' + ')
+            ''' '<Control-S>' actually means 'Ctrl-Shift-s' in tkinter.
+                Insert 'Shift' before making bindings upper-case.
+            '''
+            match = re.match('.*-([A-Z])$',bindings)
+            if match:
+                group    = match.group(1)
+                bindings = bindings.replace ('-'       + group
+                                            ,'-Shift-' + group
+                                            )
+            ''' We make letters upper-case in order to avoid confusion,
+                e.g., when using 'i', 'l' and '1'.
+            '''
+            match = re.match('.*-([a-z])$',bindings)
+            if match:
+                group    = match.group(1)
+                bindings = bindings.replace ('-' + group
+                                            ,'-' + group.upper()
+                                            )
+            #bindings = bindings.replace('-','+')
+            bindings = bindings.strip()
+            bindings = Text(bindings).delete_end_punc()
             return bindings
         else:
             #todo: do we need this warning?
