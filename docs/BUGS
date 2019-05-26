@@ -1,4 +1,6 @@
-- 
+
+- MessageBuilder: it is impossible to quit the GUI program correctly
+  if a message is ignored several times in a row
 - sh.Path.basename works incorrectly for cases like file.dict.dz
 - Use ord() just like in mclient to get rid of chars not supported
   by Tcl before pasting the text into text widgets
