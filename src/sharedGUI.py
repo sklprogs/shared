@@ -4,6 +4,7 @@
 import sys, os
 import tkinter            as tk
 import tkinter.filedialog as dialog
+import tkinter.font
 import tkinter.ttk        as ttk
 import shared             as sh
 
@@ -13,6 +14,87 @@ gettext.install('shared','../resources/locale')
 
 
 SHOW_HINTS = True
+
+
+class Font:
+    
+    def __init__(self,family,size):
+        self.values()
+        if family and size:
+            self.reset (family = family
+                       ,size   = size
+                       )
+    
+    def reset(self,family,size):
+        self.values()
+        self._family = family
+        self._size   = size
+    
+    def values(self):
+        self._font   = None
+        self._family = ''
+        self._size   = 0
+        self._height = 0
+        self._width  = 0
+    
+    def set_text(self,text):
+        f = '[shared] sharedGUI.Font.set_text'
+        if text:
+            self._text = text
+        else:
+            sh.com.empty(f)
+    
+    def font(self):
+        f = '[shared] sharedGUI.Font.font'
+        if not self._font:
+            if self._family and self._size:
+                self._font = tkinter.font.Font (family = self._family
+                                               ,size   = self._size
+                                               )
+            else:
+                sh.com.empty(f)
+        return self._font
+    
+    def height(self,border=20):
+        f = '[shared] sharedGUI.Font.height'
+        if not self._height:
+            if self.font():
+                try:
+                    self._height = self._font.metrics("linespace")
+                except Exception as e:
+                    sh.log.append (f,_('ERROR')
+                                  ,str(e)
+                                  )
+                if self._height:
+                    lines = len(self._text.splitlines())
+                    if lines:
+                        self._height = self._height * lines
+                    self._height += border
+                sh.log.append (f,_('DEBUG')
+                              ,'%d' % self._height
+                              )
+            else:
+                sh.com.empty(f)
+        return self._height
+    
+    def width(self,border=20):
+        f = '[shared] sharedGUI.Font.width'
+        if not self._width:
+            if self.font() and self._text:
+                try:
+                    self._width = self._font.measure(max(self._text.splitlines()))
+                except Exception as e:
+                    sh.log.append (f,_('ERROR')
+                                  ,str(e)
+                                  )
+                if self._width:
+                    self._width += border
+                sh.log.append (f,_('DEBUG')
+                              ,'%d' % self._width
+                              )
+            else:
+                sh.com.empty(f)
+        return self._width
 
 
 # Привязать горячие клавиши или кнопки мыши к действию
