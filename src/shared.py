@@ -1033,7 +1033,10 @@ class Text:
         return self.text
 
     def delete_autotranslate_markers(self):
-        self.text = self.text.replace('[[','').replace(']]','').replace('{','').replace('}','').replace('_','')
+        self.text = self.text.replace('[[','').replace(']]','')
+        self.text = self.text.replace('{','').replace('}','')
+        self.text = self.text.replace('_','')
+        self.text = self.text.replace('<f>','').replace('</f>','')
         return self.text
 
     def delete_embraced_text(self,opening_sym='(',closing_sym=')'):
