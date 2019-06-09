@@ -1032,12 +1032,6 @@ class Text:
             match = re.search(my_expr,self.text)
         return self.text
 
-    def delete_autotranslate_markers(self):
-        self.text = self.text.replace('{','').replace('}','')
-        self.text = self.text.replace('_','')
-        self.text = self.text.replace('<f>','').replace('</f>','')
-        return self.text
-
     def delete_embraced_text(self,opening_sym='(',closing_sym=')'):
         ''' If there are some brackets left after performing this
             operation, ensure that all of them are in the right place
