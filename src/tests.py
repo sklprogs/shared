@@ -19,7 +19,7 @@ class Commands:
         '''
         file = '/boot/initrd.img-4.9.0-9-686'
         size = sh.File(file).size()
-        print(sh.com.human_size(size))
+        print(sh.com.human_size(size,LargeOnly=0))
     
     def panes(self):
         panes = sg.Panes(Extended=1)

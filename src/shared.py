@@ -1674,7 +1674,7 @@ class File:
             if cond:
                 result = os.path.getsize(self.file)
         else:
-            sh.com.cancel(f)
+            com.cancel(f)
         return result
     
     def _copy(self):
@@ -2354,7 +2354,7 @@ class Directory:
                     if cond:
                         result += os.path.getsize(obj)
         else:
-            sh.com.cancel(f)
+            com.cancel(f)
         return result
     
     def values(self):
@@ -4674,7 +4674,7 @@ class Commands:
     def __init__(self):
         self.lang()
         
-    def human_size(self,bsize):
+    def human_size(self,bsize,LargeOnly=False):
         result = '%d %s' % (0,_('B'))
         if bsize:
             terabytes = bsize // pow(10,12)
@@ -4693,10 +4693,11 @@ class Commands:
                 mes.append('%d %s' % (gigabytes,_('GB')))
             if megabytes:
                 mes.append('%d %s' % (megabytes,_('MB')))
-            if kilobytes:
-                mes.append('%d %s' % (kilobytes,_('KB')))
-            if rbytes:
-                mes.append('%d %s' % (rbytes,_('B')))
+            if not (LargeOnly and bsize // pow(10,6)):
+                if kilobytes:
+                    mes.append('%d %s' % (kilobytes,_('KB')))
+                if rbytes:
+                    mes.append('%d %s' % (rbytes,_('B')))
             if mes:
                 result = ' '.join(mes)
         return result
