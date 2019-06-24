@@ -4276,12 +4276,12 @@ class MultCBoxes:
     def region(self):
         f = '[shared] sharedGUI.MultCBoxes.region'
         if self._frms:
-            self.cvs.region (x        = self._width
-                            ,y        = 22 * len(self._frms)
-                            ,x_border = 10
-                            ,y_border = 20
-                            )
-            self.cvs.scroll()
+            self.cvs_prm.region (x        = self._width
+                                ,y        = 22 * len(self._frms)
+                                ,x_border = 10
+                                ,y_border = 20
+                                )
+            self.cvs_prm.scroll()
         else:
             sh.log.append (f,_('INFO')
                           ,_('Nothing to do!')
@@ -4294,16 +4294,16 @@ class MultCBoxes:
         
     
     def widgets(self):
-        self.cvs  = Canvas(parent=self.frm1)
-        self.frme = Frame(parent=self.frm1)
-        self.cvs.embed(self.frme)
-        self.btn1 = Button (parent = self.frmb
-                           ,text   = _('Toggle all')
-                           ,hint   = _('Mark/unmark all checkboxes')
-                           ,side   = 'left'
-                           ,action = self.toggle
-                           )
-        self.btn2 = Button (parent = self.frmb
+        self.cvs_prm = Canvas(parent=self.frm_sec)
+        self.frm_emb = Frame(parent=self.frm_sec)
+        self.cvs_prm.embed(self.frm_emb)
+        self.btn_sel = Button (parent = self.frm_bth
+                              ,text   = _('Toggle all')
+                              ,hint   = _('Mark/unmark all checkboxes')
+                              ,side   = 'left'
+                              ,action = self.toggle
+                              )
+        self.btn_cls = Button (parent = self.frm_bth
                            ,text   = _('Close')
                            ,hint   = _('Close this window')
                            ,side   = 'right'
@@ -4311,23 +4311,23 @@ class MultCBoxes:
                            )
         
     def add_row(self,text):
-        frm  = Frame (parent = self.frme
-                     ,expand = False
-                     )
-        cbox = CheckBox (parent = frm
-                        ,side   = 'left'
-                        )
-        lbl  = Label (parent = frm
-                     ,text   = text
-                     ,side   = 'left'
-                     ,Close  = False
-                     )
+        frm = Frame (parent = self.frm_emb
+                    ,expand = False
+                    )
+        cbx = CheckBox (parent = frm
+                       ,side   = 'left'
+                       )
+        lbl = Label (parent = frm
+                    ,text   = text
+                    ,side   = 'left'
+                    ,Close  = False
+                    )
         bind (obj      = lbl
              ,bindings = '<ButtonRelease-1>'
-             ,action   = cbox.toggle
+             ,action   = cbx.toggle
              )
         self._frms.append(frm)
-        self._cboxes.append(cbox)
+        self._cboxes.append(cbx)
         self._lbls.append(lbl)
         
     def toggle(self,event=None):
@@ -4357,96 +4357,44 @@ class MultCBoxes:
              ,bindings = ['<Control-q>','<Control-w>','<Escape>']
              ,action   = self.close
              )
-        bind (obj      = self.parent
-             ,bindings = '<Down>'
-             ,action   = self.cvs.move_down
-             )
-        bind (obj      = self.parent
-             ,bindings = '<Up>'
-             ,action   = self.cvs.move_up
-             )
-        bind (obj      = self.parent
-             ,bindings = '<Left>'
-             ,action   = self.cvs.move_left
-             )
-        bind (obj      = self.parent
-             ,bindings = '<Right>'
-             ,action   = self.cvs.move_right
-             )
-        bind (obj      = self.parent
-             ,bindings = '<Next>'
-             ,action   = self.cvs.move_page_down
-             )
-        bind (obj      = self.parent
-             ,bindings = '<Prior>'
-             ,action   = self.cvs.move_page_up
-             )
-        bind (obj      = self.parent
-             ,bindings = '<End>'
-             ,action   = self.cvs.move_bottom
-             )
-        bind (obj      = self.parent
-             ,bindings = '<Home>'
-             ,action   = self.cvs.move_top
-             )
-        if sh.oss.win() or sh.oss.mac():
-            bind (obj      = self.parent
-                 ,bindings = '<MouseWheel>'
-                 ,action   = self.mouse_wheel
-                 )
-        else:
-            bind (obj      = self.parent
-                 ,bindings = ['<Button 4>'
-                             ,'<Button 5>'
-                             ]
-                 ,action   = self.mouse_wheel
-                 )
-    
-    def mouse_wheel(self,event):
-        ''' In Windows XP delta == -120 for scrolling up and 120
-            for scrolling down, however, this value varies for different
-            versions.
-        '''
-        if event.num == 5 or event.delta < 0:
-            self.cvs.move_down()
-        elif event.num == 4 or event.delta > 0:
-            self.cvs.move_up()
-        return 'break'
+        self.cvs_prm.top_bindings (top     = self.parent
+                                  ,Control = False
+                                  )
     
     def gui(self):
         self.frames()
         self.widgets()
         self.scrollbars()
-        self.btn2.focus()
+        self.btn_cls.focus()
         self.bindings()
         self.title()
         
     def frames(self):
-        self.frm  = Frame (parent = self.parent)
-        self.frmy = Frame (parent = self.frm
-                          ,expand = False
-                          ,fill   = 'y'
-                          ,side   = 'right'
-                          )
-        self.frmb = Frame (parent = self.parent
-                          ,expand = False
-                          ,fill   = 'both'
-                          )
-        self.frmx = Frame (parent = self.frm
-                          ,expand = False
-                          ,fill   = 'x'
-                          ,side   = 'bottom'
-                          )
-        self.frm1 = Frame (parent = self.frm)
+        self.frm_prm = Frame (parent = self.parent)
+        self.frm_ver = Frame (parent = self.frm_prm
+                             ,expand = False
+                             ,fill   = 'y'
+                             ,side   = 'right'
+                             )
+        self.frm_bth = Frame (parent = self.parent
+                             ,expand = False
+                             ,fill   = 'both'
+                             )
+        self.frm_hor = Frame (parent = self.frm_prm
+                             ,expand = False
+                             ,fill   = 'x'
+                             ,side   = 'bottom'
+                             )
+        self.frm_sec = Frame (parent = self.frm_prm)
         
     def scrollbars(self):
-        self.xscr = Scrollbar (parent = self.frmx
-                              ,scroll = self.cvs
-                              ,Horiz  = True
-                              )
-        self.yscr = Scrollbar (parent = self.frmy
-                              ,scroll = self.cvs
-                              )
+        self.scr_hor = Scrollbar (parent = self.frm_hor
+                                 ,scroll = self.cvs_prm
+                                 ,Horiz  = True
+                                 )
+        self.scr_ver = Scrollbar (parent = self.frm_ver
+                                 ,scroll = self.cvs_prm
+                                 )
                                  
     def show(self,event=None):
         self.parent.show()
