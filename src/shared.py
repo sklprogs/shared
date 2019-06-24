@@ -1663,6 +1663,20 @@ class File:
                      ,_('The object "%s" is not a file!') % self.file
                      )
 
+    def size(self,Follow=True):
+        f = '[shared] shared.File.size'
+        result = 0
+        if self.Success:
+            if Follow:
+                cond = not os.path.islink(self.file)
+            else:
+                cond = True
+            if cond:
+                result = os.path.getsize(self.file)
+        else:
+            sh.com.cancel(f)
+        return result
+    
     def _copy(self):
         f = '[shared] shared.File._copy'
         Success = True
@@ -2326,6 +2340,23 @@ class Directory:
                      ,_('Wrong input data: "%s"') % self.dir
                      )
 
+    def size(self,Follow=True):
+        f = '[shared] shared.Directory.size'
+        result = 0
+        if self.Success:
+            for dirpath, dirnames, filenames in os.walk(self.dir):
+                for name in filenames:
+                    obj = os.path.join(dirpath,name)
+                    if Follow:
+                        cond = not os.path.islink(obj)
+                    else:
+                        cond = True
+                    if cond:
+                        result += os.path.getsize(obj)
+        else:
+            sh.com.cancel(f)
+        return result
+    
     def values(self):
         self.Success = True
         # Assigning lists must be one per line
@@ -4642,6 +4673,33 @@ class Commands:
 
     def __init__(self):
         self.lang()
+        
+    def human_size(self,bsize):
+        result = '%d %s' % (0,_('B'))
+        if bsize:
+            terabytes = bsize // pow(10,12)
+            cursize   = terabytes * pow(10,12)
+            gigabytes = (bsize - cursize) // pow(10,9)
+            cursize  += gigabytes * pow(10,9)
+            megabytes = (bsize - cursize) // pow(10,6)
+            cursize  += megabytes * pow(10,6)
+            kilobytes = (bsize - cursize) // pow(10,3)
+            cursize  += kilobytes * pow(10,3)
+            rbytes    = bsize - cursize
+            mes = []
+            if terabytes:
+                mes.append('%d %s' % (terabytes,_('TB')))
+            if gigabytes:
+                mes.append('%d %s' % (gigabytes,_('GB')))
+            if megabytes:
+                mes.append('%d %s' % (megabytes,_('MB')))
+            if kilobytes:
+                mes.append('%d %s' % (kilobytes,_('KB')))
+            if rbytes:
+                mes.append('%d %s' % (rbytes,_('B')))
+            if mes:
+                result = ' '.join(mes)
+        return result
     
     def split_time(self,length=0):
         hours   = length // 3600
