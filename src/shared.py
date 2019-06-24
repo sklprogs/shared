@@ -4677,25 +4677,25 @@ class Commands:
     def human_size(self,bsize,LargeOnly=False):
         result = '%d %s' % (0,_('B'))
         if bsize:
-            terabytes = bsize // pow(10,12)
-            cursize   = terabytes * pow(10,12)
-            gigabytes = (bsize - cursize) // pow(10,9)
-            cursize  += gigabytes * pow(10,9)
-            megabytes = (bsize - cursize) // pow(10,6)
-            cursize  += megabytes * pow(10,6)
-            kilobytes = (bsize - cursize) // pow(10,3)
-            cursize  += kilobytes * pow(10,3)
+            tebibytes = bsize // pow(2,40)
+            cursize   = tebibytes * pow(2,40)
+            gibibytes = (bsize - cursize) // pow(2,30)
+            cursize  += gibibytes * pow(2,30)
+            mebibytes = (bsize - cursize) // pow(2,20)
+            cursize  += mebibytes * pow(2,20)
+            kibibytes = (bsize - cursize) // pow(2,10)
+            cursize  += kibibytes * pow(2,10)
             rbytes    = bsize - cursize
             mes = []
-            if terabytes:
-                mes.append('%d %s' % (terabytes,_('TB')))
-            if gigabytes:
-                mes.append('%d %s' % (gigabytes,_('GB')))
-            if megabytes:
-                mes.append('%d %s' % (megabytes,_('MB')))
-            if not (LargeOnly and bsize // pow(10,6)):
-                if kilobytes:
-                    mes.append('%d %s' % (kilobytes,_('KB')))
+            if tebibytes:
+                mes.append('%d %s' % (tebibytes,_('TiB')))
+            if gibibytes:
+                mes.append('%d %s' % (gibibytes,_('GiB')))
+            if mebibytes:
+                mes.append('%d %s' % (mebibytes,_('MiB')))
+            if not (LargeOnly and bsize // pow(2,20)):
+                if kibibytes:
+                    mes.append('%d %s' % (kibibytes,_('KiB')))
                 if rbytes:
                     mes.append('%d %s' % (rbytes,_('B')))
             if mes:
