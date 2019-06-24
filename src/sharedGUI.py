@@ -4251,6 +4251,7 @@ class MultCBoxes:
 
     def __init__ (self,text='',width=350
                  ,height=300,font='Serif 14'
+                 ,SelectAll=False
                  ):
         self._width  = width
         self._height = height
@@ -4263,8 +4264,14 @@ class MultCBoxes:
                                          )
         self.gui()
         if text:
-            self.reset(text)
+            self.reset (text      = text
+                       ,SelectAll = SelectAll
+                       )
         
+    def select_all(self,event=None):
+        for cbx in self._cboxes:
+            cbx.enable()
+    
     def selected(self,event=None):
         active = []
         for i in range(len(self._cboxes)):
@@ -4349,7 +4356,7 @@ class MultCBoxes:
             for cbox in self._cboxes:
                 cbox.enable()
     
-    def reset(self,text=''):
+    def reset(self,text='',SelectAll=False):
         for frame in self._frms:
             frame.widget.destroy()
         self.values()
@@ -4357,6 +4364,8 @@ class MultCBoxes:
         for item in self._text.splitlines():
             self.add_row(item)
         self.region()
+        if SelectAll:
+            self.select_all()
     
     def bindings(self):
         bind (obj      = self.parent
