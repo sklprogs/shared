@@ -4249,9 +4249,12 @@ class AttachWidget:
 
 class MultCBoxes:
 
-    def __init__(self,lst=[],width=350,height=300):
+    def __init__ (self,text='',width=350
+                 ,height=300,font='Serif 14'
+                 ):
         self._width  = width
         self._height = height
+        self._font   = font
         self.values()
         self.parent = Top(parent=objs.root())
         Geometry(parent=self.parent).set ('%dx%d' % (self._width
@@ -4259,7 +4262,8 @@ class MultCBoxes:
                                                     )
                                          )
         self.gui()
-        self.reset(lst=lst)
+        if text:
+            self.reset(text)
         
     def selected(self,event=None):
         active = []
@@ -4276,10 +4280,11 @@ class MultCBoxes:
     def region(self):
         f = '[shared] sharedGUI.MultCBoxes.region'
         if self._frms:
-            self.cvs_prm.region (x        = self._width
-                                ,y        = 22 * len(self._frms)
-                                ,x_border = 10
-                                ,y_border = 20
+            objs.root().idle()
+            self.cvs_prm.region (x        = self.frm_emb.widget.winfo_reqwidth()
+                                ,y        = self.frm_emb.widget.winfo_reqheight()
+                                ,x_border = 5
+                                ,y_border = 10
                                 )
             self.cvs_prm.scroll()
         else:
@@ -4291,7 +4296,7 @@ class MultCBoxes:
         self._frms   = []
         self._cboxes = []
         self._lbls   = []
-        
+        self._text   = ''
     
     def widgets(self):
         self.cvs_prm = Canvas(parent=self.frm_sec)
@@ -4304,11 +4309,11 @@ class MultCBoxes:
                               ,action = self.toggle
                               )
         self.btn_cls = Button (parent = self.frm_bth
-                           ,text   = _('Close')
-                           ,hint   = _('Close this window')
-                           ,side   = 'right'
-                           ,action = self.close
-                           )
+                              ,text   = _('Close')
+                              ,hint   = _('Close this window')
+                              ,side   = 'right'
+                              ,action = self.close
+                              )
         
     def add_row(self,text):
         frm = Frame (parent = self.frm_emb
@@ -4321,6 +4326,7 @@ class MultCBoxes:
                     ,text   = text
                     ,side   = 'left'
                     ,Close  = False
+                    ,font   = self._font
                     )
         bind (obj      = lbl
              ,bindings = '<ButtonRelease-1>'
@@ -4343,12 +4349,12 @@ class MultCBoxes:
             for cbox in self._cboxes:
                 cbox.enable()
     
-    def reset(self,lst=[]):
-        lst = [str(item) for item in lst]
+    def reset(self,text=''):
         for frame in self._frms:
             frame.widget.destroy()
         self.values()
-        for item in lst:
+        self._text = str(text)
+        for item in self._text.splitlines():
             self.add_row(item)
         self.region()
     
