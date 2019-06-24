@@ -4674,6 +4674,7 @@ class Commands:
     def __init__(self):
         self.lang()
         
+    # IEC standard
     def human_size(self,bsize,LargeOnly=False):
         result = '%d %s' % (0,_('B'))
         if bsize:

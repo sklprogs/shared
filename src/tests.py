@@ -17,9 +17,10 @@ class Commands:
         print('Object: directory; expected result: 62M')
         print(sh.Directory(my_dir).size(Follow=True))
         '''
-        file = '/boot/initrd.img-4.9.0-9-686'
+        #file = '/boot/initrd.img-4.9.0-9-686'
+        file = '/home/pete/main/dist/manjaro-xfce-15.12-i686.iso'
         size = sh.File(file).size()
-        print(sh.com.human_size(size,LargeOnly=1))
+        print(sh.com.human_size(size,LargeOnly=0))
     
     def panes(self):
         panes = sg.Panes(Extended=1)
