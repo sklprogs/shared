@@ -1667,12 +1667,22 @@ class File:
         f = '[shared] shared.File.size'
         result = 0
         if self.Success:
-            if Follow:
-                cond = not os.path.islink(self.file)
-            else:
-                cond = True
-            if cond:
-                result = os.path.getsize(self.file)
+            try:
+                if Follow:
+                    cond = not os.path.islink(self.file)
+                else:
+                    cond = True
+                if cond:
+                    result = os.path.getsize(self.file)
+            except Exception as e:
+                ''' Along with other errors, 'No such file or directory'
+                    error will be raised if Follow=False and this is
+                    a broken symbolic link.
+                '''
+                objs.mes (f,_('WARNING')
+                         ,_('Operation has failed!\nDetails: %s') \
+                         % str(e)
+                         )
         else:
             com.cancel(f)
         return result
@@ -2344,15 +2354,25 @@ class Directory:
         f = '[shared] shared.Directory.size'
         result = 0
         if self.Success:
-            for dirpath, dirnames, filenames in os.walk(self.dir):
-                for name in filenames:
-                    obj = os.path.join(dirpath,name)
-                    if Follow:
-                        cond = not os.path.islink(obj)
-                    else:
-                        cond = True
-                    if cond:
-                        result += os.path.getsize(obj)
+            try:
+                for dirpath, dirnames, filenames in os.walk(self.dir):
+                    for name in filenames:
+                        obj = os.path.join(dirpath,name)
+                        if Follow:
+                            cond = not os.path.islink(obj)
+                        else:
+                            cond = True
+                        if cond:
+                            result += os.path.getsize(obj)
+            except Exception as e:
+                ''' Along with other errors, 'No such file or directory'
+                    error will be raised if Follow=False and there are
+                    broken symbolic links.
+                '''
+                objs.mes (f,_('WARNING')
+                         ,_('Operation has failed!\nDetails: %s') \
+                         % str(e)
+                         )
         else:
             com.cancel(f)
         return result

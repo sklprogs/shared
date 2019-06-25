@@ -12,15 +12,31 @@ import sharedGUI as sg
 class Commands:
     
     def size(self):
-        '''
-        my_dir = '/boot'
-        print('Object: directory; expected result: 62M')
-        print(sh.Directory(my_dir).size(Follow=True))
-        '''
-        #file = '/boot/initrd.img-4.9.0-9-686'
-        file = '/home/pete/main/dist/manjaro-xfce-15.12-i686.iso'
+        print('Test #1')
+        my_dir = '/home/pete/base/Изображения'
+        print('Object: directory; expected result: 975M')
+        size = sh.Directory(my_dir).size(Follow=1)
+        print(sh.com.human_size(size,LargeOnly=0))
+        print('Test #2')
+        my_dir = '/home/pete/base/docs'
+        print('Object: directory; expected result: 8,7G')
+        size = sh.Directory(my_dir).size(Follow=1)
+        print(sh.com.human_size(size,LargeOnly=0))
+        print('Test #3')
+        file = '/boot/initrd.img-4.9.0-9-686'
+        print('Object: file; expected result: 21M')
         size = sh.File(file).size()
         print(sh.com.human_size(size,LargeOnly=0))
+        print('Test #4')
+        file = '/home/pete/main/dist/manjaro-xfce-15.12-i686.iso'
+        print('Object: file; LargeOnly=1; expected result: 1,3G')
+        size = sh.File(file).size()
+        print(sh.com.human_size(size,LargeOnly=1))
+        print('Test #5')
+        file = '/home/pete/bin/examples/gettext_windows.py'
+        print('Object: file; Follow=0; expected result: 0')
+        size = sh.File(file).size(Follow=0)
+        print(sh.com.human_size(size,LargeOnly=1))
     
     def panes(self):
         panes = sg.Panes(Extended=1)
