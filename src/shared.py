@@ -2362,8 +2362,13 @@ class Directory:
         f = '[shared] shared.Directory.__init__'
         self.values()
         if path:
-            # Removes trailing slashes if necessary
-            self.dir = Path(path).path
+            ''' Remove trailing slashes and follow symlinks. No error is
+                thrown for broken symlinks, but further checks will fail
+                for them. Failing a real path (e.g., pointing to
+                the volume that is not mounted yet) is more
+                apprehensible than failing a symlink.
+            '''
+            self.dir = os.path.realpath(path)
         else:
             self.dir = ''
         if dest:

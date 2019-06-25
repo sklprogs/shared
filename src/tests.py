@@ -178,6 +178,9 @@ com = Commands()
 
 if __name__ == '__main__':
     sg.objs.start()
-    com.free_space()
+    path = '/home/pete/.local/share/unmusic/внешняя коллекция'
+    #size = sh.Path(path).free_space()
+    #print(sh.com.human_size(size,LargeOnly=1))
+    print(sh.Directory(path).Success)
     sg.objs.end()
     
