@@ -11,6 +11,23 @@ import sharedGUI as sg
 
 class Commands:
     
+    def free_space(self):
+        print('Test #1')
+        print('Empty input. 0B is expected')
+        path = None
+        size = sh.Path(path).free_space()
+        print(sh.com.human_size(size))
+        print('Test #2')
+        print('/. LargeOnly=1. 8,3G is expected')
+        path = '/'
+        size = sh.Path(path).free_space()
+        print(sh.com.human_size(size,LargeOnly=1))
+        print('Test #3')
+        print('/home/pete/tmp/. 32G is expected')
+        path = '/home/pete/tmp/'
+        size = sh.Path(path).free_space()
+        print(sh.com.human_size(size))
+    
     def size(self):
         print('Test #1')
         my_dir = '/home/pete/base/Изображения'
@@ -161,6 +178,6 @@ com = Commands()
 
 if __name__ == '__main__':
     sg.objs.start()
-    com.size()
+    com.free_space()
     sg.objs.end()
     

@@ -1848,6 +1848,27 @@ class Path:
     def __init__(self,path):
         self.reset(path)
 
+    def free_space(self):
+        f = '[shared] shared.Path.free_space'
+        result = 0
+        if self.path:
+            if os.path.exists(self.path):
+                try:
+                    istat  = os.statvfs(self.path)
+                    result = istat.f_bavail * istat.f_bsize
+                except Exception as e:
+                    objs.mes (f,_('WARNING')
+                             ,_('Operation has failed!\nDetails: %s') \
+                             % str(e)
+                             )
+            else:
+                objs.mes (f,_('WARNING')
+                         ,_('Wrong input data: "%s"!') % str(self.path)
+                         )
+        else:
+            com.empty(f)
+        return result
+    
     def _splitpath(self):
         if not self._split:
             self._split = os.path.splitext(self.basename())
@@ -1925,7 +1946,11 @@ class Path:
         return self._filename
 
     def reset(self,path):
-        self.path = path
+        # Prevent 'NoneType'
+        if path:
+            self.path = path
+        else:
+            self.path = ''
         ''' Building paths in Windows:
             - Use raw strings (e.g., set path as r'C:\1.txt')
             - Use os.path.join(mydir,myfile) or os.path.normpath(path)
@@ -1936,7 +1961,8 @@ class Path:
             dirname work differently in this case ('' and the last
             directory, correspondingly)
         '''
-        self.path      = self.path.rstrip('//')
+        if self.path != '/':
+            self.path = self.path.rstrip('//')
         self._basename = self._dirname = self._extension \
                        = self._filename = self._split = self._date = ''
         self.parts     = []
