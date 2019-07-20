@@ -325,7 +325,7 @@ class SearchBox:
             # Prevents from calling self.search() once again
             if not self.isearch._next_loop:
                 mes = _('No matches!')
-                Message(f,mes).info()
+                objs.mes(f,mes).info()
                 self.Success = False
         else:
             self.Success = False
@@ -371,7 +371,7 @@ class SearchBox:
                 result2 = self.words.no_by_pos_n(pos=self.pos2())
             if result1 is None or result2 is None:
                 mes = _('Wrong input data!')
-                Message(f,mes,True).error()
+                objs.mes(f,mes,True).error()
             else:
                 _pos1 = self.words.words[result1].tf()
                 _pos2 = self.words.words[result2].tl()
@@ -416,15 +416,15 @@ class SearchBox:
                 if old_i == self.i:
                     if len(_loop) == 1:
                         mes = _('Only one match has been found!')
-                        Message(f,mes).info()
+                        objs.mes(f,mes).info()
                     else:
                         self.i = 0
                         mes = _('No more matches, continuing from the top!')
-                        Message(f,mes).info()
+                        objs.mes(f,mes).info()
                 self.select()
             else:
                 mes = _('No matches!')
-                Message(f,mes).info()
+                objs.mes(f,mes).info()
         else:
             com.cancel(f)
 
@@ -438,16 +438,16 @@ class SearchBox:
                 if old_i == self.i:
                     if len(_loop) == 1:
                         mes = _('Only one match has been found!')
-                        Message(f,mes).info()
+                        objs.mes(f,mes).info()
                     else:
                         # Not just -1
                         self.i = len(_loop) - 1
                         mes = _('No more matches, continuing from the bottom!')
-                        Message(f,mes).info()
+                        objs.mes(f,mes).info()
                 self.select()
             else:
                 mes = _('No matches!')
-                Message(f,mes).info()
+                objs.mes(f,mes).info()
         else:
             com.cancel(f)
 
@@ -536,7 +536,7 @@ class Selection:
         # Too frequent
         '''
         mes = '{}-{}'.format(self._pos1,self._pos2)
-        Message(f,mes,True).debug()
+        objs.mes(f,mes,True).debug()
         '''
         return(self._pos1,self._pos2)
 
@@ -640,13 +640,13 @@ class TextBoxC:
                                      )
                 
                 mes = _('{} tags to assign').format(len(result))
-                Message(f,mes,True).debug()
+                objs.mes(f,mes,True).debug()
                 self.tag_config (tag = 'spell'
                                 ,bg  = 'red'
                                 )
             else:
                 mes = _('Spelling seems to be correct.')
-                Message(f,mes,True).info()
+                objs.mes(f,mes,True).info()
         else:
             com.empty(f)
     
@@ -1409,7 +1409,7 @@ class MultCBoxes:
                                 )
             self.cvs_prm.scroll()
         else:
-            lg.com.lazy(f)
+            com.lazy(f)
         
     def values(self):
         self._frms   = []
@@ -1615,7 +1615,7 @@ class ProgressBar:
         '''
         sub = '{}x{}'.format(max_x,max_y)
         mes = _('Widget sizes: {}').format(sub)
-        Message(f,mes,True).debug()
+        objs.mes(f,mes,True).debug()
         '''
         self.canvas.region (x        = max_x
                            ,y        = max_y
@@ -1691,7 +1691,7 @@ class Image:
         if self._bytes:
             self._loader = self.gui.loader(io.BytesIO(self._bytes))
         else:
-            lg.com.empty(f)
+            com.empty(f)
         return self._loader
         
     def thumbnail(self,x,y):
@@ -1705,9 +1705,9 @@ class Image:
             except Exception as e:
                 mes = _('Third-party module has failed!\n\nDetails: {}')
                 mes = mes.format(e)
-                Message(f,mes,True).warning()
+                objs.mes(f,mes,True).warning()
         else:
-            lg.com.empty(f)
+            com.empty(f)
         return self._loader
     
     def image(self):
@@ -1715,7 +1715,7 @@ class Image:
         if self._loader:
             self._image = self.gui.image(self._loader)
         else:
-            lg.com.empty(f)
+            com.empty(f)
         return self._image
         
     def bytes(self,ext='PNG'):
@@ -1724,7 +1724,7 @@ class Image:
             self._loader.save(self._bytes,format=ext)
             self._bytes = self._bytes.getvalue()
         else:
-            lg.com.empty(f)
+            com.empty(f)
         return self._bytes
 
 
@@ -1808,9 +1808,9 @@ class Canvas:
                              )
             else:
                 mes = _('Wrong input data!')
-                Message(f,mes,True).warning()
+                objs.mes(f,mes,True).warning()
         else:
-            lg.com.empty(f)
+            com.empty(f)
     
     def move_up(self,event=None,value=-1):
         self.gui.move_up(value)
@@ -1848,7 +1848,7 @@ class Canvas:
                             ,y_border = y_border
                             )
         else:
-            lg.com.empty(f)
+            com.empty(f)
     
     def scroll(self,event=None,x=0,y=0):
         self.gui.scroll (x = x
@@ -1861,7 +1861,7 @@ class Canvas:
             self.gui.embed(obj)
         else:
             mes = _('Wrong input data!')
-            Message(f,mes,True).error()
+            objs.mes(f,mes,True).error()
         
     def focus(self,event=None):
         self.gui.focus()
@@ -1890,7 +1890,7 @@ class Clipboard:
             except Exception as e:
                 com.failed(f,e,self.Silent)
         else:
-            lg.com.empty(f)
+            com.empty(f)
 
     def paste(self):
         f = '[shared] shared.Clipboard.paste'
@@ -2044,7 +2044,7 @@ class OptionMenu:
         if self.action:
             self.action()
         else:
-            lg.com.lazy(f)
+            com.lazy(f)
 
     def _default_set(self):
         if len(self.items) > 0:
@@ -2070,7 +2070,7 @@ class OptionMenu:
             else:
                 mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
                 mes = mes.format(self.default,self.items)
-                Message(f,mes,True).error()
+                objs.mes(f,mes,True).error()
                 self._default_set()
 
     def set(self,item,event=None):
@@ -2082,7 +2082,7 @@ class OptionMenu:
             self.index  = self.items.index(self.choice)
         else:
             mes = _('Wrong input data: "{}"!').format(item)
-            Message(f,mes,True).error()
+            objs.mes(f,mes,True).error()
 
     def fill(self):
         self.gui.fill (items  = self.items
@@ -2118,7 +2118,7 @@ class OptionMenu:
             self.index = self.items.index(self.choice)
         except ValueError:
             mes = _('Wrong input data: "{}"!').format(self.choice)
-            Message(f,mes,True).error()
+            objs.mes(f,mes,True).error()
 
     def set_prev(self,event=None):
         if self.index == 0:
@@ -2198,10 +2198,10 @@ class ListBox:
             del self.lst[self._index]
             # Set this after 'del' to be triggered only on success
             mes = _('Remove item #{}').format(self._index)
-            Message(f,mes,True).debug()
+            objs.mes(f,mes,True).debug()
         except IndexError:
             mes = _('No item #{}!').format(self._index)
-            Message(f,mes,True).warning()
+            objs.mes(f,mes,True).warning()
         else:
             self.reset(lst=self.lst)
 
@@ -2269,9 +2269,9 @@ class ListBox:
                 self._select()
             else:
                 mes = _('Item "{}" is not in list!').format(item)
-                Message(f,mes,True).error()
+                objs.mes(f,mes,True).error()
         else:
-            lg.com.empty(f)
+            com.empty(f)
 
     def fill(self):
         for item in self.lst:
@@ -2498,9 +2498,9 @@ class Scrollbar:
                 return True
             else:
                 mes = _('Wrong input data!')
-                Message(f,mes,True).error()
+                objs.mes(f,mes,True).error()
         else:
-            lg.com.empty(f)
+            com.empty(f)
 
 
 
@@ -2567,7 +2567,7 @@ class ToolTipBase:
             y = 0
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(self.dir,'top, bottom')
-            Message(f,mes,True).error()
+            objs.mes(f,mes,True).error()
         self.tip = Top(Lock=False)
         self.tip.widget.wm_overrideredirect(1)
         # "+%d+%d" is not enough!
@@ -2575,7 +2575,7 @@ class ToolTipBase:
                                                        ,self.height
                                                        ,x,y
                                                        )
-        Message(f,mes,True).info()
+        objs.mes(f,mes,True).info()
         self.tip.widget.wm_geometry ("%dx%d+%d+%d" % (self.width
                                                      ,self.height
                                                      ,x, y
@@ -2621,7 +2621,7 @@ class ToolTip(ToolTipBase):
                 self.width  = ifont.width()
                 self.height = ifont.height()
             else:
-                lg.com.lazy(f)
+                com.lazy(f)
     
     def showcontents(self):
         # Assign this boolean externally to stop showing hints
@@ -2663,9 +2663,9 @@ class WaitBox:
                 self.gui.icon(path)
             else:
                 mes = _('File "{}" has not been found!').format(path)
-                Message(f,mes).warning()
+                objs.mes(f,mes).warning()
         else:
-            lg.com.empty(f)
+            com.empty(f)
     
     def update(self):
         ''' Tkinter works differently in Linux in Windows. This allows
@@ -2825,7 +2825,7 @@ class Button:
             else:
                 self.action()
         else:
-            lg.com.lazy(f)
+            com.lazy(f)
 
     def active(self):
         if not self.Status:
@@ -2938,14 +2938,14 @@ class AttachWidget:
             else:
                 self.Success = False
                 mes = _('Wrong input data!')
-                Message(f,mes).warning()
+                objs.mes(f,mes).warning()
         else:
             self.Success = False
-            lg.com.empty(f)
+            com.empty(f)
         if self.anchor not in self.anchors:
             self.Success = False
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".').format(self.anchor,self.anchors)
-            Message(f,mes).error()
+            objs.mes(f,mes).error()
     
     def _ne(self):
         self.x2 = self.x1
@@ -3024,7 +3024,7 @@ class AttachWidget:
                 self._ws()
             else:
                 mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".').format(self.anchor,self.anchors)
-                Message(f,mes).error()
+                objs.mes(f,mes).error()
             geom = Geometry(parent=self.obj2)
             ''' Do not use '.format' here since it produces floats
                 and we need integers.
@@ -3034,7 +3034,7 @@ class AttachWidget:
                                          )
             geom.restore()
         else:
-            lg.com.cancel(f)
+            com.cancel(f)
     
     def get(self):
         f = '[shared] sharedGUI.AttachWidget.get'
@@ -3052,15 +3052,15 @@ class AttachWidget:
                                                              ,self.x1
                                                              ,self.y1
                                                              )
-            lg.Message(f,mes).debug()
+            objs.mes(f,mes,True).debug()
             mes = _('Widget 2 geometry: {}x{}+{}+{}').format (self.w2
                                                              ,self.h2
                                                              ,self.x2
                                                              ,self.y2
                                                              )
-            lg.Message(f,mes).debug()
+            objs.mes(f,mes,True).debug()
         else:
-            lg.com.cancel(f)
+            com.cancel(f)
     
     def run(self,event=None):
         self.get()
@@ -3146,7 +3146,7 @@ class Label:
             self._font = arg
         if not self.gui.font(self._font):
             mes = _('Wrong font: "{}"!').format(self._font)
-            lg.Message(f,mes).error()
+            objs.mes(f,mes,True).error()
             self._font = 'Sans 11'
 
     def show(self,event=None):
@@ -3198,22 +3198,22 @@ class Geometry:
             self.update()
             self._geom = self.gui.geometry()
             mes = _('Save geometry: {}').format(self._geom)
-            lg.Message(f,mes).info()
+            objs.mes(f,mes,True).info()
         else:
-            lg.com.empty(f)
+            com.empty(f)
 
     def restore(self):
         f = '[shared] shared.Geometry.restore'
         if self.parent:
             if self._geom:
                 mes = _('Restore geometry: {}').format(self._geom)
-                lg.Message(f,mes).info()
+                objs.mes(f,mes,True).info()
                 self.gui.restore(self._geom)
             else:
                 mes = _('Failed to restore geometry!')
-                lg.Message(f,mes).warning()
+                objs.mes(f,mes,True).warning()
         else:
-            lg.com.empty(f)
+            com.empty(f)
 
     def foreground(self,event=None):
         f = '[shared] shared.Geometry.foreground'
@@ -3229,13 +3229,13 @@ class Geometry:
                         so we just log it
                     '''
                     mes = _('Failed to change window properties!')
-                    lg.Message(f,mes).error()
+                    objs.mes(f,mes,True).error()
             else:
-                lg.com.empty(f)
+                com.empty(f)
         elif self.parent:
             self.gui.foreground()
         else:
-            lg.com.empty(f)
+            com.empty(f)
 
     def minimize(self,event=None):
         f = '[shared] shared.Geometry.minimize'
@@ -3247,7 +3247,7 @@ class Geometry:
             '''
             self.gui.minimize()
         else:
-            lg.com.empty(f)
+            com.empty(f)
 
     def maximize(self,event=None):
         f = '[shared] shared.Geometry.maximize'
@@ -3257,7 +3257,7 @@ class Geometry:
         elif self.parent:
             self.gui.maximize_nix()
         else:
-            lg.com.empty(f)
+            com.empty(f)
 
     def focus(self,event=None):
         f = '[shared] shared.Geometry.focus'
@@ -3266,21 +3266,21 @@ class Geometry:
         elif self.parent:
             self.gui.focus()
         else:
-            lg.com.empty(f)
+            com.empty(f)
 
     def lift(self,event=None):
         f = '[shared] shared.Geometry.lift'
         if self.parent:
             self.gui.lift()
         else:
-            lg.com.empty(f)
+            com.empty(f)
 
     def _activate(self):
         f = '[shared] shared.Geometry._activate'
         if self.parent:
             self.gui._activate()
         else:
-            lg.com.empty(f)
+            com.empty(f)
 
     def activate(self,event=None,MouseClicked=False):
         self._activate()
@@ -3312,9 +3312,9 @@ class Geometry:
                     self._hwnd = win32gui.FindWindow(None,self._title)
                 except win32ui.error:
                     mes = _('Failed to get the window handle!')
-                    lg.Message(f,mes).error()
+                    objs.mes(f,mes,True).error()
             else:
-                lg.com.empty(f)
+                com.empty(f)
         return self._hwnd
 
     def set(self,arg='800x600'):
@@ -3354,9 +3354,9 @@ class Top:
                 self.gui.icon(path)
             else:
                 mes = _('File "{}" has not been found!').format(path)
-                Message(f,mes).warning()
+                objs.mes(f,mes).warning()
         else:
-            lg.com.empty(f)
+            com.empty(f)
     
     def title(self,text=''):
         text = lg.com.sanitize(text)
@@ -3588,7 +3588,7 @@ class MessageBuilder:
         if self.logic._icon and os.path.exists(self.logic._icon):
             self.gui.icon(self.logic._icon)
         else:
-            lg.com.empty(f)
+            com.empty(f)
 
     def image(self,event=None):
         f = '[shared] shared.MessageBuilder.image'
@@ -3603,7 +3603,7 @@ class MessageBuilder:
                                  ,image  = iimage
                                  )
         else:
-            lg.com.empty(f)
+            com.empty(f)
 
 
 
@@ -3699,7 +3699,7 @@ class Commands:
                ,Silent=True
                ):
         mes = _('Operation has failed!\n\nDetails: {}').format(e)
-        Message(f,mes,Silent).error()
+        objs.mes(f,mes,Silent).error()
     
     def mod_color(self,color,delta=76): # ~30%
         ''' Make a color (a color name (/usr/share/X11/rgb.txt) or
@@ -3713,11 +3713,11 @@ class Commands:
                 return lg.com.mod_color(rgb,delta)
             else:
                 mes = _('An unknown color "{}"!').format(color)
-                Message(f,mes).error()
+                objs.mes(f,mes).error()
         else:
             sub = '-255 <= {} <= 255'.format(delta)
             mes = _('The condition "{}" is not observed!').format(sub)
-            Message(f,mes).warning()
+            objs.mes(f,mes).warning()
     
     def fast_txt(self,text):
         objs.txt().reset()
@@ -3731,7 +3731,8 @@ class Commands:
             file = gi.com.dialog_save_file(options)
         except:
             file = ''
-            Message(f,_('Failed to select a file!')).error()
+            mes = _('Failed to select a file!')
+            objs.mes(f,mes).error()
         return file
     
     def bind(self,obj,bindings,action):
@@ -3748,13 +3749,13 @@ class Commands:
                     if not gi.com.bind(obj,binding,action):
                         mes = _('Failed to enable key combination "{}"!')
                         mes = mes.format(binding)
-                        Message(f,mes,True).error()
+                        objs.mes(f,mes,True).error()
             else:
                 mes = _('Wrong input data: "{}"').format(bindings)
-                Message(f,mes,True).error()
+                objs.mes(f,mes,True).error()
         else:
             mes = _('Wrong input data!')
-            Message(f,mes,True).error()
+            objs.mes(f,mes,True).error()
     
     def start(self):
         gi.objs.start()
@@ -3791,7 +3792,7 @@ class Font:
                                            ,size   = self.logic._size
                                            )
             else:
-                lg.com.empty(f)
+                com.empty(f)
         return self._font
     
     def height(self):
@@ -3801,12 +3802,10 @@ class Font:
                 try:
                     self.logic._height = self.gui.height(self._font)
                 except Exception as e:
-                    Message (func    = f
-                            ,message = str(e)
-                            ).error()
+                    objs.mes(f,str(e),True).error()
                 self.logic.height()
             else:
-                lg.com.empty(f)
+                com.empty(f)
         return self.logic._height
     
     def width(self):
@@ -3822,12 +3821,10 @@ class Font:
                                                        ,max_line = max_line
                                                        )
                 except Exception as e:
-                    Message (func    = f
-                            ,message = str(e)
-                            ).error()
+                    objs.mes(f,str(e),True).error()
                 self.logic.width()
             else:
-                lg.com.empty(f)
+                com.empty(f)
         return self.logic._width
 
 

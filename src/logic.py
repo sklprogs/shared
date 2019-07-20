@@ -264,10 +264,8 @@ class Hotkeys:
             and not isinstance(self._hotkeys,tuple) \
             and not isinstance(self._hotkeys,list):
                 self.Success = False
-                objs.mes (f,_('WARNING')
-                         ,_('Wrong input data: "%s"!') \
-                         % str(self._hotkeys)
-                         )
+                mes = _('Wrong input data: "{}"!').format(self._hotkeys)
+                objs.mes(f,mes).warning()
         else:
             self.Success = False
             #todo: do we need this warning?
@@ -493,10 +491,8 @@ class Launch:
     def _launch(self):
         f = '[shared] logic.Launch._launch'
         if self.custom_args:
-            log.append (f,_('DEBUG')
-                       ,_('Custom arguments: "%s"') \
-                       % ';'.join(self.custom_args)
-                       )
+            mes = _('Custom arguments: "{}"').format(self.custom_args)
+            objs.mes(f,mes,True).debug()
             try:
                 # Block the script till the called program is closed
                 if self.Block:
@@ -504,41 +500,34 @@ class Launch:
                 else:
                     subprocess.Popen(self.custom_args)
             except:
-                objs.mes (f,_('ERROR')
-                         ,_('Failed to run "%s"!') \
-                         % str(self.custom_args)
-                         )
+                mes = _('Failed to run "{}"!').format(self.custom_args)
+                objs.mes(f,mes).error()
         else:
-            log.append (f,_('ERROR')
-                       ,_('Not enough input data!')
-                       )
+            com.empty(f)
 
     def _lin(self):
         f = '[shared] logic.Launch._lin'
         try:
             os.system("xdg-open " + self.ipath.escape() + "&")
         except OSError:
-            objs.mes (f,_('ERROR')
-                     ,_('Unable to open the file in an external program. You should probably check the file associations.')
-                     )
+            mes = _('Unable to open the file in an external program. You should probably check the file associations.')
+            objs.mes(f,mes).error()
 
     def _mac(self):
         f = '[shared] logic.Launch._mac'
         try:
             os.system("open " + self.target)
         except:
-            objs.mes (f,_('ERROR')
-                     ,_('Unable to open the file in an external program. You should probably check the file associations.')
-                     )
+            mes = _('Unable to open the file in an external program. You should probably check the file associations.')
+            objs.mes(f,mes).error()
 
     def _win(self):
         f = '[shared] logic.Launch._win'
         try:
             os.startfile(self.target)
         except:
-            objs.mes (f,_('ERROR')
-                     ,_('Unable to open the file in an external program. You should probably check the file associations.')
-                     )
+            mes = _('Unable to open the file in an external program. You should probably check the file associations.')
+            objs.mes(f,mes).error()
 
     def app(self,custom_app='',custom_args=[]):
         self.custom_app  = custom_app
@@ -592,30 +581,26 @@ class WriteTextFile:
         self.Rewrite = Rewrite
         self.Success = True
         if not self.file:
-            objs.mes (f,_('ERROR')
-                     ,_('Not enough input data!')
-                     )
             self.Success = False
+            mes = _('Not enough input data!')
+            objs.mes(f,mes).warning()
 
     def _write(self,mode='w'):
         f = '[shared] logic.WriteTextFile._write'
         if mode == 'w' or mode == 'a':
-            log.append (f,_('INFO')
-                       ,_('Write file "%s"') % self.file
-                       )
+            mes = _('Write file "{}"').format(self.file)
+            objs.mes(f,mes,True).info()
             try:
                 with open(self.file,mode,encoding='UTF-8') as fl:
                     fl.write(self.text)
             except:
                 self.Success = False
-                objs.mes (f,_('ERROR')
-                         ,_('Unable to write file "%s"!') % self.file
-                         )
+                mes = _('Unable to write file "{}"!').format(self.file)
+                objs.mes(f,mes).error()
         else:
-            objs.mes (f,_('ERROR')
-                     ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".')\
-                     % (str(mode),'a, w')
-                     )
+            mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
+            mes = mes.format(mode,'a, w')
+            objs.mes(f,mes).error()
 
     def append(self,text=''):
         f = '[shared] logic.WriteTextFile.append'
@@ -628,9 +613,8 @@ class WriteTextFile:
                 '''
                 self._write('a')
             else:
-                objs.mes (f,_('ERROR')
-                         ,_('Not enough input data!')
-                         )
+                mes = _('Not enough input data!')
+                objs.mes(f,mes).warning()
         else:
             com.cancel(f)
 
@@ -644,9 +628,8 @@ class WriteTextFile:
                                ):
                     self._write('w')
             else:
-                objs.mes (f,_('ERROR')
-                         ,_('Not enough input data!')
-                         )
+                mes = _('Not enough input data!')
+                objs.mes(f,mes).warning()
         else:
             com.cancel(f)
 
@@ -725,22 +708,17 @@ class TextDic:
                 old = self.lines()
                 self._list = list(set(self.list()))
                 new = self._lines = len(self._list)
-                log.append (f,_('INFO')
-                           ,_('Entries deleted: %d (%d-%d)') % (old-new
-                                                               ,old
-                                                               ,new
-                                                               )
-                           )
+                mes = _('Entries deleted: {} ({}-{})')
+                mes = mes.format(old-new,old,new)
+                objs.mes(f,mes,True).info()
                 self.text = '\n'.join(self._list)
                 # Update original and translation
                 self._split()
                 # After using set(), the original order was lost
                 self.sort()
             else:
-                objs.mes (f,_('WARNING')
-                         ,_('File "%s" is not sortable!') \
-                         % self.file
-                         )
+                mes = _('File "{}" is not sortable!').format(self.file)
+                objs.mes(f,mes).warning()
         else:
             com.cancel(f)
 
@@ -754,9 +732,8 @@ class TextDic:
                 self._list.append(self.orig[i]+'\t'+self.transl[i])
             self.text = '\n'.join(self._list)
         else:
-            objs.mes (f,_('WARNING')
-                     ,_('Wrong input data!')
-                     )
+            mes = _('Wrong input data!')
+            objs.mes(f,mes).warning()
 
     def _split(self):
         ''' We can use this to check integrity and/or update original
@@ -778,10 +755,9 @@ class TextDic:
                 else:
                     self.Success = False
                     # i+1: Count from 1
-                    objs.mes (f,_('WARNING')
-                             ,_('Dictionary "%s": Incorrect line #%d: "%s"!')\
-                             % (self.file,i+1,self._list[i])
-                             )
+                    mes = _('Dictionary "{}": Incorrect line #{}: "{}"!')
+                    mes = mes.format(self.file,i+1,self._list[i])
+                    objs.mes(f,mes).warning()
         else:
             self.Success = False
 
@@ -797,9 +773,7 @@ class TextDic:
                 self.transl.append(translation)
                 self._join()
             else:
-                objs.mes (f,_('WARNING')
-                         ,_('Empty input is not allowed!')
-                         )
+                com.empty(f)
         else:
             com.cancel(f)
 
@@ -815,12 +789,10 @@ class TextDic:
                 del self.transl[entry_no]
                 self._join()
             else:
-                objs.mes (f,_('ERROR')
-                         ,_('The condition "%s" is not observed!') \
-                         % ('0 <= ' + str(entry_no) + ' < %d' \
-                           % self.lines()
-                           )
-                         )
+                sub = '0 <= {} < {}'.format(entry_no,self.lines())
+                mes = _('The condition "{}" is not observed!')
+                mes = mes.format(sub)
+                objs.mes(f,mes).error()
         else:
             com.cancel(f)
 
@@ -836,12 +808,10 @@ class TextDic:
                 self.transl[entry_no] = transl
                 self._join()
             else:
-                objs.mes (f,_('ERROR')
-                         ,_('The condition "%s" is not observed!') \
-                         % ('0 <= ' + str(entry_no) + ' < %d' \
-                           % self.lines()
-                           )
-                         )
+                sub = '0 <= {} < {}'.format(entry_no,self.lines())
+                mes = _('The condition "{}" is not observed!')
+                mes = mes.format(sub)
+                objs.mes(f,mes).error()
         else:
             com.cancel(f)
 
@@ -888,9 +858,8 @@ class TextDic:
                                                   + self.transl[i]
                 self.text = '\n'.join(self._list)
             else:
-                objs.mes (f,_('WARNING')
-                         ,_('File "%s" is not sortable!') % self.file
-                         )
+                mes = _('File "{}" is not sortable!').format(self.file)
+                objs.mes(f,mes).warning()
         else:
             com.cancel(f)
 
@@ -1030,11 +999,9 @@ class Input:
         if isinstance(self.value,float):
             return self.value
         else:
-            objs.mes (self.title
-                     ,_('ERROR')
-                     ,_('Float is required at input, but found "%s"! Return 0.0')\
-                     % str(type(self.value))
-                     )
+            mes = _('Float is required at input, but found "{}"! Return 0.0')
+            mes = mes.format(self.value)
+            objs.mes(self.title,mes).warning()
             self.value = 0.0
         return self.value
     
@@ -1042,10 +1009,8 @@ class Input:
         if isinstance(self.value,list):
             return self.value
         else:
-            log.append (self.title
-                       ,_('WARNING')
-                       ,_('Wrong input data!')
-                       )
+            mes = _('Wrong input data!')
+            objs.mes(self.title,mes,True).warning()
             return []
     
     def integer(self):
@@ -1053,16 +1018,12 @@ class Input:
             return self.value
         elif str(self.value).isdigit():
             self.value = int(self.value)
-            log.append (self.title
-                       ,_('INFO')
-                       ,_('Convert "%s" to an integer') % str(self.value)
-                       )
+            mes = _('Convert "{}" to an integer').format(self.value)
+            objs.mes(self.title,mes,True).debug()
         else:
-            objs.mes (self.title
-                     ,_('ERROR')
-                     ,_('Integer is required at input, but found "%s"! Return 0')\
-                     % str(type(self.value))
-                     )
+            mes = _('Integer is required at input, but found "{}"! Return 0')
+            mes = mes.format(self.value)
+            objs.mes(self.title,mes).warning()
             self.value = 0
         return self.value
 
@@ -1205,14 +1166,13 @@ class Text:
                 self.text.strip()
             '''
         else:
-            objs.mes (f,_('WARNING')
-                     ,_('Different number of opening and closing brackets: "%s": %d; "%s": %d!')\
-                     % (opening_sym
-                       ,self.text.count(opening_sym)
-                       ,closing_sym
-                       ,self.text.count(closing_sym)
-                       )
-                     )
+            mes = _('Different number of opening and closing brackets: "{}": {}; "{}": {}!')
+            mes = mes.format (opening_sym
+                             ,self.text.count(opening_sym)
+                             ,closing_sym
+                             ,self.text.count(closing_sym)
+                             )
+            objs.mes(f,mes).warning()
         return self.text
 
     def convert_line_breaks(self):
@@ -1249,9 +1209,7 @@ class Text:
                 in punc_array:
                     self.text = self.text[:-1]
         else:
-            log.append (f,_('WARNING')
-                       ,_('Empty strings are not supported!')
-                       )
+            com.empty(f)
         return self.text
 
     def delete_figures(self):
@@ -1355,9 +1313,8 @@ class Text:
         '''
         f = '[shared] logic.Text.split_by_comma'
         if (';' in self.text or ',' in self.text) and '\n' in self.text:
-            objs.mes (f,_('WARNING')
-                     ,_('Commas and/or semicolons or line breaks can be used, but not altogether!')
-                     )
+            mes = _('Commas and/or semicolons or line breaks can be used, but not altogether!')
+            objs.mes(f,mes).warning()
         elif ';' in self.text or ',' in self.text:
             self.text = self.text.replace(',','\n')
             self.text = self.text.replace(';','\n')
@@ -1380,10 +1337,9 @@ class Text:
         try:
             par = int(self.text)
         except(ValueError,TypeError):
-            log.append (f,_('WARNING')
-                       ,_('Failed to convert "%s" to an integer!') \
-                       % str(self.text)
-                       )
+            mes = _('Failed to convert "{}" to an integer!')
+            mes = mes.format(self.text)
+            objs.mes(f,mes,True).warning()
         return par
 
     def str2float(self):
@@ -1392,10 +1348,9 @@ class Text:
         try:
             par = float(self.text)
         except(ValueError,TypeError):
-            log.append (f,_('WARNING')
-                       ,_('Failed to convert "%s" to a floating-point number!')\
-                       % str(self.text)
-                       )
+            mes = _('Failed to convert "{}" to a floating-point number!')
+            mes = mes.format(self.text)
+            objs.mes(f,mes,True).warning()
         return par
 
     def strip_lines(self):
@@ -1587,9 +1542,8 @@ class Time:
                 self._instance += datetime.timedelta(days=days_delta)
             except:
                 self.Success = False
-                objs.mes (f,_('WARNING')
-                         ,_('Set time parameters are incorrect or not supported.')
-                         )
+                mes = _('Set time parameters are incorrect or not supported.')
+                objs.mes(f,mes).warning()
             self.monday_warning()
         else:
             com.cancel(f)
@@ -1603,9 +1557,8 @@ class Time:
                 self._date = self._instance.strftime(self.pattern)
             except:
                 self.Success = False
-                objs.mes (f,_('WARNING')
-                         ,_('Set time parameters are incorrect or not supported.')
-                         )
+                mes = _('Set time parameters are incorrect or not supported.')
+                objs.mes(f,mes).warning()
         else:
             com.cancel(f)
         return self._date
@@ -1619,10 +1572,9 @@ class Time:
                 self._instance = datetime.datetime.fromtimestamp(self._timestamp)
             except Exception as e:
                 self.Success = False
-                objs.mes (f,_('WARNING')
-                         ,_('Set time parameters are incorrect or not supported.\n\nDetails: %s')\
-                         % str(e)
-                         )
+                mes = _('Set time parameters are incorrect or not supported.\n\nDetails: {}')
+                mes = mes.format(e)
+                objs.mes(f,mes).warning()
         else:
             com.cancel(f)
         return self._instance
@@ -1636,9 +1588,8 @@ class Time:
                 self._timestamp = time.mktime(datetime.datetime.strptime(self._date,self.pattern).timetuple())
             except:
                 self.Success = False
-                objs.mes (f,_('WARNING')
-                         ,_('Set time parameters are incorrect or not supported.')
-                         )
+                mes = _('Set time parameters are incorrect or not supported.')
+                objs.mes(f,mes).warning()
         else:
             com.cancel(f)
         return self._timestamp
@@ -1650,9 +1601,8 @@ class Time:
                 self.instance()
             if self.MondayWarning \
             and datetime.datetime.weekday(self._instance) == 0:
-                objs.mes (f,_('INFO')
-                         ,_('Note: it will be Monday!')
-                         )
+                mes = _('Note: it will be Monday!')
+                objs.mes(f,mes).info()
         else:
             com.cancel(f)
 
@@ -1697,9 +1647,8 @@ class Time:
         elif self._month_abbr == 'Dec':
             self._month_abbr = _('Dec')
         else:
-            log.append (f,_('WARNING')
-                       ,_('Wrong input data!')
-                       )
+            mes = _('Wrong input data!')
+            objs.mes(f,mes,True).warning()
         return self._month_abbr
     
     def month_abbr(self):
@@ -1728,9 +1677,8 @@ class Time:
                 self._year = self._instance.strftime("%Y")
             except:
                 self.Success = False
-                objs.mes (f,_('WARNING')
-                         ,_('Set time parameters are incorrect or not supported.')
-                         )
+                mes = _('Set time parameters are incorrect or not supported.')
+                objs.mes(f,mes).warning()
         else:
             com.cancel(f)
         return self._year
@@ -1761,19 +1709,16 @@ class File:
                                          )
         elif not self.file:
             self.Success = False
-            objs.mes (f,_('ERROR')
-                     ,_('Empty input is not allowed!')
-                     )
+            mes = _('Empty input is not allowed!')
+            objs.mes(f,mes).warning()
         elif not os.path.exists(self.file):
             self.Success = False
-            objs.mes (f,_('WARNING')
-                     ,_('File "%s" has not been found!') % self.file
-                     )
+            mes = _('File "{}" has not been found!').format(self.file)
+            objs.mes(f,mes).warning()
         else:
             self.Success = False
-            objs.mes (f,_('WARNING')
-                     ,_('The object "%s" is not a file!') % self.file
-                     )
+            mes = _('The object "{}" is not a file!').format(self.file)
+            objs.mes(f,mes).warning()
 
     def size(self,Follow=True):
         f = '[shared] logic.File.size'
@@ -1791,10 +1736,8 @@ class File:
                     error will be raised if Follow=False and this is
                     a broken symbolic link.
                 '''
-                objs.mes (f,_('WARNING')
-                         ,_('Operation has failed!\nDetails: %s') \
-                         % str(e)
-                         )
+                mes = _('Operation has failed!\nDetails: {}').format(e)
+                objs.mes(f,mes).warning()
         else:
             com.cancel(f)
         return result
@@ -1802,33 +1745,29 @@ class File:
     def _copy(self):
         f = '[shared] logic.File._copy'
         Success = True
-        log.append (f,_('INFO')
-                   ,_('Copy "%s" to "%s"') % (self.file,self.dest)
-                   )
+        mes = _('Copy "{}" to "{}"').format(self.file,self.dest)
+        objs.mes(f,mes,True).info()
         try:
             shutil.copyfile(self.file,self.dest)
         except:
             Success = False
-            objs.mes (f,_('ERROR')
-                     ,_('Failed to copy file "%s" to "%s"!') \
-                     % (self.file,self.dest)
-                     )
+            mes = _('Failed to copy file "{}" to "{}"!')
+            mes = mes.format(self.file,self.dest)
+            objs.mes(f,mes).error()
         return Success
 
     def _move(self):
         f = '[shared] logic.File._move'
         Success = True
-        log.append (f,_('INFO')
-                   ,_('Move "%s" to "%s"') % (self.file,self.dest)
-                   )
+        mes = _('Move "{}" to "{}"').format(self.file,self.dest)
+        objs.mes(f,mes,True).info()
         try:
             shutil.move(self.file,self.dest)
         except:
             Success = False
-            objs.mes (f,_('ERROR')
-                     ,_('Failed to move "%s" to "%s"!') \
-                     % (self.file,self.dest)
-                     )
+            mes = _('Failed to move "{}" to "{}"!')
+            mes = mes.format(self.file,self.dest)
+            objs.mes(f,mes).error()
         return Success
 
     def access_time(self):
@@ -1839,10 +1778,9 @@ class File:
                 # Further steps: datetime.date.fromtimestamp(self.atime).strftime(self.pattern)
                 return self.atime
             except:
-                objs.mes (f,_('WARNING')
-                         ,_('Failed to get the date of the file "%s"!') \
-                         % self.file
-                         )
+                mes = _('Failed to get the date of the file "{}"!')
+                mes = mes.format(self.file)
+                objs.mes(f,mes).error()
         else:
             com.cancel(f)
 
@@ -1851,17 +1789,16 @@ class File:
         Success = True
         if self.Success:
             if self.file.lower() == self.dest.lower():
-                objs.mes (f,_('ERROR')
-                         ,_('Unable to copy the file "%s" to iself!') \
-                         % self.file
-                         )
+                mes = _('Unable to copy the file "{}" to iself!')
+                mes = mes.format(self.file)
+                objs.mes(f,mes).error()
             elif com.rewrite (file    = self.dest
                              ,Rewrite = self.Rewrite
                              ):
                 Success = self._copy()
             else:
                 mes = _('Operation has been canceled by the user.')
-                Message(f,mes).info()
+                objs.mes(f,mes,True).info()
         else:
             com.cancel(f)
         return Success
@@ -1870,16 +1807,14 @@ class File:
         f = '[shared] logic.File.delete'
         Success = True
         if self.Success:
-            log.append (f,_('INFO')
-                       ,_('Delete "%s"') % self.file
-                       )
+            mes = _('Delete "{}"').format(self.file)
+            objs.mes(f,mes,True).info()
             try:
                 os.remove(self.file)
             except:
                 Success = False
-                objs.mes (f,_('WARNING')
-                         ,_('Failed to delete file "%s"!') % self.file
-                         )
+                mes = _('Failed to delete file "{}"!').format(self.file)
+                objs.mes(f,mes).error()
         else:
             com.cancel(f)
         return Success
@@ -1892,10 +1827,9 @@ class File:
                 # Further steps: datetime.date.fromtimestamp(self.mtime).strftime(self.pattern)
                 return self.mtime
             except:
-                objs.mes (f,_('WARNING')
-                         ,_('Failed to get the date of the file "%s"!')\
-                         % self.file
-                         )
+                mes = _('Failed to get the date of the file "{}"!')
+                mes = mes.format(self.file)
+                objs.mes(f,mes).error()
         else:
             com.cancel(f)
 
@@ -1904,17 +1838,16 @@ class File:
         Success = True
         if self.Success:
             if self.file.lower() == self.dest.lower():
-                objs.mes (f,_('WARNING')
-                         ,_('Moving is not necessary, because the source and destination are identical (%s).')\
-                         % self.file
-                         )
+                mes = _('Moving is not necessary, because the source and destination are identical ({}).')
+                mes = mes.format(self.file)
+                objs.mes(f,mes).warning()
             elif com.rewrite (file    = self.dest
                              ,Rewrite = self.Rewrite
                              ):
                 Success = self._move()
             else:
                 mes = _('Operation has been canceled by the user.')
-                Message(f,mes).info()
+                objs.mes(f,mes,True).info()
         else:
             com.cancel(f)
         return Success
@@ -1923,19 +1856,15 @@ class File:
         f = '[shared] logic.File.set_time'
         if self.Success:
             if self.atime and self.mtime:
-                log.append (f,_('INFO')
-                           ,_('Change the time of the file "%s" to %s')\
-                           % (self.file,str((self.atime,self.mtime)))
-                           )
+                mes = _('Change the time of the file "{}" to {}')
+                mes = mes.format(self.file,(self.atime,self.mtime))
+                objs.mes(f,mes,True).info()
                 try:
                     os.utime(self.file,(self.atime,self.mtime))
                 except:
-                    objs.mes (f,_('WARNING')
-                             ,_('Failed to change the time of the file "%s" to "%s"!')\
-                             % (self.file
-                               ,str((self.atime,self.mtime))
-                               )
-                             )
+                    mes = _('Failed to change the time of the file "{}" to "{}"!')
+                    mes = mes.format(self.file,(self.atime,self.mtime))
+                    objs.mes(f,mes).error()
         else:
             com.cancel(f)
 
@@ -1955,14 +1884,12 @@ class Path:
                     istat  = os.statvfs(self.path)
                     result = istat.f_bavail * istat.f_bsize
                 except Exception as e:
-                    objs.mes (f,_('WARNING')
-                             ,_('Operation has failed!\nDetails: %s') \
-                             % str(e)
-                             )
+                    mes = _('Operation has failed!\nDetails: {}')
+                    mes = mes.format(e)
+                    objs.mes(f,mes).error()
             else:
-                objs.mes (f,_('WARNING')
-                         ,_('Wrong input data: "%s"!') % str(self.path)
-                         )
+                mes = _('Wrong input data: "{}"!').format(self.path)
+                objs.mes(f,mes).warning()
         else:
             com.empty(f)
         return result
@@ -1985,33 +1912,28 @@ class Path:
         if self.path:
             if os.path.exists(self.path):
                 if os.path.isdir(self.path):
-                    log.append (f,_('INFO')
-                               ,_('Directory "%s" already exists.') \
-                               % self.path
-                               )
+                    mes = _('Directory "{}" already exists.')
+                    mes = mes.format(self.path)
+                    objs.mes(f,mes,True).info()
                 else:
                     Success = False
-                    objs.mes (f,_('WARNING')
-                             ,_('The path "%s" is invalid!') % self.path
-                             )
+                    mes = _('The path "{}" is invalid!')
+                    mes = mes.format(self.path)
+                    objs.mes(f,mes).warning()
             else:
-                log.append (f,_('INFO')
-                           ,_('Create directory "%s"') % self.path
-                           )
+                mes = _('Create directory "{}"').format(self.path)
+                objs.mes(f,mes,True).info()
                 try:
                     #todo: consider os.mkdir
                     os.makedirs(self.path)
                 except:
                     Success = False
-                    objs.mes (f,_('ERROR')
-                             ,_('Failed to create directory "%s"!') \
-                             % self.path
-                             )
+                    mes = _('Failed to create directory "{}"!')
+                    mes = mes.format(self.path)
+                    objs.mes(f,mes).error()
         else:
             Success = False
-            objs.mes (f,_('ERROR')
-                     ,_('Not enough input data!')
-                     )
+            com.empty(f)
         return Success
 
     def delete_inappropriate_symbols(self):
@@ -2096,15 +2018,12 @@ class WriteBinary:
             self.fragm   = None
         else:
             self.Success = False
-            log.append (f,_('WARNING')
-                       ,_('Empty input is not allowed!')
-                       )
+            com.empty(f)
 
     def _write(self,mode='w+b'):
         f = '[shared] logic.WriteBinary._write'
-        log.append (f,_('INFO')
-                   ,_('Write file "%s"') % self.file
-                   )
+        mes = _('Write file "{}"').format(self.file)
+        objs.mes(f,mes,True).info()
         if mode == 'w+b' or mode == 'a+b':
             try:
                 with open(self.file,mode) as fl:
@@ -2114,14 +2033,12 @@ class WriteBinary:
                         pickle.dump(self.fragm,fl)
             except:
                 self.Success = False
-                objs.mes (f,_('ERROR')
-                         ,_('Unable to write file "%s"!') % self.file
-                         )
+                mes = _('Unable to write file "{}"!').format(self.file)
+                objs.mes(f,mes).error()
         else:
-            objs.mes (f,_('ERROR')
-                     ,_('An unknown mode "%s"!\n\nThe following modes are supported: "%s".')\
-                     % (str(mode),'w+b, a+b')
-                     )
+            mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
+            mes = mes.format(mode,'w+b, a+b')
+            objs.mes(f,mes).error()
 
     def append(self,fragm):
         f = '[shared] logic.WriteBinary.append'
@@ -2130,9 +2047,7 @@ class WriteBinary:
             if self.fragm:
                 self._write(mode='a+b')
             else:
-                objs.mes (f,_('ERROR')
-                         ,_('Empty input is not allowed!')
-                         )
+                com.empty(f)
         else:
             com.cancel(f)
 
@@ -2171,21 +2086,17 @@ class Dic:
                 old = self.lines()
                 self._list = list(set(self.list()))
                 new = self._lines = len(self._list)
-                log.append (f,_('INFO')
-                           ,_('Entries deleted: %d (%d-%d)') % (old-new
-                                                               ,old
-                                                               ,new
-                                                               )
-                           )
+                mes = _('Entries deleted: {} ({}-{})')
+                mes = mes.format(old-new,old,new)
+                objs.mes(f,mes,True).info()
                 self.text = '\n'.join(self._list)
                 # Update original and translation
                 self._split()
                 # After using set(), the original order was lost
                 self.sort()
             else:
-                objs.mes (f,_('WARNING')
-                         ,_('File "%s" is not sortable!') % self.file
-                         )
+                mes = _('File "{}" is not sortable!').format(self.file)
+                objs.mes(f,mes).warning()
         else:
             com.cancel(f)
 
@@ -2199,9 +2110,8 @@ class Dic:
                 self._list.append(self.orig[i]+'\t'+self.transl[i])
             self.text = '\n'.join(self._list)
         else:
-            objs.mes (f,_('WARNING')
-                     ,_('Wrong input data!')
-                     )
+            mes = _('Wrong input data!')
+            objs.mes(f,mes).warning()
 
     def _split(self):
         ''' We can use this to check integrity and/or update original
@@ -2235,10 +2145,9 @@ class Dic:
         f = '[shared] logic.Dic.warn'
         if self.errors:
             message = ', '.join(self.errors)
-            objs.mes (f,_('WARNING')
-                     ,_('The following lines cannot be parsed:') \
-                     + '\n' + message
-                     )
+            mes = _('The following lines cannot be parsed:')
+            mes += '\n' + message
+            objs.mes(f,mes).warning()
 
     def append(self,original,translation):
         ''' #todo: write a dictionary in an append mode after appending
@@ -2252,9 +2161,7 @@ class Dic:
                 self.transl.append(translation)
                 self._join()
             else:
-                objs.mes (f,_('WARNING')
-                         ,_('Empty input is not allowed!')
-                         )
+                com.empty(f)
         else:
             com.cancel(f)
 
@@ -2271,12 +2178,10 @@ class Dic:
                 del self.transl[entry_no]
                 self._join()
             else:
-                objs.mes (f,_('ERROR')
-                         ,_('The condition "%s" is not observed!') \
-                         % ('0 <= ' + str(entry_no) + ' < %d' \
-                           % self.lines()
-                           )
-                         )
+                sub = '0 <= {} < {}'.format(entry_no,self.lines())
+                mes = _('The condition "{}" is not observed!')
+                mes = mes.format(sub)
+                objs.mes(f,mes).error()
         else:
             com.cancel(f)
 
@@ -2293,12 +2198,10 @@ class Dic:
                 self.transl[entry_no] = transl
                 self._join()
             else:
-                objs.mes (f,_('ERROR')
-                         ,_('The condition "%s" is not observed!') \
-                         % ('0 <= ' + str(entry_no) + ' < %d' \
-                           % self.lines()
-                           )
-                         )
+                sub = '0 <= {} < {}'.format(entry_no,self.lines())
+                mes = _('The condition "{}" is not observed!')
+                mes = mes.format(sub)
+                objs.mes(f,mes).error()
         else:
             com.cancel(f)
 
@@ -2349,9 +2252,8 @@ class Dic:
                     self._list[i] = self.orig[i] + '\t' + self.transl[i]
                 self.text = '\n'.join(self._list)
             else:
-                objs.mes (f,_('WARNING')
-                         ,_('File "%s" is not sortable!') % self.file
-                         )
+                mes = _('File "{}" is not sortable!').format(self.file)
+                objs.mes(f,mes).warning()
         else:
             com.cancel(f)
 
@@ -2394,9 +2296,8 @@ class ReadBinary:
 
     def _load(self):
         f = '[shared] logic.ReadBinary._load'
-        log.append (f,_('INFO')
-                   ,_('Load file "%s"') % self.file
-                   )
+        mes = _('Load file "{}"').format(self.file)
+        objs.mes(f,mes,True).info()
         try:
             ''' AttributeError means that a module using _load does not
                 have a class that was defined while creating the binary
@@ -2405,10 +2306,9 @@ class ReadBinary:
                 self.obj = pickle.load(fl)
         except Exception as e:
             self.Success = False
-            objs.mes (f,_('WARNING')
-                     ,_('Unable to read file "%s"!\n\nDetails: %s') \
-                     % (self.file,str(e))
-                     )
+            mes = _('Unable to read file "{}"!\n\nDetails: {}')
+            mes = mes.format(self.file,e)
+            objs.mes(f,mes).error()
 
     #todo: load fragments appended to a binary
     def load(self):
@@ -2454,9 +2354,8 @@ class Directory:
             self.dest = self.dir
         if not os.path.isdir(self.dir):
             self.Success = False
-            objs.mes (f,_('WARNING')
-                     ,_('Wrong input data: "%s"') % self.dir
-                     )
+            mes = _('Wrong input data: "{}"!').format(self.dir)
+            objs.mes(f,mes).warning()
 
     def size(self,Follow=True):
         f = '[shared] logic.Directory.size'
@@ -2477,10 +2376,8 @@ class Directory:
                     error will be raised if Follow=False and there are
                     broken symbolic links.
                 '''
-                objs.mes (f,_('WARNING')
-                         ,_('Operation has failed!\nDetails: %s') \
-                         % str(e)
-                         )
+                mes = _('Operation has failed!\nDetails: {}').format(e)
+                objs.mes(f,mes).error()
         else:
             com.cancel(f)
         return result
@@ -2530,16 +2427,14 @@ class Directory:
     def delete(self):
         f = '[shared] logic.Directory.delete'
         if self.Success:
-            log.append (f,_('INFO')
-                       ,_('Delete "%s"') % self.dir
-                       )
+            mes = _('Delete "{}"').format(self.dir)
+            objs.mes(f,mes,True).info()
             try:
                 shutil.rmtree(self.dir)
             except:
-                objs.mes (f,_('WARNING')
-                         ,_('Failed to delete directory "%s"! Delete it manually.')\
-                         % str(self.dir)
-                         )
+                mes = _('Failed to delete directory "{}"! Delete it manually.')
+                mes = mes.format(self.dir)
+                objs.mes(f,mes).error()
         else:
             com.cancel(f)
 
@@ -2606,14 +2501,12 @@ class Directory:
         f = '[shared] logic.Directory.copy'
         if self.Success:
             if self.dir.lower() == self.dest.lower():
-                objs.mes (f,_('ERROR')
-                         ,_('Unable to copy "%s" to iself!') % self.dir
-                         )
+                mes = _('Unable to copy "{}" to iself!').format(self.dir)
+                objs.mes(f,mes).error()
             elif os.path.isdir(self.dest):
-                objs.mes (f,_('INFO')
-                         ,_('Directory "%s" already exists.') \
-                         % self.dest
-                         )
+                mes = _('Directory "{}" already exists.')
+                mes = mes.format(self.dest)
+                objs.mes(f,mes).info()
             else:
                 self._copy()
         else:
@@ -2621,17 +2514,15 @@ class Directory:
 
     def _copy(self):
         f = '[shared] logic.Directory._copy'
-        log.append (f,_('INFO')
-                   ,_('Copy "%s" to "%s"') % (self.dir,self.dest)
-                   )
+        mes = _('Copy "{}" to "{}"').format(self.dir,self.dest)
+        objs.mes(f,mes,True).info()
         try:
             shutil.copytree(self.dir,self.dest)
         except:
             self.Success = False
-            objs.mes (f,_('WARNING')
-                     ,_('Failed to copy "%s" to "%s"!') \
-                     % (self.dir,self.dest)
-                     )
+            mes = _('Failed to copy "{}" to "{}"!')
+            mes = mes.format(self.dir,self.dest)
+            objs.mes(f,mes).error()
 
 
 
@@ -2707,10 +2598,9 @@ class Config:
                 config_parser.read(self.path,'utf-8')
             except:
                 Success = False
-                objs.mes (f,_('WARNING')
-                         ,_('Failed to read the configuration file "%s". This file must share the same directory with the program and have UTF-8 encoding (no BOM) and UNIX line break type.')\
-                         % self.path
-                         )
+                mes = _('Failed to read the configuration file "{}". This file must share the same directory with the program and have UTF-8 encoding (no BOM) and UNIX line break type.')
+                mes = mes.format(self.path)
+                objs.mes(f,mes).error()
         else:
             com.cancel(f)
 
@@ -2745,19 +2635,17 @@ class Online:
                             ,autoraise = True
                             )
         except Exception as e:
-            objs.mes (f,_('ERROR')
-                     ,_('Failed to open URL "%s" in a default browser!\n\nDetails: %s')\
-                     % (self._url,str(e))
-                     )
+            mes = _('Failed to open URL "{}" in a default browser!\n\nDetails: {}')
+            mes = mes.format(self._url,e)
+            objs.mes(f,mes).error()
 
     # Create a correct online link (URI => URL)
     def url(self):
         f = '[shared] logic.Online.url'
         if not self._url:
             self._url = self.base_str % urllib.parse.quote(self.get_bytes())
-            log.append (f,_('DEBUG')
-                       ,str(self._url)
-                       )
+            mes = str(self._url)
+            objs.mes(f,mes,True).debug()
         return self._url
 
     def reset (self,base_str='',search_str=''
@@ -2828,9 +2716,8 @@ class Diff:
         f = '[shared] logic.Diff.compare'
         if self.text1 and self.text2:
             if self.text1 == self.text2:
-                objs.mes (f,_('INFO')
-                         ,_('Texts are identical!')
-                         )
+                mes = _('Texts are identical!')
+                objs.mes(f,mes).info()
             else:
                 self.diff()
                 self.header()
@@ -2841,9 +2728,7 @@ class Diff:
                     '''
                     Launch(target=self.file).default()
         else:
-            objs.mes (f,_('WARNING')
-                     ,_('Empty input is not allowed!')
-                     )
+            com.empty(f)
 
 
 
@@ -2856,9 +2741,8 @@ class Shortcut:
         self.symlink = symlink
         if not self.path and not self.symlink:
             self.Success = False
-            objs.mes (f,_('WARNING')
-                     ,_('Wrong input data!')
-                     )
+            mes = _('Wrong input data!')
+            objs.mes(f,mes).warning()
 
     # http://timgolden.me.uk/python/win32_how_do_i/read-a-shortcut.html
     def _get_win(self):
@@ -2888,16 +2772,14 @@ class Shortcut:
 
     def _delete(self):
         f = '[shared] logic.Shortcut._delete'
-        log.append (f,_('INFO')
-                   ,_('Delete the symbolic link "%s"') % self.symlink
-                   )
+        mes = _('Delete the symbolic link "{}"').format(self.symlink)
+        objs.mes(f,mes,True).info()
         try:
             os.unlink(self.symlink)
         except:
-            objs.mes (f,_('WARNING')
-                     ,_('Failed to remove shortcut "%s". Remove it manually and press OK.')\
-                     % self.symlink
-                     )
+            mes = _('Failed to remove shortcut "{}". Remove it manually and press OK.')
+            mes = mes.format(self.symlink)
+            objs.mes(f,mes).error()
 
     def delete(self):
         f = '[shared] logic.Shortcut.delete'
@@ -2909,38 +2791,32 @@ class Shortcut:
 
     def _create_unix(self):
         f = '[shared] logic.Shortcut._create_unix'
-        log.append (f,_('INFO')
-                   ,_('Create a symbolic link "%s"') % self.symlink
-                   )
+        mes = _('Create a symbolic link "{}"').format(self.symlink)
+        objs.mes(f,mes,True).info()
         try:
             os.symlink(self.path,self.symlink)
         except:
-            objs.mes (f,_('ERROR')
-                     ,_('Failed to create shortcut "%s". Create it manually and press OK.')\
-                     % self.symlink
-                     )
+            mes = _('Failed to create shortcut "{}". Create it manually and press OK.')
+            mes = mes.format(self.symlink)
+            objs.mes(f,mes).error()
 
     def create_unix(self):
         f = '[shared] logic.Shortcut.create_unix'
         self.delete()
         if os.path.exists(self.symlink):
             if os.path.islink(self.symlink):
-                log.append (f,_('INFO')
-                           ,_('Nothing to do.')
-                           )
+                com.lazy(f)
             else:
                 self.Success = False
-                objs.mes (f,_('WARNING')
-                         ,_('Wrong input data!')
-                         )
+                mes = _('Wrong input data!')
+                objs.mes(f,mes).warning()
         else:
             self._create_unix()
 
     def _create_win(self):
         f = '[shared] logic.Shortcut._create_win'
-        log.append (f,_('INFO')
-                   ,_('Create a symbolic link "%s"') % self.symlink
-                   )
+        mes = _('Create a symbolic link "{}"').format(self.symlink)
+        objs.mes(f,mes,True).info()
         try:
             # The code will automatically add '.lnk' if necessary
             shell = win32com.client.Dispatch("WScript.Shell")
@@ -2948,10 +2824,9 @@ class Shortcut:
             shortcut.Targetpath = self.path
             shortcut.save()
         except:
-            objs.mes (f,_('ERROR')
-                     ,_('Failed to create shortcut "%s". Create it manually and press OK.')\
-                     % self.symlink
-                     )
+            mes = _('Failed to create shortcut "{}". Create it manually and press OK.')
+            mes = mes.format(self.symlink)
+            objs.mes(f,mes).error()
 
     def create_win(self):
         ''' Using python 3 and windows (since 2009) it is possible to
@@ -2968,9 +2843,7 @@ class Shortcut:
                 self.symlink += '.lnk'
             self.delete()
             if os.path.exists(self.symlink):
-                log.append (f,_('INFO')
-                           ,_('Nothing to do.')
-                           )
+                com.lazy(f)
             else:
                 self._create_win()
         else:
@@ -3069,9 +2942,8 @@ class Email:
                                       )
                                     )
             except:
-                objs.mes (f,_('WARNING')
-                         ,_('Failed to load an e-mail client.')
-                         )
+                mes = _('Failed to load an e-mail client.')
+                objs.mes(f,mes).error()
         else:
             com.cancel(f)
     
@@ -3105,13 +2977,11 @@ class Email:
                 mail.Display(True)
                 return True
             except Exception as e:
-                objs.mes (f,_('WARNING')
-                         ,_('Operation has failed!\nDetails: %s') % str(e)
-                         )
+                mes = _('Operation has failed!\nDetails: {}').format(e)
+                objs.mes(f,mes).error()
         else:
-            log.append (f,_('INFO')
-                       ,_('This operation cannot be executed on your operating system.')
-                       )
+            mes = _('This operation cannot be executed on your operating system.')
+            objs.mes(f,mes).info()
     
     def thunderbird(self):
         f = '[shared] logic.Email.thunderbird'
@@ -3136,10 +3006,9 @@ class Email:
                     subprocess.Popen(self.custom_args)
                     return True
                 except:
-                    objs.mes (f,_('WARNING')
-                             ,_('Failed to run "%s"!') \
-                             % str(self.custom_args)
-                             )
+                    mes = _('Failed to run "{}"!')
+                    mes = mes.format(self.custom_args)
+                    objs.mes(f,mes).error()
         else:
             com.cancel(f)
     
@@ -3165,10 +3034,9 @@ class Email:
                     subprocess.Popen(self.custom_args)
                     return True
                 except:
-                    objs.mes (f,_('WARNING')
-                             ,_('Failed to run "%s"!') \
-                             % str(self.custom_args)
-                             )
+                    mes = _('Failed to run "{}"!')
+                    mes = mes.format(self.custom_args)
+                    objs.mes(f,mes).error()
         else:
             com.cancel(f)
 
@@ -3176,7 +3044,9 @@ class Email:
 
 class Grep:
 
-    def __init__(self,lst,start=[],middle=[],end=[]):
+    def __init__ (self,lst,start=[]
+                 ,middle=[],end=[]
+                 ):
         self._lst    = lst
         self._start  = start
         self._middle = middle
@@ -3316,17 +3186,13 @@ class Word:
     # Do only after Words.sent_nos
     def print(self,no=0):
         f = '[shared] logic.Word.print'
-        log.append (f,_('DEBUG')
-                   ,'no: %d; _p: %s; _n: %s; _nm: %s; _pf: %s; _pl: %s; _nf: %s; _nl: %s; _cyr: %s; _lat: %s; _greek: %s; _digit: %s; _empty: %s; _ref: %s; _sent_no: %s; _sents_len: %s; _spell_ru: %s; _nmf: %s; _nml: %s' \
-                   % (no,str(self._p),str(self._n)
-                     ,str(self._nm),str(self._pf),str(self._pl)
-                     ,str(self._nf),str(self._nl),str(self._cyr)
-                     ,str(self._lat),str(self._greek),str(self._digit)
-                     ,str(self._empty),str(self._ref)
-                     ,str(self._sent_no),str(self._sents_len)
-                     ,str(self._spell_ru),str(self._nmf),str(self._nml)
-                     )
-                   )
+        mes = 'no: {}; _p: {}; _n: {}; _nm: {}; _pf: {}; _pl: {}; _nf: {}; _nl: {}; _cyr: {}; _lat: {}; _greek: {}; _digit: {}; _empty: {}; _ref: {}; _sent_no: {}; _sents_len: {}; _spell_ru: {}; _nmf: {}; _nml: {}'
+        mes = mes.format (no,self._p,self._n,self._nm,self._pf,self._pl
+                         ,self._nf,self._nl,self._cyr,self._lat
+                         ,self._greek,self._digit,self._empty,self._ref
+                         ,self._sent_no,self._sents_len,self._spell_ru
+                         ,self._nmf,self._nml)
+        objs.mes(f,mes,True).debug()
 
     def nm(self):
         if self._nm is None:
@@ -3385,9 +3251,7 @@ class Word:
             self._tf = '1.0'
             # This could happen if double line breaks were not deleted
             if self._sent_no is None:
-                log.append (f,_('WARNING')
-                           ,_('Not enough input data!')
-                           )
+                com.empty(f)
             else:
                 # This is easier, but assigning a tag throws an error
                 #self._tf = '1.0+%dc' % (self._pf - self._sent_no)
@@ -3395,7 +3259,7 @@ class Word:
                 if self._sent_no > 0 and result > 0:
                     result -= 1
                 self._tf = '%d.%d' % (self._sent_no + 1,result)
-                #log.append ('Word.tf',_('DEBUG'),self._tf)
+                #objs.mes(f,str(self._tf),True).debug()
         return self._tf
 
     def tl(self):
@@ -3404,9 +3268,7 @@ class Word:
             self._tl = '1.1'
             # This could happen if double line breaks were not deleted
             if self._sent_no is None:
-                log.append (f,_('WARNING')
-                           ,_('Not enough input data!')
-                           )
+                com.empty(f)
             else:
                 # This is easier, but assigning a tag throws an error
                 #self._tl = '1.0+%dc' % (self._pl - self._sent_no + 1)
@@ -3414,7 +3276,7 @@ class Word:
                 if self._sent_no > 0 and result > 0:
                     result -= 1
                 self._tl = '%d.%d' % (self._sent_no + 1,result + 1)
-                #log.append(f,_('DEBUG'),self._tl)
+                #objs.mes(f,str(self._tl),True).debug()
         return self._tl
 
 
@@ -3429,9 +3291,8 @@ class Words:
         self.Auto    = Auto
         self.values()
         if text:
-            log.append (f,_('INFO')
-                       ,_('Analyze the text')
-                       )
+            mes = _('Analyze the text')
+            objs.mes(f,mes,True).info()
             ''' This is MUCH faster than using old symbol-per-symbol
                 algorithm for finding words. We must, however, drop
                 double space cases.
@@ -3691,18 +3552,14 @@ class Words:
                             result += lst[1]
                         else:
                             result += lst[1] + 1
-                        log.append (f,_('DEBUG')
-                                   ,'%s -> %d' % (tkpos,result)
-                                   )
+                        mes = '{} -> {}'.format(tkpos,result)
+                        objs.mes(f,mes,True).debug()
                         return self.no_by_pos_p(pos=result)
                 else:
-                    objs.mes (f,_('WARNING')
-                             ,_('Wrong input data: "%s"') % str(lst)
-                             )
+                    mes = _('Wrong input data: "{}"!').format(lst)
+                    objs.mes(f,mes).warning()
             else:
-                objs.mes (f,_('WARNING')
-                         ,_('Wrong input data: "%s"') % str(lst)
-                         )
+                com.empty(f)
         else:
             com.cancel(f)
 
@@ -3723,10 +3580,9 @@ class Words:
                 # Valid for one-word paragraph
                 result = (min(nos),max(nos))
             else:
-                log.append (f,_('WARNING')
-                           ,_('Failed to find words of paragraph #%d!')\
-                           % sent_no
-                           )
+                mes = _('Failed to find words of paragraph #{}!')
+                mes = mes.format(sent_no)
+                objs.mes(f,mes,True).warning()
         else:
             com.cancel(f)
         return result
@@ -3767,10 +3623,9 @@ class Search:
         self._text      = text
         self._search    = search
         if not self._search or not self._text:
-            objs.mes (f,_('WARNING')
-                     ,_('Wrong input data!')
-                     )
             self.Success = False
+            mes = _('Wrong input data!')
+            objs.mes(f,mes,True).warning()
 
     def add(self):
         f = '[shared] logic.Search.add'
@@ -3944,13 +3799,12 @@ class Decline:
         f = '[shared] logic.Decline.decline'
         for i in range(len(self._list)):
             # Inflecting '', None, digits and Latin words *only* fails
-            ''' log.append (f,_('DEBUG')
-                           ,_('Decline "%s" in "%s" number and "%s" case')\
-                           % (str(self._list[i])
-                             ,str(self.number())
-                             ,str(self.case())
-                             )
-                           )
+            ''' mes = _('Decline "{}" in "{}" number and "{}" case')
+                mes = mes.format (self._list[i]
+                                 ,self.number()
+                                 ,self.case()
+                                 )
+                objs.mes(f,mes,True).debug()
             '''
             try:
                 self._list[i] = objs.morph().parse(self._list[i])[0].inflect({self.number(),self.case()}).word
@@ -3977,9 +3831,8 @@ class Decline:
                         tmp.append(objs.morph().parse(self._list[i])[0].tag.number)
                 if tmp and max(tmp,key=tmp.count) == 'plur':
                     self._number = 'plur'
-            ''' log.append (f,_('DEBUG')
-                           ,str(self._number)
-                           )
+            ''' mes = str(self._number)
+                objs.mes(f,mes,True).debug()
             '''
         return self._number
 
@@ -3996,9 +3849,8 @@ class Decline:
                 result = max(tmp,key=tmp.count)
                 if result:
                     self._case = result
-            log.append (f,_('DEBUG')
-                       ,str(self._case)
-                       )
+            mes = str(self._case)
+            objs.mes(f,mes,True).debug()
         return self._case
 
 
@@ -4078,27 +3930,23 @@ class MessagePool:
             self.free()
             self.pool.append(message)
         else:
-            log.append (f,_('WARNING')
-                       ,_('Empty input is not allowed!')
-                       )
+            com.empty(f)
 
     def delete_first(self):
         f = '[shared] logic.MessagePool.delete_first'
         if len(self.pool) > 0:
             del self.pool[0]
         else:
-            log.append (f,_('WARNING')
-                       ,_('The pool is empty!')
-                       )
+            mes = _('The pool is empty!')
+            objs.mes(f,mes,True).warning()
 
     def delete_last(self):
         f = '[shared] logic.MessagePool.delete_last'
         if len(self.pool) > 0:
             del self.pool[-1]
         else:
-            log.append (f,_('WARNING')
-                       ,_('The pool is empty!')
-                       )
+            mes = _('The pool is empty!')
+            objs.mes(f,mes,True).warning()
 
     def clear(self):
         self.pool = []
@@ -4132,11 +3980,8 @@ class Timer:
 
     def end(self):
         delta = float(time.time()-self._start)
-        log.append (self._func_title
-                   ,_('INFO')
-                   ,_('The operation has taken %f s.') \
-                   % delta
-                   )
+        mes = _('The operation has taken {} s.').format(delta)
+        objs.mes(self._func_title,mes,True).info()
         return delta
 
 
@@ -4157,9 +4002,7 @@ class Table:
             self.Success = True
         else:
             self.Success = False
-            log.append (f,_('WARNING')
-                       ,_('Empty input is not allowed!')
-                       )
+            com.empty(f)
 
     def _shorten_headers(self):
         self._headers = [Text(text=header).shorten(max_len=self.MaxRow)\
@@ -4179,10 +4022,9 @@ class Table:
         f = '[shared] logic.Table._shorten_rows'
         if self.MaxRows < 2 or self.MaxRows > len(self._rows):
             self.MaxRows = len(self._rows)
-            log.append (f,_('INFO')
-                       ,_('Set the max number of rows to %d') \
-                       % self.MaxRows
-                       )
+            mes = _('Set the max number of rows to {}')
+            mes = mes.format(self.MaxRows)
+            objs.mes(f,mes,True).info()
         self.MaxRows = int(self.MaxRows / 2)
         pos3 = len(self._rows)
         pos2 = pos3 - self.MaxRows
@@ -4312,9 +4154,8 @@ class Get:
             if hasattr(ssl,'_create_unverified_context'):
                 ssl._create_default_https_context = ssl._create_unverified_context
             else:
-                log.append (f,_('WARNING')
-                           ,_('Unable to use unverified certificates!')
-                           )
+                mes = _('Unable to use unverified certificates!')
+                objs.mes(f,mes,True).warning()
         
     def _get(self):
         ''' Changing UA allows us to avoid a bot protection
@@ -4331,15 +4172,13 @@ class Get:
             self._html = \
             urllib.request.urlopen(req,timeout=self._timeout).read()
             if self.Verbose:
-                log.append (f,_('INFO')
-                           ,_('[OK]: "%s"') % self._url
-                           )
+                mes = _('[OK]: "{}"').format(self._url)
+                objs.mes(f,mes,True).info()
         # Too many possible exceptions
         except Exception as e:
-            log.append (f,_('WARNING')
-                       ,_('[FAILED]: "%s". Details: %s') \
-                       % (self._url,str(e))
-                       )
+            mes = _('[FAILED]: "{}". Details: {}')
+            mes = mes.format(self._url,e)
+            objs.mes(f,mes,True).warning()
     
     def decode(self):
         ''' Set 'encoding' to None to cancel decoding. This is useful
@@ -4353,14 +4192,10 @@ class Get:
                     self._html.decode(encoding=self._encoding)
                 except UnicodeDecodeError:
                     self._html = str(self._html)
-                    log.append (f,_('WARNING')
-                               ,_('Unable to decode "%s"!') \
-                                % str(self._url)
-                               )
+                    mes = _('Unable to decode "{}"!').format(self._url)
+                    objs.mes(f,mes,True).warning()
             else:
-                log.append (f,_('WARNING')
-                           ,_('Empty input is not allowed!')
-                           )
+                com.empty(f)
     
     def run(self):
         f = '[shared] logic.Get.run'
@@ -4376,13 +4211,10 @@ class Get:
                     timer.end()
                 return self._html
             else:
-                log.append (f,_('WARNING')
-                           ,_('Wrong input data!')
-                           )
+                mes = _('Wrong input data: {}!').format(self._url)
+                objs.mes(f,mes).warning()
         else:
-            log.append (f,_('WARNING')
-                       ,_('Empty input is not allowed!')
-                       )
+            com.empty(f)
 
 
 
@@ -4400,9 +4232,7 @@ class References:
             self.words1.refs()
         else:
             self.Success = False
-            log.append (f,_('WARNING')
-                       ,_('Empty input is not allowed!')
-                       )
+            com.empty(f)
         
     def ref_before(self,word_no):
         f = '[shared] logic.References.ref_before'
@@ -4415,10 +4245,10 @@ class References:
                         word_no -= 1
                 return word_no
             else:
-                objs.mes (f,_('ERROR')
-                         ,_('The condition "%s" is not observed!') \
-                         % '%d < %d' % (word_no,len(self.words1.words))
-                         )
+                sub = '{} < {}'.format(word_no,len(self.words1.words))
+                mes = _('The condition "{}" is not observed!')
+                mes = mes.format(sub)
+                objs.mes(f,mes).error()
         else:
             com.cancel(f)
         
@@ -4433,10 +4263,10 @@ class References:
                         word_no += 1
                 return -1
             else:
-                objs.mes (f,_('ERROR')
-                         ,_('The condition "%s" is not observed!') \
-                         % '%d < %d' % (word_no,len(self.words1.words))
-                         )
+                sub = '{} < {}'.format(word_no,len(self.words1.words))
+                mes = _('The condition "{}" is not observed!')
+                mes = mes.format(sub)
+                objs.mes(f,mes).error()
         else:
             com.cancel(f)
     
@@ -4446,19 +4276,16 @@ class References:
             word_no1 = self.ref_before(word_no)
             word_no2 = self.ref_after(word_no)
             if word_no1 == -1 and word_no2 == -1:
-                log.append (f,_('INFO')
-                           ,_('No references have been found!')
-                           )
+                mes = _('No references have been found!')
+                objs.mes(f,mes,True).info()
                 return word_no
             elif word_no1 >= 0 and word_no2 == -1:
-                log.append (f,_('INFO')
-                           ,_('No references to the right!')
-                           )
+                mes = _('No references to the right!')
+                objs.mes(f,mes,True).info()
                 return word_no1
             elif word_no2 >= 0 and word_no1 == -1:
-                log.append (f,_('INFO')
-                           ,_('No references to the left!')
-                           )
+                mes = _('No references to the left!')
+                objs.mes(f,mes,True).info()
                 return word_no2
             else:
                 delta_before = word_no - word_no1
@@ -4480,10 +4307,10 @@ class References:
                         count += 1
                 return count
             else:
-                objs.mes (f,_('ERROR')
-                         ,_('The condition "%s" is not observed!') \
-                         % '%d < %d' % (word_no,len(self.words1.words))
-                         )
+                sub = '{} < {}'.format(word_no,len(self.words1.words))
+                mes = _('The condition "{}" is not observed!')
+                mes = mes.format(sub)
+                objs.mes(f,mes).error()
         else:
             com.cancel(f)
         
@@ -4534,18 +4361,16 @@ class Links:
         f = '[shared] logic.Links.link'
         pos = self._pos + len(self._root)
         if pos >= len(self._text):
-            log.append (f,_('WARNING')
-                       ,_('Unexpected end of text!')
-                       )
+            mes = _('Unexpected end of text!')
+            objs.mes(f,mes,True).warning()
         else:
             text = self._text[pos:]
             try:
                 pos = text.index('"')
                 self._links.append(text[:pos])
             except ValueError:
-                log.append (f,_('WARNING')
-                           ,_('Wrong input data!')
-                           )
+                mes = _('Wrong input data!')
+                objs.mes(f,mes,True).warning()
                               
     def duplicates(self):
         ''' Sometimes there are duplicate URLs on a page - we delete
@@ -4826,9 +4651,8 @@ class Commands:
                 result = days * 86400 + hours * 3600 + minutes * 60 \
                          + seconds
             else:
-                objs.mes (f,_('WARNING')
-                         ,_('Wrong input data: "%s"!') % str(length)
-                         )
+                mes = _('Wrong input data: "{}"!').format(length)
+                objs.mes(f,mes).warning()
         else:
             self.empty(f)
         return result
@@ -4845,13 +4669,9 @@ class Commands:
             ''' We don't actually need to force rewriting or delete
                 the file before rewriting.
             '''
-            obj = objs.mes (f,_('QUESTION')
-                            ,_('ATTENTION: Do yo really want to rewrite file "%s"?')\
-                            % file
-                            )
-            # We do not have 'Yes' in a Silent mode
-            if hasattr(obj,'Yes'):
-                return obj.Yes
+            mes = _('ATTENTION: Do yo really want to rewrite file "{}"?')
+            mes = mes.format(file)
+            return objs.mes(f,mes).question()
         else:
             ''' We return True so we may proceed with writing
                 if the file has not been found.

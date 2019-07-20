@@ -45,9 +45,8 @@ class Record:
         self._what   = self._with = ''
         if not self._orig or not self._final:
             self.Success = False
-            sh.objs.mes (f,_('WARNING')
-                        ,_('Not enough input data!')
-                        )
+            mes = _('Not enough input data!')
+            sh.objs.mes(f,mes).warning()
     
     def apply(self,text):
         f = '[shared] regexp.Record.apply'
@@ -57,10 +56,9 @@ class Record:
             except sre_constants.error:
                 result = ''
                 self.Success = False
-                sh.objs.mes (f,_('WARNING')
-                            ,_('A syntax error in the regular expression (id: %s)!') \
-                            % str(self._id)
-                            )
+                mes = _('A syntax error in the regular expression (id: {})!')
+                mes = mes.format(self._id)
+                sh.objs.mes(f,mes).warning()
             return result
         else:
             sh.com.cancel(f)
@@ -71,10 +69,9 @@ class Record:
             result = self.apply(text=self._what)
             if self.Success and result != self._with:
                 self.Success = False
-                sh.objs.mes (f,_('WARNING')
-                            ,_('Regular expression %s has failed: we were expecting\n"%s",\nbut received\n"%s".') \
-                            % (str(self._id),str(self._with),str(result))
-                            )
+                mes = _('Regular expression {} has failed: we were expecting\n"{}",\nbut received\n"{}".')
+                mes = mes.format(self._id,self._with,result)
+                sh.objs.mes(f,mes).warning()
         else:
             sh.com.cancel(f)
         return self.Success
@@ -110,9 +107,8 @@ class Record:
                     self._check()
             else:
                 self.Success = False
-                sh.objs.mes (f,_('WARNING')
-                            ,_('Not enough input data!')
-                            )
+                mes = _('Not enough input data!')
+                sh.objs.mes(f,mes).warning()
         else:
             sh.com.cancel(f)
         return self.Success

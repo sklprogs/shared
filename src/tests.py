@@ -804,9 +804,10 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
+    com.panes()
     '''
     sh.GUI_MES = False
     sh.lg.ReadTextFile('/tmp/aaa').get()
     '''
-    sh.objs.mes(f,'Hello',False).info()
+    #sh.objs.mes(f,'Hello',False).info()
     sh.com.end()
