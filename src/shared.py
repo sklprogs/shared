@@ -2571,10 +2571,10 @@ class ToolTipBase:
         self.tip = Top(Lock=False)
         self.tip.widget.wm_overrideredirect(1)
         # "+%d+%d" is not enough!
-        mes = _('Set the geometry to "%dx%d+%d+%d"') % (self.width
-                                                       ,self.height
-                                                       ,x,y
-                                                       )
+        mes = _('Set the geometry to "{}x{}+{}+{}"').format (self.width
+                                                            ,self.height
+                                                            ,x,y
+                                                            )
         objs.mes(f,mes,True).info()
         self.tip.widget.wm_geometry ("%dx%d+%d+%d" % (self.width
                                                      ,self.height

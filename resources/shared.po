@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-25 01:24+0300\n"
-"PO-Revision-Date: 2019-06-25 01:27+0300\n"
+"POT-Creation-Date: 2019-07-21 00:10+0300\n"
+"PO-Revision-Date: 2019-07-21 00:24+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -18,144 +18,62 @@ msgstr ""
 "X-Poedit-Basepath: ../src\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: regexp.py:48 regexp.py:60 regexp.py:74 regexp.py:113 shared.py:102
-#: shared.py:405 shared.py:419 shared.py:474 shared.py:492 shared.py:514
-#: shared.py:533 shared.py:583 shared.py:588 shared.py:602 shared.py:626
-#: shared.py:645 shared.py:649 shared.py:672 shared.py:695 shared.py:742
-#: shared.py:746 shared.py:765 shared.py:777 shared.py:800 shared.py:824
-#: shared.py:835 shared.py:846 shared.py:856 shared.py:888 shared.py:918
-#: shared.py:1080 shared.py:1124 shared.py:1230 shared.py:1255 shared.py:1267
-#: shared.py:1462 shared.py:1467 shared.py:1480 shared.py:1484 shared.py:1498
-#: shared.py:1503 shared.py:1517 shared.py:1521 shared.py:1537 shared.py:1552
-#: shared.py:1584 shared.py:1600 shared.py:1617 shared.py:1621 shared.py:1657
-#: shared.py:1662 shared.py:1720 shared.py:1725 shared.py:1747 shared.py:1763
-#: shared.py:1767 shared.py:1780 shared.py:1785 shared.py:1794 shared.py:1807
-#: shared.py:1823 shared.py:1830 shared.py:1865 shared.py:1965 shared.py:2003
-#: shared.py:2019 shared.py:2057 shared.py:2061 shared.py:2075 shared.py:2111
-#: shared.py:2128 shared.py:2132 shared.py:2156 shared.py:2180 shared.py:2231
-#: shared.py:2235 shared.py:2254 shared.py:2266 shared.py:2293 shared.py:2304
-#: shared.py:2339 shared.py:2381 shared.py:2392 shared.py:2404 shared.py:2417
-#: shared.py:2422 shared.py:2444 shared.py:2471 shared.py:2486 shared.py:2506
-#: shared.py:2519 shared.py:2560 shared.py:2588 shared.py:2593 shared.py:2604
-#: shared.py:2609 shared.py:2740 shared.py:2755 shared.py:2793 shared.py:2804
-#: shared.py:2831 shared.py:2875 shared.py:2887 shared.py:2932 shared.py:2938
-#: shared.py:2948 shared.py:2980 shared.py:2984 shared.py:2998 shared.py:3020
-#: shared.py:3051 shared.py:3056 shared.py:3082 shared.py:3087 shared.py:3304
-#: shared.py:3323 shared.py:3362 shared.py:3399 shared.py:3409 shared.py:3442
-#: shared.py:3461 shared.py:3471 shared.py:3490 shared.py:3509 shared.py:3524
-#: shared.py:3539 shared.py:3559 shared.py:3571 shared.py:3585 shared.py:3599
-#: shared.py:3614 shared.py:3645 shared.py:3649 shared.py:3653 shared.py:3674
-#: shared.py:3679 shared.py:3697 shared.py:3722 shared.py:3733 shared.py:3746
-#: shared.py:3761 shared.py:3777 shared.py:3794 shared.py:4054 shared.py:4063
-#: shared.py:4072 shared.py:4133 shared.py:4182 shared.py:4195 shared.py:4292
-#: shared.py:4316 shared.py:4333 shared.py:4338 shared.py:4356 shared.py:4360
-#: shared.py:4380 shared.py:4400 shared.py:4420 shared.py:4452 shared.py:4471
-#: shared.py:4485 shared.py:4524 shared.py:4533 shared.py:4581 shared.py:4593
-#: shared.py:4611 shared.py:4778 shared.py:4868 shared.py:4872 shared.py:4879
-#: shared.py:4885 sharedGUI.py:186 sharedGUI.py:190 sharedGUI.py:471
-#: sharedGUI.py:487 sharedGUI.py:498 sharedGUI.py:508 sharedGUI.py:538
-#: sharedGUI.py:560 sharedGUI.py:587 sharedGUI.py:615 sharedGUI.py:630
-#: sharedGUI.py:641 sharedGUI.py:861 sharedGUI.py:872 sharedGUI.py:913
-#: sharedGUI.py:1024 sharedGUI.py:1076 sharedGUI.py:1092 sharedGUI.py:1117
-#: sharedGUI.py:1163 sharedGUI.py:1257 sharedGUI.py:1287 sharedGUI.py:1739
-#: sharedGUI.py:1901 sharedGUI.py:2439 sharedGUI.py:2810 sharedGUI.py:2827
-#: sharedGUI.py:2837 sharedGUI.py:2899 sharedGUI.py:2903 sharedGUI.py:2951
-#: sharedGUI.py:2971 sharedGUI.py:3132 sharedGUI.py:3149 sharedGUI.py:3252
-#: sharedGUI.py:3256 sharedGUI.py:3297 sharedGUI.py:3396 sharedGUI.py:3537
-#: sharedGUI.py:3615 sharedGUI.py:3629 sharedGUI.py:3634 sharedGUI.py:3645
-#: sharedGUI.py:4113 sharedGUI.py:4118 sharedGUI.py:4216 sharedGUI.py:4240
+#: gui.py:1212 logic.py:95 logic.py:140 logic.py:654 logic.py:673 logic.py:4542
+#: shared.py:3436
 msgid "WARNING"
 msgstr "ПРЕДУПРЕЖДЕНИЕ"
 
-#: regexp.py:49 regexp.py:114 shared.py:348 shared.py:435 shared.py:471
-#: shared.py:489 shared.py:796 shared.py:1884 shared.py:3305 shared.py:3324
-#: sharedGUI.py:1164 sharedGUI.py:2565 sharedGUI.py:2823
-msgid "Not enough input data!"
-msgstr "Недостаточно входных данных!"
-
-#: regexp.py:61
-#, python-format
-msgid "A syntax error in the regular expression (id: %s)!"
-msgstr "Синтаксическая ошибка в регулярном выражении (запись: %s)!"
-
-#: regexp.py:75
-#, python-format
-msgid ""
-"Regular expression %s has failed: we were expecting\n"
-"\"%s\",\n"
-"but received\n"
-"\"%s\"."
-msgstr ""
-"Неудачное вычисление регулярного выражения %s: ожидалось\n"
-"\"%s\",\n"
-"получили\n"
-"\"%s\"."
-
-#: shared.py:103 shared.py:4779 shared.py:4869 sharedGUI.py:36
-#, python-format
-msgid "Wrong input data: \"%s\"!"
-msgstr "Недопустимые входные данные: \"%s\"!"
-
-#: shared.py:174 shared.py:177
-msgid "Left mouse button"
-msgstr "Левая кнопка мыши"
-
-#: shared.py:180 shared.py:183
-msgid "Middle mouse button"
-msgstr "Средняя кнопка мыши"
-
-#: shared.py:186 shared.py:189
-msgid "Right mouse button"
-msgstr "Правая кнопка мыши"
-
-#: shared.py:192
-msgid "Space"
-msgstr "Пробел"
-
-#: shared.py:331 shared.py:2654 shared.py:3235 shared.py:3640 shared.py:3961
-#: shared.py:3988 sharedGUI.py:1112 sharedGUI.py:1152 sharedGUI.py:1735
-#: sharedGUI.py:4231 sharedGUI.py:4235
-msgid "DEBUG"
-msgstr "ОТЛАДКА"
-
-#: shared.py:332
-#, python-format
-msgid "Custom arguments: \"%s\""
-msgstr "Особые параметры: \"%s\""
-
-#: shared.py:342 shared.py:347 shared.py:356 shared.py:365 shared.py:374
-#: shared.py:434 shared.py:450 shared.py:454 shared.py:470 shared.py:488
-#: shared.py:514 shared.py:665 shared.py:688 shared.py:795 shared.py:805
-#: shared.py:883 shared.py:906 shared.py:934 shared.py:1652 shared.py:1690
-#: shared.py:1706 shared.py:1734 shared.py:1877 shared.py:1883 shared.py:1983
-#: shared.py:1987 shared.py:1999 shared.py:2149 shared.py:2173 shared.py:2495
-#: shared.py:2644 shared.py:2816 shared.py:2849 shared.py:4395 shared.py:4415
-#: shared.py:4466 sharedGUI.py:35 sharedGUI.py:81 sharedGUI.py:109
-#: sharedGUI.py:137 sharedGUI.py:142 sharedGUI.py:147 sharedGUI.py:167
-#: sharedGUI.py:259 sharedGUI.py:263 sharedGUI.py:274 sharedGUI.py:289
-#: sharedGUI.py:300 sharedGUI.py:315 sharedGUI.py:332 sharedGUI.py:337
-#: sharedGUI.py:526 sharedGUI.py:945 sharedGUI.py:958 sharedGUI.py:966
-#: sharedGUI.py:974 sharedGUI.py:991 sharedGUI.py:1007 sharedGUI.py:1013
-#: sharedGUI.py:1065 sharedGUI.py:1594 sharedGUI.py:1880 sharedGUI.py:1897
-#: sharedGUI.py:2111 sharedGUI.py:2125 sharedGUI.py:2179 sharedGUI.py:2303
-#: sharedGUI.py:2426 sharedGUI.py:2443 sharedGUI.py:2460 sharedGUI.py:2464
-#: sharedGUI.py:2470 sharedGUI.py:2484 sharedGUI.py:2496 sharedGUI.py:2507
-#: sharedGUI.py:2516 sharedGUI.py:2527 sharedGUI.py:2560 sharedGUI.py:2564
-#: sharedGUI.py:2622 sharedGUI.py:2721 sharedGUI.py:2822 sharedGUI.py:2829
-#: sharedGUI.py:2834 sharedGUI.py:2838 sharedGUI.py:2850 sharedGUI.py:2854
-#: sharedGUI.py:2963 sharedGUI.py:2968 sharedGUI.py:2971 sharedGUI.py:3087
-#: sharedGUI.py:3113 sharedGUI.py:3119 sharedGUI.py:3123 sharedGUI.py:3143
-#: sharedGUI.py:3153 sharedGUI.py:3321 sharedGUI.py:3404 sharedGUI.py:3434
-#: sharedGUI.py:3587 sharedGUI.py:4123 sharedGUI.py:4206
+#: gui.py:1219 logic.py:134 logic.py:654 shared.py:3428
 msgid "ERROR"
 msgstr "ОШИБКА"
 
-#: shared.py:343 shared.py:3052 shared.py:3083
-#, python-format
-msgid "Failed to run \"%s\"!"
-msgstr "Не удалось запустить \"%s\"!"
+#: gui.py:1226 logic.py:97 logic.py:158 shared.py:3461 shared.py:3668
+msgid "QUESTION"
+msgstr "ВОПРОС"
 
-#: shared.py:357 shared.py:366 shared.py:375
+#: gui.py:1233 logic.py:93 logic.py:118 logic.py:146 logic.py:644 logic.py:679
+#: logic.py:4548 shared.py:3445 shared.py:3453
+msgid "INFO"
+msgstr "ИНФОРМАЦИЯ"
+
+#: logic.py:93 logic.py:152
+msgid "DEBUG"
+msgstr "ОТЛАДКА"
+
+#: logic.py:104
+msgid "File {} was not found!"
+msgstr "Файл \"{}\" не найден!"
+
+#: logic.py:239 logic.py:267 logic.py:1891 logic.py:2357 logic.py:3559
+#: logic.py:4654 logic.py:4740 shared.py:2084 shared.py:2120
+msgid "Wrong input data: \"{}\"!"
+msgstr "Недопустимые входные данные: \"{}\"!"
+
+#: logic.py:337 logic.py:340
+msgid "Left mouse button"
+msgstr "Левая кнопка мыши"
+
+#: logic.py:343 logic.py:346
+msgid "Middle mouse button"
+msgstr "Средняя кнопка мыши"
+
+#: logic.py:349 logic.py:352
+msgid "Right mouse button"
+msgstr "Правая кнопка мыши"
+
+#: logic.py:355
+msgid "Space"
+msgstr "Пробел"
+
+#: logic.py:494
+msgid "Custom arguments: \"{}\""
+msgstr "Дополнительные параметры: \"{}\""
+
+#: logic.py:503 logic.py:3009 logic.py:3037
+msgid "Failed to run \"{}\"!"
+msgstr "Не удалось запустить \"{}\"!"
+
+#: logic.py:513 logic.py:521 logic.py:529
 msgid ""
 "Unable to open the file in an external program. You should probably check "
 "the file associations."
@@ -163,908 +81,826 @@ msgstr ""
 "Не удается открыть файл во внешней программе. Возможно, Вам стоит проверить "
 "ассоциации файлов."
 
-#: shared.py:406 shared.py:420 shared.py:475 shared.py:493 shared.py:589
-#: shared.py:650 shared.py:673 shared.py:696 shared.py:747 shared.py:766
-#: shared.py:778 shared.py:825 shared.py:836 shared.py:847 shared.py:857
-#: shared.py:889 shared.py:1468 shared.py:1485 shared.py:1504 shared.py:1522
-#: shared.py:1538 shared.py:1553 shared.py:1601 shared.py:1622 shared.py:1726
-#: shared.py:1748 shared.py:1768 shared.py:1786 shared.py:1808 shared.py:1831
-#: shared.py:1966 shared.py:2004 shared.py:2020 shared.py:2062 shared.py:2133
-#: shared.py:2157 shared.py:2181 shared.py:2236 shared.py:2255 shared.py:2267
-#: shared.py:2305 shared.py:2382 shared.py:2393 shared.py:2405 shared.py:2423
-#: shared.py:2445 shared.py:2472 shared.py:2487 shared.py:2507 shared.py:2561
-#: shared.py:2594 shared.py:2610 shared.py:2805 shared.py:2876 shared.py:2888
-#: shared.py:2939 shared.py:2949 shared.py:2985 shared.py:2999 shared.py:3057
-#: shared.py:3088 shared.py:3363 shared.py:3400 shared.py:3410 shared.py:3443
-#: shared.py:3462 shared.py:3472 shared.py:3491 shared.py:3510 shared.py:3525
-#: shared.py:3540 shared.py:3560 shared.py:3572 shared.py:3586 shared.py:3600
-#: shared.py:3615 shared.py:3654 shared.py:3680 shared.py:3698 shared.py:3734
-#: shared.py:3747 shared.py:3762 shared.py:3778 shared.py:3795 shared.py:4183
-#: shared.py:4196 shared.py:4401 shared.py:4421 shared.py:4453 shared.py:4472
-#: shared.py:4486 shared.py:4582 shared.py:4594 shared.py:4612 shared.py:4880
-#: sharedGUI.py:472 sharedGUI.py:488 sharedGUI.py:499 sharedGUI.py:509
-#: sharedGUI.py:539 sharedGUI.py:561 sharedGUI.py:588 sharedGUI.py:616
-#: sharedGUI.py:631 sharedGUI.py:642 sharedGUI.py:2855 sharedGUI.py:2871
-#: sharedGUI.py:2888 sharedGUI.py:2904 sharedGUI.py:4217 sharedGUI.py:4241
-msgid "Operation has been canceled."
-msgstr "Операция отменена."
+#: logic.py:585 logic.py:616 logic.py:631 regexp.py:48 regexp.py:110
+msgid "Not enough input data!"
+msgstr "Недостаточно входных данных!"
 
-#: shared.py:442 shared.py:504 shared.py:539 shared.py:571 shared.py:865
-#: shared.py:929 shared.py:1533 shared.py:1683 shared.py:1699 shared.py:1743
-#: shared.py:1756 shared.py:1803 shared.py:1816 shared.py:1859 shared.py:1869
-#: shared.py:1971 shared.py:2015 shared.py:2045 shared.py:2282 shared.py:2411
-#: shared.py:2499 shared.py:2512 shared.py:2549 shared.py:2555 shared.py:2727
-#: shared.py:2787 shared.py:2810 shared.py:2826 shared.py:2839 shared.py:2869
-#: shared.py:3024 shared.py:3348 shared.py:4109 shared.py:4155 shared.py:4311
-#: shared.py:4430 shared.py:4435 shared.py:4440 shared.py:4912 sharedGUI.py:465
-#: sharedGUI.py:573 sharedGUI.py:577 sharedGUI.py:583 sharedGUI.py:600
-#: sharedGUI.py:604 sharedGUI.py:611 sharedGUI.py:1159 sharedGUI.py:1495
-#: sharedGUI.py:1601 sharedGUI.py:1650 sharedGUI.py:2085 sharedGUI.py:2422
-#: sharedGUI.py:2434 sharedGUI.py:2825 sharedGUI.py:2837 sharedGUI.py:2866
-#: sharedGUI.py:2870 sharedGUI.py:2955 sharedGUI.py:2972 sharedGUI.py:3388
-#: sharedGUI.py:3420 sharedGUI.py:3427 sharedGUI.py:3544 sharedGUI.py:4298
-#: tests.py:70
-msgid "INFO"
-msgstr "ИНФОРМАЦИЯ"
+#: logic.py:591 logic.py:2025
+msgid "Write file \"{}\""
+msgstr "Запись файла \"{}\""
 
-#: shared.py:443 shared.py:1972
-#, python-format
-msgid "Write file \"%s\""
-msgstr "Запись файла \"%s\""
+#: logic.py:598 logic.py:2036
+msgid "Unable to write file \"{}\"!"
+msgstr "Не удается записать файл \"{}\"!"
 
-#: shared.py:451 shared.py:1984
-#, python-format
-msgid "Unable to write file \"%s\"!"
-msgstr "Не удается записать файл \"%s\"!"
-
-#: shared.py:455 shared.py:1988 sharedGUI.py:1595 sharedGUI.py:2112
-#: sharedGUI.py:2835 sharedGUI.py:2969 sharedGUI.py:4124 sharedGUI.py:4207
-#, python-format
+#: logic.py:601 logic.py:2039 shared.py:2071 shared.py:2568 shared.py:2947
+#: shared.py:3026
 msgid ""
-"An unknown mode \"%s\"!\n"
+"An unknown mode \"{}\"!\n"
 "\n"
-"The following modes are supported: \"%s\"."
+"The following modes are supported: \"{}\"."
 msgstr ""
-"Неизвестный режим \"%s\"!\n"
+"Неизвестный режим \"{}\"!\n"
 "\n"
-"Поддерживаются следующие режимы: \"%s\"."
+"Поддерживаются следующие режимы: \"{}\"."
 
-#: shared.py:534
+#: logic.py:674
 msgid "Cannot print the message!"
 msgstr "Не удаётся показать сообщение!"
 
-#: shared.py:572 shared.py:2046
-#, python-format
-msgid "Entries deleted: %d (%d-%d)"
-msgstr "Удалено вхождений: %d (%d-%d)"
+#: logic.py:711 logic.py:2089
+msgid "Entries deleted: {} ({}-{})"
+msgstr "Удалено вхождений: {} ({}-{})"
 
-#: shared.py:584 shared.py:743 shared.py:2058 shared.py:2232
-#, python-format
-msgid "File \"%s\" is not sortable!"
-msgstr "Файл \"%s\" не подлежит сортировке!"
+#: logic.py:720 logic.py:861 logic.py:2098 logic.py:2255
+msgid "File \"{}\" is not sortable!"
+msgstr "Файл \"{}\" не подлежит сортировке!"
 
-#: shared.py:603 shared.py:806 shared.py:919 shared.py:1585 shared.py:2076
-#: shared.py:2756 shared.py:2832 shared.py:3723 shared.py:4357 shared.py:4534
-#: sharedGUI.py:148 sharedGUI.py:527 sharedGUI.py:2427 sharedGUI.py:2444
-#: sharedGUI.py:2465 sharedGUI.py:2471 sharedGUI.py:2485 sharedGUI.py:2497
-#: sharedGUI.py:2508 sharedGUI.py:2517 sharedGUI.py:2528 sharedGUI.py:2623
-#: sharedGUI.py:3253 sharedGUI.py:3322 sharedGUI.py:3588 sharedGUI.py:4114
+#: logic.py:735 logic.py:915 logic.py:1012 logic.py:1650 logic.py:2113
+#: logic.py:2744 logic.py:2811 logic.py:3627 logic.py:4372 shared.py:373
+#: shared.py:1810 shared.py:1863 shared.py:2500 shared.py:2940 shared.py:3757
 msgid "Wrong input data!"
 msgstr "Недопустимые входные данные!"
 
-#: shared.py:627
-#, python-format
-msgid "Dictionary \"%s\": Incorrect line #%d: \"%s\"!"
-msgstr "Словарь \"%s\": Неправильная строка №%d: \"%s\"!"
+#: logic.py:758
+msgid "Dictionary \"{}\": Incorrect line #{}: \"{}\"!"
+msgstr "Словарь \"{}\": Неправильная строка №{}: \"{}\"!"
 
-#: shared.py:646 shared.py:1653 shared.py:2000 shared.py:2129 shared.py:2741
-#: shared.py:2933 shared.py:4055 shared.py:4134 shared.py:4339 shared.py:4361
-#: shared.py:4381 shared.py:4873 shared.py:4886 sharedGUI.py:862
-#: sharedGUI.py:1093 sharedGUI.py:1881 sharedGUI.py:1902 sharedGUI.py:3133
-#: sharedGUI.py:3257 sharedGUI.py:3298 sharedGUI.py:3616 sharedGUI.py:3635
-#: sharedGUI.py:3646 sharedGUI.py:4119
+#: logic.py:793 logic.py:812 logic.py:2182 logic.py:2202 logic.py:4249
+#: logic.py:4267 logic.py:4311 shared.py:3719
+msgid "The condition \"{}\" is not observed!"
+msgstr "Условие \"{}\" не выполнено!"
+
+#: logic.py:907 logic.py:1712 logic.py:4753
 msgid "Empty input is not allowed!"
 msgstr "Пустые входные данные не допускаются!"
 
-#: shared.py:666 shared.py:689 shared.py:2150 shared.py:2174 shared.py:4396
-#: shared.py:4416 shared.py:4467 sharedGUI.py:191
-#, python-format
-msgid "The condition \"%s\" is not observed!"
-msgstr "Условие \"%s\" не выполнено!"
+#: logic.py:911 logic.py:1716 shared.py:2665 shared.py:3356
+msgid "File \"{}\" has not been found!"
+msgstr "Файл \"{}\" не найден!"
 
-#: shared.py:801 shared.py:1658 sharedGUI.py:333
-#, python-format
-msgid "File \"%s\" has not been found!"
-msgstr "Файл \"%s\" не найден!"
+#: logic.py:966 logic.py:2299
+msgid "Load file \"{}\""
+msgstr "Загрузка файла \"{}\""
 
-#: shared.py:866 shared.py:2283
-#, python-format
-msgid "Load file \"%s\""
-msgstr "Загрузка файла \"%s\""
+#: logic.py:983
+msgid "Unable to read file \"{}\"!"
+msgstr "Не удается прочитать файл \"{}\"!"
 
-#: shared.py:884
-#, python-format
-msgid "Unable to read file \"%s\"!"
-msgstr "Не удается прочитать файл \"%s\"!"
-
-#: shared.py:907
-#, python-format
-msgid "Float is required at input, but found \"%s\"! Return 0.0"
+#: logic.py:1002
+msgid "Float is required at input, but found \"{}\"! Return 0.0"
 msgstr ""
-"На входе должно быть число с плавающей запятой, но получено \"%s\"! "
+"На входе должно быть число с плавающей запятой, но получено \"{}\"! "
 "Возвращаю 0.0"
 
-#: shared.py:930
-#, python-format
-msgid "Convert \"%s\" to an integer"
-msgstr "Конвертация \"%s\" в целое число"
+#: logic.py:1021
+msgid "Convert \"{}\" to an integer"
+msgstr "Конвертация \"{}\" в целое число"
 
-#: shared.py:935
-#, python-format
-msgid "Integer is required at input, but found \"%s\"! Return 0"
-msgstr "На входе должно быть целое число, но получено \"%s\"! Возвращаю 0"
+#: logic.py:1024
+msgid "Integer is required at input, but found \"{}\"! Return 0"
+msgstr "На входе должно быть целое число, но получено \"{}\"! Возвращаю 0"
 
-#: shared.py:1081
-#, python-format
+#: logic.py:1169
 msgid ""
-"Different number of opening and closing brackets: \"%s\": %d; \"%s\": %d!"
-msgstr "Разное число открывающих и закрывающих скобок: \"%s\": %d; \"%s\": %d!"
+"Different number of opening and closing brackets: \"{}\": {}; \"{}\": {}!"
+msgstr "Разное число открывающих и закрывающих скобок: \"{}\": {}; \"{}\": {}!"
 
-#: shared.py:1125
-msgid "Empty strings are not supported!"
-msgstr "Поддерживаются только непустые строки!"
-
-#: shared.py:1231
+#: logic.py:1316
 msgid ""
 "Commas and/or semicolons or line breaks can be used, but not altogether!"
 msgstr ""
 "Можно использовать запятые и/или точки с запятой или переносы строк, но не "
 "все сразу!"
 
-#: shared.py:1256
-#, python-format
-msgid "Failed to convert \"%s\" to an integer!"
-msgstr "Не удалось конвертировать \"%s\" в целое число!"
+#: logic.py:1340
+msgid "Failed to convert \"{}\" to an integer!"
+msgstr "Не удалось конвертировать \"{}\" в целое число!"
 
-#: shared.py:1268
-#, python-format
-msgid "Failed to convert \"%s\" to a floating-point number!"
-msgstr "Не удалось конвертировать \"%s\" в число с плавающей точкой!"
+#: logic.py:1351
+msgid "Failed to convert \"{}\" to a floating-point number!"
+msgstr "Не удалось конвертировать \"{}\" в число с плавающей точкой!"
 
-#: shared.py:1463 shared.py:1481 shared.py:1518 shared.py:1618
+#: logic.py:1545 logic.py:1560 logic.py:1591 logic.py:1680
 msgid "Set time parameters are incorrect or not supported."
 msgstr "Заданные параметры времени неверны или не поддерживаются."
 
-#: shared.py:1499
-#, python-format
+#: logic.py:1575
 msgid ""
 "Set time parameters are incorrect or not supported.\n"
 "\n"
-"Details: %s"
+"Details: {}"
 msgstr ""
 "Заданные параметры времени неверны или не поддерживаются.\n"
 "\n"
-"Подробности: %s"
+"Подробности: {}"
 
-#: shared.py:1534
+#: logic.py:1604
 msgid "Note: it will be Monday!"
 msgstr "Обратите внимание: указанная дата - понедельник!"
 
-#: shared.py:1560
+#: logic.py:1626
 msgid "Jan"
 msgstr "янв"
 
-#: shared.py:1562
+#: logic.py:1628
 msgid "Feb"
 msgstr "фев"
 
-#: shared.py:1564
+#: logic.py:1630
 msgid "Mar"
 msgstr "мар"
 
-#: shared.py:1566
+#: logic.py:1632
 msgid "Apr"
 msgstr "апр"
 
-#: shared.py:1568
+#: logic.py:1634
 msgid "May"
 msgstr "май"
 
-#: shared.py:1570
+#: logic.py:1636
 msgid "Jun"
 msgstr "июн"
 
-#: shared.py:1572
+#: logic.py:1638
 msgid "Jul"
 msgstr "июл"
 
-#: shared.py:1574
+#: logic.py:1640
 msgid "Aug"
 msgstr "ав"
 
-#: shared.py:1576
+#: logic.py:1642
 msgid "Sep"
 msgstr "сен"
 
-#: shared.py:1578
+#: logic.py:1644
 msgid "Oct"
 msgstr "окт"
 
-#: shared.py:1580
+#: logic.py:1646
 msgid "Nov"
 msgstr "ноя"
 
-#: shared.py:1582
+#: logic.py:1648
 msgid "Dec"
 msgstr "дек"
 
-#: shared.py:1663
-#, python-format
-msgid "The object \"%s\" is not a file!"
-msgstr "Объект \"%s\" не является файлом!"
+#: logic.py:1720
+msgid "The object \"{}\" is not a file!"
+msgstr "Объект \"{}\" не является файлом!"
 
-#: shared.py:1684 shared.py:2513
-#, python-format
-msgid "Copy \"%s\" to \"%s\""
-msgstr "Копирование \"%s\" в \"%s\""
+#: logic.py:1739 logic.py:1887 logic.py:2379 logic.py:2980
+msgid ""
+"Operation has failed!\n"
+"Details: {}"
+msgstr ""
+"Операция завершилась с ошибкой!\n"
+"Подробности: {}"
 
-#: shared.py:1691
-#, python-format
-msgid "Failed to copy file \"%s\" to \"%s\"!"
-msgstr "Не удалось скопировать файл \"%s\" в \"%s\"!"
+#: logic.py:1748 logic.py:2517
+msgid "Copy \"{}\" to \"{}\""
+msgstr "Нельзя скопировать \"{}\" сам в себя!"
 
-#: shared.py:1700
-#, python-format
-msgid "Move \"%s\" to \"%s\""
-msgstr "Перемещение \"%s\" в \"%s\""
+#: logic.py:1754
+msgid "Failed to copy file \"{}\" to \"{}\"!"
+msgstr "Не удалось скопировать файл \"{}\" в \"{}\"!"
 
-#: shared.py:1707
-#, python-format
-msgid "Failed to move \"%s\" to \"%s\"!"
-msgstr "Не удалось переместить \"%s\" в \"%s\"!"
+#: logic.py:1762
+msgid "Move \"{}\" to \"{}\""
+msgstr "Перемещение \"{}\" в \"{}\""
 
-#: shared.py:1721 shared.py:1781
-#, python-format
-msgid "Failed to get the date of the file \"%s\"!"
-msgstr "Не удалось определить дату файла \"%s\"!"
+#: logic.py:1768
+msgid "Failed to move \"{}\" to \"{}\"!"
+msgstr "Не удалось переместить \"{}\" в \"{}\"!"
 
-#: shared.py:1735
-#, python-format
-msgid "Unable to copy the file \"%s\" to iself!"
-msgstr "Нельзя скопировать файл \"%s\" сам в себя!"
+#: logic.py:1781 logic.py:1830
+msgid "Failed to get the date of the file \"{}\"!"
+msgstr "Не удалось определить дату файла \"{}\"!"
 
-#: shared.py:1744 shared.py:1804 shared.py:2016
+#: logic.py:1792
+msgid "Unable to copy the file \"{}\" to iself!"
+msgstr "Нельзя скопировать файл \"{}\" сам в себя!"
+
+#: logic.py:1800 logic.py:1849 logic.py:2062
 msgid "Operation has been canceled by the user."
 msgstr "Операция отменена пользователем."
 
-#: shared.py:1757 shared.py:2412
-#, python-format
-msgid "Delete \"%s\""
-msgstr "Удаление \"%s\""
+#: logic.py:1810 logic.py:2430
+msgid "Delete \"{}\""
+msgstr "Удаление \"{}\""
 
-#: shared.py:1764
-#, python-format
-msgid "Failed to delete file \"%s\"!"
-msgstr "Не удается удалить файл \"%s\"!"
+#: logic.py:1816
+msgid "Failed to delete file \"{}\"!"
+msgstr "Не удается удалить файл \"{}\"!"
 
-#: shared.py:1795
-#, python-format
+#: logic.py:1841
 msgid ""
 "Moving is not necessary, because the source and destination are identical "
-"(%s)."
+"({})."
 msgstr ""
 "Перемещение не требуется, поскольку на входе и выходе указан один и тот же "
-"объект (%s)."
+"объект ({})."
 
-#: shared.py:1817
-#, python-format
-msgid "Change the time of the file \"%s\" to %s"
-msgstr "Изменение времени файла \"%s\" на %s"
+#: logic.py:1859
+msgid "Change the time of the file \"{}\" to {}"
+msgstr "Изменение времени файла \"{}\" на {}"
 
-#: shared.py:1824
-#, python-format
-msgid "Failed to change the time of the file \"%s\" to \"%s\"!"
-msgstr "Не удалось изменить время файла \"%s\" на \"%s\"!"
+#: logic.py:1865
+msgid "Failed to change the time of the file \"{}\" to \"{}\"!"
+msgstr "Не удалось изменить время файла \"{}\" на \"{}\"!"
 
-#: shared.py:1860 shared.py:2500
-#, python-format
-msgid "Directory \"%s\" already exists."
-msgstr "Каталог \"%s\" уже существует."
+#: logic.py:1915 logic.py:2507
+msgid "Directory \"{}\" already exists."
+msgstr "Каталог \"{}\" уже существует."
 
-#: shared.py:1866
-#, python-format
-msgid "The path \"%s\" is invalid!"
-msgstr "Путь \"%s\" неверен!"
+#: logic.py:1920
+msgid "The path \"{}\" is invalid!"
+msgstr "Путь \"{}\" неверен!"
 
-#: shared.py:1870
-#, python-format
-msgid "Create directory \"%s\""
-msgstr "Создание каталога \"%s\""
+#: logic.py:1924
+msgid "Create directory \"{}\""
+msgstr "Создание каталога \"{}\""
 
-#: shared.py:1878
-#, python-format
-msgid "Failed to create directory \"%s\"!"
-msgstr "Не удается создать каталог \"%s\"!"
+#: logic.py:1931
+msgid "Failed to create directory \"{}\"!"
+msgstr "Не удается создать каталог \"{}\"!"
 
-#: shared.py:2112
+#: logic.py:2148
 msgid "The following lines cannot be parsed:"
 msgstr "Не удается обработать следующие строки:"
 
-#: shared.py:2294
-#, python-format
+#: logic.py:2309
 msgid ""
-"Unable to read file \"%s\"!\n"
+"Unable to read file \"{}\"!\n"
 "\n"
-"Details: %s"
+"Details: {}"
 msgstr ""
-"Не удается прочитать файл \"%s\"!\n"
+"Не удается прочитать файл \"{}\"!\n"
 "\n"
-"Подробности: %s"
+"Подробности: {}"
 
-#: shared.py:2340 shared.py:3646 shared.py:3650 sharedGUI.py:143
-#: sharedGUI.py:2126 sharedGUI.py:2180
-#, python-format
-msgid "Wrong input data: \"%s\""
-msgstr "Недопустимые входные данные: \"%s\""
+#: logic.py:2435
+msgid "Failed to delete directory \"{}\"! Delete it manually."
+msgstr "Не удается удалить каталог \"{}\"! Удалите его вручную."
 
-#: shared.py:2418
-#, python-format
-msgid "Failed to delete directory \"%s\"! Delete it manually."
-msgstr "Не удается удалить каталог \"%s\"! Удалите его вручную."
+#: logic.py:2504
+msgid "Unable to copy \"{}\" to iself!"
+msgstr "Нельзя скопировать \"{}\" сам в себя!"
 
-#: shared.py:2496
-#, python-format
-msgid "Unable to copy \"%s\" to iself!"
-msgstr "Нельзя скопировать \"%s\" сам в себя!"
+#: logic.py:2523
+msgid "Failed to copy \"{}\" to \"{}\"!"
+msgstr "Не удалось скопировать \"{}\" в \"{}\"!"
 
-#: shared.py:2520
-#, python-format
-msgid "Failed to copy \"%s\" to \"%s\"!"
-msgstr "Не удалось скопировать \"%s\" в \"%s\"!"
-
-#: shared.py:2536
+#: logic.py:2539
 msgid "The following sections and/or keys are missing:"
 msgstr "ОШИБКА"
 
-#: shared.py:2550
-#, python-format
-msgid "New value of the key \"%s\" has been loaded."
-msgstr "Загружено новое значение ключа \"%s\"."
+#: logic.py:2552
+msgid "New value of the key \"{}\" has been loaded."
+msgstr "Загружено новое значение ключа \"{}\"."
 
-#: shared.py:2556
-#, python-format
-msgid "Keys loaded in total: %d, whereas %d are modified."
-msgstr "Всего загружено ключей: %d, из них измененных: %d"
+#: logic.py:2557
+msgid "Keys loaded in total: {}, whereas {} are modified."
+msgstr "Всего загружено ключей: {}, из них измененных: {}"
 
-#: shared.py:2582
-#, python-format
-msgid "Missing sections: %d"
-msgstr "Отсутствующих разделов: %d"
+#: logic.py:2582
+msgid "Missing sections: {}"
+msgstr "Отсутствующих разделов: {}"
 
-#: shared.py:2584
-#, python-format
-msgid "Missing keys: %d"
-msgstr "Отсутствующих ключей: %d"
+#: logic.py:2584
+msgid "Missing keys: {}"
+msgstr "Отсутствующих ключей: {}"
 
-#: shared.py:2586
+#: logic.py:2586
 msgid "The default configuration has been loaded."
 msgstr "Загружена конфигурация по умолчанию."
 
-#: shared.py:2605
-#, python-format
+#: logic.py:2601
 msgid ""
-"Failed to read the configuration file \"%s\". This file must share the same "
+"Failed to read the configuration file \"{}\". This file must share the same "
 "directory with the program and have UTF-8 encoding (no BOM) and UNIX line "
 "break type."
 msgstr ""
-"Не удается прочитать конфигурационный файл \"%s\". Этот файл должен "
-"находиться в одном каталоге с программой и иметь кодировку utf-8 (без BOM), "
+"Не удается прочитать конфигурационный файл \"{}\". Этот файл должен "
+"находиться в одном каталоге с программой и иметь кодировку UTF-8 (без BOM), "
 "тип разрыва строки - UNIX."
 
-#: shared.py:2645
-#, python-format
+#: logic.py:2638
 msgid ""
-"Failed to open URL \"%s\" in a default browser!\n"
+"Failed to open URL \"{}\" in a default browser!\n"
 "\n"
-"Details: %s"
+"Details: {}"
 msgstr ""
-"Не удалось открыть адрес \"%s\" в браузере по умолчанию!\n"
+"Не удалось открыть адрес \"{}\" в браузере по умолчанию!\n"
 "\n"
-"Подробности: %s"
+"Подробности: {}"
 
-#: shared.py:2703
+#: logic.py:2695
 msgid "Differences:"
 msgstr "Различия:"
 
-#: shared.py:2728
+#: logic.py:2719
 msgid "Texts are identical!"
 msgstr "Различий нет!"
 
-#: shared.py:2788
-#, python-format
-msgid "Delete the symbolic link \"%s\""
-msgstr "Удаление ярлыка \"%s\""
+#: logic.py:2775
+msgid "Delete the symbolic link \"{}\""
+msgstr "Удаление ярлыка \"{}\""
 
-#: shared.py:2794
-#, python-format
-msgid "Failed to remove shortcut \"%s\". Remove it manually and press OK."
-msgstr "Не удается удалить ярлык \"%s\". Удалите его вручную и нажмите OK."
+#: logic.py:2780
+msgid "Failed to remove shortcut \"{}\". Remove it manually and press OK."
+msgstr "Не удается удалить ярлык \"{}\". Удалите его вручную и нажмите OK."
 
-#: shared.py:2811 shared.py:2840
-#, python-format
-msgid "Create a symbolic link \"%s\""
-msgstr "Создание ярлыка \"%s\""
+#: logic.py:2794 logic.py:2818
+msgid "Create a symbolic link \"{}\""
+msgstr "Создание ярлыка \"{}\""
 
-#: shared.py:2817 shared.py:2850
-#, python-format
-msgid "Failed to create shortcut \"%s\". Create it manually and press OK."
-msgstr "Не удается создать ярлык \"%s\". Создайте его вручную и нажмите OK."
+#: logic.py:2799 logic.py:2827
+msgid "Failed to create shortcut \"{}\". Create it manually and press OK."
+msgstr "Не удается создать ярлык \"{}\". Создайте его вручную и нажмите OK."
 
-#: shared.py:2827 shared.py:2870 sharedGUI.py:3538 sharedGUI.py:3545
-msgid "Nothing to do."
-msgstr "Действие не требуется."
-
-#: shared.py:2981
+#: logic.py:2945
 msgid "Failed to load an e-mail client."
 msgstr "Не удалось загрузить почтовый клиент."
 
-#: shared.py:3021
-#, python-format
-msgid ""
-"Operation has failed!\n"
-"Details: %s"
-msgstr ""
-"Операция завершилась с ошибкой!\n"
-"Подробности: %s"
-
-#: shared.py:3025
+#: logic.py:2983
 msgid "This operation cannot be executed on your operating system."
 msgstr "Эта операция не может быть выполнена на вашей операционной системе."
 
-#: shared.py:3349
+#: logic.py:3294
 msgid "Analyze the text"
 msgstr "Анализ текста"
 
-#: shared.py:3675
-#, python-format
-msgid "Failed to find words of paragraph #%d!"
-msgstr "Не удалось найти слова абзаца #%d!"
+#: logic.py:3583
+msgid "Failed to find words of paragraph #{}!"
+msgstr "Не удалось найти слова абзаца #{}!"
 
-#: shared.py:4064 shared.py:4073
+#: logic.py:3940 logic.py:3948
 msgid "The pool is empty!"
 msgstr "Пул пуст!"
 
-#: shared.py:4110
-#, python-format
-msgid "The operation has taken %f s."
-msgstr "Операция завершена за %f с."
+#: logic.py:3983
+msgid "The operation has taken {} s."
+msgstr "Операция завершена за {} с."
 
-#: shared.py:4156
-#, python-format
-msgid "Set the max number of rows to %d"
-msgstr "Задать максимальное число столбцов: %d"
+#: logic.py:4025
+msgid "Set the max number of rows to {}"
+msgstr "Задать максимальное число столбцов: {}"
 
-#: shared.py:4293
+#: logic.py:4157
 msgid "Unable to use unverified certificates!"
 msgstr "Не удается использовать неподтвержденные сертификаты!"
 
-#: shared.py:4312
-#, python-format
-msgid "[OK]: \"%s\""
-msgstr "[Успешно]: \"%s\""
+#: logic.py:4175
+msgid "[OK]: \"{}\""
+msgstr "[Успешно]: \"{}\""
 
-#: shared.py:4317
-#, python-format
-msgid "[FAILED]: \"%s\". Details: %s"
-msgstr "[ОШИБКА]: \"%s\". Подробности: %s"
+#: logic.py:4179
+msgid "[FAILED]: \"{}\". Details: {}"
+msgstr "[ОШИБКА]: \"{}\". Подробности: {}"
 
-#: shared.py:4334
-#, python-format
-msgid "Unable to decode \"%s\"!"
-msgstr "Не удается изменить кодировку \"%s\"!"
+#: logic.py:4195
+msgid "Unable to decode \"{}\"!"
+msgstr "Не удается изменить кодировку \"{}\"!"
 
-#: shared.py:4431
+#: logic.py:4214
+msgid "Wrong input data: {}!"
+msgstr "Недопустимые входные данные: \"{}\"!"
+
+#: logic.py:4279
 msgid "No references have been found!"
 msgstr "Ориентиры не найдены!"
 
-#: shared.py:4436
+#: logic.py:4283
 msgid "No references to the right!"
 msgstr "Справа ориентиров нет!"
 
-#: shared.py:4441
+#: logic.py:4287
 msgid "No references to the left!"
 msgstr "Слева ориентиров нет!"
 
-#: shared.py:4525
+#: logic.py:4364
 msgid "Unexpected end of text!"
 msgstr "Неожиданный конец текста!"
 
-#: shared.py:4678 shared.py:4700
-msgid "B"
-msgstr "Б"
-
-#: shared.py:4691
-msgid "TiB"
-msgstr "ТиБ"
-
-#: shared.py:4693
-msgid "GiB"
-msgstr "ГиБ"
-
-#: shared.py:4695
-msgid "MiB"
-msgstr "МиБ"
-
-#: shared.py:4698
-msgid "KiB"
-msgstr "КиБ"
-
-#: shared.py:4797 sharedGUI.py:2831 sharedGUI.py:2838 sharedGUI.py:2882
-#: sharedGUI.py:2887 sharedGUI.py:2959 sharedGUI.py:2972 sharedGUI.py:3009
-#: sharedGUI.py:3015 sharedGUI.py:3412
-msgid "QUESTION"
-msgstr "ВОПРОС"
-
-#: shared.py:4798
-#, python-format
-msgid "ATTENTION: Do yo really want to rewrite file \"%s\"?"
-msgstr "ВНИМАНИЕ: Перезаписать файл \"%s\"?"
-
-#: shared.py:4831 shared.py:4864
-msgid "sec"
-msgstr "сек"
-
-#: shared.py:4852
-msgid "yrs"
-msgstr "лет"
-
-#: shared.py:4854
-msgid "mths"
-msgstr "мес"
-
-#: shared.py:4856
-msgid "wks"
-msgstr "нед"
-
-#: shared.py:4858
-msgid "days"
-msgstr "дн"
-
-#: shared.py:4860
-msgid "hrs"
-msgstr "ч"
-
-#: shared.py:4862
-msgid "min"
-msgstr "мин"
-
-#: shared.py:4913 sharedGUI.py:1496 sharedGUI.py:1651 sharedGUI.py:2086
-#: sharedGUI.py:4299
-msgid "Nothing to do!"
-msgstr "Действие не требуется."
-
-#: sharedGUI.py:138
-#, python-format
-msgid "Failed to enable key combination \"%s\"!"
-msgstr "Не удалось задействовать сочетание клавиш \"%s\"!"
-
-#: sharedGUI.py:155
+#: logic.py:4524
 msgid "Plain text (UTF-8)"
 msgstr "Обычный текст (UTF-8)"
 
-#: sharedGUI.py:156 sharedGUI.py:157
+#: logic.py:4525 logic.py:4526
 msgid "Web-page"
 msgstr "Веб-страница"
 
-#: sharedGUI.py:158
+#: logic.py:4527
 msgid "All files"
 msgstr "Все файлы"
 
-#: sharedGUI.py:163
+#: logic.py:4532
 msgid "Save As:"
 msgstr "Сохранить как:"
 
-#: sharedGUI.py:168
-msgid "Failed to select a file!"
-msgstr "Не удалось выбрать файл!"
+#: logic.py:4537
+msgid "Nothing to do!"
+msgstr "Действие не требуется."
 
-#: sharedGUI.py:187
-#, python-format
-msgid "An unknown color \"%s\"!"
-msgstr "Неизвестный цвет \"%s\"!"
+#: logic.py:4554 logic.py:4576
+msgid "B"
+msgstr "Б"
 
-#: sharedGUI.py:256 sharedGUI.py:260
-msgid "Failed to insert the text!"
-msgstr "Не удалось вставить текст!"
+#: logic.py:4567
+msgid "TiB"
+msgstr "ТиБ"
 
-#: sharedGUI.py:264 sharedGUI.py:275 sharedGUI.py:290 sharedGUI.py:301
-#: sharedGUI.py:316 sharedGUI.py:338
-#, python-format
-msgid "A logic error: unknown object type: \"%s\"!"
-msgstr "Логическая ошибка: неизвестный тип объекта: \"%s\"!"
+#: logic.py:4569
+msgid "GiB"
+msgstr "ГиБ"
 
-#: sharedGUI.py:295
-msgid "Text:"
-msgstr "Текст:"
+#: logic.py:4571
+msgid "MiB"
+msgstr "МиБ"
 
-#: sharedGUI.py:311 sharedGUI.py:747 sharedGUI.py:748 sharedGUI.py:1204
-#: sharedGUI.py:1205 sharedGUI.py:1820 sharedGUI.py:1821
-msgid "Quit"
-msgstr "Выйти"
+#: logic.py:4574
+msgid "KiB"
+msgstr "КиБ"
 
-#: sharedGUI.py:313
-msgid "Save and close"
-msgstr "Запомнить и выйти"
+#: logic.py:4672
+msgid "ATTENTION: Do yo really want to rewrite file \"{}\"?"
+msgstr "ВНИМАНИЕ: Перезаписать файл \"{}\"?"
 
-#: sharedGUI.py:387 sharedGUI.py:1098 sharedGUI.py:3040 sharedGUI.py:3051
-#: sharedGUI.py:3515
-msgid "Title:"
-msgstr "Заголовок:"
+#: logic.py:4702 logic.py:4735
+msgid "sec"
+msgstr "сек"
 
-#: sharedGUI.py:430
-msgid "Find:"
-msgstr "Найти:"
+#: logic.py:4723
+msgid "yrs"
+msgstr "лет"
 
-#: sharedGUI.py:466 sharedGUI.py:584 sharedGUI.py:612
-msgid "No matches!"
-msgstr "Совпадений нет!"
+#: logic.py:4725
+msgid "mths"
+msgstr "мес"
 
-#: sharedGUI.py:574 sharedGUI.py:601
-msgid "Only one match has been found!"
-msgstr "Найдено 1 совпадение!"
+#: logic.py:4727
+msgid "wks"
+msgstr "нед"
 
-#: sharedGUI.py:578
-msgid "No more matches, continuing from the top!"
-msgstr "Совпадений больше нет, поиск продолжен с начала!"
+#: logic.py:4729
+msgid "days"
+msgstr "дн"
 
-#: sharedGUI.py:605
-msgid "No more matches, continuing from the bottom!"
-msgstr "Совпадений больше нет, поиск продолжен с конца!"
+#: logic.py:4731
+msgid "hrs"
+msgstr "ч"
 
-#: sharedGUI.py:873 sharedGUI.py:1025 sharedGUI.py:1258 sharedGUI.py:1288
-#: sharedGUI.py:3120 sharedGUI.py:3150
-msgid "The parent has already been destroyed."
-msgstr "Родительский виджет уже был разрушен."
+#: logic.py:4733
+msgid "min"
+msgstr "мин"
 
-#: sharedGUI.py:914
-#, python-format
-msgid "Failed to remove the tag %s in the widget %s in positions %s-%s!"
-msgstr "Не удалось удалить тэг %s в виджете %s для позиций %s-%s!"
+#: logic.py:4748
+msgid "Operation has been canceled."
+msgstr "Операция отменена."
 
-#: sharedGUI.py:930
-msgid "DEBUG-ERROR"
-msgstr "ОШИБКА ПРИ ОТЛАДКЕ"
+#: logic.py:4758
+msgid "Not implemented yet!"
+msgstr "Еще не реализовано!"
 
-#: sharedGUI.py:931 sharedGUI.py:1014
-#, python-format
-msgid "Element \"%s\" has not been found in fragment \"%s\"!"
-msgstr "Элемент \"%s\" не был найден во фрагменте \"%s\"!"
+#: regexp.py:59
+msgid "A syntax error in the regular expression (id: {})!"
+msgstr "Синтаксическая ошибка в регулярном выражении (запись: {})!"
 
-#: sharedGUI.py:946
-#, python-format
-msgid "Failed to add tag \"%s\" for positions %s-%s!"
-msgstr "Не удалось добавить тэг \"%s\" для позиций %s-%s!"
-
-#: sharedGUI.py:959
-#, python-format
-msgid "Failed to configure tag \"%s\" to have the background of color \"%s\"!"
-msgstr "Не удалось назначить тэгу \"%s\" фон \"%s\"!"
-
-#: sharedGUI.py:967
-#, python-format
-msgid "Failed to configure tag \"%s\" to have the foreground of color \"%s\"!"
-msgstr "Не удалось назначить тэгу \"%s\" цвет \"%s\"!"
-
-#: sharedGUI.py:975
-#, python-format
-msgid "Failed to configure tag \"%s\" to have the font \"%s\"!"
-msgstr "Не удалось назначить тэгу \"%s\" шрифт \"%s\"!"
-
-#: sharedGUI.py:992
-#, python-format
-msgid "Failed to insert mark \"%s\" in position \"%s\"!"
-msgstr "Не удается вставить метку \"%s\" для позиции \"%s\"!"
-
-#: sharedGUI.py:1008
-#, python-format
-msgid "Failed to remove mark \"%s\"!"
-msgstr "Не удалось удалить метку \"%s\"!"
-
-#: sharedGUI.py:1066 sharedGUI.py:1077
-#, python-format
-msgid "Failed to shift screen to label \"%s\"!"
-msgstr "Не удалось сдвинуть экран до метки \"%s\"!"
-
-#: sharedGUI.py:1113
-#, python-format
-msgid "Got position: \"%s\""
-msgstr "Получена позиция: \"%s\""
-
-#: sharedGUI.py:1118
-msgid "Cannot return a cursor position!"
-msgstr "Не удалось вернуть позицию курсора!"
-
-#: sharedGUI.py:1153
-#, python-format
-msgid "%d tags to assign"
-msgstr "Создание %d тэгов"
-
-#: sharedGUI.py:1160
-msgid "Spelling seems to be correct."
-msgstr "Ошибок правописания не обнаружено."
-
-#: sharedGUI.py:1602
-#, python-format
-msgid "Set the geometry to \"%dx%d+%d+%d\""
-msgstr "Изменение геометрии виджета на \"%dx%d+%d+%d\""
-
-#: sharedGUI.py:1736
-#, python-format
-msgid "Remove item #%d"
-msgstr "Удаление элемента №%d"
-
-#: sharedGUI.py:1740
-#, python-format
-msgid "No item #%d!"
-msgstr "Элемент №%d не существует!"
-
-#: sharedGUI.py:1898
-#, python-format
-msgid "Item \"%s\" is not in list!"
-msgstr "Элемент \"%s\" не в списке!"
-
-#: sharedGUI.py:2304
-msgid "Failed to return selection in the Tkinter widget!"
-msgstr "Не удается вернуть диапазон выделения в виджете Tkinter!"
-
-#: sharedGUI.py:2362
-msgid "Paste a special symbol"
-msgstr "Вставить специальный символ"
-
-#: sharedGUI.py:2423
-#, python-format
-msgid "Save geometry: %s"
-msgstr "Сохранение геометрии: %s"
-
-#: sharedGUI.py:2435
-#, python-format
-msgid "Restore geometry: %s"
-msgstr "Восстановление геометрии: %s"
-
-#: sharedGUI.py:2440
-msgid "Failed to restore geometry!"
-msgstr "Не удалось восстановить геометрию!"
-
-#: sharedGUI.py:2461
-msgid "Failed to change window properties!"
-msgstr "Не удалось изменить свойства окна!"
-
-#: sharedGUI.py:2561
-msgid "Failed to get the window handle!"
-msgstr "Не удалось получить дескриптор окна!"
-
-#: sharedGUI.py:2588 sharedGUI.py:2647 sharedGUI.py:2650
-msgid "Please wait..."
-msgstr "Подождите..."
-
-#: sharedGUI.py:2722
-#, python-format
-msgid "Wrong font: \"%s\"!"
-msgstr "Неправильный шрифт: \"%s\"!"
-
-#: sharedGUI.py:2811 sharedGUI.py:3043 sharedGUI.py:3051
-msgid "Message"
-msgstr "Сообщение"
-
-#: sharedGUI.py:2829
-msgid "CRITICAL"
-msgstr "КРИТИЧЕСКАЯ ОШИБКА"
-
-#: sharedGUI.py:3010
-msgid "Yes"
-msgstr "Да"
-
-#: sharedGUI.py:3011
-msgid "No"
-msgstr "Нет"
-
-#: sharedGUI.py:3014
-msgid "Cancel"
-msgstr "Отмена"
-
-#: sharedGUI.py:3018 sharedGUI.py:3032
-msgid "Accept and close"
-msgstr "Принять и закрыть"
-
-#: sharedGUI.py:3026
-msgid "Reject and close"
-msgstr "Отказаться и закрыть"
-
-#: sharedGUI.py:3088
-#, python-format
-msgid "Picture \"%s\" was not found!"
-msgstr "Изображение \"%s\" не найдено!"
-
-#: sharedGUI.py:3114
-msgid "A clipboard error has occurred!"
-msgstr "Ошибка буфера обмена!"
-
-#: sharedGUI.py:3124 sharedGUI.py:3154
-msgid "An unknown error has occurred."
-msgstr "Произошла неизвестная ошибка."
-
-#: sharedGUI.py:3144
-msgid "Failed to paste the clipboard contents!"
-msgstr "Ошибка вставки из буфера обмена."
-
-#: sharedGUI.py:3389
-#, python-format
-msgid "Add %s"
-msgstr "Добавить %s"
-
-#: sharedGUI.py:3428
-#, python-format
-msgid "Close %d objs"
-msgstr "Закрыть %d объектов"
-
-#: sharedGUI.py:3435
-#, python-format
-msgid "Widget \"%s\" does not have a \"close\" action!"
-msgstr "У виджета \"%s\" нет действия \"close\"!"
-
-#: sharedGUI.py:3630
-#, python-format
+#: regexp.py:72
 msgid ""
-"Third-party module has failed!\n"
-"\n"
-"Details: %s"
+"Regular expression {} has failed: we were expecting\n"
+"\"{}\",\n"
+"but received\n"
+"\"{}\"."
 msgstr ""
-"Ошибка модуля третьей стороны!\n"
-"\n"
-"Детали: %s"
+"Неудачное вычисление регулярного выражения {}: ожидалось\n"
+"\"{}\",\n"
+"получили\n"
+"\"{}\"."
 
-#: sharedGUI.py:3716
+#: shared.py:94
 msgid "Compare texts:"
 msgstr "Сравните тексты:"
 
-#: sharedGUI.py:3926
-#, python-format
-msgid "File: \"%s\"; %d/%d MB; Rate: %s kbps; ETA: %ss"
-msgstr "Файл: \"%s\"; %d/%d Мб; Скорость: %s Кб/с; Осталось: %sс"
+#: shared.py:280
+msgid "Find:"
+msgstr "Найти:"
 
-#: sharedGUI.py:3970
-msgid "Download progress"
-msgstr "Ход загрузок"
+#: shared.py:327 shared.py:426 shared.py:449
+msgid "No matches!"
+msgstr "Совпадений нет!"
 
-#: sharedGUI.py:4232
-#, python-format
-msgid "Widget 1 geometry: %dx%d+%d+%d"
-msgstr "Геометрия виджета 1: %dx%d+%d+%d"
+#: shared.py:418 shared.py:440
+msgid "Only one match has been found!"
+msgstr "Найдено 1 совпадение!"
 
-#: sharedGUI.py:4236
-#, python-format
-msgid "Widget 2 geometry: %dx%d+%d+%d"
-msgstr "Геометрия виджета 2: %dx%d+%d+%d"
+#: shared.py:422
+msgid "No more matches, continuing from the top!"
+msgstr "Совпадений больше нет, поиск продолжен с начала!"
 
-#: sharedGUI.py:4284
-msgid "Select files:"
-msgstr "Выберите файлы:"
+#: shared.py:445
+msgid "No more matches, continuing from the bottom!"
+msgstr "Совпадений больше нет, поиск продолжен с конца!"
 
-#: sharedGUI.py:4313
-msgid "Toggle all"
-msgstr "Переключить все"
+#: shared.py:642
+msgid "{} tags to assign"
+msgstr "Создание {} тэгов"
 
-#: sharedGUI.py:4314
-msgid "Mark/unmark all checkboxes"
-msgstr "Добавить/убрать все пометы"
+#: shared.py:648
+msgid "Spelling seems to be correct."
+msgstr "Ошибок правописания не обнаружено."
 
-#: sharedGUI.py:4319
+#: shared.py:1087 shared.py:1337 shared.py:2379
 msgid "Close"
 msgstr "Закрыть"
 
-#: sharedGUI.py:4320
+#: shared.py:1095
+msgid "Clear"
+msgstr "Очистить"
+
+#: shared.py:1103 shared.py:2384
+msgid "Save and close"
+msgstr "Запомнить и выйти"
+
+#: shared.py:1331
+msgid "Toggle all"
+msgstr "Переключить все"
+
+#: shared.py:1332
+msgid "Mark/unmark all checkboxes"
+msgstr "Добавить/убрать все пометы"
+
+#: shared.py:1338
 msgid "Close this window"
 msgstr "Закрыть это окно"
+
+#: shared.py:1364
+msgid "Select files:"
+msgstr "Выберите файлы:"
+
+#: shared.py:1560
+msgid "Download progress"
+msgstr "Ход загрузок"
+
+#: shared.py:1669
+msgid "File: \"{}\"; {}/{} MB; Rate: {} kbps; ETA: {}s"
+msgstr "Файл: \"{}\"; {}/{} Мб; Скорость: {} Кб/с; Осталось: {}с"
+
+#: shared.py:1706
+msgid ""
+"Third-party module has failed!\n"
+"\n"
+"Details: {}"
+msgstr ""
+"Ошибка модуля третьей стороны!\n"
+"\n"
+"Детали: {}"
+
+#: shared.py:1928
+msgid "Paste a special symbol"
+msgstr "Вставить специальный символ"
+
+#: shared.py:2200
+msgid "Remove item #{}"
+msgstr "Удаление элемента №{}"
+
+#: shared.py:2203
+msgid "No item #{}!"
+msgstr "Элемент №{} отсутствует!"
+
+#: shared.py:2271
+msgid "Item \"{}\" is not in list!"
+msgstr "Элемент \"{}\" не в списке!"
+
+#: shared.py:2378 shared.py:3546
+msgid "Reject and close"
+msgstr "Отказаться и закрыть"
+
+#: shared.py:2383 shared.py:3538 shared.py:3552
+msgid "Accept and close"
+msgstr "Принять и закрыть"
+
+#: shared.py:2574
+msgid "Set the geometry to \"{}x{}+{}+{}\""
+msgstr "Изменение геометрии виджета на \"{}x{}+{}+{}\""
+
+#: shared.py:2655 shared.py:2698 shared.py:2700
+msgid "Please wait..."
+msgstr "Подождите..."
+
+#: shared.py:3050
+msgid "Widget 1 geometry: {}x{}+{}+{}"
+msgstr "Геометрия виджета 1: {}x{}+{}+{}"
+
+#: shared.py:3056
+msgid "Widget 2 geometry: {}x{}+{}+{}"
+msgstr "Геометрия виджета 2: {}x{}+{}+{}"
+
+#: shared.py:3148
+msgid "Wrong font: \"{}\"!"
+msgstr "Неправильный шрифт: \"{}\"!"
+
+#: shared.py:3200
+msgid "Save geometry: {}"
+msgstr "Сохранение геометрии: {}"
+
+#: shared.py:3209
+msgid "Restore geometry: {}"
+msgstr "Восстановление геометрии: {}"
+
+#: shared.py:3213
+msgid "Failed to restore geometry!"
+msgstr "Не удалось восстановить геометрию!"
+
+#: shared.py:3231
+msgid "Failed to change window properties!"
+msgstr "Не удалось изменить свойства окна!"
+
+#: shared.py:3314
+msgid "Failed to get the window handle!"
+msgstr "Не удалось получить дескриптор окна!"
+
+#: shared.py:3530
+msgid "Yes"
+msgstr "Да"
+
+#: shared.py:3531
+msgid "No"
+msgstr "Нет"
+
+#: shared.py:3534
+msgid "Cancel"
+msgstr "Отмена"
+
+#: shared.py:3701
+msgid ""
+"Operation has failed!\n"
+"\n"
+"Details: {}"
+msgstr ""
+"Операция завершилась неудачно!\n"
+"\n"
+"Подробности: {}"
+
+#: shared.py:3715
+msgid "An unknown color \"{}\"!"
+msgstr "Неизвестный цвет \"{}\"!"
+
+#: shared.py:3734
+msgid "Failed to select a file!"
+msgstr "Не удалось выбрать файл!"
+
+#: shared.py:3750
+msgid "Failed to enable key combination \"{}\"!"
+msgstr "Не удалось задействовать сочетание клавиш \"{}\"!"
+
+#: shared.py:3754
+msgid "Wrong input data: \"{}\""
+msgstr "Недопустимые входные данные: \"{}\"!"
+
+#: tests.py:26 tests.py:58
+msgid "Press Return to place widgets randomly"
+msgstr "Нажмите Ввод, чтобы расположить виджеты случайным образом"
+
+#: tests.py:30
+msgid ""
+"Anchor: {}\n"
+"Press Return to adjust Widget 2"
+msgstr ""
+"Привязка: {}\n"
+"Нажмите Ввод для подгонки Виджета 2"
+
+#: tests.py:81
+msgid "Anchor: {}"
+msgstr "Привязка: {}"
+
+#: tests.py:328 tests.py:353
+msgid "New settings"
+msgstr "Новые настройки"
+
+#: tests.py:352
+msgid "Mexico"
+msgstr "Мексика"
+
+#: tests.py:352
+msgid "Canada"
+msgstr "Канада"
+
+#: tests.py:352
+msgid "Russia"
+msgstr "Россия"
+
+#: tests.py:452
+msgid "The event has been triggered!"
+msgstr "Событие вызвано!"
+
+#: tests.py:467
+msgid "Button"
+msgstr "Кнопка"
+
+#: tests.py:471
+msgid "Trigger an event"
+msgstr "Вызвать событие"
+
+#: tests.py:531
+msgid "Screen resolution: {}x{}"
+msgstr "Разрешение экрана: {}x{}"
+
+#: tests.py:537
+msgid "Random coordinates: x: {}; y: {}"
+msgstr "Случайные координаты: x: {}; y: {}"
+
+#~ msgid "Empty strings are not supported!"
+#~ msgstr "Поддерживаются только непустые строки!"
+
+#~ msgid "Nothing to do."
+#~ msgstr "Действие не требуется."
+
+#~ msgid "Failed to insert the text!"
+#~ msgstr "Не удалось вставить текст!"
+
+#~ msgid "A logic error: unknown object type: \"%s\"!"
+#~ msgstr "Логическая ошибка: неизвестный тип объекта: \"%s\"!"
+
+#~ msgid "Text:"
+#~ msgstr "Текст:"
+
+#~ msgid "Quit"
+#~ msgstr "Выйти"
+
+#~ msgid "Title:"
+#~ msgstr "Заголовок:"
+
+#~ msgid "Failed to remove the tag %s in the widget %s in positions %s-%s!"
+#~ msgstr "Не удалось удалить тэг %s в виджете %s для позиций %s-%s!"
+
+#~ msgid "DEBUG-ERROR"
+#~ msgstr "ОШИБКА ПРИ ОТЛАДКЕ"
+
+#~ msgid "Element \"%s\" has not been found in fragment \"%s\"!"
+#~ msgstr "Элемент \"%s\" не был найден во фрагменте \"%s\"!"
+
+#~ msgid "Failed to add tag \"%s\" for positions %s-%s!"
+#~ msgstr "Не удалось добавить тэг \"%s\" для позиций %s-%s!"
+
+#~ msgid ""
+#~ "Failed to configure tag \"%s\" to have the background of color \"%s\"!"
+#~ msgstr "Не удалось назначить тэгу \"%s\" фон \"%s\"!"
+
+#~ msgid ""
+#~ "Failed to configure tag \"%s\" to have the foreground of color \"%s\"!"
+#~ msgstr "Не удалось назначить тэгу \"%s\" цвет \"%s\"!"
+
+#~ msgid "Failed to configure tag \"%s\" to have the font \"%s\"!"
+#~ msgstr "Не удалось назначить тэгу \"%s\" шрифт \"%s\"!"
+
+#~ msgid "Failed to insert mark \"%s\" in position \"%s\"!"
+#~ msgstr "Не удается вставить метку \"%s\" для позиции \"%s\"!"
+
+#~ msgid "Failed to remove mark \"%s\"!"
+#~ msgstr "Не удалось удалить метку \"%s\"!"
+
+#~ msgid "Failed to shift screen to label \"%s\"!"
+#~ msgstr "Не удалось сдвинуть экран до метки \"%s\"!"
+
+#~ msgid "Got position: \"%s\""
+#~ msgstr "Получена позиция: \"%s\""
+
+#~ msgid "Cannot return a cursor position!"
+#~ msgstr "Не удалось вернуть позицию курсора!"
+
+#~ msgid "Failed to return selection in the Tkinter widget!"
+#~ msgstr "Не удается вернуть диапазон выделения в виджете Tkinter!"
+
+#~ msgid "Message"
+#~ msgstr "Сообщение"
+
+#~ msgid "CRITICAL"
+#~ msgstr "КРИТИЧЕСКАЯ ОШИБКА"
+
+#~ msgid "Picture \"%s\" was not found!"
+#~ msgstr "Изображение \"%s\" не найдено!"
+
+#~ msgid "A clipboard error has occurred!"
+#~ msgstr "Ошибка буфера обмена!"
+
+#~ msgid "An unknown error has occurred."
+#~ msgstr "Произошла неизвестная ошибка."
+
+#~ msgid "Failed to paste the clipboard contents!"
+#~ msgstr "Ошибка вставки из буфера обмена."
+
+#~ msgid "Add %s"
+#~ msgstr "Добавить %s"
+
+#~ msgid "Close %d objs"
+#~ msgstr "Закрыть %d объектов"
+
+#~ msgid "Widget \"%s\" does not have a \"close\" action!"
+#~ msgstr "У виджета \"%s\" нет действия \"close\"!"
 
 #~ msgid "***** Start of log. *****"
 #~ msgstr "***** Начало записи лога. *****"

@@ -9,117 +9,6 @@ import random
 import shared as sh
 
 
-class Anchors:
-    
-    def __init__(self):
-        self.count   = 0
-        self.anchors = ('N' ,'NE','NW','E' 
-                       ,'EN','ES','S' ,'SE'
-                       ,'SW','W','WN','WS'
-                       )
-        self.anchor = self.anchors[0]
-    
-    def adjust(self,event=None):
-        if self.count % 2:
-            self.next_anchor()
-            self.attach()
-            mes = _('Press Return to place widgets randomly')
-            self.lbl_top.text(mes)
-        else:
-            self.place_widgets()
-            mes = _('Anchor: {}\nPress Return to adjust Widget 2').format(self.anchor)
-            self.lbl_top.text(mes)
-        self.count += 1
-    
-    def next_anchor(self):
-        ind = self.anchors.index(self.anchor)
-        if ind + 1 == len(self.anchors):
-            self.anchor = self.anchors[0]
-        else:
-            self.anchor = self.anchors[ind+1]
-    
-    def run(self,event=None):
-        f = '[shared] tests.Anchors.run'
-
-        self.top  = sh.Top()
-        self.top1 = sh.Top (AutoCr = False
-                           ,Lock   = False
-                           )
-        self.top2 = sh.Top (AutoCr = False
-                           ,Lock   = False
-                           )
-        self.top.title('HOST')
-        sh.Geometry(self.top).set('350x150')
-        
-        # Strict order: 'wm_overrideredirect' -> 'show' -> 'center'
-        self.top1.widget.wm_overrideredirect(1)
-        self.top2.widget.wm_overrideredirect(1)
-        
-        mes = _('Press Return to place widgets randomly')
-        self.lbl_top = sh.Label (parent = self.top
-                                ,text   = mes
-                                ,expand = True
-                                ,fill   = 'both'
-                                )
-        sh.Label (parent = self.top1
-                 ,text   = 'WIDGET1'
-                 ,bg     = 'green'
-                 ,fg     = 'orange'
-                 ,expand = True
-                 ,fill   = 'both'
-                 )
-        sh.Label (parent = self.top2
-                 ,text   = 'WIDGET2'
-                 ,bg     = 'red'
-                 ,fg     = 'orange'
-                 ,expand = True
-                 ,fill   = 'both'
-                 )
-        
-        self.place_widgets()
-        
-        mes = _('Anchor: {}').format(self.anchor)
-        sh.Message(f,mes,True).info()
-        
-        sh.com.bind (obj      = self.top
-                    ,bindings = '<Return>'
-                    ,action   = self.adjust
-                    )
-        sh.com.bind (obj      = self.top1
-                    ,bindings = '<Return>'
-                    ,action   = self.adjust
-                    )
-        sh.com.bind (obj      = self.top2
-                    ,bindings = '<Return>'
-                    ,action   = self.adjust
-                    )
-        
-        self.top1.show()
-        self.top2.show()
-        self.top.show()
-    
-    def place_widgets(self,event=None):
-        w1, w2 = com.size_range()
-        h1, h2 = com.size_range()
-        
-        x1, y1 = com.random_coor(h1,w1)
-        x2, y2 = com.random_coor(h2,w2)
-        
-        geom = sh.Geometry(parent=self.top1)
-        geom._geom = '%dx%d+%d+%d' % (w1,h1,x1,y1)
-        geom.restore()
-        
-        geom = sh.Geometry(parent=self.top2)
-        geom._geom = '%dx%d+%d+%d' % (w2,h2,x2,y2)
-        geom.restore()
-    
-    def attach(self,event=None):
-        sh.AttachWidget (obj1   = self.top1
-                        ,obj2   = self.top2
-                        ,anchor = self.anchor
-                        ).run()
-
-
 class Commands:
     
     def __init__(self):
@@ -798,13 +687,126 @@ class Commands:
         pb.show()
 
 
+
+class Anchors:
+    
+    def __init__(self):
+        self.count   = 0
+        self.anchors = ('N' ,'NE','NW','E' 
+                       ,'EN','ES','S' ,'SE'
+                       ,'SW','W','WN','WS'
+                       )
+        self.anchor = self.anchors[0]
+    
+    def adjust(self,event=None):
+        if self.count % 2:
+            self.next_anchor()
+            self.attach()
+            mes = _('Press Return to place widgets randomly')
+            self.lbl_top.text(mes)
+        else:
+            self.place_widgets()
+            mes = _('Anchor: {}\nPress Return to adjust Widget 2').format(self.anchor)
+            self.lbl_top.text(mes)
+        self.count += 1
+    
+    def next_anchor(self):
+        ind = self.anchors.index(self.anchor)
+        if ind + 1 == len(self.anchors):
+            self.anchor = self.anchors[0]
+        else:
+            self.anchor = self.anchors[ind+1]
+    
+    def run(self,event=None):
+        f = '[shared] tests.Anchors.run'
+
+        self.top  = sh.Top()
+        self.top1 = sh.Top (AutoCr = False
+                           ,Lock   = False
+                           )
+        self.top2 = sh.Top (AutoCr = False
+                           ,Lock   = False
+                           )
+        self.top.title('HOST')
+        sh.Geometry(self.top).set('550x150')
+        
+        # Strict order: 'wm_overrideredirect' -> 'show' -> 'center'
+        self.top1.widget.wm_overrideredirect(1)
+        self.top2.widget.wm_overrideredirect(1)
+        
+        mes = _('Press Return to place widgets randomly')
+        self.lbl_top = sh.Label (parent = self.top
+                                ,text   = mes
+                                ,expand = True
+                                ,fill   = 'both'
+                                )
+        sh.Label (parent = self.top1
+                 ,text   = 'WIDGET1'
+                 ,bg     = 'green'
+                 ,fg     = 'orange'
+                 ,expand = True
+                 ,fill   = 'both'
+                 )
+        sh.Label (parent = self.top2
+                 ,text   = 'WIDGET2'
+                 ,bg     = 'red'
+                 ,fg     = 'orange'
+                 ,expand = True
+                 ,fill   = 'both'
+                 )
+        
+        self.place_widgets()
+        
+        mes = _('Anchor: {}').format(self.anchor)
+        sh.Message(f,mes,True).info()
+        
+        sh.com.bind (obj      = self.top
+                    ,bindings = '<Return>'
+                    ,action   = self.adjust
+                    )
+        sh.com.bind (obj      = self.top1
+                    ,bindings = '<Return>'
+                    ,action   = self.adjust
+                    )
+        sh.com.bind (obj      = self.top2
+                    ,bindings = '<Return>'
+                    ,action   = self.adjust
+                    )
+        
+        self.top1.show()
+        self.top2.show()
+        self.top.show()
+    
+    def place_widgets(self,event=None):
+        w1, w2 = com.size_range()
+        h1, h2 = com.size_range()
+        
+        x1, y1 = com.random_coor(h1,w1)
+        x2, y2 = com.random_coor(h2,w2)
+        
+        geom = sh.Geometry(parent=self.top1)
+        geom._geom = '%dx%d+%d+%d' % (w1,h1,x1,y1)
+        geom.restore()
+        
+        geom = sh.Geometry(parent=self.top2)
+        geom._geom = '%dx%d+%d+%d' % (w2,h2,x2,y2)
+        geom.restore()
+    
+    def attach(self,event=None):
+        sh.AttachWidget (obj1   = self.top1
+                        ,obj2   = self.top2
+                        ,anchor = self.anchor
+                        ).run()
+
+
 com = Commands()
 
 
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    com.panes()
+    Anchors().run()
+    #com.panes()
     '''
     sh.GUI_MES = False
     sh.lg.ReadTextFile('/tmp/aaa').get()
