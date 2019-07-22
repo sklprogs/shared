@@ -61,7 +61,10 @@ class Panes:
 
 
 class TextBoxC:
-    
+    ''' #note: there is no '.focus' method since we want to focus on
+        'TextBox.widget' (tk.Text) instead of 'self.parent'
+        (tk.Toplevel).
+    '''
     def __init__(self,parent):
         self.parent = parent
         self.widget = self.parent.widget
@@ -890,6 +893,12 @@ class Frame:
                          ,ipady  = ipady
                          )
 
+    def height(self):
+        return self.widget.winfo_height()
+    
+    def width(self):
+        return self.widget.winfo_width()
+    
     def reqheight(self):
         return self.widget.winfo_reqheight()
     

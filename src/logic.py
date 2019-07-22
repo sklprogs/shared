@@ -682,7 +682,7 @@ class Log:
             if func and level and message:
                 self.func    = func
                 self.level   = level
-                self.message = message
+                self.message = str(message)
                 self.print()
                 self.count += 1
 
@@ -2875,7 +2875,9 @@ class Email:
           an attachment. Currently, I managed to add attachments only
           using CentOS6 + Palemoon + Thunderbird.
     '''
-    def __init__(self,email='',subject='',message='',attachment=''):
+    def __init__ (self,email='',subject=''
+                 ,message='',attachment=''
+                 ):
         if email:
             self.reset (email      = email
                        ,subject    = subject
@@ -2883,7 +2885,9 @@ class Email:
                        ,attachment = attachment
                        )
     
-    def reset(self,email,subject='',message='',attachment=''):
+    def reset (self,email,subject=''
+              ,message='',attachment=''
+              ):
         f = '[shared] logic.Email.reset'
         self.Success = True
         ''' A single address or multiple comma-separated addresses (not

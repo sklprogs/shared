@@ -4,8 +4,8 @@
 import sys, os
 import re
 import io
-import logic as lg
-import gui   as gi
+import skl_shared.logic as lg
+import skl_shared.gui   as gi
 
 import gettext, gettext_windows
 gettext_windows.setup_env()
@@ -597,22 +597,46 @@ class TextBoxC:
                  ):
         self.Save     = False
         self.SpReturn = SpReturn
+        self.Maximize = Maximize
         self._title   = title
         self._icon    = icon
         self.words    = words
-        self.gui.focus()
+        self.add_gui()
+        self.focus()
     
-    def reset(self,words=None):
+    def enable(self,event=None):
+        self.obj.enable()
+    
+    def disable(self,event=None):
+        self.obj.disable()
+    
+    def focus(self,event=None):
+        # Focus on 'tk.Text' instead of 'tk.Toplevel'
+        self.obj.focus()
+    
+    def insert (self,text=''
+               ,pos='1.0',MoveTop=True
+               ):
+        self.obj.insert (text    = text
+                        ,pos     = pos
+                        ,MoveTop = MoveTop
+                        )
+    
+    def reset(self,words=None,title=''):
         self.obj.reset(self.words)
+        self.title(title)
     
     def add_gui(self):
-        self.parent = Top(Maximize=Maximize)
+        self.parent = Top(Maximize=self.Maximize)
         self.widget = self.parent.widget
-        self.obj = TextBox (parent  = self.paremt
+        self.gui = gi.TextBoxC(self.parent)
+        self.obj = TextBox (parent  = self.parent
                            ,words   = self.words
                            ,ScrollX = False
                            ,ScrollY = True
                            )
+        self.title()
+        self.icon()
     
     def spelling(self):
         ''' Tags can be marked only after text is inserted; thus, call
@@ -791,7 +815,7 @@ class TextBox:
         if words:
             self.words = words
             # Selection is reset in 'SearchBox.reset'
-            self.search.reset(words)
+            self.search.reset(self.words)
 
     def bindings(self):
         com.bind (obj      = self.gui
@@ -854,7 +878,7 @@ class TextBox:
             else:
                 return result.strip('\n')
 
-    def insert(self,text='text',pos='1.0',MoveTop=True):
+    def insert(self,text='',pos='1.0',MoveTop=True):
         f = '[shared] shared.TextBox.insert'
         try:
             self.gui.insert (text = text
@@ -2266,7 +2290,7 @@ class ListBox:
         if item:
             if item in self.lst:
                 self._index = self.lst.index(item)
-                self._select()
+                self.select()
             else:
                 mes = _('Item "{}" is not in list!').format(item)
                 objs.mes(f,mes,True).error()
@@ -2346,7 +2370,6 @@ class ListBoxC:
                 ,fill     = 'both'
                 ,title    = 'Title:'
                 ,icon     = None
-                ,SelQuits = True
                 ,ScrollX  = True
                 ,ScrollY  = True
                 ):
@@ -2359,10 +2382,15 @@ class ListBoxC:
         self._fill    = fill
         self._title   = title
         self._icon    = icon
-        self.SelQuits = SelQuits
         self.ScrollX  = ScrollX
         self.ScrollY  = ScrollY
         self.add_gui()
+    
+    def set(self,item):
+        self.lbx_prm.set(item)
+    
+    def clear_selection(self,event=None):
+        self.lbx_prm.clear_selection()
     
     def reset(self,lst=(1,2,3,4,5),action=None,title='',icon=''):
         self.Save = False
@@ -2882,6 +2910,12 @@ class Frame:
                             )
         self.widget = self.gui.widget
 
+    def height(self):
+        return self.gui.height()
+    
+    def width(self):
+        return self.gui.width()
+    
     def reqheight(self):
         return self.gui.reqheight()
     
@@ -3402,7 +3436,19 @@ class Objects:
     
     def __init__(self):
         self._question = self._info = self._warning = self._debug \
-                       = self._error = self._mes = self._waitbox = None
+                       = self._error = self._mes = self._waitbox \
+                       = self._txt = None
+        self._pdir = self.pdir()
+        self._os   = self.os()
+        self._root = self.root()
+    
+    def txt(self):
+        if self._txt is None:
+            self._txt = sh.TextBoxC(title=_('Test:'))
+        return self._txt
+    
+    def pdir(self):
+        return lg.objs.pdir()
     
     def mes (self,func='Logic error'
             ,message='Logic error'

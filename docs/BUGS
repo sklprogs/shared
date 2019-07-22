@@ -1,4 +1,7 @@
 
+- Tooltips do not always disappear
+- tests.com.textboxc: a wrong selection is returned when searching for
+  'lama' several times
 - MessageBuilder: it is impossible to quit the GUI program correctly
   if a message is ignored several times in a row
 - sh.Path.basename works incorrectly for cases like file.dict.dz

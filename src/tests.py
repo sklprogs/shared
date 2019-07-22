@@ -14,6 +14,25 @@ class Commands:
     def __init__(self):
         pass
     
+    def textboxc(self):
+        file   = '/home/pete/base/[unmusic] corrupted tags.txt'
+        text   = sh.lg.ReadTextFile(file).get()
+        words  = sh.lg.Words (text = text
+                             ,Auto = True
+                             )
+        words.sent_nos()
+        itxt = sh.TextBoxC (SpReturn = True
+                           ,Maximize = False
+                           ,title   = 'TextBoxC with Selection and Search'
+                           ,icon     = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
+                           ,words    = words
+                           )
+        itxt.insert(text)
+        itxt.focus()
+        itxt.show()
+        result = sh.lg.Text(itxt.get()).shorten(max_len=20)
+        print('Output: "{}"'.format(result))
+    
     def panes(self):
         file   = '/home/pete/base/[unmusic] corrupted tags.txt'
         text   = sh.lg.ReadTextFile(file).get()
@@ -805,11 +824,5 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    Anchors().run()
-    #com.panes()
-    '''
-    sh.GUI_MES = False
-    sh.lg.ReadTextFile('/tmp/aaa').get()
-    '''
-    #sh.objs.mes(f,'Hello',False).info()
+    com.textboxc()
     sh.com.end()
