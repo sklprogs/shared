@@ -1167,6 +1167,15 @@ class Root:
         self.type   = 'Root'
         self.widget = tk.Tk()
 
+    def icon(self,file):
+        image = tk.PhotoImage (master = self.widget
+                              ,file   = file
+                              )
+        self.widget.tk.call('wm','iconphoto',self.widget._w,image)
+
+    def title(self,text):
+        self.widget.title(text)
+    
     def resolution(self):
         self.idle()
         return (self.widget.winfo_screenwidth()

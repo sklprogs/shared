@@ -3474,8 +3474,8 @@ class Objects:
     def os(self):
         return lg.objs.os()
     
-    def root(self):
-        return gi.objs.root()
+    def root(self,Close=True):
+        return gi.objs.root(Close)
     
     def error(self):
         if self._error is None:
