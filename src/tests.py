@@ -152,11 +152,13 @@ class Commands:
         parent.show()
     
     def progressbar(self):
-        top = sh.Top(AutoCr=False)
-        iprog  = sh.ProgressBar (width   = 750
-                                ,height  = 200
-                                ,YScroll = True
-                                )
+        top   = sh.Top(AutoCr=False)
+        iprog = sh.ProgressBar (width   = 750
+                               ,height  = 200
+                               ,YScroll = True
+                               ,title   = 'Load dictionaries'
+                               ,icon    = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
+                               )
         for i in range(10):
             iprog.add()
         iprog.show()
@@ -826,5 +828,6 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    com.textboxc()
+    #com.textboxc()
+    com.progressbar()
     sh.com.end()

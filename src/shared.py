@@ -1589,11 +1589,14 @@ class CheckBox:
 class ProgressBar:
     
     def __init__ (self,width=750,height=200
-                 ,YScroll = True
+                 ,YScroll=True,title=_('Download progress')
+                 ,icon=''
                  ):
         self.values()
         self._width  = width
         self._height = height
+        self._icon   = icon
+        self._title  = title
         self.YScroll = YScroll
         self.add_gui()
         
@@ -1618,12 +1621,14 @@ class ProgressBar:
         self.frm_sec = Frame (parent = self.frm_prm)
     
     def icon(self,path=''):
-        self.gui.icon(path)
+        if path:
+            self._icon = path
+        self.gui.icon(self._icon)
     
     def title(self,text=''):
-        if not text:
-            text = _('Download progress')
-        self.gui.title(text)
+        if text:
+            self._title = text
+        self.gui.title(self._title)
         
     def show(self,event=None):
         self.gui.show()
@@ -1644,6 +1649,7 @@ class ProgressBar:
         self.gui = gi.ProgressBar(self.parent)
         self.bindings()
         self.title()
+        self.icon()
         
     def bindings(self):
         com.bind (obj      = self.parent
