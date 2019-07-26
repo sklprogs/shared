@@ -15,19 +15,21 @@ class Commands:
         pass
     
     def textboxc(self):
-        file   = '/home/pete/base/[unmusic] corrupted tags.txt'
-        text   = sh.lg.ReadTextFile(file).get()
-        words  = sh.lg.Words (text = text
-                             ,Auto = True
-                             )
+        #file  = '/home/pete/base/[unmusic] corrupted tags.txt'
+        file  = '/tmp/test.txt'
+        text  = sh.lg.ReadTextFile(file).get()
+        words = sh.lg.Words (text = text
+                            ,Auto = True
+                            )
         words.sent_nos()
         itxt = sh.TextBoxC (SpReturn = True
                            ,Maximize = False
-                           ,title   = 'TextBoxC with Selection and Search'
+                           ,title    = 'TextBoxC with Selection and Search'
                            ,icon     = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
                            ,words    = words
                            )
         itxt.insert(text)
+        itxt.spelling()
         itxt.focus()
         itxt.show()
         result = sh.lg.Text(itxt.get()).shorten(max_len=20)
@@ -824,5 +826,5 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    com.entryc()
+    com.textboxc()
     sh.com.end()

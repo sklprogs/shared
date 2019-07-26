@@ -605,6 +605,47 @@ class TextBoxC:
         self.add_gui()
         self.focus()
     
+    def mark_remove(self,mark='insert'):
+        self.obj.mark_remove(mark)
+    
+    def mark_add(self,mark='insert',pos='1.0'):
+        self.obj.mark_add (mark = mark
+                          ,pos  = pos
+                          )
+    
+    def clear_marks(self,event=None):
+        self.obj.clear_marks()
+    
+    def clear_tags(self,event=None):
+        self.obj.clear_tags()
+    
+    def tag_config (self,tag='sel',bg=None
+                   ,fg=None,font=None
+                   ):
+        self.obj.tag_config (tag  = tag
+                            ,bg   = bg
+                            ,fg   = fg
+                            ,font = font
+                            )
+    
+    def tag_remove (self,tag='sel'
+                   ,pos1='1.0'
+                   ,pos2='end'
+                   ):
+        self.obj.tag_remove (tag  = tag
+                            ,pos1 = pos1
+                            ,pos2 = pos2
+                            )
+    
+    def tag_add (self,tag='sel',pos1='1.0'
+                ,pos2='end',DelPrev=True
+                ):
+        self.obj.tag_add (tag     = tag
+                         ,pos1    = pos1
+                         ,pos2    = pos2
+                         ,DelPrev = DelPrev
+                         )
+    
     def enable(self,event=None):
         self.obj.enable()
     
@@ -648,7 +689,7 @@ class TextBoxC:
             self.words.sent_nos()
             result = []
             for i in range(self.words.len()):
-                if not self.words.words[i].spell_ru():
+                if not self.words.words[i].spell():
                     result.append(i)
             if result:
                 self.clear_tags()
@@ -656,12 +697,11 @@ class TextBoxC:
                     no   = self.words._no = result[i]
                     pos1 = self.words.words[no].tf()
                     pos2 = self.words.words[no].tl()
-                    #todo: apply IGNORE_SPELLING
                     if pos1 and pos2:
-                        self.tag_add (tag   = 'spell'
-                                     ,pos1  = pos1
-                                     ,pos2  = pos2
-                                     ,DelPr = False
+                        self.tag_add (tag     = 'spell'
+                                     ,pos1    = pos1
+                                     ,pos2    = pos2
+                                     ,DelPrev = False
                                      )
                 
                 mes = _('{} tags to assign').format(len(result))
