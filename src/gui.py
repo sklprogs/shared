@@ -741,7 +741,7 @@ class ToolTipBase:
         return self.widget.winfo_rooty()
     
     def schedule(self,hint_delay,showtip):
-        self.widget.after(hint_delay,showtip)
+        return self.widget.after(hint_delay,showtip)
     
     def unschedule(self,myid):
         self.widget.after_cancel(myid)

@@ -1109,30 +1109,26 @@ class EntryC:
         self.gui.title(self._title)
     
     def buttons(self):
-        # Hints are too annoying here
         self.btn_cls = Button (parent = self.frm_btl
                               ,action = self.close
-                              #,hint   = _('Reject and close')
+                              ,hint   = _('Reject and close')
                               ,text   = _('Close')
                               ,side   = 'left'
                               ,hdir   = 'bottom'
-                              ,hdelay = 1500
                               )
         self.btn_clr = Button (parent = self.frm_btl
                               ,action = self.clear
-                              #,hint   = _('Clear the field')
+                              ,hint   = _('Clear the field')
                               ,text   = _('Clear')
                               ,side   = 'right'
                               ,hdir   = 'bottom'
-                              ,hdelay = 1500
                               )
         self.btn_sav = Button (parent = self.frm_btr
                               ,action = self.save
-                              #,hint   = _('Accept and close')
+                              ,hint   = _('Accept and close')
                               ,text   = _('Save and close')
                               ,side   = 'right'
                               ,hdir   = 'bottom'
-                              ,hdelay = 1500
                               )
     
     def bindings(self):

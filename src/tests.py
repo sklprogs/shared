@@ -824,5 +824,5 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    com.textboxc()
+    com.entryc()
     sh.com.end()
