@@ -2433,6 +2433,9 @@ class ListBoxC:
         self.ScrollY  = ScrollY
         self.add_gui()
     
+    def clear(self,event=None):
+        self.lbx_prm.clear()
+    
     def focus(self,event=None):
         self.gui.focus()
     
