@@ -3517,9 +3517,9 @@ class Objects:
             self._mes = Message
         return self._mes(func,message,Silent)
     
-    def waitbox(self):
+    def waitbox(self,icon=''):
         if self._waitbox is None:
-            self._waitbox = WaitBox()
+            self._waitbox = WaitBox(icon)
         return self._waitbox
     
     def os(self):
