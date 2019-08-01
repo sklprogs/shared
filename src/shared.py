@@ -1737,8 +1737,8 @@ class ProgressBarItem:
     def text (self,file='',cur_size=0
              ,total=0,rate=0,eta=0
              ):
-        mes=_('File: "{}"; {}/{} MB; Rate: {} kbps; ETA: {}s')
-        mes = mes.format(file,cur_size,total,rate,eta)
+        mes = _('File: "{}"; {}/{} MB; Rate: {} kbps; ETA: {}s')
+        mes = mes.format(file,int(cur_size),int(total),rate,eta)
         self.label.text(mes)
 
 
@@ -2724,10 +2724,11 @@ class ToolTip(ToolTipBase):
 
 class WaitBox:
 
-    def __init__(self):
+    def __init__(self,icon=''):
         self.type   = 'WaitBox'
         self.parent = Top (Lock   = False
                           ,AutoCr = True
+                          ,icon   = icon
                           )
         self.widget = self.parent.widget
         self.gui    = gi.WaitBox(self.parent)
@@ -3414,6 +3415,7 @@ class Top:
 
     def __init__ (self,Maximize=False
                  ,AutoCr=True,Lock=True
+                 ,icon='',title=''
                  ):
         ''' 'Lock = True': the further program execution is blocked
             until an attempt to close the widget. 'Lock = False' allows
@@ -3430,6 +3432,10 @@ class Top:
         self.widget = self.gui.widget
         if Maximize:
             Geometry(parent=self).maximize()
+        if icon:
+            self.icon(icon)
+        if title:
+            self.title(title)
         
     def idle(self,event=None):
         self.gui.idle()
