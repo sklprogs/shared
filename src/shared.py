@@ -1016,7 +1016,7 @@ class TextBox:
 
     def clear_selection(self,event=None):
         f = '[shared] shared.TextBox.clear_selection'
-        pos1, pos2 = self.selection.get()
+        pos1, pos2 = self.select.get()
         if pos1 and pos2:
             self.clear_text (pos1 = pos1
                             ,pos2 = pos2
