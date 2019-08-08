@@ -2558,11 +2558,11 @@ class ListBox:
                  )
         if not self.Multiple:
             com.bind (obj      = self.gui
-                     ,bindings = '<Up>'
+                     ,bindings = ('<Up>','<Left>')
                      ,action   = self.move_up
                      )
             com.bind (obj      = self.gui
-                     ,bindings = '<Down>'
+                     ,bindings = ('<Down>','<Right>')
                      ,action   = self.move_down
                      )
 
