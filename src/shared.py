@@ -3706,6 +3706,9 @@ class Top:
         if title:
             self.title(title)
         
+    def kill(self,event=None):
+        self.widget.destroy()
+    
     def idle(self,event=None):
         self.gui.idle()
     
