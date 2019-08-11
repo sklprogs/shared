@@ -4136,8 +4136,8 @@ class Commands(lg.Commands):
             mes = _('Wrong input data!')
             objs.mes(f,mes,True).error()
     
-    def start(self):
-        gi.objs.start()
+    def start(self,Close=True):
+        gi.objs.start(Close)
     
     def end(self):
         gi.objs.end()
