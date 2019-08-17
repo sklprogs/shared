@@ -2705,6 +2705,8 @@ class ListBoxC:
                 ,icon     = None
                 ,ScrollX  = True
                 ,ScrollY  = True
+                ,width    = 300
+                ,height   = 350
                 ):
         self.Save     = False
         self.Multiple = Multiple
@@ -2717,6 +2719,8 @@ class ListBoxC:
         self._icon    = icon
         self.ScrollX  = ScrollX
         self.ScrollY  = ScrollY
+        self._width   = width
+        self._height  = height
         self.add_gui()
     
     def index(self,event=None):
@@ -2818,7 +2822,8 @@ class ListBoxC:
     def add_gui(self):
         self.parent = Top()
         self.widget = self.parent.widget
-        Geometry(self.parent).set('800x600')
+        geom = '{}x{}'.format(self._width,self._height)
+        Geometry(self.parent).set(geom)
         self.frames()
         self.lbx_prm = ListBox (parent   = self.frm_lbx
                                ,Multiple = self.Multiple

@@ -246,7 +246,8 @@ class Commands:
     
     def listboxc(self):
         f = '[shared] tests.Commands.listboxc'
-        lst = [i for i in range(15)]
+        #lst = [i for i in range(15)]
+        lst = sh.Directory(sh.Home().home()).files()
         self.lbx_prm = sh.ListBoxC (Multiple = False
                                    ,lst      = lst
                                    ,action   = None
@@ -255,18 +256,19 @@ class Commands:
                                    ,fill     = 'both'
                                    ,title    = 'ListBox (All)'
                                    ,icon     = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
-                                   ,SelQuits = True
                                    ,ScrollX  = True
                                    ,ScrollY  = True
                                    )
         self.lbx_prm.show()
         print('Your final selection: "{}"'.format(self.lbx_prm.get()))
+        '''
         self.lbx_prm.reset (lst   = (_('Mexico'),_('Canada'),_('Russia'))
                            ,title = _('New settings')
                            ,icon  = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
                            )
         self.lbx_prm.show()
         print('Your final selection: "{}"'.format(self.lbx_prm.get()))
+        '''
     
     def lbx_trigger(self,event=None):
         text = self.lbx_prm.get()
@@ -827,6 +829,5 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    #com.textboxc()
-    com.top()
+    com.listboxc()
     sh.com.end()
