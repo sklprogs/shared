@@ -2810,8 +2810,12 @@ class ListBoxC:
                              ,expand = False
                              ,fill   = 'y'
                              )
+        ''' Set 'expand' to True and 'propag' to False here, otherwise,
+            buttons will not be shown.
+        '''
         self.frm_lbx = Frame (parent = self.frm_trt
                              ,side   = 'top'
+                             ,propag = False
                              )
         self.frm_hor = Frame (parent = self.frm_trt
                              ,side   = 'bottom'
