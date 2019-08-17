@@ -858,12 +858,9 @@ class Selection:
 
 class TextBoxC:
     
-    def __init__ (self,SpReturn=True
-                 ,Maximize=False,title=''
+    def __init__ (self,Maximize=False,title=''
                  ,icon='',words=None
                  ):
-        self.Save     = False
-        self.SpReturn = SpReturn
         self.Maximize = Maximize
         self._title   = title
         self._icon    = icon
@@ -931,6 +928,7 @@ class TextBoxC:
                         )
     
     def reset(self,words=None,title=''):
+        self.words = words
         self.obj.reset(self.words)
         self.title(title)
     
@@ -993,8 +991,7 @@ class TextBoxC:
         self.gui.title(self._title)
     
     def get(self,event=None):
-        if self.Save:
-            return self.obj.get()
+        return self.obj.get()
     
     def show(self,event=None):
         self.gui.show()
@@ -1002,23 +999,129 @@ class TextBoxC:
     def close(self,event=None):
         self.gui.close()
     
-    def save(self,event=None):
-        self.Save = True
-        self.close()
-    
     def bindings(self):
-        if self.SpReturn:
-            # Do not add a new line
-            self.gui.unbind('<Return>')
-            self.gui.unbind('<KP_Enter>')
-            com.bind (obj      = self.gui
-                     ,bindings = ('<Return>','<KP_Enter>')
-                     ,action   = self.save
-                     )
         com.bind (obj      = self.gui
                  ,bindings = ('<Escape>','<Control-w>','<Control-q>')
                  ,action   = self.close
                  )
+
+
+
+class TextBoxRO(TextBoxC):
+    
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.ro_add_gui()
+    
+    def ro_buttons(self):
+        self.btn_cls = Button (parent   = self.frm_btn
+                              ,action   = self.close
+                              ,text     = _('Close')
+                              ,hint     = _('Close this window')
+                              ,side     = 'left'
+                              ,bindings = ('<Escape>','<Control-w>'
+                                          ,'<Control-q>','<Return>'
+                                          ,'<KP_Enter>'
+                                          )
+                              ,expand   = True
+                              )
+    
+    def ro_add_gui(self):
+        self.ro_frames()
+        self.ro_buttons()
+        self.ro_bindings()
+    
+    def ro_frames(self):
+        self.frm_btn = Frame (parent = self.gui.parent
+                             ,expand = False
+                             ,side   = 'bottom'
+                             )
+    
+    def ro_bindings(self):
+        # Do not add a new line
+        self.gui.unbind('<Return>')
+        self.gui.unbind('<KP_Enter>')
+        com.bind (obj      = self.gui
+                 ,bindings = ('<Return>','<KP_Enter>')
+                 ,action   = self.close
+                 )
+
+
+
+class TextBoxRW(TextBoxC):
+    
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.Save = False
+        self.rw_text = self.get()
+        self.rw_add_gui()
+    
+    def insert (self,text=''
+               ,pos='1.0',MoveTop=True
+               ):
+        self.rw_text = text
+        self.obj.insert (text    = text
+                        ,pos     = pos
+                        ,MoveTop = MoveTop
+                        )
+    
+    def rw_reset(self,event=None):
+        self.reset()
+        self.insert(self.rw_text)
+    
+    def get(self,event=None):
+        if self.Save:
+            return self.obj.get()
+        else:
+            return ''
+    
+    def save(self,event=None):
+        self.Save = True
+        self.close()
+    
+    def rw_buttons(self):
+        self.btn_cls = Button (parent   = self.frm_btl
+                              ,action   = self.close
+                              ,text     = _('Close')
+                              ,hint     = _('Reject and close')
+                              ,side     = 'left'
+                              ,bindings = ('<Escape>','<Control-w>'
+                                          ,'<Control-q>'
+                                          )
+                              )
+        self.btn_rst = Button (parent   = self.frm_btl
+                              ,action   = self.rw_reset
+                              ,text     = _('Reset')
+                              ,hint     = _('Reset the text')
+                              ,side     = 'right'
+                              ,bindings = '<F5>'
+                              )
+        self.btn_sav = Button (parent   = self.frm_btr
+                              ,action   = self.save
+                              ,text     = _('Save')
+                              ,hint     = _('Accept and close')
+                              ,side     = 'right'
+                              ,bindings = ('<F2>','<Control-s>')
+                              )
+    
+    def rw_add_gui(self):
+        self.rw_frames()
+        self.rw_buttons()
+        self.rw_bindings()
+    
+    def rw_frames(self):
+        self.frm_btn = Frame (parent = self.gui.parent
+                             ,expand = False
+                             ,side   = 'bottom'
+                             )
+        self.frm_btl = Frame (parent = self.frm_btn
+                             ,side   = 'left'
+                             )
+        self.frm_btr = Frame (parent = self.frm_btn
+                             ,side   = 'right'
+                             )
+    
+    def rw_bindings(self):
         com.bind (obj      = self.gui
                  ,bindings = ('<F2>','<Control-s>')
                  ,action   = self.save

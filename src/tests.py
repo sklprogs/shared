@@ -14,6 +14,42 @@ class Commands:
     def __init__(self):
         pass
     
+    def textboxro(self):
+        file  = '/home/pete/base/[unmusic] corrupted tags.txt'
+        text  = sh.ReadTextFile(file).get()
+        words = sh.Words (text = text
+                         ,Auto = True
+                         )
+        words.sent_nos()
+        itxt = sh.TextBoxRO (Maximize = True
+                            ,title    = 'TextBoxRO with Selection and Search'
+                            ,icon     = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
+                            ,words    = words
+                            )
+        itxt.insert(text)
+        itxt.focus()
+        itxt.show()
+        result = sh.Text(itxt.get()).shorten(max_len=20)
+        print('Output: "{}"'.format(result))
+    
+    def textboxrw(self):
+        file  = '/home/pete/base/[unmusic] corrupted tags.txt'
+        text  = sh.ReadTextFile(file).get()
+        words = sh.Words (text = text
+                         ,Auto = True
+                         )
+        words.sent_nos()
+        itxt = sh.TextBoxRW (Maximize = False
+                            ,title    = 'TextBoxRW with Selection and Search'
+                            ,icon     = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
+                            ,words    = words
+                            )
+        itxt.insert(text)
+        itxt.focus()
+        itxt.show()
+        result = sh.Text(itxt.get()).shorten(max_len=20)
+        print('Output: "{}"'.format(result))
+    
     def textboxc(self):
         #file  = '/home/pete/base/[unmusic] corrupted tags.txt'
         file  = '/tmp/test.txt'
@@ -829,5 +865,5 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    com.listboxc()
+    com.textboxro()
     sh.com.end()
