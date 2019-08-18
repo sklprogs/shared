@@ -3902,6 +3902,7 @@ class Objects:
         self._enchant_ru = self._morph = self._pretty_table \
                          = self._pdir = self._online = self._tmpfile \
                          = self._os = self._mes = None
+        self._icon = ''
 
     def mes (self,func=_('Logic error!')
             ,message=_('Logic error!')

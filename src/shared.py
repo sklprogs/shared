@@ -1515,7 +1515,10 @@ class EntryC:
                         )
     
     def add_gui(self):
-        self.parent = Top(AutoCr=False)
+        self.parent = Top (AutoCr = False
+                          ,title  = self._title
+                          ,icon   = self._icon
+                          )
         self.gui    = gi.EntryC(self.parent)
         self.widget = self.gui.widget
         self.frames()
@@ -1524,7 +1527,6 @@ class EntryC:
                          ,fill   = 'x'
                          )
         self.buttons()
-        self.icon()
         self.bindings()
     
     def frames(self):
@@ -3868,6 +3870,8 @@ class Top:
             Geometry(parent=self).maximize()
         if icon:
             self.icon(icon)
+        elif objs._icon:
+            self.icon(objs._icon)
         if title:
             self.title(title)
         
