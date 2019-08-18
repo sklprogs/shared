@@ -1067,8 +1067,8 @@ class TextBoxRW(TextBoxC):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-        self.Save = False
-        self.rw_text = self.get()
+        self.Save    = False
+        self.rw_text = ''
         self.rw_add_gui()
     
     def insert (self,text=''
@@ -1080,7 +1080,13 @@ class TextBoxRW(TextBoxC):
                         ,MoveTop = MoveTop
                         )
     
-    def rw_reset(self,event=None):
+    def reset(self,words=None,title=''):
+        self.Save  = False
+        self.words = words
+        self.obj.reset(self.words)
+        self.title(title)
+    
+    def reload(self,event=None):
         self.reset()
         self.insert(self.rw_text)
     
@@ -1105,9 +1111,9 @@ class TextBoxRW(TextBoxC):
                                           )
                               )
         self.btn_rst = Button (parent   = self.frm_btl
-                              ,action   = self.rw_reset
+                              ,action   = self.reload
                               ,text     = _('Reset')
-                              ,hint     = _('Reset the text')
+                              ,hint     = _('Restore the text')
                               ,side     = 'right'
                               ,bindings = ('<F5>','<Control-r>')
                               )
@@ -1143,7 +1149,7 @@ class TextBoxRW(TextBoxC):
                  )
         com.bind (obj      = self.gui
                  ,bindings = ('<F5>','<Control-r>')
-                 ,action   = self.rw_reset
+                 ,action   = self.reload
                  )
 
 
