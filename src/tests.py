@@ -8,6 +8,10 @@ gettext.install('shared','../resources/locale')
 import random
 import shared as sh
 
+ICON  = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
+ICON2 = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
+FILE  = '/home/pete/base/[unmusic] corrupted tags.txt'
+
 
 class Commands:
     
@@ -15,15 +19,14 @@ class Commands:
         pass
     
     def textboxro(self):
-        file  = '/home/pete/base/[unmusic] corrupted tags.txt'
-        text  = sh.ReadTextFile(file).get()
+        text  = sh.ReadTextFile(FILE).get()
         words = sh.Words (text = text
                          ,Auto = True
                          )
         words.sent_nos()
-        itxt = sh.TextBoxRO (Maximize = True
+        itxt = sh.TextBoxRO (Maximize = False
                             ,title    = 'TextBoxRO with Selection and Search'
-                            ,icon     = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
+                            ,icon     = ICON
                             ,words    = words
                             )
         itxt.insert(text)
@@ -33,15 +36,14 @@ class Commands:
         print('Output: "{}"'.format(result))
     
     def textboxrw(self):
-        file  = '/home/pete/base/[unmusic] corrupted tags.txt'
-        text  = sh.ReadTextFile(file).get()
+        text  = sh.ReadTextFile(FILE).get()
         words = sh.Words (text = text
                          ,Auto = True
                          )
         words.sent_nos()
         itxt = sh.TextBoxRW (Maximize = False
                             ,title    = 'TextBoxRW with Selection and Search'
-                            ,icon     = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
+                            ,icon     = ICON
                             ,words    = words
                             )
         itxt.insert(text)
@@ -51,32 +53,28 @@ class Commands:
         print('Output: "{}"'.format(result))
     
     def textboxc(self):
-        #file  = '/home/pete/base/[unmusic] corrupted tags.txt'
-        file  = '/tmp/test.txt'
-        text  = sh.lg.ReadTextFile(file).get()
-        words = sh.lg.Words (text = text
-                            ,Auto = True
-                            )
+        text  = sh.ReadTextFile(FILE).get()
+        words = sh.Words (text = text
+                         ,Auto = True
+                         )
         words.sent_nos()
-        itxt = sh.TextBoxC (SpReturn = True
-                           ,Maximize = False
+        itxt = sh.TextBoxC (Maximize = False
                            ,title    = 'TextBoxC with Selection and Search'
-                           ,icon     = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
+                           ,icon     = ICON
                            ,words    = words
                            )
         itxt.insert(text)
         itxt.spelling()
         itxt.focus()
         itxt.show()
-        result = sh.lg.Text(itxt.get()).shorten(max_len=20)
+        result = sh.Text(itxt.get()).shorten(max_len=20)
         print('Output: "{}"'.format(result))
     
     def panes(self):
-        file   = '/home/pete/base/[unmusic] corrupted tags.txt'
-        text   = sh.lg.ReadTextFile(file).get()
-        words  = sh.lg.Words (text = text
-                             ,Auto = True
-                             )
+        text  = sh.ReadTextFile(FILE).get()
+        words = sh.Words (text = text
+                         ,Auto = True
+                         )
         words.sent_nos()
         ipanes = sh.Panes (bg       = 'old lace'
                           ,Extended = True
@@ -94,14 +92,15 @@ class Commands:
         ipanes.show()
     
     def textbox(self):
-        file   = '/home/pete/base/[unmusic] corrupted tags.txt'
-        text   = sh.lg.ReadTextFile(file).get()
-        words  = sh.lg.Words (text = text
-                             ,Auto = True
-                             )
+        text  = sh.ReadTextFile(FILE).get()
+        words = sh.Words (text = text
+                         ,Auto = True
+                         )
         words.sent_nos()
-        parent = sh.Top()
-        parent.title('TextBox with Selection and Search')
+        parent = sh.Top (title = 'TextBox with Selection and Search'
+                        ,icon  = ICON
+                        ,AutoCr = False
+                        )
         itxt = sh.TextBox (parent  = parent
                           ,expand  = 1
                           ,side    = None
@@ -111,16 +110,17 @@ class Commands:
                           ,ScrollX = True
                           ,ScrollY = True
                           ,wrap    = 'word'
+                          ,icon    = ICON
                           )
         itxt.insert(text)
         itxt.focus()
         parent.show()
-        result = sh.lg.Text(itxt.get()).shorten(max_len=20)
+        result = sh.Text(itxt.get()).shorten(max_len=20)
         print('Output: "{}"'.format(result))
     
     def entryc(self):
         ient = sh.EntryC (title = 'This is an Entry'
-                         ,icon  = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
+                         ,icon  = ICON
                          )
         ient.show()
         print('Output: "{}"'.format(ient.get()))
@@ -151,7 +151,7 @@ class Commands:
                                ,height  = 400
                                ,font    = 'Sans 11'
                                ,MarkAll = False
-                               ,icon    = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
+                               ,icon    = ICON
                                )
         imult.show()
         print(imult.selected())
@@ -193,7 +193,7 @@ class Commands:
                                ,height  = 200
                                ,YScroll = True
                                ,title   = 'Load dictionaries'
-                               ,icon    = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
+                               ,icon    = ICON
                                )
         for i in range(10):
             iprog.add()
@@ -300,7 +300,7 @@ class Commands:
         '''
         self.lbx_prm.reset (lst   = (_('Mexico'),_('Canada'),_('Russia'))
                            ,title = _('New settings')
-                           ,icon  = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
+                           ,icon  = ICON
                            )
         self.lbx_prm.show()
         print('Your final selection: "{}"'.format(self.lbx_prm.get()))
@@ -374,8 +374,8 @@ class Commands:
     def waitbox(self):
         f = '[shared] tests.Commands.waitbox'
         import time
-        icon1 = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
-        icon2 = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
+        icon1 = ICON
+        icon2 = ICON2
         sh.objs.waitbox().icon(icon1)
         sh.objs.waitbox()
         sh.objs._waitbox.reset (func    = f
@@ -607,8 +607,8 @@ class Commands:
                       ,AutoCr   = True
                       ,Lock     = True
                       ,icon     = icon_path
+                      ,title    = 'Welcome to shared'
                       )
-        itop.title('Welcome to shared')
         itop.show()
     
     def messages(self):
@@ -865,5 +865,5 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    com.textboxro()
+    com.textboxc()
     sh.com.end()

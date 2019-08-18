@@ -536,7 +536,9 @@ class SearchBox:
         Search. However, preserving extra spaces/line breaks causes
         the 'Words' algorithm to be much slower.
     '''
-    def __init__(self,obj,words=None,Strict=False):
+    def __init__ (self,obj,words=None
+                 ,Strict=False,icon=''
+                 ):
         self.type   = 'SearchBox'
         self.obj    = obj
         self.words  = words
@@ -545,7 +547,7 @@ class SearchBox:
             an icon yet.
         '''
         self.ientry = EntryC (title = _('Find:')
-                             ,icon  = ''
+                             ,icon  = icon
                              )
         self.isel = obj.select
         self.reset (words  = self.words
@@ -933,16 +935,19 @@ class TextBoxC:
         self.title(title)
     
     def add_gui(self):
-        self.parent = Top(Maximize=self.Maximize)
+        self.parent = Top (Maximize = self.Maximize
+                          ,title    = self._title
+                          ,icon     = self._icon
+                          )
         self.widget = self.parent.widget
         self.gui = gi.TextBoxC(self.parent)
         self.obj = TextBox (parent  = self.parent
                            ,words   = self.words
                            ,ScrollX = False
                            ,ScrollY = True
+                           ,icon    = self._icon
                            )
-        self.title()
-        self.icon()
+        self.bindings()
     
     def spelling(self):
         ''' Tags can be marked only after text is inserted; thus, call
@@ -1012,6 +1017,16 @@ class TextBoxRO(TextBoxC):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.ro_add_gui()
+    
+    def insert (self,text=''
+               ,pos='1.0',MoveTop=True
+               ):
+        self.enable()
+        self.obj.insert (text    = text
+                        ,pos     = pos
+                        ,MoveTop = MoveTop
+                        )
+        self.disable()
     
     def ro_buttons(self):
         self.btn_cls = Button (parent   = self.frm_btn
@@ -1094,7 +1109,7 @@ class TextBoxRW(TextBoxC):
                               ,text     = _('Reset')
                               ,hint     = _('Reset the text')
                               ,side     = 'right'
-                              ,bindings = '<F5>'
+                              ,bindings = ('<F5>','<Control-r>')
                               )
         self.btn_sav = Button (parent   = self.frm_btr
                               ,action   = self.save
@@ -1126,6 +1141,10 @@ class TextBoxRW(TextBoxC):
                  ,bindings = ('<F2>','<Control-s>')
                  ,action   = self.save
                  )
+        com.bind (obj      = self.gui
+                 ,bindings = ('<F5>','<Control-r>')
+                 ,action   = self.rw_reset
+                 )
 
 
 
@@ -1135,7 +1154,7 @@ class TextBox:
                  ,side=None,fill='both'
                  ,words=None,font='Serif 14'
                  ,ScrollX=False,ScrollY=True
-                 ,wrap='word'
+                 ,wrap='word',icon=''
                  ):
         self.values()
         self.parent  = parent
@@ -1153,6 +1172,7 @@ class TextBox:
                                 )
         self.search = SearchBox (obj   = self
                                 ,words = self.words
+                                ,icon  = icon
                                 )
         self.add_gui()
 
@@ -1288,6 +1308,7 @@ class TextBox:
             else:
                 return result.strip('\n')
         else:
+            # Always return a string
             return ''
 
     def insert(self,text='',pos='1.0',MoveTop=True):
