@@ -863,6 +863,7 @@ class TextBoxC:
     def __init__ (self,Maximize=False,title=''
                  ,icon='',words=None
                  ):
+        self.Active   = False
         self.Maximize = Maximize
         self._title   = title
         self._icon    = icon
@@ -999,9 +1000,11 @@ class TextBoxC:
         return self.obj.get()
     
     def show(self,event=None):
+        self.Active = True
         self.gui.show()
 
     def close(self,event=None):
+        self.Active = False
         self.gui.close()
     
     def bindings(self):
@@ -1009,6 +1012,8 @@ class TextBoxC:
                  ,bindings = ('<Escape>','<Control-w>','<Control-q>')
                  ,action   = self.close
                  )
+        # This is to remember the 'Active' status
+        self.widget.protocol("WM_DELETE_WINDOW",self.close)
 
 
 
