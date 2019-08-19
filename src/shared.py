@@ -812,7 +812,8 @@ class Selection:
     def text(self):
         f = '[shared] shared.Selection.text'
         try:
-            self._text = self.itxt.gui.get_sel.replace('\r','').replace('\n','')
+            self._text = self.itxt.gui.get_sel()
+            self._text = self._text.replace('\r','').replace('\n','')
         except Exception as e:
             self._text = ''
             com.failed(f,e)
