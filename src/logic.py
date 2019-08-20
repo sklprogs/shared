@@ -1065,6 +1065,24 @@ class Text:
             '''
             self.text = self.text.strip()
 
+    def sim_symbols(self):
+        ''' Replace Cyrillic letters with similar Latin ones. This can
+            be useful for English words in mostly Russian text.
+        '''
+        sim_cyr = ('А','В','Е','К','Н'
+                  ,'О','Р','С','Т','Х'
+                  ,'а','е','о','р','с'
+                  ,'у','х'
+                  )
+        sim_lat = ('A','B','E','K','H'
+                  ,'O','P','C','T','X'
+                  ,'a','e','o','p','c'
+                  ,'y','x'
+                  )
+        for i in range(len(sim_cyr)):
+            self.text = self.text.replace(sim_cyr[i],sim_lat[i])
+        return self.text
+    
     def has_digits(self):
         for sym in self.text:
             if sym in digits:
