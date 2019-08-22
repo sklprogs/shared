@@ -811,6 +811,11 @@ class Selection:
 
     def text(self):
         f = '[shared] shared.Selection.text'
+        ''' #todo: do not use self.variables so we don't have to reset
+            this class (or, even better, delete this class from all
+            projects).
+        '''
+        self._text = ''
         try:
             self._text = self.itxt.gui.get_sel()
             self._text = self._text.replace('\r','').replace('\n','')
