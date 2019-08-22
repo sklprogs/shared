@@ -170,6 +170,9 @@ class TextBox:
                 ,pos1='sel.first'
                 ,pos2='sel.last'
                 ):
+        ''' Tkinter will throw an exception if there is no selection,
+            so use 'try-except' for this in the controller.
+        '''
         return self.get (pos1 = pos1
                         ,pos2 = pos2
                         )

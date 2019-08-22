@@ -814,9 +814,11 @@ class Selection:
         try:
             self._text = self.itxt.gui.get_sel()
             self._text = self._text.replace('\r','').replace('\n','')
-        except Exception as e:
-            self._text = ''
-            com.failed(f,e)
+        except:
+            ''' Tkinter will throw an exception if there is no
+                selection, so we just ignore this exception.
+            '''
+            pass
         return self._text
 
     def select_all(self):
