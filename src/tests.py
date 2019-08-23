@@ -37,6 +37,7 @@ class Commands:
     
     def textboxrw(self):
         text  = sh.ReadTextFile(FILE).get()
+        text  = text.strip()
         words = sh.Words (text = text
                          ,Auto = True
                          )
@@ -865,24 +866,5 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    #com.textboxrw()
-    txt = sh.TextBoxRW (title = 'TextBoxRW'
-                       ,icon  = ICON
-                       )
-    txt.reset()
-    clip = sh.Clipboard().paste()
-    txt.insert(clip)
-    txt.show()
-    
-    sh.Clipboard().copy(txt.get())
-    clip = sh.Clipboard().paste()
-    txt.reset()
-    txt.insert(clip)
-    txt.show()
-    
-    sh.Clipboard().copy(txt.get())
-    clip = sh.Clipboard().paste()
-    txt.reset()
-    txt.insert(clip)
-    txt.show()
+    com.textboxrw()
     sh.com.end()

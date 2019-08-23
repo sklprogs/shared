@@ -1279,10 +1279,14 @@ class TextBox:
                  ,bindings = '<Shift-F3>'
                  ,action   = self.search.prev
                  )
+        # Custom selection
         com.bind (obj      = self.gui
                  ,bindings = '<Control-a>'
                  ,action   = self.select_all
                  )
+        ''' Tkinter does not delete the selection before pasting, so we
+            do custom pasting here.
+        '''
         com.bind (obj      = self.gui
                  ,bindings = '<Control-v>'
                  ,action   = self.paste
@@ -1346,13 +1350,16 @@ class TextBox:
 
     def paste(self,event=None):
         self.clear_selection()
-        self.insert (text = Clipboard().paste()
-                    ,pos  = self.cursor()
+        self.insert (text    = Clipboard().paste()
+                    ,pos     = self.cursor()
+                    ,MoveTop = False
                     )
+        return 'break'
 
     def select_all(self,event=None):
         ''' 'end-1c' allows to select text without the last newline
-            (which is added automatically by 'tkinter').
+            (which is added automatically by 'tkinter'). For this
+            to work correctly, strip the text first.
         '''
         self.tag_add (tag  = 'sel'
                      ,pos1 = '1.0'
