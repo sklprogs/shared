@@ -2216,6 +2216,25 @@ class Image:
         self._image = self._bytes = self._loader = None
         self.gui = gi.Image()
         
+    def error(self,f,e):
+        mes = _('Third-party module has failed!\n\nDetails: {}')
+        mes = mes.format(e)
+        objs.mes(f,mes).error()
+    
+    def save(self,path,ext='PNG'):
+        f = '[shared] shared.Image.save'
+        if self._loader:
+            if com.rewrite(path):
+                try:
+                    self._loader.save(path,ext)
+                except Exception as e:
+                    self.error(f,e)
+            else:
+                mes = _('Operation has been canceled by the user.')
+                objs.mes(f,mes,True).info()
+        else:
+            com.empty(f)
+    
     def open(self,path):
         if lg.File(file=path).Success:
             self._loader = self.gui.loader(path)
@@ -2239,9 +2258,7 @@ class Image:
             try:
                 self._loader.thumbnail([x,y])
             except Exception as e:
-                mes = _('Third-party module has failed!\n\nDetails: {}')
-                mes = mes.format(e)
-                objs.mes(f,mes,True).warning()
+                self.error(f,e)
         else:
             com.empty(f)
         return self._loader
@@ -2257,8 +2274,11 @@ class Image:
     def bytes(self,ext='PNG'):
         if self._loader:
             self._bytes = io.BytesIO()
-            self._loader.save(self._bytes,format=ext)
-            self._bytes = self._bytes.getvalue()
+            try:
+                self._loader.save(self._bytes,format=ext)
+                self._bytes = self._bytes.getvalue()
+            except Exception as e:
+                self.error(f,e)
         else:
             com.empty(f)
         return self._bytes
