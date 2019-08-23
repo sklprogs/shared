@@ -235,6 +235,17 @@ class Entry:
                          ,expand = expand
                          )
     
+    def sel_index(self):
+        return (self.index('sel.first')
+               ,self.index('sel.last')
+               )
+    
+    def index(self,mark='insert'):
+        return self.widget.index(mark)
+    
+    def cursor(self):
+        return self.index('insert')
+    
     def focus(self,event=None):
         self.widget.focus_set()
         # Manual Tab focus (left to right widget)

@@ -1659,9 +1659,32 @@ class Entry:
         self.AddBind = AddBind
         self.add_gui()
 
+    def selection(self,event=None):
+        try:
+            pos1, pos2 = self.gui.sel_index()
+        except Exception as e:
+            pos1 = 0
+            pos2 = 0
+        return(pos1,pos2)
+    
+    def cursor(self,event=None):
+        f = '[shared] shared.Entry.cursor'
+        try:
+            pos = self.gui.cursor()
+        except Exception as e:
+            pos = 0
+            com.failed(f,e)
+        return pos
+    
     def paste(self,event=None):
-        self.clear()
-        self.insert(Clipboard().paste())
+        pos1, pos2 = self.selection()
+        self.clear (pos1 = pos1
+                   ,pos2 = pos2
+                   )
+        self.insert (text = Clipboard().paste()
+                    ,pos  = self.cursor()
+                    )
+        return 'break'
     
     def add_gui(self):
         self.gui = gi.Entry (parent  = self.parent
@@ -1693,6 +1716,10 @@ class Entry:
         com.bind (obj      = self.gui
                  ,bindings = '<Control-a>'
                  ,action   = self.select_all
+                 )
+        com.bind (obj      = self.gui
+                 ,bindings = '<Control-v>'
+                 ,action   = self.paste
                  )
     
     def extra_bind(self):
