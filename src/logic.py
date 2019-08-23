@@ -2055,9 +2055,10 @@ class WriteBinary:
                         pickle.dump(self.obj,fl)
                     elif mode == 'a+b':
                         pickle.dump(self.fragm,fl)
-            except:
+            except Exception as e:
                 self.Success = False
-                mes = _('Unable to write file "{}"!').format(self.file)
+                mes = _('Unable to write file "{}"!\n\nDetails: {}')
+                mes = mes.format(self.file,e)
                 objs.mes(f,mes).error()
         else:
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
