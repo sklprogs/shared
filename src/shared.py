@@ -3685,6 +3685,7 @@ class Label:
                  ,image=None,fg=None,bg=None
                  ,anchor=None,width=None
                  ,height=None,justify=None
+                 ,padx=None,pady=None
                  ):
         self.type   = 'Label'
         self.parent = parent
@@ -3695,6 +3696,8 @@ class Label:
         self._font  = font
         self.ipadx  = ipadx
         self.ipady  = ipady
+        self.padx   = padx
+        self.pady   = pady
         self.image  = image
         self.bg     = bg
         self.fg     = fg
@@ -3709,6 +3712,8 @@ class Label:
                             ,expand  = self.expand
                             ,ipadx   = self.ipadx
                             ,ipady   = self.ipady
+                            ,padx    = self.padx
+                            ,pady    = self.pady
                             ,image   = self.image
                             ,fg      = self.fg
                             ,bg      = self.bg
@@ -3768,8 +3773,6 @@ class Label:
         '''
         self.widget.config (text   = self._text
                            ,font   = self._font
-                           ,ipadx  = self.ipadx
-                           ,ipady  = self.ipady
                            #,image = self.image
                            ,bg     = self.bg
                            ,fg     = self.fg

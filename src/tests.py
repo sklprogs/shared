@@ -866,5 +866,5 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    com.entryc()
+    com.label()
     sh.com.end()

@@ -944,6 +944,7 @@ class Label:
                  ,image=None,fg=None,bg=None
                  ,anchor=None,width=None
                  ,height=None,justify=None
+                 ,padx=None,pady=None
                  ):
         self.parent = parent
         self.side   = side
@@ -951,6 +952,8 @@ class Label:
         self.expand = expand
         self.ipadx  = ipadx
         self.ipady  = ipady
+        self.padx   = padx
+        self.pady   = pady
         self.image  = image
         self.bg     = bg
         self.fg     = fg
@@ -1008,6 +1011,8 @@ class Label:
                          ,expand = self.expand
                          ,ipadx  = self.ipadx
                          ,ipady  = self.ipady
+                         ,padx   = self.padx
+                         ,pady   = self.pady
                          ,anchor = self.anchor
                          )
 
