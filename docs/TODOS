@@ -1,4 +1,5 @@
 (English)
+- Delete obj.type (e.g., top.type == 'Toplevel') from all projects
 - Delete Selection class in shared and all projects
 - EntryC, Entry: rename 'clear_text' to 'clear' in all projects
 - Elaborate 'sh.Input' error messages (since we always get a string

@@ -2313,58 +2313,54 @@ class Canvas:
     def top_bindings(self,top,Ctrl=True):
         f = '[shared] shared.Canvas.top_bindings'
         if top:
-            if hasattr(top,'type') and top.type == 'Toplevel':
+            com.bind (obj      = top
+                     ,bindings = '<Down>'
+                     ,action   = self.move_down
+                     )
+            com.bind (obj      = top
+                     ,bindings = '<Up>'
+                     ,action   = self.move_up
+                     )
+            com.bind (obj      = top
+                     ,bindings = '<Left>'
+                     ,action   = self.move_left
+                     )
+            com.bind (obj      = top
+                     ,bindings = '<Right>'
+                     ,action   = self.move_right
+                     )
+            com.bind (obj      = top
+                     ,bindings = '<Next>'
+                     ,action   = self.move_page_down
+                     )
+            com.bind (obj      = top
+                     ,bindings = '<Prior>'
+                     ,action   = self.move_page_up
+                     )
+            com.bind (obj      = top
+                     ,bindings = ('<MouseWheel>','<Button 4>'
+                                 ,'<Button 5>'
+                                 )
+                     ,action   = self.mouse_wheel
+                     )
+            if Ctrl:
                 com.bind (obj      = top
-                         ,bindings = '<Down>'
-                         ,action   = self.move_down
+                         ,bindings = '<Control-Home>'
+                         ,action   = self.move_top
                          )
                 com.bind (obj      = top
-                         ,bindings = '<Up>'
-                         ,action   = self.move_up
+                         ,bindings = '<Control-End>'
+                         ,action   = self.move_bottom
                          )
-                com.bind (obj      = top
-                         ,bindings = '<Left>'
-                         ,action   = self.move_left
-                         )
-                com.bind (obj      = top
-                         ,bindings = '<Right>'
-                         ,action   = self.move_right
-                         )
-                com.bind (obj      = top
-                         ,bindings = '<Next>'
-                         ,action   = self.move_page_down
-                         )
-                com.bind (obj      = top
-                         ,bindings = '<Prior>'
-                         ,action   = self.move_page_up
-                         )
-                com.bind (obj      = top
-                         ,bindings = ('<MouseWheel>','<Button 4>'
-                                     ,'<Button 5>'
-                                     )
-                         ,action   = self.mouse_wheel
-                         )
-                if Ctrl:
-                    com.bind (obj      = top
-                             ,bindings = '<Control-Home>'
-                             ,action   = self.move_top
-                             )
-                    com.bind (obj      = top
-                             ,bindings = '<Control-End>'
-                             ,action   = self.move_bottom
-                             )
-                else:
-                    com.bind (obj      = top
-                             ,bindings = '<Home>'
-                             ,action   = self.move_top
-                             )
-                    com.bind (obj      = top
-                             ,bindings = '<End>'
-                             ,action   = self.move_bottom
-                             )
             else:
-                mes = _('Wrong input data!')
-                objs.mes(f,mes,True).warning()
+                com.bind (obj      = top
+                         ,bindings = '<Home>'
+                         ,action   = self.move_top
+                         )
+                com.bind (obj      = top
+                         ,bindings = '<End>'
+                         ,action   = self.move_bottom
+                         )
         else:
             com.empty(f)
     
