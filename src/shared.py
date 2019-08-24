@@ -2922,6 +2922,16 @@ class ListBoxC:
         self._height  = height
         self.add_gui()
     
+    def bindings(self):
+        com.bind (obj      = self.gui
+                 ,bindings = ('<Return>','<KP_Enter>')
+                 ,action   = self.save
+                 )
+        com.bind (obj      = self.gui
+                 ,bindings = ('<Escape>','<Control-q>','<Control-w>')
+                 ,action   = self.close
+                 )
+    
     def index(self,event=None):
         return self.lbx_prm._index
     
@@ -2949,16 +2959,20 @@ class ListBoxC:
         self.icon(icon)
     
     def buttons(self):
-        self.btn_cls = Button (parent = self.frm_btn
-                              ,action = self.close
-                              ,hint   = _('Reject and close')
-                              ,text   = _('Close')
+        self.btn_cls = Button (parent   = self.frm_btn
+                              ,action   = self.close
+                              ,hint     = _('Reject and close')
+                              ,text     = _('Close')
+                              ,bindings = ('<Escape>','<Control-q>'
+                                          ,'<Control-w>'
+                                          )
                               )
-        self.btn_sav = Button (parent = self.frm_btn
-                              ,action = self.save
-                              ,hint   = _('Accept and close')
-                              ,text   = _('Save and close')
-                              ,side   = 'right'
+        self.btn_sav = Button (parent   = self.frm_btn
+                              ,action   = self.save
+                              ,hint     = _('Accept and close')
+                              ,text     = _('Save and close')
+                              ,side     = 'right'
+                              ,bindings = ('<Return>','<KP_Enter>')
                               )
     
     def get(self):
@@ -3023,7 +3037,9 @@ class ListBoxC:
                              )
     
     def add_gui(self):
-        self.parent = Top()
+        self.parent = Top (title = self._title
+                          ,icon  = self._icon
+                          )
         self.widget = self.parent.widget
         geom = '{}x{}'.format(self._width,self._height)
         Geometry(self.parent).set(geom)
@@ -3041,8 +3057,7 @@ class ListBoxC:
         self.scrollx()
         self.scrolly()
         self.buttons()
-        self.title()
-        self.icon()
+        self.bindings()
     
     def title(self,text=''):
         if text:
