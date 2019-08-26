@@ -1334,7 +1334,9 @@ class TextBox:
             # Always return a string
             return ''
 
-    def insert(self,text='',pos='1.0',MoveTop=True):
+    def insert (self,text='',pos='1.0'
+               ,MoveTop=True
+               ):
         f = '[shared] shared.TextBox.insert'
         try:
             self.gui.insert (text = text
@@ -1345,7 +1347,6 @@ class TextBox:
         if MoveTop:
             # Move to the beginning
             self.mark_add()
-        else:
             self.scroll(mark='insert')
 
     def paste(self,event=None):
