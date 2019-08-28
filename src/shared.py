@@ -1215,7 +1215,11 @@ class TextBox:
         self.scr_hor = None
 
     def frames(self):
-        self.frm_prm = Frame(self.parent)
+        self.frm_prm = Frame (parent = self.parent
+                             ,side   = self.side
+                             ,expand = self.expand
+                             ,fill   = self.fill
+                             )
         self.frm_sec = Frame (parent = self.frm_prm
                              ,side   = 'top'
                              )
