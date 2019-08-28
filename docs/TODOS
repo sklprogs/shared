@@ -1,4 +1,5 @@
 (English)
+- Use DoubleClick in ListBoxC to select & close (if not multichoice)
 - Delete obj.type (e.g., top.type == 'Toplevel') from all projects
 - Delete Selection class in shared and all projects
 - EntryC, Entry: rename 'clear_text' to 'clear' in all projects
