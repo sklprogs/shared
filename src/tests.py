@@ -767,7 +767,8 @@ class Anchors:
             self.lbl_top.text(mes)
         else:
             self.place_widgets()
-            mes = _('Anchor: {}\nPress Return to adjust Widget 2').format(self.anchor)
+            mes = _('Anchor: {}\nPress Return to adjust Widget 2')
+            mes = mes.format(self.anchor)
             self.lbl_top.text(mes)
         self.count += 1
     
@@ -866,5 +867,5 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    com.label()
+    com.textboxrw()
     sh.com.end()

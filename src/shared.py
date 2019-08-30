@@ -1031,6 +1031,13 @@ class TextBoxRO(TextBoxC):
         super().__init__(*args,**kwargs)
         self.ro_add_gui()
     
+    def reset(self,words=None,title=''):
+        self.enable()
+        self.words = words
+        self.obj.reset(self.words)
+        self.title(title)
+        self.disable()
+    
     def insert (self,text=''
                ,pos='1.0',MoveTop=True
                ):
