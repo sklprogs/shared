@@ -4031,6 +4031,10 @@ class Top:
 class Objects(lg.Objects):
     
     def __init__(self):
+        ''' #NOTE: Since we use 'super' here, attributes of 'lg.Objects'
+            set directly in the controller will not be reflected in
+            'logic'. Use 'logic' methods to set attributes.
+        '''
         super().__init__()
         self._question = self._info = self._warning = self._debug \
                        = self._error = self._mes = self._waitbox \
