@@ -2552,6 +2552,7 @@ class OptionMenu:
                  ,expand  = False
                  ,fill    = None
                  ,font    = None
+                 ,width   = None
                  ):
         self.parent  = parent
         self.items   = items
@@ -2565,6 +2566,7 @@ class OptionMenu:
         # Take focus; must be 1/True to be operational from keyboard
         self.tfocus  = tfocus
         self.font    = font
+        self.width   = width
         
         self.gui = gi.OptionMenu (parent = self.parent
                                  ,Combo  = self.Combo
@@ -2574,6 +2576,7 @@ class OptionMenu:
                                  ,fill   = self._fill
                                  ,tfocus = self.tfocus
                                  ,font   = self.font
+                                 ,width  = self.width
                                  )
         self.widget = self.gui.widget
         if self.Combo:

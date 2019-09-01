@@ -550,6 +550,7 @@ class OptionMenu:
                  ,side='left',anchor='center'
                  ,expand=False,fill=None
                  ,tfocus=1,font=None
+                 ,width=None
                  ):
         self.parent = parent
         self.Combo  = Combo
@@ -559,6 +560,7 @@ class OptionMenu:
         self._fill  = fill
         self.tfocus = tfocus
         self.font   = font
+        self.width  = width
         self.var    = tk.StringVar(self.parent.widget)
         self.gui()
     
@@ -612,6 +614,7 @@ class OptionMenu:
                          )
         self.widget.configure (takefocus = self.tfocus
                               ,font      = self.font
+                              ,width     = self.width
                               )
 
 
