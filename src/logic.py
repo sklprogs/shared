@@ -4085,7 +4085,9 @@ class Table:
             values
         '''
         if len(headers) != len(self._headers):
-            result = List(lst1=headers,lst2=self._headers).equalize()
+            result = List (lst1 = headers
+                          ,lst2 = self._headers
+                          ).equalize()
             if result:
                 self._headers = result[0]
 

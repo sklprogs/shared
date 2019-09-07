@@ -12,7 +12,30 @@ import skl_shared.gettext_windows as gettext_windows
 gettext_windows.setup_env()
 gettext.install('shared','../resources/locale')
 
-GUI_MES = True
+GUI_MES  = True
+STOP_MES = False
+
+
+class DummyMessage:
+
+    def __init__(self,*args):
+        pass
+
+    def debug(self):
+        pass
+    
+    def error(self):
+        pass
+
+    def info(self):
+        pass
+                       
+    def warning(self):
+        pass
+
+    def question(self):
+        pass
+
 
 
 class CreateInstance(lg.CreateInstance):
@@ -4049,6 +4072,8 @@ class Objects(lg.Objects):
             ,message='Logic error'
             ,Silent=False
             ):
+        if STOP_MES:
+            return DummyMessage()
         if self._mes is None:
             self._mes = Message
         return self._mes(func,message,Silent)

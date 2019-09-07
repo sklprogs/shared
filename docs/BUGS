@@ -1,5 +1,7 @@
-
-- Tooltips do not always disappear
+- 
+- STOP_MES does not work for all messages (suppressing messages from
+  shared, but still processing messages from the main program) - maybe,
+  sh.lg. is to blame
 - tests.com.textboxc: a wrong selection is returned when searching
   from the end
 - MessageBuilder: it is impossible to quit the GUI program correctly
