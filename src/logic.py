@@ -1065,6 +1065,12 @@ class Text:
             '''
             self.text = self.text.strip()
 
+    def delete_embraced_figs(self):
+        self.text = re.sub('\s\(\d+\)','',self.text)
+        self.text = re.sub('\s\[\d+\]','',self.text)
+        self.text = re.sub('\s\{\d+\}','',self.text)
+        return self.text
+    
     def sim_symbols(self):
         ''' Replace Cyrillic letters with similar Latin ones. This can
             be useful for English words in mostly Russian text.

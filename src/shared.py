@@ -4065,7 +4065,7 @@ class Objects(lg.Objects):
     
     def txt(self):
         if self._txt is None:
-            self._txt = TextBoxC(title=_('Test:'))
+            self._txt = TextBoxRO(title=_('Test:'))
         return self._txt
     
     def mes (self,func='Logic error'
