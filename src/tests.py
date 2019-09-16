@@ -416,36 +416,37 @@ class Commands:
     def button(self):
         parent  = sh.Top()
         parent.title(_('Button'))
-        self.btn_trg = sh.Button (parent      = parent
-                                 ,side        = 'top'
-                                 ,action      = self.button_trigger
-                                 ,text        = _('Trigger an event')
-                                 ,font        = 'Sans 14 bold'
+        self.btn_trg = sh.Button (parent   = parent
+                                 ,side     = 'top'
+                                 ,action   = self.button_trigger
+                                 ,text     = _('Trigger an event')
+                                 ,font     = 'Sans 14 bold'
+                                 ,hint     = 'A sample hint'
+                                 ,bindings = ('<Control-s>','<F2>')
                                  )
-        self.btn_img = sh.Button (parent      = parent
-                                 ,action      = None
-                                 ,hint        = 'This is a hint'
-                                 ,inactive    = '/home/pete/bin/mclient/resources/buttons/icon_36x36_watch_clipboard_off.gif'
-                                 ,active      = '/home/pete/bin/mclient/resources/buttons/icon_36x36_watch_clipboard_on.gif'
-                                 ,text        = 'Press me'
-                                 ,height      = 36
-                                 ,width       = 36
-                                 ,side        = 'top'
-                                 ,expand      = 0
-                                 ,bg          = None
-                                 ,bg_focus    = None
-                                 ,fg          = None
-                                 ,fg_focus    = None
-                                 ,bd          = 0
-                                 ,hint_delay  = 800
-                                 ,hint_bg     = '#ffffe0'
-                                 ,hint_dir    = 'top'
-                                 ,hint_bwidth = 1
-                                 ,hint_bcolor = 'navy'
-                                 ,bindings    = []
-                                 ,fill        = 'both'
-                                 ,TakeFocus   = True
-                                 ,font        = None
+        self.btn_img = sh.Button (parent   = parent
+                                 ,action   = None
+                                 ,hint     = 'This is a hint'
+                                 ,inactive = '/home/pete/bin/mclient/resources/buttons/icon_36x36_watch_clipboard_off.gif'
+                                 ,active   = '/home/pete/bin/mclient/resources/buttons/icon_36x36_watch_clipboard_on.gif'
+                                 ,text     = 'Press me'
+                                 ,height   = 36
+                                 ,width    = 36
+                                 ,side     = 'top'
+                                 ,expand   = 0
+                                 ,bg       = None
+                                 ,bg_focus = None
+                                 ,fg       = None
+                                 ,fg_focus = None
+                                 ,bd       = 0
+                                 ,hdelay   = 800
+                                 ,hbg      = '#ffffe0'
+                                 ,hdir     = 'top'
+                                 ,hbwidth  = 1
+                                 ,hbcolor  = 'navy'
+                                 ,fill     = 'both'
+                                 ,Focus    = True
+                                 ,font     = None
                                  )
         parent.show()
     
@@ -867,5 +868,6 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    com.textboxrw()
+    #com.textboxrw()
+    com.button()
     sh.com.end()
