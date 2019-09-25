@@ -1014,18 +1014,30 @@ class Input:
             objs.mes(self.title,mes,True).warning()
             return []
     
-    def integer(self):
+    def integer(self,Negative=False):
         if isinstance(self.value,int):
             return self.value
-        elif str(self.value).isdigit():
-            self.value = int(self.value)
-            mes = _('Convert "{}" to an integer').format(self.value)
-            objs.mes(self.title,mes,True).debug()
         else:
-            mes = _('Integer is required at input, but found "{}"! Return 0')
-            mes = mes.format(self.value)
-            objs.mes(self.title,mes).warning()
-            self.value = 0
+            # Avoid exceptions if the input is not an integer or string
+            self.value = str(self.value)
+            if self.value.isdigit():
+                self.value = int(self.value)
+                mes = _('Convert "{}" to an integer').format(self.value)
+                objs.mes(self.title,mes,True).debug()
+            elif Negative and re.match('-\d+$',self.value):
+                ''' 'isinstance' will detect negative integers too,
+                    however, we can also have a string at input.
+                '''
+                old = self.value
+                self.value = int(self.value.replace('-','',1))
+                self.value -= self.value * 2
+                mes = _('Convert "{}" to an integer').format(old)
+                objs.mes(self.title,mes,True).debug()
+            else:
+                mes = _('Integer is required at input, but found "{}"! Return 0')
+                mes = mes.format(self.value)
+                objs.mes(self.title,mes).warning()
+                self.value = 0
         return self.value
 
     # Insert '' instead of 'None' into text widgets
