@@ -1552,23 +1552,17 @@ class Time:
     ''' We constantly recalculate each value because they depend on each
         other.
     '''
-    def __init__ (self,_timestamp=None,pattern='%Y-%m-%d'
-                 ,MondayWarning=False
-                 ):
-        self.reset (_timestamp    = _timestamp
-                   ,pattern       = pattern
-                   ,MondayWarning = MondayWarning
+    def __init__ (self,_timestamp=None,pattern='%Y-%m-%d'):
+        self.reset (_timestamp = _timestamp
+                   ,pattern    = pattern
                    )
 
-    def reset (self,_timestamp=None,pattern='%Y-%m-%d'
-              ,MondayWarning=False
-              ):
-        self.Success       = True
-        self.pattern       = pattern
-        self.MondayWarning = MondayWarning
-        self._timestamp    = _timestamp
-        self._instance = self._date = self._year = self._month_abbr \
-                       = self._month_name = ''
+    def reset(self,_timestamp=None,pattern='%Y-%m-%d'):
+        self.Success    = True
+        self.pattern    = pattern
+        self._timestamp = _timestamp
+        self._instance  = self._date = self._year = self._month_abbr \
+                        = self._month_name = ''
         # Prevent recursion
         if self._timestamp is None:
             self.todays_date()
@@ -1586,7 +1580,6 @@ class Time:
                 self.Success = False
                 mes = _('Set time parameters are incorrect or not supported.')
                 objs.mes(f,mes).warning()
-            self.monday_warning()
         else:
             com.cancel(f)
 
@@ -1636,15 +1629,13 @@ class Time:
             com.cancel(f)
         return self._timestamp
 
-    def monday_warning(self):
-        f = '[shared] logic.Time.monday_warning'
+    def is_monday(self):
+        f = '[shared] logic.Time.is_monday'
         if self.Success:
             if not self._instance:
                 self.instance()
-            if self.MondayWarning \
-            and datetime.datetime.weekday(self._instance) == 0:
-                mes = _('Note: it will be Monday!')
-                objs.mes(f,mes).info()
+            if datetime.datetime.weekday(self._instance) == 0:
+                return True
         else:
             com.cancel(f)
 
