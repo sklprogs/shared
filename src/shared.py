@@ -1381,7 +1381,10 @@ class TextBox:
         if MoveTop:
             # Move to the beginning
             self.mark_add()
-            self.scroll(mark='insert')
+        ''' This should be done irrespectively of 'MoveTop' since
+            'tkinter' does not go to the cursor position automatically.
+        '''
+        self.scroll(mark='insert')
 
     def paste(self,event=None):
         self.clear_selection()

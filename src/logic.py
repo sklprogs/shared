@@ -469,7 +469,7 @@ class OSSpecific:
 
 
 class Launch:
-    #note: 'Block' works only a 'custom_app' is set
+    #NOTE: 'Block' works only when a 'custom_app' is set
     def __init__(self,target='',Block=False):
         self.values()
         self.target = target
