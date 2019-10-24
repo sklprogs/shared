@@ -536,7 +536,8 @@ class Launch:
         if self.custom_app:
             if self.custom_args and len(self.custom_args) > 0:
                 self.custom_args.insert(0,self.custom_app)
-                if self.TargetExists:
+                if self.TargetExists \
+                and not self.target in self.custom_args:
                     self.custom_args.append(self.target)
             else:
                 self.custom_args = [self.custom_app]
