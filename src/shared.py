@@ -14,6 +14,8 @@ gettext.install('shared','../resources/locale')
 
 GUI_MES  = True
 STOP_MES = False
+FONT1    = 'Serif 14'
+FONT2    = 'Sans 11'
 
 
 class DummyMessage:
@@ -892,12 +894,13 @@ class Selection:
 class TextBoxC:
     
     def __init__ (self,Maximize=False,title=''
-                 ,icon='',words=None
+                 ,icon='',words=None,font=FONT1
                  ):
         self.Active   = False
         self.Maximize = Maximize
         self._title   = title
         self._icon    = icon
+        self._font    = font
         self.words    = words
         self.add_gui()
         self.focus()
@@ -978,6 +981,7 @@ class TextBoxC:
                            ,ScrollX = False
                            ,ScrollY = True
                            ,icon    = self._icon
+                           ,font    = self._font
                            )
         self.bindings()
     
@@ -1201,7 +1205,7 @@ class TextBox:
 
     def __init__ (self,parent,expand=True
                  ,side=None,fill='both'
-                 ,words=None,font='Serif 14'
+                 ,words=None,font=FONT1
                  ,ScrollX=False,ScrollY=True
                  ,wrap='word',icon=''
                  ):
@@ -1677,7 +1681,7 @@ class Entry:
     def __init__ (self,parent,side=None
                  ,ipadx=None,ipady=None
                  ,fill=None,width=None
-                 ,expand=None,font='Sans 11'
+                 ,expand=None,font=FONT2
                  ,bg=None,fg=None
                  ,justify='left'
                  ,AddBind=True
@@ -1825,7 +1829,7 @@ class Entry:
 class MultCBoxesC:
     
     def __init__ (self,text='',width=350
-                 ,height=300,font='Sans 11'
+                 ,height=300,font=FONT2
                  ,MarkAll=False,icon=''
                  ):
         self._width  = width
@@ -1943,8 +1947,7 @@ class MultCBoxesC:
 class MultCBoxes:
 
     def __init__ (self,parent,text=''
-                 ,font='Sans 11'
-                 ,MarkAll=False
+                 ,font=FONT2,MarkAll=False
                  ):
         self.parent = parent
         self.widget = self.parent.widget
@@ -3232,7 +3235,7 @@ class ToolTip(ToolTipBase):
     def __init__(self,obj,text='Sample text'
                 ,delay=800,bg='#ffffe0'
                 ,hdir='top',bwidth=1
-                ,bcolor='navy',font='Sans 11'
+                ,bcolor='navy',font=FONT2
                 ):
         self.height = 0
         self.width  = 0
@@ -3251,7 +3254,7 @@ class ToolTip(ToolTipBase):
         if not self.width or not self.height:
             if self.text:
                 if not self.font:
-                    self.font = 'Sans 11'
+                    self.font = FONT2
                 ifont = Font(self.font)
                 ifont.set_text(self.text)
                 self.width  = ifont.width()
@@ -3721,7 +3724,7 @@ class Label:
            config options. List of them: http://effbot.org/tkinterbook/label.htm#Tkinter.Label.config-method
     '''
     def __init__ (self,parent,text='Text:'
-                 ,font='Sans 11',side=None,fill=None
+                 ,font=FONT2,side=None,fill=None
                  ,expand=False,ipadx=None,ipady=None
                  ,image=None,fg=None,bg=None
                  ,anchor=None,width=None
@@ -3795,7 +3798,7 @@ class Label:
         if not self.gui.font(self._font):
             mes = _('Wrong font: "{}"!').format(self._font)
             objs.mes(f,mes,True).error()
-            self._font = 'Sans 11'
+            self._font = FONT2
 
     def show(self,event=None):
         self.gui.show()
@@ -4066,9 +4069,11 @@ class Objects(lg.Objects):
                        = self._error = self._mes = self._waitbox \
                        = self._txt = None
     
-    def txt(self):
+    def txt(self,font=FONT1):
         if self._txt is None:
-            self._txt = TextBoxRO(title=_('Test:'))
+            self._txt = TextBoxRO (title = _('Test:')
+                                  ,font  = font
+                                  )
         return self._txt
     
     def mes (self,func='Logic error'
@@ -4369,8 +4374,8 @@ class Commands(lg.Commands):
             mes = _('The condition "{}" is not observed!').format(sub)
             objs.mes(f,mes).warning()
     
-    def fast_txt(self,text):
-        objs.txt().reset()
+    def fast_txt(self,text,font=FONT1):
+        objs.txt(font).reset()
         objs._txt.insert(text)
         objs._txt.show()
     
