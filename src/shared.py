@@ -4085,10 +4085,11 @@ class Objects(lg.Objects):
                        = self._error = self._mes = self._waitbox \
                        = self._txt = None
     
-    def txt(self,font=FONT1):
+    def txt(self,font=FONT1,Maximize=False):
         if self._txt is None:
-            self._txt = TextBoxRO (title = _('Test:')
-                                  ,font  = font
+            self._txt = TextBoxRO (title    = _('Test:')
+                                  ,font     = font
+                                  ,Maximize = Maximize
                                   )
         return self._txt
     
@@ -4387,8 +4388,8 @@ class Commands(lg.Commands):
             mes = _('The condition "{}" is not observed!').format(sub)
             objs.mes(f,mes).warning()
     
-    def fast_txt(self,text,font=FONT1):
-        objs.txt(font).reset()
+    def fast_txt(self,text,font=FONT1,Maximize=False):
+        objs.txt(font,Maximize).reset()
         objs._txt.insert(text)
         objs._txt.show()
     
