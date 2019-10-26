@@ -957,11 +957,11 @@ class TextBoxC:
         self.obj.focus()
     
     def insert (self,text=''
-               ,pos='1.0',MoveTop=True
+               ,pos='1.0',mode=None
                ):
-        self.obj.insert (text    = text
-                        ,pos     = pos
-                        ,MoveTop = MoveTop
+        self.obj.insert (text = text
+                        ,pos  = pos
+                        ,mode = mode
                         )
     
     def reset(self,words=None,title=''):
@@ -1066,12 +1066,12 @@ class TextBoxRO(TextBoxC):
         self.disable()
     
     def insert (self,text=''
-               ,pos='1.0',MoveTop=True
+               ,pos='1.0',mode='top'
                ):
         self.enable()
-        self.obj.insert (text    = text
-                        ,pos     = pos
-                        ,MoveTop = MoveTop
+        self.obj.insert (text = text
+                        ,pos  = pos
+                        ,mode = mode
                         )
         self.disable()
     
@@ -1119,12 +1119,12 @@ class TextBoxRW(TextBoxC):
         self.rw_add_gui()
     
     def insert (self,text=''
-               ,pos='1.0',MoveTop=True
+               ,pos='1.0',mode='top'
                ):
         self.rw_text = text
-        self.obj.insert (text    = text
-                        ,pos     = pos
-                        ,MoveTop = MoveTop
+        self.obj.insert (text = text
+                        ,pos  = pos
+                        ,mode = mode
                         )
     
     def reset(self,words=None,title=''):
@@ -1339,9 +1339,8 @@ class TextBox:
         text = Text(text=self.select.text()).toggle_case()
         pos1, pos2 = self.select.get()
         self.clear_selection()
-        self.insert (text    = text
-                    ,pos     = self.cursor()
-                    ,MoveTop = False
+        self.insert (text = text
+                    ,pos  = self.cursor()
                     )
         if pos1 and pos2:
             self.select.reset (pos1 = pos1
@@ -1373,7 +1372,7 @@ class TextBox:
             return ''
 
     def insert (self,text='',pos='1.0'
-               ,MoveTop=True
+               ,mode=None
                ):
         f = '[shared] shared.TextBox.insert'
         try:
@@ -1382,19 +1381,36 @@ class TextBox:
                             )
         except Exception as e:
             com.failed(f,e)
-        if MoveTop:
+        ''' #NOTE: 'Tkinter' does not go to the cursor position
+            automatically, but we should not use 'self.scroll' each time
+            'self.insert' is used because in that case pasting text in
+            'TextBox' will cause scrolling and thereby some discomfort
+            in using 'TextBox'-based widgets.
+        '''
+        if mode == 'top':
             # Move to the beginning
             self.mark_add()
-        ''' This should be done irrespectively of 'MoveTop' since
-            'tkinter' does not go to the cursor position automatically.
-        '''
-        self.scroll(mark='insert')
+            self.scroll('insert')
+        elif mode == 'bottom':
+            self.mark_add(pos='end')
+            self.scroll('insert')
+        elif mode in (True,1,'1'):
+            self.scroll('insert')
+        elif mode in (None,False,0,'0'):
+            pass
+        else:
+            modes = ('top','bottom','',None,False,0,True,1)
+            mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
+            mes = mes.format(mode,modes)
+            ''' Do not use GUI here since 'MessageBuilder' depends on
+                'TextBox'.
+            '''
+            objs.mes(f,mes,True).error()
 
     def paste(self,event=None):
         self.clear_selection()
-        self.insert (text    = Clipboard().paste()
-                    ,pos     = self.cursor()
-                    ,MoveTop = False
+        self.insert (text = Clipboard().paste()
+                    ,pos  = self.cursor()
                     )
         return 'break'
 
@@ -4160,10 +4176,7 @@ class MessageBuilder:
     def update(self,text=''):
         #note: Control-c does not work with read-only fields
         self.txt.clear_text()
-        ''' Setting 'MoveTop' to 'True' leads to a bug when
-            proportions of 'MessageBuilder' change upon reset. 
-        '''
-        self.txt.insert(text,MoveTop=False)
+        self.txt.insert(text)
     
     def bindings(self):
         com.bind (obj      = self
