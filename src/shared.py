@@ -89,6 +89,13 @@ class Email(lg.Email):
 
 
 
+class FastTable(lg.FastTable):
+    
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+
+
+
 class File(lg.File):
     
     def __init__(self,*args,**kwargs):

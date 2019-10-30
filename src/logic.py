@@ -6,18 +6,17 @@ license   = 'GPL v.3'
 email     = 'skl.progs@gmail.com'
 
 import re
-import os, sys
+import io
+import os
+import sys
 import configparser
 import calendar
 import datetime
-import os
 import pickle
-import re
 import shlex
 import shutil
 import ssl
 import subprocess
-import sys
 import tempfile
 import time
 import webbrowser
@@ -79,6 +78,84 @@ reserved_win  = ['CON','PRN','AUX','NUL','COM1','COM2','COM3','COM4'
                 ,'LPT4','LPT5','LPT6','LPT7','LPT8','LPT9'
                 ]
 config_parser = configparser.SafeConfigParser()
+
+
+class FastTable:
+    
+    def __init__(self,iterable,sep=' '):
+        ''' #NOTE: In case of tuple, do not forget to add commas,
+            e.g.: ((1,),).
+        '''
+        self.Success = True
+        self.vlens   = []
+        self.vlst    = iterable
+        self.vsep    = sep
+    
+    def report(self):
+        f = '[shared] logic.FastTable.report'
+        result = ''
+        if self.Success:
+            iwrite = io.StringIO()
+            for j in range(len(self.vlst[0])):
+                for i in range(len(self.vlst)):
+                    delta = self.vlens[i] - len(self.vlst[i][j])
+                    iwrite.write(self.vlst[i][j])
+                    iwrite.write(' ' * delta)
+                    if i + 1 < len(self.vlst):
+                        iwrite.write(self.vsep)
+                iwrite.write('\n')
+            result = iwrite.getvalue()
+            iwrite.close()
+        else:
+            com.cancel(f)
+        return result
+    
+    def equalize(self):
+        f = '[shared] logic.FastTable.equalize'
+        if self.Success:
+            maxl = max([len(item) for item in self.vlst])
+            for i in range(len(self.vlst)):
+                delta = maxl - len(self.vlst[i])
+                for j in range(delta):
+                    self.vlst[i].append('')
+        else:
+            com.cancel(f)
+    
+    def lens(self):
+        f = '[shared] logic.FastTable.lens'
+        if self.Success:
+            for item in self.vlst:
+                tmp = sorted(item,key=len,reverse=True)
+                self.vlens.append(len(tmp[0]))
+        else:
+            com.cancel(f)
+    
+    def make_list(self):
+        f = '[shared] logic.FastTable.make_list'
+        if self.Success:
+            if self.vlst:
+                try:
+                    self.vlst = list(self.vlst)
+                    for i in range(len(self.vlst)):
+                        self.vlst[i] = [str(item) \
+                                        for item in self.vlst[i]
+                                       ]
+                except TypeError:
+                    self.Success = False
+                    mes = _('Only iterable objects are supported!')
+                    objs.mes(f,mes).warning()
+            else:
+                self.Success = False
+                com.empty(f)
+        else:
+            com.cancel(f)
+    
+    def run(self):
+        self.make_list()
+        self.equalize()
+        self.lens()
+        return self.report()
+
 
 
 class MessageBuilder:
