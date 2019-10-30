@@ -4589,6 +4589,24 @@ class Commands:
     def __init__(self):
         self.lang()
     
+    def figure_commas(self,figure):
+        f = '[shared] logic.Commands.figure_commas'
+        figure = str(figure)
+        if figure.isdigit():
+            figure = list(figure)
+            figure = figure[::-1]
+            i = 0
+            while i < len(figure):
+                if (i + 1) % 4 == 0:
+                    figure.insert(i,',')
+                i += 1
+            figure = figure[::-1]
+            figure = ''.join(figure)
+        else:
+            mes = _('Wrong input data: "{}"!').format(figure)
+            objs.mes(f,mes).warning()
+        return figure
+    
     def failed (self,f='Logic error'
                ,e='Logic error'
                ,Silent=False
