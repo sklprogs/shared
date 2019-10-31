@@ -82,7 +82,7 @@ config_parser = configparser.SafeConfigParser()
 
 class FastTable:
     
-    def __init__(self,iterable,sep=' '):
+    def __init__(self,iterable,sep='   '):
         ''' #NOTE: In case of tuple, do not forget to add commas,
             e.g.: ((1,),).
         '''
@@ -4668,21 +4668,16 @@ class Commands:
     
     def figure_commas(self,figure):
         f = '[shared] logic.Commands.figure_commas'
-        figure = str(figure)
-        if figure.isdigit():
-            figure = list(figure)
-            figure = figure[::-1]
-            i = 0
-            while i < len(figure):
-                if (i + 1) % 4 == 0:
-                    figure.insert(i,',')
-                i += 1
-            figure = figure[::-1]
-            figure = ''.join(figure)
-        else:
-            mes = _('Wrong input data: "{}"!').format(figure)
-            objs.mes(f,mes).warning()
-        return figure
+        # Skip checking with 'isdigit' in order to process negatives
+        figure = list(str(figure))
+        figure = figure[::-1]
+        i = 0
+        while i < len(figure):
+            if (i + 1) % 4 == 0:
+                figure.insert(i,',')
+            i += 1
+        figure = figure[::-1]
+        return ''.join(figure)
     
     def failed (self,f='Logic error'
                ,e='Logic error'
