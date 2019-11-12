@@ -1559,11 +1559,12 @@ class TextBox:
 
 class EntryC:
     
-    def __init__(self,title='',icon=''):
-        self.type   = 'Entry'
-        self.Save   = False
-        self._title = title
-        self._icon  = icon
+    def __init__(self,title='',icon='',ClearAll=False):
+        self.type     = 'Entry'
+        self.Save     = False
+        self._title   = title
+        self._icon    = icon
+        self.ClearAll = ClearAll
         self.add_gui()
         self.reset()
     
@@ -1607,9 +1608,10 @@ class EntryC:
         self.gui    = gi.EntryC(self.parent)
         self.widget = self.gui.widget
         self.frames()
-        self.obj = Entry (parent = self.frm_ent
-                         ,expand = True
-                         ,fill   = 'x'
+        self.obj = Entry (parent   = self.frm_ent
+                         ,expand   = True
+                         ,fill     = 'x'
+                         ,ClearAll = self.ClearAll
                          )
         self.buttons()
         self.bindings()
@@ -1705,23 +1707,23 @@ class Entry:
                  ,ipadx=None,ipady=None
                  ,fill=None,width=None
                  ,expand=None,font=FONT2
-                 ,bg=None,fg=None
-                 ,justify='left'
-                 ,AddBind=True
+                 ,bg=None,fg=None,justify='left'
+                 ,AddBind=True,ClearAll=False
                 ):
-        self.type    = 'Entry'
-        self.parent  = parent
-        self.side    = side
-        self.ipadx   = ipadx
-        self.ipady   = ipady
-        self._fill   = fill
-        self.width   = width
-        self.expand  = expand
-        self.font    = font
-        self.bg      = bg
-        self.fg      = fg
-        self.justify = justify
-        self.AddBind = AddBind
+        self.type     = 'Entry'
+        self.parent   = parent
+        self.side     = side
+        self.ipadx    = ipadx
+        self.ipady    = ipady
+        self._fill    = fill
+        self.width    = width
+        self.expand   = expand
+        self.font     = font
+        self.bg       = bg
+        self.fg       = fg
+        self.justify  = justify
+        self.AddBind  = AddBind
+        self.ClearAll = ClearAll
         self.add_gui()
 
     def selection(self,event=None):
@@ -1742,7 +1744,10 @@ class Entry:
         return pos
     
     def paste(self,event=None):
-        pos1, pos2 = self.selection()
+        if self.ClearAll:
+            pos1, pos2 = 0, 'end'
+        else:
+            pos1, pos2 = self.selection()
         self.clear (pos1 = pos1
                    ,pos2 = pos2
                    )
