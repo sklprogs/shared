@@ -4674,7 +4674,7 @@ class Commands:
         i = 0
         while i < len(figure):
             if (i + 1) % 4 == 0:
-                figure.insert(i,',')
+                figure.insert(i,_(','))
             i += 1
         figure = figure[::-1]
         return ''.join(figure)
