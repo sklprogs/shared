@@ -18,6 +18,16 @@ class Commands:
     def __init__(self):
         pass
     
+    def figure_commas(self):
+        f = '[shared] tests.Commands.figure_commas'
+        vals = [None,'',0,-1,-123456,-1234567,-12.34,123456,1234567
+               ,56874867845678456845678456845,'hello'
+               ]
+        for old in vals:
+            new = sh.com.figure_commas(old)
+            mes = '"{}" -> "{}"'.format(old,new)
+            sh.objs.mes(f,mes,True).debug()
+    
     def textboxro(self):
         text  = sh.ReadTextFile(FILE).get()
         words = sh.Words (text = text
@@ -869,5 +879,5 @@ if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
     #com.textboxrw()
-    com.button()
+    com.figure_commas()
     sh.com.end()

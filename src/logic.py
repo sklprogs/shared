@@ -4668,16 +4668,25 @@ class Commands:
     
     def figure_commas(self,figure):
         f = '[shared] logic.Commands.figure_commas'
-        # Skip checking with 'isdigit' in order to process negatives
-        figure = list(str(figure))
-        figure = figure[::-1]
-        i = 0
-        while i < len(figure):
-            if (i + 1) % 4 == 0:
-                figure.insert(i,_(','))
-            i += 1
-        figure = figure[::-1]
-        return ''.join(figure)
+        figure = str(figure)
+        if figure.startswith('-'):
+            Minus = True
+            figure = figure[1:]
+        else:
+            Minus = False
+        if figure.isdigit():
+            figure = list(figure)
+            figure = figure[::-1]
+            i = 0
+            while i < len(figure):
+                if (i + 1) % 4 == 0:
+                    figure.insert(i,_(','))
+                i += 1
+            figure = figure[::-1]
+            figure = ''.join(figure)
+        if Minus:
+            figure = '-' + figure
+        return figure
     
     def failed (self,f='Logic error'
                ,e='Logic error'
