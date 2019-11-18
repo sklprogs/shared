@@ -84,7 +84,8 @@ class FastTable:
     
     def __init__ (self,iterable,sep='   '
                  ,headers=[],Transpose=False
-                 ,maxcol=0,FromEnd=False
+                 ,maxrow=0,FromEnd=False
+                 ,maxrows=0
                  ):
         ''' #NOTE: In case of tuple, do not forget to add commas,
             e.g.: ((1,),).
@@ -96,19 +97,34 @@ class FastTable:
         self.vheaders  = headers
         self.Transpose = Transpose
         self.FromEnd   = FromEnd
-        self.vmaxcol   = maxcol
+        self.vmaxrow   = maxrow
+        self.vmaxrows  = maxrows
+    
+    def max_rows(self):
+        f = '[shared] logic.FastTable.max_rows'
+        if self.Success:
+            if self.vmaxrows > 0:
+                mes = _('Set the max number of rows to {}')
+                mes = mes.format(self.vmaxrows)
+                objs.mes(f,mes,True).debug()
+                for i in range(len(self.vlst)):
+                    # +1 for a header
+                    self.vlst[i] = self.vlst[i][0:self.vmaxrows+1]
+        else:
+            com.cancel(f)
     
     def max_width(self):
         f = '[shared] logic.FastTable.max_width'
         if self.Success:
-            if self.vmaxcol > 0:
+            if self.vmaxrow > 0:
+                mes = _('Set the max column width to {} symbols')
+                mes = mes.format(self.vmaxrow)
+                objs.mes(f,mes,True).debug()
                 for i in range(len(self.vlst)):
                     for j in range(len(self.vlst[i])):
-                        self.vlst[i][j] = Text(str(self.vlst[i][j])).shorten (max_len = self.vmaxcol
+                        self.vlst[i][j] = Text(str(self.vlst[i][j])).shorten (max_len = self.vmaxrow
                                                                              ,FromEnd = self.FromEnd
                                                                              )
-            else:
-                com.lazy()
         else:
             com.cancel(f)
     
@@ -204,6 +220,7 @@ class FastTable:
         self.make_list()
         self.transpose()
         self.headers()
+        self.max_rows()
         self.max_width()
         self.add_gap()
         self.lens()
