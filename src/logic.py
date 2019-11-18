@@ -82,14 +82,47 @@ config_parser = configparser.SafeConfigParser()
 
 class FastTable:
     
-    def __init__(self,iterable,sep='   '):
+    def __init__ (self,iterable,sep='   '
+                 ,headers=[],Transpose=False
+                 ):
         ''' #NOTE: In case of tuple, do not forget to add commas,
             e.g.: ((1,),).
         '''
-        self.Success = True
-        self.vlens   = []
-        self.vlst    = iterable
-        self.vsep    = sep
+        self.Success   = True
+        self.vlens     = []
+        self.vlst      = iterable
+        self.vsep      = sep
+        self.vheaders  = headers
+        self.Transpose = Transpose
+    
+    def transpose(self):
+        f = '[shared] logic.FastTable.transpose'
+        if self.Success:
+            if self.Transpose:
+                self.vlst = [*zip(*self.vlst)]
+                # 'zip' which produces tuples
+                self.vlst = [list(item) for item in self.vlst]
+        else:
+            com.cancel(f)
+    
+    def headers(self):
+        f = '[shared] logic.FastTable.headers'
+        if self.Success:
+            if self.vheaders:
+                if len(self.vheaders) == len(self.vlst):
+                    for i in range(len(self.vlst)):
+                        self.vlst[i].insert(0,self.vheaders[i])
+                else:
+                    sub = '{} == {}'.format (len(self.vheaders)
+                                            ,len(self.vlst)
+                                            )
+                    mes = _('The condition "{}" is not observed!')
+                    mes = mes.format(sub)
+                    objs.mes(f,mes).warning()
+            else:
+                com.lazy(f)
+        else:
+            com.cancel(f)
     
     def report(self):
         f = '[shared] logic.FastTable.report'
@@ -110,8 +143,8 @@ class FastTable:
             com.cancel(f)
         return result
     
-    def equalize(self):
-        f = '[shared] logic.FastTable.equalize'
+    def add_gap(self):
+        f = '[shared] logic.FastTable.add_gap'
         if self.Success:
             maxl = max([len(item) for item in self.vlst])
             for i in range(len(self.vlst)):
@@ -152,7 +185,9 @@ class FastTable:
     
     def run(self):
         self.make_list()
-        self.equalize()
+        self.transpose()
+        self.headers()
+        self.add_gap()
         self.lens()
         return self.report()
 

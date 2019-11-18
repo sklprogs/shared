@@ -5,6 +5,7 @@ import gettext, gettext_windows
 gettext_windows.setup_env()
 gettext.install('shared','../resources/locale')
 
+import io
 import random
 import shared as sh
 
@@ -17,6 +18,95 @@ class Commands:
     
     def __init__(self):
         pass
+    
+    def _fast_table1(self):
+        mes = _('Variant #{}').format(1)
+        self.iwrite.write(mes)
+        self.iwrite.write('\n')
+        mes = _('Description: no settings')
+        self.iwrite.write(mes)
+        self.iwrite.write('\n')
+        
+        iterable = [[0,1,2]
+                   ,['/home/pete','/home','/']
+                   ,['notes.txt','Trash.info','bash']
+                   ]
+        mes = sh.FastTable(iterable).run()
+        
+        self.iwrite.write(mes)
+        self.iwrite.write('\n\n')
+    
+    def _fast_table2(self):
+        mes = _('Variant #{}').format(2)
+        self.iwrite.write(mes)
+        self.iwrite.write('\n')
+        mes = _('Description: headers')
+        self.iwrite.write(mes)
+        self.iwrite.write('\n')
+        
+        iterable = ([0,1,2]
+                   ,['/home/pete','/home','/']
+                   ,['notes.txt','Trash.info','bash']
+                   )
+        headers  = ('NO','DIRECTORY','FILE')
+        mes = sh.FastTable (iterable = iterable
+                           ,headers  = headers
+                           ).run()
+        
+        self.iwrite.write(mes)
+        self.iwrite.write('\n\n')
+    
+    def _fast_table3(self):
+        mes = _('Variant #{}').format(3)
+        self.iwrite.write(mes)
+        self.iwrite.write('\n')
+        mes = _('Description: transposition')
+        self.iwrite.write(mes)
+        self.iwrite.write('\n')
+        
+        iterable = ((0,'/home/pete','notes.txt')
+                   ,(1,'/home','Trash.info')
+                   ,(2,'/','bash')
+                   )
+        mes = sh.FastTable (iterable  = iterable
+                           ,Transpose = True
+                           ).run()
+        
+        self.iwrite.write(mes)
+        self.iwrite.write('\n\n')
+    
+    def _fast_table4(self):
+        mes = _('Variant #{}').format(4)
+        self.iwrite.write(mes)
+        self.iwrite.write('\n')
+        mes = _('Description: transposition and headers')
+        self.iwrite.write(mes)
+        self.iwrite.write('\n')
+        
+        iterable = [(0,'/home/pete','notes.txt')
+                   ,(1,'/home','Trash.info')
+                   ,(2,'/','bash')
+                   ]
+        headers  = ['NO','DIRECTORY','FILE']
+        mes = sh.FastTable (iterable  = iterable
+                           ,headers   = headers
+                           ,Transpose = True
+                           ).run()
+        
+        self.iwrite.write(mes)
+        self.iwrite.write('\n\n')
+    
+    def fast_table(self):
+        self.iwrite = io.StringIO()
+        self._fast_table1()
+        self._fast_table2()
+        self._fast_table3()
+        self._fast_table4()
+        mes = self.iwrite.getvalue()
+        self.iwrite.close()
+        sh.com.fast_txt (text = mes
+                        ,font = 'Mono 12'
+                        )
     
     def figure_commas(self):
         f = '[shared] tests.Commands.figure_commas'
@@ -879,5 +969,5 @@ if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
     #com.textboxrw()
-    com.figure_commas()
+    com.fast_table()
     sh.com.end()
