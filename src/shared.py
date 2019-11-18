@@ -4405,6 +4405,13 @@ class Commands(lg.Commands):
         objs._txt.insert(text)
         objs._txt.show()
     
+    def fast_debug(self,text):
+        objs.txt (font     = 'Mono 11'
+                 ,Maximize = True
+                 ).reset()
+        objs._txt.insert(text)
+        objs._txt.show()
+    
     def dialog_save_file(self,types=()):
         f = '[shared] shared.Commands.dialog_save_file'
         options = lg.com.dialog_save_file()
