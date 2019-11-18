@@ -82,8 +82,9 @@ config_parser = configparser.SafeConfigParser()
 
 class FastTable:
     
-    def __init__ (self,iterable,sep='   '
+    def __init__ (self,iterable,sep='   '
                  ,headers=[],Transpose=False
+                 ,maxcol=0,FromEnd=False
                  ):
         ''' #NOTE: In case of tuple, do not forget to add commas,
             e.g.: ((1,),).
@@ -94,6 +95,22 @@ class FastTable:
         self.vsep      = sep
         self.vheaders  = headers
         self.Transpose = Transpose
+        self.FromEnd   = FromEnd
+        self.vmaxcol   = maxcol
+    
+    def max_width(self):
+        f = '[shared] logic.FastTable.max_width'
+        if self.Success:
+            if self.vmaxcol > 0:
+                for i in range(len(self.vlst)):
+                    for j in range(len(self.vlst[i])):
+                        self.vlst[i][j] = Text(str(self.vlst[i][j])).shorten (max_len = self.vmaxcol
+                                                                             ,FromEnd = self.FromEnd
+                                                                             )
+            else:
+                com.lazy()
+        else:
+            com.cancel(f)
     
     def transpose(self):
         f = '[shared] logic.FastTable.transpose'
@@ -187,6 +204,7 @@ class FastTable:
         self.make_list()
         self.transpose()
         self.headers()
+        self.max_width()
         self.add_gap()
         self.lens()
         return self.report()
