@@ -179,11 +179,16 @@ class FastTable:
     def add_gap(self):
         f = '[shared] logic.FastTable.add_gap'
         if self.Success:
-            maxl = max([len(item) for item in self.vlst])
-            for i in range(len(self.vlst)):
-                delta = maxl - len(self.vlst[i])
-                for j in range(delta):
-                    self.vlst[i].append('')
+            lst = [len(item) for item in self.vlst]
+            if lst:
+                maxl = max(lst)
+                for i in range(len(self.vlst)):
+                    delta = maxl - len(self.vlst[i])
+                    for j in range(delta):
+                        self.vlst[i].append('')
+            else:
+                self.Success = False
+                com.empty(f)
         else:
             com.cancel(f)
     
