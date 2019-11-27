@@ -1382,6 +1382,8 @@ class TextBox:
                ,mode=None
                ):
         f = '[shared] shared.TextBox.insert'
+        if text is None:
+            text = ''
         try:
             self.gui.insert (text = text
                             ,pos  = pos

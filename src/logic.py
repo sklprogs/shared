@@ -1678,7 +1678,7 @@ class List:
                     text += ' ' + self.lst1[i]
         return text
 
-    # Сделать списки, указанные на входе, одинаковой длины
+    # Adjust the lists at input to have the same length
     def equalize(self):
         max_range = max(len(self.lst1),len(self.lst2))
         if max_range == len(self.lst1):
