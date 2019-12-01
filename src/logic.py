@@ -4741,6 +4741,23 @@ class Commands:
     def __init__(self):
         self.lang()
     
+    def divisible(self,number):
+        f = '[shared] logic.Commands.divisible'
+        ''' Return integers by which a set integer is divisible (except
+            for 1 and itself).
+        '''
+        result = []
+        if str(number).isdigit():
+            i = 2
+            while i < number:
+                if number % i == 0:
+                    result.append(i)
+                i += 1
+        else:
+            mes = _('Wrong input data: "{}"!').format(number)
+            objs.mes(f,mes).warning()
+        return result
+    
     def figure_commas(self,figure):
         f = '[shared] logic.Commands.figure_commas'
         figure = str(figure)
