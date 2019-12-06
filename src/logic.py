@@ -77,7 +77,7 @@ reserved_win  = ['CON','PRN','AUX','NUL','COM1','COM2','COM3','COM4'
                 ,'COM5','COM6','COM7','COM8','COM9','LPT1','LPT2','LPT3'
                 ,'LPT4','LPT5','LPT6','LPT7','LPT8','LPT9'
                 ]
-config_parser = configparser.SafeConfigParser()
+config_parser = configparser.ConfigParser()
 
 
 class FastTable:
@@ -142,6 +142,10 @@ class FastTable:
         f = '[shared] logic.FastTable.headers'
         if self.Success:
             if self.vheaders:
+                ''' If there is a condition mismatch when everything is
+                    seemingly correct, check that headers are provided
+                    in the form of ('NO1','NO2') instead of ('NO1,NO2').
+                '''
                 if len(self.vheaders) == len(self.vlst):
                     for i in range(len(self.vlst)):
                         self.vlst[i].insert(0,self.vheaders[i])
