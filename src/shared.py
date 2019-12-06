@@ -4,6 +4,7 @@
 import sys, os
 import re
 import io
+import pyperclip
 import skl_shared.logic as lg
 import skl_shared.gui   as gi
 
@@ -2500,6 +2501,15 @@ class Canvas:
 class Clipboard:
 
     def __init__(self,Silent=False):
+        ''' I use a combined approach of different methods here.
+            On Linux text seems to be put in a wrong buffer when
+            copying using Tkinter (Wine apps read clipboard filled
+            by other Linux apps but *sometimes* fail to read mine
+            (a previous buffer is returned)). At the same time,
+            my Tkinter apps freeze upon Ctrl-V when pasting using
+            pyperclip.paste(). So, I use pyperclip to copy and
+            Tkinter to paste.
+        '''
         self.Silent = Silent
         self.gui    = gi.Clipboard()
 
@@ -2508,8 +2518,7 @@ class Clipboard:
         if text or CopyEmpty:
             text = lg.com.sanitize(text)
             try:
-                self.gui.clear()
-                self.gui.copy(text)
+                pyperclip.copy(text)
             except Exception as e:
                 com.failed(f,e,self.Silent)
         else:
@@ -2517,10 +2526,10 @@ class Clipboard:
 
     def paste(self):
         f = '[shared] shared.Clipboard.paste'
-        text = ''
         try:
             text = str(self.gui.paste())
         except Exception as e:
+            text = ''
             com.failed(f,e,self.Silent)
         # Further possible actions: strip, delete double line breaks
         return text

@@ -341,9 +341,22 @@ class Commands:
         parent.show()
     
     def clipboard(self):
-        iclip = sh.Clipboard(Silent=True)
-        #iclip.copy('Hello, this is очень классный лент!')
-        print('Output: "{}"'.format(iclip.paste()))
+        ''' #NOTE: Clipboard actions should be tested in Tkinter GUI
+            since it may freeze when using pyperclip.
+        '''
+        f = '[shared] tests.Commands.clipboard'
+        mes = _('Copy something to clipboard')
+        sh.objs.mes(f,mes).info()
+        sub = sh.Clipboard().paste()
+        mes = _('Clipboard contents: "{}"').format(sub)
+        sh.objs.mes(f,mes).debug()
+        sub = 'Hello! Это тест! αβàáҖҚŸ'
+        mes = _('The following will be copied: "{}"').format(sub)
+        sh.objs.mes(f,mes).info()
+        sh.Clipboard().copy(sub)
+        sub = sh.Clipboard().paste()
+        mes = _('Clipboard contents: "{}"').format(sub)
+        sh.objs.mes(f,mes).debug()
     
     def symbol_map(self):
         imap = sh.SymbolMap (items = 'àáâäāãæßćĉçèéêēёëəғĝģĥìíîïīĵķļñņòóôõöōœøšùúûūŭũüýÿžжҗқңәөүұÀÁÂÄĀÃÆSSĆĈÇÈÉÊĒЁËƏҒĜĢĤÌÍÎÏĪĴĶĻÑŅÒÓÔÕÖŌŒØŠÙÚÛŪŬŨÜÝŸŽЖҖҚҢӘӨҮҰ'
@@ -969,5 +982,5 @@ if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
     #com.textboxrw()
-    com.fast_table()
+    com.clipboard()
     sh.com.end()
