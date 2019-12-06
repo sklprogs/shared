@@ -551,13 +551,9 @@ class Panes:
     def reset(self,words1,words2,words3=None,words4=None):
         self.pane1.reset(words=words1)
         self.pane2.reset(words=words2)
-        self.pane1.insert(words1._text_orig)
-        self.pane2.insert(words2._text_orig)
         if self.Extended:
             self.pane3.reset(words=words3)
             self.pane4.reset(words=words4)
-            self.pane3.insert(words3._text_orig)
-            self.pane4.insert(words4._text_orig)
             self.select1()
 
 
