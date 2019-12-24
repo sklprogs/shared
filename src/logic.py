@@ -82,7 +82,7 @@ config_parser = configparser.ConfigParser()
 
 class FastTable:
     
-    def __init__ (self,iterable,sep='   '
+    def __init__ (self,iterable,sep=' '
                  ,headers=[],Transpose=False
                  ,maxrow=0,FromEnd=False
                  ,maxrows=0
@@ -1995,19 +1995,17 @@ class File:
 
     def delete(self):
         f = '[shared] logic.File.delete'
-        Success = True
         if self.Success:
             mes = _('Delete "{}"').format(self.file)
             objs.mes(f,mes,True).info()
             try:
                 os.remove(self.file)
+                return True
             except:
-                Success = False
                 mes = _('Failed to delete file "{}"!').format(self.file)
                 objs.mes(f,mes).error()
         else:
             com.cancel(f)
-        return Success
 
     def modification_time(self):
         f = '[shared] logic.File.modification_time'
@@ -2622,6 +2620,7 @@ class Directory:
             objs.mes(f,mes,True).info()
             try:
                 shutil.rmtree(self.dir)
+                return True
             except:
                 mes = _('Failed to delete directory "{}"! Delete it manually.')
                 mes = mes.format(self.dir)
