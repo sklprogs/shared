@@ -8,11 +8,7 @@ import tkinter.ttk
 # Load PIL only after loading tkinter
 from PIL import Image   as pilimage
 from PIL import ImageTk as piltk
-
-import gettext
-import skl_shared.gettext_windows as gettext_windows
-gettext_windows.setup_env()
-gettext.install('shared','../resources/locale')
+from skl_shared.localize import _
 
 
 class Panes:

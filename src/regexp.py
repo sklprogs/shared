@@ -3,11 +3,7 @@
 import re
 import sre_constants
 import skl_shared.shared as sh
-
-import gettext
-import skl_shared.gettext_windows
-skl_shared.gettext_windows.setup_env()
-gettext.install('shared','../resources/locale')
+from skl_shared.localize import _
 
 
 class Record:

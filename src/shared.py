@@ -7,11 +7,7 @@ import io
 import pyperclip
 import skl_shared.logic as lg
 import skl_shared.gui   as gi
-
-import gettext
-import skl_shared.gettext_windows as gettext_windows
-gettext_windows.setup_env()
-gettext.install('shared','../resources/locale')
+from skl_shared.localize import _
 
 GUI_MES  = True
 STOP_MES = False

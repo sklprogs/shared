@@ -26,11 +26,7 @@ import webbrowser
 import urllib.request, urllib.parse
 import difflib
 import locale
-
-import gettext
-import skl_shared.gettext_windows as gettext_windows
-gettext_windows.setup_env()
-gettext.install('shared','../resources/locale')
+from skl_shared.localize import _
 
 
 gpl3_url_en = 'http://www.gnu.org/licenses/gpl.html'
@@ -78,6 +74,7 @@ reserved_win  = ['CON','PRN','AUX','NUL','COM1','COM2','COM3','COM4'
                 ,'LPT4','LPT5','LPT6','LPT7','LPT8','LPT9'
                 ]
 config_parser = configparser.ConfigParser()
+
 
 
 class FastTable:

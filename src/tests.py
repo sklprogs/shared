@@ -1,13 +1,10 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-import gettext, gettext_windows
-gettext_windows.setup_env()
-gettext.install('shared','../resources/locale')
-
 import io
 import random
-import shared as sh
+import skl_shared as sh
+from skl_shared.localize import _
 
 ICON  = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
 ICON2 = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
