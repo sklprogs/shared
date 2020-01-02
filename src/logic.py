@@ -129,8 +129,22 @@ class FastTable:
         f = '[shared] logic.FastTable.transpose'
         if self.Success:
             if self.Transpose:
-                self.vlst = [*zip(*self.vlst)]
-                # 'zip' which produces tuples
+                try:
+                    ''' Works only in Python >=3.5. 
+                        'eval' is needed since we cannot catch
+                        'SyntaxError' in runtime.
+                    '''
+                    self.vlst = eval('[*zip(*self.vlst)]')
+                except SyntaxError:
+                    # 10x slower (with already imported numpy)
+                    try:
+                        import numpy
+                        self.vlst = numpy.array(lst).transpose()
+                    except ImportError:
+                        mes = _('You need to install "{}"!')
+                        mes = mes.format('numpy')
+                        objs.mes(f,mes).error()
+                # 'zip' produces tuples
                 self.vlst = [list(item) for item in self.vlst]
         else:
             com.cancel(f)
