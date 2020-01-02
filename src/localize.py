@@ -3,6 +3,8 @@
 
 import os
 import gettext
+import skl_shared.gettext_windows
+skl_shared.gettext_windows.setup_env()
 
 
 class Localization:
