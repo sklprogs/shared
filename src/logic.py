@@ -2557,6 +2557,27 @@ class Directory:
             mes = _('Wrong input data: "{}"!').format(self.dir)
             objs.mes(f,mes).warning()
 
+    def subfiles(self,Follow=True):
+        # Include files in subfolders
+        f = '[shared] logic.Directory.subfiles'
+        if self.Success:
+            if not self._subfiles:
+                try:
+                    for dirpath, dirnames, fnames \
+                    in os.walk(self.dir,followlinks=Follow):
+                        for name in fnames:
+                            obj = os.path.join(dirpath,name)
+                            if os.path.isfile(obj):
+                                self._subfiles.append(obj)
+                    self._subfiles.sort(key=lambda x: x.lower())
+                except Exception as e:
+                    mes = _('Operation has failed!\nDetails: {}')
+                    mes = mes.format(e)
+                    objs.mes(f,mes).error()
+        else:
+            com.cancel(f)
+        return self._subfiles
+    
     def size(self,Follow=True):
         f = '[shared] logic.Directory.size'
         result = 0
@@ -2593,6 +2614,7 @@ class Directory:
         self._rel_dirs       = []
         self._extensions     = []
         self._extensions_low = []
+        self._subfiles       = []
     
     def extensions(self): # with a dot
         f = '[shared] logic.Directory.extensions'
