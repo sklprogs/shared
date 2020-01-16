@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import os
+import sys
 import gettext
 import skl_shared.gettext_windows
 skl_shared.gettext_windows.setup_env()
@@ -34,8 +35,10 @@ class Localization:
     
     def load(self):
         if self.Success:
-            path = os.path.join('..','resources','locale')
+            prefix = os.path.dirname(sys.argv[0])
+            path = os.path.join(prefix,'..','resources','locale')
             path = os.path.realpath(path)
+            print('Search the translation file in "{}"'.format(path))
             try:
                 self.iloc = gettext.translation('transl',path)
             except Exception as e:
