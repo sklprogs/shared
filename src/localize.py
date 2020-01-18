@@ -36,8 +36,8 @@ class Localization:
     def load(self):
         if self.Success:
             prefix = os.path.dirname(sys.argv[0])
-            path = os.path.join(prefix,'..','resources','locale')
-            path = os.path.realpath(path)
+            path   = os.path.join(prefix,'..','resources','locale')
+            path   = os.path.realpath(path)
             print('Search the translation file in "{}"'.format(path))
             try:
                 self.iloc = gettext.translation('transl',path)
