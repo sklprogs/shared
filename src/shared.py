@@ -3245,7 +3245,7 @@ class ToolTipBase:
                                                             ,self.height
                                                             ,x,y
                                                             )
-        objs.mes(f,mes,True).info()
+        objs.mes(f,mes,True).debug()
         self.tip.widget.wm_geometry ("%dx%d+%d+%d" % (self.width
                                                      ,self.height
                                                      ,x, y
@@ -3887,7 +3887,7 @@ class Geometry:
         if self.parent:
             if self._geom:
                 mes = _('Restore geometry: {}').format(self._geom)
-                objs.mes(f,mes,True).info()
+                objs.mes(f,mes,True).debug()
                 self.gui.restore(self._geom)
             else:
                 mes = _('Failed to restore geometry!')

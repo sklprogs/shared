@@ -19,6 +19,7 @@ import ssl
 import subprocess
 import tempfile
 import time
+import termcolor
 import webbrowser
 ''' 'import urllib' does not work in Python 3, importing must be as
     follows:
@@ -808,7 +809,7 @@ class Log:
 
     def __init__ (self,Use=True,Short=False
                  ):
-        f = self.func = 'shared.Log.__init__'
+        self.func    = 'shared.Log.__init__'
         self.Success = True
         self.level   = _('INFO')
         self.message = 'Test'
@@ -817,32 +818,41 @@ class Log:
         if not Use:
             self.Success = False
 
+    def _warn(self,mes):
+        return termcolor.colored(mes,'red')
+    
+    def _debug(self,mes):
+        return termcolor.colored(mes,'yellow')
+    
+    def _generate(self):
+        return '{}:{}:{}:{}'.format (self.count,self.func
+                                    ,self.level,self.message
+                                    )
+    
     def print(self):
+        f = '[shared] logic.Log.print'
         if self.Success:
-            if self.Short:
+            try:
                 if self.level in (_('WARNING'),_('ERROR')):
-                    self._print()
-            else:
-                self._print()
-
-    def _print(self):
-        f = '[shared] logic.Log._print'
-        try:
-            print ('%d:%s:%s:%s' % (self.count,self.func,self.level
-                                   ,self.message
-                                   )
-                  )
-        except:
-            ''' Rarely somehing like "UnicodeEncodeError: 'utf-8' codec
-                can't encode character '\udce9' in position 175:
-                surrogates not allowed" occurs. Since there are to many
-                Unicode exceptions to except, we do not specify
-                an exception type.
-            '''
-            print ('%s:%s:%s' % (f,_('WARNING')
-                                ,_('Cannot print the message!')
-                                )
-                  )
+                    print(self._warn(self._generate()))
+                elif self.Short:
+                    pass
+                elif self.level == _('DEBUG'):
+                    print(self._debug(self._generate()))
+                else:
+                    print(self._generate())
+            except Exception as e:
+                ''' Rarely somehing like "UnicodeEncodeError:
+                    'utf-8' codec can't encode character '\udce9' in
+                    position 175: surrogates not allowed" occurs.
+                    Since there are to many Unicode exceptions to
+                    except, we do not specify an exception type.
+                '''
+                sub = 'Cannot print the message! ({})'.format(e)
+                mes = '{}:{}:{}'.format (f,'WARNING'
+                                        ,sub
+                                        )
+                print(mes)
 
     def append (self,func='shared.Log.append'
                ,level=_('INFO'),message='Test'
@@ -4250,7 +4260,7 @@ class Timer:
     def end(self):
         delta = float(time.time()-self._start)
         mes = _('The operation has taken {} s.').format(delta)
-        objs.mes(self._func_title,mes,True).info()
+        objs.mes(self._func_title,mes,True).debug()
         return delta
 
 
