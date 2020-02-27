@@ -4417,13 +4417,14 @@ class Commands(lg.Commands):
     
     def dialog_save_file(self,types=()):
         f = '[shared] shared.Commands.dialog_save_file'
-        options = lg.com.dialog_save_file()
+        options = lg.com.dialog_save_file(types)
         try:
             file = gi.com.dialog_save_file(options)
-        except:
+        except Exception as e:
             file = ''
-            mes = _('Failed to select a file!')
-            objs.mes(f,mes).error()
+            mes = _('The operation has failed!\n\nDetails: {}')
+            mes = mes.format(e)
+            objs.mes(f,mes,True).error()
         return file
     
     def bind(self,obj,bindings,action):
