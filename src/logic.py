@@ -1099,9 +1099,7 @@ class ReadTextFile:
             with open(self.file,'r',encoding=encoding) as fl:
                 self._text = fl.read()
         except:
-            ''' We can handle UnicodeDecodeError here, however, we just
-                handle them all (there could be access errors, etc.)
-            '''
+            # Avoid UnicodeDecodeError, access errors, etc.
             pass
 
     def delete_bom(self):
@@ -1200,8 +1198,9 @@ class Input:
             self.value = str(self.value)
             if self.value.isdigit():
                 self.value = int(self.value)
-                mes = _('Convert "{}" to an integer').format(self.value)
-                objs.mes(self.title,mes,True).debug()
+                # Too frequent, almost useless
+                #mes = _('Convert "{}" to an integer').format(self.value)
+                #objs.mes(self.title,mes,True).debug()
             elif Negative and re.match('-\d+$',self.value):
                 ''' 'isinstance' will detect negative integers too,
                     however, we can also have a string at input.
