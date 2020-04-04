@@ -26,8 +26,7 @@ class Localization:
                 ''' #NOTE: Do not set 'self.Success' here, we need
                    an original input upon a failure.
                 '''
-                mes = 'Operation has failed!\n\nDetails: {}'
-                mes = mes.format(str(e))
+                mes = 'Operation has failed!\n\nDetails: {}'.format(e)
                 print(mes)
                 return string
         else:
@@ -43,8 +42,12 @@ class Localization:
                 self.iloc = gettext.translation('transl',path)
             except Exception as e:
                 self.Success = False                
-                mes = 'Operation has failed!\n\nDetails: {}'
-                mes = mes.format(str(e))
+                e = str(e)
+                if 'No translation file found' in e:
+                    mes = 'A translation file is missing!'
+                else:
+                    mes = 'Operation has failed!\n\nDetails: {}'
+                    mes = mes.format(e)
                 print(mes)
         else:
             print('Failed to localize the app!')
