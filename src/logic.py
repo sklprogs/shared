@@ -27,7 +27,7 @@ import webbrowser
 import urllib.request, urllib.parse
 import difflib
 import locale
-from skl_shared.localize import _
+from skl_shared2.localize import _
 
 
 gpl3_url_en = 'http://www.gnu.org/licenses/gpl.html'
@@ -61,7 +61,7 @@ SectionVariables_abbr  = 'var'
 SectionWindowsSettings = 'Windows settings'
 
 punc_array      = ['.',',','!','?',':',';']
-#todo: why there were no opening brackets?
+#TODO: why there were no opening brackets?
 #punc_ext_array = ['"','”','»',']','}',')']
 punc_ext_array  = ['"','“','”','','«','»','[',']'
                   ,'{','}','(',')','’',"'",'*'
@@ -80,8 +80,9 @@ config_parser = configparser.ConfigParser()
 
 class FastTable:
     
-    def __init__ (self,iterable,sep=' '
-                 ,headers=[],Transpose=False
+    def __init__ (self,iterable=[]
+                 ,headers=[],sep=' '
+                 ,Transpose=False
                  ,maxrow=0,FromEnd=False
                  ,maxrows=0
                  ):
@@ -89,40 +90,40 @@ class FastTable:
             e.g.: ((1,),).
         '''
         self.Success   = True
-        self.vlens     = []
-        self.vlst      = iterable
-        self.vsep      = sep
-        self.vheaders  = headers
+        self.lens      = []
+        self.lst       = iterable
+        self.sep       = sep
+        self.headers   = headers
         self.Transpose = Transpose
         self.FromEnd   = FromEnd
-        self.vmaxrow   = maxrow
-        self.vmaxrows  = maxrows
+        self.maxrow    = maxrow
+        self.maxrows   = maxrows
     
-    def max_rows(self):
-        f = '[shared] logic.FastTable.max_rows'
+    def set_max_rows(self):
+        f = '[shared] logic.FastTable.set_max_rows'
         if self.Success:
-            if self.vmaxrows > 0:
+            if self.maxrows > 0:
                 mes = _('Set the max number of rows to {}')
-                mes = mes.format(self.vmaxrows)
-                objs.mes(f,mes,True).debug()
-                for i in range(len(self.vlst)):
+                mes = mes.format(self.maxrows)
+                objs.get_mes(f,mes,True).show_debug()
+                for i in range(len(self.lst)):
                     # +1 for a header
-                    self.vlst[i] = self.vlst[i][0:self.vmaxrows+1]
+                    self.lst[i] = self.lst[i][0:self.maxrows+1]
         else:
             com.cancel(f)
     
-    def max_width(self):
-        f = '[shared] logic.FastTable.max_width'
+    def set_max_width(self):
+        f = '[shared] logic.FastTable.set_max_width'
         if self.Success:
-            if self.vmaxrow > 0:
+            if self.maxrow > 0:
                 mes = _('Set the max column width to {} symbols')
-                mes = mes.format(self.vmaxrow)
-                objs.mes(f,mes,True).debug()
-                for i in range(len(self.vlst)):
-                    for j in range(len(self.vlst[i])):
-                        self.vlst[i][j] = Text(str(self.vlst[i][j])).shorten (max_len = self.vmaxrow
-                                                                             ,FromEnd = self.FromEnd
-                                                                             )
+                mes = mes.format(self.maxrow)
+                objs.get_mes(f,mes,True).show_debug()
+                for i in range(len(self.lst)):
+                    for j in range(len(self.lst[i])):
+                        self.lst[i][j] = Text(str(self.lst[i][j])).shorten (max_len = self.maxrow
+                                                                           ,FromEnd = self.FromEnd
+                                                                           )
         else:
             com.cancel(f)
     
@@ -135,41 +136,41 @@ class FastTable:
                         'eval' is needed since we cannot catch
                         'SyntaxError' in runtime.
                     '''
-                    self.vlst = eval('[*zip(*self.vlst)]')
+                    self.lst = eval('[*zip(*self.lst)]')
                 except SyntaxError:
                     # 10x slower (with already imported numpy)
                     try:
                         import numpy
-                        self.vlst = numpy.array(lst).transpose()
+                        self.lst = numpy.array(lst).transpose()
                     except ImportError:
                         mes = _('You need to install "{}"!')
                         mes = mes.format('numpy')
-                        objs.mes(f,mes).error()
+                        objs.get_mes(f,mes).show_error()
                 # 'zip' produces tuples
-                self.vlst = [list(item) for item in self.vlst]
+                self.lst = [list(item) for item in self.lst]
         else:
             com.cancel(f)
     
-    def headers(self):
-        f = '[shared] logic.FastTable.headers'
+    def set_headers(self):
+        f = '[shared] logic.FastTable.set_headers'
         if self.Success:
-            if self.vheaders:
+            if self.headers:
                 ''' If there is a condition mismatch when everything is
                     seemingly correct, check that headers are provided
                     in the form of ('NO1','NO2') instead of ('NO1,NO2').
                 '''
-                if len(self.vheaders) == len(self.vlst):
-                    for i in range(len(self.vlst)):
-                        self.vlst[i].insert(0,self.vheaders[i])
+                if len(self.headers) == len(self.lst):
+                    for i in range(len(self.lst)):
+                        self.lst[i].insert(0,self.headers[i])
                 else:
-                    sub = '{} == {}'.format (len(self.vheaders)
-                                            ,len(self.vlst)
+                    sub = '{} == {}'.format (len(self.headers)
+                                            ,len(self.lst)
                                             )
                     mes = _('The condition "{}" is not observed!')
                     mes = mes.format(sub)
-                    objs.mes(f,mes).warning()
+                    objs.get_mes(f,mes).show_warning()
             else:
-                com.lazy(f)
+                com.rep_lazy(f)
         else:
             com.cancel(f)
     
@@ -178,13 +179,13 @@ class FastTable:
         result = ''
         if self.Success:
             iwrite = io.StringIO()
-            for j in range(len(self.vlst[0])):
-                for i in range(len(self.vlst)):
-                    delta = self.vlens[i] - len(self.vlst[i][j])
-                    iwrite.write(self.vlst[i][j])
+            for j in range(len(self.lst[0])):
+                for i in range(len(self.lst)):
+                    delta = self.lens[i] - len(self.lst[i][j])
+                    iwrite.write(self.lst[i][j])
                     iwrite.write(' ' * delta)
-                    if i + 1 < len(self.vlst):
-                        iwrite.write(self.vsep)
+                    if i + 1 < len(self.lst):
+                        iwrite.write(self.sep)
                 iwrite.write('\n')
             result = iwrite.getvalue()
             iwrite.close()
@@ -195,56 +196,56 @@ class FastTable:
     def add_gap(self):
         f = '[shared] logic.FastTable.add_gap'
         if self.Success:
-            lst = [len(item) for item in self.vlst]
+            lst = [len(item) for item in self.lst]
             if lst:
                 maxl = max(lst)
-                for i in range(len(self.vlst)):
-                    delta = maxl - len(self.vlst[i])
+                for i in range(len(self.lst)):
+                    delta = maxl - len(self.lst[i])
                     for j in range(delta):
-                        self.vlst[i].append('')
+                        self.lst[i].append('')
             else:
                 self.Success = False
-                com.empty(f)
+                com.rep_empty(f)
         else:
             com.cancel(f)
     
-    def lens(self):
-        f = '[shared] logic.FastTable.lens'
+    def get_lens(self):
+        f = '[shared] logic.FastTable.get_lens'
         if self.Success:
-            for item in self.vlst:
+            for item in self.lst:
                 tmp = sorted(item,key=len,reverse=True)
-                self.vlens.append(len(tmp[0]))
+                self.lens.append(len(tmp[0]))
         else:
             com.cancel(f)
     
     def make_list(self):
         f = '[shared] logic.FastTable.make_list'
         if self.Success:
-            if self.vlst:
+            if self.lst:
                 try:
-                    self.vlst = list(self.vlst)
-                    for i in range(len(self.vlst)):
-                        self.vlst[i] = [str(item) \
-                                        for item in self.vlst[i]
-                                       ]
+                    self.lst = list(self.lst)
+                    for i in range(len(self.lst)):
+                        self.lst[i] = [str(item) \
+                                       for item in self.lst[i]
+                                      ]
                 except TypeError:
                     self.Success = False
                     mes = _('Only iterable objects are supported!')
-                    objs.mes(f,mes).warning()
+                    objs.get_mes(f,mes).show_warning()
             else:
                 self.Success = False
-                com.empty(f)
+                com.rep_empty(f)
         else:
             com.cancel(f)
     
     def run(self):
         self.make_list()
         self.transpose()
-        self.headers()
-        self.max_rows()
-        self.max_width()
+        self.set_headers()
+        self.set_max_rows()
+        self.set_max_width()
         self.add_gap()
-        self.lens()
+        self.get_lens()
         return self.report()
 
 
@@ -252,43 +253,43 @@ class FastTable:
 class MessageBuilder:
     
     def __init__(self,level):
-        self.values()
-        self._level = level
-        self.icon()
+        self.set_values()
+        self.level = level
+        self.set_icon()
     
-    def icon(self):
-        f = '[shared] logic.MessageBuilder.icon'
-        if not self._icon:
-            if self._level in (_('INFO'),_('DEBUG')):
+    def set_icon(self):
+        f = '[shared] logic.MessageBuilder.set_icon'
+        if not self.icon:
+            if self.level in (_('INFO'),_('DEBUG')):
                 prefix = 'info'
-            elif self._level == _('WARNING'):
+            elif self.level == _('WARNING'):
                 prefix = 'warning'
-            elif self._level == _('QUESTION'):
+            elif self.level == _('QUESTION'):
                 prefix = 'question'
             else:
                 prefix = 'error'
-            self._icon = objs.pdir().add('..','resources',prefix+'.gif')
-        if not os.path.exists(self._icon):
-            self._icon = ''
-            message = _('File "{}" was not found!').format(self._icon)
+            self.icon = objs.get_pdir().add('..','resources',prefix+'.gif')
+        if not os.path.exists(self.icon):
+            self.icon = ''
+            message = _('File "{}" was not found!').format(self.icon)
             Message (func    = f
                     ,message = message
-                    ).error()
+                    ).show_error()
     
     def reset(self,text='',title=''):
-        self._text  = text
-        self._title = title
+        self.text  = text
+        self.title = title
         self.sanitize()
     
-    def values(self):
-        self._text  = ''
-        self._title = ''
-        self._icon  = ''
-        self._level = _('INFO')
+    def set_values(self):
+        self.text  = ''
+        self.title = ''
+        self.icon  = ''
+        self.level = _('INFO')
     
     def sanitize(self):
-        self._title = com.sanitize(self._title) + ':'
-        self._text  = com.sanitize(self._text)
+        self.title = com.sanitize(self.title) + ':'
+        self.text  = com.sanitize(self.text)
 
 
 
@@ -298,31 +299,31 @@ class Message:
         self.func    = func
         self.message = message
 
-    def error(self):
+    def show_error(self):
         log.append (self.func
                    ,_('ERROR')
                    ,self.message
                    )
     
-    def warning(self):
+    def show_warning(self):
         log.append (self.func
                    ,_('WARNING')
                    ,self.message
                    )
     
-    def info(self):
+    def show_info(self):
         log.append (self.func
                    ,_('INFO')
                    ,self.message
                    )
     
-    def debug(self):
+    def show_debug(self):
         log.append (self.func
                    ,_('DEBUG')
                    ,self.message
                    )
     
-    def question(self):
+    def show_question(self):
         log.append (self.func
                    ,_('QUESTION')
                    ,self.message
@@ -332,15 +333,20 @@ class Message:
         except (EOFError, KeyboardInterrupt):
             # The user pressed 'Ctrl-c' or 'Ctrl-d'
             answer = ''
-        if answer.lower() == 'y':
+        answer = answer.lower().strip()
+        if answer in ('y',''):
             return True
+        elif answer == 'n':
+            return False
+        else:
+            self.show_question()
 
 
 
 class Font:
     
     def __init__(self,name,xborder=0,yborder=0):
-        self.values()
+        self.set_values()
         if name:
             self.reset (name    = name
                        ,xborder = xborder
@@ -350,67 +356,67 @@ class Font:
     def set_text(self,text):
         f = '[shared] logic.Font.set_text'
         if text:
-            self._text = text
+            self.text = text
         else:
-            com.empty(f)
+            com.rep_empty(f)
     
-    def values(self):
-        self._font   = None
-        self._family = ''
-        self._name   = ''
-        self._text   = ''
-        self._size   = 0
-        self._height = 0
-        self._width  = 0
+    def set_values(self):
+        self.font    = None
+        self.family  = ''
+        self.name    = ''
+        self.text    = ''
+        self.size    = 0
+        self.height  = 0
+        self.width   = 0
         self.xborder = 0
         self.yborder = 0
     
-    def width(self):
-        f = '[shared] logic.Font.width'
-        if self._width:
-            self._width += self.xborder
+    def set_width(self):
+        f = '[shared] logic.Font.set_width'
+        if self.width:
+            self.width += self.xborder
             '''
             Message (func    = f
-                    ,message = '%d' % self._width
-                    ).debug()
+                    ,message = '%d' % self.width
+                    ).show_debug()
             '''
     
-    def height(self):
-        f = '[shared] logic.Font.height'
-        if self._height:
-            lines = len(self._text.splitlines())
+    def set_height(self):
+        f = '[shared] logic.Font.set_height'
+        if self.set_height:
+            lines = len(self.text.splitlines())
             if lines:
-                self._height = self._height * lines
-            self._height += self.yborder
+                self.height = self.height * lines
+            self.height += self.yborder
             '''
             Message (func    = f
-                    ,message = '%d' % self._height
-                    ).debug()
+                    ,message = '%d' % self.height
+                    ).show_debug()
             '''
         else:
-            com.empty(f)
+            com.rep_empty(f)
     
     def reset(self,name,xborder=0,yborder=0):
-        self.values()
-        self._name   = name
+        self.set_values()
+        self.name    = name
         self.xborder = xborder
         self.yborder = yborder
-        self.attr()
+        self.set_attr()
     
-    def attr(self):
-        f = '[shared] logic.Font.attr'
-        if self._name:
-            match = re.match('([aA-zZ].*) (\d+)',self._name)
+    def set_attr(self):
+        f = '[shared] logic.Font.set_attr'
+        if self.name:
+            match = re.match('([aA-zZ].*) (\d+)',self.name)
             if match:
-                self._family = match.group(1)
-                self._size   = int(match.group(2))
+                self.family = match.group(1)
+                self.size   = int(match.group(2))
             else:
-                message = _('Wrong input data: "{}"!').format(self._name)
+                message = _('Wrong input data: "{}"!').format(self.name)
                 Message (func    = f
                         ,message = message
-                        ).error()
+                        ).show_error()
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
 
 
@@ -418,42 +424,42 @@ class Hotkeys:
     ''' Transform tkinter bindings to a human readable form
         Use the following key names:
         http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/key-names.html
-        #todo: add remaining keypad key
+        #TODO: add remaining keypad key
     '''
     def __init__(self,hotkeys,sep='; '):
-        self.Success  = True
-        self._hotkeys = hotkeys
-        self._sep     = sep
+        self.Success = True
+        self.hotkeys = hotkeys
+        self.sep     = sep
         self.check()
     
     def check(self):
         f = '[shared] logic.Hotkeys.check'
-        if self._hotkeys and self._sep:
-            if not isinstance(self._hotkeys,str) \
-            and not isinstance(self._hotkeys,tuple) \
-            and not isinstance(self._hotkeys,list):
+        if self.hotkeys and self.sep:
+            if not isinstance(self.hotkeys,str) \
+            and not isinstance(self.hotkeys,tuple) \
+            and not isinstance(self.hotkeys,list):
                 self.Success = False
-                mes = _('Wrong input data: "{}"!').format(self._hotkeys)
-                objs.mes(f,mes).warning()
+                mes = _('Wrong input data: "{}"!').format(self.hotkeys)
+                objs.get_mes(f,mes).show_warning()
         else:
             self.Success = False
-            #todo: do we need this warning?
-            com.empty(f)
+            #TODO: do we need this warning?
+            com.rep_empty(f)
     
     def _loop(self,pattern):
-        self._hotkeys = [hotkey for hotkey in self._hotkeys \
-                         if not pattern in hotkey
-                        ]
+        self.hotkeys = [hotkey for hotkey in self.hotkeys \
+                        if not pattern in hotkey
+                       ]
     
-    def keypad(self):
+    def set_keypad(self):
         ''' Both 'Return' (main key) and 'KP_Enter' (numeric keypad)
             usually do the same thing, so we just remove KP_Enter.
             The same relates to other keypad key.
         '''
-        f = '[shared] logic.Hotkeys.keypad'
+        f = '[shared] logic.Hotkeys.set_keypad'
         if self.Success:
-            if not isinstance(self._hotkeys,str):
-                for hotkey in self._hotkeys:
+            if not isinstance(self.hotkeys,str):
+                for hotkey in self.hotkeys:
                     ''' Do not use '<' and '>' signs here since
                         the combination can actually be
                         '<Control-KP_Enter>'.
@@ -471,15 +477,15 @@ class Hotkeys:
         else:
             com.cancel(f)
     
-    def hotkeys(self):
-        f = '[shared] logic.Hotkeys.hotkeys'
+    def set_hotkeys(self):
+        f = '[shared] logic.Hotkeys.set_hotkeys'
         if self.Success:
-            self._hotkeys = [self.replace(hotkey) \
-                             for hotkey in self._hotkeys
-                            ]
-            self._hotkeys = [hotkey for hotkey in self._hotkeys \
-                             if hotkey
-                            ]
+            self.hotkeys = [self.replace(hotkey) \
+                            for hotkey in self.hotkeys
+                           ]
+            self.hotkeys = [hotkey for hotkey in self.hotkeys \
+                            if hotkey
+                           ]
         else:
             com.cancel(f)
     
@@ -487,12 +493,12 @@ class Hotkeys:
         f = '[shared] logic.Hotkeys.run'
         result = ''
         if self.Success:
-            if isinstance(self._hotkeys,str):
-                result = self.replace(self._hotkeys)
+            if isinstance(self.hotkeys,str):
+                result = self.replace(self.hotkeys)
             else:
-                self.keypad()
-                self.hotkeys()
-                result = self._sep.join(self._hotkeys)
+                self.set_keypad()
+                self.set_hotkeys()
+                result = self.sep.join(self.hotkeys)
         else:
             com.cancel(f)
         return result
@@ -558,22 +564,22 @@ class Hotkeys:
             match = re.match('.*-([A-Z])$',key)
             if match:
                 group = match.group(1)
-                key   = key.replace ('-'       + group
-                                    ,'-Shift-' + group
-                                    )
+                key = key.replace ('-'       + group
+                                  ,'-Shift-' + group
+                                  )
             ''' We make letters upper-case in order to avoid confusion,
                 e.g., when using 'i', 'l' and '1'.
             '''
             match = re.match('.*-([a-z])$',key)
             if match:
                 group = match.group(1)
-                key   = key.replace ('-' + group
-                                    ,'-' + group.upper()
-                                    )
+                key = key.replace ('-' + group
+                                  ,'-' + group.upper()
+                                  )
             #key = key.replace('-','+')
         else:
-            #todo: do we need this warning?
-            self.empty(f)
+            #TODO: do we need this warning?
+            self.rep_empty(f)
         return key
 
 
@@ -581,38 +587,38 @@ class Hotkeys:
 class OSSpecific:
 
     def __init__(self):
-        self._name = ''
-        self.win_import()
+        self.name = ''
+        self.import_win()
 
-    def shift_tab(self):
-        if self.lin():
+    def get_shift_tab(self):
+        if self.is_lin():
             return '<Shift-ISO_Left_Tab>'
         else:
             return '<Shift-KeyPress-Tab>'
 
-    def win(self):
+    def is_win(self):
         return 'win' in sys.platform
 
-    def lin(self):
+    def is_lin(self):
         return 'lin' in sys.platform
 
-    def mac(self):
+    def is_mac(self):
         return 'mac' in sys.platform
 
-    def name(self):
-        if not self._name:
-            if self.win():
-                self._name = 'win'
-            elif self.lin():
-                self._name = 'lin'
-            elif self.mac():
-                self._name = 'mac'
+    def get_name(self):
+        if not self.name:
+            if self.is_win():
+                self.name = 'win'
+            elif self.is_lin():
+                self.name = 'lin'
+            elif self.is_mac():
+                self.name = 'mac'
             else:
-                self._name = 'unknown'
-        return self._name
+                self.name = 'unknown'
+        return self.name
 
-    def win_import(self):
-        if self.win():
+    def import_win(self):
+        if self.is_win():
             #http://mail.python.org/pipermail/python-win32/2012-July/012493.html
             _tz = os.getenv('TZ')
             if _tz is not None and '/' in _tz:
@@ -639,12 +645,12 @@ class OSSpecific:
 class Launch:
     #NOTE: 'Block' works only when a 'custom_app' is set
     def __init__(self,target='',Block=False):
-        self.values()
+        self.set_values()
         self.target = target
         self.Block  = Block
         # Do not shorten, Path is used further
         self.ipath  = Path(self.target)
-        self.ext    = self.ipath.extension().lower()
+        self.ext    = self.ipath.get_ext().lower()
         ''' We do not use the File class because the target can be a
             directory.
         '''
@@ -653,7 +659,7 @@ class Launch:
         else:
             self.TargetExists = False
 
-    def values(self):
+    def set_values(self):
         self.custom_app  = ''
         self.custom_args = []
     
@@ -661,7 +667,7 @@ class Launch:
         f = '[shared] logic.Launch._launch'
         if self.custom_args:
             mes = _('Custom arguments: "{}"').format(self.custom_args)
-            objs.mes(f,mes,True).debug()
+            objs.get_mes(f,mes,True).show_debug()
             try:
                 # Block the script till the called program is closed
                 if self.Block:
@@ -670,35 +676,35 @@ class Launch:
                     subprocess.Popen(self.custom_args)
             except:
                 mes = _('Failed to run "{}"!').format(self.custom_args)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
-    def _lin(self):
-        f = '[shared] logic.Launch._lin'
+    def _launch_lin(self):
+        f = '[shared] logic.Launch._launch_lin'
         try:
             os.system("xdg-open " + self.ipath.escape() + "&")
         except OSError:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
-            objs.mes(f,mes).error()
+            objs.get_mes(f,mes).show_error()
 
-    def _mac(self):
-        f = '[shared] logic.Launch._mac'
+    def _launch_mac(self):
+        f = '[shared] logic.Launch._launch_mac'
         try:
             os.system("open " + self.target)
         except:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
-            objs.mes(f,mes).error()
+            objs.get_mes(f,mes).show_error()
 
-    def _win(self):
-        f = '[shared] logic.Launch._win'
+    def _launch_win(self):
+        f = '[shared] logic.Launch._launch_win'
         try:
             os.startfile(self.target)
         except:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
-            objs.mes(f,mes).error()
+            objs.get_mes(f,mes).show_error()
 
-    def app(self,custom_app='',custom_args=[]):
+    def launch_app(self,custom_app='',custom_args=[]):
         self.custom_app  = custom_app
         self.custom_args = custom_args
         if self.custom_app:
@@ -718,25 +724,25 @@ class Launch:
             are usually installed with admin rights and cannot be
             compromised).
         '''
-        self.default()
+        self.launch_default()
 
-    def custom(self):
-        f = '[shared] logic.Launch.custom'
+    def launch_custom(self):
+        f = '[shared] logic.Launch.launch_custom'
         if self.TargetExists:
             self.custom_args = [self.custom_app,self.target]
             self._launch()
         else:
             com.cancel(f)
 
-    def default(self):
-        f = '[shared] logic.Launch.default'
+    def launch_default(self):
+        f = '[shared] logic.Launch.launch_default'
         if self.TargetExists:
-            if objs.os().lin():
-                self._lin()
-            elif objs._os.mac():
-                self._mac()
-            elif objs._os.win():
-                self._win()
+            if objs.get_os().is_lin():
+                self._launch_lin()
+            elif objs.os.is_mac():
+                self._launch_mac()
+            elif objs.os.is_win():
+                self._launch_win()
         else:
             com.cancel(f)
 
@@ -753,38 +759,38 @@ class WriteTextFile:
         if not self.file:
             self.Success = False
             mes = _('Not enough input data!')
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
 
     def _write(self,mode='w'):
         f = '[shared] logic.WriteTextFile._write'
         if mode == 'w' or mode == 'a':
             mes = _('Write file "{}"').format(self.file)
-            objs.mes(f,mes,True).info()
+            objs.get_mes(f,mes,True).show_info()
             try:
                 with open(self.file,mode,encoding='UTF-8') as fl:
                     fl.write(self.text)
             except:
                 self.Success = False
                 mes = _('Unable to write file "{}"!').format(self.file)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(mode,'a, w')
-            objs.mes(f,mes).error()
+            objs.get_mes(f,mes).show_error()
 
     def append(self,text=''):
         f = '[shared] logic.WriteTextFile.append'
         if self.Success:
             self.text = text
             if self.text:
-                ''' #todo: In the append mode the file is created if it
+                ''' #TODO: In the append mode the file is created if it
                     does not exist, but should we warn the user that we
                     create it from scratch?
                 '''
                 self._write('a')
             else:
                 mes = _('Not enough input data!')
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
             com.cancel(f)
 
@@ -799,7 +805,7 @@ class WriteTextFile:
                     self._write('w')
             else:
                 mes = _('Not enough input data!')
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
             com.cancel(f)
 
@@ -867,7 +873,6 @@ class Log:
 
 
 
-#todo: Do we really need this?
 class TextDic:
 
     def __init__(self,file,Sortable=False):
@@ -885,19 +890,19 @@ class TextDic:
         if self.Success:
             if self.Sortable:
                 old = self.lines()
-                self._list = list(set(self.list()))
-                new = self._lines = len(self._list)
+                self.lst = list(set(self.get_list()))
+                new = self.lines = len(self.lst)
                 mes = _('Entries deleted: {} ({}-{})')
                 mes = mes.format(old-new,old,new)
-                objs.mes(f,mes,True).info()
-                self.text = '\n'.join(self._list)
+                objs.get_mes(f,mes,True).show_info()
+                self.text = '\n'.join(self.lst)
                 # Update original and translation
                 self._split()
                 # After using set(), the original order was lost
                 self.sort()
             else:
                 mes = _('File "{}" is not sortable!').format(self.file)
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
             com.cancel(f)
 
@@ -905,14 +910,14 @@ class TextDic:
     def _join(self):
         f = '[shared] logic.TextDic._join'
         if len(self.orig) == len(self.transl):
-            self._lines = len(self.orig)
-            self._list  = []
-            for i in range(self._lines):
-                self._list.append(self.orig[i]+'\t'+self.transl[i])
-            self.text = '\n'.join(self._list)
+            self.lines = len(self.orig)
+            self.lst   = []
+            for i in range(self.lines):
+                self.lst.append(self.orig[i]+'\t'+self.transl[i])
+            self.text = '\n'.join(self.lst)
         else:
             mes = _('Wrong input data!')
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
 
     def _split(self):
         ''' We can use this to check integrity and/or update original
@@ -926,8 +931,8 @@ class TextDic:
             ''' Building lists takes ~0.1 longer without temporary
                 variables (now self._split() takes ~0.256)
             '''
-            for i in range(self._lines):
-                tmp_lst = self._list[i].split('\t')
+            for i in range(self.lines):
+                tmp_lst = self.lst[i].split('\t')
                 if len(tmp_lst) == 2:
                     self.orig.append(tmp_lst[0])
                     self.transl.append(tmp_lst[1])
@@ -935,14 +940,14 @@ class TextDic:
                     self.Success = False
                     # i+1: Count from 1
                     mes = _('Dictionary "{}": Incorrect line #{}: "{}"!')
-                    mes = mes.format(self.file,i+1,self._list[i])
-                    objs.mes(f,mes).warning()
+                    mes = mes.format(self.file,i+1,self.lst[i])
+                    objs.get_mes(f,mes).show_warning()
         else:
             self.Success = False
 
     def append(self,original,translation):
-        ''' #todo: skip repetitions
-            #todo: write a dictionary in an append mode after appending
+        ''' #TODO: skip repetitions
+            #TODO: write a dictionary in an append mode after appending
             to memory.
         '''
         f = '[shared] logic.TextDic.append'
@@ -952,45 +957,45 @@ class TextDic:
                 self.transl.append(translation)
                 self._join()
             else:
-                com.empty(f)
+                com.rep_empty(f)
         else:
             com.cancel(f)
 
     def delete_entry(self,entry_no): # Count from 1
-        ''' #todo: #fix: an entry which is only one in a dictionary is
+        ''' #TODO: #FIX: an entry which is only one in a dictionary is
             not deleted.
         '''
         f = '[shared] logic.TextDic.delete_entry'
         if self.Success:
             entry_no -= 1
-            if entry_no >= 0 and entry_no < self.lines():
+            if entry_no >= 0 and entry_no < self.get_lines():
                 del self.orig[entry_no]
                 del self.transl[entry_no]
                 self._join()
             else:
-                sub = '0 <= {} < {}'.format(entry_no,self.lines())
+                sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
                 mes = _('The condition "{}" is not observed!')
                 mes = mes.format(sub)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
 
     def edit_entry(self,entry_no,orig,transl): # Count from 1
-        ''' #todo: Add checking orig and transl (where needed) for
+        ''' #TODO: Add checking orig and transl (where needed) for
             a wrapper function.
         '''
         f = '[shared] logic.TextDic.edit_entry'
         if self.Success:
             entry_no -= 1
-            if entry_no >= 0 and entry_no < self.lines():
+            if entry_no >= 0 and entry_no < self.get_lines():
                 self.orig[entry_no] = orig
                 self.transl[entry_no] = transl
                 self._join()
             else:
-                sub = '0 <= {} < {}'.format(entry_no,self.lines())
+                sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
                 mes = _('The condition "{}" is not observed!')
                 mes = mes.format(sub)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
 
@@ -999,22 +1004,22 @@ class TextDic:
             self.text = self.iread.load()
         return self.text
 
-    def lines(self):
-        if self._lines == 0:
-            self._lines = len(self.list())
-        return self._lines
+    def get_lines(self):
+        if self.lines == 0:
+            self.lines = len(self.get_list())
+        return self.lines
 
-    def list(self):
-        if not self._list:
-            self._list = self.get().splitlines()
-        return self._list
+    def get_list(self):
+        if not self.lst:
+            self.lst = self.get().splitlines()
+        return self.lst
 
     def reset(self):
         self.text   = self.iread.load()
         self.orig   = []
         self.transl = []
-        self._list  = self.get().splitlines()
-        self._lines = len(self._list)
+        self.lst    = self.get().splitlines()
+        self.lines  = len(self.lst)
         self._split()
 
     # Sort a dictionary with the longest lines going first
@@ -1023,22 +1028,22 @@ class TextDic:
         if self.Success:
             if self.Sortable:
                 tmp_list = []
-                for i in range(len(self._list)):
+                for i in range(len(self.lst)):
                     tmp_list += [[len(self.orig[i])
                                  ,self.orig[i]
                                  ,self.transl[i]
                                  ]
                                 ]
                 tmp_list.sort(key=lambda x: x[0],reverse=True)
-                for i in range(len(self._list)):
+                for i in range(len(self.lst)):
                     self.orig[i]   = tmp_list[i][1]
                     self.transl[i] = tmp_list[i][2]
-                    self._list[i]  = self.orig[i] + '\t' \
+                    self.lst[i]    = self.orig[i] + '\t' \
                                                   + self.transl[i]
-                self.text = '\n'.join(self._list)
+                self.text = '\n'.join(self.lst)
             else:
                 mes = _('File "{}" is not sortable!').format(self.file)
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
             com.cancel(f)
 
@@ -1047,13 +1052,13 @@ class TextDic:
         tail_text = ''
         if self.Success:
             tail_len = globs['int']['tail_len']
-            if tail_len > self.lines():
-                tail_len = self.lines()
-            i = self.lines() - tail_len
+            if tail_len > self.get_lines():
+                tail_len = self.get_lines()
+            i = self.get_lines() - tail_len
             # We count from 1, therefore it is < and not <=
             while i < self.lines():
                 # i+1 by the same reason
-                tail_text += str(i+1) + ':' + '"' + self.list()[i] \
+                tail_text += str(i+1) + ':' + '"' + self.get_list()[i] \
                                       + '"\n'
                 i += 1
         else:
@@ -1076,28 +1081,28 @@ class ReadTextFile:
     def __init__(self,file):
         f = '[shared] logic.ReadTextFile.__init__'
         self.file    = file
-        self._text   = ''
-        self._list   = []
+        self.text    = ''
+        self.lst     = []
         self.Success = True
         if self.file and os.path.isfile(self.file):
             pass
         elif not self.file:
             self.Success = False
             mes = _('Empty input is not allowed!')
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
         elif not os.path.exists(self.file):
             self.Success = False
             mes = _('File "{}" has not been found!').format(self.file)
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
         else:
             self.Success = False
             mes = _('Wrong input data!')
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
 
     def _read(self,encoding):
         try:
             with open(self.file,'r',encoding=encoding) as fl:
-                self._text = fl.read()
+                self.text = fl.read()
         except:
             # Avoid UnicodeDecodeError, access errors, etc.
             pass
@@ -1105,7 +1110,7 @@ class ReadTextFile:
     def delete_bom(self):
         f = '[shared] logic.ReadTextFile.delete_bom'
         if self.Success:
-            self._text = self._text.replace('\N{ZERO WIDTH NO-BREAK SPACE}','')
+            self.text = self.text.replace('\N{ZERO WIDTH NO-BREAK SPACE}','')
         else:
             com.cancel(f)
 
@@ -1113,62 +1118,62 @@ class ReadTextFile:
     def get(self):
         f = '[shared] logic.ReadTextFile.get'
         if self.Success:
-            if not self._text:
+            if not self.text:
                 self.load()
         else:
             com.cancel(f)
-        return self._text
+        return self.text
 
     # Return a number of lines in the file. Returns 0 for an empty file.
-    def lines(self):
-        f = '[shared] logic.ReadTextFile.lines'
+    def get_lines(self):
+        f = '[shared] logic.ReadTextFile.get_lines'
         if self.Success:
-            return len(self.list())
+            return len(self.get_list())
         else:
             com.cancel(f)
 
-    def list(self):
-        f = '[shared] logic.ReadTextFile.list'
+    def get_list(self):
+        f = '[shared] logic.ReadTextFile.get_list'
         if self.Success:
-            if not self._list:
-                self._list = self.get().splitlines()
+            if not self.lst:
+                self.lst = self.get().splitlines()
         else:
             com.cancel(f)
         # len(None) causes an error
-        return self._list
+        return self.lst
 
     def load(self):
         f = '[shared] logic.ReadTextFile.load'
         if self.Success:
             mes = _('Load file "{}"').format(self.file)
-            Message(f,mes).info()
+            Message(f,mes).show_info()
             ''' We can try to define an encoding automatically, however,
                 this often spoils some symbols, so we just proceed with
                 try-except and the most popular encodings.
             '''
             self._read('UTF-8')
-            if not self._text:
+            if not self.text:
                 self._read('windows-1251')
-            if not self._text:
+            if not self.text:
                 self._read('windows-1252')
-            if not self._text:
+            if not self.text:
                 ''' The file cannot be read OR the file is empty (we
                     don't need empty files)
-                    #todo: Update the message
+                    #TODO: Update the message
                 '''
                 self.Success = False
                 mes = _('Unable to read file "{}"!').format(self.file)
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
             self.delete_bom()
         else:
             com.cancel(f)
-        return self._text
+        return self.text
 
 
 
 class Input:
 
-    def __init__(self,value,title='Input'):
+    def __init__(self,title='Input',value=''):
         self.title = title
         self.value = value
 
@@ -1178,19 +1183,19 @@ class Input:
         else:
             mes = _('Float is required at input, but found "{}"! Return 0.0')
             mes = mes.format(self.value)
-            objs.mes(self.title,mes).warning()
+            objs.get_mes(self.title,mes).show_warning()
             self.value = 0.0
         return self.value
     
-    def list(self):
+    def get_list(self):
         if isinstance(self.value,list):
             return self.value
         else:
             mes = _('Wrong input data!')
-            objs.mes(self.title,mes,True).warning()
+            objs.get_mes(self.title,mes,True).show_warning()
             return []
     
-    def integer(self,Negative=False):
+    def get_integer(self,Negative=False):
         if isinstance(self.value,int):
             return self.value
         else:
@@ -1200,7 +1205,7 @@ class Input:
                 self.value = int(self.value)
                 # Too frequent, almost useless
                 #mes = _('Convert "{}" to an integer').format(self.value)
-                #objs.mes(self.title,mes,True).debug()
+                #objs.get_mes(self.title,mes,True).show_debug()
             elif Negative and re.match('-\d+$',self.value):
                 ''' 'isinstance' will detect negative integers too,
                     however, we can also have a string at input.
@@ -1209,16 +1214,16 @@ class Input:
                 self.value = int(self.value.replace('-','',1))
                 self.value -= self.value * 2
                 mes = _('Convert "{}" to an integer').format(old)
-                objs.mes(self.title,mes,True).debug()
+                objs.get_mes(self.title,mes,True).show_debug()
             else:
                 mes = _('Integer is required at input, but found "{}"! Return 0')
                 mes = mes.format(self.value)
-                objs.mes(self.title,mes).warning()
+                objs.get_mes(self.title,mes).show_warning()
                 self.value = 0
         return self.value
 
     # Insert '' instead of 'None' into text widgets
-    def not_none(self):
+    def get_not_none(self):
         if not self.value:
             self.value = ''
         return self.value
@@ -1229,9 +1234,7 @@ class Text:
 
     def __init__(self,text,Auto=False):
         self.text = text
-        self.text = Input (title = 'Text.__init__'
-                          ,value = self.text
-                          ).not_none()
+        self.text = Input('Text.__init__',self.text).get_not_none()
         # This can be useful in many cases, e.g. after OCR
         if Auto:
             ''' This will remove symbols that cannot be shown in Tcl/Tk.
@@ -1243,11 +1246,11 @@ class Text:
             self.strip_lines()
             self.delete_duplicate_line_breaks()
             self.tabs2spaces()
-            self.trash()
+            self.delete_trash()
             self.replace_x()
             self.delete_duplicate_spaces()
-            self.yo()
-            self.text = OCR(text=self.text).common()
+            self.replace_yo()
+            self.text = OCR(text=self.text).run_common()
             self.delete_space_with_punctuation()
             ''' This is necessary even if we do strip for each line (we
                 need to strip '\n' at the beginning/end).
@@ -1260,7 +1263,7 @@ class Text:
         self.text = re.sub('\s\{\d+\}','',self.text)
         return self.text
     
-    def sim_symbols(self):
+    def replace_sim_syms(self):
         ''' Replace Cyrillic letters with similar Latin ones. This can
             be useful for English words in mostly Russian text.
         '''
@@ -1292,8 +1295,9 @@ class Text:
         return self.text
     
     # Getting rid of some useless symbols
-    def trash(self):
-        self.text = self.text.replace('· ','').replace('• ','').replace('¬','')
+    def delete_trash(self):
+        self.text = self.text.replace('· ','').replace('• ','')
+        self.text = self.text.replace('¬','')
     
     def toggle_case(self):
         if self.text == self.text.lower():
@@ -1302,7 +1306,7 @@ class Text:
             self.text = self.text.lower()
         return self.text
 
-    def quotations(self):
+    def replace_quotes(self):
         self.text = re.sub(r'"([a-zA-Z\d\(\[\{\(])',r'“\1',self.text)
         self.text = re.sub(r'([a-zA-Z\d\.\?\!\)])"',r'\1”',self.text)
         self.text = re.sub(r'"(\.\.\.[a-zA-Z\d])',r'“\1',self.text)
@@ -1319,7 +1323,7 @@ class Text:
             match = re.search(expr,self.text)
         return self.text
 
-    def country(self):
+    def get_country(self):
         if len(self.text) > 4:
             if self.text[-4:-2] == ', ':
                 if self.text[-1].isalpha() and self.text[-1].isupper() \
@@ -1334,7 +1338,7 @@ class Text:
         self.text = self.text.replace('\xa0',' ').replace('\x07',' ')
         return self.text
 
-    #todo: check
+    #TODO: check
     def delete_alphabetic_numeration(self):
         my_expr = ' [\(,\[]{0,1}[aA-zZ,аА-яЯ][\.,\),\]]( \D)'
         match = re.search(my_expr,self.text)
@@ -1391,7 +1395,7 @@ class Text:
                              ,closing_sym
                              ,self.text.count(closing_sym)
                              )
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
         return self.text
 
     def convert_line_breaks(self):
@@ -1428,7 +1432,7 @@ class Text:
                 in punc_array:
                     self.text = self.text[:-1]
         else:
-            com.empty(f)
+            com.rep_empty(f)
         return self.text
 
     def delete_figures(self):
@@ -1455,7 +1459,10 @@ class Text:
             self.text = self.text.replace (' ' + punc_array[i]
                                           ,punc_array[i]
                                           )
-        self.text = self.text.replace('“ ','“').replace(' ”','”').replace('( ','(').replace(' )',')').replace('[ ','[').replace(' ]',']').replace('{ ','{').replace(' }','}')
+        self.text = self.text.replace('“ ','“').replace(' ”','”')
+        self.text = self.text.replace('( ','(').replace(' )',')')
+        self.text = self.text.replace('[ ','[').replace(' ]',']')
+        self.text = self.text.replace('{ ','{').replace(' }','}')
         return self.text
 
     # Only for pattern '(YYYY-MM-DD)'
@@ -1533,7 +1540,7 @@ class Text:
         f = '[shared] logic.Text.split_by_comma'
         if (';' in self.text or ',' in self.text) and '\n' in self.text:
             mes = _('Commas and/or semicolons or line breaks can be used, but not altogether!')
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
         elif ';' in self.text or ',' in self.text:
             self.text = self.text.replace(',','\n')
             self.text = self.text.replace(';','\n')
@@ -1558,7 +1565,7 @@ class Text:
         except(ValueError,TypeError):
             mes = _('Failed to convert "{}" to an integer!')
             mes = mes.format(self.text)
-            objs.mes(f,mes,True).warning()
+            objs.get_mes(f,mes,True).show_warning()
         return par
 
     def str2float(self):
@@ -1569,7 +1576,7 @@ class Text:
         except(ValueError,TypeError):
             mes = _('Failed to convert "{}" to a floating-point number!')
             mes = mes.format(self.text)
-            objs.mes(f,mes,True).warning()
+            objs.get_mes(f,mes,True).show_warning()
         return par
 
     def strip_lines(self):
@@ -1584,13 +1591,13 @@ class Text:
         return self.text
 
     # This allows to shorten dictionaries
-    def yo(self):
+    def replace_yo(self):
         self.text = self.text.replace('Ё','Е')
         self.text = self.text.replace('ё','е')
         return self.text
 
     # Delete everything but alphas and digits
-    def alphanum(self):
+    def get_alphanum(self):
         self.text = ''.join([x for x in self.text if x.isalnum()])
         return self.text
         
@@ -1628,7 +1635,7 @@ class List:
         else:
             self.lst2 = list(lst2)
 
-    def shared(self):
+    def get_shared(self):
         return [item for item in self.lst2 if item in self.lst1]
     
     # Check if 'lst1' fully comprises 'lst2'
@@ -1638,7 +1645,7 @@ class List:
                 return False
         return True
     
-    def duplicates_low(self):
+    def get_duplicates_low(self):
         ''' Remove (case-insensitively) duplicate items (positioned
             after original items). Both lists must consist of strings.
         '''
@@ -1653,7 +1660,7 @@ class List:
         return self.lst1
     
     # Remove duplicate items (positioned after original items)
-    def duplicates(self):
+    def delete_duplicates(self):
         i = len(self.lst1) - 1
         while i >= 0:
             ind = self.lst1.index(self.lst1[i])
@@ -1715,7 +1722,7 @@ class List:
 
     # Find different elements (strict order)
     # Based on http://stackoverflow.com/a/788780
-    def diff(self):
+    def get_diff(self):
         seqm = difflib.SequenceMatcher(a=self.lst1,b=self.lst2)
         output = []
         for opcode, a0, a1, b0, b1 in seqm.get_opcodes():
@@ -1729,169 +1736,170 @@ class Time:
     ''' We constantly recalculate each value because they depend on each
         other.
     '''
-    def __init__ (self,_timestamp=None,pattern='%Y-%m-%d'):
-        self.reset (_timestamp = _timestamp
-                   ,pattern    = pattern
+    def __init__ (self,tstamp=None,pattern='%Y-%m-%d'):
+        self.reset (tstamp  = tstamp
+                   ,pattern = pattern
                    )
 
-    def reset(self,_timestamp=None,pattern='%Y-%m-%d'):
-        self.Success    = True
-        self.pattern    = pattern
-        self._timestamp = _timestamp
-        self._instance  = self._date = self._year = self._month_abbr \
-                        = self._month_name = ''
+    def set_values(self):
+        self.Success = True
+        self.date = self.year = self.month_abbr = self.month_name = ''
+        self.inst = None
+    
+    def reset(self,tstamp=None,pattern='%Y-%m-%d'):
+        self.set_values()
+        self.pattern = pattern
+        self.tstamp  = tstamp
         # Prevent recursion
-        if self._timestamp is None:
-            self.todays_date()
+        if self.tstamp is None:
+            self.get_todays_date()
         else:
-            self.instance()
+            self.get_instance()
 
     def add_days(self,days_delta):
         f = '[shared] logic.Time.add_days'
         if self.Success:
-            if not self._instance:
-                self.instance()
             try:
-                self._instance += datetime.timedelta(days=days_delta)
+                self.inst = self.get_instance() \
+                          + datetime.timedelta(days=days_delta)
             except:
                 self.Success = False
                 mes = _('Set time parameters are incorrect or not supported.')
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
             com.cancel(f)
 
-    def date(self):
-        f = '[shared] logic.Time.date'
+    def get_date(self):
+        f = '[shared] logic.Time.get_date'
         if self.Success:
-            if not self._instance:
-                self.instance()
             try:
-                self._date = self._instance.strftime(self.pattern)
+                self.date = self.get_instance().strftime(self.pattern)
             except:
                 self.Success = False
                 mes = _('Set time parameters are incorrect or not supported.')
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
             com.cancel(f)
-        return self._date
+        return self.date
 
-    def instance(self):
-        f = '[shared] logic.Time.instance'
+    def get_instance(self):
+        f = '[shared] logic.Time.get_instance'
         if self.Success:
-            if self._timestamp is None:
-                self.timestamp()
-            try:
-                self._instance = datetime.datetime.fromtimestamp(self._timestamp)
-            except Exception as e:
-                self.Success = False
-                mes = _('Set time parameters are incorrect or not supported.\n\nDetails: {}')
-                mes = mes.format(e)
-                objs.mes(f,mes).warning()
+            if self.inst is None:
+                if self.tstamp is None:
+                    self.get_timestamp()
+                try:
+                    self.inst = datetime.datetime.fromtimestamp(self.tstamp)
+                except Exception as e:
+                    self.Success = False
+                    mes = _('Set time parameters are incorrect or not supported.\n\nDetails: {}')
+                    mes = mes.format(e)
+                    objs.get_mes(f,mes).show_warning()
         else:
             com.cancel(f)
-        return self._instance
+        return self.inst
 
-    def timestamp(self):
-        f = '[shared] logic.Time.timestamp'
+    def get_timestamp(self):
+        f = '[shared] logic.Time.get_timestamp'
         if self.Success:
-            if not self._date:
-                self.date()
+            if not self.date:
+                self.get_date()
             try:
-                self._timestamp = time.mktime(datetime.datetime.strptime(self._date,self.pattern).timetuple())
+                self.tstamp = time.mktime(datetime.datetime.strptime(self.date,self.pattern).timetuple())
             except:
                 self.Success = False
                 mes = _('Set time parameters are incorrect or not supported.')
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
             com.cancel(f)
-        return self._timestamp
+        return self.tstamp
 
     def is_monday(self):
         f = '[shared] logic.Time.is_monday'
         if self.Success:
-            if not self._instance:
-                self.instance()
-            if datetime.datetime.weekday(self._instance) == 0:
+            if not self.inst:
+                self.get_instance()
+            if datetime.datetime.weekday(self.inst) == 0:
                 return True
         else:
             com.cancel(f)
 
-    def month_name(self):
-        f = '[shared] logic.Time.month_name'
+    def get_month_name(self):
+        f = '[shared] logic.Time.get_month_name'
         if self.Success:
-            if not self._instance:
-                self.instance()
-            self._month_name = calendar.month_name \
-                             [Text (text = self._instance.strftime("%m")
-                                   ,Auto = False
-                                   ).str2int()
-                             ]
+            if not self.inst:
+                self.get_instance()
+            self.month_name = calendar.month_name \
+                              [Text (text = self.inst.strftime("%m")
+                                    ,Auto = False
+                                    ).str2int()
+                              ]
         else:
             com.cancel(f)
-        return self._month_name
+        return self.month_name
 
     def localize_month_abbr(self):
         f = '[shared] logic.Time.localize_month_abbr'
-        if self._month_abbr == 'Jan':
-            self._month_abbr = _('Jan')
-        elif self._month_abbr == 'Feb':
-            self._month_abbr = _('Feb')
-        elif self._month_abbr == 'Mar':
-            self._month_abbr = _('Mar')
-        elif self._month_abbr == 'Apr':
-            self._month_abbr = _('Apr')
-        elif self._month_abbr == 'May':
-            self._month_abbr = _('May')
-        elif self._month_abbr == 'Jun':
-            self._month_abbr = _('Jun')
-        elif self._month_abbr == 'Jul':
-            self._month_abbr = _('Jul')
-        elif self._month_abbr == 'Aug':
-            self._month_abbr = _('Aug')
-        elif self._month_abbr == 'Sep':
-            self._month_abbr = _('Sep')
-        elif self._month_abbr == 'Oct':
-            self._month_abbr = _('Oct')
-        elif self._month_abbr == 'Nov':
-            self._month_abbr = _('Nov')
-        elif self._month_abbr == 'Dec':
-            self._month_abbr = _('Dec')
+        if self.month_abbr == 'Jan':
+            self.month_abbr = _('Jan')
+        elif self.month_abbr == 'Feb':
+            self.month_abbr = _('Feb')
+        elif self.month_abbr == 'Mar':
+            self.month_abbr = _('Mar')
+        elif self.month_abbr == 'Apr':
+            self.month_abbr = _('Apr')
+        elif self.month_abbr == 'May':
+            self.month_abbr = _('May')
+        elif self.month_abbr == 'Jun':
+            self.month_abbr = _('Jun')
+        elif self.month_abbr == 'Jul':
+            self.month_abbr = _('Jul')
+        elif self.month_abbr == 'Aug':
+            self.month_abbr = _('Aug')
+        elif self.month_abbr == 'Sep':
+            self.month_abbr = _('Sep')
+        elif self.month_abbr == 'Oct':
+            self.month_abbr = _('Oct')
+        elif self.month_abbr == 'Nov':
+            self.month_abbr = _('Nov')
+        elif self.month_abbr == 'Dec':
+            self.month_abbr = _('Dec')
         else:
             mes = _('Wrong input data!')
-            objs.mes(f,mes,True).warning()
-        return self._month_abbr
+            objs.get_mes(f,mes,True).show_warning()
+        return self.month_abbr
     
-    def month_abbr(self):
-        f = '[shared] logic.Time.month_abbr'
+    def get_month_abbr(self):
+        f = '[shared] logic.Time.get_month_abbr'
         if self.Success:
-            if not self._instance:
-                self.instance()
-            self._month_abbr = calendar.month_abbr \
-                             [Text (text = self._instance.strftime("%m")
-                                   ,Auto = False
-                                   ).str2int()
-                             ]
+            if not self.inst:
+                self.get_instance()
+            self.month_abbr = calendar.month_abbr \
+                              [Text (text = self.inst.strftime("%m")
+                                    ,Auto = False
+                                    ).str2int()
+                              ]
         else:
             com.cancel(f)
-        return self._month_abbr
+        return self.month_abbr
 
-    def todays_date(self):
-        self._instance = datetime.datetime.today()
+    def get_todays_date(self):
+        self.inst = datetime.datetime.today()
 
-    def year(self):
-        f = '[shared] logic.Time.year'
+    def get_year(self):
+        f = '[shared] logic.Time.get_year'
         if self.Success:
-            if not self._instance:
-                self.instance()
+            if not self.inst:
+                self.get_instance()
             try:
-                self._year = self._instance.strftime("%Y")
+                self.year = self.inst.strftime("%Y")
             except:
                 self.Success = False
                 mes = _('Set time parameters are incorrect or not supported.')
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
             com.cancel(f)
-        return self._year
+        return self.year
 
 
 
@@ -1920,18 +1928,18 @@ class File:
         elif not self.file:
             self.Success = False
             mes = _('Empty input is not allowed!')
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
         elif not os.path.exists(self.file):
             self.Success = False
             mes = _('File "{}" has not been found!').format(self.file)
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
         else:
             self.Success = False
             mes = _('The object "{}" is not a file!').format(self.file)
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
 
-    def size(self,Follow=True):
-        f = '[shared] logic.File.size'
+    def get_size(self,Follow=True):
+        f = '[shared] logic.File.get_size'
         result = 0
         if self.Success:
             try:
@@ -1947,7 +1955,7 @@ class File:
                     a broken symbolic link.
                 '''
                 mes = _('Operation has failed!\nDetails: {}').format(e)
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
             com.cancel(f)
         return result
@@ -1956,32 +1964,32 @@ class File:
         f = '[shared] logic.File._copy'
         Success = True
         mes = _('Copy "{}" to "{}"').format(self.file,self.dest)
-        objs.mes(f,mes,True).info()
+        objs.get_mes(f,mes,True).show_info()
         try:
             shutil.copyfile(self.file,self.dest)
         except:
             Success = False
             mes = _('Failed to copy file "{}" to "{}"!')
             mes = mes.format(self.file,self.dest)
-            objs.mes(f,mes).error()
+            objs.get_mes(f,mes).show_error()
         return Success
 
     def _move(self):
         f = '[shared] logic.File._move'
         Success = True
         mes = _('Move "{}" to "{}"').format(self.file,self.dest)
-        objs.mes(f,mes,True).info()
+        objs.get_mes(f,mes,True).show_info()
         try:
             shutil.move(self.file,self.dest)
         except:
             Success = False
             mes = _('Failed to move "{}" to "{}"!')
             mes = mes.format(self.file,self.dest)
-            objs.mes(f,mes).error()
+            objs.get_mes(f,mes).show_error()
         return Success
 
-    def access_time(self):
-        f = '[shared] logic.File.access_time'
+    def get_access_time(self):
+        f = '[shared] logic.File.get_access_time'
         if self.Success:
             try:
                 self.atime = os.path.getatime(self.file)
@@ -1990,7 +1998,7 @@ class File:
             except:
                 mes = _('Failed to get the date of the file "{}"!')
                 mes = mes.format(self.file)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
 
@@ -2001,14 +2009,14 @@ class File:
             if self.file.lower() == self.dest.lower():
                 mes = _('Unable to copy the file "{}" to iself!')
                 mes = mes.format(self.file)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
             elif com.rewrite (file    = self.dest
                              ,Rewrite = self.Rewrite
                              ):
                 Success = self._copy()
             else:
                 mes = _('Operation has been canceled by the user.')
-                objs.mes(f,mes,True).info()
+                objs.get_mes(f,mes,True).show_info()
         else:
             com.cancel(f)
         return Success
@@ -2017,18 +2025,18 @@ class File:
         f = '[shared] logic.File.delete'
         if self.Success:
             mes = _('Delete "{}"').format(self.file)
-            objs.mes(f,mes,True).info()
+            objs.get_mes(f,mes,True).show_info()
             try:
                 os.remove(self.file)
                 return True
             except:
                 mes = _('Failed to delete file "{}"!').format(self.file)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
 
-    def modification_time(self):
-        f = '[shared] logic.File.modification_time'
+    def get_modification_time(self):
+        f = '[shared] logic.File.get_modification_time'
         if self.Success:
             try:
                 self.mtime = os.path.getmtime(self.file)
@@ -2037,7 +2045,7 @@ class File:
             except:
                 mes = _('Failed to get the date of the file "{}"!')
                 mes = mes.format(self.file)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
 
@@ -2048,14 +2056,14 @@ class File:
             if self.file.lower() == self.dest.lower():
                 mes = _('Moving is not necessary, because the source and destination are identical ({}).')
                 mes = mes.format(self.file)
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
             elif com.rewrite (file    = self.dest
                              ,Rewrite = self.Rewrite
                              ):
                 Success = self._move()
             else:
                 mes = _('Operation has been canceled by the user.')
-                objs.mes(f,mes,True).info()
+                objs.get_mes(f,mes,True).show_info()
         else:
             com.cancel(f)
         return Success
@@ -2066,13 +2074,13 @@ class File:
             if self.atime and self.mtime:
                 mes = _('Change the time of the file "{}" to {}')
                 mes = mes.format(self.file,(self.atime,self.mtime))
-                objs.mes(f,mes,True).info()
+                objs.get_mes(f,mes,True).show_info()
                 try:
                     os.utime(self.file,(self.atime,self.mtime))
                 except:
                     mes = _('Failed to change the time of the file "{}" to "{}"!')
                     mes = mes.format(self.file,(self.atime,self.mtime))
-                    objs.mes(f,mes).error()
+                    objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
 
@@ -2083,8 +2091,8 @@ class Path:
     def __init__(self,path):
         self.reset(path)
 
-    def free_space(self):
-        f = '[shared] logic.Path.free_space'
+    def get_free_space(self):
+        f = '[shared] logic.Path.get_free_space'
         result = 0
         if self.path:
             if os.path.exists(self.path):
@@ -2094,23 +2102,23 @@ class Path:
                 except Exception as e:
                     mes = _('Operation has failed!\nDetails: {}')
                     mes = mes.format(e)
-                    objs.mes(f,mes).error()
+                    objs.get_mes(f,mes).show_error()
             else:
                 mes = _('Wrong input data: "{}"!').format(self.path)
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
-            com.empty(f)
+            com.rep_empty(f)
         return result
     
-    def _splitpath(self):
-        if not self._split:
-            self._split = os.path.splitext(self.basename())
-        return self._split
+    def _split_path(self):
+        if not self.split:
+            self.split = os.path.splitext(self.get_basename())
+        return self.split
 
-    def basename(self):
-        if not self._basename:
-            self._basename = os.path.basename(self.path)
-        return self._basename
+    def get_basename(self):
+        if not self.basename:
+            self.basename = os.path.basename(self.path)
+        return self.basename
 
     # This will recursively (by design) create self.path
     def create(self):
@@ -2122,38 +2130,38 @@ class Path:
                 if os.path.isdir(self.path):
                     mes = _('Directory "{}" already exists.')
                     mes = mes.format(self.path)
-                    objs.mes(f,mes,True).info()
+                    objs.get_mes(f,mes,True).show_info()
                 else:
                     Success = False
                     mes = _('The path "{}" is invalid!')
                     mes = mes.format(self.path)
-                    objs.mes(f,mes).warning()
+                    objs.get_mes(f,mes).show_warning()
             else:
                 mes = _('Create directory "{}"').format(self.path)
-                objs.mes(f,mes,True).info()
+                objs.get_mes(f,mes,True).show_info()
                 try:
-                    #todo: consider os.mkdir
+                    #TODO: consider os.mkdir
                     os.makedirs(self.path)
                 except:
                     Success = False
                     mes = _('Failed to create directory "{}"!')
                     mes = mes.format(self.path)
-                    objs.mes(f,mes).error()
+                    objs.get_mes(f,mes).show_error()
         else:
             Success = False
-            com.empty(f)
+            com.rep_empty(f)
         return Success
 
     def delete_inappropriate_symbols(self):
         ''' These symbols may pose a problem while opening files
-            #todo: check whether this is really necessary
+            #TODO: check whether this is really necessary
         '''
-        return self.filename().replace("'",'').replace("&",'')
+        return self.get_filename().replace("'",'').replace("&",'')
 
-    def dirname(self):
-        if not self._dirname:
-            self._dirname = os.path.dirname(self.path)
-        return self._dirname
+    def get_dirname(self):
+        if not self.dirname:
+            self.dirname = os.path.dirname(self.path)
+        return self.dirname
 
     # In order to use xdg-open, we need to escape some characters first
     def escape(self):
@@ -2161,17 +2169,17 @@ class Path:
         return self.path
 
     # An extension with a dot
-    def extension(self):
-        if not self._extension:
-            if len(self._splitpath()) > 1:
-                self._extension = self._splitpath()[1]
-        return self._extension
+    def get_ext(self):
+        if not self.extension:
+            if len(self._split_path()) > 1:
+                self.extension = self._split_path()[1]
+        return self.extension
 
-    def filename(self):
-        if not self._filename:
-            if len(self._splitpath()) >= 1:
-                self._filename = self._splitpath()[0]
-        return self._filename
+    def get_filename(self):
+        if not self.filename:
+            if len(self._split_path()) >= 1:
+                self.filename = self._split_path()[0]
+        return self.filename
 
     def reset(self,path):
         # Prevent 'NoneType'
@@ -2191,13 +2199,13 @@ class Path:
         '''
         if self.path != '/':
             self.path = self.path.rstrip('//')
-        self._basename = self._dirname = self._extension \
-                       = self._filename = self._split = self._date = ''
-        self.parts     = []
+        self.basename = self.dirname = self.extension \
+                      = self.filename = self.split = self.date = ''
+        self.parts = []
 
     def split(self):
         if not self.parts:
-            #todo: use os.path.split
+            #TODO: use os.path.split
             self.parts = self.path.split(os.path.sep)
             i = 0
             tmp_str = ''
@@ -2226,12 +2234,12 @@ class WriteBinary:
             self.fragm   = None
         else:
             self.Success = False
-            com.empty(f)
+            com.rep_empty(f)
 
     def _write(self,mode='w+b'):
         f = '[shared] logic.WriteBinary._write'
         mes = _('Write file "{}"').format(self.file)
-        objs.mes(f,mes,True).info()
+        objs.get_mes(f,mes,True).show_info()
         if mode == 'w+b' or mode == 'a+b':
             try:
                 with open(self.file,mode) as fl:
@@ -2243,11 +2251,11 @@ class WriteBinary:
                 self.Success = False
                 mes = _('Unable to write file "{}"!\n\nDetails: {}')
                 mes = mes.format(self.file,e)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(mode,'w+b, a+b')
-            objs.mes(f,mes).error()
+            objs.get_mes(f,mes).show_error()
 
     def append(self,fragm):
         f = '[shared] logic.WriteBinary.append'
@@ -2256,7 +2264,7 @@ class WriteBinary:
             if self.fragm:
                 self._write(mode='a+b')
             else:
-                com.empty(f)
+                com.rep_empty(f)
         else:
             com.cancel(f)
 
@@ -2269,7 +2277,7 @@ class WriteBinary:
                 self._write(mode='w+b')
             else:
                 mes = _('Operation has been canceled by the user.')
-                Message(f,mes).info()
+                Message(f,mes).show_info()
         else:
             com.cancel(f)
 
@@ -2292,20 +2300,20 @@ class Dic:
         f = '[shared] logic.Dic._delete_duplicates'
         if self.Success:
             if self.Sortable:
-                old = self.lines()
-                self._list = list(set(self.list()))
-                new = self._lines = len(self._list)
+                old = self.get_lines()
+                self.lst = list(set(self.get_list()))
+                new = self.lines = len(self.lst)
                 mes = _('Entries deleted: {} ({}-{})')
                 mes = mes.format(old-new,old,new)
-                objs.mes(f,mes,True).info()
-                self.text = '\n'.join(self._list)
+                objs.get_mes(f,mes,True).show_info()
+                self.text = '\n'.join(self.lst)
                 # Update original and translation
                 self._split()
                 # After using set(), the original order was lost
                 self.sort()
             else:
                 mes = _('File "{}" is not sortable!').format(self.file)
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
             com.cancel(f)
 
@@ -2313,14 +2321,14 @@ class Dic:
     def _join(self):
         f = '[shared] logic.Dic._join'
         if len(self.orig) == len(self.transl):
-            self._lines = len(self.orig)
-            self._list = []
-            for i in range(self._lines):
-                self._list.append(self.orig[i]+'\t'+self.transl[i])
-            self.text = '\n'.join(self._list)
+            self.lines = len(self.orig)
+            self.lst   = []
+            for i in range(self.lines):
+                self.lst.append(self.orig[i]+'\t'+self.transl[i])
+            self.text = '\n'.join(self.lst)
         else:
             mes = _('Wrong input data!')
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
 
     def _split(self):
         ''' We can use this to check integrity and/or update original
@@ -2333,8 +2341,8 @@ class Dic:
             ''' Building lists takes ~0.1 longer without temporary
                 variables (now self._split() takes ~0.256)
             '''
-            for i in range(self._lines):
-                tmp_lst = self._list[i].split('\t')
+            for i in range(self.lines):
+                tmp_lst = self.lst[i].split('\t')
                 if len(tmp_lst) == 2:
                     self.orig.append(tmp_lst[0])
                     self.transl.append(tmp_lst[1])
@@ -2356,12 +2364,12 @@ class Dic:
             message = ', '.join(self.errors)
             mes = _('The following lines cannot be parsed:')
             mes += '\n' + message
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
 
     def append(self,original,translation):
-        ''' #todo: write a dictionary in an append mode after appending
+        ''' #TODO: write a dictionary in an append mode after appending
                    to memory.
-            #todo: skip repetitions
+            #TODO: skip repetitions
         '''
         f = '[shared] logic.Dic.append'
         if self.Success:
@@ -2370,47 +2378,47 @@ class Dic:
                 self.transl.append(translation)
                 self._join()
             else:
-                com.empty(f)
+                com.rep_empty(f)
         else:
             com.cancel(f)
 
     # Count from 1
     def delete_entry(self,entry_no):
-        ''' #todo: fix: an entry which is only one in a dictionary is
+        ''' #TODO: fix: an entry which is only one in a dictionary is
             not deleted.
         '''
         f = '[shared] logic.Dic.delete_entry'
         if self.Success:
             entry_no -= 1
-            if entry_no >= 0 and entry_no < self.lines():
+            if entry_no >= 0 and entry_no < self.get_lines():
                 del self.orig[entry_no]
                 del self.transl[entry_no]
                 self._join()
             else:
-                sub = '0 <= {} < {}'.format(entry_no,self.lines())
+                sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
                 mes = _('The condition "{}" is not observed!')
                 mes = mes.format(sub)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
 
     # Count from 1
     def edit_entry(self,entry_no,orig,transl):
-        ''' #todo: Add checking orig and transl (where needed) for
+        ''' #TODO: Add checking orig and transl (where needed) for
             a wrapper function.
         '''
         f = '[shared] logic.Dic.edit_entry'
         if self.Success:
             entry_no -= 1
-            if entry_no >= 0 and entry_no < self.lines():
+            if entry_no >= 0 and entry_no < self.get_lines():
                 self.orig[entry_no] = orig
                 self.transl[entry_no] = transl
                 self._join()
             else:
-                sub = '0 <= {} < {}'.format(entry_no,self.lines())
+                sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
                 mes = _('The condition "{}" is not observed!')
                 mes = mes.format(sub)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
 
@@ -2419,27 +2427,27 @@ class Dic:
             self.text = self.iread.load()
         return self.text
 
-    def lines(self):
-        if self._lines == 0:
-            self._lines = len(self.list())
-        return self._lines
+    def get_lines(self):
+        if self.lines == 0:
+            self.lines = len(self.get_list())
+        return self.lines
 
-    def list(self):
-        if not self._list:
-            self._list = self.get().splitlines()
-        return self._list
+    def get_list(self):
+        if not self.lst:
+            self.lst = self.get().splitlines()
+        return self.lst
 
     def reset(self):
         self.text   = self.iread.load()
         self.orig   = []
         self.transl = []
-        self._list  = self.get().splitlines()
+        self.lst    = self.get().splitlines()
         # Delete empty and commented lines
-        self._list  = [line for line in self._list if line \
-                       and not line.startswith('#')
-                      ]
-        self.text   = '\n'.join(self._list)
-        self._lines = len(self._list)
+        self.lst = [line for line in self.lst if line \
+                    and not line.startswith('#')
+                   ]
+        self.text  = '\n'.join(self.lst)
+        self.lines = len(self.lst)
         self._split()
 
     # Sort a dictionary with the longest lines going first
@@ -2448,21 +2456,21 @@ class Dic:
         if self.Success:
             if self.Sortable:
                 tmp_list = []
-                for i in range(len(self._list)):
+                for i in range(len(self.lst)):
                     tmp_list += [[len(self.orig[i])
                                  ,self.orig[i]
                                  ,self.transl[i]
                                  ]
                                 ]
                 tmp_list.sort(key=lambda x: x[0],reverse=True)
-                for i in range(len(self._list)):
+                for i in range(len(self.lst)):
                     self.orig[i] = tmp_list[i][1]
                     self.transl[i] = tmp_list[i][2]
-                    self._list[i] = self.orig[i] + '\t' + self.transl[i]
-                self.text = '\n'.join(self._list)
+                    self.lst[i] = self.orig[i] + '\t' + self.transl[i]
+                self.text = '\n'.join(self.lst)
             else:
                 mes = _('File "{}" is not sortable!').format(self.file)
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
             com.cancel(f)
 
@@ -2471,13 +2479,13 @@ class Dic:
         tail_text = ''
         if self.Success:
             tail_len = globs['int']['tail_len']
-            if tail_len > self.lines():
-                tail_len = self.lines()
-            i = self.lines() - tail_len
+            if tail_len > self.get_lines():
+                tail_len = self.get_lines()
+            i = self.get_lines() - tail_len
             # We count from 1, therefore it is < and not <=
-            while i < self.lines():
+            while i < self.get_lines():
                 # i+1 by the same reason
-                tail_text += str(i+1) + ':' + '"' + self.list()[i] \
+                tail_text += str(i+1) + ':' + '"' + self.get_list()[i] \
                              + '"\n'
                 i += 1
         else:
@@ -2506,7 +2514,7 @@ class ReadBinary:
     def _load(self):
         f = '[shared] logic.ReadBinary._load'
         mes = _('Load file "{}"').format(self.file)
-        objs.mes(f,mes,True).info()
+        objs.get_mes(f,mes,True).show_info()
         try:
             ''' AttributeError means that a module using _load does not
                 have a class that was defined while creating the binary
@@ -2517,9 +2525,9 @@ class ReadBinary:
             self.Success = False
             mes = _('Unable to read file "{}"!\n\nDetails: {}')
             mes = mes.format(self.file,e)
-            objs.mes(f,mes).error()
+            objs.get_mes(f,mes).show_error()
 
-    #todo: load fragments appended to a binary
+    #TODO: load fragments appended to a binary
     def load(self):
         f = '[shared] logic.ReadBinary.load'
         if self.Success:
@@ -2541,12 +2549,12 @@ class CreateInstance:
 
 
 
-#todo: fix: does not work with a root dir ('/')
+#TODO: fix: does not work with a root dir ('/')
 class Directory:
 
     def __init__(self,path,dest=''):
         f = '[shared] logic.Directory.__init__'
-        self.values()
+        self.set_values()
         if path:
             ''' Remove trailing slashes and follow symlinks. No error is
                 thrown for broken symlinks, but further checks will fail
@@ -2564,31 +2572,31 @@ class Directory:
         if not os.path.isdir(self.dir):
             self.Success = False
             mes = _('Wrong input data: "{}"!').format(self.dir)
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
 
-    def subfiles(self,Follow=True):
+    def get_subfiles(self,Follow=True):
         # Include files in subfolders
-        f = '[shared] logic.Directory.subfiles'
+        f = '[shared] logic.Directory.get_subfiles'
         if self.Success:
-            if not self._subfiles:
+            if not self.subfiles:
                 try:
                     for dirpath, dirnames, fnames \
                     in os.walk(self.dir,followlinks=Follow):
                         for name in fnames:
                             obj = os.path.join(dirpath,name)
                             if os.path.isfile(obj):
-                                self._subfiles.append(obj)
-                    self._subfiles.sort(key=lambda x: x.lower())
+                                self.subfiles.append(obj)
+                    self.subfiles.sort(key=lambda x: x.lower())
                 except Exception as e:
                     mes = _('Operation has failed!\nDetails: {}')
                     mes = mes.format(e)
-                    objs.mes(f,mes).error()
+                    objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
-        return self._subfiles
+        return self.subfiles
     
-    def size(self,Follow=True):
-        f = '[shared] logic.Directory.size'
+    def get_size(self,Follow=True):
+        f = '[shared] logic.Directory.get_size'
         result = 0
         if self.Success:
             try:
@@ -2607,44 +2615,44 @@ class Directory:
                     broken symbolic links.
                 '''
                 mes = _('Operation has failed!\nDetails: {}').format(e)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
         return result
     
-    def values(self):
+    def set_values(self):
         self.Success = True
         # Assigning lists must be one per line
-        self._list           = []
-        self._rel_list       = []
-        self._files          = []
-        self._rel_files      = []
-        self._dirs           = []
-        self._rel_dirs       = []
-        self._extensions     = []
-        self._extensions_low = []
-        self._subfiles       = []
+        self.lst      = []
+        self.rellist  = []
+        self.files    = []
+        self.relfiles = []
+        self.dirs     = []
+        self.reldirs  = []
+        self.exts     = []
+        self.extslow  = []
+        self.subfiles = []
     
-    def extensions(self): # with a dot
-        f = '[shared] logic.Directory.extensions'
+    def get_ext(self): # with a dot
+        f = '[shared] logic.Directory.get_ext'
         if self.Success:
-            if not self._extensions:
-                for file in self.rel_files():
-                    ext = Path(path=file).extension()
-                    self._extensions.append(ext)
-                    self._extensions_low.append(ext.lower())
+            if not self.exts:
+                for file in self.relfiles():
+                    ext = Path(path=file).get_ext()
+                    self.exts.append(ext)
+                    self.extslow.append(ext.lower())
         else:
             com.cancel(f)
-        return self._extensions
+        return self.exts
 
-    def extensions_low(self): # with a dot
-        f = '[shared] logic.Directory.extensions_low'
+    def get_ext_low(self): # with a dot
+        f = '[shared] logic.Directory.get_ext_low'
         if self.Success:
-            if not self._extensions_low:
-                self.extensions()
+            if not self.extslow:
+                self.get_ext()
         else:
             com.cancel(f)
-        return self._extensions_low
+        return self.extslow
 
     def delete_empty(self):
         f = '[shared] logic.Directory.delete_empty'
@@ -2659,86 +2667,96 @@ class Directory:
         f = '[shared] logic.Directory.delete'
         if self.Success:
             mes = _('Delete "{}"').format(self.dir)
-            objs.mes(f,mes,True).info()
+            objs.get_mes(f,mes,True).show_info()
             try:
                 shutil.rmtree(self.dir)
                 return True
             except:
                 mes = _('Failed to delete directory "{}"! Delete it manually.')
                 mes = mes.format(self.dir)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
 
     # Create a list of objects with a relative path
-    def rel_list(self):
+    def get_rel_list(self):
+        f = '[shared] logic.Directory.get_rel_list'
         if self.Success:
-            if not self._rel_list:
-                self.list()
-        return self._rel_list
+            if not self.rellist:
+                self.get_list()
+        else:
+            com.cancel(f)
+        return self.rellist
 
     # Create a list of objects with an absolute path
-    def list(self):
-        f = '[shared] logic.Directory.list'
+    def get_list(self):
+        f = '[shared] logic.Directory.get_list'
         if self.Success:
-            if not self._list:
-                self._list = os.listdir(self.dir)
-                self._list.sort(key=lambda x: x.lower())
-                self._rel_list = list(self._list)
-                for i in range(len(self._list)):
-                    self._list[i] = os.path.join(self.dir,self._list[i])
+            if not self.lst:
+                self.lst = os.listdir(self.dir)
+                self.lst.sort(key=lambda x: x.lower())
+                self.rellist = list(self.lst)
+                for i in range(len(self.lst)):
+                    self.lst[i] = os.path.join(self.dir,self.lst[i])
         else:
             com.cancel(f)
-        return self._list
+        return self.lst
 
-    def rel_dirs(self):
+    def get_rel_dirs(self):
+        f = '[shared] logic.Directory.get_rel_dirs'
         if self.Success:
-            if not self._rel_dirs:
+            if not self.reldirs:
                 self.dirs()
-        return self._rel_dirs
+        else:
+            com.cancel(f)
+        return self.reldirs
 
-    def rel_files(self):
+    def get_rel_files(self):
+        f = '[shared] logic.Directory.get_rel_files'
         if self.Success:
-            if not self._rel_files:
+            if not self.relfiles:
                 self.files()
-        return self._rel_files
-
-    # Needs absolute path
-    def dirs(self):
-        f = '[shared] logic.Directory.dirs'
-        if self.Success:
-            if not self._dirs:
-                for i in range(len(self.list())):
-                    if os.path.isdir(self._list[i]):
-                        self._dirs.append(self._list[i])
-                        self._rel_dirs.append(self._rel_list[i])
         else:
             com.cancel(f)
-        return self._dirs
+        return self.relfiles
 
     # Needs absolute path
-    def files(self):
-        f = '[shared] logic.Directory.files'
+    def get_dirs(self):
+        f = '[shared] logic.Directory.get_dirs'
         if self.Success:
-            if not self._files:
-                for i in range(len(self.list())):
-                    if os.path.isfile(self._list[i]):
-                        self._files.append(self._list[i])
-                        self._rel_files.append(self._rel_list[i])
+            if not self.dirs:
+                for i in range(len(self.get_list())):
+                    if os.path.isdir(self.lst[i]):
+                        self.dirs.append(self.lst[i])
+                        self.reldirs.append(self.rellist[i])
         else:
             com.cancel(f)
-        return self._files
+        return self.dirs
+
+    # Needs absolute path
+    def get_files(self):
+        f = '[shared] logic.Directory.get_files'
+        if self.Success:
+            if not self.files:
+                for i in range(len(self.get_list())):
+                    if os.path.isfile(self.lst[i]):
+                        self.files.append(self.lst[i])
+                        self.relfiles.append(self.rellist[i])
+        else:
+            com.cancel(f)
+        return self.files
 
     def copy(self):
         f = '[shared] logic.Directory.copy'
         if self.Success:
             if self.dir.lower() == self.dest.lower():
-                mes = _('Unable to copy "{}" to iself!').format(self.dir)
-                objs.mes(f,mes).error()
+                mes = _('Unable to copy "{}" to iself!')
+                mes = mes.format(self.dir)
+                objs.get_mes(f,mes).show_error()
             elif os.path.isdir(self.dest):
                 mes = _('Directory "{}" already exists.')
                 mes = mes.format(self.dest)
-                objs.mes(f,mes).info()
+                objs.get_mes(f,mes).show_info()
             else:
                 self._copy()
         else:
@@ -2747,23 +2765,23 @@ class Directory:
     def _copy(self):
         f = '[shared] logic.Directory._copy'
         mes = _('Copy "{}" to "{}"').format(self.dir,self.dest)
-        objs.mes(f,mes,True).info()
+        objs.get_mes(f,mes,True).show_info()
         try:
             shutil.copytree(self.dir,self.dest)
         except:
             self.Success = False
             mes = _('Failed to copy "{}" to "{}"!')
             mes = mes.format(self.dir,self.dest)
-            objs.mes(f,mes).error()
+            objs.get_mes(f,mes).show_error()
 
 
 
 class Config:
 
     def __init__(self):
-        self.values()
+        self.set_values()
         
-    def values(self):
+    def set_values(self):
         self.Success          = True
         self.sections         = [SectionVariables]
         self.sections_abbr    = [SectionVariables_abbr]
@@ -2783,12 +2801,12 @@ class Config:
                     if globs[self.sections_abbr[i]][option] != new_val:
                         mes = _('New value of the key "{}" has been loaded.')
                         mes = mes.format(option)
-                        Message(f,mes).info()
+                        Message(f,mes).show_info()
                         self.changed_keys += 1
                         globs[self.sections_abbr[i]][option] = new_val
             mes = _('Keys loaded in total: {}, whereas {} are modified.')
             mes = mes.format(self.total_keys,self.changed_keys)
-            Message(f,mes).info()
+            Message(f,mes).show_info()
         else:
             com.cancel(f)
 
@@ -2811,13 +2829,16 @@ class Config:
                     self.message += self.sections[i] + '; '
             if not self.Success:
                 self.message += '\n'
-                self.message += _('Missing sections: {}').format(self.missing_sections)
+                sub = _('Missing sections: {}')
+                sub = sub.format(self.missing_sections)
+                self.message += sub
                 self.message += '\n'
-                self.message += _('Missing keys: {}').format(self.missing_keys)
+                sub = _('Missing keys: {}').format(self.missing_keys)
+                self.message += sub
                 self.message += '\n'
                 self.message += _('The default configuration has been loaded.')
-                objs.mes(f,self.message).warning()
-                self._default()
+                objs.get_mes(f,self.message).show_warning()
+                self.load_default()
         else:
             com.cancel(f)
 
@@ -2830,7 +2851,7 @@ class Config:
                 Success = False
                 mes = _('Failed to read the configuration file "{}". This file must share the same directory with the program and have UTF-8 encoding (no BOM) and UNIX line break type.')
                 mes = mes.format(self.path)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
 
@@ -2841,51 +2862,51 @@ class Online:
         then you probably forgot to call 'self.reset' here or
         in children classes.
     '''
-    def __init__ (self,base_str='%s',search_str=''
-                 ,encoding='UTF-8'
+    def __init__ (self,base='%s',pattern=''
+                 ,coding='UTF-8'
                  ):
-        self.reset (base_str   = base_str
-                   ,search_str = search_str
-                   ,encoding   = encoding
+        self.reset (base    = base
+                   ,pattern = pattern
+                   ,coding  = coding
                    )
 
     def get_bytes(self):
-        if not self._bytes:
-            self._bytes = bytes (self.search_str
-                                ,encoding = self.encoding
-                                )
-        return self._bytes
+        if not self.bytes:
+            self.bytes = bytes (self.pattern
+                               ,encoding = self.coding
+                               )
+        return self.bytes
 
     # Open a URL in a default browser
     def browse(self):
         f = '[shared] logic.Online.browse'
         try:
-            webbrowser.open (url       = self.url()
+            webbrowser.open (url       = self.get_url()
                             ,new       = 2
                             ,autoraise = True
                             )
         except Exception as e:
             mes = _('Failed to open URL "{}" in a default browser!\n\nDetails: {}')
-            mes = mes.format(self._url,e)
-            objs.mes(f,mes).error()
+            mes = mes.format(self.url,e)
+            objs.get_mes(f,mes).show_error()
 
     # Create a correct online link (URI => URL)
-    def url(self):
-        f = '[shared] logic.Online.url'
-        if not self._url:
-            self._url = self.base_str % urllib.parse.quote(self.get_bytes())
-            mes = str(self._url)
-            objs.mes(f,mes,True).debug()
-        return self._url
+    def get_url(self):
+        f = '[shared] logic.Online.get_url'
+        if not self.url:
+            self.url = self.base % urllib.parse.quote(self.get_bytes())
+            mes = str(self.url)
+            objs.get_mes(f,mes,True).show_debug()
+        return self.url
 
-    def reset (self,base_str='',search_str=''
-              ,encoding='UTF-8'
+    def reset (self,base='',pattern=''
+              ,coding='UTF-8'
               ):
-        self._bytes     = None
-        self._url       = None
-        self.encoding   = encoding
-        self.base_str   = base_str
-        self.search_str = search_str
+        self.bytes   = None
+        self.url     = None
+        self.coding  = coding
+        self.base    = base
+        self.pattern = pattern
 
 
 
@@ -2897,7 +2918,7 @@ class Diff:
             some even do not open the same file again. So, we have to
             create a new temporary file each time.
         '''
-        self.wda_html   = com.tmpfile(suffix='.htm',Delete=0)
+        self.wda_html   = com.get_tmpfile(suffix='.htm',Delete=0)
         self.iwda_write = WriteTextFile (file    = self.wda_html
                                         ,Rewrite = True
                                         )
@@ -2908,13 +2929,13 @@ class Diff:
                        )
 
     def reset(self,text1,text2,file=None):
-        self._diff = ''
+        self.diff = ''
         self.text1 = text1
         self.text2 = text2
         if file:
             self.Custom  = True
             self.file    = file
-            self._header = ''
+            self.header  = ''
             self.iwrite  = WriteTextFile (file    = self.file
                                          ,Rewrite = False
                                          )
@@ -2922,43 +2943,44 @@ class Diff:
         else:
             self.Custom  = False
             self.file    = self.wda_html
-            self._header = '<title>%s</title>' % _('Differences:')
+            self.header  = '<title>%s</title>' % _('Differences:')
             self.iwrite  = self.iwda_write
         return self
 
-    def diff(self):
+    def set_diff(self):
         self.text1 = self.text1.split(' ')
         self.text2 = self.text2.split(' ')
-        self._diff = difflib.HtmlDiff().make_file(self.text1,self.text2)
+        self.diff  = difflib.HtmlDiff().make_file(self.text1,self.text2)
         # Avoid a bug in HtmlDiff()
-        self._diff = self._diff.replace ('charset=ISO-8859-1'
-                                        ,'charset=UTF-8'
-                                        )
+        self.diff  = self.diff.replace ('charset=ISO-8859-1'
+                                       ,'charset=UTF-8'
+                                       )
 
-    def header(self):
+    def set_header(self):
         if self.Custom:
-            self._header = self.ipath.basename().replace(self.ipath.extension(),'')
-            self._header = '<title>' + self._header + '</title>'
-        self._diff = self._diff.replace('<title></title>',self._header)\
-                     + '\n'
+            self.header = self.ipath.basename()
+            self.header = self.header.replace(self.ipath.get_ext(),'')
+            self.header = '<title>' + self.header + '</title>'
+        self.diff = self.diff.replace('<title></title>',self.header)
+        self.diff += '\n'
 
     def compare(self):
         f = '[shared] logic.Diff.compare'
         if self.text1 and self.text2:
             if self.text1 == self.text2:
                 mes = _('Texts are identical!')
-                objs.mes(f,mes).info()
+                objs.get_mes(f,mes).show_info()
             else:
-                self.diff()
-                self.header()
-                self.iwrite.write(self._diff)
+                self.set_diff()
+                self.set_header()
+                self.iwrite.write(self.diff)
                 if self.iwrite.Success:
                     ''' Cannot reuse the class instance because the
                         temporary file might be missing
                     '''
-                    Launch(target=self.file).default()
+                    Launch(target=self.file).launch_default()
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
 
 
@@ -2972,7 +2994,7 @@ class Shortcut:
         if not self.path and not self.symlink:
             self.Success = False
             mes = _('Wrong input data!')
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
 
     # http://timgolden.me.uk/python/win32_how_do_i/read-a-shortcut.html
     def _get_win(self):
@@ -2994,7 +3016,7 @@ class Shortcut:
 
     def get(self):
         if self.Success and not self.path:
-            if objs.os().win():
+            if objs.get_os().is_win():
                 self._get_win()
             else:
                 self._get_unix()
@@ -3003,13 +3025,13 @@ class Shortcut:
     def _delete(self):
         f = '[shared] logic.Shortcut._delete'
         mes = _('Delete the symbolic link "{}"').format(self.symlink)
-        objs.mes(f,mes,True).info()
+        objs.get_mes(f,mes,True).show_info()
         try:
             os.unlink(self.symlink)
         except:
             mes = _('Failed to remove shortcut "{}". Remove it manually and press OK.')
             mes = mes.format(self.symlink)
-            objs.mes(f,mes).error()
+            objs.get_mes(f,mes).show_error()
 
     def delete(self):
         f = '[shared] logic.Shortcut.delete'
@@ -3022,31 +3044,31 @@ class Shortcut:
     def _create_unix(self):
         f = '[shared] logic.Shortcut._create_unix'
         mes = _('Create a symbolic link "{}"').format(self.symlink)
-        objs.mes(f,mes,True).info()
+        objs.get_mes(f,mes,True).show_info()
         try:
             os.symlink(self.path,self.symlink)
         except:
             mes = _('Failed to create shortcut "{}". Create it manually and press OK.')
             mes = mes.format(self.symlink)
-            objs.mes(f,mes).error()
+            objs.get_mes(f,mes).show_error()
 
     def create_unix(self):
         f = '[shared] logic.Shortcut.create_unix'
         self.delete()
         if os.path.exists(self.symlink):
             if os.path.islink(self.symlink):
-                com.lazy(f)
+                com.rep_lazy(f)
             else:
                 self.Success = False
                 mes = _('Wrong input data!')
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
             self._create_unix()
 
     def _create_win(self):
         f = '[shared] logic.Shortcut._create_win'
         mes = _('Create a symbolic link "{}"').format(self.symlink)
-        objs.mes(f,mes,True).info()
+        objs.get_mes(f,mes,True).show_info()
         try:
             # The code will automatically add '.lnk' if necessary
             shell = win32com.client.Dispatch("WScript.Shell")
@@ -3056,7 +3078,7 @@ class Shortcut:
         except:
             mes = _('Failed to create shortcut "{}". Create it manually and press OK.')
             mes = mes.format(self.symlink)
-            objs.mes(f,mes).error()
+            objs.get_mes(f,mes).show_error()
 
     def create_win(self):
         ''' Using python 3 and windows (since 2009) it is possible to
@@ -3066,14 +3088,14 @@ class Shortcut:
             supported) (must use os.path.exists()), however, os.unlink()
             will work as expected.
         '''
-        # Do not forget: windows paths must have a double backslash!
+        #NOTE: windows paths must have a double backslash!
         f = '[shared] logic.Shortcut.create_win'
         if self.Success:
-            if not Path(self.symlink).extension().lower() == '.lnk':
+            if not Path(self.symlink).get_ext().lower() == '.lnk':
                 self.symlink += '.lnk'
             self.delete()
             if os.path.exists(self.symlink):
-                com.lazy(f)
+                com.rep_lazy(f)
             else:
                 self._create_win()
         else:
@@ -3082,7 +3104,7 @@ class Shortcut:
     def create(self):
         f = '[shared] logic.Shortcut.create'
         if self.Success:
-            if objs.os().win():
+            if objs.get_os().is_win():
                 self.create_win()
             else:
                 self.create_unix()
@@ -3106,17 +3128,17 @@ class Email:
           using CentOS6 + Palemoon + Thunderbird.
     '''
     def __init__ (self,email='',subject=''
-                 ,message='',attachment=''
+                 ,message='',attach=''
                  ):
         if email:
-            self.reset (email      = email
-                       ,subject    = subject
-                       ,message    = message
-                       ,attachment = attachment
+            self.reset (email   = email
+                       ,subject = subject
+                       ,message = message
+                       ,attach  = attach
                        )
     
     def reset (self,email,subject=''
-              ,message='',attachment=''
+              ,message='',attach=''
               ):
         f = '[shared] logic.Email.reset'
         self.Success = True
@@ -3124,19 +3146,15 @@ class Email:
             all mail agents support ';'). #note that, however, Outlook
             supports ONLY ';' and Evolution - only ','!
         '''
-        self._email   = email
-        self._subject = Input (title = f
-                              ,value = subject
-                              ).not_none()
-        self._message = Input (title = f
-                              ,value = message
-                              ).not_none()
-        self._attachment = attachment
-        if not self._email:
+        self.email   = email
+        self.subject = Input(f,subject).get_not_none()
+        self.message = Input(f,message).get_not_none()
+        self.attach  = attach
+        if not self.email:
             self.Success = False
-            com.empty(f)
-        if self._attachment:
-            self.Success = File(file=self._attachment).Success
+            com.rep_empty(f)
+        if self.attach:
+            self.Success = File(file=self.attach).Success
             if not self.Success:
                 com.cancel(f)
 
@@ -3144,7 +3162,7 @@ class Email:
     def sanitize(self,value):
         f = '[shared] logic.Email.sanitize'
         if self.Success:
-            return str(Online(search_str=value).url())
+            return str(Online(pattern=value).get_url())
         else:
             com.cancel(f)
     
@@ -3152,7 +3170,7 @@ class Email:
         f = '[shared] logic.Email.browser'
         if self.Success:
             try:
-                if self._attachment:
+                if self.attach:
                     ''' - This is the last resort. Attaching a file
                           worked for me only with CentOS6 + Palemoon +
                           Thunderbird. Using another OS/browser/email
@@ -3162,78 +3180,78 @@ class Email:
                           they will stay visible otherwise.
                     '''
                     webbrowser.open ('mailto:%s?subject=%s&body=%s&attach="%s"'\
-                                    % (self._email
-                                      ,self._subject
-                                      ,self._message
-                                      ,self._attachment
+                                    % (self.email
+                                      ,self.subject
+                                      ,self.message
+                                      ,self.attach
                                       )
                                     )
                 else:
                     webbrowser.open ('mailto:%s?subject=%s&body=%s' \
-                                    % (self._email
-                                      ,self._subject
-                                      ,self._message
+                                    % (self.email
+                                      ,self.subject
+                                      ,self.message
                                       )
                                     )
             except:
                 mes = _('Failed to load an e-mail client.')
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
     
     def create(self):
         f = '[shared] logic.Email.create'
         if self.Success:
-            if not self.evolution() and not self.thunderbird() \
-            and not self.outlook():
-                self._subject    = self.sanitize(self._subject)
-                self._message    = self.sanitize(self._message)
-                self._attachment = self.sanitize(self._attachment)
+            if not self.run_evolution() and not self.run_thunderbird() \
+            and not self.run_outlook():
+                self.subject = self.sanitize(self.subject)
+                self.message = self.sanitize(self.message)
+                self.attach  = self.sanitize(self.attach)
                 self.browser()
         else:
             com.cancel(f)
                        
-    #note: this does not work in wine!
-    def outlook(self):
-        f = '[shared] logic.Email.outlook'
-        if objs.os().win():
+    #NOTE: this does not work in wine!
+    def run_outlook(self):
+        f = '[shared] logic.Email.run_outlook'
+        if objs.get_os().is_win():
             try:
                 import win32com.client
                 #https://stackoverflow.com/a/51993450
                 outlook       = win32com.client.dynamic.Dispatch('outlook.application')
                 mail          = outlook.CreateItem(0)
-                mail.To       = self._email.replace(',',';')
-                mail.Subject  = self._subject
+                mail.To       = self.email.replace(',',';')
+                mail.Subject  = self.subject
                 mail.HtmlBody = '<html><body><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">%s</body></html>'\
-                                % self._message
-                if self._attachment:
-                    mail.Attachments.Add(self._attachment)
+                                % self.message
+                if self.attach:
+                    mail.Attachments.Add(self.attach)
                 mail.Display(True)
                 return True
             except Exception as e:
                 mes = _('Operation has failed!\nDetails: {}').format(e)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             mes = _('This operation cannot be executed on your operating system.')
-            objs.mes(f,mes).info()
+            objs.get_mes(f,mes).show_info()
     
-    def thunderbird(self):
-        f = '[shared] logic.Email.thunderbird'
+    def run_thunderbird(self):
+        f = '[shared] logic.Email.run_thunderbird'
         if self.Success:
             app = '/usr/bin/thunderbird'
             if os.path.isfile(app):
-                if self._attachment:
+                if self.attach:
                     self.custom_args = [app,'-compose'
                                        ,"to='%s',subject='%s',body='%s',attachment='%s'"\
-                                       % (self._email,self._subject
-                                         ,self._message,self._attachment
+                                       % (self.email,self.subject
+                                         ,self.message,self.attach
                                          )
                                        ]
                 else:
                     self.custom_args = [app,'-compose'
                                        ,"to='%s',subject='%s',body='%s'"\
-                                       % (self._email,self._subject
-                                         ,self._message
+                                       % (self.email,self.subject
+                                         ,self.message
                                          )
                                        ]
                 try:
@@ -3242,26 +3260,26 @@ class Email:
                 except:
                     mes = _('Failed to run "{}"!')
                     mes = mes.format(self.custom_args)
-                    objs.mes(f,mes).error()
+                    objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
     
-    def evolution(self):
-        f = '[shared] logic.Email.evolution'
+    def run_evolution(self):
+        f = '[shared] logic.Email.run_evolution'
         if self.Success:
             app = '/usr/bin/evolution'
             if os.path.isfile(app):
-                if self._attachment:
+                if self.attach:
                     self.custom_args = [app,'mailto:%s?subject=%s&body=%s&attach=%s'\
-                                       % (self._email.replace(';',',')
-                                         ,self._subject,self._message
-                                         ,self._attachment
+                                       % (self.email.replace(';',',')
+                                         ,self.subject,self.message
+                                         ,self.attach
                                          )
                                        ]
                 else:
                     self.custom_args = [app,'mailto:%s?subject=%s&body=%s'\
-                                       % (self._email.replace(';',',')
-                                         ,self._subject,self._message
+                                       % (self.email.replace(';',',')
+                                         ,self.subject,self.message
                                          )
                                        ]
                 try:
@@ -3270,7 +3288,7 @@ class Email:
                 except:
                     mes = _('Failed to run "{}"!')
                     mes = mes.format(self.custom_args)
-                    objs.mes(f,mes).error()
+                    objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
 
@@ -3281,212 +3299,210 @@ class Grep:
     def __init__ (self,lst,start=[]
                  ,middle=[],end=[]
                  ):
-        self._lst    = lst
-        self._start  = start
-        self._middle = middle
-        self._end    = end
-        self._found  = []
-        self.i       = 0
+        self.lst    = lst
+        self.start  = start
+        self.middle = middle
+        self.end    = end
+        self.found  = []
+        self.i      = 0
         self.sanitize()
 
     def sanitize(self):
         ''' Get rid of constructs like [None] instead of checking
             arguments when parameterizing.
         '''
-        if len(self._lst) == 1:
-            if not self._lst[0]:
-                self._lst = []
-        if len(self._start) == 1:
-            if not self._start[0]:
-                self._start = []
-        if len(self._middle) == 1:
-            if not self._middle[0]:
-                self._middle = []
-        if len(self._end) == 1:
-            if not self._end[0]:
-                self._end = []
+        if len(self.lst) == 1:
+            if not self.lst[0]:
+                self.lst = []
+        if len(self.start) == 1:
+            if not self.start[0]:
+                self.start = []
+        if len(self.middle) == 1:
+            if not self.middle[0]:
+                self.middle = []
+        if len(self.end) == 1:
+            if not self.end[0]:
+                self.end = []
 
-    def start(self):
-        if not self._start:
+    def match_start(self):
+        if not self.start:
             return True
         found = False
-        for i in range(len(self._start)):
-            if self._start[i] \
-            and self._lst[self.i].startswith(self._start[i]):
+        for i in range(len(self.start)):
+            if self.start[i] \
+            and self.lst[self.i].startswith(self.start[i]):
                 found = True
         return found
 
-    def middle(self):
-        if not self._middle:
+    def match_middle(self):
+        if not self.middle:
             return True
         found = False
-        for i in range(len(self._middle)):
-            if self._middle[i] and self._middle[i] in self._lst[self.i]:
+        for i in range(len(self.middle)):
+            if self.middle[i] and self.middle[i] in self.lst[self.i]:
                 found = True
         return found
 
-    def end(self):
-        if not self._end:
+    def match_end(self):
+        if not self.end:
             return True
         found = False
-        for i in range(len(self._end)):
-            if self._end[i] \
-            and self._lst[self.i].endswith(self._end[i]):
+        for i in range(len(self.end)):
+            if self.end[i] and self.lst[self.i].endswith(self.end[i]):
                 found = True
         return found
 
     # Return all matches as a list
     def get(self):
-        if not self._found:
-            for i in range(len(self._lst)):
+        if not self.found:
+            for i in range(len(self.lst)):
                 self.i = i
-                if self.start() and self.middle() and self.end():
-                    self._found.append(self._lst[i])
-        return self._found
+                if self.match_start() and self.match_middle() \
+                and self.match_end():
+                    self.found.append(self.lst[i])
+        return self.found
 
     # Return the 1st match as a string
     def get_first(self):
         self.get()
-        if self._found:
-            return self._found[0]
+        if self.found:
+            return self.found[0]
 
 
 
 class Word:
 
     def __init__(self):
-        ''' _p: word with punctuation
-            _n: _p without punctuation, lower case
-            _nm: normal form of _n
-            _pf: position of the 1st symbol of _p
-            _pl: position of the last symbol of _p
-            _nf: position of the 1st symbol of _n
-            _nl: position of the last symbol of _n
-            _nmf: position of the 1st symbol of _nm  # 'matches'
-            _nml: position of the last symbol of _nm # 'matches'
+        ''' 'p': word with punctuation
+            'n': 'p' without punctuation, lower case
+            'nm': normal form of 'n'
+            'pf': position of the 1st symbol of 'p'
+            'pl': position of the last symbol of 'p'
+            'nf': position of the 1st symbol of 'n'
+            'nl': position of the last symbol of 'n'
+            'nmf': position of the 1st symbol of 'nm'  # 'matches'
+            'nml': position of the last symbol of 'nm' # 'matches'
         '''
-        self._nm = self._nmf = self._nml = self._pf \
-                     = self._pl = self._nf = self._nl = self._cyr \
-                     = self._lat = self._greek = self._digit \
-                     = self._empty = self._ref = self._sent_no \
-                     = self._spell = self._sents_len = self._tf \
-                     = self._tl = None
+        self.nm = self.nmf = self.nml = self.pf = self.pl = self.nf \
+                = self.nl = self.cyr = self.lat = self.greek \
+                = self.digit = self.empty = self.ref = self.sentno \
+                = self.spell = self.sentslen = self.tf = self.tl = None
 
-    def empty(self):
-        if self._empty is None:
-            self._empty = True
-            for sym in self._p:
+    def is_empty(self):
+        if self.empty is None:
+            self.empty = True
+            for sym in self.p:
                 if sym.isalpha():
-                    self._empty = False
+                    self.empty = False
                     break
-        return self._empty
+        return self.empty
 
-    def digit(self):
-        if self._digit is None:
-            self._digit = False
-            for sym in self._p:
+    def has_digit(self):
+        if self.digit is None:
+            self.digit = False
+            for sym in self.p:
                 if sym.isdigit():
-                    self._digit = True
+                    self.digit = True
                     break
-        return self._digit
+        return self.digit
 
-    def cyr(self):
-        if self._cyr is None:
-            self._cyr = False
+    def has_cyr(self):
+        if self.cyr is None:
+            self.cyr = False
             for sym in ru_alphabet_low:
-                if sym in self._n:
-                    self._cyr = True
+                if sym in self.n:
+                    self.cyr = True
                     break
-        return self._cyr
+        return self.cyr
 
-    def lat(self):
-        if self._lat is None:
-            self._lat = False
+    def has_lat(self):
+        if self.lat is None:
+            self.lat = False
             for sym in lat_alphabet_low:
-                if sym in self._n:
+                if sym in self.n:
                     self._lat = True
                     break
-        return self._lat
+        return self.lat
 
-    def greek(self):
-        if self._greek is None:
-            self._greek = False
+    def has_greek(self):
+        if self.greek is None:
+            self.greek = False
             for sym in greek_alphabet_low:
-                if sym in self._n:
-                    self._greek = True
+                if sym in self.n:
+                    self.greek = True
                     break
-        return self._greek
+        return self.greek
 
     # Do only after Words.sent_nos
     def print(self,no=0):
         f = '[shared] logic.Word.print'
-        mes = 'no: {}; _p: {}; _n: {}; _nm: {}; _pf: {}; _pl: {}; _nf: {}; _nl: {}; _cyr: {}; _lat: {}; _greek: {}; _digit: {}; _empty: {}; _ref: {}; _sent_no: {}; _sents_len: {}; _spell: {}; _nmf: {}; _nml: {}'
-        mes = mes.format (no,self._p,self._n,self._nm,self._pf,self._pl
-                         ,self._nf,self._nl,self._cyr,self._lat
-                         ,self._greek,self._digit,self._empty,self._ref
-                         ,self._sent_no,self._sents_len,self._spell
-                         ,self._nmf,self._nml)
-        objs.mes(f,mes,True).debug()
+        mes = 'no: {}; p: {}; n: {}; nm: {}; pf: {}; pl: {}; nf: {}; nl: {}; cyr: {}; lat: {}; greek: {}; digit: {}; empty: {}; ref: {}; sentno: {}; sentslen: {}; spell: {}; nmf: {}; nml: {}'
+        mes = mes.format (no,self.p,self.n,self.nm,self.pf,self.pl
+                         ,self.nf,self.nl,self.cyr,self.lat
+                         ,self.greek,self.digit,self.empty,self.ref
+                         ,self.sentno,self.sentslen,self.spell
+                         ,self.nmf,self.nml)
+        objs.get_mes(f,mes,True).show_debug()
 
-    def nm(self):
-        if self._nm is None:
-            if self.ref():
-                ''' #note: Setting '_nm' to '' allows to find longer
+    def get_nm(self):
+        if self.nm is None:
+            if self.has_ref():
+                ''' #NOTE: Setting 'nm' to '' allows to find longer
                     matches (without references), but requires replacing
                     duplicate spaces in 'text_nm' with ordinary ones and
-                    using another word numbering for '_nm'.
+                    using another word numbering for 'nm'.
                 '''
-                #self._nm = ''
-                self._nm = self._n
+                #self.nm = ''
+                self.nm = self.n
             else:
-                result = Decline (text = self._n
+                result = Decline (text = self.n
                                  ,Auto = False
                                  ).normal().get()
                 if result:
-                    self._nm = result.replace('ё','е')
+                    self.nm = result.replace('ё','е')
                 else:
-                    self._nm = self._n
-        return self._nm
+                    self.nm = self.n
+        return self.nm
 
-    def ref(self):
+    def has_ref(self):
         ''' Criteria for setting the 'reference' mark:
             - The word has digits
             - The word has Greek characters (that are treated as
               variables. Greek should NOT be a predominant language)
             - The word has Latin characters in the predominantly Russian
               text (inexact)
-            - The word has '-' (inexact) (#note: when finding matches,
+            - The word has '-' (inexact) (#NOTE: when finding matches,
               set the condition of ''.join(set(ref)) != '-')
         '''
-        if self._ref is None:
-            if self.lat() or self.digit() or self.greek():
-                self._ref = True
+        if self.ref is None:
+            if self.has_lat() or self.has_digit() or self.has_greek():
+                self.ref = True
             else:
-                self._ref = False
-        return self._ref
+                self.ref = False
+        return self.ref
 
-    def spell_ru(self):
-        return objs.enchant(lang='ru').check(self._n)
+    def check_spell_ru(self):
+        return objs.get_enchant(lang='ru').check(self.n)
     
-    def spell_yo(self):
+    def check_spell_yo(self):
         words = []
-        for i in range(len(self._n)):
-            if self._n[i] == 'е':
-                word    = list(self._n)
+        for i in range(len(self.n)):
+            if self.n[i] == 'е':
+                word    = list(self.n)
                 word[i] = 'ё'
                 word    = ''.join(word)
                 words.append(word)
         for word in words:
-            if objs.enchant(lang='ru').check(word):
+            if objs.get_enchant(lang='ru').check(word):
                 return True
     
-    def spell_us(self):
-        return objs.enchant(lang='us').check(self._n)
+    def check_spell_us(self):
+        return objs.get_enchant(lang='us').check(self.n)
     
-    def spell_gb(self):
-        return objs.enchant(lang='gb').check(self._n)
+    def check_spell_gb(self):
+        return objs.get_enchant(lang='gb').check(self.n)
     
-    def spell(self):
+    def check_spell(self):
         ''' Enchant:
             1) Lower-case, upper-case and words where the first letter
                is capital, are all accepted. Mixed case is not accepted;
@@ -3495,57 +3511,57 @@ class Word:
             4) 'е' instead of 'ё' returns False, however, 'ё' in
                a wrong place returns True.
         '''
-        if self._spell is None:
-            self._spell = False
-            if self._n:
-                if Text(self._n).has_digits():
-                    self._spell = True
-                elif Text(self._n).has_cyrillic():
-                    if self.spell_ru() or self.spell_yo():
-                        self._spell = True
-                elif Text(self._n).has_latin():
-                    if self.spell_us() or self.spell_gb():
-                        self._spell = True
+        if self.spell is None:
+            self.spell = False
+            if self.n:
+                if Text(self.n).has_digits():
+                    self.spell = True
+                elif Text(self.n).has_cyrillic():
+                    if self.check_spell_ru() or self.check_spell_yo():
+                        self.spell = True
+                elif Text(self.n).has_latin():
+                    if self.check_spell_us() or self.check_spell_gb():
+                        self.spell = True
                 else:
-                    self._spell = True
+                    self.spell = True
             else:
-                self._spell = True
-        return self._spell
+                self.spell = True
+        return self.spell
 
     # Wrong selection upon search: see an annotation to SearchBox
-    def tf(self):
-        f = '[shared] logic.Word.tf'
-        if self._tf is None:
-            self._tf = '1.0'
+    def get_tf(self):
+        f = '[shared] logic.Word.get_tf'
+        if self.tf is None:
+            self.tf = '1.0'
             # This could happen if double line breaks were not deleted
-            if self._sent_no is None:
-                com.empty(f)
+            if self.sentno is None:
+                com.rep_empty(f)
             else:
                 # This is easier, but assigning a tag throws an error
-                #self._tf = '1.0+%dc' % (self._pf - self._sent_no)
-                result = self._pf - self._sents_len
-                if self._sent_no > 0 and result > 0:
+                #self.tf = '1.0+%dc' % (self.pf - self.sentno)
+                result = self.pf - self.sentslen
+                if self.sentno > 0 and result > 0:
                     result -= 1
-                self._tf = '%d.%d' % (self._sent_no + 1,result)
-                #objs.mes(f,str(self._tf),True).debug()
-        return self._tf
+                self.tf = '%d.%d' % (self.sentno + 1,result)
+                #objs.get_mes(f,str(self.tf),True).show_debug()
+        return self.tf
 
-    def tl(self):
-        f = '[shared] logic.Word.tl'
-        if self._tl is None:
-            self._tl = '1.1'
+    def get_tl(self):
+        f = '[shared] logic.Word.get_tl'
+        if self.tl is None:
+            self.tl = '1.1'
             # This could happen if double line breaks were not deleted
-            if self._sent_no is None:
-                com.empty(f)
+            if self.sentno is None:
+                com.rep_empty(f)
             else:
                 # This is easier, but assigning a tag throws an error
-                #self._tl = '1.0+%dc' % (self._pl - self._sent_no + 1)
-                result = self._pl - self._sents_len
-                if self._sent_no > 0 and result > 0:
+                #self.tl = '1.0+%dc' % (self.pl - self.sentno + 1)
+                result = self.pl - self.sentslen
+                if self.sentno > 0 and result > 0:
                     result -= 1
-                self._tl = '%d.%d' % (self._sent_no + 1,result + 1)
-                #objs.mes(f,str(self._tl),True).debug()
-        return self._tl
+                self.tl = '%d.%d' % (self.sentno + 1,result + 1)
+                #objs.get_mes(f,str(self.tl),True).show_debug()
+        return self.tl
 
 
 
@@ -3557,39 +3573,39 @@ class Words:
         f = '[shared] logic.Words.__init__'
         self.Success = True
         self.Auto    = Auto
-        self.values()
+        self.set_values()
         if text:
             mes = _('Analyze the text')
-            objs.mes(f,mes,True).info()
+            objs.get_mes(f,mes,True).show_info()
             ''' This is MUCH faster than using old symbol-per-symbol
                 algorithm for finding words. We must, however, drop
                 double space cases.
             '''
-            self._text_orig   = Text(text=text,Auto=self.Auto).text
-            self._line_breaks = Search(self._text_orig,'\n').next_loop()
-            self._text_p      = Text(text=self._text_orig).delete_line_breaks()
-            self._text_n      = Text(text=self._text_p).delete_punctuation().lower()
+            self.textorig = Text(text=text,Auto=self.Auto).text
+            self.linebr   = Search(self.textorig,'\n').get_next_loop()
+            self.textp    = Text(text=self.textorig).delete_line_breaks()
+            self.textn    = Text(text=self.textp).delete_punctuation().lower()
             self.split()
         else:
             self.Success = False
             com.cancel(f)
                        
-    def values(self):
-        self._no          = 0
-        self.words        = []
-        self._line_breaks = []
-        self._list_nm     = []
-        self._text_nm     = None
-        self._text_orig   = ''
-        self._text_p      = ''
-        self._text_n      = ''
+    def set_values(self):
+        self.no       = 0
+        self.words    = []
+        self.linebr   = []
+        self.listnm   = []
+        self.textnm   = None
+        self.textorig = ''
+        self.textp    = ''
+        self.textn    = ''
 
     def split(self):
         f = '[shared] logic.Words.split'
         if self.Success:
-            if not self.len():
-                lst_p = self._text_p.split(' ')
-                lst_n = self._text_n.split(' ')
+            if not self.get_len():
+                lst_p = self.textp.split(' ')
+                lst_n = self.textn.split(' ')
                 assert len(lst_p) == len(lst_n)
                 cur_len_p = cur_len_n = 0
                 for i in range(len(lst_p)):
@@ -3597,14 +3613,14 @@ class Words:
                         cur_len_p += 2
                         cur_len_n += 2
                     cur_word = Word()
-                    cur_word._p = lst_p[i]
-                    cur_word._n = lst_n[i]
-                    cur_word._pf = cur_len_p
-                    cur_word._nf = cur_len_n
-                    cur_len_p = cur_word._pl = cur_word._pf \
-                                               + len(cur_word._p) - 1
-                    cur_len_n = cur_word._nl = cur_word._nf \
-                                               + len(cur_word._n) - 1
+                    cur_word.p = lst_p[i]
+                    cur_word.n = lst_n[i]
+                    cur_word.pf = cur_len_p
+                    cur_word.nf = cur_len_n
+                    cur_len_p = cur_word.pl = cur_word.pf \
+                                            + len(cur_word.p) - 1
+                    cur_len_n = cur_word.nl = cur_word.nf \
+                                            + len(cur_word.n) - 1
                     self.words.append(cur_word)
         else:
             com.cancel(f)
@@ -3612,191 +3628,189 @@ class Words:
     def print(self):
         f = '[shared] logic.Words.print'
         if self.Success:
-            for i in range(self.len()):
+            for i in range(self.get_len()):
                 self.words[i].print(no=i)
         else:
             com.cancel(f)
 
-    # Running 'range(self.len())' does not re-run 'len'
-    def len(self):
+    # Running 'range(self.get_len())' does not re-run 'get_len'
+    def get_len(self):
         return len(self.words)
 
-    def _sent_nos(self):
+    def _get_sent_nos(self):
         no = sents_len = 0
-        for i in range(self.len()):
-            condition1 = self.words[i]._pf - 1 in self._line_breaks
+        for i in range(self.get_len()):
+            condition1 = self.words[i].pf - 1 in self.linebr
             if self.Auto:
                 condition = condition1
             else:
                 # In case duplicate spaces/line breaks were not deleted
-                condition2 = self.words[i]._p == '\n' \
-                             or self.words[i]._p == '\r' \
-                             or self.words[i]._p == '\r\n'
+                condition2 = self.words[i].p == '\n' \
+                             or self.words[i].p == '\r' \
+                             or self.words[i].p == '\r\n'
                 condition = condition1 or condition2
             if condition:
                 no += 1
-                sents_len = self.words[i]._pf - 1
-            self.words[i]._sent_no = no
-            self.words[i]._sents_len = sents_len
+                sents_len = self.words[i].pf - 1
+            self.words[i].sentno = no
+            self.words[i].sentslen = sents_len
 
-    def sent_nos(self):
-        f = '[shared] logic.Words.sent_nos'
+    def get_sent_nos(self):
+        f = '[shared] logic.Words.get_sent_nos'
         if self.Success:
-            if self.len() > 0:
-                if self.words[self._no]._sent_no is None:
-                    self._sent_nos()
+            if self.get_len() > 0:
+                if self.words[self.no].sentno is None:
+                    self._get_sent_nos()
         else:
             com.cancel(f)
 
-    def sent_p(self):
-        f = '[shared] logic.Words.sent_p'
+    def get_sent_p(self):
+        f = '[shared] logic.Words.get_sent_p'
         if self.Success:
-            sent_no = self.sent_no()
-            sent_no = Input (title = f
-                            ,value = sent_no
-                            ).integer()
-            old = self._no
+            sent_no = self.get_sent_no()
+            sent_no = Input(f,sent_no).get_integer()
+            old     = self.no
             result = []
-            for self._no in range(self.len()):
-                if self.words[self._no]._sent_no == sent_no:
-                    result.append(self.words[self._no]._p)
-            self._no = old
+            for self.no in range(self.get_len()):
+                if self.words[self.no].sentno == sent_no:
+                    result.append(self.words[self.no].p)
+            self.no = old
             return ' '.join(result)
         else:
             com.cancel(f)
 
-    def sent_no(self):
-        f = '[shared] logic.Words.sent_no'
+    def get_sent_no(self):
+        f = '[shared] logic.Words.get_sent_no'
         if self.Success:
-            self.sent_nos()
-            return self.words[self._no]._sent_no
+            self.get_sent_nos()
+            return self.words[self.no].sentno
         else:
             com.cancel(f)
 
-    def next_ref(self):
-        f = '[shared] logic.Words.next_ref'
+    def get_next_ref(self):
+        f = '[shared] logic.Words.get_next_ref'
         if self.Success:
-            old = self._no
+            old = self.no
             Found = False
-            while self._no < self.len():
-                if self.words[self._no].ref():
+            while self.no < self.get_len():
+                if self.words[self.no].has_ref():
                     Found = True
                     break
                 else:
-                    self._no += 1
+                    self.no += 1
             if not Found:
-                self._no = old
-            return self._no
+                self.no = old
+            return self.no
         else:
             com.cancel(f)
 
-    def prev_ref(self):
-        f = '[shared] logic.Words.prev_ref'
+    def get_prev_ref(self):
+        f = '[shared] logic.Words.get_prev_ref'
         if self.Success:
-            old = self._no
+            old = self.no
             Found = False
-            while self._no >= 0:
-                if self.words[self._no].ref():
+            while self.no >= 0:
+                if self.words[self.no].ref():
                     Found = True
                     break
                 else:
-                    self._no -= 1
+                    self.no -= 1
             if not Found:
-                self._no = old
-            return self._no
+                self.no = old
+            return self.no
         else:
             com.cancel(f)
 
-    def spellcheck(self):
-        f = '[shared] logic.Words.spellcheck'
+    def check_spell(self):
+        f = '[shared] logic.Words.check_spell'
         if self.Success:
-            if self.len() > 0:
-                if self.words[0]._spell is None:
-                    for i in range(self.len()):
-                        self.words[i].spell()
+            if self.get_len() > 0:
+                if self.words[0].spell is None:
+                    for i in range(self.get_len()):
+                        self.words[i].check_spell()
         else:
             com.cancel(f)
 
-    def _refs(self):
-        for i in range(self.len()):
-            self.words[i].ref()
+    def _get_refs(self):
+        for i in range(self.get_len()):
+            self.words[i].has_ref()
 
-    def refs(self):
-        f = '[shared] logic.Words.refs'
+    def get_refs(self):
+        f = '[shared] logic.Words.get_refs'
         if self.Success:
-            if self.len() > 0:
-                if self.words[0]._ref is None:
-                    self._refs()
+            if self.get_len() > 0:
+                if self.words[0].ref is None:
+                    self._get_refs()
         else:
             com.cancel(f)
 
     # Needed for text comparison
-    def list_nm(self):
-        f = '[shared] logic.Words.list_nm'
+    def get_list_nm(self):
+        f = '[shared] logic.Words.get_list_nm'
         if self.Success:
-            if not self._list_nm:
+            if not self.listnm:
                 cur_len_nm = 0
-                for i in range(self.len()):
-                    self._list_nm.append(self.words[i].nm())
+                for i in range(self.get_len()):
+                    self.listnm.append(self.words[i].get_nm())
                     if i > 0:
                         cur_len_nm += 2
-                    cur_word = self.words[i]
-                    cur_word._nmf = cur_len_nm
-                    cur_len_nm = cur_word._nml = cur_word._nmf \
-                                               + len(cur_word._nm) - 1
-            return self._list_nm
+                    cur_word     = self.words[i]
+                    cur_word.nmf = cur_len_nm
+                    cur_len_nm   = cur_word.nml = cur_word.nmf \
+                                                + len(cur_word.nm) - 1
+            return self.listnm
         else:
             com.cancel(f)
 
     # Needed for text comparison
-    def text_nm(self):
-        f = '[shared] logic.Words.text_nm'
+    def get_text_nm(self):
+        f = '[shared] logic.Words.get_text_nm'
         if self.Success:
-            if not self._text_nm:
-                self._text_nm = ' '.join(self.list_nm())
-            return self._text_nm
+            if not self.textnm:
+                self.textnm = ' '.join(self.get_list_nm())
+            return self.textnm
         else:
             com.cancel(f)
 
-    def no_by_pos_p(self,pos):
-        f = '[shared] logic.Words.no_by_pos_p'
+    def get_no_by_pos_p(self,pos):
+        f = '[shared] logic.Words.get_no_by_pos_p'
         if self.Success:
-            result = self._no
-            for i in range(self.len()):
-                if self.words[i]._pf - 1 <= pos <= self.words[i]._pl + 1:
+            result = self.no
+            for i in range(self.get_len()):
+                if self.words[i].pf - 1 <= pos <= self.words[i].pl + 1:
                     result = i
                     break
             return result
         else:
             com.cancel(f)
 
-    def no_by_pos_n(self,pos):
-        f = '[shared] logic.Words.no_by_pos_n'
+    def get_no_by_pos_n(self,pos):
+        f = '[shared] logic.Words.get_no_by_pos_n'
         if self.Success:
-            result = self._no
-            for i in range(self.len()):
-                if self.words[i]._nf - 1 <= pos <= self.words[i]._nl + 1:
+            result = self.no
+            for i in range(self.get_len()):
+                if self.words[i].nf - 1 <= pos <= self.words[i].nl + 1:
                     result = i
                     break
             return result
         else:
             com.cancel(f)
 
-    # Call 'list_nm()' first
-    def no_by_pos_nm(self,pos):
-        f = '[shared] logic.Words.no_by_pos_nm'
+    # Call 'get_list_nm()' first
+    def get_no_by_pos_nm(self,pos):
+        f = '[shared] logic.Words.get_no_by_pos_nm'
         if self.Success:
-            result = self._no
-            for i in range(self.len()):
-                if self.words[i]._nmf - 1 <= pos <= self.words[i]._nml + 1:
+            result = self.no
+            for i in range(self.get_len()):
+                if self.words[i].nmf - 1 <= pos <= self.words[i].nml+1:
                     result = i
                     break
             return result
         else:
             com.cancel(f)
 
-    def no_by_tk(self,tkpos):
-        f = '[shared] logic.Words.no_by_tk'
+    def get_no_by_tk(self,tkpos):
+        f = '[shared] logic.Words.get_no_by_tk'
         if self.Success:
             if tkpos:
                 lst = tkpos.split('.')
@@ -3807,8 +3821,8 @@ class Words:
                     lst[1] = Text(text=lst[1]).str2int()
                     result = None
                     for i in range(self.len()):
-                        if self.words[i]._sent_no == lst[0]:
-                            result = self.words[i]._sents_len
+                        if self.words[i].sentno == lst[0]:
+                            result = self.words[i].sentslen
                             break
                     if result is not None:
                         if lst[1] == 0:
@@ -3818,36 +3832,34 @@ class Words:
                         else:
                             result += lst[1] + 1
                         mes = '{} -> {}'.format(tkpos,result)
-                        objs.mes(f,mes,True).debug()
-                        return self.no_by_pos_p(pos=result)
+                        objs.get_mes(f,mes,True).show_debug()
+                        return self.get_no_by_pos_p(pos=result)
                 else:
                     mes = _('Wrong input data: "{}"!').format(lst)
-                    objs.mes(f,mes).warning()
+                    objs.get_mes(f,mes).show_warning()
             else:
-                com.empty(f)
+                com.rep_empty(f)
         else:
             com.cancel(f)
 
-    def nos_by_sent_no(self,sent_no=0):
-        f = '[shared] logic.Words.nos_by_sent_no'
+    def get_nos_by_sent_no(self,sent_no=0):
+        f = '[shared] logic.Words.get_nos_by_sent_no'
         result = (0,0)
         if self.Success:
-            sent_no = Input (title = f
-                            ,value = sent_no
-                            ).integer()
-            old = self._no
+            sent_no = Input(f,sent_no).get_integer()
+            old = self.no
             nos = []
-            for self._no in range(self.len()):
-                if sent_no == self.sent_no():
-                    nos.append(self._no)
-            self._no = old
+            for self.no in range(self.get_len()):
+                if sent_no == self.get_sent_no():
+                    nos.append(self.no)
+            self.no = old
             if nos:
                 # Valid for one-word paragraph
                 result = (min(nos),max(nos))
             else:
                 mes = _('Failed to find words of paragraph #{}!')
                 mes = mes.format(sent_no)
-                objs.mes(f,mes,True).warning()
+                objs.get_mes(f,mes,True).show_warning()
         else:
             com.cancel(f)
         return result
@@ -3855,15 +3867,15 @@ class Words:
     def complete(self):
         f = '[shared] logic.Words.complete'
         if self.Success:
-            self.sent_nos()
-            for i in range(self.len()):
-                self.words[i].empty()
-                self.words[i].ref()
-                self.words[i].nm()
-                self.words[i].spell()
-                self.words[i].tf()
-                self.words[i].tl()
-            self.text_nm()
+            self.get_sent_nos()
+            for i in range(self.get_len()):
+                self.words[i].is_empty()
+                self.words[i].has_ref()
+                self.words[i].get_nm()
+                self.words[i].check_spell()
+                self.words[i].get_tf()
+                self.words[i].get_tl()
+            self.get_text_nm()
         else:
             com.cancel(f)
 
@@ -3871,39 +3883,41 @@ class Words:
 
 class Search:
 
-    def __init__(self,text=None,search=None):
-        self.Success    = False
-        self.i          = 0
-        self._next_loop = []
-        self._prev_loop = []
-        if text and search:
-            self.reset(text=text,search=search)
+    def __init__(self,text=None,pattern=None):
+        self.Success  = False
+        self.i        = 0
+        self.nextloop = []
+        self.prevloop = []
+        if text and pattern:
+            self.reset (text    = text
+                       ,pattern = pattern
+                       )
 
-    def reset(self,text,search):
+    def reset(self,text,pattern):
         f = '[shared] logic.Search.reset'
-        self.Success    = True
-        self.i          = 0
-        self._next_loop = []
-        self._prev_loop = []
-        self._text      = text
-        self._search    = search
-        if not self._search or not self._text:
+        self.Success  = True
+        self.i        = 0
+        self.nextloop = []
+        self.prevloop = []
+        self.text     = text
+        self.pattern  = pattern
+        if not self.pattern or not self.text:
             self.Success = False
             mes = _('Wrong input data!')
-            objs.mes(f,mes,True).warning()
+            objs.get_mes(f,mes,True).show_warning()
 
     def add(self):
         f = '[shared] logic.Search.add'
         if self.Success:
-            if len(self._text) > self.i + len(self._search) - 1:
-                self.i += len(self._search)
+            if len(self.text) > self.i + len(self.pattern) - 1:
+                self.i += len(self.pattern)
         else:
             com.cancel(f)
 
-    def next(self):
-        f = '[shared] logic.Search.next'
+    def get_next(self):
+        f = '[shared] logic.Search.get_next'
         if self.Success:
-            result = self._text.find(self._search,self.i)
+            result = self.text.find(self.pattern,self.i)
             if result != -1:
                 self.i = result
                 self.add()
@@ -3911,55 +3925,55 @@ class Search:
         else:
             com.cancel(f)
 
-    def prev(self):
-        f = '[shared] logic.Search.prev'
+    def get_prev(self):
+        f = '[shared] logic.Search.get_prev'
         if self.Success:
             ''' rfind, unlike find, does not include limits, so we can
                 use it to search backwards
             '''
-            result = self._text.rfind(self._search,0,self.i)
+            result = self.text.rfind(self.pattern,0,self.i)
             if result != -1:
                 self.i = result
             return result
         else:
             com.cancel(f)
 
-    def next_loop(self):
-        f = '[shared] logic.Search.next_loop'
+    def get_next_loop(self):
+        f = '[shared] logic.Search.get_next_loop'
         if self.Success:
-            if not self._next_loop:
+            if not self.nextloop:
                 self.i = 0
                 while True:
-                    result = self.next()
+                    result = self.get_next()
                     if result == -1:
                         break
                     else:
-                        self._next_loop.append(result)
+                        self.nextloop.append(result)
         else:
             com.cancel(f)
-        return self._next_loop
+        return self.nextloop
 
-    def prev_loop(self):
-        f = '[shared] logic.Search.prev_loop'
+    def get_prev_loop(self):
+        f = '[shared] logic.Search.get_prev_loop'
         if self.Success:
-            if not self._prev_loop:
-                self.i = len(self._text)
+            if not self.prevloop:
+                self.i = len(self.text)
                 while True:
-                    result = self.prev()
+                    result = self.get_prev()
                     if result == -1:
                         break
                     else:
-                        self._prev_loop.append(result)
+                        self.prevloop.append(result)
         else:
             com.cancel(f)
-        return self._prev_loop
+        return self.prevloop
 
 
 
 class OCR:
 
     def __init__(self,text):
-        self._text = text
+        self.text = text
 
     # Texts in Latin characters only
     def cyr2lat(self):
@@ -3973,40 +3987,42 @@ class OCR:
               ,'e','o','p','c','y'
               ]
         for i in range(len(cyr)):
-            self._text = self._text.replace(cyr[i],lat[i])
-        return self._text
+            self.text = self.text.replace(cyr[i],lat[i])
+        return self.text
 
     # Digits only
     def letter2digit(self):
-        self._text = self._text.replace('З','3').replace('з','3').replace('O','0').replace('О','0').replace('б','6')
-        return self._text
+        self.text = self.text.replace('З','3').replace('з','3')
+        self.text = self.text.replace('O','0').replace('О','0')
+        self.text = self.text.replace('б','6')
+        return self.text
 
-    def common(self):
+    def run_common(self):
         # 100o => 100°
-        self._text = re.sub(r'(\d+)[oо]',r'\1°',self._text)
+        self.text = re.sub(r'(\d+)[oо]',r'\1°',self.text)
         # 106а => 106a (Cyrillic)
-        self._text = re.sub(r'(\d+)а',r'\1a',self._text)
+        self.text = re.sub(r'(\d+)а',r'\1a',self.text)
         # 106е => 106e (Cyrillic)
-        self._text = re.sub(r'(\d+)е',r'\1e',self._text)
+        self.text = re.sub(r'(\d+)е',r'\1e',self.text)
         # 106Ь => 106b
-        self._text = re.sub(r'(\d+)Ь',r'\1b',self._text)
+        self.text = re.sub(r'(\d+)Ь',r'\1b',self.text)
         # А1 => A1 (Cyrillic)
-        self._text = re.sub(r'А(\d+)',r'A\1',self._text)
+        self.text = re.sub(r'А(\d+)',r'A\1',self.text)
         # 1А => 1A (Cyrillic)
-        self._text = re.sub(r'(\d+)А',r'\1A',self._text)
+        self.text = re.sub(r'(\d+)А',r'\1A',self.text)
         # В1 => B1 (Cyrillic)
-        self._text = re.sub(r'В(\d+)',r'B\1',self._text)
+        self.text = re.sub(r'В(\d+)',r'B\1',self.text)
         # 1В => 1B (Cyrillic)
-        self._text = re.sub(r'(\d+)В',r'\1B',self._text)
+        self.text = re.sub(r'(\d+)В',r'\1B',self.text)
         # С1 => C1 (Cyrillic)
-        self._text = re.sub(r'С(\d+)',r'C\1',self._text)
+        self.text = re.sub(r'С(\d+)',r'C\1',self.text)
         # 1С => 1C (Cyrillic)
-        self._text = re.sub(r'(\d+)С',r'\1C',self._text)
-        #fix a degree sign
-        self._text = re.sub (r'[\s]{0,1}[°o][\s]{0,1}[CС](\W)'
-                            ,r'°C',self._text
-                            )
-        return self._text
+        self.text = re.sub(r'(\d+)С',r'\1C',self.text)
+        # Fix a degree sign
+        self.text = re.sub (r'[\s]{0,1}[°o][\s]{0,1}[CС](\W)'
+                           ,r'°C',self.text
+                           )
+        return self.text
 
 
 
@@ -4028,95 +4044,101 @@ class Decline:
                        ,Auto   = Auto
                        )
         else:
-            self.Auto    = Auto
-            self._orig   = ''
-            self._number = 'sing'
-            self._case   = 'nomn'
-            self._list   = []
+            self.Auto   = Auto
+            self.orig   = ''
+            self.number = 'sing'
+            self.case   = 'nomn'
+            self.lst    = []
 
     def reset(self,text,number='',case='',Auto=True):
-        ''' #todo:
+        ''' #TODO:
             1) Restore punctuation
             2) Optional leading/trailing spaces
         '''
-        self._orig = text
-        self._number = number
+        self.orig = text
+        self.number = number
         # 'nomn', 'gent', 'datv', 'accs', 'ablt', 'loct'
-        self._case = case
+        self.case = case
         self.Auto = Auto
         if self.Auto:
-            result = Text(text=self._orig).delete_punctuation()
+            result = Text(text=self.orig).delete_punctuation()
         else:
-            result = self._orig
-        self._list = result.split(' ')
+            result = self.orig
+        self.lst = result.split(' ')
         ''' Returning 'self' allows to call 'get' in the same line, e.g.
             Decline(text='текст').normal().get()
         '''
         return self
 
     def get(self):
-        result = ' '.join(self._list)
+        result = ' '.join(self.lst)
         if self.Auto:
             result = result.replace('ё','е')
         return result
 
     def decline(self):
         f = '[shared] logic.Decline.decline'
-        for i in range(len(self._list)):
+        for i in range(len(self.lst)):
             # Inflecting '', None, digits and Latin words *only* fails
             ''' mes = _('Decline "{}" in "{}" number and "{}" case')
-                mes = mes.format (self._list[i]
+                mes = mes.format (self.lst[i]
                                  ,self.number()
                                  ,self.case()
                                  )
-                objs.mes(f,mes,True).debug()
+                objs.get_mes(f,mes,True).show_debug()
             '''
             try:
-                self._list[i] = objs.morph().parse(self._list[i])[0].inflect({self.number(),self.case()}).word
+                form = objs.get_morph().parse(self.lst[i])[0]
+                form = form.inflect({self.get_number(),self.get_case()})
+                form = form.word
+                self.lst[i] = form
             except AttributeError:
-                self._list[i] = self._list[i]
+                pass
         return self
 
     # If input is a phrase, 'normal' each word of it
-    def normal(self):
-        for i in range(len(self._list)):
-            self._list[i] = objs.morph().parse(self._list[i])[0].normal_form
+    def get_normal(self):
+        for i in range(len(self.lst)):
+            form = objs.get_morph().parse(self._list[i])[0]
+            self.lst[i] = form.normal_form
         return self
 
-    def number(self):
-        f = '[shared] logic.Decline.number'
-        if not self._number:
-            self._number = 'sing'
+    def get_number(self):
+        f = '[shared] logic.Decline.get_number'
+        if not self.number:
+            self.number = 'sing'
             # Needed by 'max'
-            if self._list:
+            if self.lst:
                 tmp = []
-                for i in range(len(self._list)):
-                    if self._list[i]:
+                for i in range(len(self.lst)):
+                    if self.lst[i]:
                         # Returns 'sing', 'plur' or None
-                        tmp.append(objs.morph().parse(self._list[i])[0].tag.number)
+                        number = self.lst[i][0].tag.number
+                        tmp.append(objs.get_morph().parse(number))
                 if tmp and max(tmp,key=tmp.count) == 'plur':
-                    self._number = 'plur'
-            ''' mes = str(self._number)
-                objs.mes(f,mes,True).debug()
+                    self.number = 'plur'
+            ''' mes = str(self.number)
+                objs.get_mes(f,mes,True).show_debug()
             '''
-        return self._number
+        return self.number
 
-    def case(self):
-        f = '[shared] logic.Decline.case'
-        if not self._case:
-            self._case = 'nomn'
+    def get_case(self):
+        f = '[shared] logic.Decline.get_case'
+        if not self.case:
+            self.case = 'nomn'
             # Needed by 'max'
-            if self._list:
+            if self.lst:
                 tmp = []
-                for i in range(len(self._list)):
-                    if self._list[i]:
-                        tmp.append(objs.morph().parse(self._list[i])[0].tag.case)
+                for i in range(len(self.lst)):
+                    if self.lst[i]:
+                        form = objs.get_morph().parse(self.lst[i])[0]
+                        tmp.append(form.tag.case)
                 result = max(tmp,key=tmp.count)
                 if result:
-                    self._case = result
-            mes = str(self._case)
-            objs.mes(f,mes,True).debug()
-        return self._case
+                    self.case = result
+            mes = str(self.case)
+            objs.get_mes(f,mes,True).show_debug()
+        return self.case
 
 
 
@@ -4125,70 +4147,70 @@ class Objects:
         through different programs both using 'shared.py').
     '''
     def __init__(self):
-        self._enchant_ru = self._morph = self._pretty_table \
-                         = self._pdir = self._online = self._tmpfile \
-                         = self._os = self._mes = None
-        self._icon = ''
+        self.enchant_ru = self.morph = self.pretty_table \
+                         = self.pdir = self.online = self.tmpfile \
+                         = self.os = self.mes = None
+        self.icon = ''
 
-    def mes (self,func=_('Logic error!')
-            ,message=_('Logic error!')
-            ,Silent=False
-            ):
-        if self._mes is None:
-            self._mes = Message
-        return self._mes(func,message,Silent)
+    def get_mes (self,func=_('Logic error!')
+                ,message=_('Logic error!')
+                ,Silent=False
+                ):
+        if self.mes is None:
+            self.mes = Message
+        return self.mes(func,message,Silent)
     
-    def os(self):
-        if self._os is None:
-            self._os = OSSpecific()
-        return self._os
+    def get_os(self):
+        if self.os is None:
+            self.os = OSSpecific()
+        return self.os
     
-    def tmpfile(self,suffix='.htm',Delete=0):
-        if self._tmpfile is None:
-            self._tmpfile = com.tmpfile (suffix = suffix
-                                        ,Delete = Delete
-                                        )
-        return self._tmpfile
+    def get_tmpfile(self,suffix='.htm',Delete=0):
+        if self.tmpfile is None:
+            self.tmpfile = com.get_tmpfile (suffix = suffix
+                                           ,Delete = Delete
+                                           )
+        return self.tmpfile
     
-    def online(self):
-        if self._online is None:
-            self._online = Online()
-        return self._online
+    def get_online(self):
+        if self.online is None:
+            self.online = Online()
+        return self.online
     
-    def pdir(self):
-        if not self._pdir:
-            self._pdir = ProgramDir()
-        return self._pdir
+    def get_pdir(self):
+        if not self.pdir:
+            self.pdir = ProgramDir()
+        return self.pdir
 
-    def enchant(self,lang='ru'):
+    def get_enchant(self,lang='ru'):
         import enchant
-        if not self._enchant_ru:
-            self._enchant_ru = enchant.Dict('ru_RU')
-            self._enchant_gb = enchant.Dict('en_GB')
-            self._enchant_us = enchant.Dict('en_US')
+        if not self.enchant_ru:
+            self.enchant_ru = enchant.Dict('ru_RU')
+            self.enchant_gb = enchant.Dict('en_GB')
+            self.enchant_us = enchant.Dict('en_US')
         if lang == 'ru':
-            return self._enchant_ru
+            return self.enchant_ru
         elif lang == 'gb':
-            return self._enchant_gb
+            return self.enchant_gb
         elif lang == 'us':
-            return self._enchant_us
+            return self.enchant_us
         else:
             mes = 'An unknown mode "{}"!\n\nThe following modes are supported: "{}".'
             mes = mes.format(lang,'ru; gb; us')
-            objs.mes(f,mes).error()
-            return self._enchant_ru
+            objs.get_mes(f,mes).show_error()
+            return self.enchant_ru
 
-    def morph(self):
-        if not self._morph:
+    def get_morph(self):
+        if not self.morph:
             import pymorphy2
-            self._morph = pymorphy2.MorphAnalyzer()
-        return self._morph
+            self.morph = pymorphy2.MorphAnalyzer()
+        return self.morph
 
-    def pretty_table(self):
-        if not self._pretty_table:
+    def get_pretty_table(self):
+        if not self.pretty_table:
             from prettytable import PrettyTable
-            self._pretty_table = PrettyTable
-        return self._pretty_table
+            self.pretty_table = PrettyTable
+        return self.pretty_table
 
 
 
@@ -4208,7 +4230,7 @@ class MessagePool:
             self.free()
             self.pool.append(message)
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
     def delete_first(self):
         f = '[shared] logic.MessagePool.delete_first'
@@ -4216,7 +4238,7 @@ class MessagePool:
             del self.pool[0]
         else:
             mes = _('The pool is empty!')
-            objs.mes(f,mes,True).warning()
+            objs.get_mes(f,mes,True).show_warning()
 
     def delete_last(self):
         f = '[shared] logic.MessagePool.delete_last'
@@ -4224,7 +4246,7 @@ class MessagePool:
             del self.pool[-1]
         else:
             mes = _('The pool is empty!')
-            objs.mes(f,mes,True).warning()
+            objs.get_mes(f,mes,True).show_warning()
 
     def clear(self):
         self.pool = []
@@ -4240,7 +4262,7 @@ class ProgramDir:
         self.dir = sys.path[0]
         # We run app, not interpreter
         if os.path.isfile(self.dir):
-            self.dir = Path(path=self.dir).dirname()
+            self.dir = Path(path=self.dir).get_dirname()
 
     def add(self,*args):
         return os.path.join(self.dir,*args)
@@ -4250,16 +4272,16 @@ class ProgramDir:
 class Timer:
 
     def __init__(self,func_title='__main__'):
-        self._start = self._end = 0
-        self._func_title = func_title
+        self.startv = 0
+        self.func_title = func_title
 
     def start(self):
-        self._start = time.time()
+        self.startv = time.time()
 
     def end(self):
-        delta = float(time.time()-self._start)
+        delta = float(time.time()-self.startv)
         mes = _('The operation has taken {} s.').format(delta)
-        objs.mes(self._func_title,mes,True).debug()
+        objs.get_mes(self.func_title,mes,True).show_debug()
         return delta
 
 
@@ -4271,62 +4293,62 @@ class Table:
                  ,MaxRows=20
                  ):
         f = '[shared] logic.Table.__init__'
-        self._headers = headers
-        self._rows    = rows
-        self.Shorten  = Shorten
-        self.MaxRow   = MaxRow
-        self.MaxRows  = MaxRows
-        if self._headers and self._rows:
+        self.headers = headers
+        self.rows    = rows
+        self.Shorten = Shorten
+        self.MaxRow  = MaxRow
+        self.MaxRows = MaxRows
+        if self.headers and self.rows:
             self.Success = True
         else:
             self.Success = False
-            com.empty(f)
+            com.rep_empty(f)
 
     def _shorten_headers(self):
         self._headers = [Text(text=header).shorten(max_len=self.MaxRow)\
-                         for header in self._headers
+                         for header in self.headers
                         ]
         # prettytable.py, 302: Exception: Field names must be unique!
-        headers = list(set(self._headers))
+        headers = list(set(self.headers))
         ''' prettytable.py, 818: Exception: Row has incorrect number of
             values
         '''
-        if len(headers) != len(self._headers):
+        if len(headers) != len(self.headers):
             result = List (lst1 = headers
-                          ,lst2 = self._headers
+                          ,lst2 = self.headers
                           ).equalize()
             if result:
-                self._headers = result[0]
+                self.headers = result[0]
 
     def _shorten_rows(self):
         f = '[shared] logic.Table._shorten_rows'
-        if self.MaxRows < 2 or self.MaxRows > len(self._rows):
-            self.MaxRows = len(self._rows)
+        if self.MaxRows < 2 or self.MaxRows > len(self.rows):
+            self.MaxRows = len(self.rows)
             mes = _('Set the max number of rows to {}')
             mes = mes.format(self.MaxRows)
-            objs.mes(f,mes,True).info()
+            objs.get_mes(f,mes,True).show_info()
         self.MaxRows = int(self.MaxRows / 2)
-        pos3 = len(self._rows)
+        pos3 = len(self.rows)
         pos2 = pos3 - self.MaxRows
-        self._rows = self._rows[0:self.MaxRows] + self._rows[pos2:pos3]
+        self.rows = self.rows[0:self.MaxRows] + self.rows[pos2:pos3]
 
     def _shorten_row(self):
         # Will not be assigned without using 'for i in range...'
-        for i in range(len(self._rows)):
-            if isinstance(self._rows[i],tuple):
-                self._rows[i] = list(self._rows[i])
-            for j in range(len(self._rows[i])):
-                if isinstance(self._rows[i][j],str):
-                    if len(self._rows[i][j]) > self.MaxRow:
-                        self._rows[i][j] = self._rows[i][j][0:self.MaxRow]
+        for i in range(len(self.rows)):
+            if isinstance(self.rows[i],tuple):
+                self.rows[i] = list(self.rows[i])
+            for j in range(len(self.rows[i])):
+                if isinstance(self.rows[i][j],str):
+                    if len(self.rows[i][j]) > self.MaxRow:
+                        self.rows[i][j] = self.rows[i][j][0:self.MaxRow]
 
     def shorten(self):
         f = '[shared] logic.Table.shorten'
         if self.Success:
             if self.Shorten:
                 self._shorten_headers()
-                self._shorten_rows   ()
-                self._shorten_row    ()
+                self._shorten_rows()
+                self._shorten_row()
         else:
             com.cancel(f)
 
@@ -4334,8 +4356,8 @@ class Table:
         f = '[shared] logic.Table.print'
         if self.Success:
             self.shorten()
-            obj = objs.pretty_table()(self._headers)
-            for row in self._rows:
+            obj = objs.get_pretty_table()(self.headers)
+            for row in self.rows:
                 obj.add_row(row)
             print(obj)
         else:
@@ -4350,81 +4372,81 @@ class FixBaseName:
         a separator and not an illegal character.
     '''
     def __init__(self,basename,AllOS=False,max_len=0):
-        self.AllOS    = AllOS
-        self._name    = basename
-        self._max_len = max_len
+        self.AllOS   = AllOS
+        self.name    = basename
+        self.max_len = max_len
         
-    def length(self):
-        if self._max_len:
-            self._name = self._name[:self._max_len]
+    def set_length(self):
+        if self.max_len:
+            self.name = self.name[:self.max_len]
     
-    def win(self):
-        self._name = [char for char in self._name if not char \
-                      in forbidden_win
-                     ]
-        self._name = ''.join(self._name)
-        if self._name.endswith('.'):
-            self._name = self._name[:-1]
-        self._name = self._name.strip()
-        if self._name.upper() in reserved_win:
-            self._name = ''
+    def run_win(self):
+        self.name = [char for char in self.name if not char \
+                     in forbidden_win
+                    ]
+        self.name = ''.join(self.name)
+        if self.name.endswith('.'):
+            self.name = self.name[:-1]
+        self.name = self.name.strip()
+        if self.name.upper() in reserved_win:
+            self.name = ''
         
-    def lin(self):
-        self._name = [char for char in self._name if not char \
-                      in forbidden_lin
-                     ]
-        self._name = ''.join(self._name)
-        self._name = self._name.strip()
+    def run_lin(self):
+        self.name = [char for char in self.name if not char \
+                     in forbidden_lin
+                    ]
+        self.name = ''.join(self.name)
+        self.name = self.name.strip()
         
-    def mac(self):
-        self._name = [char for char in self._name if not char \
-                      in forbidden_mac
-                     ]
-        self._name = ''.join(self._name)
-        self._name = self._name.strip()
+    def run_mac(self):
+        self.name = [char for char in self.name if not char \
+                     in forbidden_mac
+                    ]
+        self.name = ''.join(self.name)
+        self.name = self.name.strip()
         
     def run(self):
         if self.AllOS:
-            self.win()
-            self.lin()
-            self.mac()
-        elif objs.os().win():
-            self.win()
-        elif objs._os.lin():
-            self.lin()
-        elif objs._os.mac():
-            self.mac()
+            self.run_win()
+            self.run_lin()
+            self.run_mac()
+        elif objs.get_os().is_win():
+            self.run_win()
+        elif objs.os.is_lin():
+            self.run_lin()
+        elif objs.os.is_mac():
+            self.run_mac()
         else:
-            self.win()
-            self.lin()
-            self.mac()
-        self.length()
-        return self._name
+            self.run_win()
+            self.run_lin()
+            self.run_mac()
+        self.set_length()
+        return self.name
 
 
 
 class Get:
     
-    def __init__ (self,url,encoding='UTF-8'
+    def __init__ (self,url,coding='UTF-8'
                  ,Verbose=True,Verify=False
                  ,timeout=6
                  ):
-        self._html     = ''
-        self._timeout  = timeout
-        self._url      = url
-        self._encoding = encoding
-        self.Verbose   = Verbose
-        self.Verify    = Verify
-        self.unverified()
+        self.html    = ''
+        self.timeout = timeout
+        self.url     = url
+        self.coding  = coding
+        self.Verbose = Verbose
+        self.Verify  = Verify
+        self.use_unverified()
     
     def read(self):
         ''' This is a dummy function to return the final result.
             It is needed merely to use 'json' which calls 'read'
             for input object.
         '''
-        return self._html
+        return self.html
     
-    def unverified(self):
+    def use_unverified(self):
         ''' On *some* systems we can get urllib.error.URLError: 
             <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED].
             To get rid of this error, we use this small workaround.
@@ -4435,7 +4457,7 @@ class Get:
                 ssl._create_default_https_context = ssl._create_unverified_context
             else:
                 mes = _('Unable to use unverified certificates!')
-                objs.mes(f,mes,True).warning()
+                objs.get_mes(f,mes,True).show_warning()
         
     def _get(self):
         ''' Changing UA allows us to avoid a bot protection
@@ -4443,45 +4465,45 @@ class Get:
         '''
         f = '[shared] logic.Get._get'
         try:
-            req = urllib.request.Request (url     = self._url
+            req = urllib.request.Request (url     = self.url
                                          ,data    = None
                                          ,headers = {'User-Agent': \
                                                      'Mozilla'
                                                     }
                                          )
-            self._html = \
-            urllib.request.urlopen(req,timeout=self._timeout).read()
+            self.html = \
+            urllib.request.urlopen(req,timeout=self.timeout).read()
             if self.Verbose:
-                mes = _('[OK]: "{}"').format(self._url)
-                objs.mes(f,mes,True).info()
+                mes = _('[OK]: "{}"').format(self.url)
+                objs.get_mes(f,mes,True).show_info()
         # Too many possible exceptions
         except Exception as e:
             mes = _('[FAILED]: "{}". Details: {}')
-            mes = mes.format(self._url,e)
-            objs.mes(f,mes,True).warning()
+            mes = mes.format(self.url,e)
+            objs.get_mes(f,mes,True).show_warning()
     
     def decode(self):
-        ''' Set 'encoding' to None to cancel decoding. This is useful
+        ''' Set 'coding' to None to cancel decoding. This is useful
             if we are downloading a non-text content.
         '''
         f = '[shared] logic.Get.decode'
-        if self._encoding:
-            if self._html:
+        if self.coding:
+            if self.html:
                 try:
-                    self._html = \
-                    self._html.decode(encoding=self._encoding)
+                    self.html = \
+                    self.html.decode(encoding=self.coding)
                 except UnicodeDecodeError:
-                    self._html = str(self._html)
-                    mes = _('Unable to decode "{}"!').format(self._url)
-                    objs.mes(f,mes,True).warning()
+                    self.html = str(self.html)
+                    mes = _('Unable to decode "{}"!').format(self.url)
+                    objs.get_mes(f,mes,True).show_warning()
             else:
-                com.empty(f)
+                com.rep_empty(f)
     
     def run(self):
         f = '[shared] logic.Get.run'
-        if self._url:
+        if self.url:
             # Safely use URL as a string
-            if isinstance(self._url,str):
+            if isinstance(self.url,str):
                 if self.Verbose:
                     timer = Timer(func_title=f)
                     timer.start()
@@ -4489,12 +4511,12 @@ class Get:
                 self.decode()
                 if self.Verbose:
                     timer.end()
-                return self._html
+                return self.html
             else:
-                mes = _('Wrong input data: {}!').format(self._url)
-                objs.mes(f,mes).warning()
+                mes = _('Wrong input data: {}!').format(self.url)
+                objs.get_mes(f,mes).show_warning()
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
 
 
@@ -4507,19 +4529,19 @@ class References:
         if self.words1 and self.words2 and len(self.words1.words) \
         and len(self.words2.words):
             self.Success = True
-            self.words1.sent_nos()
-            self.words2.sent_nos()
-            self.words1.refs()
+            self.words1.get_sent_nos()
+            self.words2.get_sent_nos()
+            self.words1.get_refs()
         else:
             self.Success = False
-            com.empty(f)
+            com.rep_empty(f)
         
-    def ref_before(self,word_no):
-        f = '[shared] logic.References.ref_before'
+    def get_ref_before(self,word_no):
+        f = '[shared] logic.References.get_ref_before'
         if self.Success:
             if word_no < len(self.words1.words):
                 while word_no >= 0:
-                    if self.words1.words[word_no]._ref:
+                    if self.words1.words[word_no].ref:
                         break
                     else:
                         word_no -= 1
@@ -4528,16 +4550,16 @@ class References:
                 sub = '{} < {}'.format(word_no,len(self.words1.words))
                 mes = _('The condition "{}" is not observed!')
                 mes = mes.format(sub)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
         
-    def ref_after(self,word_no):
-        f = '[shared] logic.References.ref_after'
+    def get_ref_after(self,word_no):
+        f = '[shared] logic.References.get_ref_after'
         if self.Success:
             if word_no < len(self.words1.words):
                 while word_no < len(self.words1.words):
-                    if self.words1.words[word_no]._ref:
+                    if self.words1.words[word_no].ref:
                         return word_no
                     else:
                         word_no += 1
@@ -4546,26 +4568,26 @@ class References:
                 sub = '{} < {}'.format(word_no,len(self.words1.words))
                 mes = _('The condition "{}" is not observed!')
                 mes = mes.format(sub)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
     
-    def nearest_ref(self,word_no):
-        f = '[shared] logic.References.nearest_ref'
+    def get_nearest_ref(self,word_no):
+        f = '[shared] logic.References.get_nearest_ref'
         if self.Success:
-            word_no1 = self.ref_before(word_no)
-            word_no2 = self.ref_after(word_no)
+            word_no1 = self.get_ref_before(word_no)
+            word_no2 = self.get_ref_after(word_no)
             if word_no1 == -1 and word_no2 == -1:
                 mes = _('No references have been found!')
-                objs.mes(f,mes,True).info()
+                objs.get_mes(f,mes,True).show_info()
                 return word_no
             elif word_no1 >= 0 and word_no2 == -1:
                 mes = _('No references to the right!')
-                objs.mes(f,mes,True).info()
+                objs.get_mes(f,mes,True).show_info()
                 return word_no1
             elif word_no2 >= 0 and word_no1 == -1:
                 mes = _('No references to the left!')
-                objs.mes(f,mes,True).info()
+                objs.get_mes(f,mes,True).show_info()
                 return word_no2
             else:
                 delta_before = word_no - word_no1
@@ -4577,29 +4599,29 @@ class References:
         else:
             com.cancel(f)
                 
-    def repeated(self,word_no):
-        f = '[shared] logic.References.repeated'
+    def get_repeated(self,word_no):
+        f = '[shared] logic.References.get_repeated'
         if self.Success:
             if word_no < len(self.words1.words):
                 count = 0
                 for i in range(word_no+1):
-                    if self.words1.words[i]._n == self.words1.words[word_no]._n:
+                    if self.words1.words[i].n == self.words1.words[word_no].n:
                         count += 1
                 return count
             else:
                 sub = '{} < {}'.format(word_no,len(self.words1.words))
                 mes = _('The condition "{}" is not observed!')
                 mes = mes.format(sub)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
         
-    def repeated2(self,word_n,count):
-        f = '[shared] logic.References.repeated2'
+    def get_repeated2(self,word_n,count):
+        f = '[shared] logic.References.get_repeated2'
         if self.Success:
             tmp = 0
             for i in range(len(self.words2.words)):
-                if self.words2.words[i]._n == word_n:
+                if self.words2.words[i].n == word_n:
                    tmp += 1
                    if tmp == count:
                        return i
@@ -4611,71 +4633,70 @@ class References:
 class Links:
     
     def __init__(self,text,root='href="'):
-        self.values()
-        self._text = text
+        self.set_values()
+        self.text = text
         # Some sites omit 'http(s):' for their links
-        self._text = self._text.replace('"//www.','"http://www.')
-        self._root = root
+        self.text = self.text.replace('"//www.','"http://www.')
+        self.root = root
         
-    def redirection(self):
-        for i in range(len(self._links)):
-            if '?url' in self._links[i]:
-                self._links[i] = re.sub('.*\?url=','',self._links[i])
+    def redirect(self):
+        for i in range(len(self.links)):
+            if '?url' in self.links[i]:
+                self.links[i] = re.sub('.*\?url=','',self.links[i])
                 # Replace '%3A%2F%2F' with '://' and so on
-                self._links[i] = urllib.parse.unquote(self._links[i])
+                self.links[i] = urllib.parse.unquote(self.links[i])
     
-    def values(self):
-        self._pos   = 0
-        self._links = []
+    def set_values(self):
+        self.pos   = 0
+        self.links = []
     
-    def poses(self):
-        text = self._text
-        search = Search (text   = self._text
-                        ,search = self._root
+    def get_poses(self):
+        search = Search (text    = self.text
+                        ,pattern = self.root
                         )
-        loop = search.next_loop()
-        for self._pos in loop:
-            self.link()
+        loop = search.get_next_loop()
+        for self.pos in loop:
+            self.get_link()
             
-    def link(self):
-        f = '[shared] logic.Links.link'
-        pos = self._pos + len(self._root)
-        if pos >= len(self._text):
+    def get_link(self):
+        f = '[shared] logic.Links.get_link'
+        pos = self.pos + len(self.root)
+        if pos >= len(self.text):
             mes = _('Unexpected end of text!')
-            objs.mes(f,mes,True).warning()
+            objs.get_mes(f,mes,True).show_warning()
         else:
-            text = self._text[pos:]
+            text = self.text[pos:]
             try:
                 pos = text.index('"')
-                self._links.append(text[:pos])
+                self.links.append(text[:pos])
             except ValueError:
                 mes = _('Wrong input data!')
-                objs.mes(f,mes,True).warning()
+                objs.get_mes(f,mes,True).show_warning()
                               
-    def duplicates(self):
+    def delete_duplicates(self):
         ''' Sometimes there are duplicate URLs on a page - we delete
             them there. We may need to preserve an original sorting so
             do not use 'set'.
         '''
-        i = len(self._links) - 1
+        i = len(self.links) - 1
         while i >= 0:
-            ind = self._links.index(self._links[i])
+            ind = self.links.index(self.links[i])
             if ind < i:
-                del self._links[i]
+                del self.links[i]
             i -= 1
-        return self._links
+        return self.links
     
     def add_root(self,root):
-        for i in range(len(self._links)):
-            if self._links[i].startswith('/'):
-                self._links[i] = root + self._links[i]
-        return self._links
+        for i in range(len(self.links)):
+            if self.links[i].startswith('/'):
+                self.links[i] = root + self.links[i]
+        return self.links
         
-    def valid(self):
-        self._links = [link for link in self._links \
-                       if link.startswith('http')
-                      ]
-        return self._links
+    def get_valid(self):
+        self.links = [link for link in self.links \
+                      if link.startswith('http')
+                     ]
+        return self.links
 
 
 
@@ -4684,27 +4705,27 @@ class FilterList:
         Blacklist is a list of patterns, not obligatory full names.
     '''
     def __init__(self,path,blacklist=[]):
-        self._list   = []
-        self._path   = path
-        self._block  = blacklist
-        self.Success = Directory(self._path).Success \
-                       and isinstance(blacklist,list)
+        self.lst     = []
+        self.path    = path
+        self.block   = blacklist
+        self.Success = Directory(self.path).Success \
+                       and isinstance(self.block,list)
     
-    def block(self):
-        f = '[shared] logic.FilterList.block'
+    def set_block(self):
+        f = '[shared] logic.FilterList.set_block'
         if self.Success:
             # Actually, there is no reason to use 'strip' here
-            self._block = [item.lower() for item in self._block if item]
+            self.block = [item.lower() for item in self.block if item]
         else:
             com.cancel(f)
     
-    def list(self):
-        f = '[shared] logic.FilterList.list'
+    def get_list(self):
+        f = '[shared] logic.FilterList.get_list'
         if self.Success:
-            if not self._list:
+            if not self.lst:
                 # Those are base names
-                self._list = os.listdir(self._path)
-            return self._list
+                self.lst = os.listdir(self.path)
+            return self.lst
         else:
             com.cancel(f)
     
@@ -4712,21 +4733,21 @@ class FilterList:
         f = '[shared] logic.FilterList.filter'
         if self.Success:
             match = []
-            for item in self._list:
-                for pattern in self._block:
+            for item in self.lst:
+                for pattern in self.block:
                     if pattern in item.lower():
                         match.append(item)
                         break
             # This allows us to return matches as well if necessary
-            mismatch = list(set(self._list) - set(match))
+            mismatch = list(set(self.lst) - set(match))
             mismatch.sort()
-            return [os.path.join(self._path,item) for item in mismatch]
+            return [os.path.join(self.path,item) for item in mismatch]
         else:
             com.cancel(f)
         
     def run(self):
-        self.block()
-        self.list()
+        self.set_block()
+        self.get_list()
         return self.filter()
 
 
@@ -4734,60 +4755,60 @@ class FilterList:
 class Home:
 
     def __init__(self,app_name='myapp'):
-        self._app_name = app_name
-        self._conf_dir = self._share_dir = ''
+        self.appname = app_name
+        self.confdir = self.sharedir = ''
         
     def add_share(self,*args):
-        return os.path.join(self.share_dir(),*args)
+        return os.path.join(self.get_share_dir(),*args)
     
     def create_share(self):
-        return Path(path=self.share_dir()).create()
+        return Path(path=self.get_share_dir()).create()
     
-    def share_dir(self):
-        if not self._share_dir:
-            if objs.os().win():
+    def get_share_dir(self):
+        if not self.sharedir:
+            if objs.get_os().is_win():
                 os_folder = 'Application Data'
             else:
                 os_folder = os.path.join('.local','share')
-            self._share_dir = os.path.join (self.home()
-                                           ,os_folder
-                                           ,self._app_name
-                                           )
-        return self._share_dir
+            self.sharedir = os.path.join (self.get_home()
+                                         ,os_folder
+                                         ,self.appname
+                                         )
+        return self.sharedir
     
     def create_conf(self):
-        return Path(path=self.conf_dir()).create()
+        return Path(path=self.get_conf_dir()).create()
     
-    def home(self):
+    def get_home(self):
         return os.path.expanduser('~')
         
-    def conf_dir(self):
-        if not self._conf_dir:
-            if objs.os().win():
+    def get_conf_dir(self):
+        if not self.confdir:
+            if objs.get_os().is_win():
                 os_folder = 'Application Data'
             else:
                 os_folder = '.config'
-            self._conf_dir = os.path.join (self.home()
-                                          ,os_folder
-                                          ,self._app_name
-                                          )
-        return self._conf_dir
+            self.confdir = os.path.join (self.get_home()
+                                        ,os_folder
+                                        ,self.appname
+                                        )
+        return self.confdir
     
     def add(self,*args):
-        return os.path.join(self.home(),*args)
+        return os.path.join(self.get_home(),*args)
     
     def add_config(self,*args):
-        return os.path.join(self.conf_dir(),*args)
+        return os.path.join(self.get_conf_dir(),*args)
 
 
 
 class Commands:
 
     def __init__(self):
-        self.lang()
+        self.set_lang()
     
-    def divisible(self,number):
-        f = '[shared] logic.Commands.divisible'
+    def get_additives(self,number):
+        f = '[shared] logic.Commands.get_additives'
         ''' Return integers by which a set integer is divisible (except
             for 1 and itself).
         '''
@@ -4800,11 +4821,11 @@ class Commands:
                 i += 1
         else:
             mes = _('Wrong input data: "{}"!').format(number)
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
         return result
     
-    def figure_commas(self,figure):
-        f = '[shared] logic.Commands.figure_commas'
+    def set_figure_commas(self,figure):
+        f = '[shared] logic.Commands.set_figure_commas'
         figure = str(figure)
         if figure.startswith('-'):
             Minus = True
@@ -4825,12 +4846,12 @@ class Commands:
             figure = '-' + figure
         return figure
     
-    def failed (self,f='Logic error'
-               ,e='Logic error'
-               ,Silent=False
-               ):
+    def rep_failed (self,f='Logic error'
+                   ,e='Logic error'
+                   ,Silent=False
+                   ):
         mes = _('Operation has failed!\n\nDetails: {}').format(e)
-        objs.mes(f,mes,Silent).error()
+        objs.get_mes(f,mes,Silent).show_error()
     
     def sanitize(self,text):
         if text is None:
@@ -4839,13 +4860,13 @@ class Commands:
             text = Text(str(text)).delete_unsupported()
         return text
     
-    def mod_color(self,rgb,delta):
+    def get_mod_color(self,rgb,delta):
         rgb = list(max(min(255,x/256+delta),0) for x in rgb)
         # We need to have integers here. I had a float once.
         rgb = tuple(int(item) for item in rgb)
         return '#%02x%02x%02x' % rgb
     
-    def dialog_save_file(self,types=()):
+    def show_save_dialog(self,types=()):
         if not types:
             types = ((_('Plain text (UTF-8)'),'.txt' )
                     ,( _('Web-page')         ,'.htm' )
@@ -4858,29 +4879,29 @@ class Commands:
         options['title']       = _('Save As:')
         return options
     
-    def lazy(self,func=_('Logic error!')):
+    def rep_lazy(self,func=_('Logic error!')):
         Message (func    = func
                 ,message = _('Nothing to do!')
-                ).info()
+                ).show_info()
     
-    def warning (self,func=_('Logic error!')
-                ,message=_('Logic error!')
-                ):
-        objs.mes (func    = func
-                 ,level   = _('WARNING')
-                 ,message = message
-                 )
+    def show_warning (self,func=_('Logic error!')
+                     ,message=_('Logic error!')
+                     ):
+        objs.get_mes (func    = func
+                     ,level   = _('WARNING')
+                     ,message = message
+                     )
     
-    def info (self,func=_('Logic error!')
-             ,message=_('Logic error!')
-             ):
-        objs.mes (func    = func
-                 ,level   = _('INFO')
-                 ,message = message
-                 )
+    def show_info (self,func=_('Logic error!')
+                  ,message=_('Logic error!')
+                  ):
+        objs.get_mes (func    = func
+                     ,level   = _('INFO')
+                     ,message = message
+                     )
         
     # IEC standard
-    def human_size(self,bsize,LargeOnly=False):
+    def get_human_size(self,bsize,LargeOnly=False):
         result = '%d %s' % (0,_('B'))
         if bsize:
             tebibytes = bsize // pow(2,40)
@@ -4916,8 +4937,8 @@ class Commands:
         seconds = length - all_sec
         return(hours,minutes,seconds)
     
-    def easy_time(self,length=0):
-        f = '[shared] logic.Commands.easy_time'
+    def get_easy_time(self,length=0):
+        f = '[shared] logic.Commands.get_easy_time'
         result = '00:00:00'
         if length:
             hours, minutes, seconds = self.split_time(length)
@@ -4934,12 +4955,12 @@ class Commands:
             mes.append(item)
             result = ':'.join(mes)
         else:
-            com.empty(f)
+            com.rep_empty(f)
         return result
     
-    def yt_date(self,date):
+    def get_yt_date(self,date):
         # Convert a date provided by Youtube API to a timestamp
-        f = '[shared] logic.Commands.yt_date'
+        f = '[shared] logic.Commands.get_yt_date'
         if date:
             pattern = '%Y-%m-%dT%H:%M:%S'
             itime = Time(pattern=pattern)
@@ -4948,17 +4969,17 @@ class Commands:
             if date != tmp[0]:
                 ind  = date.index('.'+tmp[-1])
                 date = date[0:ind]
-            itime._instance = datetime.datetime.strptime(date,pattern)
-            return itime.timestamp()
+            itime.inst = datetime.datetime.strptime(date,pattern)
+            return itime.get_timestamp()
         else:
-            self.empty(f)
+            self.rep_empty(f)
     
-    def yt_length(self,length):
+    def get_yt_length(self,length):
         ''' Convert a length of a video provided by Youtube API (string)
             to seconds.
             Possible variants: PT%dM%dS, PT%dH%dM%dS, P%dDT%dH%dM%dS.
         '''
-        f = '[shared] logic.Commands.yt_length'
+        f = '[shared] logic.Commands.get_yt_length'
         result = 0
         if length:
             if isinstance(length,str) and length[0] == 'P':
@@ -4982,9 +5003,9 @@ class Commands:
                          + seconds
             else:
                 mes = _('Wrong input data: "{}"!').format(length)
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
-            self.empty(f)
+            self.rep_empty(f)
         return result
     
     def rewrite(self,file,Rewrite=False):
@@ -5001,14 +5022,14 @@ class Commands:
             '''
             mes = _('ATTENTION: Do yo really want to rewrite file "{}"?')
             mes = mes.format(file)
-            return objs.mes(f,mes).question()
+            return objs.get_mes(f,mes).show_question()
         else:
             ''' We return True so we may proceed with writing
                 if the file has not been found.
             '''
             return True
     
-    def lang(self):
+    def set_lang(self):
         result = locale.getdefaultlocale()
         if result and len(result) > 0 and result[0]:
             if 'ru' in result[0]:
@@ -5020,15 +5041,15 @@ class Commands:
         else:
             globs['ui_lang'] = 'en'
     
-    def tmpfile(self,suffix='.htm',Delete=0):
+    def get_tmpfile(self,suffix='.htm',Delete=0):
         return tempfile.NamedTemporaryFile (mode     = 'w'
                                            ,encoding = 'UTF-8'
                                            ,suffix   = suffix
                                            ,delete   = Delete
                                            ).name
     
-    def human_time(self,delta):
-        f = '[shared] logic.Commands.human_time'
+    def get_human_time(self,delta):
+        f = '[shared] logic.Commands.get_human_time'
         result = '%d %s' % (0,_('sec'))
         # Allows to use 'None'
         if delta:
@@ -5066,27 +5087,28 @@ class Commands:
                 if mes:
                     result = ' '.join(mes)
             else:
+                mes = _('Wrong input data: "{}"!').format(delta)
                 Message (func    = f
-                        ,message = _('Wrong input data: "{}"!').format(delta)
-                        ).warning()
+                        ,message = mes
+                        ).show_warning()
         else:
-            self.empty(f)
+            self.rep_empty(f)
         return result
     
     def cancel(self,func):
         Message (func    = func
                 ,message = _('Operation has been canceled.')
-                ).warning()
+                ).show_warning()
     
-    def empty(self,func):
+    def rep_empty(self,func):
         Message (func    = func
                 ,message = _('Empty input is not allowed!')
-                ).warning()
+                ).show_warning()
     
-    def not_ready(self,func):
+    def rep_not_ready(self,func):
         Message (func    = func
                 ,message = _('Not implemented yet!')
-                ).info()
+                ).show_info()
 
 
 ''' If there are problems with import or tkinter's wait_variable, put

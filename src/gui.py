@@ -8,7 +8,7 @@ import tkinter.ttk
 # Load PIL only after loading tkinter
 from PIL import Image   as pilimage
 from PIL import ImageTk as piltk
-from skl_shared.localize import _
+from skl_shared2.localize import _
 
 
 class Panes:
@@ -23,11 +23,11 @@ class Panes:
         self.pane3  = pane3
         self.pane4  = pane4
     
-    def icon(self,path=''):
-        self.parent.icon(path)
+    def set_icon(self,path=''):
+        self.parent.set_icon(path)
     
-    def title(self,text=''):
-        self.parent.title(text=text)
+    def set_title(self,text=''):
+        self.parent.set_title(text=text)
         
     def show(self,event=None):
         self.parent.show()
@@ -35,22 +35,22 @@ class Panes:
     def close(self,event=None):
         self.parent.close()
     
-    def pane1_config(self,bg='old lace'):
+    def config_pane1(self,bg='old lace'):
         self.pane1.widget.config(bg=bg)
         # Ignore 'Alt-Up/Down'
         return 'break'
     
-    def pane2_config(self,bg='old lace'):
+    def config_pane2(self,bg='old lace'):
         self.pane2.widget.config(bg=bg)
         # Ignore 'Alt-Up/Down'
         return 'break'
     
-    def pane3_config(self,bg='old lace'):
+    def config_pane3(self,bg='old lace'):
         self.pane3.widget.config(bg=bg)
         # Ignore 'Alt-Up/Down'
         return 'break'
     
-    def pane4_config(self,bg='old lace'):
+    def config_pane4(self,bg='old lace'):
         self.pane4.widget.config(bg=bg)
         # Ignore 'Alt-Up/Down'
         return 'break'
@@ -58,7 +58,7 @@ class Panes:
 
 
 class TextBoxC:
-    ''' #note: there is no '.focus' method since we want to focus on
+    ''' #NOTE: there is no '.focus' method since we want to focus on
         'TextBox.widget' (tk.Text) instead of 'self.parent'
         (tk.Toplevel).
     '''
@@ -66,11 +66,11 @@ class TextBoxC:
         self.parent = parent
         self.widget = self.parent.widget
     
-    def icon(self,path=''):
-        self.parent.icon(path)
+    def set_icon(self,path=''):
+        self.parent.set_icon(path)
     
-    def title(self,text=''):
-        self.parent.title(text)
+    def set_title(self,text=''):
+        self.parent.set_title(text)
     
     def show(self,event=None):
         self.parent.show()
@@ -99,24 +99,24 @@ class TextBox:
                          ,side   = side
                          )
     
-    def marks(self):
+    def get_marks(self):
         return self.widget.mark_names()
     
-    def tags(self):
+    def get_tags(self):
         return self.widget.tag_names()
     
-    def sel_index(self):
+    def get_sel_index(self):
         return (self.index('sel.first')
                ,self.index('sel.last')
                )
     
-    def focus(self):
+    def set_focus(self):
         self.widget.focus_set()
     
-    def index(self,mark='insert'):
+    def get_index(self,mark='insert'):
         return self.widget.index(mark)
     
-    def cursor(self):
+    def get_cursor(self):
         return self.index('insert')
     
     def see(self,mark):
@@ -190,14 +190,14 @@ class EntryC:
         self.parent = parent
         self.widget = self.parent.widget
     
-    def focus(self,event=None):
-        self.parent.focus()
+    def set_focus(self,event=None):
+        self.parent.set_focus()
     
-    def icon(self,path=''):
-        self.parent.icon(path)
+    def set_icon(self,path=''):
+        self.parent.set_icon(path)
     
-    def title(self,text=''):
-        self.parent.title(text)
+    def set_title(self,text=''):
+        self.parent.set_title(text)
     
     def show(self,event=None):
         self.parent.show()
@@ -231,18 +231,18 @@ class Entry:
                          ,expand = expand
                          )
     
-    def sel_index(self):
+    def get_sel_index(self):
         return (self.index('sel.first')
                ,self.index('sel.last')
                )
     
-    def index(self,mark='insert'):
+    def get_index(self,mark='insert'):
         return self.widget.index(mark)
     
-    def cursor(self):
-        return self.index('insert')
+    def get_cursor(self):
+        return self.get_index('insert')
     
-    def focus(self,event=None):
+    def set_focus(self,event=None):
         self.widget.focus_set()
         # Manual Tab focus (left to right widget)
         return 'break'
@@ -273,11 +273,11 @@ class MultCBoxesC:
         self.parent = parent
         self.widget = self.parent.widget
     
-    def icon(self,path=''):
-        self.parent.icon(path)
+    def set_icon(self,path=''):
+        self.parent.set_icon(path)
     
-    def title(self,text=''):
-        self.parent.title(text)
+    def set_title(self,text=''):
+        self.parent.set_title(text)
     
     def show(self,event=None):
         self.parent.show()
@@ -288,14 +288,14 @@ class MultCBoxesC:
 
 
 class CheckBox:
-    ''' #note: For some reason, CheckBox that should be Active must be
+    ''' #NOTE: For some reason, CheckBox that should be Active must be
         assigned to a variable (var = CheckBox(parent,Active=1))
     '''
     def __init__(self,parent,side=None):
         self.parent = parent
         self.side   = side
         self.status = tk.IntVar()
-        self.gui()
+        self.set_gui()
     
     def toggle(self,event=None):
         self.widget.toggle()
@@ -309,7 +309,7 @@ class CheckBox:
     def enable(self,event=None):
         self.widget.select()
     
-    def focus(self,event=None):
+    def set_focus(self,event=None):
         self.widget.focus_set()
     
     def close(self,event=None):
@@ -318,7 +318,7 @@ class CheckBox:
     def show(self,event=None):
         self.parent.show()
     
-    def gui(self):
+    def set_gui(self):
         self.widget = tk.Checkbutton (master   = self.parent.widget
                                      ,variable = self.status
                                      )
@@ -340,11 +340,11 @@ class ProgressBar:
     def show(self,event=None):
         self.parent.show()
     
-    def title(self,text=''):
-        self.parent.title(text)
+    def set_title(self,text=''):
+        self.parent.set_title(text)
     
-    def icon(self,path=''):
-        self.parent.icon(path)
+    def set_icon(self,path=''):
+        self.parent.set_icon(path)
 
 
 
@@ -357,9 +357,9 @@ class ProgressBarItem:
         self.orient = orient
         self.length = length
         self.mode   = mode
-        self.gui()
+        self.set_gui()
     
-    def gui(self):
+    def set_gui(self):
         self.widget = tkinter.ttk.Progressbar (master = self.parent.widget
                                               ,orient = self.orient
                                               ,length = self.length
@@ -374,10 +374,10 @@ class Image:
         convert bytes back to the image.
     '''
     # Accepts both path and 'io.BytesIO(image_bytes)'
-    def loader(self,path):
+    def get_loader(self,path):
         return pilimage.open(path)
     
-    def image(self,loader):
+    def get_image(self,loader):
         return piltk.PhotoImage(loader)
 
 
@@ -389,14 +389,14 @@ class Canvas:
                  ,expand=True,side=None
                  ,fill='both'
                  ):
-        self.parent  = parent
-        self._region = region
-        self.width   = width
-        self.height  = height
-        self.expand  = expand
-        self.side    = side
-        self.fill    = fill
-        self.gui()
+        self.parent = parent
+        self.region = region
+        self.width  = width
+        self.height = height
+        self.expand = expand
+        self.side   = side
+        self.fill   = fill
+        self.set_gui()
     
     def close(self,event=None):
         self.parent.close()
@@ -404,7 +404,7 @@ class Canvas:
     def show(self,event=None):
         self.parent.show()
     
-    def focus(self,event=None):
+    def set_focus(self,event=None):
         self.widget.focus_set()
     
     def embed(self,obj):
@@ -414,14 +414,14 @@ class Canvas:
         self.widget.xview_moveto(x)
         self.widget.yview_moveto(y)
     
-    def region (self,x=0,y=0
-               ,x_border=0
-               ,y_border=0
-               ):
-        self.widget.configure (scrollregion = (-x/2 - x_border
-                                              ,-y/2 - y_border
-                                              , x/2 + x_border
-                                              , y/2 + y_border
+    def set_region (self,x=0,y=0
+                   ,xborder=0
+                   ,yborder=0
+                   ):
+        self.widget.configure (scrollregion = (-x/2 - xborder
+                                              ,-y/2 - yborder
+                                              , x/2 + xborder
+                                              , y/2 + yborder
                                               )
                               )
     
@@ -446,7 +446,7 @@ class Canvas:
     def move_up(self,event=None,value=-1):
         self.widget.yview_scroll(value,'units')
     
-    def mouse_wheel(self,event=None):
+    def get_mouse_wheel(self,event=None):
         ''' Windows XP has the delta of -120, however, it differs
             depending on the version.
         '''
@@ -461,9 +461,9 @@ class Canvas:
         self.move_top()
         self.widget.xview_moveto(0)
     
-    def gui(self):
+    def set_gui(self):
         self.widget = tk.Canvas (master       = self.parent.widget
-                                ,scrollregion = self._region
+                                ,scrollregion = self.region
                                 ,width        = self.width
                                 ,height       = self.height
                                 )
@@ -483,13 +483,13 @@ class Clipboard:
         pass
     
     def paste(self):
-        return objs.root().widget.clipboard_get()
+        return objs.get_root().widget.clipboard_get()
     
     def copy(self,text):
-        objs.root().widget.clipboard_append(text)
+        objs.get_root().widget.clipboard_append(text)
     
     def clear(self):
-        objs.root().widget.clipboard_clear()
+        objs.get_root().widget.clipboard_clear()
 
 
 
@@ -532,11 +532,11 @@ class SymbolMap:
                                 ,expand = True
                                 )
     
-    def icon(self,path=''):
-        self.parent.icon(path)
+    def set_icon(self,path=''):
+        self.parent.set_icon(path)
     
-    def title(self,text=''):
-        self.parent.title(text)
+    def set_title(self,text=''):
+        self.parent.set_title(text)
 
 
 
@@ -553,14 +553,14 @@ class OptionMenu:
         self.side   = side
         self.anchor = anchor
         self.expand = expand
-        self._fill  = fill
+        self.fill_  = fill
         self.tfocus = tfocus
         self.font   = font
         self.width  = width
         self.var    = tk.StringVar(self.parent.widget)
-        self.gui()
+        self.set_gui()
     
-    def focus(self,event=None):
+    def set_focus(self,event=None):
         self.widget.focus_set()
     
     def get(self):
@@ -582,7 +582,7 @@ class OptionMenu:
     def set(self,value):
         self.var.set(value)
     
-    def clear_selection(self):
+    def clear_sel(self):
         self.widget.selection_clear()
     
     def enable(self):
@@ -591,7 +591,7 @@ class OptionMenu:
     def disable(self):
         self.widget.config(state='disabled')
     
-    def gui(self):
+    def set_gui(self):
         if self.Combo:
             self.widget = tkinter.ttk.Combobox (master       = self.parent.widget
                                                ,textvariable = self.var
@@ -606,7 +606,7 @@ class OptionMenu:
         self.widget.pack (side   = self.side
                          ,anchor = self.anchor
                          ,expand = self.expand
-                         ,fill   = self._fill
+                         ,fill   = self.fill_
                          )
         self.widget.configure (takefocus = self.tfocus
                               ,font      = self.font
@@ -621,8 +621,8 @@ class ListBoxC:
         self.parent = parent
         self.widget = self.parent.widget
     
-    def focus(self,event=None):
-        self.widget.focus()
+    def set_focus(self,event=None):
+        self.widget.focus_set()
     
     def show(self,event=None):
         self.parent.show()
@@ -630,16 +630,16 @@ class ListBoxC:
     def close(self,event=None):
         self.parent.close()
     
-    def title(self,text=''):
-        self.parent.title(text)
+    def set_title(self,text=''):
+        self.parent.set_title(text)
     
-    def icon(self,path=''):
-        self.parent.icon(path)
+    def set_icon(self,path=''):
+        self.parent.set_icon(path)
 
 
 
 class ListBox:
-    #todo: configure a font
+    #TODO: configure a font
     def __init__ (self
                  ,parent
                  ,Multiple = False
@@ -651,13 +651,13 @@ class ListBox:
         self.Multiple = Multiple
         self.expand   = expand
         self.side     = side
-        self._fill    = fill
-        self.gui()
+        self.fill_    = fill
+        self.set_gui()
     
     def get(self,ind):
         return self.widget.get(ind)
     
-    def selection(self):
+    def get_sel(self):
         return self.widget.curselection()
     
     def insert(self,item,pos=tk.END):
@@ -667,7 +667,7 @@ class ListBox:
         self.widget.selection_set(ind)
         self.widget.see(ind)
     
-    def clear_selection(self):
+    def clear_sel(self):
         self.widget.selection_clear(0,tk.END)
     
     def clear(self):
@@ -680,10 +680,10 @@ class ListBox:
         # Autofit to contents
         self.widget.config(width=0,height=0)
     
-    def focus(self,event=None):
+    def set_focus(self,event=None):
         self.widget.focus_set()
     
-    def gui(self):
+    def set_gui(self):
         if self.Multiple:
             self.widget = tk.Listbox (master          = self.parent.widget
                                      ,exportselection = 0
@@ -695,7 +695,7 @@ class ListBox:
                                      ,selectmode      = tk.SINGLE
                                      )
         self.widget.pack (expand = self.expand
-                         ,fill   = self._fill
+                         ,fill   = self.fill_
                          ,side   = self.side
                          )
 
@@ -741,16 +741,16 @@ class ToolTipBase:
         self.obj    = obj
         self.widget = self.obj.widget
     
-    def height(self):
+    def get_height(self):
         return self.widget.winfo_height()
     
-    def width(self):
+    def get_width(self):
         return self.widget.winfo_width()
     
-    def rootx(self):
+    def get_rootx(self):
         return self.widget.winfo_rootx()
     
-    def rooty(self):
+    def get_rooty(self):
         return self.widget.winfo_rooty()
     
     def schedule(self,hint_delay,showtip):
@@ -767,14 +767,14 @@ class WaitBox:
         self.parent = parent
         self.widget = self.parent.widget
 
-    def icon(self,file):
+    def set_icon(self,file):
         image = tk.PhotoImage (master = self.widget
                               ,file   = file
                               )
         self.widget.tk.call('wm','iconphoto',self.widget._w,image)
     
-    def title(self,text=''):
-        self.parent.title(text)
+    def set_title(self,text=''):
+        self.parent.set_title(text)
     
     def show(self,event=None):
         self.parent.show()
@@ -816,9 +816,9 @@ class Button:
         self.width    = width
         self.on_img   = on_img
         self.off_img  = off_img
-        self.gui()
+        self.set_gui()
     
-    def gui(self):
+    def set_gui(self):
         if self.off_img:
             self.widget = tk.Button (master           = self.parent.widget
                                     ,image            = self.off_img
@@ -850,14 +850,14 @@ class Button:
                          ,fill   = self.fill
                          )
     
-    def title(self,button_text=''):
+    def set_title(self,button_text=''):
         self.widget.config(text=button_text)
 
-    def active(self):
+    def activate(self):
         self.widget.config(image=self.on_img)
         self.widget.flag_img = self.on_img
 
-    def inactive(self):
+    def inactivate(self):
         self.widget.config(image=self.off_img)
         self.widget.flag_img = self.off_img
 
@@ -867,7 +867,7 @@ class Button:
     def close(self,event=None):
         self.parent.close()
 
-    def focus(self,event=None):
+    def set_focus(self,event=None):
         self.widget.focus_set()
     
     def enable(self):
@@ -910,23 +910,23 @@ class Frame:
                          ,ipady  = ipady
                          )
 
-    def height(self):
+    def get_height(self):
         return self.widget.winfo_height()
     
-    def width(self):
+    def get_width(self):
         return self.widget.winfo_width()
     
-    def reqheight(self):
+    def get_reqheight(self):
         return self.widget.winfo_reqheight()
     
-    def reqwidth(self):
+    def get_reqwidth(self):
         return self.widget.winfo_reqwidth()
     
     def kill(self):
         self.widget.destroy()
     
-    def title(self,text=''):
-        self.parent.title(text)
+    def set_title(self,text=''):
+        self.parent.set_title(text)
 
     def show(self):
         self.parent.show()
@@ -961,19 +961,19 @@ class Label:
         self.height = height
         # Usually the alignment is done by tuning the parent
         self.justify = justify
-        self.gui()
+        self.set_gui()
     
-    def reqheight(self):
+    def get_reqheight(self):
         return self.widget.winfo_reqheight()
     
-    def reqwidth(self):
+    def get_reqwidth(self):
         return self.widget.winfo_reqwidth()
     
     def kill(self):
         self.widget.destroy()
     
-    def title(self,text=''):
-        self.parent.title(text=text)
+    def set_title(self,text=''):
+        self.parent.set_title(text=text)
     
     def close(self,event=None):
         self.parent.close()
@@ -981,14 +981,14 @@ class Label:
     def show(self,event=None):
         self.parent.show()
     
-    def font(self,arg=''):
+    def set_font(self,arg=''):
         try:
             self.widget.config(font=arg)
             return True
         except tk.TclError:
             pass
     
-    def text(self,arg=''):
+    def set_text(self,arg=''):
         self.widget.config(text=arg)
     
     def enable(self,event=None):
@@ -997,7 +997,7 @@ class Label:
     def disable(self,event=None):
         self.widget.config(state='disabled')
     
-    def gui(self):
+    def set_gui(self):
         self.widget = tk.Label (master = self.parent.widget
                                ,image  = self.image
                                ,bg     = self.bg
@@ -1030,7 +1030,7 @@ class Geometry:
     def lift(self):
         self.parent.widget.lift()
     
-    def focus(self):
+    def set_focus(self):
         self.parent.widget.focus_set()
     
     def maximize_win(self):
@@ -1042,13 +1042,13 @@ class Geometry:
     def minimize(self):
         self.parent.widget.iconify()
     
-    def foreground(self):
+    def set_foreground(self):
         self.parent.widget.lift()
     
     def update(self):
-        objs.root().widget.update_idletasks()
+        objs.get_root().widget.update_idletasks()
     
-    def geometry(self):
+    def set_geometry(self):
         return self.parent.widget.geometry()
     
     def restore(self,position):
@@ -1059,30 +1059,30 @@ class Geometry:
 class Top:
     
     def __init__(self,Lock=True):
-        self.parent     = objs.root()
+        self.parent     = objs.get_root()
         self.Lock       = Lock
         self.widget     = tk.Toplevel(self.parent.widget)
         self.tk_trigger = tk.BooleanVar()
         self.widget.protocol("WM_DELETE_WINDOW",self.close)
     
-    def icon(self,file):
+    def set_icon(self,file):
         image = tk.PhotoImage (master = self.widget
                               ,file   = file
                               )
         self.widget.tk.call('wm','iconphoto',self.widget._w,image)
     
-    def idle(self):
+    def update_idle(self):
         self.widget.update_idletasks()
     
-    def geometry(self,position=None):
+    def set_geometry(self,position=None):
         # This method can both retrieve and set coordinates
         return self.widget.geometry(position)
     
-    def focus(self,event=None):
+    def set_focus(self,event=None):
         self.widget.focus_set()
     
-    def resolution(self):
-        self.idle()
+    def get_resolution(self):
+        self.update_idle()
         return (self.widget.winfo_screenwidth()
                ,self.widget.winfo_screenheight()
                )
@@ -1093,7 +1093,7 @@ class Top:
             self.tk_trigger = tk.BooleanVar()
             self.widget.wait_variable(self.tk_trigger)
     
-    def title(self,text):
+    def set_title(self,text):
         self.widget.title(text)
     
     def close(self,event=None):
@@ -1105,20 +1105,20 @@ class Top:
 
 class Commands:
     
-    def image(self,path,width,height):
+    def get_image(self,path,width,height):
         return tk.PhotoImage (file   = path
-                             ,master = objs.root().widget
+                             ,master = objs.get_root().widget
                              ,width  = width
                              ,height = height
                              )
         
-    def mod_color(self,color):
+    def get_mod_color(self,color):
         try:
-            return objs.root().widget.winfo_rgb(color=color)
+            return objs.get_root().widget.winfo_rgb(color=color)
         except tk._tkinter.TclError:
             pass
     
-    def dialog_save_file(self,options=()):
+    def show_save_dialog(self,options=()):
         return tkinter.filedialog.asksaveasfilename(**options)
     
     def bind(self,obj,binding,action):
@@ -1144,7 +1144,7 @@ class MessageBuilder:
     def close(self,event=None):
         self.parent.close()
     
-    def image(self,path,obj):
+    def set_image(self,path,obj):
         ''' Without explicitly indicating 'master', we get
             "image pyimage1 doesn't exist".
         '''
@@ -1152,23 +1152,23 @@ class MessageBuilder:
                              ,file   = path
                              )
         
-    def title(self,text=''):
-        self.parent.title(text)
+    def set_title(self,text=''):
+        self.parent.set_title(text)
         
-    def icon(self,path):
-        self.parent.icon(path)
+    def set_icon(self,path):
+        self.parent.set_icon(path)
 
 
 
 class Font:
     
-    def width(self,font,max_line):
+    def get_width(self,font,max_line):
         return font.measure(max_line)
     
-    def height(self,font):
+    def get_height(self,font):
         return font.metrics("linespace")
     
-    def font(self,family,size):
+    def get_font(self,family,size):
         ''' If an "AttributeError: 'NoneType' object has no attribute
             'call'" is thrown there, then we forgot to run 'tk.Tk()'
             first (no 'gi.objs.start').
@@ -1185,22 +1185,22 @@ class Root:
         self.type   = 'Root'
         self.widget = tk.Tk()
 
-    def icon(self,file):
+    def set_icon(self,file):
         image = tk.PhotoImage (master = self.widget
                               ,file   = file
                               )
         self.widget.tk.call('wm','iconphoto',self.widget._w,image)
 
-    def title(self,text):
+    def set_title(self,text):
         self.widget.title(text)
     
-    def resolution(self):
-        self.idle()
+    def get_resolution(self):
+        self.update_idle()
         return (self.widget.winfo_screenwidth()
                ,self.widget.winfo_screenheight()
                )
     
-    def idle(self):
+    def update_idle(self):
         self.widget.update_idletasks()
     
     def run(self):
@@ -1229,50 +1229,50 @@ class Root:
 class Objects:
 
     def __init__(self):
-        self._root = self._warning = self._error = self._question \
-                   = self._info = self._entry = None
+        self.root = self.warning = self.error = self.question \
+                  = self.info = self.entry = None
     
-    def root(self,Close=True):
-        if not self._root:
-            self._root = Root()
+    def get_root(self,Close=True):
+        if not self.root:
+            self.root = Root()
             if Close:
-                self._root.close()
-        return self._root
+                self.root.close()
+        return self.root
 
     def start(self,Close=True):
-        self.root(Close=Close)
+        self.get_root(Close=Close)
 
     def end(self):
-        self.root().kill()
-        self._root.run()
+        self.get_root().kill()
+        self.root.run()
 
-    def warning(self):
-        if not self._warning:
-            self._warning = MessageBuilder (parent = self.root()
-                                           ,level  = _('WARNING')
-                                           )
-        return self._warning
+    def get_warning(self):
+        if not self.warning:
+            self.warning = MessageBuilder (parent = self.get_root()
+                                          ,level  = _('WARNING')
+                                          )
+        return self.warning
 
-    def error(self):
-        if not self._error:
-            self._error = MessageBuilder (parent = self.root()
-                                         ,level  = _('ERROR')
-                                         )
-        return self._error
-
-    def question(self):
-        if not self._question:
-            self._question = MessageBuilder (parent = self.root()
-                                            ,level  = _('QUESTION')
-                                            )
-        return self._question
-
-    def info(self):
-        if not self._info:
-            self._info = MessageBuilder (parent = self.root()
-                                        ,level  = _('INFO')
+    def get_error(self):
+        if not self.error:
+            self.error = MessageBuilder (parent = self.get_root()
+                                        ,level  = _('ERROR')
                                         )
-        return self._info
+        return self.error
+
+    def get_question(self):
+        if not self.question:
+            self.question = MessageBuilder (parent = self.get_root()
+                                           ,level  = _('QUESTION')
+                                           )
+        return self.question
+
+    def get_info(self):
+        if not self.info:
+            self.info = MessageBuilder (parent = self.get_root()
+                                       ,level  = _('INFO')
+                                       )
+        return self.info
 
 
 

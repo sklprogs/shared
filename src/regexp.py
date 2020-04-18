@@ -2,8 +2,8 @@
 
 import re
 import sre_constants
-import skl_shared.shared as sh
-from skl_shared.localize import _
+import skl_shared2.shared as sh
+from skl_shared2.localize import _
 
 
 class Record:
@@ -22,40 +22,40 @@ class Record:
                 ,with1=None,what2=None,with2=None
                 ,what3=None,with3=None,what4=None
                 ,with4=None,what5=None,with5=None
-                ,_id='Unknown id'
+                ,id_='Unknown id'
                 ):
         f = '[shared] regexp.Record.__init__'
         self.Success = True
-        self._orig   = orig
-        self._final  = final
-        self._what1  = what1
-        self._with1  = with1
-        self._what2  = what2
-        self._with2  = with2
-        self._what3  = what3
-        self._with3  = with3
-        self._what4  = what4
-        self._with4  = with4
-        self._what5  = what5
-        self._with5  = with5
-        self._id     = _id
-        self._what   = self._with = ''
-        if not self._orig or not self._final:
+        self.orig    = orig
+        self.final   = final
+        self.what1   = what1
+        self.with1   = with1
+        self.what2   = what2
+        self.with2   = with2
+        self.what3   = what3
+        self.with3   = with3
+        self.what4   = what4
+        self.with4   = with4
+        self.what5   = what5
+        self.with5   = with5
+        self.id      = id_
+        self.what    = self.with_ = ''
+        if not self.orig or not self.final:
             self.Success = False
             mes = _('Not enough input data!')
-            sh.objs.mes(f,mes).warning()
+            sh.objs.get_mes(f,mes).show_warning()
     
     def apply(self,text):
         f = '[shared] regexp.Record.apply'
         if self.Success:
             try:
-                result = re.sub(self._orig,self._final,text)
+                result = re.sub(self.orig,self.final,text)
             except sre_constants.error:
                 result = ''
                 self.Success = False
                 mes = _('A syntax error in the regular expression (id: {})!')
-                mes = mes.format(self._id)
-                sh.objs.mes(f,mes).warning()
+                mes = mes.format(self.id_)
+                sh.objs.get_mes(f,mes).show_warning()
             return result
         else:
             sh.com.cancel(f)
@@ -63,11 +63,11 @@ class Record:
     def _check(self):
         f = '[shared] regexp.Record._check'
         if self.Success:
-            result = self.apply(text=self._what)
-            if self.Success and result != self._with:
+            result = self.apply(text=self.what)
+            if self.Success and result != self.with_:
                 self.Success = False
                 mes = _('Regular expression {} has failed: we were expecting\n"{}",\nbut received\n"{}".')
-                mes = mes.format(self._id,self._with,result)
+                mes = mes.format(self.id_,self.with_,result)
                 sh.objs.mes(f,mes).warning()
         else:
             sh.com.cancel(f)
@@ -76,36 +76,36 @@ class Record:
     def check(self):
         f = '[shared] regexp.Record.check'
         if self.Success:
-            cond1 = self._what1 and self._with1
-            cond2 = self._what2 and self._with2
-            cond3 = self._what3 and self._with3
-            cond4 = self._what4 and self._with4
-            cond5 = self._what5 and self._with5
+            cond1 = self.what1 and self.with1
+            cond2 = self.what2 and self.with2
+            cond3 = self.what3 and self.with3
+            cond4 = self.what4 and self.with4
+            cond5 = self.what5 and self.with5
             if cond1 or cond2 or cond3 or cond4 or cond5:
                 if cond1:
-                    self._what = self._what1
-                    self._with = self._with1
+                    self.what  = self.what1
+                    self.with_ = self.with1
                     self._check()
                 if self.Success and cond2:
-                    self._what = self._what2
-                    self._with = self._with2
+                    self.what  = self.what2
+                    self.with_ = self.with2
                     self._check()
                 if self.Success and cond3:
-                    self._what = self._what3
-                    self._with = self._with3
+                    self.what  = self.what3
+                    self.with_ = self.with3
                     self._check()
                 if self.Success and cond4:
-                    self._what = self._what4
-                    self._with = self._with4
+                    self.what  = self.what4
+                    self.with_ = self.with4
                     self._check()
                 if self.Success and cond5:
-                    self._what = self._what5
-                    self._with = self._with5
+                    self.what  = self.what5
+                    self.with_ = self.with5
                     self._check()
             else:
                 self.Success = False
                 mes = _('Not enough input data!')
-                sh.objs.mes(f,mes).warning()
+                sh.objs.get_mes(f,mes).show_warning()
         else:
             sh.com.cancel(f)
         return self.Success

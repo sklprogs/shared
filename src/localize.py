@@ -4,8 +4,8 @@
 import os
 import sys
 import gettext
-import skl_shared.gettext_windows
-skl_shared.gettext_windows.setup_env()
+import skl_shared2.gettext_windows
+skl_shared2.gettext_windows.setup_env()
 
 
 class Localization:
@@ -44,7 +44,7 @@ class Localization:
                 self.Success = False                
                 e = str(e)
                 if 'No translation file found' in e:
-                    mes = 'A translation file is missing!'
+                    mes = 'No translation file has been found'
                 else:
                     mes = 'Operation has failed!\n\nDetails: {}'
                     mes = mes.format(e)

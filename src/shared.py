@@ -5,9 +5,9 @@ import sys, os
 import re
 import io
 import pyperclip
-import skl_shared.logic as lg
-import skl_shared.gui   as gi
-from skl_shared.localize import _
+import skl_shared2.logic as lg
+import skl_shared2.gui   as gi
+from skl_shared2.localize import _
 
 GUI_MES  = True
 STOP_MES = False
@@ -20,19 +20,19 @@ class DummyMessage:
     def __init__(self,*args):
         pass
 
-    def debug(self):
+    def show_debug(self):
         pass
     
-    def error(self):
+    def show_error(self):
         pass
 
-    def info(self):
+    def show_info(self):
         pass
                        
-    def warning(self):
+    def show_warning(self):
         pass
 
-    def question(self):
+    def show_question(self):
         pass
 
 
@@ -317,9 +317,9 @@ class Panes:
                  ,words2=None,words3=None
                  ,words4=None
                  ):
-        self._bg      = bg
-        self.Extended = Extended
-        self.add_gui()
+        self.bg     = bg
+        self.Extend = Extended
+        self.set_gui()
         if words1 and words2:
             self.reset (words1 = words1
                        ,words2 = words2
@@ -327,7 +327,7 @@ class Panes:
                        ,words4 = words4
                        )
         
-    def frames(self):
+    def set_frames(self):
         self.frm_prm = Frame (parent = self.parent)
         self.frm_top = Frame (parent = self.frm_prm
                              ,side   = 'top'
@@ -345,7 +345,7 @@ class Panes:
                              ,propag = False
                              ,height = 1
                              )
-        if self.Extended:
+        if self.Extend:
             self.frm_pn3 = Frame (parent = self.frm_btm
                                  ,side   = 'left'
                                  ,propag = False
@@ -357,20 +357,20 @@ class Panes:
                                  ,height = 1
                                  )
 
-    def panes(self):
+    def set_panes(self):
         self.pane1 = TextBox(self.frm_pn1)
         self.pane2 = TextBox(self.frm_pn2)
-        if self.Extended:
+        if self.Extend:
             self.pane3 = TextBox(self.frm_pn3)
             self.pane4 = TextBox(self.frm_pn4)
     
-    def add_gui(self):
+    def set_gui(self):
         self.parent = Top(Maximize=True)
         self.widget = self.parent.widget
-        self.frames()
-        self.panes()
-        self.pane1.focus()
-        if self.Extended:
+        self.set_frames()
+        self.set_panes()
+        self.pane1.set_focus()
+        if self.Extend:
             pane3 = self.pane3
             pane4 = self.pane4
         else:
@@ -381,14 +381,14 @@ class Panes:
                             ,pane3  = pane3
                             ,pane4  = pane4
                             )
-        if self.Extended:
-            self.gui.pane1_config(bg=self._bg)
-        self.icon()
-        self.title()
-        self.bindings()
+        if self.Extend:
+            self.gui.config_pane1(bg=self._bg)
+        self.set_icon()
+        self.set_title()
+        self.set_bindings()
         
-    def title(self,text=_('Compare texts:')):
-        self.gui.title(text=text)
+    def set_title(self,text=_('Compare texts:')):
+        self.gui.set_title(text=text)
         
     def show(self,event=None):
         self.gui.show()
@@ -396,7 +396,7 @@ class Panes:
     def close(self,event=None):
         self.gui.close()
         
-    def bindings(self):
+    def set_bindings(self):
         ''' - We do not bind 'select1' to 'pane1' and 'select2' to
               'pane3' since we need to further synchronize references
               by LMB anyway, and this further binding will rewrite
@@ -443,7 +443,7 @@ class Panes:
                  ,bindings = '<Alt-Left>'
                  ,action   = self.select1
                  )
-        if self.Extended:
+        if self.Extend:
             com.bind (obj      = self.gui
                      ,bindings = ('<Alt-Key-3>','<Control-Key-3>')
                      ,action   = self.select3
@@ -503,51 +503,51 @@ class Panes:
                      )
              
     def decolorize(self):
-        self.gui.pane1_config(bg='white')
-        self.gui.pane2_config(bg='white')
+        self.gui.config_pane1(bg='white')
+        self.gui.config_pane2(bg='white')
         if self.Extended:
-            self.gui.pane3_config(bg='white')
-            self.gui.pane4_config(bg='white')
+            self.gui.config_pane3(bg='white')
+            self.gui.config_pane4(bg='white')
     
     def select1(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
-        self.pane1.focus()
-        if self.Extended:
+        self.pane1.set_focus()
+        if self.Extend:
             self.decolorize()
-            self.gui.pane1_config(bg=self._bg)
+            self.gui.config_pane1(bg=self._bg)
         
     def select2(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
-        self.pane2.focus()
-        if self.Extended:
+        self.pane2.set_focus()
+        if self.Extend:
             self.decolorize()
-            self.gui.pane2_config(bg=self._bg)
+            self.gui.config_pane2(bg=self._bg)
         
     def select3(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
-        self.pane3.focus()
+        self.pane3.set_focus()
         self.decolorize()
-        self.gui.pane3_config(bg=self._bg)
+        self.gui.config_pane3(bg=self._bg)
         
     def select4(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
-        self.pane4.focus()
+        self.pane4.set_focus()
         self.decolorize()
-        self.gui.pane4_config(bg=self._bg)
+        self.gui.config_pane4(bg=self._bg)
         
-    def icon(self,path=None):
+    def set_icon(self,path=None):
         if path:
-            self.gui.icon(path)
+            self.gui.set_icon(path)
         else:
-            self.gui.icon (lg.objs.pdir().add ('..','resources'
-                                              ,'icon_64x64_cpt.gif'
-                                              )
-                          )
+            self.gui.set_icon (lg.objs.get_pdir().add ('..','resources'
+                                                      ,'icon_64x64_cpt.gif'
+                                                      )
+                              )
                           
     def reset(self,words1,words2,words3=None,words4=None):
         self.pane1.reset(words=words1)
         self.pane2.reset(words=words2)
-        if self.Extended:
+        if self.Extend:
             self.pane3.reset(words=words3)
             self.pane4.reset(words=words4)
             self.select1()
@@ -555,7 +555,7 @@ class Panes:
 
 
 class SearchBox:
-    ''' #note: if duplicate spaces/line breaks are not deleted,
+    ''' #NOTE: if duplicate spaces/line breaks are not deleted,
         text with and without punctuation will have a different number
         of words; thus, 'tkinter' will be supplied wrong positions upon
         Search. However, preserving extra spaces/line breaks causes
@@ -587,57 +587,57 @@ class SearchBox:
     
     # Strict: case-sensitive, with punctuation
     def reset_logic(self,words=None,Strict=False):
-        self.Success    = True
-        self._prev_loop = self._next_loop = self._search = self._pos1 \
-                        = self._pos2 = self._text = None
-        self.i          = 0
-        self.words      = words
-        self.Strict     = Strict
+        self.Success  = True
+        self.prevloop = self.nextloop = self.pattern = self.pos1 \
+                      = self.pos2 = self.text = None
+        self.i        = 0
+        self.words    = words
+        self.Strict   = Strict
         if self.words:
             # Do not get text from the widget - it's not packed yet
             if self.Strict:
-                self._text = self.words._text_p
+                self.text = self.words.textp
             else:
-                self._text = self.words._text_n
+                self.text = self.words.textn
             self.isel.reset(words=self.words)
-            self.isearch = lg.Search(text=self._text)
+            self.isearch = lg.Search(text=self.text)
         else:
             self.Success = False
 
     def reset_data(self):
         f = '[shared] shared.SearchBox.reset_data'
-        self.Success    = True
-        self._prev_loop = self._next_loop = self._search = self._pos1 \
-                        = self._pos2 = None
-        self.i          = 0
+        self.Success  = True
+        self.prevloop = self.nextloop = self.pattern = self.pos1 \
+                      = self.pos2 = None
+        self.i        = 0
         self.search()
-        if self._text and self._search:
-            self.isearch.reset (text   = self._text
-                               ,search = self._search
+        if self.text and self.pattern:
+            self.isearch.reset (text   = self.text
+                               ,search = self.pattern
                                )
-            self.isearch.next_loop()
+            self.isearch.get_next_loop()
             # Prevents from calling self.search() once again
-            if not self.isearch._next_loop:
+            if not self.isearch.nextloop:
                 mes = _('No matches!')
-                objs.mes(f,mes).info()
+                objs.get_mes(f,mes).show_info()
                 self.Success = False
         else:
             self.Success = False
             com.cancel(f)
 
-    def loop(self):
-        f = '[shared] shared.SearchBox.loop'
+    def get_loop(self):
+        f = '[shared] shared.SearchBox.get_loop'
         if self.Success:
-            if not self.isearch._next_loop:
+            if not self.isearch.nextloop:
                 self.reset()
         else:
             com.cancel(f)
-        return self.isearch._next_loop
+        return self.isearch.nextloop
 
     def add(self):
         f = '[shared] shared.SearchBox.add'
         if self.Success:
-            if self.i < len(self.loop()) - 1:
+            if self.i < len(self.get_loop()) - 1:
                 self.i += 1
         else:
             com.cancel(f)
@@ -650,27 +650,27 @@ class SearchBox:
         else:
             com.cancel(f)
 
-    def new(self,event=None):
+    def get_new(self,event=None):
         self.reset_data()
-        self.next()
+        self.get_next()
 
     def select(self):
         f = '[shared] shared.SearchBox.select'
         if self.Success:
             if self.Strict:
-                result1 = self.words.no_by_pos_p(pos=self.pos1())
-                result2 = self.words.no_by_pos_p(pos=self.pos2())
+                result1 = self.words.get_no_by_pos_p(pos=self.get_pos1())
+                result2 = self.words.get_no_by_pos_p(pos=self.get_pos2())
             else:
-                result1 = self.words.no_by_pos_n(pos=self.pos1())
-                result2 = self.words.no_by_pos_n(pos=self.pos2())
+                result1 = self.words.get_no_by_pos_n(pos=self.get_pos1())
+                result2 = self.words.get_no_by_pos_n(pos=self.get_pos2())
             if result1 is None or result2 is None:
                 mes = _('Wrong input data!')
-                objs.mes(f,mes,True).error()
+                objs.get_mes(f,mes,True).show_error()
             else:
-                _pos1 = self.words.words[result1].tf()
-                _pos2 = self.words.words[result2].tl()
-                self.isel.reset (pos1 = _pos1
-                                ,pos2 = _pos2
+                pos1 = self.words.words[result1].get_tf()
+                pos2 = self.words.words[result2].get_tl()
+                self.isel.reset (pos1 = pos1
+                                ,pos2 = pos2
                                 ,bg   = 'green2'
                                 )
                 self.isel.set()
@@ -681,89 +681,89 @@ class SearchBox:
         f = '[shared] shared.SearchBox.search'
         if self.Success:
             if self.words:
-                if not self._search:
-                    self.ientry.focus()
+                if not self.pattern:
+                    self.ientry.set_focus()
                     self.ientry.select_all()
                     self.ientry.show()
-                    self._search = self.ientry.get()
-                    if self._search and not self.Strict:
-                        self._search = lg.Text (text = self._search
+                    self.pattern = self.ientry.get()
+                    if self.pattern and not self.Strict:
+                        self.pattern = lg.Text (text = self.pattern
                                                ,Auto = False
                                                ).delete_punctuation()
-                        self._search = lg.Text (text = self._search
+                        self.pattern = lg.Text (text = self.pattern
                                                ,Auto = False
                                                ).delete_duplicate_spaces()
-                        self._search = self._search.lower()
+                        self.pattern = self.pattern.lower()
             else:
-                com.empty(f)
-            return self._search
+                com.rep_empty(f)
+            return self.pattern
         else:
             com.cancel(f)
 
-    def next(self,event=None):
-        f = '[shared] shared.SearchBox.next'
+    def get_next(self,event=None):
+        f = '[shared] shared.SearchBox.get_next'
         if self.Success:
-            _loop = self.loop()
-            if _loop:
+            loop = self.get_loop()
+            if loop:
                 old_i = self.i
                 self.add()
                 if old_i == self.i:
-                    if len(_loop) == 1:
+                    if len(loop) == 1:
                         mes = _('Only one match has been found!')
-                        objs.mes(f,mes).info()
+                        objs.get_mes(f,mes).show_info()
                     else:
                         self.i = 0
                         mes = _('No more matches, continuing from the top!')
-                        objs.mes(f,mes).info()
+                        objs.get_mes(f,mes).show_info()
                 self.select()
             else:
                 mes = _('No matches!')
-                objs.mes(f,mes).info()
+                objs.get_mes(f,mes).show_info()
         else:
             com.cancel(f)
 
-    def prev(self,event=None):
-        f = '[shared] shared.SearchBox.prev'
+    def get_prev(self,event=None):
+        f = '[shared] shared.SearchBox.get_prev'
         if self.Success:
-            _loop = self.loop()
-            if _loop:
+            loop = self.get_loop()
+            if loop:
                 old_i = self.i
                 self.subtract()
                 if old_i == self.i:
-                    if len(_loop) == 1:
+                    if len(loop) == 1:
                         mes = _('Only one match has been found!')
-                        objs.mes(f,mes).info()
+                        objs.get_mes(f,mes).show_info()
                     else:
                         # Not just -1
-                        self.i = len(_loop) - 1
+                        self.i = len(loop) - 1
                         mes = _('No more matches, continuing from the bottom!')
-                        objs.mes(f,mes).info()
+                        objs.get_mes(f,mes).show_info()
                 self.select()
             else:
                 mes = _('No matches!')
-                objs.mes(f,mes).info()
+                objs.get_mes(f,mes).show_info()
         else:
             com.cancel(f)
 
-    def pos1(self):
-        f = '[shared] shared.SearchBox.pos1'
+    def get_pos1(self):
+        f = '[shared] shared.SearchBox.get_pos1'
         if self.Success:
-            if self._pos1 is None:
-                self.loop()
+            if self.pos1 is None:
+                self.get_loop()
                 self.i = 0
-            _loop = self.loop()
-            if _loop:
-                self._pos1 = _loop[self.i]
-            return self._pos1
+            loop = self.get_loop()
+            if loop:
+                self.pos1 = loop[self.i]
+            return self.pos1
         else:
             com.cancel(f)
 
-    def pos2(self):
-        f = '[shared] shared.SearchBox.pos2'
+    def get_pos2(self):
+        f = '[shared] shared.SearchBox.get_pos2'
         if self.Success:
-            if self.pos1() is not None:
-                self._pos2 = self._pos1 + len(self.search())
-            return self._pos2
+            if self.get_pos1() is not None:
+                self.pos2 = self.pos1 + len(self.search())
+            return self.pos2
         else:
             com.cancel(f)
 
@@ -775,7 +775,7 @@ class Selection:
         com.bind(itxt,'<ButtonRelease-1>',action)
 
     def action(event=None):
-        """ Refresh coordinates (or set isel._pos1, isel._pos2
+        """ Refresh coordinates (or set isel.pos1, isel.pos2
             manually).
         """
         isel.get()
@@ -793,14 +793,14 @@ class Selection:
               ,fg    = None
               ,tag   = 'tag'
               ):
-        self._pos1 = pos1
-        self._pos2 = pos2
-        self._text = ''
-        self._bg   = bg
-        self._fg   = fg
-        if not self._bg and not self._fg:
-            self._bg = 'cyan'
-        self._tag  = tag
+        self.pos1 = pos1
+        self.pos2 = pos2
+        self.text = ''
+        self.bg   = bg
+        self.fg   = fg
+        if not self.bg and not self.fg:
+            self.bg = 'cyan'
+        self.tag  = tag
         self.words = words
 
     def clear(self,tag='sel',pos1='1.0',pos2='end'):
@@ -809,82 +809,82 @@ class Selection:
                              ,pos2 = pos2
                              )
 
-    def pos1(self):
-        if self._pos1 is None:
+    def get_pos1(self):
+        if self.pos1 is None:
             self.get()
-        return self._pos1
+        return self.pos1
 
-    def pos2(self):
-        if self._pos2 is None:
+    def get_pos2(self):
+        if self.pos2 is None:
             self.get()
-        return self._pos2
+        return self.pos2
 
     def get(self,event=None):
         f = '[shared] shared.Selection.get'
         try:
-            self._pos1, self._pos2 = self.itxt.gui.sel_index()
+            self.pos1, self.pos2 = self.itxt.gui.get_sel_index()
         except Exception as e:
-            self._pos1, self._pos2 = None, None
+            self.pos1, self.pos2 = None, None
             # Too frequent
-            #com.failed(f,e)
+            #com.rep_failed(f,e)
         # Too frequent
         '''
-        mes = '{}-{}'.format(self._pos1,self._pos2)
-        objs.mes(f,mes,True).debug()
+        mes = '{}-{}'.format(self.pos1,self.pos2)
+        objs.get_mes(f,mes,True).show_debug()
         '''
-        return(self._pos1,self._pos2)
+        return(self.pos1,self.pos2)
 
-    def text(self):
-        f = '[shared] shared.Selection.text'
-        ''' #todo: do not use self.variables so we don't have to reset
+    def get_text(self):
+        f = '[shared] shared.Selection.get_text'
+        ''' #TODO: do not use self.variables so we don't have to reset
             this class (or, even better, delete this class from all
             projects).
         '''
-        self._text = ''
+        self.text = ''
         try:
-            self._text = self.itxt.gui.get_sel()
-            self._text = self._text.replace('\r','').replace('\n','')
+            self.text = self.itxt.gui.get_sel()
+            self.text = self.text.replace('\r','').replace('\n','')
         except:
             ''' Tkinter will throw an exception if there is no
                 selection, so we just ignore this exception.
             '''
             pass
-        return self._text
+        return self.text
 
     def select_all(self):
         self.itxt.select_all()
 
     def set(self,DelPrev=True,AutoScroll=True):
-        if self.pos1() and self.pos2():
-            mark = self._pos1
-            self.itxt.tag_add (pos1    = self._pos1
-                              ,pos2    = self._pos2
-                              ,tag     = self._tag
+        if self.get_pos1() and self.get_pos2():
+            mark = self.pos1
+            self.itxt.tag_add (pos1    = self.pos1
+                              ,pos2    = self.pos2
+                              ,tag     = self.tag
                               ,DelPrev = DelPrev
                               )
         else:
             # Just need to return something w/o warnings
-            _cursor = mark = self.itxt.cursor()
-            self.itxt.tag_add (tag     = self._tag
-                              ,pos1    = _cursor
-                              ,pos2    = _cursor
+            cursor = mark = self.itxt.get_cursor()
+            self.itxt.tag_add (tag     = self.tag
+                              ,pos1    = cursor
+                              ,pos2    = cursor
                               ,DelPrev = DelPrev
                               )
         
-        if self._bg:
+        if self.bg:
             ''' This is not necessary for 'sel' tag which is hardcoded
                 for selection and permanently colored with gray.
                 A 'background' attribute cannot be changed for a 'sel'
                 tag.
             '''
-            self.itxt.tag_config (tag = self._tag
-                                 ,bg  = self._bg
+            self.itxt.tag_config (tag = self.tag
+                                 ,bg  = self.bg
                                  )
-        elif self._fg:
-            self.itxt.tag_config (tag = self._tag
-                                 ,fg  = self._fg
+        elif self.fg:
+            self.itxt.tag_config (tag = self.tag
+                                 ,fg  = self.fg
                                  )
-        #todo: select either 'see' or 'autoscroll'
+        #TODO: select either 'see' or 'autoscroll'
         if AutoScroll:
             #self.itxt.see(mark)
             self.itxt.autoscroll(mark)
@@ -898,12 +898,12 @@ class TextBoxC:
                  ):
         self.Active   = False
         self.Maximize = Maximize
-        self._title   = title
-        self._icon    = icon
-        self._font    = font
+        self.title    = title
+        self.icon     = icon
+        self.font     = font
         self.words    = words
-        self.add_gui()
-        self.focus()
+        self.set_gui()
+        self.set_focus()
     
     def mark_remove(self,mark='insert'):
         self.obj.mark_remove(mark)
@@ -952,9 +952,9 @@ class TextBoxC:
     def disable(self,event=None):
         self.obj.disable()
     
-    def focus(self,event=None):
+    def set_focus(self,event=None):
         # Focus on 'tk.Text' instead of 'tk.Toplevel'
-        self.obj.focus()
+        self.obj.set_focus()
     
     def insert (self,text=''
                ,pos='1.0',mode=None
@@ -967,12 +967,12 @@ class TextBoxC:
     def reset(self,words=None,title=''):
         self.words = words
         self.obj.reset(self.words)
-        self.title(title)
+        self.set_title(title)
     
-    def add_gui(self):
+    def set_gui(self):
         self.parent = Top (Maximize = self.Maximize
-                          ,title    = self._title
-                          ,icon     = self._icon
+                          ,title    = self.title
+                          ,icon     = self.icon
                           )
         self.widget = self.parent.widget
         self.gui = gi.TextBoxC(self.parent)
@@ -980,28 +980,28 @@ class TextBoxC:
                            ,words   = self.words
                            ,ScrollX = False
                            ,ScrollY = True
-                           ,icon    = self._icon
-                           ,font    = self._font
+                           ,icon    = self.icon
+                           ,font    = self.font
                            )
-        self.bindings()
+        self.set_bindings()
     
-    def spelling(self):
+    def check_spell(self):
         ''' Tags can be marked only after text is inserted; thus, call
             this procedure separately before '.show'.
         '''
-        f = '[shared] shared.TextBox.spelling'
+        f = '[shared] shared.TextBox.check_spell'
         if self.words:
-            self.words.sent_nos()
+            self.words.get_sent_nos()
             result = []
-            for i in range(self.words.len()):
-                if not self.words.words[i].spell():
+            for i in range(self.words.get_len()):
+                if not self.words.words[i].check_spell():
                     result.append(i)
             if result:
                 self.clear_tags()
                 for i in range(len(result)):
-                    no   = self.words._no = result[i]
-                    pos1 = self.words.words[no].tf()
-                    pos2 = self.words.words[no].tl()
+                    no   = self.words.no = result[i]
+                    pos1 = self.words.words[no].get_tf()
+                    pos2 = self.words.words[no].get_tl()
                     if pos1 and pos2:
                         self.tag_add (tag     = 'spell'
                                      ,pos1    = pos1
@@ -1010,26 +1010,26 @@ class TextBoxC:
                                      )
                 
                 mes = _('{} tags to assign').format(len(result))
-                objs.mes(f,mes,True).debug()
+                objs.get_mes(f,mes,True).show_debug()
                 self.tag_config (tag = 'spell'
                                 ,bg  = 'red'
                                 )
             else:
                 mes = _('Spelling seems to be correct.')
-                objs.mes(f,mes,True).info()
+                objs.get_mes(f,mes,True).show_info()
         else:
-            com.empty(f)
+            com.rep_empty(f)
     
-    def icon(self,path=''):
+    def set_icon(self,path=''):
         if path:
-            self._icon = path
-        self.gui.icon(self._icon)
+            self.icon = path
+        self.gui.set_icon(self.icon)
 
-    def title(self,text=''):
+    def set_title(self,text=''):
         text = lg.com.sanitize(text)
         if text:
-            self._title = text
-        self.gui.title(self._title)
+            self.title = text
+        self.gui.set_title(self.title)
     
     def get(self,event=None):
         return self.obj.get()
@@ -1042,7 +1042,7 @@ class TextBoxC:
         self.Active = False
         self.gui.close()
     
-    def bindings(self):
+    def set_bindings(self):
         com.bind (obj      = self.gui
                  ,bindings = ('<Escape>','<Control-w>','<Control-q>')
                  ,action   = self.close
@@ -1056,13 +1056,13 @@ class TextBoxRO(TextBoxC):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-        self.ro_add_gui()
+        self.ro_set_gui()
     
     def reset(self,words=None,title=''):
         self.enable()
         self.words = words
         self.obj.reset(self.words)
-        self.title(title)
+        self.set_title(title)
         self.disable()
     
     def insert (self,text=''
@@ -1075,7 +1075,7 @@ class TextBoxRO(TextBoxC):
                         )
         self.disable()
     
-    def ro_buttons(self):
+    def ro_set_buttons(self):
         self.btn_cls = Button (parent   = self.frm_btn
                               ,action   = self.close
                               ,text     = _('Close')
@@ -1088,18 +1088,18 @@ class TextBoxRO(TextBoxC):
                               ,expand   = True
                               )
     
-    def ro_add_gui(self):
-        self.ro_frames()
-        self.ro_buttons()
-        self.ro_bindings()
+    def ro_set_gui(self):
+        self.ro_set_frames()
+        self.ro_set_buttons()
+        self.ro_set_bindings()
     
-    def ro_frames(self):
+    def ro_set_frames(self):
         self.frm_btn = Frame (parent = self.gui.parent
                              ,expand = False
                              ,side   = 'bottom'
                              )
     
-    def ro_bindings(self):
+    def ro_set_bindings(self):
         # Do not add a new line
         self.gui.unbind('<Return>')
         self.gui.unbind('<KP_Enter>')
@@ -1116,7 +1116,7 @@ class TextBoxRW(TextBoxC):
         super().__init__(*args,**kwargs)
         self.Save    = False
         self.rw_text = ''
-        self.rw_add_gui()
+        self.add_rw_gui()
     
     def insert (self,text=''
                ,pos='1.0',mode='top'
@@ -1131,7 +1131,7 @@ class TextBoxRW(TextBoxC):
         self.Save  = False
         self.words = words
         self.obj.reset(self.words)
-        self.title(title)
+        self.set_title(title)
     
     def reload(self,event=None):
         self.reset()
@@ -1147,7 +1147,7 @@ class TextBoxRW(TextBoxC):
         self.Save = True
         self.close()
     
-    def rw_buttons(self):
+    def set_rw_buttons(self):
         self.btn_cls = Button (parent   = self.frm_btl
                               ,action   = self.close
                               ,text     = _('Close')
@@ -1172,12 +1172,12 @@ class TextBoxRW(TextBoxC):
                               ,bindings = ('<F2>','<Control-s>')
                               )
     
-    def rw_add_gui(self):
-        self.rw_frames()
-        self.rw_buttons()
-        self.rw_bindings()
+    def add_rw_gui(self):
+        self.set_rw_frames()
+        self.set_rw_buttons()
+        self.set_rw_bindings()
     
-    def rw_frames(self):
+    def set_rw_frames(self):
         self.frm_btn = Frame (parent = self.gui.parent
                              ,expand = False
                              ,side   = 'bottom'
@@ -1189,7 +1189,7 @@ class TextBoxRW(TextBoxC):
                              ,side   = 'right'
                              )
     
-    def rw_bindings(self):
+    def set_rw_bindings(self):
         com.bind (obj      = self.gui
                  ,bindings = ('<F2>','<Control-s>')
                  ,action   = self.save
@@ -1209,7 +1209,7 @@ class TextBox:
                  ,ScrollX=False,ScrollY=True
                  ,wrap='word',icon=''
                  ):
-        self.values()
+        self.set_values()
         self.parent  = parent
         self.expand  = expand
         self.side    = side
@@ -1227,14 +1227,14 @@ class TextBox:
                                 ,words = self.words
                                 ,icon  = icon
                                 )
-        self.add_gui()
+        self.set_gui()
 
     def clear_marks(self,event=None):
-        for mark in self.gui.marks():
+        for mark in self.gui.get_marks():
             self.mark_remove(mark)
     
     def clear_tags(self,event=None):
-        for tag in self.gui.tags():
+        for tag in self.gui.get_tags():
             self.tag_remove(tag)
     
     def disable(self,event=None):
@@ -1243,12 +1243,12 @@ class TextBox:
     def enable(self,event=None):
         self.gui.enable()
     
-    def values(self):
+    def set_values(self):
         self.type    = 'TextBox'
         self.scr_ver = None
         self.scr_hor = None
 
-    def frames(self):
+    def set_frames(self):
         self.frm_prm = Frame (parent = self.parent
                              ,side   = self.side
                              ,expand = self.expand
@@ -1274,8 +1274,8 @@ class TextBox:
                              ,fill   = 'x'
                              )
     
-    def add_gui(self):
-        self.frames()
+    def set_gui(self):
+        self.set_frames()
         self.gui = gi.TextBox (parent = self.frm_txt
                               ,wrap   = self.wrap
                               ,expand = self.expand
@@ -1293,7 +1293,7 @@ class TextBox:
                                      ,scroll = self.gui
                                      ,Horiz  = True
                                      )
-        self.bindings()
+        self.set_bindings()
 
     def reset(self,words=None):
         self.clear_text()
@@ -1304,18 +1304,18 @@ class TextBox:
             # Selection is reset in 'SearchBox.reset'
             self.search.reset(self.words)
 
-    def bindings(self):
+    def set_bindings(self):
         com.bind (obj      = self.gui
                  ,bindings = ('<Control-f>','<Control-F3>')
-                 ,action   = self.search.new
+                 ,action   = self.search.get_new
                  )
         com.bind (obj      = self.gui
                  ,bindings = '<F3>'
-                 ,action   = self.search.next
+                 ,action   = self.search.get_next
                  )
         com.bind (obj      = self.gui
                  ,bindings = '<Shift-F3>'
-                 ,action   = self.search.prev
+                 ,action   = self.search.get_prev
                  )
         # Custom selection
         com.bind (obj      = self.gui
@@ -1336,9 +1336,9 @@ class TextBox:
 
     def toggle_case(self,event=None):
         f = '[shared] shared.TextBox.toggle_case'
-        text = Text(text=self.select.text()).toggle_case()
+        text = Text(text=self.select.get_text()).toggle_case()
         pos1, pos2 = self.select.get()
-        self.clear_selection()
+        self.clear_sel()
         self.insert (text = text
                     ,pos  = self.cursor()
                     )
@@ -1350,7 +1350,7 @@ class TextBox:
                               )
             self.select.set(DelPrev=0,AutoScroll=0)
         else:
-            com.empty(f)
+            com.rep_empty(f)
         return 'break'
 
     def _get(self):
@@ -1358,7 +1358,7 @@ class TextBox:
         try:
             return self.gui.get()
         except Exception as e:
-            com.failed(f,e)
+            com.rep_failed(f,e)
 
     def get(self,Strip=True):
         result = self._get()
@@ -1382,7 +1382,7 @@ class TextBox:
                             ,pos  = pos
                             )
         except Exception as e:
-            com.failed(f,e)
+            com.rep_failed(f,e)
         ''' #NOTE: 'Tkinter' does not go to the cursor position
             automatically, but we should not use 'self.scroll' each time
             'self.insert' is used because in that case pasting text in
@@ -1407,10 +1407,10 @@ class TextBox:
             ''' Do not use GUI here since 'MessageBuilder' depends on
                 'TextBox'.
             '''
-            objs.mes(f,mes,True).error()
+            objs.get_mes(f,mes,True).show_error()
 
     def paste(self,event=None):
-        self.clear_selection()
+        self.clear_sel()
         self.insert (text = Clipboard().paste()
                     ,pos  = self.cursor()
                     )
@@ -1436,7 +1436,7 @@ class TextBox:
                                 ,pos2 = pos2
                                 )
         except Exception as e:
-            com.failed(f,e)
+            com.rep_failed(f,e)
 
     def tag_add (self,tag='sel',pos1='1.0'
                 ,pos2='end',DelPrev=True
@@ -1450,7 +1450,7 @@ class TextBox:
                              ,pos2 = pos2
                              )
         except Exception as e:
-            com.failed(f,e)
+            com.rep_failed(f,e)
 
     def tag_config (self,tag='sel',bg=None
                    ,fg=None,font=None
@@ -1463,7 +1463,7 @@ class TextBox:
                                 ,font = font
                                 )
         except Exception as e:
-            com.failed(f,e)
+            com.rep_failed(f,e)
 
     def mark_add(self,mark='insert',pos='1.0'):
         f = '[shared] shared.TextBox.mark_add'
@@ -1472,14 +1472,14 @@ class TextBox:
                               ,pos  = pos
                               )
         except Exception as e:
-            com.failed(f,e)
+            com.rep_failed(f,e)
 
     def mark_remove(self,mark='insert'):
         f = '[shared] shared.TextBox.mark_remove'
         try:
             self.gui.mark_remove(mark)
         except Exception as e:
-            com.failed(f,e)
+            com.rep_failed(f,e)
 
     def clear_text(self,pos1='1.0',pos2='end'):
         f = '[shared] shared.TextBox.clear_text'
@@ -1488,10 +1488,10 @@ class TextBox:
                                 ,pos2 = pos2
                                 )
         except Exception as e:
-            com.failed(f,e)
+            com.rep_failed(f,e)
 
-    def clear_selection(self,event=None):
-        f = '[shared] shared.TextBox.clear_selection'
+    def clear_sel(self,event=None):
+        f = '[shared] shared.TextBox.clear_sel'
         pos1, pos2 = self.select.get()
         if pos1 and pos2:
             self.clear_text (pos1 = pos1
@@ -1507,9 +1507,9 @@ class TextBox:
                 self.mark_add('insert',goto_pos)
                 self.gui.scroll('goto')
             except Exception as e:
-                com.failed(f,e)
+                com.rep_failed(f,e)
         else:
-            com.lazy(f)
+            com.rep_lazy(f)
 
     # Scroll screen to a tkinter position or a mark (tags do not work)
     def scroll(self,mark):
@@ -1517,38 +1517,38 @@ class TextBox:
         try:
             self.gui.scroll(mark)
         except Exception as e:
-            com.failed(f,e)
+            com.rep_failed(f,e)
 
     def autoscroll(self,mark='1.0'):
         ''' Scroll screen to a tkinter position or a mark if they
             are not visible (tags do not work).
         '''
-        if not self.visible(mark):
+        if not self.is_visible(mark):
             self.scroll(mark)
 
-    #todo: select either 'see' or 'autoscroll'
+    #TODO: select either 'see' or 'autoscroll'
     def see(self,mark):
         f = '[shared] shared.TextBox.see'
         if mark is None:
-            com.empty(f)
+            com.rep_empty(f)
         else:
             self.gui.see(mark)
 
-    def visible(self,tk_pos):
+    def is_visible(self,tk_pos):
         if self.widget.bbox(tk_pos):
             return True
 
-    def cursor(self,event=None):
+    def get_cursor(self,event=None):
         f = '[shared] shared.TextBox.cursor'
         try:
-            self._pos = self.gui.cursor()
+            self.pos = self.gui.get_cursor()
         except Exception as e:
-            self._pos = '1.0'
-            com.failed(f,e)
-        return self._pos
+            self.pos = '1.0'
+            com.rep_failed(f,e)
+        return self.pos
 
-    def focus(self,event=None):
-        self.gui.focus()
+    def set_focus(self,event=None):
+        self.gui.set_focus()
 
 
 
@@ -1557,10 +1557,10 @@ class EntryC:
     def __init__(self,title='',icon='',ClearAll=False):
         self.type     = 'Entry'
         self.Save     = False
-        self._title   = title
-        self._icon    = icon
+        self.title    = title
+        self.icon     = icon
         self.ClearAll = ClearAll
-        self.add_gui()
+        self.set_gui()
         self.reset()
     
     def insert(self,text='text',pos=0):
@@ -1571,14 +1571,14 @@ class EntryC:
     def select_all(self,event=None):
         self.obj.select_all()
     
-    def focus(self,event=None):
-        self.gui.focus()
+    def set_focus(self,event=None):
+        self.gui.set_focus()
     
     def reset(self,title=''):
         self.Save = False
         if title:
-            self._title = title
-        self.title()
+            self.title = title
+        self.set_title()
         self.clear()
     
     def clear_text (self,event=None
@@ -1595,23 +1595,23 @@ class EntryC:
                         ,pos2 = pos2
                         )
     
-    def add_gui(self):
+    def set_gui(self):
         self.parent = Top (AutoCr = False
-                          ,title  = self._title
-                          ,icon   = self._icon
+                          ,title  = self.title
+                          ,icon   = self.icon
                           )
         self.gui    = gi.EntryC(self.parent)
         self.widget = self.gui.widget
-        self.frames()
+        self.set_frames()
         self.obj = Entry (parent   = self.frm_ent
                          ,expand   = True
                          ,fill     = 'x'
                          ,ClearAll = self.ClearAll
                          )
-        self.buttons()
-        self.bindings()
+        self.set_buttons()
+        self.set_bindings()
     
-    def frames(self):
+    def set_frames(self):
         self.frm_ent = Frame (parent = self.parent
                              ,side   = 'top'
                              ,expand = False
@@ -1633,18 +1633,18 @@ class EntryC:
         else:
             return ''
     
-    def icon(self,path=''):
+    def set_icon(self,path=''):
         if path:
-            self._icon = path
-        self.gui.icon(self._icon)
+            self.icon = path
+        self.gui.set_icon(self.icon)
 
-    def title(self,text=''):
+    def set_title(self,text=''):
         text = lg.com.sanitize(text)
         if text:
-            self._title = text
-        self.gui.title(self._title)
+            self.title = text
+        self.gui.set_title(self.title)
     
-    def buttons(self):
+    def set_buttons(self):
         self.btn_cls = Button (parent = self.frm_btl
                               ,action = self.close
                               ,hint   = _('Reject and close')
@@ -1667,7 +1667,7 @@ class EntryC:
                               ,hdir   = 'bottom'
                               )
     
-    def bindings(self):
+    def set_bindings(self):
         com.bind (obj      = self.gui
                  ,bindings = ('<Escape>','<Control-q>','<Control-w>')
                  ,action   = self.close
@@ -1691,7 +1691,7 @@ class EntryC:
         self.gui.close()
     
     def show(self,event=None):
-        self.obj.focus()
+        self.obj.set_focus()
         self.gui.show()
 
 
@@ -1710,7 +1710,7 @@ class Entry:
         self.side     = side
         self.ipadx    = ipadx
         self.ipady    = ipady
-        self._fill    = fill
+        self.fill_    = fill
         self.width    = width
         self.expand   = expand
         self.font     = font
@@ -1719,44 +1719,44 @@ class Entry:
         self.justify  = justify
         self.AddBind  = AddBind
         self.ClearAll = ClearAll
-        self.add_gui()
+        self.set_gui()
 
-    def selection(self,event=None):
+    def get_sel(self,event=None):
         try:
-            pos1, pos2 = self.gui.sel_index()
+            pos1, pos2 = self.gui.get_sel_index()
         except Exception as e:
             pos1 = 0
             pos2 = 0
         return(pos1,pos2)
     
-    def cursor(self,event=None):
-        f = '[shared] shared.Entry.cursor'
+    def get_cursor(self,event=None):
+        f = '[shared] shared.Entry.get_cursor'
         try:
-            pos = self.gui.cursor()
+            pos = self.gui.get_cursor()
         except Exception as e:
             pos = 0
-            com.failed(f,e)
+            com.rep_failed(f,e)
         return pos
     
     def paste(self,event=None):
         if self.ClearAll:
             pos1, pos2 = 0, 'end'
         else:
-            pos1, pos2 = self.selection()
+            pos1, pos2 = self.get_sel()
         self.clear (pos1 = pos1
                    ,pos2 = pos2
                    )
         self.insert (text = Clipboard().paste()
-                    ,pos  = self.cursor()
+                    ,pos  = self.get_cursor()
                     )
         return 'break'
     
-    def add_gui(self):
+    def set_gui(self):
         self.gui = gi.Entry (parent  = self.parent
                             ,side    = self.side
                             ,ipadx   = self.ipadx
                             ,ipady   = self.ipady
-                            ,fill    = self._fill
+                            ,fill    = self.fill_
                             ,width   = self.width
                             ,expand  = self.expand
                             ,font    = self.font
@@ -1765,8 +1765,8 @@ class Entry:
                             ,justify = self.justify
                             )
         self.widget = self.gui.widget
-        self.bindings()
-        self.extra_bind()
+        self.set_bindings()
+        self.set_extra_bind()
     
     def reset(self):
         self.clear_text()
@@ -1777,7 +1777,7 @@ class Entry:
     def enable(self,event=None):
         self.gui.enable()
 
-    def bindings(self):
+    def set_bindings(self):
         com.bind (obj      = self.gui
                  ,bindings = '<Control-a>'
                  ,action   = self.select_all
@@ -1787,7 +1787,7 @@ class Entry:
                  ,action   = self.paste
                  )
     
-    def extra_bind(self):
+    def set_extra_bind(self):
         if self.AddBind:
             com.bind (obj      = self.gui
                      ,bindings = '<ButtonRelease-2>'
@@ -1803,7 +1803,7 @@ class Entry:
         try:
             return self.gui.get()
         except Exception as e:
-            com.failed(f,e)
+            com.rep_failed(f,e)
 
     def get(self,Strip=False):
         f = '[shared] shared.Entry.get'
@@ -1821,7 +1821,7 @@ class Entry:
         try:
             self.widget.insert(pos,text)
         except Exception as e:
-            com.failed(f,e)
+            com.rep_failed(f,e)
 
     def select_all(self,event=None):
         return self.gui.select_all()
@@ -1842,10 +1842,10 @@ class Entry:
                                 ,pos2 = pos2
                                 )
         except Exception as e:
-            com.failed(f,e)
+            com.rep_failed(f,e)
 
-    def focus(self,event=None):
-        return self.gui.focus()
+    def set_focus(self,event=None):
+        return self.gui.set_focus()
 
 
 
@@ -1855,12 +1855,12 @@ class MultCBoxesC:
                  ,height=300,font=FONT2
                  ,MarkAll=False,icon=''
                  ):
-        self._width  = width
-        self._height = height
-        self._icon   = icon
-        self.font    = font
-        self.add_gui()
-        self.title()
+        self.width  = width
+        self.height = height
+        self.icon   = icon
+        self.font   = font
+        self.set_gui()
+        self.set_title()
         self.reset (text    = text
                    ,MarkAll = MarkAll
                    )
@@ -1868,33 +1868,33 @@ class MultCBoxesC:
     def select_all(self,event=None):
         self.obj.select_all()
     
-    def selected(self,event=None):
-        return self.obj.selected()
+    def get_selected(self,event=None):
+        return self.obj.get_selected()
     
     def toggle(self,event=None):
         self.obj.toggle()
     
-    def bindings(self):
+    def set_bindings(self):
         com.bind (obj      = self.parent
                  ,bindings = ('<Control-q>','<Control-w>','<Escape>')
                  ,action   = self.close
                  )
-        self.obj.cvs_prm.top_bindings (top  = self.parent
-                                      ,Ctrl = False
-                                      )
+        self.obj.cvs_prm.set_top_bindings (top  = self.parent
+                                          ,Ctrl = False
+                                          )
     
-    def icon(self,path=''):
+    def set_icon(self,path=''):
         if path:
-            self._icon = path
-        self.gui.icon(self._icon)
+            self.icon = path
+        self.gui.set_icon(self.icon)
     
     def reset(self,text='',MarkAll=False):
-        self._text = lg.com.sanitize(text)
+        self.text = lg.com.sanitize(text)
         self.obj.reset (text    = text
                        ,MarkAll = MarkAll
                        )
     
-    def frames(self):
+    def set_frames(self):
         self.frm_prm = Frame (parent = self.parent)
         self.frm_ver = Frame (parent = self.frm_prm
                              ,expand = False
@@ -1912,7 +1912,7 @@ class MultCBoxesC:
                              )
         self.frm_sec = Frame (parent = self.frm_prm)
         
-    def scrollbars(self):
+    def set_scroll(self):
         self.scr_hor = Scrollbar (parent = self.frm_hor
                                  ,scroll = self.obj.cvs_prm
                                  ,Horiz  = True
@@ -1921,7 +1921,7 @@ class MultCBoxesC:
                                  ,scroll = self.obj.cvs_prm
                                  )
     
-    def widgets(self):
+    def set_widgets(self):
         self.btn_sel = Button (parent = self.frm_bth
                               ,text   = _('Toggle all')
                               ,hint   = _('Mark/unmark all checkboxes')
@@ -1935,29 +1935,29 @@ class MultCBoxesC:
                               ,action = self.close
                               )
     
-    def add_gui(self):
+    def set_gui(self):
         self.parent = Top()
-        Geometry(parent=self.parent).set ('%dx%d' % (self._width
-                                                    ,self._height
+        Geometry(parent=self.parent).set ('%dx%d' % (self.width
+                                                    ,self.height
                                                     )
                                          )
         self.gui    = gi.MultCBoxesC(self.parent)
         self.widget = self.gui.widget
-        self.frames()
+        self.set_frames()
         self.obj = MultCBoxes (parent  = self.frm_sec
                               ,font    = self.font
                               )
-        self.widgets()
-        self.scrollbars()
-        self.btn_cls.focus()
-        self.bindings()
-        self.title()
-        self.icon()
+        self.set_widgets()
+        self.set_scroll()
+        self.btn_cls.set_focus()
+        self.set_bindings()
+        self.set_title()
+        self.set_icon()
     
-    def title(self,text=None):
+    def set_title(self,text=None):
         if not text:
             text = _('Select files:')
-        self.gui.title(text)
+        self.gui.set_title(text)
     
     def show(self,event=None):
         self.gui.show()
@@ -1974,44 +1974,44 @@ class MultCBoxes:
                  ):
         self.parent = parent
         self.widget = self.parent.widget
-        self._font  = font
-        self.values()
-        self.add_gui()
+        self.font   = font
+        self.set_values()
+        self.set_gui()
         self.reset (text    = text
                    ,MarkAll = MarkAll
                    )
     
     def select_all(self,event=None):
-        for cbx in self._cboxes:
+        for cbx in self.cboxes:
             cbx.enable()
     
-    def selected(self,event=None):
+    def get_selected(self,event=None):
         active = []
-        for i in range(len(self._cboxes)):
-            if self._cboxes[i].get():
-                active.append(self._lbls[i]._text)
+        for i in range(len(self.cboxes)):
+            if self.cboxes[i].get():
+                active.append(self.lbls[i].text)
         return active
     
-    def region(self):
-        f = '[shared] shared.MultCBoxes.region'
-        if self._frms:
-            objs.root().idle()
-            self.cvs_prm.region (x        = self.frm_emb.reqwidth()
-                                ,y        = self.frm_emb.reqheight()
-                                ,x_border = 5
-                                ,y_border = 10
+    def set_region(self):
+        f = '[shared] shared.MultCBoxes.set_region'
+        if self.frms:
+            objs.get_root().update_idle()
+            self.cvs_prm.region (x       = self.frm_emb.get_reqwidth()
+                                ,y       = self.frm_emb.get_reqheight()
+                                ,xborder = 5
+                                ,yborder = 10
                                 )
-            self.cvs_prm.scroll()
+            self.cvs_prm.config_scroll()
         else:
-            com.lazy(f)
+            com.rep_lazy(f)
         
-    def values(self):
-        self._frms   = []
-        self._cboxes = []
-        self._lbls   = []
-        self._text   = ''
+    def set_values(self):
+        self.frms   = []
+        self.cboxes = []
+        self.lbls   = []
+        self.text   = ''
     
-    def widgets(self):
+    def set_widgets(self):
         self.cvs_prm = Canvas(parent=self.parent)
         self.frm_emb = Frame(parent=self.parent)
         self.cvs_prm.embed(self.frm_emb)
@@ -2026,47 +2026,47 @@ class MultCBoxes:
         lbl = Label (parent = frm
                     ,text   = text
                     ,side   = 'left'
-                    ,font   = self._font
+                    ,font   = self.font
                     )
         com.bind (obj      = lbl
                  ,bindings = '<ButtonRelease-1>'
                  ,action   = cbx.toggle
                  )
-        self._frms.append(frm)
-        self._cboxes.append(cbx)
-        self._lbls.append(lbl)
+        self.frms.append(frm)
+        self.cboxes.append(cbx)
+        self.lbls.append(lbl)
         
     def toggle(self,event=None):
         Marked = False
-        for cbox in self._cboxes:
+        for cbox in self.cboxes:
             if cbox.get():
                 Marked = True
                 break
         if Marked:
-            for cbox in self._cboxes:
+            for cbox in self.cboxes:
                 cbox.disable()
         else:
-            for cbox in self._cboxes:
+            for cbox in self.cboxes:
                 cbox.enable()
     
     def reset(self,text='',MarkAll=False):
-        for frame in self._frms:
+        for frame in self.frms:
             frame.kill()
-        self.values()
-        self._text = lg.com.sanitize(text)
-        for item in self._text.splitlines():
+        self.set_values()
+        self.text = lg.com.sanitize(text)
+        for item in self.text.splitlines():
             self.add_row(item)
-        self.region()
+        self.set_region()
         if MarkAll:
             self.select_all()
     
-    def add_gui(self):
-        self.widgets()
+    def set_gui(self):
+        self.set_widgets()
 
 
 
 class CheckBox:
-    ''' #note: For some reason, CheckBox that should be Active must be
+    ''' #NOTE: For some reason, CheckBox that should be Active must be
         assigned to a variable (var = CheckBox(parent,Active=1))
     '''
     def __init__ (self,parent,Active=False
@@ -2098,8 +2098,8 @@ class CheckBox:
     def close(self,event=None):
         self.gui.close()
 
-    def focus(self,event=None):
-        self.gui.focus()
+    def set_focus(self,event=None):
+        self.gui.set_focus()
 
     def enable(self,event=None):
         self.gui.enable()
@@ -2121,20 +2121,20 @@ class ProgressBar:
                  ,YScroll=True,title=_('Download progress')
                  ,icon=''
                  ):
-        self.values()
-        self._width  = width
-        self._height = height
-        self._icon   = icon
-        self._title  = title
+        self.set_values()
+        self.width   = width
+        self.height  = height
+        self.icon    = icon
+        self.title   = title
         self.YScroll = YScroll
-        self.add_gui()
+        self.set_gui()
         
-    def values(self):
-        self._items  = []
-        self._item   = None
-        self._border = 80
+    def set_values(self):
+        self.items  = []
+        self.item   = None
+        self.border = 80
     
-    def frames(self):
+    def set_frames(self):
         self.frm_prm = Frame (parent = self.parent)
         self.frm_hor = Frame (parent = self.frm_prm
                              ,expand = False
@@ -2149,15 +2149,15 @@ class ProgressBar:
         # This frame must be created after the bottom frame
         self.frm_sec = Frame (parent = self.frm_prm)
     
-    def icon(self,path=''):
+    def set_icon(self,path=''):
         if path:
-            self._icon = path
-        self.gui.icon(self._icon)
+            self.icon = path
+        self.gui.set_icon(self.icon)
     
-    def title(self,text=''):
+    def set_title(self,text=''):
         if text:
-            self._title = text
-        self.gui.title(self._title)
+            self.title = text
+        self.gui.set_title(self.title)
         
     def show(self,event=None):
         self.gui.show()
@@ -2165,31 +2165,31 @@ class ProgressBar:
     def close(self,event=None):
         self.gui.close()
     
-    def add_gui(self):
+    def set_gui(self):
         self.parent = self.obj = Top(Lock=False)
         self.widget = self.parent.widget
-        Geometry(self.parent).set('%dx%d' % (self._width,self._height))
-        self.frames()
-        self.widgets()
-        self.canvas.region (x = self._width
-                           ,y = self._height
-                           )
+        Geometry(self.parent).set('%dx%d' % (self.width,self.height))
+        self.set_frames()
+        self.set_widgets()
+        self.canvas.set_region (x = self.width
+                               ,y = self.height
+                               )
         self.canvas.scroll()
         self.gui = gi.ProgressBar(self.parent)
-        self.bindings()
-        self.title()
-        self.icon()
+        self.set_bindings()
+        self.set_title()
+        self.set_icon()
         
-    def bindings(self):
+    def set_bindings(self):
         com.bind (obj      = self.parent
                  ,bindings = ('<Control-q>','<Control-w>','<Escape>')
                  ,action   = self.close
                  )
-        self.canvas.top_bindings (top  = self.parent
-                                 ,Ctrl = False
-                                 )
+        self.canvas.set_top_bindings (top  = self.parent
+                                     ,Ctrl = False
+                                     )
     
-    def widgets(self):
+    def set_widgets(self):
         self.canvas = Canvas(parent = self.frm_sec)
         self.label  = Label (parent = self.frm_sec
                             ,text   = 'ProgressBar'
@@ -2201,29 +2201,29 @@ class ProgressBar:
             self.yscroll = Scrollbar (parent = self.frm_ver
                                      ,scroll = self.canvas
                                      )
-        self.canvas.focus()
+        self.canvas.set_focus()
         
     def add(self,event=None):
         f = '[shared] shared.ProgressBar.add'
-        self._item = ProgressBarItem (parent = self.label
-                                     ,length = self._width-self._border
-                                     )
-        self._items.append(self._item)
-        objs.root().idle()
-        max_x = self.label.reqwidth()
-        max_y = self.label.reqheight()
+        self.item = ProgressBarItem (parent = self.label
+                                    ,length = self.width - self.border
+                                    )
+        self.items.append(self.item)
+        objs.get_root().update_idle()
+        max_x = self.label.get_reqwidth()
+        max_y = self.label.get_reqheight()
         '''
         sub = '{}x{}'.format(max_x,max_y)
         mes = _('Widget sizes: {}').format(sub)
-        objs.mes(f,mes,True).debug()
+        objs.get_mes(f,mes,True).show_debug()
         '''
-        self.canvas.region (x        = max_x
-                           ,y        = max_y
-                           ,x_border = 50
-                           ,y_border = 20
-                           )
+        self.canvas.set_region (x       = max_x
+                               ,y       = max_y
+                               ,xborder = 50
+                               ,yborder = 20
+                               )
         self.canvas.move_bottom()
-        return self._item
+        return self.item
 
 
 
@@ -2236,12 +2236,12 @@ class ProgressBarItem:
         self.orient = orient
         self.length = length
         self.mode   = mode
-        self.add_gui()
+        self.set_gui()
         
-    def add_gui(self):
-        self.frames()
-        self.labels()
-        self.text()
+    def set_gui(self):
+        self.set_frames()
+        self.set_labels()
+        self.set_text()
         self.gui = gi.ProgressBarItem (parent = self.frame2
                                       ,orient = self.orient
                                       ,length = self.length
@@ -2249,7 +2249,7 @@ class ProgressBarItem:
                                       )
         self.widget = self.gui.widget
         
-    def frames(self):
+    def set_frames(self):
         self.frame  = Frame (parent = self.parent
                             ,expand = False
                             ,fill   = 'x'
@@ -2257,18 +2257,18 @@ class ProgressBarItem:
         self.frame1 = Frame(parent=self.frame)
         self.frame2 = Frame(parent=self.frame)
         
-    def labels(self):
+    def set_labels(self):
         self.label = Label (parent = self.frame1
                            ,side   = 'left'
                            ,font   = 'Mono 11'
                            )
 
-    def text (self,file='',cur_size=0
-             ,total=0,rate=0,eta=0
-             ):
+    def set_text (self,file='',cursize=0
+                 ,total=0,rate=0,eta=0
+                 ):
         mes = _('File: "{}"; {}/{} MB; Rate: {} kbps; ETA: {}s')
-        mes = mes.format(file,int(cur_size),int(total),rate,eta)
-        self.label.text(mes)
+        mes = mes.format(file,int(cursize),int(total),rate,eta)
+        self.label.set_text(mes)
 
 
 
@@ -2277,75 +2277,75 @@ class Image:
         convert bytes back to the image.
     '''
     def __init__(self):
-        self._image = self._bytes = self._loader = None
+        self.image = self.bytes_ = self.loader = None
         self.gui = gi.Image()
         
-    def error(self,f,e):
+    def show_error(self,f,e):
         mes = _('Third-party module has failed!\n\nDetails: {}')
         mes = mes.format(e)
-        objs.mes(f,mes).error()
+        objs.get_mes(f,mes).show_error()
     
     def save(self,path,ext='PNG'):
         f = '[shared] shared.Image.save'
-        if self._loader:
+        if self.loader:
             if com.rewrite(path):
                 try:
-                    self._loader.save(path,ext)
+                    self.loader.save(path,ext)
                 except Exception as e:
-                    self.error(f,e)
+                    self.show_error(f,e)
             else:
                 mes = _('Operation has been canceled by the user.')
-                objs.mes(f,mes,True).info()
+                objs.get_mes(f,mes,True).show_info()
         else:
-            com.empty(f)
+            com.rep_empty(f)
     
     def open(self,path):
         if lg.File(file=path).Success:
-            self._loader = self.gui.loader(path)
-            self._image  = self.gui.image(self._loader)
-        return self._image
+            self.loader = self.gui.get_loader(path)
+            self.image  = self.gui.get_image(self.loader)
+        return self.image
             
-    def loader(self):
-        f = '[shared] shared.Image.loader'
-        if self._bytes:
-            self._loader = self.gui.loader(io.BytesIO(self._bytes))
+    def get_loader(self):
+        f = '[shared] shared.Image.get_loader'
+        if self.bytes_:
+            self.loader = self.gui.get_loader(io.BytesIO(self.bytes_))
         else:
-            com.empty(f)
-        return self._loader
+            com.rep_empty(f)
+        return self.loader
         
-    def thumbnail(self,x,y):
+    def get_thumbnail(self,x,y):
         ''' Resize an image to x,y limits. PIL will keep an original
             aspect ratio.
         '''
-        f = '[shared] shared.Image.thumbnail'
-        if self._loader:
+        f = '[shared] shared.Image.get_thumbnail'
+        if self.loader:
             try:
-                self._loader.thumbnail([x,y])
+                self.loader.thumbnail([x,y])
             except Exception as e:
-                self.error(f,e)
+                self.show_error(f,e)
         else:
-            com.empty(f)
-        return self._loader
+            com.rep_empty(f)
+        return self.loader
     
-    def image(self):
-        f = '[shared] shared.Image.image'
-        if self._loader:
-            self._image = self.gui.image(self._loader)
+    def get_image(self):
+        f = '[shared] shared.Image.get_image'
+        if self.loader:
+            self.image = self.gui.get_image(self.loader)
         else:
-            com.empty(f)
-        return self._image
+            com.rep_empty(f)
+        return self.image
         
-    def bytes(self,ext='PNG'):
-        if self._loader:
-            self._bytes = io.BytesIO()
+    def get_bytes(self,ext='PNG'):
+        if self.loader:
+            bytes_ = io.BytesIO()
             try:
-                self._loader.save(self._bytes,format=ext)
-                self._bytes = self._bytes.getvalue()
+                self.loader.save(bytes_,format=ext)
+                self.bytes_ = bytes_.getvalue()
             except Exception as e:
-                self.error(f,e)
+                self.show_error(f,e)
         else:
-            com.empty(f)
-        return self._bytes
+            com.rep_empty(f)
+        return self.bytes_
 
 
 
@@ -2356,26 +2356,26 @@ class Canvas:
                 ,width=None,height=None
                 ,fill='both'
                 ):
-        self.type    = 'Canvas'
-        self.parent  = parent
-        self.expand  = expand
-        self.side    = side
-        self._region = region
-        self.width   = width
-        self.height  = height
-        self.fill    = fill
-        self.gui     = gi.Canvas(self.parent)
-        self.widget  = self.gui.widget
+        self.type   = 'Canvas'
+        self.parent = parent
+        self.expand = expand
+        self.side   = side
+        self.region = region
+        self.width  = width
+        self.height = height
+        self.fill   = fill
+        self.gui    = gi.Canvas(self.parent)
+        self.widget = self.gui.widget
         
     def move_left_corner(self,event=None):
         self.gui.move_left_corner()
     
-    def mouse_wheel(self,event=None):
-        return self.gui.mouse_wheel(event)
+    def get_mouse_wheel(self,event=None):
+        return self.gui.get_mouse_wheel(event)
     
     # These bindings are not enabled by default
-    def top_bindings(self,top,Ctrl=True):
-        f = '[shared] shared.Canvas.top_bindings'
+    def set_top_bindings(self,top,Ctrl=True):
+        f = '[shared] shared.Canvas.set_top_bindings'
         if top:
             com.bind (obj      = top
                      ,bindings = '<Down>'
@@ -2405,7 +2405,7 @@ class Canvas:
                      ,bindings = ('<MouseWheel>','<Button 4>'
                                  ,'<Button 5>'
                                  )
-                     ,action   = self.mouse_wheel
+                     ,action   = self.get_mouse_wheel
                      )
             if Ctrl:
                 com.bind (obj      = top
@@ -2426,7 +2426,7 @@ class Canvas:
                          ,action   = self.move_bottom
                          )
         else:
-            com.empty(f)
+            com.rep_empty(f)
     
     def move_up(self,event=None,value=-1):
         self.gui.move_up(value)
@@ -2452,19 +2452,19 @@ class Canvas:
     def move_top(self,event=None):
         self.gui.move_top()
     
-    def region (self,x=0,y=0
-               ,x_border=0,y_border=0
-               ):
-        f = '[shared] shared.Canvas.region'
+    def set_region (self,x=0,y=0
+                   ,xborder=0,yborder=0
+                   ):
+        f = '[shared] shared.Canvas.set_region'
         # Both integer and float values are allowed at input
         if x and y:
-            self.gui.region (x        = x
-                            ,y        = y
-                            ,x_border = x_border
-                            ,y_border = y_border
-                            )
+            self.gui.set_region (x        = x
+                                ,y        = y
+                                ,xborder = xborder
+                                ,yborder = yborder
+                                )
         else:
-            com.empty(f)
+            com.rep_empty(f)
     
     def scroll(self,event=None,x=0,y=0):
         self.gui.scroll (x = x
@@ -2477,10 +2477,10 @@ class Canvas:
             self.gui.embed(obj)
         else:
             mes = _('Wrong input data!')
-            objs.mes(f,mes,True).error()
+            objs.get_mes(f,mes,True).show_error()
         
-    def focus(self,event=None):
-        self.gui.focus()
+    def set_focus(self,event=None):
+        self.gui.set_focus()
     
     def show(self,event=None):
         self.gui.show()
@@ -2512,9 +2512,9 @@ class Clipboard:
             try:
                 pyperclip.copy(text)
             except Exception as e:
-                com.failed(f,e,self.Silent)
+                com.rep_failed(f,e,self.Silent)
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
     def paste(self):
         f = '[shared] shared.Clipboard.paste'
@@ -2522,7 +2522,7 @@ class Clipboard:
             text = str(self.gui.paste())
         except Exception as e:
             text = ''
-            com.failed(f,e,self.Silent)
+            com.rep_failed(f,e,self.Silent)
         # Further possible actions: strip, delete double line breaks
         return text
 
@@ -2535,7 +2535,7 @@ class SymbolMap:
         self.widget  = self.parent.widget
         self.frm_prm = None
         self.gui     = gi.SymbolMap(self.parent)
-        self.bindings()
+        self.set_bindings()
         self.reset (items = items
                    ,title = title
                    ,icon  = icon
@@ -2544,13 +2544,13 @@ class SymbolMap:
     def get(self,event=None):
         return self.gui.get()
     
-    def icon(self,path=''):
-        self.gui.icon(path)
+    def set_icon(self,path=''):
+        self.gui.set_icon(path)
     
-    def title(self,text=''):
+    def set_title(self,text=''):
         if not text:
             text = _('Paste a special symbol')
-        self.gui.title(text)
+        self.gui.set_title(text)
         
     def reset(self,items=(),title='',icon=''):
         ''' It is better to run the whole class once again instead of
@@ -2561,8 +2561,8 @@ class SymbolMap:
             items = ['1','2','3','4','5']
         items = [lg.com.sanitize(item) for item in items]
         items = [item for item in items if item]
-        self.title(title)
-        self.icon(icon)
+        self.set_title(title)
+        self.set_icon(icon)
         if self.frm_prm:
             self.frm_prm.kill()
         self.frm_prm = Frame(self.parent)
@@ -2574,7 +2574,7 @@ class SymbolMap:
                             ,i     = i
                             )
 
-    def bindings(self):
+    def set_bindings(self):
         com.bind (obj      = self.parent
                  ,bindings = ('<Escape>','<Control-q>','<Control-w>')
                  ,action   = self.close
@@ -2622,7 +2622,7 @@ class OptionMenu:
         self.side    = side
         self.anchor  = anchor
         self.expand  = expand
-        self._fill   = fill
+        self.fill_   = fill
         # Take focus; must be 1/True to be operational from keyboard
         self.tfocus  = tfocus
         self.font    = font
@@ -2633,7 +2633,7 @@ class OptionMenu:
                                  ,side   = self.side
                                  ,anchor = self.anchor
                                  ,expand = self.expand
-                                 ,fill   = self._fill
+                                 ,fill   = self.fill_
                                  ,tfocus = self.tfocus
                                  ,font   = self.font
                                  ,width  = self.width
@@ -2667,13 +2667,13 @@ class OptionMenu:
         f = '[shared] shared.OptionMenu.trigger'
         self._get()
         if self.Combo:
-            self.gui.clear_selection()
+            self.gui.clear_sel()
         if self.action:
             self.action()
         else:
-            com.lazy(f)
+            com.rep_lazy(f)
 
-    def _default_set(self):
+    def _set_default(self):
         if len(self.items) > 0:
             self.gui.set(self.items[0])
             ''' Return a default value instead of 'None' if there was
@@ -2682,10 +2682,10 @@ class OptionMenu:
             self.choice = self.items[0]
             self.index  = 0
 
-    def default_set(self):
-        f = '[shared] shared.OptionMenu.default_set'
+    def set_default(self):
+        f = '[shared] shared.OptionMenu.set_default'
         if self.default is None:
-            self._default_set()
+            self._set_default()
         else:
             if self.default in self.items:
                 self.gui.set(self.default)
@@ -2697,7 +2697,7 @@ class OptionMenu:
             else:
                 mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
                 mes = mes.format(self.default,self.items)
-                objs.mes(f,mes,True).error()
+                objs.get_mes(f,mes,True).show_error()
                 self._default_set()
 
     def set(self,item,event=None):
@@ -2709,7 +2709,7 @@ class OptionMenu:
             self.index  = self.items.index(self.choice)
         else:
             mes = _('Wrong input data: "{}"!').format(item)
-            objs.mes(f,mes,True).error()
+            objs.get_mes(f,mes,True).show_error()
 
     def fill(self):
         self.gui.fill (items  = self.items
@@ -2731,7 +2731,7 @@ class OptionMenu:
                 default = self.choice
         if default is not None:
             self.default = str(default)
-        self.default_set()
+        self.set_default()
         if len(self.items) == 1:
             self.gui.disable()
         else:
@@ -2745,7 +2745,7 @@ class OptionMenu:
             self.index = self.items.index(self.choice)
         except ValueError:
             mes = _('Wrong input data: "{}"!').format(self.choice)
-            objs.mes(f,mes,True).error()
+            objs.get_mes(f,mes,True).show_error()
 
     def set_prev(self,event=None):
         if self.index == 0:
@@ -2763,13 +2763,13 @@ class OptionMenu:
         self.choice = self.items[self.index]
         self.gui.set(self.choice)
 
-    def focus(self,event=None):
-        self.gui.focus()
+    def set_focus(self,event=None):
+        self.gui.set_focus()
 
 
 
 class ListBox:
-    #todo: configure a font
+    #TODO: configure a font
     def __init__(self
                 ,parent
                 ,Multiple = False
@@ -2785,7 +2785,7 @@ class ListBox:
         self.Multiple = Multiple
         self.expand   = expand
         self.side     = side
-        self._fill    = fill
+        self.fill_    = fill
         ''' 'action': A user-defined function that is run when
             pressing Up/Down arrow keys and LMB. There is a problem
             binding it externally, so we bind it here.
@@ -2796,17 +2796,17 @@ class ListBox:
                               ,Multiple = self.Multiple
                               ,side     = self.side
                               ,expand   = self.expand
-                              ,fill     = self._fill
+                              ,fill     = self.fill_
                               )
         self.widget = self.gui.widget
-        self.bindings()
+        self.set_bindings()
         if lst or action:
             self.reset (lst    = lst
                        ,action = action
                        )
 
-    def focus(self,event=None):
-        self.gui.focus()
+    def set_focus(self,event=None):
+        self.gui.set_focus()
     
     def trigger(self,event=None):
         if self.action:
@@ -2822,13 +2822,13 @@ class ListBox:
         # Set an actual value
         self.index()
         try:
-            del self.lst[self._index]
+            del self.lst[self.index]
             # Set this after 'del' to be triggered only on success
-            mes = _('Remove item #{}').format(self._index)
-            objs.mes(f,mes,True).debug()
+            mes = _('Remove item #{}').format(self.index)
+            objs.get_mes(f,mes,True).show_debug()
         except IndexError:
-            mes = _('No item #{}!').format(self._index)
-            objs.mes(f,mes,True).warning()
+            mes = _('No item #{}!').format(self.index)
+            objs.get_mes(f,mes,True).show_warning()
         else:
             self.reset(lst=self.lst)
 
@@ -2841,7 +2841,7 @@ class ListBox:
         self.lst.insert(pos,string)
         self.reset(lst=self.lst)
     
-    def bindings(self):
+    def set_bindings(self):
         com.bind (obj      = self.gui
                  ,bindings = '<<ListboxSelect>>'
                  ,action   = self.trigger
@@ -2866,8 +2866,8 @@ class ListBox:
     def clear(self):
         self.gui.clear()
 
-    def clear_selection(self):
-        self.gui.clear_selection()
+    def clear_sel(self):
+        self.gui.clear_sel()
 
     def reset(self,lst=[],action=None):
         self.clear()
@@ -2881,56 +2881,56 @@ class ListBox:
             self.action = action
         self.fill()
         self.resize()
-        self._index = 0
+        self.index = 0
         self.select()
 
     def select(self):
-        self.clear_selection()
-        self.gui.select(self._index)
+        self.clear_sel()
+        self.gui.select(self.index)
 
     def set(self,item):
         f = '[shared] shared.ListBox.set'
         if item:
             if item in self.lst:
-                self._index = self.lst.index(item)
+                self.index = self.lst.index(item)
                 self.select()
             else:
                 mes = _('Item "{}" is not in list!').format(item)
-                objs.mes(f,mes,True).error()
+                objs.get_mes(f,mes,True).show_error()
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
     def fill(self):
         for item in self.lst:
             self.gui.insert(item)
 
-    def index(self):
-        selection = self.gui.selection()
+    def get_index(self):
+        selection = self.gui.get_sel()
         if selection and len(selection) > 0:
-            ''' #note: selection[0] is a number in Python 3.4, however,
+            ''' #NOTE: selection[0] is a number in Python 3.4, however,
                 in older interpreters and builds based on them it is a
                 string. In order to preserve compatibility, we convert
                 it to a number.
             '''
-            self._index = int(selection[0])
+            self.index = int(selection[0])
         else:
-            self._index = 0
-        return self._index
+            self.index = 0
+        return self.index
 
     def index_add(self):
-        if self.index() < len(self.lst) - 1:
-            self._index += 1
+        if self.get_index() < len(self.lst) - 1:
+            self.index += 1
         else:
-            self._index = 0
+            self.index = 0
 
     def index_subtract(self):
-        if self.index() > 0:
-            self._index -= 1
+        if self.get_index() > 0:
+            self.index -= 1
         else:
-            self._index = len(self.lst) - 1
+            self.index = len(self.lst) - 1
 
     def get(self):
-        result = [self.gui.get(idx) for idx in self.gui.selection()]
+        result = [self.gui.get(idx) for idx in self.gui.get_sel()]
         if self.Multiple:
             return result
         elif len(result) > 0:
@@ -2948,13 +2948,13 @@ class ListBox:
         
     def move_top(self,event=None):
         if self.lst:
-            self._index = 0
+            self.index = 0
             self.select()
             self.trigger()
     
     def move_bottom(self,event=None):
         if self.lst:
-            self._index = len(self.lst) - 1
+            self.index = len(self.lst) - 1
             self.select()
             self.trigger()
 
@@ -2984,16 +2984,16 @@ class ListBoxC:
         self.action   = action
         self.side     = side
         self.expand   = expand
-        self._fill    = fill
-        self._title   = title
-        self._icon    = icon
+        self.fill_    = fill
+        self.title    = title
+        self.icon     = icon
         self.ScrollX  = ScrollX
         self.ScrollY  = ScrollY
-        self._width   = width
-        self._height  = height
-        self.add_gui()
+        self.width    = width
+        self.height   = height
+        self.set_gui()
     
-    def bindings(self):
+    def set_bindings(self):
         com.bind (obj      = self.gui
                  ,bindings = ('<Return>','<KP_Enter>')
                  ,action   = self.save
@@ -3003,20 +3003,20 @@ class ListBoxC:
                  ,action   = self.close
                  )
     
-    def index(self,event=None):
-        return self.lbx_prm._index
+    def get_index(self,event=None):
+        return self.lbx_prm.index
     
     def clear(self,event=None):
         self.lbx_prm.clear()
     
-    def focus(self,event=None):
-        self.gui.focus()
+    def set_focus(self,event=None):
+        self.gui.set_focus()
     
     def set(self,item):
         self.lbx_prm.set(item)
     
-    def clear_selection(self,event=None):
-        self.lbx_prm.clear_selection()
+    def clear_sel(self,event=None):
+        self.lbx_prm.clear_sel()
     
     def reset (self,lst=(1,2,3,4,5)
               ,action=None,title=''
@@ -3026,10 +3026,10 @@ class ListBoxC:
         self.lbx_prm.reset (lst    = lst
                            ,action = action
                            )
-        self.title(title)
-        self.icon(icon)
+        self.set_title(title)
+        self.set_icon(icon)
     
-    def buttons(self):
+    def set_buttons(self):
         self.btn_cls = Button (parent   = self.frm_btn
                               ,action   = self.close
                               ,hint     = _('Reject and close')
@@ -3053,14 +3053,14 @@ class ListBoxC:
             # Always return a string
             return ''
     
-    def scrollx(self):
+    def set_scrollx(self):
         if self.ScrollX:
             Scrollbar (parent = self.frm_hor
                       ,scroll = self.lbx_prm
                       ,Horiz  = True
                       )
     
-    def scrolly(self):
+    def set_scrolly(self):
         if self.ScrollY:
             Scrollbar (parent = self.frm_ver
                       ,scroll = self.lbx_prm
@@ -3076,7 +3076,7 @@ class ListBoxC:
         self.Save = True
         self.close()
     
-    def frames(self):
+    def set_frames(self):
         self.frm_prm = Frame(self.parent)
         self.frm_sec = Frame (parent = self.frm_prm
                              ,side   = 'top'
@@ -3107,38 +3107,38 @@ class ListBoxC:
                              ,fill   = 'x'
                              )
     
-    def add_gui(self):
-        self.parent = Top (title = self._title
-                          ,icon  = self._icon
+    def set_gui(self):
+        self.parent = Top (title = self.title
+                          ,icon  = self.icon
                           )
         self.widget = self.parent.widget
-        geom = '{}x{}'.format(self._width,self._height)
+        geom = '{}x{}'.format(self.width,self.height)
         Geometry(self.parent).set(geom)
-        self.frames()
+        self.set_frames()
         self.lbx_prm = ListBox (parent   = self.frm_lbx
                                ,Multiple = self.Multiple
                                ,lst      = self.lst
                                ,action   = self.action
                                ,side     = self.side
                                ,expand   = self.expand
-                               ,fill     = self._fill
+                               ,fill     = self.fill_
                                )
-        self.lbx_prm.focus()
+        self.lbx_prm.set_focus()
         self.gui = gi.ListBoxC(self.parent)
-        self.scrollx()
-        self.scrolly()
-        self.buttons()
-        self.bindings()
+        self.set_scrollx()
+        self.set_scrolly()
+        self.set_buttons()
+        self.set_bindings()
     
-    def title(self,text=''):
+    def set_title(self,text=''):
         if text:
-            self._title = text
-        self.gui.title(self._title)
+            self.title = text
+        self.gui.set_title(self.title)
     
-    def icon(self,path=''):
+    def set_icon(self,path=''):
         if path:
-            self._icon = path
-        self.gui.icon(self._icon)
+            self.icon = path
+        self.gui.set_icon(self.icon)
 
 
 
@@ -3168,9 +3168,9 @@ class Scrollbar:
                 return True
             else:
                 mes = _('Wrong input data!')
-                objs.mes(f,mes,True).error()
+                objs.get_mes(f,mes,True).show_error()
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
 
 
@@ -3185,9 +3185,9 @@ class ToolTipBase:
         self.id     = None
         self.x      = 0
         self.y      = 0
-        self.bindings()
+        self.set_bindings()
     
-    def bindings(self):
+    def set_bindings(self):
         self.bind_mouse()
                     
     def bind_mouse(self):
@@ -3228,16 +3228,16 @@ class ToolTipBase:
             Tip coordinates are calculated such that, despite different
             sizes, centers of a horizontal tip and button would match.
         '''
-        x = self.gui.rootx() + self.gui.width()/2 - self.width/2
+        x = self.gui.get_rootx() + self.gui.get_width()/2 - self.width/2
         if self.dir == 'bottom':
-            y = self.gui.rooty() + self.gui.height() + 1
+            y = self.gui.get_rooty() + self.gui.get_height() + 1
         elif self.dir == 'top':
-            y = self.gui.rooty() - self.height - 1
+            y = self.gui.get_rooty() - self.height - 1
         else:
             y = 0
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(self.dir,'top, bottom')
-            objs.mes(f,mes,True).error()
+            objs.get_mes(f,mes,True).show_error()
         self.tip = Top(Lock=False)
         self.tip.widget.wm_overrideredirect(1)
         # "+%d+%d" is not enough!
@@ -3245,7 +3245,7 @@ class ToolTipBase:
                                                             ,self.height
                                                             ,x,y
                                                             )
-        objs.mes(f,mes,True).debug()
+        objs.get_mes(f,mes,True).show_debug()
         self.tip.widget.wm_geometry ("%dx%d+%d+%d" % (self.width
                                                      ,self.height
                                                      ,x, y
@@ -3288,10 +3288,10 @@ class ToolTip(ToolTipBase):
                     self.font = FONT2
                 ifont = Font(self.font)
                 ifont.set_text(self.text)
-                self.width  = ifont.width()
-                self.height = ifont.height()
+                self.width  = ifont.get_width()
+                self.height = ifont.get_height()
             else:
-                com.lazy(f)
+                com.rep_lazy(f)
     
     def showcontents(self):
         # Assign this boolean externally to stop showing hints
@@ -3327,30 +3327,30 @@ class WaitBox:
                              ,expand = True
                              )
 
-    def icon(self,path=''):
-        f = '[shared] shared.WaitBox.icon'
+    def set_icon(self,path=''):
+        f = '[shared] shared.WaitBox.set_icon'
         if path:
             if os.path.exists(path):
-                self.gui.icon(path)
+                self.gui.set_icon(path)
             else:
                 mes = _('File "{}" has not been found!').format(path)
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
-            com.empty(f)
+            com.rep_empty(f)
     
     def update(self):
         ''' Tkinter works differently in Linux in Windows. This allows
             to evade focus problems in 'mclient'.
         '''
-        if objs.os().win():
-            objs.root().idle()
+        if objs.get_os().is_win():
+            objs.root().update_idle()
         else:
             self.lbl_pls.widget.update()
     
     # Use tuple for 'args' to pass multiple arguments
     def reset(self,func='',message=''):
-        self.title(func)
-        self.message(message)
+        self.set_title(func)
+        self.set_message(message)
 
     def show(self):
         self.gui.show()
@@ -3359,17 +3359,17 @@ class WaitBox:
     def close(self):
         self.gui.close()
 
-    def title(self,text=''):
+    def set_title(self,text=''):
         text = lg.com.sanitize(text)
-        self.gui.title(text)
+        self.gui.set_title(text)
 
-    def message(self,text=''):
+    def set_message(self,text=''):
         text = lg.com.sanitize(text)
         if text:
             text += '\n\n' + _('Please wait...')
         else:
             text = _('Please wait...')
-        self.lbl_pls.text(text)
+        self.lbl_pls.set_text(text)
 
 
 
@@ -3410,7 +3410,7 @@ class Button:
         self.bd        = bd
         self.bg        = bg
         self.bg_focus  = bg_focus
-        self._bindings = bindings
+        self.bindings  = bindings
         self.expand    = expand
         self.fg        = fg
         self.fg_focus  = fg_focus
@@ -3426,17 +3426,17 @@ class Button:
         self.text      = lg.com.sanitize(text)
         self.width     = width
         if active:
-            self.on_img = gi.com.image (path   = active
-                                       ,width  = self.width
-                                       ,height = self.height
-                                       )
+            self.on_img = gi.com.get_image (path   = active
+                                           ,width  = self.width
+                                           ,height = self.height
+                                           )
         else:
             self.on_img = None
         if inactive:
-            self.off_img = gi.com.image (path   = inactive
-                                        ,width  = self.width
-                                        ,height = self.height
-                                        )
+            self.off_img = gi.com.get_image (path   = inactive
+                                            ,width  = self.width
+                                            ,height = self.height
+                                            )
         else:
             self.off_img = None
         self.gui = gi.Button (parent   = parent
@@ -3455,13 +3455,13 @@ class Button:
                              ,off_img  = self.off_img
                              )
         self.widget = self.gui.widget
-        self.title(self.text)
-        self.bindings()
+        self.set_title(self.text)
+        self.set_bindings()
         if self.Focus:
-            self.focus()
+            self.set_focus()
         self.set_hint()
     
-    def bindings(self):
+    def set_bindings(self):
         com.bind (obj      = self
                  ,bindings = ('<ButtonRelease-1>','<space>'
                              ,'<Return>','<KP_Enter>'
@@ -3471,9 +3471,9 @@ class Button:
 
     def set_hint(self):
         if self.hint:
-            if self._bindings:
+            if self.bindings:
                 self.hextended = self.hint + '\n' \
-                                 + lg.Hotkeys(self._bindings).run()
+                                 + lg.Hotkeys(self.bindings).run()
             else:
                 self.hextended = self.hint
             self.tip = ToolTip (obj   = self.gui
@@ -3484,9 +3484,9 @@ class Button:
                                ,hdir  = self.hdir
                                )
     
-    def title(self,button_text='Press me'):
+    def set_title(self,button_text='Press me'):
         button_text = lg.com.sanitize(button_text)
-        self.gui.title(button_text)
+        self.gui.set_title(button_text)
 
     def click(self,*args):
         f = '[shared] shared.Button.click'
@@ -3496,19 +3496,19 @@ class Button:
             else:
                 self.action()
         else:
-            com.lazy(f)
+            com.rep_lazy(f)
 
-    def active(self):
+    def activate(self):
         if not self.Status:
             self.Status = True
             if self.on_img:
-                self.gui.active()
+                self.gui.activate()
 
-    def inactive(self):
+    def inactivate(self):
         if self.Status:
             self.Status = False
             if self.off_img:
-                self.gui.inactive()
+                self.gui.inactivate()
 
     def show(self,event=None):
         self.gui.show()
@@ -3516,8 +3516,8 @@ class Button:
     def close(self,event=None):
         self.gui.close()
 
-    def focus(self,event=None):
-        self.gui.focus()
+    def set_focus(self,event=None):
+        self.gui.set_focus()
     
     def enable(self):
         self.gui.enable()
@@ -3553,24 +3553,24 @@ class Frame:
                             )
         self.widget = self.gui.widget
 
-    def height(self):
-        return self.gui.height()
+    def get_height(self):
+        return self.gui.get_height()
     
-    def width(self):
-        return self.gui.width()
+    def get_width(self):
+        return self.gui.get_width()
     
-    def reqheight(self):
-        return self.gui.reqheight()
+    def get_reqheight(self):
+        return self.gui.get_reqheight()
     
-    def reqwidth(self):
-        return self.gui.reqwidth()
+    def get_reqwidth(self):
+        return self.gui.get_reqwidth()
     
     def kill(self):
         self.gui.kill()
     
-    def title(self,text=None):
+    def set_title(self,text=None):
         text = lg.com.sanitize(text)
-        self.gui.title(text)
+        self.gui.set_title(text)
 
     def show(self,event=None):
         self.gui.show()
@@ -3585,13 +3585,13 @@ class AttachWidget:
     def __init__ (self,obj1,obj2
                  ,anchor='N'
                  ):
-        self.values()
+        self.set_values()
         self.obj1   = obj1
         self.obj2   = obj2
         self.anchor = anchor
         self.check()
         
-    def values(self):
+    def set_values(self):
         self.anchors = ('N','NE','NW','E','EN','ES','S','SE','SW','W'
                        ,'WN','WS'
                        )
@@ -3615,60 +3615,60 @@ class AttachWidget:
             else:
                 self.Success = False
                 mes = _('Wrong input data!')
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
             self.Success = False
-            com.empty(f)
+            com.rep_empty(f)
         if self.anchor not in self.anchors:
             self.Success = False
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".').format(self.anchor,self.anchors)
-            objs.mes(f,mes).error()
+            objs.get_mes(f,mes).show_error()
     
-    def _ne(self):
+    def _set_ne(self):
         self.x2 = self.x1
         self.y2 = self.y1 - self.h2
     
-    def _n(self):
+    def _set_n(self):
         self.x2 = self.x1 + self.w1/2 - self.w2/2
         self.y2 = self.y1 - self.h2
     
-    def _nw(self):
+    def _set_nw(self):
         self.x2 = self.x1 + self.w1 - self.w2
         self.y2 = self.y1 - self.h2
                       
-    def _en(self):
+    def _set_en(self):
         self.x2 = self.x1 - self.w2
         self.y2 = self.y1
     
-    def _e(self):
+    def _set_e(self):
         self.x2 = self.x1 - self.w2
         self.y2 = self.y1 + self.h1/2 - self.h2/2
     
-    def _es(self):
+    def _set_es(self):
         self.x2 = self.x1 - self.w2
         self.y2 = self.y1 + self.h1 - self.h2
     
-    def _se(self):
+    def _set_se(self):
         self.x2 = self.x1
         self.y2 = self.y1 + self.h1
 
-    def _s(self):
+    def _set_s(self):
         self.x2 = self.x1 + self.w1/2 - self.w2/2
         self.y2 = self.y1 + self.h1
     
-    def _sw(self):
+    def _set_sw(self):
         self.x2 = self.x1 + self.w1 - self.w2
         self.y2 = self.y1 + self.h1
     
-    def _wn(self):
+    def _set_wn(self):
         self.x2 = self.x1 + self.w1
         self.y2 = self.y1
     
-    def _w(self):
+    def _set_w(self):
         self.x2 = self.x1 + self.w1
         self.y2 = self.y1 + self.h1/2 - self.h2/2
                       
-    def _ws(self):
+    def _set_ws(self):
         self.x2 = self.x1 + self.w1
         self.y2 = self.y1 + self.h1 - self.h2
     
@@ -3676,39 +3676,39 @@ class AttachWidget:
         f = '[shared] shared.AttachWidget.set'
         if self.Success:
             if self.anchor == 'N':
-                self._n()
+                self._set_n()
             elif self.anchor == 'NE':
-                self._ne()
+                self._set_ne()
             elif self.anchor == 'NW':
-                self._nw()
+                self._set_nw()
             elif self.anchor == 'E':
-                self._e()
+                self._set_e()
             elif self.anchor == 'EN':
-                self._en()
+                self._set_en()
             elif self.anchor == 'ES':
-                self._es()
+                self._set_es()
             elif self.anchor == 'S':
-                self._s()
+                self._set_s()
             elif self.anchor == 'SE':
-                self._se()
+                self._set_se()
             elif self.anchor == 'SW':
-                self._sw()
+                self._set_sw()
             elif self.anchor == 'W':
-                self._w()
+                self._set_w()
             elif self.anchor == 'WN':
-                self._wn()
+                self._set_wn()
             elif self.anchor == 'WS':
-                self._ws()
+                self._set_ws()
             else:
                 mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".').format(self.anchor,self.anchors)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
             geom = Geometry(parent=self.obj2)
             ''' Do not use '.format' here since it produces floats
                 and we need integers.
             '''
-            geom._geom = '%dx%d+%d+%d' % (self.w2,self.h2
-                                         ,self.x2,self.y2
-                                         )
+            geom.geom = '%dx%d+%d+%d' % (self.w2,self.h2
+                                        ,self.x2,self.y2
+                                        )
             geom.restore()
         else:
             com.cancel(f)
@@ -3729,13 +3729,13 @@ class AttachWidget:
                                                              ,self.x1
                                                              ,self.y1
                                                              )
-            objs.mes(f,mes,True).debug()
+            objs.get_mes(f,mes,True).show_debug()
             mes = _('Widget 2 geometry: {}x{}+{}+{}').format (self.w2
                                                              ,self.h2
                                                              ,self.x2
                                                              ,self.y2
                                                              )
-            objs.mes(f,mes,True).debug()
+            objs.get_mes(f,mes,True).show_debug()
         else:
             com.cancel(f)
     
@@ -3767,8 +3767,8 @@ class Label:
         self.side   = side
         self.fill   = fill
         self.expand = expand
-        self._text  = text
-        self._font  = font
+        self.text   = text
+        self.font   = font
         self.ipadx  = ipadx
         self.ipady  = ipady
         self.padx   = padx
@@ -3798,14 +3798,14 @@ class Label:
                             ,justify = self.justify
                             )
         self.widget  = self.gui.widget
-        self.text(self._text)
-        self.font(self._font)
+        self.set_text(self.text)
+        self.set_font(self.font)
     
-    def reqheight(self,event=None):
-        return self.gui.reqheight()
+    def get_reqheight(self,event=None):
+        return self.gui.get_reqheight()
     
-    def reqwidth(self,event=None):
-        return self.gui.reqwidth()
+    def get_reqwidth(self,event=None):
+        return self.gui.get_reqwidth()
     
     def kill(self,event=None):
         self.gui.kill()
@@ -3816,20 +3816,20 @@ class Label:
     def enable(self,event=None):
         self.gui.enable()
 
-    def text(self,arg=None):
+    def set_text(self,arg=None):
         if arg:
-            self._text = arg
-        self._text = lg.com.sanitize(arg)
-        self.gui.text(self._text)
+            self.text = arg
+        self.text = lg.com.sanitize(arg)
+        self.gui.set_text(self.text)
 
-    def font(self,arg=None):
-        f = '[shared] shared.Label.font'
+    def set_font(self,arg=None):
+        f = '[shared] shared.Label.set_font'
         if arg:
-            self._font = arg
-        if not self.gui.font(self._font):
-            mes = _('Wrong font: "{}"!').format(self._font)
-            objs.mes(f,mes,True).error()
-            self._font = FONT2
+            self.font = arg
+        if not self.gui.set_font(self.font):
+            mes = _('Wrong font: "{}"!').format(self.font)
+            objs.get_mes(f,mes,True).show_error()
+            self.font = FONT2
 
     def show(self,event=None):
         self.gui.show()
@@ -3837,17 +3837,17 @@ class Label:
     def close(self,event=None):
         self.gui.close()
 
-    def title(self,text=''):
+    def set_title(self,text=''):
         text = lg.com.sanitize(text)
-        self.gui.title(text)
+        self.gui.set_title(text)
         
     def reset(self):
-        ''' #note #todo For some reason, using 'config' externally may 
+        ''' #NOTE #TODO For some reason, using 'config' externally may 
             reset config options. Use them altogether to prevent such 
             behavior.
         '''
-        self.widget.config (text   = self._text
-                           ,font   = self._font
+        self.widget.config (text   = self.text
+                           ,font   = self.font
                            #,image = self.image
                            ,bg     = self.bg
                            ,fg     = self.fg
@@ -3864,9 +3864,9 @@ class Geometry:
     '''
     def __init__(self,parent=None,title=None,hwnd=None):
         self.parent = parent
-        self._title = title
-        self._hwnd  = hwnd
-        self._geom  = None
+        self.title  = title
+        self.hwnd   = hwnd
+        self.geom   = None
         self.gui    = gi.Geometry(parent)
 
     def update(self):
@@ -3876,96 +3876,98 @@ class Geometry:
         f = '[shared] shared.Geometry.save'
         if self.parent:
             self.update()
-            self._geom = self.gui.geometry()
-            mes = _('Save geometry: {}').format(self._geom)
-            objs.mes(f,mes,True).info()
+            self.geom = self.gui.set_geometry()
+            mes = _('Save geometry: {}').format(self.geom)
+            objs.get_mes(f,mes,True).show_info()
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
     def restore(self):
         f = '[shared] shared.Geometry.restore'
         if self.parent:
-            if self._geom:
-                mes = _('Restore geometry: {}').format(self._geom)
-                objs.mes(f,mes,True).debug()
-                self.gui.restore(self._geom)
+            if self.geom:
+                mes = _('Restore geometry: {}').format(self.geom)
+                objs.get_mes(f,mes,True).show_debug()
+                self.gui.restore(self.geom)
             else:
                 mes = _('Failed to restore geometry!')
-                objs.mes(f,mes,True).warning()
+                objs.get_mes(f,mes,True).show_warning()
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
-    def foreground(self,event=None):
-        f = '[shared] shared.Geometry.foreground'
-        if objs.os().win():
-            if self.hwnd():
+    def set_foreground(self,event=None):
+        f = '[shared] shared.Geometry.set_foreground'
+        if objs.get_os().is_win():
+            if self.get_hwnd():
                 ''' 'pywintypes.error', but needs to import this for
                     some reason
                 '''
                 try:
-                    win32gui.SetForegroundWindow(self._hwnd)
+                    win32gui.SetForegroundWindow(self.hwnd)
                 except:
                     ''' In Windows 'Message' can be raised foreground,
                         so we just log it
                     '''
                     mes = _('Failed to change window properties!')
-                    objs.mes(f,mes,True).error()
+                    objs.get_mes(f,mes,True).show_error()
             else:
-                com.empty(f)
+                com.rep_empty(f)
         elif self.parent:
-            self.gui.foreground()
+            self.gui.set_foreground()
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
     def minimize(self,event=None):
         f = '[shared] shared.Geometry.minimize'
         if self.parent:
             ''' # Does not always work
-                if objs.os().win():
-                    win32gui.ShowWindow(self.hwnd(),win32con.SW_MINIMIZE)
+                if objs.get_os().is_win():
+                    win32gui.ShowWindow (self.get_hwnd()
+                                        ,win32con.SW_MINIMIZE
+                                        )
                 else:
             '''
             self.gui.minimize()
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
     def maximize(self,event=None):
         f = '[shared] shared.Geometry.maximize'
-        if lg.objs.os().win():
-            #win32gui.ShowWindow(self.hwnd(),win32con.SW_MAXIMIZE)
+        if lg.objs.get_os().is_win():
+            #win32gui.ShowWindow(self.get_hwnd(),win32con.SW_MAXIMIZE)
             self.gui.maximize_win()
         elif self.parent:
             self.gui.maximize_nix()
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
-    def focus(self,event=None):
-        f = '[shared] shared.Geometry.focus'
-        if lg.objs.os().win():
-            win32gui.SetActiveWindow(self.hwnd())
+    def set_focus(self,event=None):
+        f = '[shared] shared.Geometry.set_focus'
+        if lg.objs.get_os().is_win():
+            win32gui.SetActiveWindow(self.get_hwnd())
         elif self.parent:
-            self.gui.focus()
+            self.gui.set_focus()
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
     def lift(self,event=None):
         f = '[shared] shared.Geometry.lift'
         if self.parent:
             self.gui.lift()
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
     def _activate(self):
         f = '[shared] shared.Geometry._activate'
         if self.parent:
             self.gui._activate()
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
     def activate(self,event=None,MouseClicked=False):
         self._activate()
-        if objs.os().win():
-            #todo: learn how to properly import modules
+        if objs.get_os().is_win():
+            #TODO: learn how to properly import modules
             import ctypes
             self.parent.widget.wm_attributes('-topmost',1)
             self.parent.widget.wm_attributes('-topmost',0)
@@ -3984,21 +3986,21 @@ class Geometry:
                 # left mouse button up
                 ctypes.windll.user32.mouse_event(4, 0, 0, 0, 0)
 
-    def hwnd(self,event=None):
-        f = '[shared] shared.Geometry.hwnd'
-        if not self._hwnd:
-            if self._title:
+    def get_hwnd(self,event=None):
+        f = '[shared] shared.Geometry.get_hwnd'
+        if not self.hwnd:
+            if self.title:
                 try:
-                    self._hwnd = win32gui.FindWindow(None,self._title)
+                    self.hwnd = win32gui.FindWindow(None,self.title)
                 except win32ui.error:
                     mes = _('Failed to get the window handle!')
-                    objs.mes(f,mes,True).error()
+                    objs.get_mes(f,mes,True).show_error()
             else:
-                com.empty(f)
-        return self._hwnd
+                com.rep_empty(f)
+        return self.hwnd
 
     def set(self,arg='800x600'):
-        self._geom = arg
+        self.geom = arg
         self.restore()
 
 
@@ -4018,41 +4020,41 @@ class Top:
             'Lock = True', then they all will be shown and immediately
             closed.
         '''
-        self.values()
+        self.set_values()
         self.AutoCr = AutoCr
         self.gui    = gi.Top(Lock=Lock)
         self.widget = self.gui.widget
         if Maximize:
             Geometry(parent=self).maximize()
         if icon:
-            self.icon(icon)
-        elif objs._icon:
-            self.icon(objs._icon)
+            self.set_icon(icon)
+        elif objs.icon:
+            self.set_icon(objs.icon)
         if title:
-            self.title(title)
+            self.set_title(title)
         
     def kill(self,event=None):
         self.widget.destroy()
     
-    def idle(self,event=None):
-        self.gui.idle()
+    def update_idle(self,event=None):
+        self.gui.update_idle()
     
-    def icon(self,path=''):
-        f = '[shared] shared.Top.icon'
+    def set_icon(self,path=''):
+        f = '[shared] shared.Top.set_icon'
         if path:
             if os.path.exists(path):
-                self.gui.icon(path)
+                self.gui.set_icon(path)
             else:
                 mes = _('File "{}" has not been found!').format(path)
-                objs.mes(f,mes).warning()
+                objs.get_mes(f,mes).show_warning()
         else:
-            com.empty(f)
+            com.rep_empty(f)
     
-    def title(self,text=''):
+    def set_title(self,text=''):
         text = lg.com.sanitize(text)
-        self.gui.title(text)
+        self.gui.set_title(text)
     
-    def values(self):
+    def set_values(self):
         self.type  = 'Toplevel'
         self.count = 0
 
@@ -4068,23 +4070,23 @@ class Top:
         self.count += 1
         self.gui.show()
 
-    def resolution(self):
-        return self.gui.resolution()
+    def get_resolution(self):
+        return self.gui.get_resolution()
 
     def center(self):
         ''' Make child widget always centered at the first time and up
             to a user's choice any other time (if the widget is reused).
             Only 'tk.Tk' and 'tk.Toplevel' types are supported.
         '''
-        width, height = self.resolution()
+        width, height = self.get_resolution()
         size = tuple(int(item) for item \
-                in self.gui.geometry().split('+')[0].split('x'))
+                in self.gui.set_geometry().split('+')[0].split('x'))
         x = width/2 - size[0]/2
         y = height/2 - size[1]/2
-        self.gui.geometry("%dx%d+%d+%d" % (size + (x, y)))
+        self.gui.set_geometry("%dx%d+%d+%d" % (size + (x, y)))
 
-    def focus(self,event=None):
-        self.gui.focus()
+    def set_focus(self,event=None):
+        self.gui.set_focus()
 
 
 
@@ -4096,76 +4098,76 @@ class Objects(lg.Objects):
             'logic'. Use 'logic' methods to set attributes.
         '''
         super().__init__()
-        self._question = self._info = self._warning = self._debug \
-                       = self._error = self._mes = self._waitbox \
-                       = self._txt = None
+        self.question = self.info = self.warning = self.debug \
+                      = self.error = self.mes = self.waitbox \
+                      = self.txt = None
     
-    def txt(self,font=FONT1,Maximize=False):
-        if self._txt is None:
-            self._txt = TextBoxRW (title    = _('Test:')
-                                  ,font     = font
-                                  ,Maximize = Maximize
-                                  )
-        return self._txt
+    def get_txt(self,font=FONT1,Maximize=False):
+        if self.txt is None:
+            self.txt = TextBoxRW (title    = _('Test:')
+                                 ,font     = font
+                                 ,Maximize = Maximize
+                                 )
+        return self.txt
     
-    def mes (self,func='Logic error'
-            ,message='Logic error'
-            ,Silent=False
-            ):
+    def get_mes (self,func='Logic error'
+                ,message='Logic error'
+                ,Silent=False
+                ):
         if STOP_MES:
             return DummyMessage()
-        if self._mes is None:
-            self._mes = Message
-        return self._mes(func,message,Silent)
+        if self.mes is None:
+            self.mes = Message
+        return self.mes(func,message,Silent)
     
-    def waitbox(self,icon=''):
-        if self._waitbox is None:
-            self._waitbox = WaitBox(icon)
-        return self._waitbox
+    def get_waitbox(self,icon=''):
+        if self.waitbox is None:
+            self.waitbox = WaitBox(icon)
+        return self.waitbox
     
-    def root(self,Close=True):
-        return gi.objs.root(Close)
+    def get_root(self,Close=True):
+        return gi.objs.get_root(Close)
     
-    def error(self):
-        if self._error is None:
-            self._error = MessageBuilder (level  = _('ERROR')
-                                         ,Single = True
-                                         ,YesNo  = False
-                                         )
-        return self._error
-    
-    def warning(self):
-        if self._warning is None:
-            self._warning = MessageBuilder (level  = _('WARNING')
-                                           ,Single = True
-                                           ,YesNo  = False
-                                           )
-        return self._warning
-    
-    def debug(self):
-        # Reusing the same 'info' object may result in GUI glitches
-        if self._debug is None:
-            self._debug = MessageBuilder (level  = _('INFO')
-                                         ,Single = True
-                                         ,YesNo  = False
-                                         )
-        return self._debug
-    
-    def info(self):
-        if self._info is None:
-            self._info = MessageBuilder (level  = _('INFO')
+    def get_error(self):
+        if self.error is None:
+            self.error = MessageBuilder (level  = _('ERROR')
                                         ,Single = True
                                         ,YesNo  = False
                                         )
-        return self._info
+        return self.error
     
-    def question(self):
-        if self._question is None:
-            self._question = MessageBuilder (level  = _('QUESTION')
-                                            ,Single = False
-                                            ,YesNo  = True
-                                            )
-        return self._question
+    def get_warning(self):
+        if self.warning is None:
+            self.warning = MessageBuilder (level  = _('WARNING')
+                                          ,Single = True
+                                          ,YesNo  = False
+                                          )
+        return self.warning
+    
+    def get_debug(self):
+        # Reusing the same 'info' object may result in GUI glitches
+        if self.debug is None:
+            self.debug = MessageBuilder (level  = _('INFO')
+                                        ,Single = True
+                                        ,YesNo  = False
+                                        )
+        return self.debug
+    
+    def get_info(self):
+        if self.info is None:
+            self.info = MessageBuilder (level  = _('INFO')
+                                       ,Single = True
+                                       ,YesNo  = False
+                                       )
+        return self.info
+    
+    def get_question(self):
+        if self.question is None:
+            self.question = MessageBuilder (level  = _('QUESTION')
+                                           ,Single = False
+                                           ,YesNo  = True
+                                           )
+        return self.question
 
 
 
@@ -4182,26 +4184,26 @@ class MessageBuilder:
         self.widget = self.parent.widget
         self.gui    = gi.MessageBuilder(self.parent)
         Geometry(parent=self.parent).set('400x250')
-        self.frames()
+        self.set_frames()
         self.txt = TextBox(self.frm_tpr)
-        self.buttons()
-        self.icon()
-        self.image()
-        self.bindings()
+        self.set_buttons()
+        self.set_icon()
+        self.set_image()
+        self.set_bindings()
     
     def update(self,text=''):
-        #note: Control-c does not work with read-only fields
+        #NOTE: Control-c does not work with read-only fields
         self.txt.clear_text()
         self.txt.insert(text)
     
-    def bindings(self):
+    def set_bindings(self):
         com.bind (obj      = self
                  ,bindings = ('<Control-q>','<Control-w>','<Escape>')
                  ,action   = self.close_no
                  )
         self.widget.protocol("WM_DELETE_WINDOW",self.close)
     
-    def frames(self):
+    def set_frames(self):
         self.frm_prm = Frame (parent = self.gui.parent)
         self.frm_top = Frame (parent = self.frm_prm
                              ,side   = 'top'
@@ -4225,7 +4227,7 @@ class MessageBuilder:
                              ,side   = 'right'
                              )
     
-    def buttons(self):
+    def set_buttons(self):
         if self.YesNo:
             YesName = _('Yes')
             NoName  = _('No')
@@ -4267,7 +4269,7 @@ class MessageBuilder:
         return self.Yes
     
     def show(self,event=None):
-        self.btn_yes.focus()
+        self.btn_yes.set_focus()
         self.gui.show()
     
     def close(self,event=None):
@@ -4277,25 +4279,25 @@ class MessageBuilder:
         self.logic.reset (text  = text
                          ,title = title
                          )
-        self.update(self.logic._text)
-        self.title()
+        self.update(self.logic.text)
+        self.set_title()
     
-    def title(self):
-        self.gui.title(self.logic._title)
+    def set_title(self):
+        self.gui.set_title(self.logic.title)
     
-    def icon(self):
-        f = '[shared] shared.MessageBuilder.icon'
-        if self.logic._icon and os.path.exists(self.logic._icon):
-            self.gui.icon(self.logic._icon)
+    def set_icon(self):
+        f = '[shared] shared.MessageBuilder.set_icon'
+        if self.logic.icon and os.path.exists(self.logic.icon):
+            self.gui.set_icon(self.logic.icon)
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
-    def image(self,event=None):
-        f = '[shared] shared.MessageBuilder.image'
-        if self.logic._icon and os.path.exists(self.logic._icon):
-            iimage = self.gui.image (path = self.logic._icon
-                                    ,obj  = self.frm_tpl
-                                    )
+    def set_image(self,event=None):
+        f = '[shared] shared.MessageBuilder.set_image'
+        if self.logic.icon and os.path.exists(self.logic.icon):
+            iimage = self.gui.set_image (path = self.logic.icon
+                                        ,obj  = self.frm_tpl
+                                        )
             ''' We need to assign self.variable to Label, otherwise,
                 it gets destroyed.
             '''
@@ -4303,7 +4305,7 @@ class MessageBuilder:
                                  ,image  = iimage
                                  )
         else:
-            com.empty(f)
+            com.rep_empty(f)
 
 
 
@@ -4314,69 +4316,69 @@ class Message:
         self.message = message
         self.Silent  = Silent
 
-    def debug(self):
+    def show_debug(self):
         if GUI_MES and not self.Silent:
-            objs.debug().reset (title = self.func
-                               ,text  = self.message
-                               )
-            objs._debug.show()
+            objs.get_debug().reset (title = self.func
+                                   ,text  = self.message
+                                   )
+            objs.debug.show()
         # Duplicate the message to the console
         lg.Message (func    = self.func
                    ,message = self.message
-                   ).debug()
+                   ).show_debug()
     
-    def error(self):
+    def show_error(self):
         if GUI_MES and not self.Silent:
-            objs.error().reset (title = self.func
-                               ,text  = self.message
-                               )
-            objs._error.show()
+            objs.get_error().reset (title = self.func
+                                   ,text  = self.message
+                                   )
+            objs.error.show()
         # Duplicate the message to the console
         lg.Message (func    = self.func
                    ,message = self.message
-                   ).error()
+                   ).show_error()
 
-    def info(self):
+    def show_info(self):
         if GUI_MES and not self.Silent:
-            objs.info().reset (title = self.func
-                              ,text  = self.message
-                              )
-            objs._info.show()
-        # Duplicate the message to the console
-        lg.Message (func    = self.func
-                   ,message = self.message
-                   ).info()
-                       
-    def warning(self):
-        if GUI_MES and not self.Silent:
-            objs.warning().reset (title = self.func
-                                 ,text  = self.message
-                                 )
-            objs._warning.show()
-        # Duplicate the message to the console
-        lg.Message (func    = self.func
-                   ,message = self.message
-                   ).warning()
-
-    def question(self):
-        if GUI_MES and not self.Silent:
-            objs.question().reset (title = self.func
+            objs.get_info().reset (title = self.func
                                   ,text  = self.message
                                   )
-            objs._question.show()
+            objs.info.show()
+        # Duplicate the message to the console
+        lg.Message (func    = self.func
+                   ,message = self.message
+                   ).show_info()
+                       
+    def show_warning(self):
+        if GUI_MES and not self.Silent:
+            objs.get_warning().reset (title = self.func
+                                     ,text  = self.message
+                                     )
+            objs.warning.show()
+        # Duplicate the message to the console
+        lg.Message (func    = self.func
+                   ,message = self.message
+                   ).show_warning()
+
+    def show_question(self):
+        if GUI_MES and not self.Silent:
+            objs.get_question().reset (title = self.func
+                                      ,text  = self.message
+                                      )
+            objs.question.show()
             lg.log.append (self.func
                           ,_('QUESTION')
                           ,self.message
                           )
-            answer = objs._question.ask()
+            answer = objs.question.ask()
             lg.Message (func    = self.func
                        ,message = str(answer)
-                       ).debug()
+                       ).show_debug()
             return answer
         else:
             return lg.Message (func    = self.func
                               ,message = self.message
-                              ).question()
+                              ).show_question()
 
 
 
@@ -4385,47 +4387,47 @@ class Commands(lg.Commands):
     def __init__(self):
         super().__init__()
     
-    def mod_color(self,color,delta=76): # ~30%
+    def get_mod_color(self,color,delta=76): # ~30%
         ''' Make a color (a color name (/usr/share/X11/rgb.txt) or
             a hex value) brighter (positive delta) or darker
             (negative delta).
         '''
-        f = '[shared] shared.Commands.mod_color'
+        f = '[shared] shared.Commands.get_mod_color'
         if -255 <= delta <= 255:
-            rgb = gi.com.mod_color(color)
+            rgb = gi.com.get_mod_color(color)
             if rgb:
-                return lg.com.mod_color(rgb,delta)
+                return lg.com.get_mod_color(rgb,delta)
             else:
                 mes = _('An unknown color "{}"!').format(color)
-                objs.mes(f,mes).error()
+                objs.get_mes(f,mes).show_error()
         else:
             sub = '-255 <= {} <= 255'.format(delta)
             mes = _('The condition "{}" is not observed!').format(sub)
-            objs.mes(f,mes).warning()
+            objs.get_mes(f,mes).show_warning()
     
-    def fast_txt(self,text='',font=FONT1,Maximize=False):
-        objs.txt(font,Maximize).reset()
-        objs._txt.insert(text)
-        objs._txt.show()
-        return objs._txt.get()
+    def run_fast_txt(self,text='',font=FONT1,Maximize=False):
+        objs.get_txt(font,Maximize).reset()
+        objs.txt.insert(text)
+        objs.txt.show()
+        return objs.txt.get()
     
-    def fast_debug(self,text):
-        objs.txt (font     = 'Mono 11'
-                 ,Maximize = True
-                 ).reset()
-        objs._txt.insert(text)
-        objs._txt.show()
+    def run_fast_debug(self,text):
+        objs.get_txt (font     = 'Mono 11'
+                     ,Maximize = True
+                     ).reset()
+        objs.txt.insert(text)
+        objs.txt.show()
     
-    def dialog_save_file(self,types=()):
-        f = '[shared] shared.Commands.dialog_save_file'
-        options = lg.com.dialog_save_file(types)
+    def show_save_dialog(self,types=()):
+        f = '[shared] shared.Commands.show_save_dialog'
+        options = lg.com.show_save_dialog(types)
         try:
-            file = gi.com.dialog_save_file(options)
+            file = gi.com.show_save_dialog(options)
         except Exception as e:
             file = ''
             mes = _('The operation has failed!\n\nDetails: {}')
             mes = mes.format(e)
-            objs.mes(f,mes,True).error()
+            objs.get_mes(f,mes,True).show_error()
         return file
     
     def bind(self,obj,bindings,action):
@@ -4442,13 +4444,13 @@ class Commands(lg.Commands):
                     if not gi.com.bind(obj,binding,action):
                         mes = _('Failed to enable key combination "{}"!')
                         mes = mes.format(binding)
-                        objs.mes(f,mes,True).error()
+                        objs.get_mes(f,mes,True).show_error()
             else:
                 mes = _('Wrong input data: "{}"').format(bindings)
-                objs.mes(f,mes,True).error()
+                objs.get_mes(f,mes,True).show_error()
         else:
             mes = _('Wrong input data!')
-            objs.mes(f,mes,True).error()
+            objs.get_mes(f,mes,True).show_error()
     
     def start(self,Close=True):
         gi.objs.start(Close)
@@ -4461,7 +4463,7 @@ class Commands(lg.Commands):
 class Font:
     
     def __init__(self,name,xborder=20,yborder=20):
-        self._font = None
+        self.font  = None
         self.gui   = gi.Font()
         self.logic = lg.Font (name    = name
                              ,xborder = xborder
@@ -4477,54 +4479,54 @@ class Font:
     def set_text(self,text):
         self.logic.set_text(text)
     
-    def font(self):
-        f = '[shared] shared.Font.font'
-        if not self._font:
-            if self.logic._family and self.logic._size:
-                self._font = self.gui.font (family = self.logic._family
-                                           ,size   = self.logic._size
-                                           )
+    def get_font(self):
+        f = '[shared] shared.Font.get_font'
+        if not self.font:
+            if self.logic.family and self.logic.size:
+                self.font = self.gui.get_font (family = self.logic.family
+                                              ,size   = self.logic.size
+                                              )
             else:
-                com.empty(f)
-        return self._font
+                com.rep_empty(f)
+        return self.font
     
-    def height(self):
-        f = '[shared] shared.Font.height'
-        if not self.logic._height:
-            if self.font():
+    def get_height(self):
+        f = '[shared] shared.Font.get_height'
+        if not self.logic.height:
+            if self.get_font():
                 try:
-                    self.logic._height = self.gui.height(self._font)
+                    self.logic.height = self.gui.get_height(self.font)
                 except Exception as e:
-                    objs.mes(f,str(e),True).error()
-                self.logic.height()
+                    objs.get_mes(f,str(e),True).show_error()
+                self.logic.set_height()
             else:
-                com.empty(f)
-        return self.logic._height
+                com.rep_empty(f)
+        return self.logic.height
     
-    def width(self):
-        f = '[shared] shared.Font.width'
-        if not self.logic._width:
-            if self.font() and self.logic._text:
+    def get_width(self):
+        f = '[shared] shared.Font.get_width'
+        if not self.logic.width:
+            if self.get_font() and self.logic.text:
                 try:
-                    max_line = sorted (self.logic._text.splitlines()
+                    max_line = sorted (self.logic.text.splitlines()
                                       ,key     = len
                                       ,reverse = True
                                       )[0]
-                    self.logic._width = self.gui.width (font     = self._font
-                                                       ,max_line = max_line
-                                                       )
+                    self.logic.width = self.gui.get_width (font     = self.font
+                                                          ,max_line = max_line
+                                                          )
                 except Exception as e:
-                    objs.mes(f,str(e),True).error()
-                self.logic.width()
+                    objs.get_mes(f,str(e),True).show_error()
+                self.logic.set_width()
             else:
-                com.empty(f)
-        return self.logic._width
+                com.rep_empty(f)
+        return self.logic.width
 
 
 com  = Commands()
 objs = Objects()
 # Use GUI dialogs for logic-only modules
-lg.objs._mes = Message
+lg.objs.mes = Message
 
 
 if __name__ == '__main__':

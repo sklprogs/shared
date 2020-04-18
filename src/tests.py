@@ -3,18 +3,71 @@
 
 import io
 import random
-import skl_shared as sh
-from skl_shared.localize import _
+import skl_shared2.shared as sh
+from skl_shared2.localize import _
 
 ICON  = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
 ICON2 = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
 FILE  = '/home/pete/base/[unmusic] corrupted tags.txt'
+
+SILENT = False
 
 
 class Commands:
     
     def __init__(self):
         pass
+    
+    def create_button(self):
+        self.btn = sh.Button (parent   = sh.Top()
+                             ,inactive = '/home/pete/bin/mclient/resources/buttons/icon_36x36_block_off.gif'
+                             ,active   = '/home/pete/bin/mclient/resources/buttons/icon_36x36_block_on.gif'
+                             ,Focus    = True
+                             )
+    
+    def run_all(self):
+        '''
+        self.get_free_space()
+        self.get_size()
+        self.get_size_range()
+        self.test_button(self.run_button_trigger)
+        self.run_canvas()
+        self.run_checkbox()
+        self.run_clipboard()
+        self.run_entry()
+        self.run_entryc()
+        self.run_fast_table()
+        self.run_frameless()
+        self.run_geometry()
+        '''
+        #cur
+        self.run_listbox()
+        self.run_listboxc()
+        self.run_messages()
+        self.run_multcboxes()
+        self.run_multcboxesc()
+        self.run_optionmenu()
+        self.run_optionmenu_trigger()
+        self.run_progressbar()
+        self.run_progressbar0()
+        self.run_progressbaritem()
+        self.run_scrollbar()
+        self.run_simple_top()
+        self.run_symbol_map()
+        self.run_textbox()
+        self.run_textboxc()
+        self.run_textboxro()
+        self.run_textboxrw()
+        self.run_top()
+        self.run_waitbox()
+        self.set_button()
+        self.set_figure_commas()
+        self.set_font()
+        self.set_frame()
+        self.set_label()
+        self.set_panes()
+        self.set_random_coor()
+        self.trigger_cbox()
     
     def _fast_table1(self):
         mes = _('Variant #{}').format(1)
@@ -93,7 +146,10 @@ class Commands:
         self.iwrite.write(mes)
         self.iwrite.write('\n\n')
     
-    def fast_table(self):
+    def run_fast_table(self):
+        f = '[shared] tests.Commands.run_fast_table'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         self.iwrite = io.StringIO()
         self._fast_table1()
         self._fast_table2()
@@ -101,100 +157,120 @@ class Commands:
         self._fast_table4()
         mes = self.iwrite.getvalue()
         self.iwrite.close()
-        sh.com.fast_txt (text = mes
-                        ,font = 'Mono 12'
-                        )
+        sh.com.run_fast_txt (text = mes
+                            ,font = 'Mono 12'
+                            )
     
-    def figure_commas(self):
-        f = '[shared] tests.Commands.figure_commas'
+    def set_figure_commas(self):
+        f = '[shared] tests.Commands.set_figure_commas'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         vals = [None,'',0,-1,-123456,-1234567,-12.34,123456,1234567
                ,56874867845678456845678456845,'hello'
                ]
         for old in vals:
-            new = sh.com.figure_commas(old)
+            new = sh.com.set_figure_commas(old)
             mes = '"{}" -> "{}"'.format(old,new)
-            sh.objs.mes(f,mes,True).debug()
+            sh.objs.get_mes(f,mes,SILENT).show_debug()
     
-    def textboxro(self):
+    def run_textboxro(self):
+        f = '[shared] tests.Commands.run_textboxro'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         text  = sh.ReadTextFile(FILE).get()
         words = sh.Words (text = text
                          ,Auto = True
                          )
-        words.sent_nos()
+        words.get_sent_nos()
         itxt = sh.TextBoxRO (Maximize = False
                             ,title    = 'TextBoxRO with Selection and Search'
                             ,icon     = ICON
                             ,words    = words
                             )
         itxt.insert(text)
-        itxt.focus()
+        itxt.set_focus()
         itxt.show()
         result = sh.Text(itxt.get()).shorten(max_len=20)
-        print('Output: "{}"'.format(result))
+        mes = _('Output: "{}"').format(result)
+        sh.objs.get_mes(f,mes,SILENT).show_debug()
     
-    def textboxrw(self):
+    def run_textboxrw(self):
+        f = '[shared] tests.Commands.run_textboxrw'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         text  = sh.ReadTextFile(FILE).get()
         text  = text.strip()
         words = sh.Words (text = text
                          ,Auto = True
                          )
-        words.sent_nos()
+        words.get_sent_nos()
         itxt = sh.TextBoxRW (Maximize = False
                             ,title    = 'TextBoxRW with Selection and Search'
                             ,icon     = ICON
                             ,words    = words
                             )
         itxt.insert(text)
-        itxt.focus()
+        itxt.set_focus()
         itxt.show()
         result = sh.Text(itxt.get()).shorten(max_len=20)
-        print('Output: "{}"'.format(result))
+        mes = _('Output: "{}"').format(result)
+        sh.objs.get_mes(f,mes,SILENT).show_debug()
     
-    def textboxc(self):
+    def run_textboxc(self):
+        f = '[shared] tests.Commands.run_textboxc'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         text  = sh.ReadTextFile(FILE).get()
         words = sh.Words (text = text
                          ,Auto = True
                          )
-        words.sent_nos()
+        words.get_sent_nos()
         itxt = sh.TextBoxC (Maximize = False
                            ,title    = 'TextBoxC with Selection and Search'
                            ,icon     = ICON
                            ,words    = words
                            )
         itxt.insert(text)
-        itxt.spelling()
-        itxt.focus()
+        itxt.check_spell()
+        itxt.set_focus()
         itxt.show()
         result = sh.Text(itxt.get()).shorten(max_len=20)
-        print('Output: "{}"'.format(result))
+        mes = _('Output: "{}"').format(result)
+        sh.objs.get_mes(f,mes,SILENT).show_debug()
     
-    def panes(self):
+    def set_panes(self):
+        f = '[shared] tests.Commands.set_panes'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         text  = sh.ReadTextFile(FILE).get()
         words = sh.Words (text = text
                          ,Auto = True
                          )
-        words.sent_nos()
-        ipanes = sh.Panes (bg       = 'old lace'
-                          ,Extended = True
+        words.get_sent_nos()
+        ipanes = sh.Panes (bg     = 'old lace'
+                          ,Extend = True
                           )
         '''
-        ipanes = sh.Panes (bg       = 'old lace'
-                          ,Extended = True
-                          ,words1   = words
-                          ,words2   = words
-                          ,words3   = words
-                          ,words4   = words
+        ipanes = sh.Panes (bg     = 'old lace'
+                          ,Extend = True
+                          ,words1 = words
+                          ,words2 = words
+                          ,words3 = words
+                          ,words4 = words
                           )
         '''
         ipanes.reset(words,words,words,words)
         ipanes.show()
     
-    def textbox(self):
+    def run_textbox(self):
+        f = '[shared] tests.Commands.run_textbox'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         text  = sh.ReadTextFile(FILE).get()
         words = sh.Words (text = text
                          ,Auto = True
                          )
-        words.sent_nos()
+        words.get_sent_nos()
         parent = sh.Top (title = 'TextBox with Selection and Search'
                         ,icon  = ICON
                         ,AutoCr = False
@@ -211,19 +287,27 @@ class Commands:
                           ,icon    = ICON
                           )
         itxt.insert(text)
-        itxt.focus()
+        itxt.set_focus()
         parent.show()
         result = sh.Text(itxt.get()).shorten(max_len=20)
-        print('Output: "{}"'.format(result))
+        mes = _('Output: "{}"').format(result)
+        sh.objs.get_mes(f,mes,SILENT).show_debug()
     
-    def entryc(self):
+    def run_entryc(self):
+        f = '[shared] tests.Commands.run_entryc'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         ient = sh.EntryC (title = 'This is an Entry'
                          ,icon  = ICON
                          )
         ient.show()
-        print('Output: "{}"'.format(ient.get()))
+        mes = _('Output: "{}"').format(ient.get())
+        sh.objs.get_mes(f,mes,SILENT).show_debug()
     
-    def entry(self):
+    def run_entry(self):
+        f = '[shared] tests.Commands.run_entry'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         parent = sh.Top()
         ient = sh.Entry (parent  = parent
                         ,side    = 'left'
@@ -237,12 +321,15 @@ class Commands:
                         ,fg      = 'red'
                         ,justify = 'right'
                         )
-        ient.focus()
+        ient.set_focus()
         ient.insert('Anything')
         ient.disable()
         parent.show()
     
-    def multcboxesc(self):
+    def run_multcboxesc(self):
+        f = '[shared] tests.Commands.run_multcboxesc'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         text = '\n'.join([str(i+1) for i in range(100)])
         imult = sh.MultCBoxesC (text    = text
                                ,width   = 550
@@ -252,9 +339,13 @@ class Commands:
                                ,icon    = ICON
                                )
         imult.show()
-        print(imult.selected())
+        mes = imult.get_selected()
+        sh.objs.get_mes(f,mes,SILENT).show_debug()
     
-    def multcboxes(self):
+    def run_multcboxes(self):
+        f = '[shared] tests.Commands.run_multcboxes'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         parent = sh.Top()
         imult = sh.MultCBoxes (parent  = parent
                               ,text    = 'Hello\nBye\nHello again'
@@ -264,12 +355,17 @@ class Commands:
         parent.show()
     
     def trigger_cbox(self,event=None):
-        print('Output: "{}"'.format(self.cbx.get()))
+        f = '[shared] tests.Commands.trigger_cbox'
+        mes = _('Output: "{}"').format(self.cbx.get())
+        sh.objs.get_mes(f,mes,SILENT).show_debug()
     
-    def checkbox(self):
+    def run_checkbox(self):
+        f = '[shared] tests.Commands.run_checkbox'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         parent = sh.Top()
         sh.Geometry(parent).set('100x100')
-        parent.title('CheckBox')
+        parent.set_title('CheckBox')
         self.cbx = sh.CheckBox (parent = parent
                                ,Active = False
                                ,side   = 'left'
@@ -285,7 +381,10 @@ class Commands:
                     )
         parent.show()
     
-    def progressbar(self):
+    def run_progressbar(self):
+        f = '[shared] tests.Commands.run_progressbar'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         top   = sh.Top(AutoCr=False)
         iprog = sh.ProgressBar (width   = 750
                                ,height  = 200
@@ -298,7 +397,10 @@ class Commands:
         iprog.show()
         top.show()
     
-    def progressbaritem(self):
+    def run_progressbaritem(self):
+        f = '[shared] tests.Commands.run_progressbaritem'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         parent = sh.Top()
         iprog  = sh.ProgressBarItem (parent = parent
                                     ,orient = 'horizontal'
@@ -307,9 +409,12 @@ class Commands:
                                     )
         parent.show()
     
-    def canvas(self):
+    def run_canvas(self):
+        f = '[shared] tests.Commands.run_canvas'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         parent = sh.Top()
-        parent.title('Canvas')
+        parent.set_title('Canvas')
         icanvas = sh.Canvas (parent = parent
                             ,expand = True
                             ,side   = None
@@ -319,58 +424,70 @@ class Commands:
                             ,fill   = 'both'
                             )
         sh.Geometry(parent=parent).set('1024x768')
-        frame  = sh.Frame (parent = parent)
+        frame = sh.Frame (parent = parent)
         # This frame must be created after the bottom frame
         frame1 = sh.Frame (parent = frame)
         canvas = sh.Canvas(parent = frame1)
 
-        label  = sh.Label (parent = frame1
-                          ,expand = True
-                          ,fill   = 'both'
-                          ,text   = 'Hello, Canvas!'
-                          ,fg     = 'white'
-                          ,bg     = 'blue'
-                          )
+        label = sh.Label (parent = frame1
+                         ,expand = True
+                         ,fill   = 'both'
+                         ,text   = 'Hello, Canvas!'
+                         ,fg     = 'white'
+                         ,bg     = 'blue'
+                         )
 
         icanvas.embed(frame)
-        icanvas.focus()
-        icanvas.top_bindings(top=parent)
+        icanvas.set_focus()
+        icanvas.set_top_bindings(top=parent)
         parent.show()
     
-    def clipboard(self):
+    def run_clipboard(self):
         ''' #NOTE: Clipboard actions should be tested in Tkinter GUI
             since it may freeze when using pyperclip.
         '''
-        f = '[shared] tests.Commands.clipboard'
+        f = '[shared] tests.Commands.run_clipboard'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         mes = _('Copy something to clipboard')
-        sh.objs.mes(f,mes).info()
+        sh.objs.get_mes(f,mes).show_info()
         sub = sh.Clipboard().paste()
         mes = _('Clipboard contents: "{}"').format(sub)
-        sh.objs.mes(f,mes).debug()
+        sh.objs.get_mes(f,mes).show_debug()
         sub = 'Hello! Это тест! αβàáҖҚŸ'
         mes = _('The following will be copied: "{}"').format(sub)
-        sh.objs.mes(f,mes).info()
+        sh.objs.get_mes(f,mes).show_info()
         sh.Clipboard().copy(sub)
         sub = sh.Clipboard().paste()
         mes = _('Clipboard contents: "{}"').format(sub)
-        sh.objs.mes(f,mes).debug()
+        sh.objs.get_mes(f,mes).show_debug()
     
-    def symbol_map(self):
+    def run_symbol_map(self):
+        f = '[shared] tests.Commands.run_symbol_map'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         imap = sh.SymbolMap (items = 'àáâäāãæßćĉçèéêēёëəғĝģĥìíîïīĵķļñņòóôõöōœøšùúûūŭũüýÿžжҗқңәөүұÀÁÂÄĀÃÆSSĆĈÇÈÉÊĒЁËƏҒĜĢĤÌÍÎÏĪĴĶĻÑŅÒÓÔÕÖŌŒØŠÙÚÛŪŬŨÜÝŸŽЖҖҚҢӘӨҮҰ'
                             ,title = ''
                             ,icon  = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
                             )
         imap.show()
-        print('Your input: "{}"'.format(imap.get()))
+        mes = _('Your input: "{}"').format(imap.get())
+        sh.objs.get_mes(f,mes,SILENT).info()
     
-    def optionmenu_trigger(self,event=None):
-        print('Your input: "{}"'.format(self.opt_prm.choice))
+    def run_optionmenu_trigger(self,event=None):
+        f = '[shared] tests.Commands.run_optionmenu_trigger'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
+        mes = _('Your input: "{}"').format(self.opt_prm.choice)
+        sh.objs.get_mes(f,mes,SILENT).show_debug()
     
-    def optionmenu(self):
-        f = '[shared] tests.Commands.optionmenu'
+    def run_optionmenu(self):
+        f = '[shared] tests.Commands.run_optionmenu'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         parent = sh.Top()
         sh.Geometry(parent).set('300x40')
-        parent.title('OptionMenu')
+        parent.set_title('OptionMenu')
         self.opt_prm = sh.OptionMenu (parent  = parent
                                      ,items   = None
                                      ,side    = 'left'
@@ -384,17 +501,19 @@ class Commands:
                                      ,font    = 'Sans 11'
                                      )
         parent.show()
-        parent.title(_('New settings'))
+        parent.set_title(_('New settings'))
         self.opt_prm.reset (items   = (33,34,345,345)
                            ,default = 345
                            ,action  = self.optionmenu_trigger
                            )
         parent.show()
     
-    def listboxc(self):
-        f = '[shared] tests.Commands.listboxc'
+    def run_listboxc(self):
+        f = '[shared] tests.Commands.run_listboxc'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         #lst = [i for i in range(15)]
-        lst = sh.Directory(sh.Home().home()).files()
+        lst = sh.Directory(sh.Home().get_home()).get_files()
         self.lbx_prm = sh.ListBoxC (Multiple = False
                                    ,lst      = lst
                                    ,action   = None
@@ -407,7 +526,8 @@ class Commands:
                                    ,ScrollY  = True
                                    )
         self.lbx_prm.show()
-        print('Your final selection: "{}"'.format(self.lbx_prm.get()))
+        mes = _('Your final selection: "{}"').format(self.lbx_prm.get())
+        sh.objs.get_mes(f,mes,SILENT).show_debug()
         '''
         self.lbx_prm.reset (lst   = (_('Mexico'),_('Canada'),_('Russia'))
                            ,title = _('New settings')
@@ -417,28 +537,34 @@ class Commands:
         print('Your final selection: "{}"'.format(self.lbx_prm.get()))
         '''
     
-    def lbx_trigger(self,event=None):
+    def _trigger_lbx(self,event=None):
+        f = '[shared] tests.Commands._trigger_lbx'
         text = self.lbx_prm.get()
-        print('Your input: "{}"'.format(text))
+        mes = _('Your input: "{}"').format(text)
+        sh.objs.get_mes(f,mes,True).show_debug()
     
-    def listbox(self):
-        f = '[shared] tests.Commands.listbox'
+    def run_listbox(self):
+        f = '[shared] tests.Commands.run_listbox'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         parent = sh.Top()
         parent.title('ListBox')
         lst = [i for i in range(15)]
         self.lbx_prm = sh.ListBox (parent   = parent
                                   ,Multiple = False
                                   ,lst      = lst
-                                  ,action   = self.lbx_trigger
+                                  ,action   = self._trigger_lbx
                                   ,side     = None
                                   ,expand   = True
                                   ,fill     = 'both'
                                   )
-        self.lbx_prm.focus()
+        self.lbx_prm.set_focus()
         parent.show()
     
-    def scrollbar(self):
-        f = '[shared] tests.Commands.scrollbar'
+    def run_scrollbar(self):
+        f = '[shared] tests.Commands.run_scrollbar'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         text = '\n'.join([('('+str(i)+')'+f+' ')*(i+1) for i in range(100)])
         parent = sh.Top()
         parent.title('Y Scrollbar')
@@ -464,7 +590,7 @@ class Commands:
                            ,fill   = 'x'
                            )
         
-        #todo: use 'TextBox'
+        #TODO: use 'TextBox'
         import tkinter as tk
         widget = tk.Text(frm_txt.widget,wrap='none')
         widget.pack(expand=True,fill='both')
@@ -482,49 +608,60 @@ class Commands:
                      )
         parent.show()
     
-    def waitbox(self):
-        f = '[shared] tests.Commands.waitbox'
+    def run_waitbox(self):
+        f = '[shared] tests.Commands.run_waitbox'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         import time
         icon1 = ICON
         icon2 = ICON2
-        sh.objs.waitbox().icon(icon1)
-        sh.objs.waitbox()
-        sh.objs._waitbox.reset (func    = f
-                               ,message = None
-                               )
-        sh.objs._waitbox.show()
+        sh.objs.get_waitbox().set_icon(icon1)
+        sh.objs.waitbox.reset (func    = f
+                              ,message = None
+                              )
+        sh.objs.waitbox.show()
         time.sleep(3)
-        sh.objs._waitbox.close()
+        sh.objs.waitbox.close()
         
-        sh.objs._waitbox.icon(icon2)
-        sh.objs._waitbox.reset (func    = f
-                               ,message = 'Hello! I\'m still here!'
-                               )
-        sh.objs._waitbox.show()
+        sh.objs.waitbox.set_icon(icon2)
+        sh.objs.waitbox.reset (func    = f
+                              ,message = 'Hello! I\'m still here!'
+                              )
+        sh.objs.waitbox.show()
         time.sleep(3)
-        sh.objs._waitbox.close()
+        sh.objs.waitbox.close()
     
-    def button_trigger(self,event=None):
-        f = '[shared] tests.Commands.button_trigger'
-        ''' #todo: this works partially: silent messages do not pass
+    def test_button(self,action=None):
+        self.create_button()
+        if action:
+            self.btn.action = action
+        self.btn.show()
+        self.btn.parent.kill()
+    
+    def run_button_trigger(self,event=None):
+        f = '[shared] tests.Commands.run_button_trigger'
+        ''' #TODO: this works partially: silent messages do not pass
             here, label colors are changed when the mouse pointer is not
             over them (when using mouse).
         '''
         mes = _('The event has been triggered!')
-        sh.Message(f,mes,True)
-        if self.btn_img.Status:
-            self.btn_trg.widget.config (bg = 'green'
-                                       ,fg = 'black'
-                                       )
-            self.btn_img.inactive()
+        sh.objs.get_mes(f,mes,True).show_debug()
+        if self.btn.Status:
+            self.btn.widget.config (bg = 'green'
+                                   ,fg = 'black'
+                                   )
+            self.btn.inactivate()
         else:
-            self.btn_trg.widget.config (bg = 'yellow'
-                                       ,fg = 'red'
-                                       )
-            self.btn_img.active()
+            self.btn.widget.config (bg = 'yellow'
+                                   ,fg = 'red'
+                                   )
+            self.btn.activate()
     
-    def button(self):
-        parent  = sh.Top()
+    def set_button(self):
+        f = '[shared] tests.Commands.set_button'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
+        parent = sh.Top()
         parent.title(_('Button'))
         self.btn_trg = sh.Button (parent   = parent
                                  ,side     = 'top'
@@ -560,7 +697,10 @@ class Commands:
                                  )
         parent.show()
     
-    def frame(self):
+    def set_frame(self):
+        f = '[shared] tests.Commands.set_frame'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         iframe = sh.Frame (parent = sh.Top()
                           ,expand = 1
                           ,fill   = 'both'
@@ -575,7 +715,7 @@ class Commands:
                           ,height = 200
                           ,propag = False
                           )
-        iframe.title('Frame')
+        iframe.set_title('Frame')
         sh.Label (parent = iframe
                  ,text   = 'Label'
                  ,bg     = 'red'
@@ -583,32 +723,40 @@ class Commands:
                  )
         iframe.show()
     
-    def random_coor(self,w,h):
-        f = '[shared] tests.Commands.random_coor'
+    def _set_random_coor(self,w,h):
+        f = '[shared] tests.Commands._set_random_coor'
         x = 0
         y = 0
-        max_x, max_y = sh.objs.root().resolution()
+        max_x, max_y = sh.objs.get_root().get_resolution()
         x = random.randint(0,max_x)
         y = random.randint(0,max_y)
-        mes = _('Screen resolution: {}x{}').format(max_x,max_y)
-        sh.Message(f,mes,True).debug()
         if w + x > max_x:
             x = max_x - w
         if h + y > max_y:
             y = max_y - h
+        messages = []
+        mes = _('Screen resolution: {}x{}').format(max_x,max_y)
+        messages.append(mes)
         mes = _('Random coordinates: x: {}; y: {}').format(x,y)
-        sh.Message(f,mes,True).debug()
+        messages.append(mes)
+        mes = '\n'.join(messages)
+        sh.objs.mes(f,mes,True).show_debug()
         return(x,y)
     
-    def size_range(self,event=None):
+    def _get_size_range(self,event=None):
+        f = '[shared] tests.Commands._get_size_range'
         v1 = 0
         v2 = 0
         while abs(v1-v2) <= 40:
             v1 = random.randint(90,250)
             v2 = random.randint(90,250)
+        sh.objs.get_mes(f,(v1,v2),True).show_debug()
         return(v1,v2)
     
-    def frameless(self):
+    def run_frameless(self):
+        f = '[shared] tests.Commands.run_frameless'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         top  = sh.Top()
         top1 = sh.Top (AutoCr = False
                       ,Lock   = False
@@ -616,7 +764,7 @@ class Commands:
         top2 = sh.Top (AutoCr = False
                       ,Lock   = False
                       )
-        top.title('Host')
+        top.set_title('Host')
         sh.Geometry(top).set('150x150')
         
         top1.widget.wm_overrideredirect(1)
@@ -644,25 +792,31 @@ class Commands:
                  ,fill   = 'both'
                  )
         
-        w1, w2 = com.size_range()
-        h1, h2 = com.size_range()
+        w1, w2 = com._get_size_range()
+        h1, h2 = com._get_size_range()
         
-        x1, y1 = com.random_coor(h1,w1)
-        x2, y2 = com.random_coor(h2,w2)
+        x1, y1 = com._set_random_coor(h1,w1)
+        x2, y2 = com._set_random_coor(h2,w2)
         
         geom = sh.Geometry(parent=top1)
-        geom._geom = '%dx%d+%d+%d' % (w1,h1,x1,y1)
+        geom.geom = '%dx%d+%d+%d' % (w1,h1,x1,y1)
         geom.restore()
         
         geom = sh.Geometry(parent=top2)
-        geom._geom = '%dx%d+%d+%d' % (w2,h2,x2,y2)
+        geom.geom = '%dx%d+%d+%d' % (w2,h2,x2,y2)
         geom.restore()
         
         top1.show()
         top2.show()
         top.show()
+        top.kill()
+        top1.kill()
+        top2.kill()
     
-    def label(self):
+    def set_label(self):
+        f = '[shared] tests.Commands.set_label'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         lbl = sh.Label (parent  = sh.Top()
                        ,text    = 'Hello! It\'s me again'
                        ,font    = 'Sans 14'
@@ -679,41 +833,53 @@ class Commands:
                        ,height  = None
                        ,justify = 'left'
                        )
-        lbl.title('Label test')
+        lbl.set_title('Label test')
         lbl.show()
     
-    def simple_top(self):
+    def run_simple_top(self):
+        f = '[shared] tests.Commands.run_simple_top'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         icon_path = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
         itop = sh.Top(Lock=False)
-        itop.title('Welcome to shared')
-        itop.icon(icon_path)
+        itop.set_title('Welcome to shared')
+        itop.set_icon(icon_path)
         itop.show()
         itop.center()
         import time
         time.sleep(2)
     
-    def geometry(self):
+    def run_geometry(self):
+        f = '[shared] tests.Commands.run_geometry'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         import time
         parent = sh.Top(Lock=False)
         igeo = sh.Geometry(parent)
         igeo.set('340x250')
-        parent.idle()
+        parent.update_idle()
         time.sleep(3)
         igeo.minimize()
-        parent.idle()
+        parent.update_idle()
         time.sleep(3)
-        igeo.focus()
-        igeo.foreground()
+        igeo.set_focus()
+        igeo.set_foreground()
         igeo.lift()
         igeo.activate()
         igeo.restore()
         igeo.maximize()
         igeo.update()
-        print('Window handle:',igeo.hwnd())
         igeo.save()
+        mes = _('Window handle (Windows-only): {}')
+        mes = mes.format(igeo.get_hwnd())
+        sh.objs.mes(f,mes,SILENT).show_debug()
         parent.show()
+        parent.kill()
     
-    def top(self):
+    def run_top(self):
+        f = '[shared] tests.Commands.run_top'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         icon_path = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
         itop = sh.Top (Maximize = False
                       ,AutoCr   = True
@@ -723,125 +889,153 @@ class Commands:
                       )
         itop.show()
     
-    def messages(self):
-        func    = '[shared] tests.Commands.messages'
-        # debug
-        message = 'This is a GUI DEBUG message'
-        sh.Message (func    = func
-                   ,message = message
-                   ).debug()
-        # info
-        message = 'This is a GUI INFO message'
-        sh.Message (func    = func
-                   ,message = message
-                   ).info()
-        # question
-        message = 'This is a GUI QUESTION message'
-        answer = sh.Message (func    = func
-                            ,message = message
-                            ).question()
+    def run_messages(self):
+        f = '[shared] tests.Commands.run_messages'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
+        mes = 'This is a GUI DEBUG message'
+        sh.objs.get_mes(f,mes).show_debug()
+        mes = 'This is a GUI INFO message'
+        sh.objs.get_mes(f,mes).show_info()
+        mes = 'This is a GUI QUESTION message'
+        answer = sh.objs.get_mes(f,mes).show_question()
         if answer:
-            print('You answered Yes')
+            mes = _('You answered Yes')
         else:
-            print('You answered No')
-        # warning
-        message = 'This is a GUI WARNING message'
-        sh.Message (func    = func
-                   ,message = message
-                   ).warning()
-        # error
-        message = 'This is a GUI ERROR message'
-        sh.Message (func    = func
-                   ,message = message
-                   ).error()
-        # debug, silent
-        message = 'This is a CLI DEBUG message'
-        sh.Message (func    = func
-                   ,message = message
-                   ,Silent  = True
-                   ).debug()
-        # info, silent
-        message = 'This is a CLI INFO message'
-        sh.Message (func    = func
-                   ,message = message
-                   ,Silent  = True
-                   ).info()
-        # question, silent
-        message = 'This is a CLI QUESTION message'
-        answer = sh.Message (func    = func
-                            ,message = message
-                            ,Silent  = True
-                            ).question()
+            mes = _('You answered No')
+        sh.objs.get_mes(f,mes,True).show_debug()
+        mes = 'This is a GUI WARNING message'
+        sh.objs.get_mes(f,mes).show_warning()
+        mes = 'This is a GUI ERROR message'
+        sh.objs.get_mes(f,mes).show_error()
+        mes = 'This is a CLI DEBUG message'
+        sh.objs.get_mes(f,mes,True).show_debug()
+        mes = 'This is a CLI INFO message'
+        sh.objs.get_mes(f,mes,True).show_info()
+        mes = 'This is a CLI QUESTION message'
+        answer = sh.objs.get_mes(f,mes,True).show_question()
         if answer:
-            print('You answered Yes')
+            mes = _('You answered Yes')
         else:
-            print('You answered No')
-        # warning, silent
-        message = 'This is a CLI WARNING message'
-        sh.Message (func    = func
-                   ,message = message
-                   ,Silent  = True
-                   ).warning()
-        # error, silent
-        message = 'This is a CLI ERROR message'
-        sh.Message (func    = func
-                   ,message = message
-                   ,Silent  = True
-                   ).error()
+            mes = _('You answered No')
+        sh.objs.get_mes(f,mes,True).show_debug()
+        mes = 'This is a CLI WARNING message'
+        sh.objs.get_mes(f,mes,True).show_warning()
+        mes = 'This is a CLI ERROR message'
+        sh.objs.get_mes(f,mes,True).show_error()
     
-    def font(self):
+    def set_font(self):
+        f = '[shared] tests.Commands.set_font'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         ifont = sh.Font('Serif 11')
         ifont.set_text('Hello, I am here and here!')
-        ifont.gui.font('Sans',11)
+        ifont.gui.set_font('Sans',11)
         width  = ifont.width()
         height = ifont.height()
-        print('Font size: {}x{}'.format(width,height))
+        mes = _('Font size: {}x{}').format(width,height)
+        sh.objs.get_mes(f,mes,SILENT).show_debug()
     
-    def free_space(self):
-        print('Test #1')
-        print('Empty input. 0B is expected')
+    def get_free_space(self):
+        f = '[shared] tests.Commands.get_free_space'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
+        messages = []
+        # Test #1
+        mes = _('Test #{}').format(1)
+        messages.append(mes)
         path = None
-        size = sh.Path(path).free_space()
-        print(sh.com.human_size(size))
-        print('Test #2')
-        print('/. LargeOnly=1. 8,3G is expected')
+        size = sh.Path(path).get_free_space()
+        size = sh.com.get_human_size(size)
+        mes = _('Path: "{}"; free space: {}').format(path,size)
+        messages.append(mes)
+        messages.append('')
+        # Test #2
+        mes = _('Test #{}').format(2)
+        messages.append(mes)
         path = '/'
-        size = sh.Path(path).free_space()
-        print(sh.com.human_size(size,LargeOnly=1))
-        print('Test #3')
-        print('/home/pete/tmp/. 32G is expected')
-        path = '/home/pete/tmp/'
-        size = sh.Path(path).free_space()
-        print(sh.com.human_size(size))
+        size = sh.Path(path).get_free_space()
+        size = sh.com.get_human_size(size,LargeOnly=1)
+        mes = _('Path: "{}"; free space: {}').format(path,size)
+        messages.append(mes)
+        messages.append('')
+        # Test #3
+        mes = _('Test #{}').format(3)
+        messages.append(mes)
+        path = '/home/pete'
+        size = sh.Path(path).get_free_space()
+        size = sh.com.get_human_size(size,LargeOnly=1)
+        mes = _('Path: "{}"; free space: {}').format(path,size)
+        messages.append(mes)
+        messages.append('')
+        # Test #4
+        mes = _('Test #{}').format(4)
+        messages.append(mes)
+        path = '/tmp'
+        size = sh.Path(path).get_free_space()
+        size = sh.com.get_human_size(size,LargeOnly=1)
+        mes = _('Path: "{}"; free space: {}').format(path,size)
+        messages.append(mes)
+        messages.append('')
+        mes = '\n'.join(messages)
+        sh.objs.get_mes(f,mes,SILENT).show_debug()
     
-    def size(self):
-        print('Test #1')
-        my_dir = '/home/pete/base/Изображения'
-        print('Object: directory; expected result: 975M')
-        size = sh.Directory(my_dir).size(Follow=1)
-        print(sh.com.human_size(size,LargeOnly=0))
-        print('Test #2')
+    def get_size(self):
+        f = '[shared] tests.Commands.get_size'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
+        messages = []
+        # Test #1
+        mes = _('Test #{}').format(1)
+        messages.append(mes)
+        my_dir = '/home/pete/base/docs/Изображения'
+        size = sh.Directory(my_dir).get_size(Follow=1)
+        size = sh.com.get_human_size(size,LargeOnly=0)
+        mes = _('Object: "{}"; size: {}').format(my_dir,size)
+        messages.append(mes)
+        messages.append('')
+        # Test #2
+        mes = _('Test #{}').format(2)
+        messages.append(mes)
         my_dir = '/home/pete/base/docs'
-        print('Object: directory; expected result: 8,7G')
-        size = sh.Directory(my_dir).size(Follow=1)
-        print(sh.com.human_size(size,LargeOnly=0))
-        print('Test #3')
-        file = '/boot/initrd.img-4.9.0-9-686'
-        print('Object: file; expected result: 21M')
-        size = sh.File(file).size()
-        print(sh.com.human_size(size,LargeOnly=0))
-        print('Test #4')
+        size = sh.Directory(my_dir).get_size(Follow=1)
+        size = sh.com.get_human_size(size,LargeOnly=0)
+        mes = _('Object: "{}"; size: {}').format(my_dir,size)
+        messages.append(mes)
+        messages.append('')
+        # Test #3
+        mes = _('Test #{}').format(3)
+        messages.append(mes)
+        file = '/boot/initrd.img-4.19.0-6-686'
+        size = sh.File(file).get_size()
+        size = sh.com.get_human_size(size,LargeOnly=0)
+        mes = _('Object: "{}"; size: {}').format(file,size)
+        messages.append(mes)
+        messages.append('')
+        # Test #4
+        mes = _('Test #{}').format(4)
+        messages.append(mes)
         file = '/home/pete/main/dist/manjaro-xfce-15.12-i686.iso'
-        print('Object: file; LargeOnly=1; expected result: 1,3G')
-        size = sh.File(file).size()
-        print(sh.com.human_size(size,LargeOnly=1))
-        print('Test #5')
-        file = '/home/pete/bin/examples/gettext_windows.py'
-        print('Object: file; Follow=0; expected result: 0')
-        size = sh.File(file).size(Follow=0)
-        print(sh.com.human_size(size,LargeOnly=1))
+        size = sh.File(file).get_size()
+        size = sh.com.get_human_size(size,LargeOnly=1)
+        mes = _('Object: "{}"; size: {}').format(file,size)
+        messages.append(mes)
+        messages.append('')
+        # Test #5
+        mes = _('Test #{}').format(5)
+        messages.append(mes)
+        file = '/home/pete/bin/examples/python/gettext_windows.py'
+        size = sh.File(file).get_size(Follow=0)
+        size = sh.com.get_human_size(size,LargeOnly=1)
+        mes = _('Object: "{}"; size: {}').format(file,size)
+        messages.append(mes)
+        mes = '\n'.join(messages)
+        sh.objs.get_mes(f,mes,SILENT).show_debug()
 
-    def progressbar0(self):
+    def run_progressbar0(self):
+        f = '[shared] tests.Commands.run_progressbar0'
+        mes = _('Run "{}". Press any key to continue').format(f)
+        input(mes)
         pb = sh.ProgressBar()
         for i in range(100):
             item     = pb.add()
@@ -872,18 +1066,18 @@ class Anchors:
     
     def adjust(self,event=None):
         if self.count % 2:
-            self.next_anchor()
+            self.set_next_anchor()
             self.attach()
             mes = _('Press Return to place widgets randomly')
-            self.lbl_top.text(mes)
+            self.lbl_top.set_text(mes)
         else:
             self.place_widgets()
             mes = _('Anchor: {}\nPress Return to adjust Widget 2')
             mes = mes.format(self.anchor)
-            self.lbl_top.text(mes)
+            self.lbl_top.set_text(mes)
         self.count += 1
     
-    def next_anchor(self):
+    def set_next_anchor(self):
         ind = self.anchors.index(self.anchor)
         if ind + 1 == len(self.anchors):
             self.anchor = self.anchors[0]
@@ -900,7 +1094,7 @@ class Anchors:
         self.top2 = sh.Top (AutoCr = False
                            ,Lock   = False
                            )
-        self.top.title('HOST')
+        self.top.set_title('HOST')
         sh.Geometry(self.top).set('550x150')
         
         # Strict order: 'wm_overrideredirect' -> 'show' -> 'center'
@@ -931,7 +1125,7 @@ class Anchors:
         self.place_widgets()
         
         mes = _('Anchor: {}').format(self.anchor)
-        sh.Message(f,mes,True).info()
+        sh.Message(f,mes,True).show_info()
         
         sh.com.bind (obj      = self.top
                     ,bindings = '<Return>'
@@ -951,18 +1145,18 @@ class Anchors:
         self.top.show()
     
     def place_widgets(self,event=None):
-        w1, w2 = com.size_range()
-        h1, h2 = com.size_range()
+        w1, w2 = com.get_size_range()
+        h1, h2 = com.get_size_range()
         
-        x1, y1 = com.random_coor(h1,w1)
-        x2, y2 = com.random_coor(h2,w2)
+        x1, y1 = com.set_random_coor(h1,w1)
+        x2, y2 = com.set_random_coor(h2,w2)
         
         geom = sh.Geometry(parent=self.top1)
-        geom._geom = '%dx%d+%d+%d' % (w1,h1,x1,y1)
+        geom.geom = '%dx%d+%d+%d' % (w1,h1,x1,y1)
         geom.restore()
         
         geom = sh.Geometry(parent=self.top2)
-        geom._geom = '%dx%d+%d+%d' % (w2,h2,x2,y2)
+        geom.geom = '%dx%d+%d+%d' % (w2,h2,x2,y2)
         geom.restore()
     
     def attach(self,event=None):
@@ -978,6 +1172,5 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    #com.textboxrw()
-    com.clipboard()
+    com.run_all()
     sh.com.end()
