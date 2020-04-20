@@ -446,7 +446,7 @@ class Canvas:
     def move_up(self,event=None,value=-1):
         self.widget.yview_scroll(value,'units')
     
-    def get_mouse_wheel(self,event=None):
+    def set_mouse_wheel(self,event=None):
         ''' Windows XP has the delta of -120, however, it differs
             depending on the version.
         '''

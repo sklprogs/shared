@@ -317,7 +317,7 @@ class Panes:
                  ,words2=None,words3=None
                  ,words4=None
                  ):
-        self.bg     = bg
+        self.bg = bg
         self.Extend = Extended
         self.set_gui()
         if words1 and words2:
@@ -365,7 +365,13 @@ class Panes:
             self.pane4 = TextBox(self.frm_pn4)
     
     def set_gui(self):
-        self.parent = Top(Maximize=True)
+        icon = lg.objs.get_pdir().add ('..','resources'
+                                      ,'icon_64x64_cpt.gif'
+                                      )
+        self.parent = Top (icon     = icon
+                          ,title    = _('Compare texts:')
+                          ,Maximize = True
+                          )
         self.widget = self.parent.widget
         self.set_frames()
         self.set_panes()
@@ -382,13 +388,13 @@ class Panes:
                             ,pane4  = pane4
                             )
         if self.Extend:
-            self.gui.config_pane1(bg=self._bg)
-        self.set_icon()
-        self.set_title()
+            self.gui.config_pane1(bg=self.bg)
         self.set_bindings()
         
-    def set_title(self,text=_('Compare texts:')):
-        self.gui.set_title(text=text)
+    def set_title(self,text):
+        if not text:
+            text = _('Compare texts:')
+        self.gui.set_title(text)
         
     def show(self,event=None):
         self.gui.show()
@@ -514,26 +520,26 @@ class Panes:
         self.pane1.set_focus()
         if self.Extend:
             self.decolorize()
-            self.gui.config_pane1(bg=self._bg)
+            self.gui.config_pane1(bg=self.bg)
         
     def select2(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
         self.pane2.set_focus()
         if self.Extend:
             self.decolorize()
-            self.gui.config_pane2(bg=self._bg)
+            self.gui.config_pane2(bg=self.bg)
         
     def select3(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
         self.pane3.set_focus()
         self.decolorize()
-        self.gui.config_pane3(bg=self._bg)
+        self.gui.config_pane3(bg=self.bg)
         
     def select4(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
         self.pane4.set_focus()
         self.decolorize()
-        self.gui.config_pane4(bg=self._bg)
+        self.gui.config_pane4(bg=self.bg)
         
     def set_icon(self,path=None):
         if path:
@@ -1996,12 +2002,12 @@ class MultCBoxes:
         f = '[shared] shared.MultCBoxes.set_region'
         if self.frms:
             objs.get_root().update_idle()
-            self.cvs_prm.region (x       = self.frm_emb.get_reqwidth()
-                                ,y       = self.frm_emb.get_reqheight()
-                                ,xborder = 5
-                                ,yborder = 10
-                                )
-            self.cvs_prm.config_scroll()
+            self.cvs_prm.set_region (x       = self.frm_emb.get_reqwidth()
+                                    ,y       = self.frm_emb.get_reqheight()
+                                    ,xborder = 5
+                                    ,yborder = 10
+                                    )
+            self.cvs_prm.scroll()
         else:
             com.rep_lazy(f)
         
@@ -2370,8 +2376,8 @@ class Canvas:
     def move_left_corner(self,event=None):
         self.gui.move_left_corner()
     
-    def get_mouse_wheel(self,event=None):
-        return self.gui.get_mouse_wheel(event)
+    def set_mouse_wheel(self,event=None):
+        return self.gui.set_mouse_wheel(event)
     
     # These bindings are not enabled by default
     def set_top_bindings(self,top,Ctrl=True):
@@ -2405,7 +2411,7 @@ class Canvas:
                      ,bindings = ('<MouseWheel>','<Button 4>'
                                  ,'<Button 5>'
                                  )
-                     ,action   = self.get_mouse_wheel
+                     ,action   = self.set_mouse_wheel
                      )
             if Ctrl:
                 com.bind (obj      = top
@@ -2698,7 +2704,7 @@ class OptionMenu:
                 mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
                 mes = mes.format(self.default,self.items)
                 objs.get_mes(f,mes,True).show_error()
-                self._default_set()
+                self._set_default()
 
     def set(self,item,event=None):
         f = '[shared] shared.OptionMenu.set'
@@ -2861,7 +2867,7 @@ class ListBox:
         self.gui.resize()
 
     def activate(self):
-        self.gui.activate(self._index)
+        self.gui.activate(self.index_)
 
     def clear(self):
         self.gui.clear()
