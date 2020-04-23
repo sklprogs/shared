@@ -2715,7 +2715,7 @@ class Directory:
         f = '[shared] logic.Directory.get_rel_files'
         if self.Success:
             if not self.relfiles:
-                self.files()
+                self.get_files()
         else:
             com.cancel(f)
         return self.relfiles
