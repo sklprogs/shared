@@ -8,7 +8,7 @@ import tkinter.ttk
 # Load PIL only after loading tkinter
 from PIL import Image   as pilimage
 from PIL import ImageTk as piltk
-from skl_shared2.localize import _
+from skl_shared.localize import _
 
 
 class Panes:

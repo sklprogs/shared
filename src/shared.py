@@ -5,9 +5,9 @@ import sys, os
 import re
 import io
 import pyperclip
-import skl_shared2.logic as lg
-import skl_shared2.gui   as gi
-from skl_shared2.localize import _
+import skl_shared.logic as lg
+import skl_shared.gui   as gi
+from skl_shared.localize import _
 
 GUI_MES  = True
 STOP_MES = False

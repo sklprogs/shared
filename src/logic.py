@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-copyright = 'Copyright 2015-2019, Peter Sklyar'
+copyright = 'Copyright 2015-2020, Peter Sklyar'
 license   = 'GPL v.3'
 email     = 'skl.progs@gmail.com'
 
@@ -27,7 +27,7 @@ import webbrowser
 import urllib.request, urllib.parse
 import difflib
 import locale
-from skl_shared2.localize import _
+from skl_shared.localize import _
 
 
 gpl3_url_en = 'http://www.gnu.org/licenses/gpl.html'

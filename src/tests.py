@@ -3,8 +3,8 @@
 
 import io
 import random
-import skl_shared2.shared as sh
-from skl_shared2.localize import _
+import skl_shared.shared as sh
+from skl_shared.localize import _
 
 ICON  = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
 ICON2 = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
