@@ -717,15 +717,6 @@ class Launch:
                 self.custom_args = [self.custom_app]
         self._launch()
 
-    def auto(self):
-        ''' Starting third-party apps instead of default ones is no
-            longer supported - it introduces an excessive complexity
-            and is a potential security breach (programs run by default
-            are usually installed with admin rights and cannot be
-            compromised).
-        '''
-        self.launch_default()
-
     def launch_custom(self):
         f = '[shared] logic.Launch.launch_custom'
         if self.TargetExists:
@@ -3637,7 +3628,7 @@ class Words:
     def get_len(self):
         return len(self.words)
 
-    def _get_sent_nos(self):
+    def _set_sent_nos(self):
         no = sents_len = 0
         for i in range(self.get_len()):
             condition1 = self.words[i].pf - 1 in self.linebr
@@ -3655,8 +3646,8 @@ class Words:
             self.words[i].sentno = no
             self.words[i].sentslen = sents_len
 
-    def get_sent_nos(self):
-        f = '[shared] logic.Words.get_sent_nos'
+    def set_sent_nos(self):
+        f = '[shared] logic.Words.set_sent_nos'
         if self.Success:
             if self.get_len() > 0:
                 if self.words[self.no].sentno is None:
@@ -3682,7 +3673,7 @@ class Words:
     def get_sent_no(self):
         f = '[shared] logic.Words.get_sent_no'
         if self.Success:
-            self.get_sent_nos()
+            self.set_sent_nos()
             return self.words[self.no].sentno
         else:
             com.cancel(f)
@@ -3867,7 +3858,7 @@ class Words:
     def complete(self):
         f = '[shared] logic.Words.complete'
         if self.Success:
-            self.get_sent_nos()
+            self.set_sent_nos()
             for i in range(self.get_len()):
                 self.words[i].is_empty()
                 self.words[i].has_ref()
@@ -4529,8 +4520,8 @@ class References:
         if self.words1 and self.words2 and len(self.words1.words) \
         and len(self.words2.words):
             self.Success = True
-            self.words1.get_sent_nos()
-            self.words2.get_sent_nos()
+            self.words1.set_sent_nos()
+            self.words2.set_sent_nos()
             self.words1.get_refs()
         else:
             self.Success = False

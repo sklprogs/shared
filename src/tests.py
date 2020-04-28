@@ -188,7 +188,7 @@ class Commands:
                             ,words    = words
                             )
         itxt.insert(text)
-        itxt.set_focus()
+        itxt.focus()
         itxt.show()
         result = sh.Text(itxt.get()).shorten(max_len=20)
         mes = _('Output: "{}"').format(result)
@@ -210,7 +210,7 @@ class Commands:
                             ,words    = words
                             )
         itxt.insert(text)
-        itxt.set_focus()
+        itxt.focus()
         itxt.show()
         result = sh.Text(itxt.get()).shorten(max_len=20)
         mes = _('Output: "{}"').format(result)
@@ -232,7 +232,7 @@ class Commands:
                            )
         itxt.insert(text)
         itxt.check_spell()
-        itxt.set_focus()
+        itxt.focus()
         itxt.show()
         result = sh.Text(itxt.get()).shorten(max_len=20)
         mes = _('Output: "{}"').format(result)
@@ -287,7 +287,7 @@ class Commands:
                           ,icon    = ICON
                           )
         itxt.insert(text)
-        itxt.set_focus()
+        itxt.focus()
         parent.show()
         result = sh.Text(itxt.get()).shorten(max_len=20)
         mes = _('Output: "{}"').format(result)
@@ -321,7 +321,7 @@ class Commands:
                         ,fg      = 'red'
                         ,justify = 'right'
                         )
-        ient.set_focus()
+        ient.focus()
         ient.insert('Anything')
         ient.disable()
         parent.show()
@@ -438,7 +438,7 @@ class Commands:
                          )
 
         icanvas.embed(frame)
-        icanvas.set_focus()
+        icanvas.focus()
         icanvas.set_top_bindings(top=parent)
         parent.show()
     
@@ -558,7 +558,7 @@ class Commands:
                                   ,expand   = True
                                   ,fill     = 'both'
                                   )
-        self.lbx_prm.set_focus()
+        self.lbx_prm.focus()
         parent.show()
     
     def run_scrollbar(self):
@@ -862,7 +862,7 @@ class Commands:
         igeo.minimize()
         parent.update_idle()
         time.sleep(3)
-        igeo.set_focus()
+        igeo.focus()
         igeo.set_foreground()
         igeo.lift()
         igeo.activate()

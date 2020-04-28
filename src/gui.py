@@ -110,7 +110,7 @@ class TextBox:
                ,self.index('sel.last')
                )
     
-    def set_focus(self):
+    def focus(self):
         self.widget.focus_set()
     
     def get_index(self,mark='insert'):
@@ -190,8 +190,8 @@ class EntryC:
         self.parent = parent
         self.widget = self.parent.widget
     
-    def set_focus(self,event=None):
-        self.parent.set_focus()
+    def focus(self,event=None):
+        self.parent.focus()
     
     def set_icon(self,path=''):
         self.parent.set_icon(path)
@@ -242,7 +242,7 @@ class Entry:
     def get_cursor(self):
         return self.get_index('insert')
     
-    def set_focus(self,event=None):
+    def focus(self,event=None):
         self.widget.focus_set()
         # Manual Tab focus (left to right widget)
         return 'break'
@@ -309,7 +309,7 @@ class CheckBox:
     def enable(self,event=None):
         self.widget.select()
     
-    def set_focus(self,event=None):
+    def focus(self,event=None):
         self.widget.focus_set()
     
     def close(self,event=None):
@@ -404,7 +404,7 @@ class Canvas:
     def show(self,event=None):
         self.parent.show()
     
-    def set_focus(self,event=None):
+    def focus(self,event=None):
         self.widget.focus_set()
     
     def embed(self,obj):
@@ -560,7 +560,7 @@ class OptionMenu:
         self.var    = tk.StringVar(self.parent.widget)
         self.set_gui()
     
-    def set_focus(self,event=None):
+    def focus(self,event=None):
         self.widget.focus_set()
     
     def get(self):
@@ -621,7 +621,7 @@ class ListBoxC:
         self.parent = parent
         self.widget = self.parent.widget
     
-    def set_focus(self,event=None):
+    def focus(self,event=None):
         self.widget.focus_set()
     
     def show(self,event=None):
@@ -680,7 +680,7 @@ class ListBox:
         # Autofit to contents
         self.widget.config(width=0,height=0)
     
-    def set_focus(self,event=None):
+    def focus(self,event=None):
         self.widget.focus_set()
     
     def set_gui(self):
@@ -867,7 +867,7 @@ class Button:
     def close(self,event=None):
         self.parent.close()
 
-    def set_focus(self,event=None):
+    def focus(self,event=None):
         self.widget.focus_set()
     
     def enable(self):
@@ -1030,7 +1030,7 @@ class Geometry:
     def lift(self):
         self.parent.widget.lift()
     
-    def set_focus(self):
+    def focus(self):
         self.parent.widget.focus_set()
     
     def maximize_win(self):
@@ -1078,7 +1078,7 @@ class Top:
         # This method can both retrieve and set coordinates
         return self.widget.geometry(position)
     
-    def set_focus(self,event=None):
+    def focus(self,event=None):
         self.widget.focus_set()
     
     def get_resolution(self):

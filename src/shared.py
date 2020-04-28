@@ -375,7 +375,7 @@ class Panes:
         self.widget = self.parent.widget
         self.set_frames()
         self.set_panes()
-        self.pane1.set_focus()
+        self.pane1.focus()
         if self.Extend:
             pane3 = self.pane3
             pane4 = self.pane4
@@ -517,27 +517,27 @@ class Panes:
     
     def select1(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
-        self.pane1.set_focus()
+        self.pane1.focus()
         if self.Extend:
             self.decolorize()
             self.gui.config_pane1(bg=self.bg)
         
     def select2(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
-        self.pane2.set_focus()
+        self.pane2.focus()
         if self.Extend:
             self.decolorize()
             self.gui.config_pane2(bg=self.bg)
         
     def select3(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
-        self.pane3.set_focus()
+        self.pane3.focus()
         self.decolorize()
         self.gui.config_pane3(bg=self.bg)
         
     def select4(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
-        self.pane4.set_focus()
+        self.pane4.focus()
         self.decolorize()
         self.gui.config_pane4(bg=self.bg)
         
@@ -688,7 +688,7 @@ class SearchBox:
         if self.Success:
             if self.words:
                 if not self.pattern:
-                    self.ientry.set_focus()
+                    self.ientry.focus()
                     self.ientry.select_all()
                     self.ientry.show()
                     self.pattern = self.ientry.get()
@@ -909,7 +909,7 @@ class TextBoxC:
         self.font     = font
         self.words    = words
         self.set_gui()
-        self.set_focus()
+        self.focus()
     
     def mark_remove(self,mark='insert'):
         self.obj.mark_remove(mark)
@@ -958,9 +958,9 @@ class TextBoxC:
     def disable(self,event=None):
         self.obj.disable()
     
-    def set_focus(self,event=None):
+    def focus(self,event=None):
         # Focus on 'tk.Text' instead of 'tk.Toplevel'
-        self.obj.set_focus()
+        self.obj.focus()
     
     def insert (self,text=''
                ,pos='1.0',mode=None
@@ -1553,8 +1553,8 @@ class TextBox:
             com.rep_failed(f,e)
         return self.pos
 
-    def set_focus(self,event=None):
-        self.gui.set_focus()
+    def focus(self,event=None):
+        self.gui.focus()
 
 
 
@@ -1577,8 +1577,8 @@ class EntryC:
     def select_all(self,event=None):
         self.obj.select_all()
     
-    def set_focus(self,event=None):
-        self.gui.set_focus()
+    def focus(self,event=None):
+        self.gui.focus()
     
     def reset(self,title=''):
         self.Save = False
@@ -1697,7 +1697,7 @@ class EntryC:
         self.gui.close()
     
     def show(self,event=None):
-        self.obj.set_focus()
+        self.obj.focus()
         self.gui.show()
 
 
@@ -1850,8 +1850,8 @@ class Entry:
         except Exception as e:
             com.rep_failed(f,e)
 
-    def set_focus(self,event=None):
-        return self.gui.set_focus()
+    def focus(self,event=None):
+        return self.gui.focus()
 
 
 
@@ -1955,7 +1955,7 @@ class MultCBoxesC:
                               )
         self.set_widgets()
         self.set_scroll()
-        self.btn_cls.set_focus()
+        self.btn_cls.focus()
         self.set_bindings()
         self.set_title()
         self.set_icon()
@@ -2104,8 +2104,8 @@ class CheckBox:
     def close(self,event=None):
         self.gui.close()
 
-    def set_focus(self,event=None):
-        self.gui.set_focus()
+    def focus(self,event=None):
+        self.gui.focus()
 
     def enable(self,event=None):
         self.gui.enable()
@@ -2207,7 +2207,7 @@ class ProgressBar:
             self.yscroll = Scrollbar (parent = self.frm_ver
                                      ,scroll = self.canvas
                                      )
-        self.canvas.set_focus()
+        self.canvas.focus()
         
     def add(self,event=None):
         f = '[shared] shared.ProgressBar.add'
@@ -2485,8 +2485,8 @@ class Canvas:
             mes = _('Wrong input data!')
             objs.get_mes(f,mes,True).show_error()
         
-    def set_focus(self,event=None):
-        self.gui.set_focus()
+    def focus(self,event=None):
+        self.gui.focus()
     
     def show(self,event=None):
         self.gui.show()
@@ -2769,8 +2769,8 @@ class OptionMenu:
         self.choice = self.items[self.index]
         self.gui.set(self.choice)
 
-    def set_focus(self,event=None):
-        self.gui.set_focus()
+    def focus(self,event=None):
+        self.gui.focus()
 
 
 
@@ -2811,8 +2811,8 @@ class ListBox:
                        ,action = action
                        )
 
-    def set_focus(self,event=None):
-        self.gui.set_focus()
+    def focus(self,event=None):
+        self.gui.focus()
     
     def trigger(self,event=None):
         if self.action:
@@ -3015,8 +3015,8 @@ class ListBoxC:
     def clear(self,event=None):
         self.lbx_prm.clear()
     
-    def set_focus(self,event=None):
-        self.gui.set_focus()
+    def focus(self,event=None):
+        self.gui.focus()
     
     def set(self,item):
         self.lbx_prm.set(item)
@@ -3129,7 +3129,7 @@ class ListBoxC:
                                ,expand   = self.expand
                                ,fill     = self.fill_
                                )
-        self.lbx_prm.set_focus()
+        self.lbx_prm.focus()
         self.gui = gi.ListBoxC(self.parent)
         self.set_scrollx()
         self.set_scrolly()
@@ -3464,7 +3464,7 @@ class Button:
         self.set_title(self.text)
         self.set_bindings()
         if self.Focus:
-            self.set_focus()
+            self.focus()
         self.set_hint()
     
     def set_bindings(self):
@@ -3522,8 +3522,8 @@ class Button:
     def close(self,event=None):
         self.gui.close()
 
-    def set_focus(self,event=None):
-        self.gui.set_focus()
+    def focus(self,event=None):
+        self.gui.focus()
     
     def enable(self):
         self.gui.enable()
@@ -3947,12 +3947,12 @@ class Geometry:
         else:
             com.rep_empty(f)
 
-    def set_focus(self,event=None):
+    def focus(self,event=None):
         f = '[shared] shared.Geometry.set_focus'
         if lg.objs.get_os().is_win():
             win32gui.SetActiveWindow(self.get_hwnd())
         elif self.parent:
-            self.gui.set_focus()
+            self.gui.focus()
         else:
             com.rep_empty(f)
 
@@ -4091,8 +4091,8 @@ class Top:
         y = height/2 - size[1]/2
         self.gui.set_geometry("%dx%d+%d+%d" % (size + (x, y)))
 
-    def set_focus(self,event=None):
-        self.gui.set_focus()
+    def focus(self,event=None):
+        self.gui.focus()
 
 
 
@@ -4275,7 +4275,7 @@ class MessageBuilder:
         return self.Yes
     
     def show(self,event=None):
-        self.btn_yes.set_focus()
+        self.btn_yes.focus()
         self.gui.show()
     
     def close(self,event=None):
