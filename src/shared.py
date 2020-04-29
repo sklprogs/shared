@@ -831,8 +831,7 @@ class Selection:
             self.pos1, self.pos2 = self.itxt.gui.get_sel_index()
         except Exception as e:
             self.pos1, self.pos2 = None, None
-            # Too frequent
-            #com.rep_failed(f,e)
+            com.rep_failed(f,e)
         # Too frequent
         '''
         mes = '{}-{}'.format(self.pos1,self.pos2)

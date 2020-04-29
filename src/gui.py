@@ -66,6 +66,14 @@ class TextBoxC:
         self.parent = parent
         self.widget = self.parent.widget
     
+    def get_sel_index(self):
+        return (self.get_index('sel.first')
+               ,self.get_index('sel.last')
+               )
+    
+    def get_index(self,mark='insert'):
+        return self.widget.index(mark)
+    
     def set_icon(self,path=''):
         self.parent.set_icon(path)
     
@@ -106,8 +114,8 @@ class TextBox:
         return self.widget.tag_names()
     
     def get_sel_index(self):
-        return (self.index('sel.first')
-               ,self.index('sel.last')
+        return (self.get_index('sel.first')
+               ,self.get_index('sel.last')
                )
     
     def focus(self):
@@ -232,8 +240,8 @@ class Entry:
                          )
     
     def get_sel_index(self):
-        return (self.index('sel.first')
-               ,self.index('sel.last')
+        return (self.get_index('sel.first')
+               ,self.get_index('sel.last')
                )
     
     def get_index(self,mark='insert'):
