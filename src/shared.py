@@ -511,7 +511,7 @@ class Panes:
     def decolorize(self):
         self.gui.config_pane1(bg='white')
         self.gui.config_pane2(bg='white')
-        if self.Extended:
+        if self.Extend:
             self.gui.config_pane3(bg='white')
             self.gui.config_pane4(bg='white')
     
@@ -618,8 +618,8 @@ class SearchBox:
         self.i        = 0
         self.search()
         if self.text and self.pattern:
-            self.isearch.reset (text   = self.text
-                               ,search = self.pattern
+            self.isearch.reset (text    = self.text
+                               ,pattern = self.pattern
                                )
             self.isearch.get_next_loop()
             # Prevents from calling self.search() once again
@@ -802,11 +802,11 @@ class Selection:
         self.pos1 = pos1
         self.pos2 = pos2
         self.text = ''
-        self.bg   = bg
-        self.fg   = fg
+        self.bg = bg
+        self.fg = fg
         if not self.bg and not self.fg:
             self.bg = 'cyan'
-        self.tag  = tag
+        self.tag = tag
         self.words = words
 
     def clear(self,tag='sel',pos1='1.0',pos2='end'):
@@ -997,7 +997,7 @@ class TextBoxC:
         '''
         f = '[shared] shared.TextBox.check_spell'
         if self.words:
-            self.words.get_sent_nos()
+            self.words.set_sent_nos()
             result = []
             for i in range(self.words.get_len()):
                 if not self.words.words[i].check_spell():
@@ -1062,7 +1062,7 @@ class TextBoxRO(TextBoxC):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-        self.ro_set_gui()
+        self.set_ro_gui()
     
     def reset(self,words=None,title=''):
         self.enable()
@@ -1081,7 +1081,7 @@ class TextBoxRO(TextBoxC):
                         )
         self.disable()
     
-    def ro_set_buttons(self):
+    def set_ro_buttons(self):
         self.btn_cls = Button (parent   = self.frm_btn
                               ,action   = self.close
                               ,text     = _('Close')
@@ -1094,18 +1094,18 @@ class TextBoxRO(TextBoxC):
                               ,expand   = True
                               )
     
-    def ro_set_gui(self):
-        self.ro_set_frames()
-        self.ro_set_buttons()
-        self.ro_set_bindings()
+    def set_ro_gui(self):
+        self.set_ro_frames()
+        self.set_ro_buttons()
+        self.set_ro_bindings()
     
-    def ro_set_frames(self):
+    def set_ro_frames(self):
         self.frm_btn = Frame (parent = self.gui.parent
                              ,expand = False
                              ,side   = 'bottom'
                              )
     
-    def ro_set_bindings(self):
+    def set_ro_bindings(self):
         # Do not add a new line
         self.gui.unbind('<Return>')
         self.gui.unbind('<KP_Enter>')
@@ -1346,7 +1346,7 @@ class TextBox:
         pos1, pos2 = self.select.get()
         self.clear_sel()
         self.insert (text = text
-                    ,pos  = self.cursor()
+                    ,pos  = self.get_cursor()
                     )
         if pos1 and pos2:
             self.select.reset (pos1 = pos1
@@ -1418,7 +1418,7 @@ class TextBox:
     def paste(self,event=None):
         self.clear_sel()
         self.insert (text = Clipboard().paste()
-                    ,pos  = self.cursor()
+                    ,pos  = self.get_cursor()
                     )
         return 'break'
 
@@ -1545,7 +1545,7 @@ class TextBox:
             return True
 
     def get_cursor(self,event=None):
-        f = '[shared] shared.TextBox.cursor'
+        f = '[shared] shared.TextBox.get_cursor'
         try:
             self.pos = self.gui.get_cursor()
         except Exception as e:

@@ -2628,7 +2628,7 @@ class Directory:
         f = '[shared] logic.Directory.get_ext'
         if self.Success:
             if not self.exts:
-                for file in self.relfiles():
+                for file in self.get_rel_files():
                     ext = Path(path=file).get_ext()
                     self.exts.append(ext)
                     self.extslow.append(ext.lower())
@@ -3440,7 +3440,7 @@ class Word:
             if self.has_ref():
                 ''' #NOTE: Setting 'nm' to '' allows to find longer
                     matches (without references), but requires replacing
-                    duplicate spaces in 'text_nm' with ordinary ones and
+                    duplicate spaces in 'textnm' with ordinary ones and
                     using another word numbering for 'nm'.
                 '''
                 #self.nm = ''
@@ -3448,7 +3448,7 @@ class Word:
             else:
                 result = Decline (text = self.n
                                  ,Auto = False
-                                 ).normal().get()
+                                 ).get_normal().get()
                 if result:
                     self.nm = result.replace('ё','е')
                 else:
@@ -3651,7 +3651,7 @@ class Words:
         if self.Success:
             if self.get_len() > 0:
                 if self.words[self.no].sentno is None:
-                    self._get_sent_nos()
+                    self._set_sent_nos()
         else:
             com.cancel(f)
 
@@ -3722,16 +3722,16 @@ class Words:
         else:
             com.cancel(f)
 
-    def _get_refs(self):
+    def _set_refs(self):
         for i in range(self.get_len()):
             self.words[i].has_ref()
 
-    def get_refs(self):
-        f = '[shared] logic.Words.get_refs'
+    def set_refs(self):
+        f = '[shared] logic.Words.set_refs'
         if self.Success:
             if self.get_len() > 0:
                 if self.words[0].ref is None:
-                    self._get_refs()
+                    self._set_refs()
         else:
             com.cancel(f)
 
@@ -4028,24 +4028,27 @@ class Decline:
     '''
     def __init__ (self,text='',number=''
                  ,case='',Auto=True):
+        self.set_values()
         if text:
             self.reset (text   = text
                        ,number = number
                        ,case   = case
                        ,Auto   = Auto
                        )
-        else:
-            self.Auto   = Auto
-            self.orig   = ''
-            self.number = 'sing'
-            self.case   = 'nomn'
-            self.lst    = []
 
+    def set_values(self):
+        self.Auto   = True
+        self.orig   = ''
+        self.number = 'sing'
+        self.case   = 'nomn'
+        self.lst    = []
+    
     def reset(self,text,number='',case='',Auto=True):
         ''' #TODO:
             1) Restore punctuation
             2) Optional leading/trailing spaces
         '''
+        self.set_values()
         self.orig = text
         self.number = number
         # 'nomn', 'gent', 'datv', 'accs', 'ablt', 'loct'
@@ -4057,7 +4060,7 @@ class Decline:
             result = self.orig
         self.lst = result.split(' ')
         ''' Returning 'self' allows to call 'get' in the same line, e.g.
-            Decline(text='текст').normal().get()
+            Decline(text='текст').get_normal().get()
         '''
         return self
 
@@ -4090,7 +4093,7 @@ class Decline:
     # If input is a phrase, 'normal' each word of it
     def get_normal(self):
         for i in range(len(self.lst)):
-            form = objs.get_morph().parse(self._list[i])[0]
+            form = objs.get_morph().parse(self.lst[i])[0]
             self.lst[i] = form.normal_form
         return self
 
@@ -4104,8 +4107,7 @@ class Decline:
                 for i in range(len(self.lst)):
                     if self.lst[i]:
                         # Returns 'sing', 'plur' or None
-                        number = self.lst[i][0].tag.number
-                        tmp.append(objs.get_morph().parse(number))
+                        tmp.append(objs.get_morph().parse(self.lst[i])[0].tag.number)
                 if tmp and max(tmp,key=tmp.count) == 'plur':
                     self.number = 'plur'
             ''' mes = str(self.number)
@@ -4522,7 +4524,7 @@ class References:
             self.Success = True
             self.words1.set_sent_nos()
             self.words2.set_sent_nos()
-            self.words1.get_refs()
+            self.words1.set_refs()
         else:
             self.Success = False
             com.rep_empty(f)

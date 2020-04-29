@@ -117,7 +117,7 @@ class TextBox:
         return self.widget.index(mark)
     
     def get_cursor(self):
-        return self.index('insert')
+        return self.get_index('insert')
     
     def see(self,mark):
         self.widget.see(mark)

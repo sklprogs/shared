@@ -1,4 +1,5 @@
-- 
+
+- pasting on selection does not erase it
 - STOP_MES does not work for all messages (suppressing messages from
   shared, but still processing messages from the main program) - maybe,
   sh.lg. is to blame
