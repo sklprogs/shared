@@ -831,7 +831,12 @@ class Selection:
             self.pos1, self.pos2 = self.itxt.gui.get_sel_index()
         except Exception as e:
             self.pos1, self.pos2 = None, None
-            com.rep_failed(f,e)
+            e = str(e)
+            if "text doesn't contain any characters tagged with" in e:
+                mes = _('No selection!')
+                objs.get_mes(f,mes,True).show_info()
+            else:
+                com.rep_failed(f,e)
         # Too frequent
         '''
         mes = '{}-{}'.format(self.pos1,self.pos2)

@@ -3811,7 +3811,7 @@ class Words:
                         lst[0] -= 1
                     lst[1] = Text(text=lst[1]).str2int()
                     result = None
-                    for i in range(self.len()):
+                    for i in range(self.get_len()):
                         if self.words[i].sentno == lst[0]:
                             result = self.words[i].sentslen
                             break
