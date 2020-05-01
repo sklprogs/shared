@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-30 03:45+0300\n"
-"PO-Revision-Date: 2020-04-30 03:46+0300\n"
+"POT-Creation-Date: 2020-05-01 18:59+0300\n"
+"PO-Revision-Date: 2020-05-01 19:00+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -19,20 +19,20 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #: gui.py:1260 logic.py:265 logic.py:310 logic.py:833 logic.py:4884
-#: shared.py:4151
+#: shared.py:4156
 msgid "WARNING"
 msgstr "ПРЕДУПРЕЖДЕНИЕ"
 
-#: gui.py:1267 logic.py:304 logic.py:833 shared.py:4143
+#: gui.py:1267 logic.py:304 logic.py:833 shared.py:4148
 msgid "ERROR"
 msgstr "ОШИБКА"
 
-#: gui.py:1274 logic.py:267 logic.py:328 shared.py:4176 shared.py:4380
+#: gui.py:1274 logic.py:267 logic.py:328 shared.py:4181 shared.py:4385
 msgid "QUESTION"
 msgstr "ВОПРОС"
 
 #: gui.py:1281 logic.py:263 logic.py:288 logic.py:316 logic.py:811 logic.py:855
-#: logic.py:4892 shared.py:4160 shared.py:4168
+#: logic.py:4892 shared.py:4165 shared.py:4173
 msgid "INFO"
 msgstr "ИНФОРМАЦИЯ"
 
@@ -49,7 +49,7 @@ msgid "You need to install \"{}\"!"
 msgstr "Необходимо установить \"{}\"!"
 
 #: logic.py:169 logic.py:968 logic.py:987 logic.py:2390 logic.py:2410
-#: logic.py:4544 logic.py:4562 logic.py:4606 shared.py:4415
+#: logic.py:4544 logic.py:4562 logic.py:4606 shared.py:4420
 msgid "The condition \"{}\" is not observed!"
 msgstr "Условие \"{}\" не выполнено!"
 
@@ -66,7 +66,7 @@ msgid "File \"{}\" was not found!"
 msgstr "Файл \"{}\" не найден!"
 
 #: logic.py:414 logic.py:442 logic.py:2098 logic.py:2565 logic.py:3829
-#: logic.py:4816 logic.py:4998 logic.py:5083 shared.py:2721 shared.py:2757
+#: logic.py:4816 logic.py:4998 logic.py:5083 shared.py:2726 shared.py:2762
 msgid "Wrong input data: \"{}\"!"
 msgstr "Недопустимые входные данные: \"{}\"!"
 
@@ -114,8 +114,8 @@ msgstr "Запись файла \"{}\""
 msgid "Unable to write file \"{}\"!"
 msgstr "Не удается записать файл \"{}\"!"
 
-#: logic.py:768 logic.py:2247 shared.py:1415 shared.py:2708 shared.py:3248
-#: shared.py:3634 shared.py:3713
+#: logic.py:768 logic.py:2247 shared.py:1415 shared.py:2713 shared.py:3253
+#: shared.py:3639 shared.py:3718
 msgid ""
 "An unknown mode \"{}\"!\n"
 "\n"
@@ -135,7 +135,7 @@ msgstr "Файл \"{}\" не подлежит сортировке!"
 
 #: logic.py:910 logic.py:1090 logic.py:1185 logic.py:1859 logic.py:2321
 #: logic.py:2987 logic.py:3054 logic.py:3897 logic.py:4666 shared.py:673
-#: shared.py:2489 shared.py:3180 shared.py:3627 shared.py:4462
+#: shared.py:2489 shared.py:3185 shared.py:3632 shared.py:4467
 msgid "Wrong input data!"
 msgstr "Недопустимые входные данные!"
 
@@ -147,7 +147,7 @@ msgstr "Словарь \"{}\": Неправильная строка №{}: \"{}
 msgid "Empty input is not allowed!"
 msgstr "Пустые входные данные не допускаются!"
 
-#: logic.py:1086 logic.py:1925 shared.py:3346 shared.py:4058
+#: logic.py:1086 logic.py:1925 shared.py:3351 shared.py:4063
 msgid "File \"{}\" has not been found!"
 msgstr "Файл \"{}\" не найден!"
 
@@ -650,7 +650,7 @@ msgstr "Создание {} тэгов"
 msgid "Spelling seems to be correct."
 msgstr "Ошибок правописания не обнаружено."
 
-#: shared.py:1091 shared.py:1163 shared.py:1661 shared.py:1942 shared.py:3046
+#: shared.py:1091 shared.py:1163 shared.py:1661 shared.py:1942 shared.py:3051
 msgid "Close"
 msgstr "Закрыть"
 
@@ -658,7 +658,7 @@ msgstr "Закрыть"
 msgid "Close this window"
 msgstr "Закрыть это окно"
 
-#: shared.py:1164 shared.py:1660 shared.py:3045 shared.py:4258
+#: shared.py:1164 shared.py:1660 shared.py:3050 shared.py:4263
 msgid "Reject and close"
 msgstr "Отказаться и закрыть"
 
@@ -674,7 +674,7 @@ msgstr "Восстановить текст"
 msgid "Save"
 msgstr "Сохранить"
 
-#: shared.py:1180 shared.py:1674 shared.py:3053 shared.py:4250 shared.py:4264
+#: shared.py:1180 shared.py:1674 shared.py:3058 shared.py:4255 shared.py:4269
 msgid "Accept and close"
 msgstr "Принять и закрыть"
 
@@ -686,7 +686,7 @@ msgstr "Очистить поле"
 msgid "Clear"
 msgstr "Очистить"
 
-#: shared.py:1675 shared.py:3054
+#: shared.py:1675 shared.py:3059
 msgid "Save and close"
 msgstr "Запомнить и выйти"
 
@@ -720,83 +720,87 @@ msgstr ""
 "\n"
 "Детали: {}"
 
-#: shared.py:2562
+#: shared.py:2537
+msgid "Clipboard is empty!"
+msgstr "Буфер обмена пуст!"
+
+#: shared.py:2567
 msgid "Paste a special symbol"
 msgstr "Вставить специальный символ"
 
-#: shared.py:2837
+#: shared.py:2842
 msgid "Remove item #{}"
 msgstr "Удаление элемента №{}"
 
-#: shared.py:2840
+#: shared.py:2845
 msgid "No item #{}!"
 msgstr "Элемент №{} отсутствует!"
 
-#: shared.py:2908
+#: shared.py:2913
 msgid "Item \"{}\" is not in list!"
 msgstr "Элемент \"{}\" не в списке!"
 
-#: shared.py:3254
+#: shared.py:3259
 msgid "Set the geometry to \"{}x{}+{}+{}\""
 msgstr "Изменение геометрии виджета на \"{}x{}+{}+{}\""
 
-#: shared.py:3336 shared.py:3379 shared.py:3381
+#: shared.py:3341 shared.py:3384 shared.py:3386
 msgid "Please wait..."
 msgstr "Подождите..."
 
-#: shared.py:3737
+#: shared.py:3742
 msgid "Widget 1 geometry: {}x{}+{}+{}"
 msgstr "Геометрия виджета 1: {}x{}+{}+{}"
 
-#: shared.py:3743
+#: shared.py:3748
 msgid "Widget 2 geometry: {}x{}+{}+{}"
 msgstr "Геометрия виджета 2: {}x{}+{}+{}"
 
-#: shared.py:3840
+#: shared.py:3845
 msgid "Wrong font: \"{}\"!"
 msgstr "Неправильный шрифт: \"{}\"!"
 
-#: shared.py:3890
+#: shared.py:3895
 msgid "Save geometry: {}"
 msgstr "Сохранение геометрии: {}"
 
-#: shared.py:3899
+#: shared.py:3904
 msgid "Restore geometry: {}"
 msgstr "Восстановление геометрии: {}"
 
-#: shared.py:3903
+#: shared.py:3908
 msgid "Failed to restore geometry!"
 msgstr "Не удалось восстановить геометрию!"
 
-#: shared.py:3921
+#: shared.py:3926
 msgid "Failed to change window properties!"
 msgstr "Не удалось изменить свойства окна!"
 
-#: shared.py:4006
+#: shared.py:4011
 msgid "Failed to get the window handle!"
 msgstr "Не удалось получить дескриптор окна!"
 
-#: shared.py:4117
+#: shared.py:4122
 msgid "Test:"
 msgstr "Тест:"
 
-#: shared.py:4242
+#: shared.py:4247
 msgid "Yes"
 msgstr "Да"
 
-#: shared.py:4243
+#: shared.py:4248
 msgid "No"
 msgstr "Нет"
 
-#: shared.py:4246
+#: shared.py:4251
 msgid "Cancel"
 msgstr "Отмена"
 
-#: shared.py:4411
+#: shared.py:4416
 msgid "An unknown color \"{}\"!"
 msgstr "Неизвестный цвет \"{}\"!"
 
-#: shared.py:4438
+#: shared.py:4443
 msgid ""
 "The operation has failed!\n"
 "\n"
@@ -806,11 +810,11 @@ msgstr ""
 "\n"
 "Подробности: {}"
 
-#: shared.py:4455
+#: shared.py:4460
 msgid "Failed to enable key combination \"{}\"!"
 msgstr "Не удалось задействовать сочетание клавиш \"{}\"!"
 
-#: shared.py:4459
+#: shared.py:4464
 msgid "Wrong input data: \"{}\""
 msgstr "Недопустимые входные данные: \"{}\"!"
 
