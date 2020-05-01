@@ -4960,9 +4960,21 @@ class Commands:
             # Prevent errors caused by 'datetime' parsing microseconds
             tmp = date.split('.')
             if date != tmp[0]:
-                ind  = date.index('.'+tmp[-1])
-                date = date[0:ind]
-            itime.inst = datetime.datetime.strptime(date,pattern)
+                index_ = date.index('.'+tmp[-1])
+                date = date[0:index_]
+            ''' Sometimes Youtube returns excessive data that are not
+                converted properly by 'datetime'.
+            '''
+            try:
+                index_ = date.index('Z')
+                date = video.ptime[:index_]
+            except ValueError:
+                pass
+            try:
+                itime.inst = datetime.datetime.strptime(date,pattern)
+            except ValueError:
+                mes = _('Wrong input data: "{}"!').format(date)
+                objs.get_mes(f,mes).show_warning()
             return itime.get_timestamp()
         else:
             self.rep_empty(f)
