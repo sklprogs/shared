@@ -3957,7 +3957,7 @@ class Geometry:
             com.rep_empty(f)
 
     def focus(self,event=None):
-        f = '[shared] shared.Geometry.set_focus'
+        f = '[shared] shared.Geometry.focus'
         if lg.objs.get_os().is_win():
             win32gui.SetActiveWindow(self.get_hwnd())
         elif self.parent:
