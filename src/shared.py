@@ -2532,7 +2532,12 @@ class Clipboard:
             text = str(self.gui.paste())
         except Exception as e:
             text = ''
-            com.rep_failed(f,e,self.Silent)
+            e = str(e)
+            if "CLIPBOARD selection doesn't exist" in e:
+                mes = _('Clipboard is empty!')
+                objs.get_mes(f,mes,True).show_warning()
+            else:
+                com.rep_failed(f,e,self.Silent)
         # Further possible actions: strip, delete double line breaks
         return text
 
