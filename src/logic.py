@@ -4967,7 +4967,7 @@ class Commands:
             '''
             try:
                 index_ = date.index('Z')
-                date = video.ptime[:index_]
+                date = date[:index_]
             except ValueError:
                 pass
             try:
