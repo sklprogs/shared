@@ -4426,10 +4426,11 @@ class Commands(lg.Commands):
         objs.txt.show()
         return objs.txt.get()
     
-    def run_fast_debug(self,text):
+    def run_fast_debug(self,title=_('Test:'),text=''):
         objs.get_txt (font     = 'Mono 11'
                      ,Maximize = True
                      ).reset()
+        objs.txt.set_title(title)
         objs.txt.insert(text)
         objs.txt.show()
     
