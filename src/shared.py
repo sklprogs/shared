@@ -3358,7 +3358,7 @@ class WaitBox:
             to evade focus problems in 'mclient'.
         '''
         if objs.get_os().is_win():
-            objs.root().update_idle()
+            objs.get_root().update_idle()
         else:
             self.lbl_pls.widget.update()
     
