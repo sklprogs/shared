@@ -2165,6 +2165,9 @@ class Path:
             if len(self._split_path()) > 1:
                 self.extension = self._split_path()[1]
         return self.extension
+    
+    def get_ext_low(self):
+        return self.get_ext().lower()
 
     def get_filename(self):
         if not self.filename:
