@@ -2127,8 +2127,8 @@ class CheckBox:
 
 class ProgressBar:
     
-    def __init__ (self,width=750,height=200
-                 ,YScroll=True,title=_('Download progress')
+    def __init__ (self,width=750,height=120
+                 ,YScroll=False,title=_('Please wait...')
                  ,icon=''
                  ):
         self.set_values()
@@ -2139,6 +2139,31 @@ class ProgressBar:
         self.YScroll = YScroll
         self.set_gui()
         
+    def set_text(self,text=None):
+        f = '[shared] shared.ProgressBar.set_text'
+        if self.item:
+            if text is None:
+                text = _('Please wait...')
+            self.item.label.set_text(text)
+        else:
+            mes = _('The required widget has not been created yet!')
+            objs.get_mes(f,mes,True).show_error()
+    
+    def update(self,count,limit):
+        f = '[shared] shared.ProgressBar.update'
+        if self.item:
+            # Prevent ZeroDivisionError
+            if limit:
+                percent = round((100*count)/limit)
+            else:
+                percent = 0
+            self.item.widget['value'] = percent
+            # This is required to fill the progress bar on-the-fly
+            objs.get_root().update_idle()
+        else:
+            mes = _('The required widget has not been created yet!')
+            objs.get_mes(f,mes,True).show_error()
+    
     def set_values(self):
         self.items  = []
         self.item   = None
@@ -2176,7 +2201,10 @@ class ProgressBar:
         self.gui.close()
     
     def set_gui(self):
-        self.parent = self.obj = Top(Lock=False)
+        self.parent = self.obj = Top (title = self.title
+                                     ,icon  = self.icon
+                                     ,Lock  = False
+                                     )
         self.widget = self.parent.widget
         Geometry(self.parent).set('%dx%d' % (self.width,self.height))
         self.set_frames()
@@ -2187,8 +2215,6 @@ class ProgressBar:
         self.canvas.scroll()
         self.gui = gi.ProgressBar(self.parent)
         self.set_bindings()
-        self.set_title()
-        self.set_icon()
         
     def set_bindings(self):
         com.bind (obj      = self.parent
@@ -2273,12 +2299,15 @@ class ProgressBarItem:
                            ,font   = 'Mono 11'
                            )
 
-    def set_text (self,file='',cursize=0
-                 ,total=0,rate=0,eta=0
-                 ):
-        mes = _('File: "{}"; {}/{} MB; Rate: {} kbps; ETA: {}s')
-        mes = mes.format(file,int(cursize),int(total),rate,eta)
-        self.label.set_text(mes)
+    def set_text(self,text=None):
+        f = '[shared] shared.ProgressBarItem.set_text'
+        if self.label:
+            if text is None:
+                text = _('Please wait...')
+            self.label.set_text(text)
+        else:
+            mes = _('The required widget has not been created yet!')
+            objs.get_mes(f,mes,True).show_error()
 
 
 
