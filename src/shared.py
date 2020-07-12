@@ -1582,7 +1582,7 @@ class EntryC:
         self.obj.select_all()
     
     def focus(self,event=None):
-        self.gui.focus()
+        self.obj.focus()
     
     def reset(self,title=''):
         self.Save = False
@@ -2122,6 +2122,12 @@ class CheckBox:
 
     def toggle(self,event=None):
         self.gui.toggle()
+    
+    def set(self,value=True,event=None):
+        if value:
+            self.enable()
+        else:
+            self.disable()
 
 
 
@@ -2750,7 +2756,7 @@ class OptionMenu:
         if item in self.items:
             self.gui.set(item)
             self.choice = item
-            self.index  = self.items.index(self.choice)
+            self.index = self.items.index(self.choice)
         else:
             mes = _('Wrong input data: "{}"!').format(item)
             objs.get_mes(f,mes,True).show_error()
