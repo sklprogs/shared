@@ -78,7 +78,6 @@ class DefaultKeys:
 
 
 class SaveConfig:
-    
     def __init__(self,file):
         self.set_values()
         self.file = file
@@ -86,6 +85,9 @@ class SaveConfig:
         self.get_parser()
     
     def set_key(self,section,key,value):
+        ''' #NOTE: The config parser is implemented such that setting
+            a key fails if the file was not read (so it must exist).
+        '''
         f = '[shared] logic.SaveConfig.set_key'
         if self.Success:
             try:
@@ -118,6 +120,10 @@ class SaveConfig:
             if not self.parser:
                 try:
                     self.parser = configparser.ConfigParser()
+                    ''' #NOTE: Without this the config parser will
+                        fail to get the list of sections.
+                    '''
+                    self.parser.read(self.file,'utf-8')
                 except Exception as e:
                     self.fail(f,e)
             return self.parser
@@ -131,6 +137,8 @@ class SaveConfig:
     def save(self):
         f = '[shared] logic.SaveConfig.save'
         if self.Success:
+            mes = _('Write "{}"').format(self.file)
+            objs.get_mes(f,mes,True).show_info()
             try:
                 with open(self.file,'w') as cf:
                     self.parser.write(cf)
