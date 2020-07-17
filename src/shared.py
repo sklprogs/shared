@@ -58,6 +58,13 @@ class Decline(lg.Decline):
 
 
 
+class DefaultKeys(lg.DefaultKeys):
+    
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+
+
+
 class Dic(lg.Dic):
     
     def __init__(self,*args,**kwargs):
@@ -234,6 +241,13 @@ class ReadTextFile(lg.ReadTextFile):
 
 
 class References(lg.References):
+    
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+
+
+
+class SaveConfig(lg.SaveConfig):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)

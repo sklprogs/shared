@@ -64,6 +64,82 @@ reserved_win  = ['CON','PRN','AUX','NUL','COM1','COM2','COM3','COM4'
                 ]
 
 
+class DefaultKeys:
+    
+    def __init__(self):
+        self.reset()
+    
+    def reset(self):
+        globs['bool']  = {}
+        globs['float'] = {}
+        globs['int']   = {}
+        globs['str']   = {}
+
+
+
+class SaveConfig:
+    
+    def __init__(self,file):
+        self.set_values()
+        self.file = file
+        self.check()
+        self.get_parser()
+    
+    def set_key(self,section,key,value):
+        f = '[shared] logic.SaveConfig.set_key'
+        if self.Success:
+            try:
+                self.parser.set(section,key,value)
+            except Exception as e:
+                self.fail(f,e)
+        else:
+            com.cancel(f)
+    
+    def check(self):
+        f = '[shared] logic.SaveConfig.check'
+        if self.file:
+            try:
+                self.Success = File(self.file).Success
+            except Exception as e:
+                self.fail(f,e)
+        else:
+            self.Success = False
+            com.rep_empty(f)
+    
+    def fail(self,f,e):
+        self.Success = False
+        mes = _('Third-party module has failed!\n\nDetails: {}')
+        mes = mes.format(e)
+        objs.get_mes(f,mes).show_error()
+    
+    def get_parser(self):
+        f = '[shared] logic.SaveConfig.save'
+        if self.Success:
+            if not self.parser:
+                try:
+                    self.parser = configparser.ConfigParser()
+                except Exception as e:
+                    self.fail(f,e)
+            return self.parser
+        else:
+            com.cancel(f)
+    
+    def set_values(self):
+        self.Success = True
+        self.parser = None
+    
+    def save(self):
+        f = '[shared] logic.SaveConfig.save'
+        if self.Success:
+            try:
+                with open(self.file,'w') as cf:
+                    self.parser.write(cf)
+            except Exception as e:
+                self.fail(f,e)
+        else:
+            com.cancel(f)
+
+
 
 class FastTable:
     
