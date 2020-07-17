@@ -2,8 +2,8 @@
 # -*- coding: UTF-8 -*-
 
 copyright = 'Copyright 2015-2020, Peter Sklyar'
-license   = 'GPL v.3'
-email     = 'skl.progs@gmail.com'
+license = 'GPL v.3'
+email = 'skl.progs@gmail.com'
 
 import re
 import io
@@ -48,18 +48,6 @@ other_alphabet     = 'ÀÁÂÆÇÈÉÊÑÒÓÔÖŒÙÚÛÜàáâæßçèéêñò
 other_alphabet_low = 'àáâæßçèéêñòóôöœùúûü'
 digits             = '0123456789'
 
-SectionBooleans        = 'Boolean'
-SectionBooleans_abbr   = 'bool'
-SectionFloatings       = 'Floating Values'
-SectionFloatings_abbr  = 'float'
-SectionIntegers        = 'Integer Values'
-SectionIntegers_abbr   = 'int'
-SectionLinuxSettings   = 'Linux settings'
-SectionMacSettings     = 'Mac settings'
-SectionVariables       = 'Variables'
-SectionVariables_abbr  = 'var'
-SectionWindowsSettings = 'Windows settings'
-
 punc_array      = ['.',',','!','?',':',';']
 #TODO: why there were no opening brackets?
 #punc_ext_array = ['"','”','»',']','}',')']
@@ -74,7 +62,6 @@ reserved_win  = ['CON','PRN','AUX','NUL','COM1','COM2','COM3','COM4'
                 ,'COM5','COM6','COM7','COM8','COM9','LPT1','LPT2','LPT3'
                 ,'LPT4','LPT5','LPT6','LPT7','LPT8','LPT9'
                 ]
-config_parser = configparser.ConfigParser()
 
 
 
@@ -743,8 +730,8 @@ class WriteTextFile:
 
     def __init__(self,file,Rewrite=False):
         f = '[shared] logic.WriteTextFile.__init__'
-        self.file    = file
-        self.text    = ''
+        self.file = file
+        self.text = ''
         self.Rewrite = Rewrite
         self.Success = True
         if not self.file:
@@ -2772,67 +2759,93 @@ class Directory:
 
 class Config:
 
-    def __init__(self):
+    def __init__(self,file):
+        f = '[shared] logic.Config.__init__'
         self.set_values()
+        self.file = file
+        if self.file:
+            if os.path.exists(self.file):
+                self.Success = File(self.file).Success
+            else:
+                com.rep_empty(f)
+                self.Success = False
+    
+    def run(self):
+        self.open()
+        self.load()
+        self.report()
         
     def set_values(self):
-        self.Success          = True
-        self.sections         = [SectionVariables]
-        self.sections_abbr    = [SectionVariables_abbr]
-        self.sections_func    = [config_parser.get]
-        self.message          = _('The following sections and/or keys are missing:') + '\n'
-        self.total_keys       = 0
-        self.changed_keys     = 0
-        self.missing_keys     = 0
-        self.missing_sections = 0
+        self.Success = True
+        self.sections = [_('Booleans'),_('Floatings'),_('Integers')
+                        ,_('Strings')
+                        ]
+        self.abbr = ['bool','float','int','str']
+        self.func = []
+        self.total_keys = 0
+        self.no_keys = []
+        self.mod_keys = []
+        self.no_sections = []        
 
     def load(self):
         f = '[shared] logic.Config.load'
+        ''' We can have KeyError on missing sections in 'globs'
+            (a programmer's mistake) but we do not catch them since
+            the program is highly likely to fail in such condition
+            anyway. By the same reason, the further KeyError check
+            is probably useless.
+        '''
         if self.Success:
             for i in range(len(self.sections)):
-                for option in globs[self.sections_abbr[i]]:
-                    new_val = self.sections_func[i](self.sections[i],option)
-                    if globs[self.sections_abbr[i]][option] != new_val:
-                        mes = _('New value of the key "{}" has been loaded.')
-                        mes = mes.format(option)
-                        Message(f,mes).show_info()
-                        self.changed_keys += 1
-                        globs[self.sections_abbr[i]][option] = new_val
-            mes = _('Keys loaded in total: {}, whereas {} are modified.')
-            mes = mes.format(self.total_keys,self.changed_keys)
-            Message(f,mes).show_info()
+                if self.parser.has_section(self.sections[i]):
+                    for option in globs[self.abbr[i]]:
+                        self.total_keys += 1
+                        if self.parser.has_option (self.sections[i]
+                                                  ,option
+                                                  ):
+                            new_val = self.func[i] (self.sections[i]
+                                                   ,option
+                                                   )
+                            try:
+                                if globs[self.abbr[i]][option] != new_val:
+                                    self.mod_keys.append(option)
+                                    globs[self.abbr[i]][option] = new_val
+                            except KeyError:
+                                mes = _('Section "{}" does not have key "{}"!')
+                                mes = mes.format (self.sections[i]
+                                                 ,option
+                                                 )
+                                objs.get_mes(f,mes).show_error()
+                        else:
+                            self.no_keys.append(option)
+                else:
+                    self.no_sections.append(self.sections[i])
         else:
             com.cancel(f)
-
-    def check(self):
-        f = '[shared] logic.Config.check'
+    
+    def report(self):
+        f = '[shared] logic.Config.report'
         if self.Success:
-            for i in range(len(self.sections)):
-                if config_parser.has_section(self.sections[i]):
-                    for option in globs[self.sections_abbr[i]]:
-                        self.total_keys += 1
-                        if not config_parser.has_option(self.sections[i]
-                                                       ,option
-                                                       ):
-                            self.Success = False
-                            self.missing_keys += 1
-                            self.message += option + '; '
-                else:
-                    self.Success = False
-                    self.missing_sections += 1
-                    self.message += self.sections[i] + '; '
-            if not self.Success:
-                self.message += '\n'
+            mes = []
+            sub = _('Keys loaded in total: {}').format(self.total_keys)
+            mes.append(sub)
+            if self.no_sections:
                 sub = _('Missing sections: {}')
-                sub = sub.format(self.missing_sections)
-                self.message += sub
-                self.message += '\n'
-                sub = _('Missing keys: {}').format(self.missing_keys)
-                self.message += sub
-                self.message += '\n'
-                self.message += _('The default configuration has been loaded.')
-                objs.get_mes(f,self.message).show_warning()
-                self.load_default()
+                sub = sub.format('; '.join(sorted(self.no_sections)))
+                mes.append(sub)
+            if self.no_keys:
+                sub = _('Missing keys: {}')
+                sub = sub.format('; '.join(sorted(self.no_keys)))
+                mes.append(sub)
+            if self.mod_keys:
+                sub = _('Modified keys: {}')
+                sub = sub.format('; '.join(sorted(self.mod_keys)))
+                mes.append(sub)
+            mes = '\n'.join(mes)
+            if self.no_keys or self.no_sections:
+                objs.get_mes(f,mes).show_warning()
+            else:
+                objs.get_mes(f,mes,True).show_info()
         else:
             com.cancel(f)
 
@@ -2840,11 +2853,17 @@ class Config:
         f = '[shared] logic.Config.open'
         if self.Success:
             try:
-                config_parser.read(self.path,'utf-8')
-            except:
-                Success = False
-                mes = _('Failed to read the configuration file "{}". This file must share the same directory with the program and have UTF-8 encoding (no BOM) and UNIX line break type.')
-                mes = mes.format(self.path)
+                self.parser = configparser.ConfigParser()
+                self.func = [self.parser.getboolean
+                            ,self.parser.getfloat
+                            ,self.parser.getint
+                            ,self.parser.get
+                            ]
+                self.parser.read(self.file,'utf-8')
+            except Exception as e:
+                self.Success = False
+                mes = _('Third-party module has failed!\n\nDetails: {}')
+                mes = mes.format(e)
                 objs.get_mes(f,mes).show_error()
         else:
             com.cancel(f)
