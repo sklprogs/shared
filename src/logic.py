@@ -2844,15 +2844,24 @@ class Directory:
 class Config:
 
     def __init__(self,file):
-        f = '[shared] logic.Config.__init__'
         self.set_values()
         self.file = file
+        self.check()
+    
+    def check(self):
+        f = '[shared] logic.Config.check'
         if self.file:
             if os.path.exists(self.file):
                 self.Success = File(self.file).Success
             else:
-                com.rep_empty(f)
                 self.Success = False
+                com.rep_empty(f)
+        if len(self.sections) != len(self.abbr):
+            self.Success = False
+            sub = '{} == {}'.format(len(self.sections),len(self.abbr))
+            mes = _('The condition "{}" is not observed!')
+            mes = mes.format(sub)
+            objs.get_mes(f,mes).show_error()
     
     def run(self):
         self.open()
@@ -2869,7 +2878,23 @@ class Config:
         self.total_keys = 0
         self.no_keys = []
         self.mod_keys = []
-        self.no_sections = []        
+        self.no_sections = []
+    
+    def get_abbr(self,section):
+        f = '[shared] logic.Config.get_abbr'
+        ''' Do not check 'self.Success' since we need a valid output
+            even if a config file does not exist.
+        '''
+        if section:
+            try:
+                index_ = self.sections.index(section)
+                return self.abbr[index_]   
+            except (ValueError,IndexError) as e:
+                mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
+                mes = mes.format(section,'; '.join(self.sections))
+                objs.get_mes(f,mes).show_error()
+        else:
+            com.rep_empty(f)
 
     def load(self):
         f = '[shared] logic.Config.load'
