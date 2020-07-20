@@ -2848,6 +2848,12 @@ class Config:
         self.file = file
         self.check()
     
+    def fail(self,f,e):
+        self.Success = False
+        mes = _('Third-party module has failed!\n\nDetails: {}')
+        mes = mes.format(e)
+        objs.get_mes(f,mes).show_error()
+    
     def check(self):
         f = '[shared] logic.Config.check'
         if self.file:
@@ -2902,33 +2908,31 @@ class Config:
             (a programmer's mistake) but we do not catch them since
             the program is highly likely to fail in such condition
             anyway. By the same reason, the further KeyError check
-            is probably useless.
+            is probably useless. 'configparser' can throw various
+            errors, for example, if '%s' in the config is not escaped
+            as '%%s'.
         '''
         if self.Success:
-            for i in range(len(self.sections)):
-                if self.parser.has_section(self.sections[i]):
-                    for option in globs[self.abbr[i]]:
-                        self.total_keys += 1
-                        if self.parser.has_option (self.sections[i]
-                                                  ,option
-                                                  ):
-                            new_val = self.func[i] (self.sections[i]
-                                                   ,option
-                                                   )
-                            try:
+            try:
+                for i in range(len(self.sections)):
+                    if self.parser.has_section(self.sections[i]):
+                        for option in globs[self.abbr[i]]:
+                            self.total_keys += 1
+                            if self.parser.has_option (self.sections[i]
+                                                      ,option
+                                                      ):
+                                new_val = self.func[i] (self.sections[i]
+                                                       ,option
+                                                       )
                                 if globs[self.abbr[i]][option] != new_val:
                                     self.mod_keys.append(option)
                                     globs[self.abbr[i]][option] = new_val
-                            except KeyError:
-                                mes = _('Section "{}" does not have key "{}"!')
-                                mes = mes.format (self.sections[i]
-                                                 ,option
-                                                 )
-                                objs.get_mes(f,mes).show_error()
-                        else:
-                            self.no_keys.append(option)
-                else:
-                    self.no_sections.append(self.sections[i])
+                            else:
+                                self.no_keys.append(option)
+                    else:
+                        self.no_sections.append(self.sections[i])
+            except Exception as e:
+                self.fail(f,e)
         else:
             com.cancel(f)
     
