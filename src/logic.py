@@ -2848,6 +2848,23 @@ class Config:
         self.file = file
         self.check()
     
+    def unescape(self):
+        f = '[shared] logic.Config.unescape'
+        if self.Success:
+            for option in globs['str'].keys():
+                if not '%%s' in globs['str'][option]:
+                    globs['str'][option] = globs['str'][option].replace('%%s','%s')
+        else:
+            com.cancel(f)
+    
+    def set_ints(self):
+        f = '[shared] logic.Config.load'
+        if self.Success:
+            for option in globs['int'].keys():
+                globs['int'][option] = Input(f,globs['int'][option]).get_integer()
+        else:
+            com.cancel(f)
+    
     def fail(self,f,e):
         self.Success = False
         mes = _('Third-party module has failed!\n\nDetails: {}')
@@ -2873,6 +2890,8 @@ class Config:
         self.open()
         self.load()
         self.report()
+        self.set_ints()
+        self.unescape()
         
     def set_values(self):
         self.Success = True
@@ -2909,8 +2928,8 @@ class Config:
             the program is highly likely to fail in such condition
             anyway. By the same reason, the further KeyError check
             is probably useless. 'configparser' can throw various
-            errors, for example, if '%s' in the config is not escaped
-            as '%%s'.
+            errors, including content errors, for example, if '%s'
+            in the config is not escaped as '%%s'.
         '''
         if self.Success:
             try:
