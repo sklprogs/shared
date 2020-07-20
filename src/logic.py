@@ -2848,6 +2848,15 @@ class Config:
         self.file = file
         self.check()
     
+    def strip(self):
+        f = '[shared] logic.Config.strip'
+        # 'Configparser' preserves extra spaces!
+        if self.Success:
+            for option in globs['str'].keys():
+                globs['str'][option] = globs['str'][option].strip()
+        else:
+            com.cancel(f)
+    
     def unescape(self):
         f = '[shared] logic.Config.unescape'
         if self.Success:
@@ -2891,6 +2900,7 @@ class Config:
         self.load()
         self.report()
         self.set_ints()
+        self.strip()
         self.unescape()
         
     def set_values(self):
