@@ -26,20 +26,20 @@ class Record:
                 ):
         f = '[shared] regexp.Record.__init__'
         self.Success = True
-        self.orig    = orig
-        self.final   = final
-        self.what1   = what1
-        self.with1   = with1
-        self.what2   = what2
-        self.with2   = with2
-        self.what3   = what3
-        self.with3   = with3
-        self.what4   = what4
-        self.with4   = with4
-        self.what5   = what5
-        self.with5   = with5
-        self.id      = id_
-        self.what    = self.with_ = ''
+        self.orig = orig
+        self.final = final
+        self.what1 = what1
+        self.with1 = with1
+        self.what2 = what2
+        self.with2 = with2
+        self.what3 = what3
+        self.with3 = with3
+        self.what4 = what4
+        self.with4 = with4
+        self.what5 = what5
+        self.with5 = with5
+        self.id_ = id_
+        self.what = self.with_ = ''
         if not self.orig or not self.final:
             self.Success = False
             mes = _('Not enough input data!')
@@ -68,7 +68,7 @@ class Record:
                 self.Success = False
                 mes = _('Regular expression {} has failed: we were expecting\n"{}",\nbut received\n"{}".')
                 mes = mes.format(self.id_,self.with_,result)
-                sh.objs.mes(f,mes).warning()
+                sh.objs.get_mes(f,mes).show_warning()
         else:
             sh.com.cancel(f)
         return self.Success
