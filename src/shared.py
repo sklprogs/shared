@@ -37,6 +37,13 @@ class DummyMessage:
 
 
 
+class CreateConfig(lg.CreateConfig):
+    
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+
+
+
 class CreateInstance(lg.CreateInstance):
     
     def __init__(self,*args,**kwargs):
