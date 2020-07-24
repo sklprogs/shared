@@ -254,13 +254,6 @@ class References(lg.References):
 
 
 
-class SaveConfig(lg.SaveConfig):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
 class Search(lg.Search):
     
     def __init__(self,*args,**kwargs):

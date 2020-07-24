@@ -196,83 +196,10 @@ class DefaultKeys:
         self.reset()
     
     def reset(self):
-        globs['bool']  = {}
+        globs['int'] = {}
+        globs['str'] = {}
+        globs['bool'] = {}
         globs['float'] = {}
-        globs['int']   = {}
-        globs['str']   = {}
-
-
-
-class SaveConfig:
-    
-    def __init__(self,file):
-        self.set_values()
-        self.file = file
-        self.check()
-        self.get_parser()
-    
-    def set_key(self,section,key,value):
-        ''' #NOTE: The config parser is implemented such that setting
-            a key fails if the file was not read (so it must exist).
-        '''
-        f = '[shared] logic.SaveConfig.set_key'
-        if self.Success:
-            try:
-                self.parser.set(section,key,value)
-            except Exception as e:
-                self.fail(f,e)
-        else:
-            com.cancel(f)
-    
-    def check(self):
-        f = '[shared] logic.SaveConfig.check'
-        if self.file:
-            try:
-                self.Success = File(self.file).Success
-            except Exception as e:
-                self.fail(f,e)
-        else:
-            self.Success = False
-            com.rep_empty(f)
-    
-    def fail(self,f,e):
-        self.Success = False
-        mes = _('Third-party module has failed!\n\nDetails: {}')
-        mes = mes.format(e)
-        objs.get_mes(f,mes).show_error()
-    
-    def get_parser(self):
-        f = '[shared] logic.SaveConfig.save'
-        if self.Success:
-            if not self.parser:
-                try:
-                    self.parser = configparser.ConfigParser()
-                    ''' #NOTE: Without this the config parser will
-                        fail to get the list of sections.
-                    '''
-                    self.parser.read(self.file,'utf-8')
-                except Exception as e:
-                    self.fail(f,e)
-            return self.parser
-        else:
-            com.cancel(f)
-    
-    def set_values(self):
-        self.Success = True
-        self.parser = None
-    
-    def save(self):
-        f = '[shared] logic.SaveConfig.save'
-        if self.Success:
-            mes = _('Write "{}"').format(self.file)
-            objs.get_mes(f,mes,True).show_info()
-            try:
-                with open(self.file,'w') as cf:
-                    self.parser.write(cf)
-            except Exception as e:
-                self.fail(f,e)
-        else:
-            com.cancel(f)
 
 
 
