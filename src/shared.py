@@ -4451,6 +4451,41 @@ class Commands(lg.Commands):
     def __init__(self):
         super().__init__()
     
+    def debug_globs(self):
+        f = '[shared] shared.Commands.debug_globs'
+        sections = []
+        keys = []
+        values = []
+        if lg.globs:
+            for abbr in objs.get_sections().abbr:
+                if 'dict' in str(type(lg.globs[abbr])):
+                    for key in sorted(lg.globs[abbr].keys()):
+                        sections.append(objs.sections.get_section(abbr))
+                        keys.append(key)
+                        values.append(lg.globs[abbr][key])
+                else:
+                    sections.append(objs.sections.get_section(abbr))
+                    keys.append(_('N/A'))
+                    values.append(lg.globs[abbr])
+            if len(sections) > 1:
+                i = 1
+                cur_sec = sections[0]
+                while i < len(sections):
+                    if sections[i] == cur_sec:
+                        sections[i] = ''
+                    else:
+                        cur_sec = sections[i]
+                    i += 1
+            iterable = [sections,keys,values]
+            headers = (_('SECTION'),_('KEY'),_('VALUE'))
+            mes = FastTable (iterable = iterable
+                            ,headers  = headers
+                            ,maxrow   = 50
+                            ).run()
+            self.run_fast_debug(f,mes)
+        else:
+            com.rep_empty(f)
+    
     def get_mod_color(self,color,delta=76): # ~30%
         ''' Make a color (a color name (/usr/share/X11/rgb.txt) or
             a hex value) brighter (positive delta) or darker

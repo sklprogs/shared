@@ -110,6 +110,20 @@ class Sections:
         else:
             com.rep_empty(f)
         return ''
+    
+    def get_section(self,abbr):
+        f = '[shared] logic.Sections.get_section'
+        if abbr:
+            try:
+                index_ = self.abbr.index(abbr)
+                return self.sections[index_]   
+            except (ValueError,IndexError) as e:
+                mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
+                mes = mes.format(abbr,'; '.join(self.abbr))
+                objs.get_mes(f,mes).show_error()
+        else:
+            com.rep_empty(f)
+        return ''
 
 
 
