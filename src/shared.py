@@ -2772,8 +2772,9 @@ class OptionMenu:
             self.choice = item
             self.index = self.items.index(self.choice)
         else:
-            mes = _('Wrong input data: "{}"!').format(item)
-            objs.get_mes(f,mes,True).show_error()
+            mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
+            mes = mes.format(item,'; '.join(self.items))
+            objs.get_mes(f,mes).show_error()
 
     def fill(self):
         self.gui.fill (items  = self.items
