@@ -2846,6 +2846,7 @@ class ListBox:
                 ):
         self.type     = 'ListBox'
         self.state    = 'normal'
+        self.lst      = []
         self.parent   = parent
         self.Multiple = Multiple
         self.expand   = expand
