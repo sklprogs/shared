@@ -5088,7 +5088,7 @@ class Commands:
     def rep_lazy(self,func=_('Logic error!')):
         Message (func    = func
                 ,message = _('Nothing to do!')
-                ).show_info()
+                ).show_debug()
     
     def show_warning (self,func=_('Logic error!')
                      ,message=_('Logic error!')
