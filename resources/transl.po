@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-01 19:08+0300\n"
-"PO-Revision-Date: 2020-10-01 19:10+0300\n"
+"POT-Creation-Date: 2020-10-02 01:57+0300\n"
+"PO-Revision-Date: 2020-10-02 01:58+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -660,7 +660,7 @@ msgstr "Выделение отсутствует!"
 
 #: shared.py:1036
 msgid "{} tags to assign"
-msgstr "Создание {} тэгов"
+msgstr "Создание {} тегов"
 
 #: shared.py:1042
 msgid "Spelling seems to be correct."
