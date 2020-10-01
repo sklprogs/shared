@@ -6,13 +6,13 @@ import re
 import io
 import pyperclip
 import skl_shared.logic as lg
-import skl_shared.gui   as gi
+import skl_shared.gui as gi
 from skl_shared.localize import _
 
-GUI_MES  = True
+GUI_MES = True
 STOP_MES = False
-FONT1    = 'Serif 14'
-FONT2    = 'Sans 11'
+FONT1 = 'Serif 14'
+FONT2 = 'Sans 11'
 
 
 class DummyMessage:
@@ -607,12 +607,12 @@ class SearchBox:
     
     # Strict: case-sensitive, with punctuation
     def reset_logic(self,words=None,Strict=False):
-        self.Success  = True
+        self.Success = True
         self.prevloop = self.nextloop = self.pattern = self.pos1 \
                       = self.pos2 = self.text = None
-        self.i        = 0
-        self.words    = words
-        self.Strict   = Strict
+        self.i = 0
+        self.words = words
+        self.Strict = Strict
         if self.words:
             # Do not get text from the widget - it's not packed yet
             if self.Strict:
@@ -626,10 +626,10 @@ class SearchBox:
 
     def reset_data(self):
         f = '[shared] shared.SearchBox.reset_data'
-        self.Success  = True
+        self.Success = True
         self.prevloop = self.nextloop = self.pattern = self.pos1 \
                       = self.pos2 = None
-        self.i        = 0
+        self.i = 0
         self.search()
         if self.text and self.pattern:
             self.isearch.reset (text    = self.text
@@ -920,12 +920,12 @@ class TextBoxC:
     def __init__ (self,Maximize=False,title=''
                  ,icon='',words=None,font=FONT1
                  ):
-        self.Active   = False
+        self.Active = False
         self.Maximize = Maximize
-        self.title    = title
-        self.icon     = icon
-        self.font     = font
-        self.words    = words
+        self.title = title
+        self.icon = icon
+        self.font = font
+        self.words = words
         self.set_gui()
         self.focus()
     
@@ -1138,7 +1138,7 @@ class TextBoxRW(TextBoxC):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-        self.Save    = False
+        self.Save = False
         self.rw_text = ''
         self.add_rw_gui()
     
@@ -1152,7 +1152,7 @@ class TextBoxRW(TextBoxC):
                         )
     
     def reset(self,words=None,title=''):
-        self.Save  = False
+        self.Save = False
         self.words = words
         self.obj.reset(self.words)
         self.set_title(title)
@@ -1234,15 +1234,15 @@ class TextBox:
                  ,wrap='word',icon=''
                  ):
         self.set_values()
-        self.parent  = parent
-        self.expand  = expand
-        self.side    = side
-        self.fill    = fill
-        self.words   = words
-        self.font    = font
+        self.parent = parent
+        self.expand = expand
+        self.side = side
+        self.fill = fill
+        self.words = words
+        self.font = font
         self.ScrollX = ScrollX
         self.ScrollY = ScrollY
-        self.wrap    = wrap
+        self.wrap = wrap
         
         self.select = Selection (itxt  = self
                                 ,words = self.words
@@ -1268,7 +1268,7 @@ class TextBox:
         self.gui.enable()
     
     def set_values(self):
-        self.type    = 'TextBox'
+        self.type = 'TextBox'
         self.scr_ver = None
         self.scr_hor = None
 
@@ -1579,10 +1579,10 @@ class TextBox:
 class EntryC:
     
     def __init__(self,title='',icon='',ClearAll=False):
-        self.type     = 'Entry'
-        self.Save     = False
-        self.title    = title
-        self.icon     = icon
+        self.type = 'Entry'
+        self.Save = False
+        self.title = title
+        self.icon = icon
         self.ClearAll = ClearAll
         self.set_gui()
         self.reset()
@@ -1624,7 +1624,7 @@ class EntryC:
                           ,title  = self.title
                           ,icon   = self.icon
                           )
-        self.gui    = gi.EntryC(self.parent)
+        self.gui = gi.EntryC(self.parent)
         self.widget = self.gui.widget
         self.set_frames()
         self.obj = Entry (parent   = self.frm_ent
@@ -1729,19 +1729,19 @@ class Entry:
                  ,bg=None,fg=None,justify='left'
                  ,AddBind=True,ClearAll=False
                 ):
-        self.type     = 'Entry'
-        self.parent   = parent
-        self.side     = side
-        self.ipadx    = ipadx
-        self.ipady    = ipady
-        self.fill_    = fill
-        self.width    = width
-        self.expand   = expand
-        self.font     = font
-        self.bg       = bg
-        self.fg       = fg
-        self.justify  = justify
-        self.AddBind  = AddBind
+        self.type = 'Entry'
+        self.parent = parent
+        self.side = side
+        self.ipadx = ipadx
+        self.ipady = ipady
+        self.fill_ = fill
+        self.width = width
+        self.expand = expand
+        self.font = font
+        self.bg = bg
+        self.fg = fg
+        self.justify = justify
+        self.AddBind = AddBind
         self.ClearAll = ClearAll
         self.set_gui()
 
@@ -1879,10 +1879,10 @@ class MultCBoxesC:
                  ,height=300,font=FONT2
                  ,MarkAll=False,icon=''
                  ):
-        self.width  = width
+        self.width = width
         self.height = height
-        self.icon   = icon
-        self.font   = font
+        self.icon = icon
+        self.font = font
         self.set_gui()
         self.set_title()
         self.reset (text    = text
@@ -1965,7 +1965,7 @@ class MultCBoxesC:
                                                     ,self.height
                                                     )
                                          )
-        self.gui    = gi.MultCBoxesC(self.parent)
+        self.gui = gi.MultCBoxesC(self.parent)
         self.widget = self.gui.widget
         self.set_frames()
         self.obj = MultCBoxes (parent  = self.frm_sec
@@ -1998,7 +1998,7 @@ class MultCBoxes:
                  ):
         self.parent = parent
         self.widget = self.parent.widget
-        self.font   = font
+        self.font = font
         self.set_values()
         self.set_gui()
         self.reset (text    = text
@@ -2030,10 +2030,10 @@ class MultCBoxes:
             com.rep_lazy(f)
         
     def set_values(self):
-        self.frms   = []
+        self.frms = []
         self.cboxes = []
-        self.lbls   = []
-        self.text   = ''
+        self.lbls = []
+        self.text = ''
     
     def set_widgets(self):
         self.cvs_prm = Canvas(parent=self.parent)
@@ -2097,11 +2097,11 @@ class CheckBox:
                  ,side=None,action=None
                  ):
         self.parent = parent
-        self.side   = side
+        self.side = side
         self.action = action
-        self.gui    = gi.CheckBox (parent = self.parent
-                                  ,side   = self.side
-                                  )
+        self.gui = gi.CheckBox (parent = self.parent
+                               ,side   = self.side
+                               )
         self.widget = self.gui.widget
         self.reset (Active = Active
                    ,action = action
@@ -2152,10 +2152,10 @@ class ProgressBar:
                  ,icon=''
                  ):
         self.set_values()
-        self.width   = width
-        self.height  = height
-        self.icon    = icon
-        self.title   = title
+        self.width = width
+        self.height = height
+        self.icon = icon
+        self.title = title
         self.YScroll = YScroll
         self.set_gui()
         
@@ -2185,8 +2185,8 @@ class ProgressBar:
             objs.get_mes(f,mes,True).show_error()
     
     def set_values(self):
-        self.items  = []
-        self.item   = None
+        self.items = []
+        self.item = None
         self.border = 80
     
     def set_frames(self):
@@ -2247,11 +2247,11 @@ class ProgressBar:
     
     def set_widgets(self):
         self.canvas = Canvas(parent = self.frm_sec)
-        self.label  = Label (parent = self.frm_sec
-                            ,text   = 'ProgressBar'
-                            ,expand = True
-                            ,fill   = 'both'
-                            )
+        self.label = Label (parent = self.frm_sec
+                           ,text   = 'ProgressBar'
+                           ,expand = True
+                           ,fill   = 'both'
+                           )
         self.canvas.embed(self.label)
         if self.YScroll:
             self.yscroll = Scrollbar (parent = self.frm_ver
@@ -2291,7 +2291,7 @@ class ProgressBarItem:
         self.parent = parent
         self.orient = orient
         self.length = length
-        self.mode   = mode
+        self.mode = mode
         self.set_gui()
         
     def set_gui(self):
@@ -2361,7 +2361,7 @@ class Image:
     def open(self,path):
         if lg.File(file=path).Success:
             self.loader = self.gui.get_loader(path)
-            self.image  = self.gui.get_image(self.loader)
+            self.image = self.gui.get_image(self.loader)
         return self.image
             
     def get_loader(self):
@@ -2415,15 +2415,15 @@ class Canvas:
                 ,width=None,height=None
                 ,fill='both'
                 ):
-        self.type   = 'Canvas'
+        self.type = 'Canvas'
         self.parent = parent
         self.expand = expand
-        self.side   = side
+        self.side = side
         self.region = region
-        self.width  = width
+        self.width = width
         self.height = height
-        self.fill   = fill
-        self.gui    = gi.Canvas(self.parent)
+        self.fill = fill
+        self.gui = gi.Canvas(self.parent)
         self.widget = self.gui.widget
         
     def move_left_corner(self,event=None):
@@ -2562,7 +2562,7 @@ class Clipboard:
             Tkinter to paste.
         '''
         self.Silent = Silent
-        self.gui    = gi.Clipboard()
+        self.gui = gi.Clipboard()
 
     def copy(self,text,CopyEmpty=True):
         f = '[shared] shared.Clipboard.copy'
@@ -2595,10 +2595,10 @@ class Clipboard:
 class SymbolMap:
 
     def __init__(self,items=(),title='',icon=''):
-        self.parent  = Top()
-        self.widget  = self.parent.widget
+        self.parent = Top()
+        self.widget = self.parent.widget
         self.frm_prm = None
-        self.gui     = gi.SymbolMap(self.parent)
+        self.gui = gi.SymbolMap(self.parent)
         self.set_bindings()
         self.reset (items = items
                    ,title = title
@@ -2678,19 +2678,19 @@ class OptionMenu:
                  ,font    = None
                  ,width   = None
                  ):
-        self.parent  = parent
-        self.items   = items
-        self.action  = action
+        self.parent = parent
+        self.items = items
+        self.action = action
         self.default = default
-        self.Combo   = Combo
-        self.side    = side
-        self.anchor  = anchor
-        self.expand  = expand
-        self.fill_   = fill
+        self.Combo = Combo
+        self.side = side
+        self.anchor = anchor
+        self.expand = expand
+        self.fill_ = fill
         # Take focus; must be 1/True to be operational from keyboard
-        self.tfocus  = tfocus
-        self.font    = font
-        self.width   = width
+        self.tfocus = tfocus
+        self.font = font
+        self.width = width
         
         self.gui = gi.OptionMenu (parent = self.parent
                                  ,Combo  = self.Combo
@@ -2744,7 +2744,7 @@ class OptionMenu:
                 no interaction with the widget.
             '''
             self.choice = self.items[0]
-            self.index  = 0
+            self.index = 0
 
     def set_default(self):
         f = '[shared] shared.OptionMenu.set_default'
@@ -2757,7 +2757,7 @@ class OptionMenu:
                     was no interaction with the widget.
                 '''
                 self.choice = self.default
-                self.index  = self.items.index(self.choice)
+                self.index = self.items.index(self.choice)
             else:
                 mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
                 mes = mes.format(self.default,self.items)
@@ -2785,8 +2785,8 @@ class OptionMenu:
               ,default=None,action=None
               ):
         self.choice = None
-        self.index  = 0
-        self.items  = items
+        self.index = 0
+        self.items = items
         if action:
             self.action = action
         self.convert2str()
@@ -2844,14 +2844,14 @@ class ListBox:
                 ,expand   = True
                 ,fill     = 'both'
                 ):
-        self.type     = 'ListBox'
-        self.state    = 'normal'
-        self.lst      = []
-        self.parent   = parent
+        self.type = 'ListBox'
+        self.state = 'normal'
+        self.lst = []
+        self.parent = parent
         self.Multiple = Multiple
-        self.expand   = expand
-        self.side     = side
-        self.fill_    = fill
+        self.expand = expand
+        self.side = side
+        self.fill_ = fill
         ''' 'action': A user-defined function that is run when
             pressing Up/Down arrow keys and LMB. There is a problem
             binding it externally, so we bind it here.
@@ -3044,19 +3044,19 @@ class ListBoxC:
                 ,width    = 300
                 ,height   = 350
                 ):
-        self.Save     = False
+        self.Save = False
         self.Multiple = Multiple
-        self.lst      = lst
-        self.action   = action
-        self.side     = side
-        self.expand   = expand
-        self.fill_    = fill
-        self.title    = title
-        self.icon     = icon
-        self.ScrollX  = ScrollX
-        self.ScrollY  = ScrollY
-        self.width    = width
-        self.height   = height
+        self.lst = lst
+        self.action = action
+        self.side = side
+        self.expand = expand
+        self.fill_ = fill
+        self.title = title
+        self.icon = icon
+        self.ScrollX = ScrollX
+        self.ScrollY = ScrollY
+        self.width = width
+        self.height = height
         self.set_gui()
     
     def set_bindings(self):
@@ -3211,10 +3211,10 @@ class ListBoxC:
 class Scrollbar:
     
     def __init__(self,parent,scroll,Horiz=False):
-        self.type   = 'Scrollbar'
+        self.type = 'Scrollbar'
         self.parent = parent
         self.scroll = scroll
-        self.Horiz  = Horiz
+        self.Horiz = Horiz
         self.gui = gi.Scrollbar (parent = self.parent
                                 ,scroll = self.scroll
                                 )
@@ -3244,13 +3244,13 @@ class Scrollbar:
 class ToolTipBase:
 
     def __init__(self,obj):
-        self.obj    = obj
+        self.obj = obj
         self.widget = self.obj.widget
-        self.gui    = gi.ToolTipBase(self.obj)
-        self.tip    = None
-        self.id     = None
-        self.x      = 0
-        self.y      = 0
+        self.gui = gi.ToolTipBase(self.obj)
+        self.tip = None
+        self.id = None
+        self.x = 0
+        self.y = 0
         self.set_bindings()
     
     def set_bindings(self):
@@ -3335,14 +3335,14 @@ class ToolTip(ToolTipBase):
                 ,bcolor='navy',font=FONT2
                 ):
         self.height = 0
-        self.width  = 0
-        self.text   = text
-        self.delay  = delay
-        self.dir    = hdir
-        self.bg     = bg
+        self.width = 0
+        self.text = text
+        self.delay = delay
+        self.dir = hdir
+        self.bg = bg
         self.bcolor = bcolor
         self.bwidth = bwidth
-        self.font   = font
+        self.font = font
         self.calc_hint()
         ToolTipBase.__init__(self,obj=obj)
 
@@ -3380,13 +3380,13 @@ class ToolTip(ToolTipBase):
 class WaitBox:
 
     def __init__(self,icon=''):
-        self.type   = 'WaitBox'
+        self.type = 'WaitBox'
         self.parent = Top (Lock   = False
                           ,AutoCr = True
                           ,icon   = icon
                           )
         self.widget = self.parent.widget
-        self.gui    = gi.WaitBox(self.parent)
+        self.gui = gi.WaitBox(self.parent)
         Geometry(self.parent).set('300x150')
         self.lbl_pls = Label (parent = self.parent
                              ,text   = _('Please wait...')
@@ -3467,30 +3467,30 @@ class Button:
                  ,Focus    = False
                  ,font     = None
                  ):
-        self.Status    = False
-        self.type      = 'Button'
-        self.parent    = parent
-        self.family    = 'Sans'
-        self.size      = 12
-        self.action    = action
-        self.bd        = bd
-        self.bg        = bg
-        self.bg_focus  = bg_focus
-        self.bindings  = bindings
-        self.expand    = expand
-        self.fg        = fg
-        self.fg_focus  = fg_focus
-        self.fill      = fill
-        self.font      = font
-        self.height    = height
-        self.hbg       = hbg
-        self.hdelay    = hdelay
-        self.hdir      = hdir
-        self.hint      = hint
-        self.side      = side
-        self.Focus     = Focus
-        self.text      = lg.com.sanitize(text)
-        self.width     = width
+        self.Status = False
+        self.type = 'Button'
+        self.parent = parent
+        self.family = 'Sans'
+        self.size = 12
+        self.action = action
+        self.bd = bd
+        self.bg = bg
+        self.bg_focus = bg_focus
+        self.bindings = bindings
+        self.expand = expand
+        self.fg = fg
+        self.fg_focus = fg_focus
+        self.fill = fill
+        self.font = font
+        self.height = height
+        self.hbg = hbg
+        self.hdelay = hdelay
+        self.hdir = hdir
+        self.hint = hint
+        self.side = side
+        self.Focus = Focus
+        self.text = lg.com.sanitize(text)
+        self.width = width
         if active:
             self.on_img = gi.com.get_image (path   = active
                                            ,width  = self.width
@@ -3601,7 +3601,7 @@ class Frame:
                  ,bd=None,bg=None,width=None
                  ,height=None,propag=True
                  ):
-        self.type   = 'Frame'
+        self.type = 'Frame'
         self.parent = parent
         self.gui = gi.Frame (parent = parent
                             ,expand = expand
@@ -3652,8 +3652,8 @@ class AttachWidget:
                  ,anchor='N'
                  ):
         self.set_values()
-        self.obj1   = obj1
-        self.obj2   = obj2
+        self.obj1 = obj1
+        self.obj2 = obj2
         self.anchor = anchor
         self.check()
         
@@ -3687,7 +3687,8 @@ class AttachWidget:
             com.rep_empty(f)
         if self.anchor not in self.anchors:
             self.Success = False
-            mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".').format(self.anchor,self.anchors)
+            mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
+            mes = mes.format(self.anchor,self.anchors)
             objs.get_mes(f,mes).show_error()
     
     def _set_ne(self):
@@ -3766,7 +3767,8 @@ class AttachWidget:
             elif self.anchor == 'WS':
                 self._set_ws()
             else:
-                mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".').format(self.anchor,self.anchors)
+                mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
+                mes = mes.format(self.anchor,self.anchors)
                 objs.get_mes(f,mes).show_error()
             geom = Geometry(parent=self.obj2)
             ''' Do not use '.format' here since it produces floats
@@ -3780,7 +3782,7 @@ class AttachWidget:
             com.cancel(f)
     
     def get(self):
-        f = '[shared] sharedGUI.AttachWidget.get'
+        f = '[shared] shared.AttachWidget.get'
         if self.Success:
             self.x1 = self.widget1.winfo_rootx()
             self.x2 = self.widget2.winfo_rootx()
@@ -3828,22 +3830,22 @@ class Label:
                  ,height=None,justify=None
                  ,padx=None,pady=None
                  ):
-        self.type   = 'Label'
+        self.type = 'Label'
         self.parent = parent
-        self.side   = side
-        self.fill   = fill
+        self.side = side
+        self.fill = fill
         self.expand = expand
-        self.text   = text
-        self.font   = font
-        self.ipadx  = ipadx
-        self.ipady  = ipady
-        self.padx   = padx
-        self.pady   = pady
-        self.image  = image
-        self.bg     = bg
-        self.fg     = fg
+        self.text = text
+        self.font = font
+        self.ipadx = ipadx
+        self.ipady = ipady
+        self.padx = padx
+        self.pady = pady
+        self.image = image
+        self.bg = bg
+        self.fg = fg
         self.anchor = anchor
-        self.width  = width
+        self.width = width
         self.height = height
         # Usually the alignment is done by tuning the parent
         self.justify = justify
@@ -3863,7 +3865,7 @@ class Label:
                             ,height  = self.height
                             ,justify = self.justify
                             )
-        self.widget  = self.gui.widget
+        self.widget = self.gui.widget
         self.set_text(self.text)
         self.set_font(self.font)
     
@@ -3930,10 +3932,10 @@ class Geometry:
     '''
     def __init__(self,parent=None,title=None,hwnd=None):
         self.parent = parent
-        self.title  = title
-        self.hwnd   = hwnd
-        self.geom   = None
-        self.gui    = gi.Geometry(parent)
+        self.title = title
+        self.hwnd = hwnd
+        self.geom = None
+        self.gui = gi.Geometry(parent)
 
     def update(self):
         self.gui.update()
@@ -3954,10 +3956,13 @@ class Geometry:
             if self.geom:
                 mes = _('Restore geometry: {}').format(self.geom)
                 objs.get_mes(f,mes,True).show_debug()
+                ''' In case of invalid geometry (e.g., too big values),
+                    we will have a BadAlloc (insufficient resources for
+                    operation) error, but we cannot catch it.
+                '''
                 self.gui.restore(self.geom)
             else:
-                mes = _('Failed to restore geometry!')
-                objs.get_mes(f,mes,True).show_warning()
+                com.rep_empty(f)
         else:
             com.rep_empty(f)
 
@@ -3965,15 +3970,9 @@ class Geometry:
         f = '[shared] shared.Geometry.set_foreground'
         if objs.get_os().is_win():
             if self.get_hwnd():
-                ''' 'pywintypes.error', but needs to import this for
-                    some reason
-                '''
                 try:
                     win32gui.SetForegroundWindow(self.hwnd)
                 except:
-                    ''' In Windows 'Message' can be raised foreground,
-                        so we just log it
-                    '''
                     mes = _('Failed to change window properties!')
                     objs.get_mes(f,mes,True).show_error()
             else:
@@ -4088,7 +4087,7 @@ class Top:
         '''
         self.set_values()
         self.AutoCr = AutoCr
-        self.gui    = gi.Top(Lock=Lock)
+        self.gui = gi.Top(Lock=Lock)
         self.widget = self.gui.widget
         if Maximize:
             Geometry(parent=self).maximize()
@@ -4242,13 +4241,13 @@ class MessageBuilder:
         if we specify a non-root parent).
     '''
     def __init__(self,level,Single=True,YesNo=False):
-        self.level  = level
+        self.level = level
         self.Single = Single
-        self.YesNo  = YesNo
-        self.logic  = lg.MessageBuilder(self.level)
+        self.YesNo = YesNo
+        self.logic = lg.MessageBuilder(self.level)
         self.parent = Top()
         self.widget = self.parent.widget
-        self.gui    = gi.MessageBuilder(self.parent)
+        self.gui = gi.MessageBuilder(self.parent)
         Geometry(parent=self.parent).set('400x250')
         self.set_frames()
         self.txt = TextBox(self.frm_tpr)
@@ -4296,10 +4295,10 @@ class MessageBuilder:
     def set_buttons(self):
         if self.YesNo:
             YesName = _('Yes')
-            NoName  = _('No')
+            NoName = _('No')
         else:
             YesName = 'OK'
-            NoName  = _('Cancel')
+            NoName = _('Cancel')
         if self.Single:
             self.btn_yes = Button (parent = self.frm_btl
                                   ,action = self.close_yes
@@ -4309,12 +4308,12 @@ class MessageBuilder:
                                   ,side   = 'right'
                                   )
         else:
-            self.btn_no  = Button (parent = self.frm_btl
-                                  ,action = self.close_no
-                                  ,hint   = _('Reject and close')
-                                  ,text   = NoName
-                                  ,side   = 'left'
-                                  )
+            self.btn_no = Button (parent = self.frm_btl
+                                 ,action = self.close_no
+                                 ,hint   = _('Reject and close')
+                                 ,text   = NoName
+                                 ,side   = 'left'
+                                 )
             self.btn_yes = Button (parent = self.frm_btr
                                   ,action = self.close_yes
                                   ,hint   = _('Accept and close')
@@ -4378,9 +4377,9 @@ class MessageBuilder:
 class Message:
 
     def __init__(self,func,message,Silent=False):
-        self.func    = func
+        self.func = func
         self.message = message
-        self.Silent  = Silent
+        self.Silent = Silent
 
     def show_debug(self):
         if GUI_MES and not self.Silent:
@@ -4565,8 +4564,8 @@ class Commands(lg.Commands):
 class Font:
     
     def __init__(self,name,xborder=20,yborder=20):
-        self.font  = None
-        self.gui   = gi.Font()
+        self.font = None
+        self.gui = gi.Font()
         self.logic = lg.Font (name    = name
                              ,xborder = xborder
                              ,yborder = yborder
@@ -4625,7 +4624,7 @@ class Font:
         return self.logic.width
 
 
-com  = Commands()
+com = Commands()
 objs = Objects()
 # Use GUI dialogs for logic-only modules
 lg.objs.mes = Message
