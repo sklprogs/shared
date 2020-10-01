@@ -3656,6 +3656,7 @@ class AttachWidget:
         self.obj2 = obj2
         self.anchor = anchor
         self.check()
+        self.maxx, self.maxy = gi.objs.get_root().get_resolution()
         
     def set_values(self):
         self.anchors = ('N','NE','NW','E','EN','ES','S','SE','SW','W'
@@ -3781,6 +3782,28 @@ class AttachWidget:
         else:
             com.cancel(f)
     
+    def _limit_x(self,width):
+        f = '[shared] shared.AttachWidget._limit_x'
+        if width > self.maxx:
+            mes = _('Widget width ({}) should not exceed screen width ({})!')
+            mes = mes.format (com.set_figure_commas(width)
+                             ,com.set_figure_commas(self.maxx)
+                             )
+            objs.get_mes(f,mes,True).show_warning()
+            width = self.maxx
+        return width
+    
+    def _limit_y(self,height):
+        f = '[shared] shared.AttachWidget._limit_y'
+        if height > self.maxy:
+            mes = _('Widget height ({}) should not exceed screen height ({})!')
+            mes = mes.format (com.set_figure_commas(height)
+                             ,com.set_figure_commas(self.maxy)
+                             )
+            objs.get_mes(f,mes,True).show_warning()
+            height = self.maxy
+        return height
+    
     def get(self):
         f = '[shared] shared.AttachWidget.get'
         if self.Success:
@@ -3792,6 +3815,16 @@ class AttachWidget:
             self.w2 = self.widget2.winfo_width()
             self.h1 = self.widget1.winfo_height()
             self.h2 = self.widget2.winfo_height()
+            
+            self.x1 = self._limit_x(self.x1)
+            self.x2 = self._limit_x(self.x2)
+            self.y1 = self._limit_y(self.y1)
+            self.y2 = self._limit_y(self.y2)
+            self.w1 = self._limit_x(self.w1)
+            self.w2 = self._limit_x(self.w2)
+            self.h1 = self._limit_y(self.h1)
+            self.h2 = self._limit_y(self.h2)
+            
             mes = _('Widget 1 geometry: {}x{}+{}+{}').format (self.w1
                                                              ,self.h1
                                                              ,self.x1
@@ -3936,7 +3969,7 @@ class Geometry:
         self.hwnd = hwnd
         self.geom = None
         self.gui = gi.Geometry(parent)
-
+    
     def update(self):
         self.gui.update()
 
