@@ -10,13 +10,13 @@ class Record:
     ''' - This class is for both checking a regular expression and
           replacing matches through text (these actions require
           different arguments and are not necessarily interconnected).
+        - Expressions must be raw strings, otherwise, there will be
+          no match.
         - Example:
-          # Expressions must be raw strings, otherwise, there will be
-            no match
-          orig:       r'(\d+)[\s]{0,1}[–-][\s]{0,1}(\d+)'
-          final:      r'\1-\2'
-          what1:      'Figures 1 - 2 show that...'
-          with1:      'Figures 1-2 show that...'
+          orig : r'(\d+)[\s]{0,1}[–-][\s]{0,1}(\d+)'
+          final: r'\1-\2'
+          what1: 'Figures 1 - 2 show that...'
+          with1: 'Figures 1-2 show that...'
     '''
     def __init__(self,orig,final,what1=None
                 ,with1=None,what2=None,with2=None
