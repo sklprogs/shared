@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 01:57+0300\n"
-"PO-Revision-Date: 2020-10-02 01:58+0300\n"
+"POT-Creation-Date: 2020-10-06 02:42+0300\n"
+"PO-Revision-Date: 2020-10-06 02:43+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -757,7 +757,7 @@ msgstr "Ширина виджета ({}) не должна превышать ш
 
 #: shared.py:3799
 msgid "Widget height ({}) should not exceed screen height ({})!"
-msgstr "Длина виджета ({}) не должна превышать длины экрана ({})!"
+msgstr "Высота виджета ({}) не должна превышать высоту экрана ({})!"
 
 #: shared.py:3828
 msgid "Widget 1 geometry: {}x{}+{}+{}"
