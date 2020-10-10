@@ -2227,7 +2227,7 @@ class Path:
         if self.path:
             if os.path.exists(self.path):
                 try:
-                    istat  = os.statvfs(self.path)
+                    istat = os.statvfs(self.path)
                     result = istat.f_bavail * istat.f_bsize
                 except Exception as e:
                     mes = _('Operation has failed!\nDetails: {}')
@@ -2249,6 +2249,9 @@ class Path:
         if not self.basename:
             self.basename = os.path.basename(self.path)
         return self.basename
+    
+    def get_basename_low(self):
+        return self.get_basename().lower()
 
     # This will recursively (by design) create self.path
     def create(self):
