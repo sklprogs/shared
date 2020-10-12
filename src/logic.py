@@ -223,20 +223,21 @@ class FastTable:
                  ,headers=[],sep=' '
                  ,Transpose=False
                  ,maxrow=0,FromEnd=False
-                 ,maxrows=0
+                 ,maxrows=0,encloser=''
                  ):
         ''' #NOTE: In case of tuple, do not forget to add commas,
             e.g.: ((1,),).
         '''
-        self.Success   = True
-        self.lens      = []
-        self.lst       = iterable
-        self.sep       = sep
-        self.headers   = headers
+        self.encloser = encloser
+        self.FromEnd = FromEnd
+        self.headers = headers
+        self.lens = []
+        self.lst = iterable
+        self.maxrow = maxrow
+        self.maxrows = maxrows
+        self.sep = sep
+        self.Success = True
         self.Transpose = Transpose
-        self.FromEnd   = FromEnd
-        self.maxrow    = maxrow
-        self.maxrows   = maxrows
     
     def set_max_rows(self):
         f = '[shared] logic.FastTable.set_max_rows'
@@ -258,11 +259,32 @@ class FastTable:
                 mes = _('Set the max column width to {} symbols')
                 mes = mes.format(self.maxrow)
                 objs.get_mes(f,mes,True).show_debug()
+                if self.encloser:
+                    max_len = self.maxrow - len(self.encloser)
+                    if max_len < 0:
+                        max_len = 0
+                else:
+                    max_len = self.maxrow
                 for i in range(len(self.lst)):
                     for j in range(len(self.lst[i])):
-                        self.lst[i][j] = Text(str(self.lst[i][j])).shorten (max_len = self.maxrow
+                        self.lst[i][j] = Text(str(self.lst[i][j])).shorten (max_len = max_len
                                                                            ,FromEnd = self.FromEnd
                                                                            )
+        else:
+            com.cancel(f)
+    
+    def enclose(self):
+        ''' Passing 'encloser' in 'Text.shorten' is not enough since it
+            does not enclose items shorter than 'max_len'.
+        '''
+        f = '[shared] logic.FastTable.enclose'
+        if self.Success:
+            if self.enclose:
+                for i in range(len(self.lst)):
+                    j = 1
+                    while j < len(self.lst[i]):
+                        self.lst[i][j] = Text(self.lst[i][j]).enclose(self.encloser)
+                        j += 1
         else:
             com.cancel(f)
     
@@ -383,6 +405,7 @@ class FastTable:
         self.set_headers()
         self.set_max_rows()
         self.set_max_width()
+        self.enclose()
         self.add_gap()
         self.get_lens()
         return self.report()
@@ -786,10 +809,10 @@ class Launch:
     def __init__(self,target='',Block=False):
         self.set_values()
         self.target = target
-        self.Block  = Block
+        self.Block = Block
         # Do not shorten, Path is used further
-        self.ipath  = Path(self.target)
-        self.ext    = self.ipath.get_ext().lower()
+        self.ipath = Path(self.target)
+        self.ext = self.ipath.get_ext().lower()
         ''' We do not use the File class because the target can be a
             directory.
         '''
@@ -1619,12 +1642,12 @@ class Text:
         return self.text
     
     # Shorten a string up to a max length
-    def shorten (self,max_len=10,Enclose=False
-                ,FromEnd=False,ShowGap=True,sym='"'
+    def shorten (self,max_len=10,FromEnd=False
+                ,ShowGap=True,encloser=''
                 ):
         if len(self.text) > max_len:
-            if Enclose:
-                enc_len = 2 * len(sym)
+            if encloser:
+                enc_len = 2 * len(encloser)
                 if max_len > enc_len:
                     max_len -= enc_len
             if ShowGap:
@@ -1639,8 +1662,8 @@ class Text:
                 self.text = gap + self.text[len(self.text)-max_len:]
             else:
                 self.text = self.text[0:max_len] + gap
-        if Enclose:
-            self.enclose(sym=sym)
+        if encloser:
+            self.enclose(encloser)
         return self.text
         
     def grow(self,max_len=20,FromEnd=False,sym=' '):
@@ -4503,9 +4526,9 @@ class Table:
                  ):
         f = '[shared] logic.Table.__init__'
         self.headers = headers
-        self.rows    = rows
+        self.rows = rows
         self.Shorten = Shorten
-        self.MaxRow  = MaxRow
+        self.MaxRow = MaxRow
         self.MaxRows = MaxRows
         if self.headers and self.rows:
             self.Success = True
@@ -4581,8 +4604,8 @@ class FixBaseName:
         a separator and not an illegal character.
     '''
     def __init__(self,basename,AllOS=False,max_len=0):
-        self.AllOS   = AllOS
-        self.name    = basename
+        self.AllOS = AllOS
+        self.name = basename
         self.max_len = max_len
         
     def set_length(self):
@@ -4640,12 +4663,12 @@ class Get:
                  ,Verbose=True,Verify=False
                  ,timeout=6
                  ):
-        self.html    = ''
+        self.html = ''
         self.timeout = timeout
-        self.url     = url
-        self.coding  = coding
+        self.url = url
+        self.coding = coding
         self.Verbose = Verbose
-        self.Verify  = Verify
+        self.Verify = Verify
         self.use_unverified()
     
     def read(self):
