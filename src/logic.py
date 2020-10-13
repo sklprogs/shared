@@ -926,6 +926,7 @@ class WriteTextFile:
                 self.Success = False
                 mes = _('Unable to write file "{}"!').format(self.file)
                 objs.get_mes(f,mes).show_error()
+            return self.Success
         else:
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(mode,'a, w')
@@ -955,7 +956,7 @@ class WriteTextFile:
                 if com.rewrite (file    = self.file
                                ,Rewrite = self.Rewrite
                                ):
-                    self._write('w')
+                    return self._write('w')
             else:
                 mes = _('Not enough input data!')
                 objs.get_mes(f,mes).show_warning()
