@@ -2853,7 +2853,14 @@ class Directory:
         f = '[shared] logic.Directory.get_list'
         if self.Success:
             if not self.lst:
-                self.lst = os.listdir(self.dir)
+                try:
+                    self.lst = os.listdir(self.dir)
+                except Exception as e:
+                    # We can encounter, e.g., PermissionError here
+                    self.Success = False
+                    mes = _('Operation has failed!\nDetails: {}')
+                    mes = mes.format(e)
+                    objs.get_mes(f,mes).show_error()
                 self.lst.sort(key=lambda x: x.lower())
                 self.rellist = list(self.lst)
                 for i in range(len(self.lst)):
