@@ -1253,6 +1253,16 @@ class TextBox:
                                 )
         self.set_gui()
 
+    def get_index(self,mark,event=None):
+        f = '[shared] shared.TextBox.get_index'
+        if mark:
+            try:
+                return self.gui.get_index(mark)
+            except Exception as e:
+                com.rep_failed(f,e)
+        else:
+            com.rep_empty(f)
+    
     def clear_marks(self,event=None):
         for mark in self.gui.get_marks():
             self.mark_remove(mark)
@@ -1329,6 +1339,9 @@ class TextBox:
             self.search.reset(self.words)
 
     def set_bindings(self):
+        ''' #cur #TODO: Move Ctrl-F, Ctrl-F3, F3 and Shift-F bindings
+            to SearchBox.
+        '''
         com.bind (obj      = self.gui
                  ,bindings = ('<Control-f>','<Control-F3>')
                  ,action   = self.search.get_new
@@ -1566,6 +1579,15 @@ class TextBox:
         f = '[shared] shared.TextBox.get_cursor'
         try:
             self.pos = self.gui.get_cursor()
+        except Exception as e:
+            self.pos = '1.0'
+            com.rep_failed(f,e)
+        return self.pos
+    
+    def get_pointer(self,event=None):
+        f = '[shared] shared.TextBox.get_pointer'
+        try:
+            self.pos = self.gui.get_pointer()
         except Exception as e:
             self.pos = '1.0'
             com.rep_failed(f,e)
