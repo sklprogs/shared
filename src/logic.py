@@ -37,31 +37,31 @@ globs = {'int':{},'bool':{},'var':{}}
 
 nbspace = ' '
 
-ru_alphabet        = '№АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЫЪЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщыъьэюя'
+ru_alphabet = '№АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЫЪЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщыъьэюя'
 # Some vowels are put at the start for the faster search
-ru_alphabet_low    = 'аеиоубявгдёжзйклмнпрстфхцчшщыъьэю№'
-lat_alphabet       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-lat_alphabet_low   = 'abcdefghijklmnopqrstuvwxyz'
-greek_alphabet     = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω'
+ru_alphabet_low = 'аеиоубявгдёжзйклмнпрстфхцчшщыъьэю№'
+lat_alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+lat_alphabet_low = 'abcdefghijklmnopqrstuvwxyz'
+greek_alphabet = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω'
 greek_alphabet_low = 'αβγδεζηθικλμνξοπρστυφχψω'
-other_alphabet     = 'ÀÁÂÆÇÈÉÊÑÒÓÔÖŒÙÚÛÜàáâæßçèéêñòóôöœùúûü'
+other_alphabet = 'ÀÁÂÆÇÈÉÊÑÒÓÔÖŒÙÚÛÜàáâæßçèéêñòóôöœùúûü'
 other_alphabet_low = 'àáâæßçèéêñòóôöœùúûü'
-digits             = '0123456789'
+digits = '0123456789'
 
-punc_array      = ['.',',','!','?',':',';']
+punc_array = ['.',',','!','?',':',';']
 #TODO: why there were no opening brackets?
 #punc_ext_array = ['"','”','»',']','}',')']
-punc_ext_array  = ['"','“','”','','«','»','[',']'
-                  ,'{','}','(',')','’',"'",'*'
-                  ]
+punc_ext_array = ['"','“','”','','«','»','[',']'
+                 ,'{','}','(',')','’',"'",'*'
+                 ]
 
 forbidden_win = '/\?%*:|"<>'
 forbidden_lin = '/'
 forbidden_mac = '/\?*:|"<>'
-reserved_win  = ['CON','PRN','AUX','NUL','COM1','COM2','COM3','COM4'
-                ,'COM5','COM6','COM7','COM8','COM9','LPT1','LPT2','LPT3'
-                ,'LPT4','LPT5','LPT6','LPT7','LPT8','LPT9'
-                ]
+reserved_win = ['CON','PRN','AUX','NUL','COM1','COM2','COM3','COM4'
+               ,'COM5','COM6','COM7','COM8','COM9','LPT1','LPT2','LPT3'
+               ,'LPT4','LPT5','LPT6','LPT7','LPT8','LPT9'
+               ]
 
 
 class Section:
@@ -1755,6 +1755,11 @@ class Text:
         self.text = ''.join([x for x in self.text if x.isalnum()])
         return self.text
         
+    def has_greek(self):
+        for sym in self.text:
+            if sym in greek_alphabet:
+                return True
+    
     def has_latin(self):
         for sym in self.text:
             if sym in lat_alphabet:
