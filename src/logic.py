@@ -1601,10 +1601,10 @@ class Text:
         return self.text
 
     def delete_punctuation(self):
-        for i in range(len(punc_array)):
-            self.text = self.text.replace(punc_array[i],'')
-        for i in range(len(punc_ext_array)):
-            self.text = self.text.replace(punc_ext_array[i],'')
+        for sym in punc_array:
+            self.text = self.text.replace(sym,'')
+        for sym in punc_ext_array:
+            self.text = self.text.replace(sym,'')
         return self.text
 
     def delete_space_with_punctuation(self):
