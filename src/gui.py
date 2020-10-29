@@ -184,7 +184,7 @@ class TextBox:
                         ,pos2 = pos2
                         )
     
-    def get(self,event=None,pos1='1.0',pos2='end'):
+    def get(self,pos1='1.0',pos2='end',event=None):
         return self.widget.get(pos1,pos2)
     
     def disable(self,event=None):

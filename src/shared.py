@@ -1247,10 +1247,13 @@ class TextBox:
         self.select = Selection (itxt  = self
                                 ,words = self.words
                                 )
+        #cur #TODO: del
+        '''
         self.search = SearchBox (obj   = self
                                 ,words = self.words
                                 ,icon  = icon
                                 )
+        '''
         self.set_gui()
 
     def get_index(self,mark,event=None):
@@ -1341,7 +1344,6 @@ class TextBox:
     def set_bindings(self):
         ''' #cur #TODO: Move Ctrl-F, Ctrl-F3, F3 and Shift-F bindings
             to SearchBox.
-        '''
         com.bind (obj      = self.gui
                  ,bindings = ('<Control-f>','<Control-F3>')
                  ,action   = self.search.get_new
@@ -1354,6 +1356,7 @@ class TextBox:
                  ,bindings = '<Shift-F3>'
                  ,action   = self.search.get_prev
                  )
+        '''
         # Custom selection
         com.bind (obj      = self.gui
                  ,bindings = '<Control-a>'
@@ -1390,15 +1393,15 @@ class TextBox:
             com.rep_empty(f)
         return 'break'
 
-    def _get(self):
+    def _get(self,pos1='1.0',pos2='end'):
         f = '[shared] shared.TextBox._get'
         try:
-            return self.gui.get()
+            return self.gui.get(pos1,pos2)
         except Exception as e:
             com.rep_failed(f,e)
 
-    def get(self,Strip=True):
-        result = self._get()
+    def get(self,pos1='1.0',pos2='end',Strip=True):
+        result = self._get(pos1,pos2)
         if result:
             if Strip:
                 return result.strip()
