@@ -247,13 +247,6 @@ class ReadTextFile(lg.ReadTextFile):
 
 
 
-class References(lg.References):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
 class Search(lg.Search):
     
     def __init__(self,*args,**kwargs):
@@ -303,13 +296,6 @@ class Timer(lg.Timer):
 
 
 
-class Words(lg.Words):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
 class WriteBinary(lg.WriteBinary):
     
     def __init__(self,*args,**kwargs):
@@ -321,471 +307,6 @@ class WriteTextFile(lg.WriteTextFile):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-
-
-
-class Panes:
-    
-    def __init__ (self,bg='old lace'
-                 ,Extended=False,words1=None
-                 ,words2=None,words3=None
-                 ,words4=None
-                 ):
-        self.bg = bg
-        self.Extend = Extended
-        self.set_gui()
-        if words1 and words2:
-            self.reset (words1 = words1
-                       ,words2 = words2
-                       ,words3 = words3
-                       ,words4 = words4
-                       )
-        
-    def set_frames(self):
-        self.frm_prm = Frame (parent = self.parent)
-        self.frm_top = Frame (parent = self.frm_prm
-                             ,side   = 'top'
-                             )
-        self.frm_btm = Frame (parent = self.frm_prm
-                             ,side   = 'bottom'
-                             )
-        self.frm_pn1 = Frame (parent = self.frm_top
-                             ,side   = 'left'
-                             ,propag = False
-                             ,height = 1
-                             )
-        self.frm_pn2 = Frame (parent = self.frm_top
-                             ,side   = 'right'
-                             ,propag = False
-                             ,height = 1
-                             )
-        if self.Extend:
-            self.frm_pn3 = Frame (parent = self.frm_btm
-                                 ,side   = 'left'
-                                 ,propag = False
-                                 ,height = 1
-                                 )
-            self.frm_pn4 = Frame (parent = self.frm_btm
-                                 ,side   = 'right'
-                                 ,propag = False
-                                 ,height = 1
-                                 )
-
-    def set_panes(self):
-        self.pane1 = TextBox(self.frm_pn1)
-        self.pane2 = TextBox(self.frm_pn2)
-        if self.Extend:
-            self.pane3 = TextBox(self.frm_pn3)
-            self.pane4 = TextBox(self.frm_pn4)
-    
-    def set_gui(self):
-        icon = lg.objs.get_pdir().add ('..','resources'
-                                      ,'icon_64x64_cpt.gif'
-                                      )
-        self.parent = Top (icon     = icon
-                          ,title    = _('Compare texts:')
-                          ,Maximize = True
-                          )
-        self.widget = self.parent.widget
-        self.set_frames()
-        self.set_panes()
-        self.pane1.focus()
-        if self.Extend:
-            pane3 = self.pane3
-            pane4 = self.pane4
-        else:
-            pane3, pane4 = None, None
-        self.gui = gi.Panes (parent = self.parent
-                            ,pane1  = self.pane1
-                            ,pane2  = self.pane2
-                            ,pane3  = pane3
-                            ,pane4  = pane4
-                            )
-        if self.Extend:
-            self.gui.config_pane1(bg=self.bg)
-        self.set_bindings()
-        
-    def set_title(self,text):
-        if not text:
-            text = _('Compare texts:')
-        self.gui.set_title(text)
-        
-    def show(self,event=None):
-        self.gui.show()
-        
-    def close(self,event=None):
-        self.gui.close()
-        
-    def set_bindings(self):
-        ''' - We do not bind 'select1' to 'pane1' and 'select2' to
-              'pane3' since we need to further synchronize references
-              by LMB anyway, and this further binding will rewrite
-              the current binding.
-            - We do not use 'Control' for bindings. If we use it,
-              Tkinter will execute its internal bindings for
-              '<Control-Down/Up>' and '<Control-Left/Right>' before
-              executing our own. Even though we can return 'break'
-              in 'select1'-4, we should not do that because we need
-              internal bindings for '<Control-Left>' and
-              '<Control-Right>'. Thus, we should not use 'Control' at
-              all because we cannot replace 'Alt' with 'Control'
-              for all actions.
-        '''
-        com.bind (obj      = self.gui
-                 ,bindings = ('<Control-q>','<Control-w>')
-                 ,action   = self.close
-                 )
-        com.bind (obj      = self.gui
-                 ,bindings = '<Escape>'
-                 ,action   = Geometry(parent=self.gui).minimize
-                 )
-        com.bind (obj      = self.gui
-                 ,bindings = ('<Alt-Key-1>','<Control-Key-1>')
-                 ,action   = self.select1
-                 )
-        com.bind (obj      = self.gui
-                 ,bindings = ('<Alt-Key-2>','<Control-Key-2>')
-                 ,action   = self.select2
-                 )
-        com.bind (obj      = self.pane1
-                 ,bindings = '<ButtonRelease-1>'
-                 ,action   = self.select1
-                 )
-        com.bind (obj      = self.pane2
-                 ,bindings = '<ButtonRelease-1>'
-                 ,action   = self.select2
-                 )
-        com.bind (obj      = self.pane1
-                 ,bindings = '<Alt-Right>'
-                 ,action   = self.select2
-                 )
-        com.bind (obj      = self.pane2
-                 ,bindings = '<Alt-Left>'
-                 ,action   = self.select1
-                 )
-        if self.Extend:
-            com.bind (obj      = self.gui
-                     ,bindings = ('<Alt-Key-3>','<Control-Key-3>')
-                     ,action   = self.select3
-                     )
-            com.bind (obj      = self.gui
-                     ,bindings = ('<Alt-Key-4>','<Control-Key-4>')
-                     ,action   = self.select4
-                     )
-            com.bind (obj      = self.pane3
-                     ,bindings = '<ButtonRelease-1>'
-                     ,action   = self.select3
-                     )
-            com.bind (obj      = self.pane4
-                     ,bindings = '<ButtonRelease-1>'
-                     ,action   = self.select4
-                     )
-            com.bind (obj      = self.pane2
-                     ,bindings = '<Alt-Right>'
-                     ,action   = self.select3
-                     )
-            com.bind (obj      = self.pane3
-                     ,bindings = '<Alt-Right>'
-                     ,action   = self.select4
-                     )
-            com.bind (obj      = self.pane3
-                     ,bindings = '<Alt-Left>'
-                     ,action   = self.select2
-                     )
-            com.bind (obj      = self.pane4
-                     ,bindings = '<Alt-Left>'
-                     ,action   = self.select3
-                     )
-            com.bind (obj      = self.pane1
-                     ,bindings = '<Alt-Down>'
-                     ,action   = self.select3
-                     )
-            com.bind (obj      = self.pane2
-                     ,bindings = '<Alt-Down>'
-                     ,action   = self.select4
-                     )
-            com.bind (obj      = self.pane3
-                     ,bindings = '<Alt-Up>'
-                     ,action   = self.select1
-                     )
-            com.bind (obj      = self.pane4
-                     ,bindings = '<Alt-Up>'
-                     ,action   = self.select2
-                     )
-        else:
-            com.bind (obj      = self.pane1
-                     ,bindings = '<Alt-Down>'
-                     ,action   = self.select2
-                     )
-            com.bind (obj      = self.pane2
-                     ,bindings = '<Alt-Up>'
-                     ,action   = self.select1
-                     )
-             
-    def decolorize(self):
-        self.gui.config_pane1(bg='white')
-        self.gui.config_pane2(bg='white')
-        if self.Extend:
-            self.gui.config_pane3(bg='white')
-            self.gui.config_pane4(bg='white')
-    
-    def select1(self,event=None):
-        # Without this the search doesn't work (the pane is inactive)
-        self.pane1.focus()
-        if self.Extend:
-            self.decolorize()
-            self.gui.config_pane1(bg=self.bg)
-        
-    def select2(self,event=None):
-        # Without this the search doesn't work (the pane is inactive)
-        self.pane2.focus()
-        if self.Extend:
-            self.decolorize()
-            self.gui.config_pane2(bg=self.bg)
-        
-    def select3(self,event=None):
-        # Without this the search doesn't work (the pane is inactive)
-        self.pane3.focus()
-        self.decolorize()
-        self.gui.config_pane3(bg=self.bg)
-        
-    def select4(self,event=None):
-        # Without this the search doesn't work (the pane is inactive)
-        self.pane4.focus()
-        self.decolorize()
-        self.gui.config_pane4(bg=self.bg)
-        
-    def set_icon(self,path=None):
-        if path:
-            self.gui.set_icon(path)
-        else:
-            self.gui.set_icon (lg.objs.get_pdir().add ('..','resources'
-                                                      ,'icon_64x64_cpt.gif'
-                                                      )
-                              )
-                          
-    def reset(self,words1,words2,words3=None,words4=None):
-        self.pane1.reset(words=words1)
-        self.pane2.reset(words=words2)
-        if self.Extend:
-            self.pane3.reset(words=words3)
-            self.pane4.reset(words=words4)
-            self.select1()
-
-
-
-class SearchBox:
-    ''' #NOTE: if duplicate spaces/line breaks are not deleted,
-        text with and without punctuation will have a different number
-        of words; thus, 'tkinter' will be supplied wrong positions upon
-        Search. However, preserving extra spaces/line breaks causes
-        the 'Words' algorithm to be much slower.
-    '''
-    def __init__ (self,obj,words=None
-                 ,Strict=False,icon=''
-                 ):
-        self.type   = 'SearchBox'
-        self.obj    = obj
-        self.words  = words
-        self.parent = self.obj.parent
-        ''' We bind 'SearchBox' to a simple 'TextBox', so we don't have
-            an icon yet.
-        '''
-        self.ientry = EntryC (title = _('Find:')
-                             ,icon  = icon
-                             )
-        self.isel = obj.select
-        self.reset (words  = self.words
-                   ,Strict = Strict
-                   )
-        self.ientry.close()
-
-    def reset(self,words=None,Strict=False):
-        self.reset_logic (words  = words
-                         ,Strict = Strict
-                         )
-    
-    # Strict: case-sensitive, with punctuation
-    def reset_logic(self,words=None,Strict=False):
-        self.Success = True
-        self.prevloop = self.nextloop = self.pattern = self.pos1 \
-                      = self.pos2 = self.text = None
-        self.i = 0
-        self.words = words
-        self.Strict = Strict
-        if self.words:
-            # Do not get text from the widget - it's not packed yet
-            if self.Strict:
-                self.text = self.words.textp
-            else:
-                self.text = self.words.textn
-            self.isel.reset(words=self.words)
-            self.isearch = lg.Search(text=self.text)
-        else:
-            self.Success = False
-
-    def reset_data(self):
-        f = '[shared] shared.SearchBox.reset_data'
-        self.Success = True
-        self.prevloop = self.nextloop = self.pattern = self.pos1 \
-                      = self.pos2 = None
-        self.i = 0
-        self.search()
-        if self.text and self.pattern:
-            self.isearch.reset (text    = self.text
-                               ,pattern = self.pattern
-                               )
-            self.isearch.get_next_loop()
-            # Prevents from calling self.search() once again
-            if not self.isearch.nextloop:
-                mes = _('No matches!')
-                objs.get_mes(f,mes).show_info()
-                self.Success = False
-        else:
-            self.Success = False
-            com.cancel(f)
-
-    def get_loop(self):
-        f = '[shared] shared.SearchBox.get_loop'
-        if self.Success:
-            if not self.isearch.nextloop:
-                self.reset()
-        else:
-            com.cancel(f)
-        return self.isearch.nextloop
-
-    def add(self):
-        f = '[shared] shared.SearchBox.add'
-        if self.Success:
-            if self.i < len(self.get_loop()) - 1:
-                self.i += 1
-        else:
-            com.cancel(f)
-
-    def subtract(self):
-        f = '[shared] shared.SearchBox.subtract'
-        if self.Success:
-            if self.i > 0:
-                self.i -= 1
-        else:
-            com.cancel(f)
-
-    def get_new(self,event=None):
-        self.reset_data()
-        self.get_next()
-
-    def select(self):
-        f = '[shared] shared.SearchBox.select'
-        if self.Success:
-            if self.Strict:
-                result1 = self.words.get_no_by_pos_p(pos=self.get_pos1())
-                result2 = self.words.get_no_by_pos_p(pos=self.get_pos2())
-            else:
-                result1 = self.words.get_no_by_pos_n(pos=self.get_pos1())
-                result2 = self.words.get_no_by_pos_n(pos=self.get_pos2())
-            if result1 is None or result2 is None:
-                mes = _('Wrong input data!')
-                objs.get_mes(f,mes,True).show_error()
-            else:
-                pos1 = self.words.words[result1].get_tf()
-                pos2 = self.words.words[result2].get_tl()
-                self.isel.reset (pos1 = pos1
-                                ,pos2 = pos2
-                                ,bg   = 'green2'
-                                )
-                self.isel.set()
-        else:
-            com.cancel(f)
-
-    def search(self):
-        f = '[shared] shared.SearchBox.search'
-        if self.Success:
-            if self.words:
-                if not self.pattern:
-                    self.ientry.focus()
-                    self.ientry.select_all()
-                    self.ientry.show()
-                    self.pattern = self.ientry.get()
-                    if self.pattern and not self.Strict:
-                        self.pattern = lg.Text (text = self.pattern
-                                               ,Auto = False
-                                               ).delete_punctuation()
-                        self.pattern = lg.Text (text = self.pattern
-                                               ,Auto = False
-                                               ).delete_duplicate_spaces()
-                        self.pattern = self.pattern.lower()
-            else:
-                com.rep_empty(f)
-            return self.pattern
-        else:
-            com.cancel(f)
-
-    def get_next(self,event=None):
-        f = '[shared] shared.SearchBox.get_next'
-        if self.Success:
-            loop = self.get_loop()
-            if loop:
-                old_i = self.i
-                self.add()
-                if old_i == self.i:
-                    if len(loop) == 1:
-                        mes = _('Only one match has been found!')
-                        objs.get_mes(f,mes).show_info()
-                    else:
-                        self.i = 0
-                        mes = _('No more matches, continuing from the top!')
-                        objs.get_mes(f,mes).show_info()
-                self.select()
-            else:
-                mes = _('No matches!')
-                objs.get_mes(f,mes).show_info()
-        else:
-            com.cancel(f)
-
-    def get_prev(self,event=None):
-        f = '[shared] shared.SearchBox.get_prev'
-        if self.Success:
-            loop = self.get_loop()
-            if loop:
-                old_i = self.i
-                self.subtract()
-                if old_i == self.i:
-                    if len(loop) == 1:
-                        mes = _('Only one match has been found!')
-                        objs.get_mes(f,mes).show_info()
-                    else:
-                        # Not just -1
-                        self.i = len(loop) - 1
-                        mes = _('No more matches, continuing from the bottom!')
-                        objs.get_mes(f,mes).show_info()
-                self.select()
-            else:
-                mes = _('No matches!')
-                objs.get_mes(f,mes).show_info()
-        else:
-            com.cancel(f)
-
-    def get_pos1(self):
-        f = '[shared] shared.SearchBox.get_pos1'
-        if self.Success:
-            if self.pos1 is None:
-                self.get_loop()
-                self.i = 0
-            loop = self.get_loop()
-            if loop:
-                self.pos1 = loop[self.i]
-            return self.pos1
-        else:
-            com.cancel(f)
-
-    def get_pos2(self):
-        f = '[shared] shared.SearchBox.get_pos2'
-        if self.Success:
-            if self.get_pos1() is not None:
-                self.pos2 = self.pos1 + len(self.search())
-            return self.pos2
-        else:
-            com.cancel(f)
 
 
 
@@ -1247,14 +768,37 @@ class TextBox:
         self.select = Selection (itxt  = self
                                 ,words = self.words
                                 )
-        #cur #TODO: del
-        '''
-        self.search = SearchBox (obj   = self
-                                ,words = self.words
-                                ,icon  = icon
-                                )
-        '''
         self.set_gui()
+    
+    def search (self,pattern,start='1.0'
+               ,end='end',Case=True
+               ,Forward=True
+               ):
+        f = '[shared] shared.TextBox.search'
+        if start and end:
+            if Forward:
+                forwards = True
+                backwards = None
+            else:
+                forwards = None
+                backwards = True
+            try:
+                pos = self.gui.widget.search (pattern = pattern
+                                             ,index = start
+                                             ,stopindex = end
+                                             ,nocase = not Case
+                                             ,forwards = forwards
+                                             ,backwards = backwards
+                                             )
+                mes = '"{}"'.format(pos)
+                objs.get_mes(f,mes,True).show_debug()
+                return pos
+            except Exception as e:
+                mes = _('Operation has failed!\n\nDetails: {}')
+                mes = mes.format(e)
+                objs.get_mes(f,mes).show_error()
+        else:
+            com.rep_empty(f)
 
     def get_index(self,mark,event=None):
         f = '[shared] shared.TextBox.get_index'
@@ -1338,25 +882,8 @@ class TextBox:
         self.clear_marks()
         if words:
             self.words = words
-            # Selection is reset in 'SearchBox.reset'
-            self.search.reset(self.words)
 
     def set_bindings(self):
-        ''' #cur #TODO: Move Ctrl-F, Ctrl-F3, F3 and Shift-F bindings
-            to SearchBox.
-        com.bind (obj      = self.gui
-                 ,bindings = ('<Control-f>','<Control-F3>')
-                 ,action   = self.search.get_new
-                 )
-        com.bind (obj      = self.gui
-                 ,bindings = '<F3>'
-                 ,action   = self.search.get_next
-                 )
-        com.bind (obj      = self.gui
-                 ,bindings = '<Shift-F3>'
-                 ,action   = self.search.get_prev
-                 )
-        '''
         # Custom selection
         com.bind (obj      = self.gui
                  ,bindings = '<Control-a>'
@@ -1482,24 +1009,27 @@ class TextBox:
                 ,pos2='end',DelPrev=True
                 ):
         f = '[shared] shared.TextBox.tag_add'
-        if DelPrev:
-            self.tag_remove(tag)
-        try:
-            self.gui.tag_add (tag  = tag
-                             ,pos1 = pos1
-                             ,pos2 = pos2
-                             )
-        except Exception as e:
-            com.rep_failed(f,e)
+        if tag and pos1 and pos2:
+            if DelPrev:
+                self.tag_remove(tag)
+            try:
+                self.gui.tag_add (tag  = tag
+                                 ,pos1 = pos1
+                                 ,pos2 = pos2
+                                 )
+            except Exception as e:
+                com.rep_failed(f,e)
+        else:
+            com.rep_empty(f)
 
     def tag_config (self,tag='sel',bg=None
                    ,fg=None,font=None
                    ):
         f = '[shared] shared.TextBox.tag_config'
         try:
-            self.gui.tag_config (tag  = tag
-                                ,bg   = bg
-                                ,fg   = fg
+            self.gui.tag_config (tag = tag
+                                ,bg = bg
+                                ,fg = fg
                                 ,font = font
                                 )
         except Exception as e:
@@ -4680,6 +4210,951 @@ class Font:
             else:
                 com.rep_empty(f)
         return self.logic.width
+
+
+
+class Panes:
+    
+    def __init__ (self,bg='old lace'
+                 ,text1='',text2=''
+                 ,text3='',text4=''
+                 ):
+        self.bg = bg
+        if text3 and text4:
+            self.Extend = True
+        else:
+            self.Extend = False
+        self.set_gui()
+        self.cpane = self.pane1
+        self.reset (text1 = text1
+                   ,text2 = text2
+                   ,text3 = text3
+                   ,text4 = text4
+                   )
+    
+    def search_prev_auto(self,event=None):
+        self.cpane.run_search_prev()
+    
+    def search_next_auto(self,event=None):
+        self.cpane.run_search_next()
+    
+    def run_new_auto(self,event=None):
+        self.cpane.run_new_now()
+    
+    def synchronize1(self,event=None):
+        f = '[shared] shared.Panes.synchronize1'
+        self.select1()
+        self.pane1.select_ref()
+        result = self.pane1.get_ref_index()
+        self.pane2.select_ref2(result)
+    
+    def synchronize3(self,event=None):
+        self.select3()
+        self.pane3.select_ref()
+        result = self.pane3.get_ref_index()
+        self.pane4.select_ref2(result)
+    
+    def set_frames(self):
+        self.frm_prm = Frame (parent = self.parent)
+        self.frm_top = Frame (parent = self.frm_prm
+                             ,side = 'top'
+                             )
+        self.frm_btm = Frame (parent = self.frm_prm
+                             ,side = 'bottom'
+                             )
+        self.frm_pn1 = Frame (parent = self.frm_top
+                             ,side = 'left'
+                             ,propag = False
+                             ,height = 1
+                             )
+        self.frm_pn2 = Frame (parent = self.frm_top
+                             ,side = 'right'
+                             ,propag = False
+                             ,height = 1
+                             )
+        if self.Extend:
+            self.frm_pn3 = Frame (parent = self.frm_btm
+                                 ,side = 'left'
+                                 ,propag = False
+                                 ,height = 1
+                                 )
+            self.frm_pn4 = Frame (parent = self.frm_btm
+                                 ,side = 'right'
+                                 ,propag = False
+                                 ,height = 1
+                                 )
+
+    def set_panes(self):
+        self.pane1 = Reference(self.frm_pn1)
+        self.pane2 = Reference(self.frm_pn2)
+        if self.Extend:
+            self.pane3 = Reference(self.frm_pn3)
+            self.pane4 = Reference(self.frm_pn4)
+    
+    def set_gui(self):
+        icon = lg.objs.get_pdir().add ('..','resources'
+                                      ,'icon_64x64_cpt.gif'
+                                      )
+        self.parent = Top (icon = icon
+                          ,title = _('Compare texts:')
+                          ,Maximize = True
+                          )
+        self.widget = self.parent.widget
+        self.set_frames()
+        self.set_panes()
+        self.pane1.focus()
+        if self.Extend:
+            pane3 = self.pane3
+            pane4 = self.pane4
+        else:
+            pane3, pane4 = None, None
+        self.gui = gi.Panes (parent = self.parent
+                            ,pane1 = self.pane1
+                            ,pane2 = self.pane2
+                            ,pane3 = pane3
+                            ,pane4 = pane4
+                            )
+        if self.Extend:
+            self.gui.config_pane1(bg=self.bg)
+        self.set_bindings()
+        
+    def set_title(self,text):
+        if not text:
+            text = _('Compare texts:')
+        self.gui.set_title(text)
+        
+    def show(self,event=None):
+        self.gui.show()
+        
+    def close(self,event=None):
+        self.gui.close()
+        
+    def set_bindings(self):
+        ''' - We do not bind 'select1' to 'pane1' and 'select2' to
+              'pane3' since we need to further synchronize references
+              by LMB anyway, and this further binding will rewrite
+              the current binding.
+            - We do not use 'Control' for bindings. If we use it,
+              Tkinter will execute its internal bindings for
+              '<Control-Down/Up>' and '<Control-Left/Right>' before
+              executing our own. Even though we can return 'break'
+              in 'select1'-4, we should not do that because we need
+              internal bindings for '<Control-Left>' and
+              '<Control-Right>'. Thus, we should not use 'Control' at
+              all because we cannot replace 'Alt' with 'Control'
+              for all actions.
+        '''
+        com.bind (obj = self.gui
+                 ,bindings = ('<Control-q>','<Control-w>')
+                 ,action = self.close
+                 )
+        com.bind (obj = self.gui
+                 ,bindings = '<Escape>'
+                 ,action = Geometry(parent=self.gui).minimize
+                 )
+        com.bind (obj = self.gui
+                 ,bindings = ('<Alt-Key-1>','<Control-Key-1>')
+                 ,action = self.select1
+                 )
+        com.bind (obj = self.gui
+                 ,bindings = ('<Alt-Key-2>','<Control-Key-2>')
+                 ,action = self.select2
+                 )
+        com.bind (obj = self.pane1
+                 ,bindings = '<ButtonRelease-1>'
+                 ,action = self.synchronize1
+                 )
+        com.bind (obj = self.pane2
+                 ,bindings = '<ButtonRelease-1>'
+                 ,action = self.select2
+                 )
+        com.bind (obj = self.pane1
+                 ,bindings = '<Alt-Right>'
+                 ,action = self.select2
+                 )
+        com.bind (obj = self.pane2
+                 ,bindings = '<Alt-Left>'
+                 ,action = self.select1
+                 )
+        com.bind (obj = self.parent
+                 ,bindings = ('<Control-f>','<Control-F3>')
+                 ,action = self.run_new_auto
+                 )
+        com.bind (obj = self.parent
+                 ,bindings = '<F3>'
+                 ,action = self.search_next_auto
+                 )
+        com.bind (obj = self.parent
+                 ,bindings = '<Shift-F3>'
+                 ,action = self.search_prev_auto
+                 )
+        if self.Extend:
+            com.bind (obj = self.gui
+                     ,bindings = ('<Alt-Key-3>','<Control-Key-3>')
+                     ,action = self.select3
+                     )
+            com.bind (obj = self.gui
+                     ,bindings = ('<Alt-Key-4>','<Control-Key-4>')
+                     ,action = self.select4
+                     )
+            com.bind (obj = self.pane3
+                     ,bindings = '<ButtonRelease-1>'
+                     ,action = self.synchronize3
+                     )
+            com.bind (obj = self.pane4
+                     ,bindings = '<ButtonRelease-1>'
+                     ,action = self.select4
+                     )
+            com.bind (obj = self.pane2
+                     ,bindings = '<Alt-Right>'
+                     ,action = self.select3
+                     )
+            com.bind (obj = self.pane3
+                     ,bindings = '<Alt-Right>'
+                     ,action = self.select4
+                     )
+            com.bind (obj = self.pane3
+                     ,bindings = '<Alt-Left>'
+                     ,action = self.select2
+                     )
+            com.bind (obj = self.pane4
+                     ,bindings = '<Alt-Left>'
+                     ,action = self.select3
+                     )
+            com.bind (obj = self.pane1
+                     ,bindings = '<Alt-Down>'
+                     ,action = self.select3
+                     )
+            com.bind (obj = self.pane2
+                     ,bindings = '<Alt-Down>'
+                     ,action = self.select4
+                     )
+            com.bind (obj = self.pane3
+                     ,bindings = '<Alt-Up>'
+                     ,action = self.select1
+                     )
+            com.bind (obj = self.pane4
+                     ,bindings = '<Alt-Up>'
+                     ,action = self.select2
+                     )
+        else:
+            com.bind (obj = self.pane1
+                     ,bindings = '<Alt-Down>'
+                     ,action = self.select2
+                     )
+            com.bind (obj = self.pane2
+                     ,bindings = '<Alt-Up>'
+                     ,action = self.select1
+                     )
+             
+    def decolorize(self):
+        self.gui.config_pane1(bg='white')
+        self.gui.config_pane2(bg='white')
+        if self.Extend:
+            self.gui.config_pane3(bg='white')
+            self.gui.config_pane4(bg='white')
+    
+    def select1(self,event=None):
+        # Without this the search doesn't work (the pane is inactive)
+        self.pane1.focus()
+        self.decolorize()
+        self.gui.config_pane1(bg=self.bg)
+        self.cpane = self.pane1
+        
+    def select2(self,event=None):
+        # Without this the search doesn't work (the pane is inactive)
+        self.pane2.focus()
+        self.decolorize()
+        self.gui.config_pane2(bg=self.bg)
+        self.cpane = self.pane2
+        
+    def select3(self,event=None):
+        f = '[shared] shared.Panes.select3'
+        if self.Extend:
+            ''' Without this the search doesn't work (the pane is
+                inactive).
+            '''
+            self.pane3.focus()
+            self.decolorize()
+            self.gui.config_pane3(bg=self.bg)
+            self.cpane = self.pane3
+        else:
+            mes = _('Logic error!')
+            objs.get_mes(f,mes,True).show_error()
+        
+    def select4(self,event=None):
+        f = '[shared] shared.Panes.select4'
+        if self.Extend:
+            ''' Without this the search doesn't work (the pane is
+                inactive).
+            '''
+            self.pane4.focus()
+            self.decolorize()
+            self.gui.config_pane4(bg=self.bg)
+            self.cpane = self.pane4
+        else:
+            mes = _('Logic error!')
+            objs.get_mes(f,mes,True).show_error()
+        
+    def set_icon(self,path=None):
+        if path:
+            self.gui.set_icon(path)
+        else:
+            self.gui.set_icon (lg.objs.get_pdir().add ('..','resources'
+                                                      ,'icon_64x64_cpt.gif'
+                                                      )
+                              )
+                          
+    def reset(self,text1,text2,text3='',text4=''):
+        self.pane1.reset()
+        self.pane2.reset()
+        self.pane1.insert (text = text1
+                          ,mode = 'top'
+                          )
+        self.pane2.insert (text = text2
+                          ,mode = 'top'
+                          )
+        if self.Extend:
+            self.pane3.reset()
+            self.pane4.reset()
+            self.pane3.insert (text = text3
+                              ,mode = 'top'
+                              )
+            self.pane4.insert (text = text4
+                              ,mode = 'top'
+                              )
+        self.select1()
+
+
+
+class SearchEntry:
+    
+    def __init__(self,icon='',Case=False,Loop=True):
+        self.Case = Case
+        self.gui = None
+        self.icon = icon
+        self.Loop = Loop
+    
+    def get_gui(self):
+        if self.gui is None:
+            self.set_gui()
+            self.gui = self.parent
+        return self.gui
+    
+    def set_gui(self):
+        self.add_widgets()
+        self.ent_src.focus()
+        self.set_bindings()
+    
+    def add_widgets(self):
+        self.parent = Top (icon = self.icon
+                          ,title = _('Search:')
+                          )
+        self.lbl_src = Label (parent = self.parent
+                             ,text = _('Enter a string to search:')
+                             ,fill = 'x'
+                             ,expand = True
+                             ,justify = 'center'
+                             )
+        self.ent_src = Entry (parent = self.parent
+                             ,fill = 'x'
+                             ,expand = None
+                             ,justify = 'center'
+                             ,ClearAll = True
+                             )
+        self.frm_cas = Frame (parent = self.parent
+                             ,fill = 'x'
+                             )
+        self.cbx_cas = CheckBox (parent = self.frm_cas
+                                ,Active = self.Case
+                                ,side = 'left'
+                                )
+        self.lbl_cas = Label (parent = self.frm_cas
+                             ,text = _('Case-sensitive search')
+                             ,side = 'left'
+                             )
+        self.frm_lop = Frame (parent = self.parent
+                             ,fill = 'x'
+                             )
+        self.cbx_lop = CheckBox (parent = self.frm_lop
+                                ,Active = self.Loop
+                                ,side = 'left'
+                                )
+        self.lbl_lop = Label (parent = self.frm_lop
+                             ,text = _('Loop')
+                             ,side = 'left'
+                             )
+    
+    def get(self,Strip=True,event=None):
+        f = '[shared] shared.SearchEntry.get'
+        self.get_gui()
+        text = self.ent_src.get()
+        if Strip:
+            text = text.strip()
+        mes = '"{}"'.format(text)
+        objs.get_mes(f,mes,True).show_debug()
+        return text
+    
+    def show(self,event=None):
+        self.get_gui().show()
+    
+    def close(self,event=None):
+        self.get_gui().close()
+    
+    def set_bindings(self):
+        com.bind (obj = self.parent
+                 ,bindings = ('<Control-q>','<Control-w>','<Escape>')
+                 ,action = self.close
+                 )
+        com.bind (obj = self.ent_src
+                 ,bindings = ('<Return>','<KP_Enter>')
+                 ,action = self.close
+                 )
+        com.bind (obj = self.lbl_cas
+                 ,bindings = '<ButtonRelease-1>'
+                 ,action = self.cbx_cas.toggle
+                 )
+        com.bind (obj = self.lbl_lop
+                 ,bindings = '<ButtonRelease-1>'
+                 ,action = self.cbx_lop.toggle
+                 )
+        self.parent.widget.protocol("WM_DELETE_WINDOW",self.close)
+
+
+
+class TextBoxTk(TextBox):
+    
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.set_word()
+    
+    def get_end(self):
+        return self.get_index('end')
+    
+    def is_last_word(self):
+        pos = self.get_current_word()
+        pos = self.get_word_end(pos)
+        return self.is_end(pos)
+    
+    def is_end(self,pos):
+        f = '[shared] shared.TextBoxTk.is_end'
+        if pos:
+            if pos == self.get_end():
+                return True
+        else:
+            com.rep_empty(f)
+    
+    def get_word_text(self,pos,Strip=True):
+        f = '[shared] shared.TextBoxTk.get_word_text'
+        if pos:
+            borders = self.get_word_borders(pos)
+            if borders:
+                word = self.get (pos1 = borders[0]
+                                ,pos2 = borders[1]
+                                ,Strip = Strip
+                                )
+                #mes = '"{}"'.format(word)
+                #objs.get_mes(f,mes,True).show_debug()
+                return word
+            else:
+                com.rep_empty(f)
+        else:
+            com.rep_empty(f)
+    
+    def set_word(self,pos=None):
+        f = '[shared] shared.TextBoxTk.set_word'
+        if not pos:
+            pos = self.get_cursor()
+            pos = self.get_word_start(pos)
+            if not pos:
+                pos = '1.0'
+        self.mark_add (mark = 'word'
+                      ,pos = pos
+                      )
+    
+    def get_current_word(self):
+        return self.get_index('word')
+    
+    def select_word(self,color='MediumOrchid1'):
+        f = '[shared] shared.TextBoxTk.select_word'
+        pos = self.get_current_word()
+        borders = self.get_word_borders(pos)
+        if borders:
+            self.tag_add (tag = 'word'
+                         ,pos1 = borders[0]
+                         ,pos2 = borders[1]
+                         )
+            self.tag_config (tag = 'word'
+                            ,bg = color
+                            )
+        else:
+            com.rep_empty(f)
+    
+    def set_next_word(self):
+        #NOTE: Tkinter considers punctuation and spaces as a word
+        f = '[shared] shared.TextBoxTk.set_next_word'
+        pos = self.get_current_word()
+        if pos:
+            if pos == self.get_end():
+                com.rep_lazy(f)
+            else:
+                pos = self.get_word_end(pos)
+                if pos:
+                    pos = self.get_word_start(pos)
+                    self.set_word(pos)
+                    return pos
+                else:
+                    com.rep_empty(f)
+        else:
+            com.rep_empty(f)
+    
+    def set_prev_word(self):
+        #NOTE: Tkinter considers punctuation and spaces as a word
+        f = '[shared] shared.TextBoxTk.set_prev_word'
+        pos = self.get_current_word()
+        if pos:
+            if pos == '1.0':
+                com.rep_lazy(f)
+            else:
+                pos = '{}-1c'.format(pos)
+                pos = self.get_word_start(pos)
+                self.set_word(pos)
+                return pos
+        else:
+            com.rep_empty(f)
+    
+    def get_word_end(self,pos):
+        f = '[shared] shared.TextBoxTk.get_word_end'
+        if pos:
+            pos = '{} wordend'.format(pos)
+            pos = self.get_index(pos)
+            #mes = '"{}"'.format(pos)
+            #objs.get_mes(f,mes,True).show_debug()
+            return pos
+        else:
+            com.rep_empty(f)
+    
+    def get_word_start(self,pos):
+        f = '[shared] shared.TextBoxTk.get_word_start'
+        if pos:
+            pos = '{} wordstart'.format(pos)
+            pos = self.get_index(pos)
+            #mes = '"{}"'.format(pos)
+            #objs.get_mes(f,mes,True).show_debug()
+            return pos
+        else:
+            com.rep_empty(f)
+    
+    def get_word_borders(self,pos):
+        f = '[shared] shared.TextBoxTk.get_word_borders'
+        if pos:
+            pos1 = self.get_word_start(pos)
+            pos2 = self.get_word_end(pos)
+            if pos1 and pos2:
+                #mes = '{}-{}'.format(pos1,pos2)
+                #objs.get_mes(f,mes,True).show_debug()
+                return (pos1,pos2)
+            else:
+                com.rep_empty(f)
+        else:
+            com.rep_empty(f)
+    
+    def select_by_count (self,pattern,start='1.0'
+                        ,end='end',Case=True
+                        ,count=1,tag='count',bg='red'
+                        ):
+        f = '[shared] shared.TextBoxTk.select_by_count'
+        pos = self.search_by_count (pattern = pattern
+                                   ,start = start
+                                   ,end = end
+                                   ,Case = Case
+                                   ,count = count
+                                   )
+        if pos:
+            self.tag_add (tag = tag
+                         ,pos1 = pos
+                         ,pos2 = '{}+{}c'.format(pos,len(pattern))
+                         )
+            self.tag_config (tag = tag
+                            ,bg = bg
+                            )
+        else:
+            com.rep_lazy(f)
+    
+    def search_by_count (self,pattern,start='1.0'
+                        ,end='end',Case=True
+                        ,count=1
+                        ):
+        f = '[shared] shared.TextBoxTk.search_by_count'
+        if pattern and start and end and count:
+            pos = start
+            limit = count
+            count = 1
+            while True:
+                pos = self.search (pattern = pattern
+                                  ,start = pos
+                                  ,end = end
+                                  ,Case = Case
+                                  )
+                if pos and count < limit:
+                    pos = '{}+{}c'.format(pos,len(pattern))
+                    count += 1
+                else:
+                    break
+            return pos
+        else:
+            com.rep_empty(f)
+    
+    def select_all(self,pattern,Case=False,tag='select_all',bg='red'):
+        f = '[shared] shared.TextBoxTk.select_all'
+        poses = self.find_all (pattern = pattern
+                              ,Case = Case
+                              )
+        for pos in poses:
+            self.tag_add (tag = tag
+                         ,pos1 = pos
+                         ,pos2 = '{}+{}c'.format(pos,len(pattern))
+                         ,DelPrev = False
+                         )
+        self.tag_config (tag = tag
+                        ,bg = bg
+                        )
+    
+    def find_all(self,pattern,Case=False):
+        f = '[shared] shared.TextBoxTk.find_all'
+        poses = []
+        if pattern:
+            pos = '1.0'
+            while pos:
+                pos = self.search (pattern = pattern
+                                  ,start = pos
+                                  ,Case = Case
+                                  )
+                if pos:
+                    poses.append(pos)
+                    pos = '{}+{}c'.format(pos,len(pattern))
+        else:
+            com.rep_empty(f)
+        return poses
+
+
+
+class SearchBox(TextBoxTk):
+    
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.Case = True
+        self.pos = '1.0'
+        self.first_src = None
+        self.Loop = False
+        self.pattern = ''
+        self.src_entry = None
+        self.Success = True
+        self.tag_src = 'search'
+        self.color_src = 'lawn green'
+        self.set_src_bindings()
+    
+    def run_search_next(self,event=None):
+        if not self.pattern:
+            self.run_new_search()
+        self.search_next()
+    
+    def run_search_prev(self,event=None):
+        if not self.pattern:
+            self.run_new_search()
+        self.search_prev()
+    
+    def set_src_bindings(self):
+        f = '[shared] shared.SearchBox.set_src_bindings'
+        if 'Top' in str(type(self.parent)):
+            com.bind (obj = self.parent
+                     ,bindings = ('<Control-f>','<Control-F3>')
+                     ,action = self.run_new_now
+                     )
+            com.bind (obj = self.parent
+                     ,bindings = '<F3>'
+                     ,action = self.run_search_next
+                     )
+            com.bind (obj = self.parent
+                     ,bindings = '<Shift-F3>'
+                     ,action = self.run_search_prev
+                     )
+        else:
+            com.rep_lazy(f)
+    
+    def run_new_now(self,event=None):
+        self.run_new_search()
+        self.search_next()
+    
+    def get_src_entry(self):
+        if self.src_entry is None:
+            if hasattr(self.parent,'icon'):
+                icon = self.parent.icon
+            else:
+                icon = ''
+            self.src_entry = SearchEntry (icon = icon
+                                         ,Case = self.Case
+                                         ,Loop = self.Loop
+                                         )
+        return self.src_entry
+    
+    def reset_src(self,Case=False,Loop=True):
+        # Set default search parameters
+        self.Case = Case
+        self.Loop = Loop
+    
+    def set_settings(self):
+        f = '[shared] shared.SearchBox.set_settings'
+        if self.Success:
+            self.Case = self.get_src_entry().cbx_cas.get()
+            self.Loop = self.src_entry.cbx_lop.get()
+        else:
+            com.cancel(f)
+    
+    def run_new_search(self,event=None):
+        self.pos = '1.0'
+        self.get_src_entry().show()
+        self.set_settings()
+        self.pattern = self.src_entry.get()
+        # 'self.Success' is search-dependent, so we reset it here
+        self.Success = True
+        self.check_src()
+        self.search_first()
+    
+    def check_src(self):
+        f = '[shared] shared.SearchBox.check_src'
+        if not self.pattern:
+            self.Success = False
+            com.rep_empty(f)
+    
+    def search_first(self):
+        f = '[shared] shared.SearchBox.search_first'
+        if self.Success:
+            self.first_src = self.search (pattern = self.pattern
+                                         ,start = self.pos
+                                         ,Case = self.Case
+                                         )
+        else:
+            com.rep_lazy(f)
+    
+    def select_src(self):
+        f = '[shared] shared.SearchBox.select_src'
+        if self.Success:
+            pos2 = '{}+{}c'.format(self.pos,len(self.pattern))
+            self.tag_add (tag = self.tag_src
+                         ,pos1 = self.pos
+                         ,pos2 = pos2
+                         )
+            self.tag_config (tag = self.tag_src
+                            ,bg = self.color_src
+                            )
+            self.see(self.pos)
+            self.mark_add (mark = 'insert'
+                          ,pos = self.pos
+                          )
+        else:
+            com.cancel(f)
+    
+    def _search_prev(self):
+        return self.search (pattern = self.pattern
+                           ,start = self.pos
+                           ,end = '1.0'
+                           ,Case = self.Case
+                           ,Forward = False
+                           )
+    
+    def search_prev(self):
+        f = '[shared] shared.SearchBox.search_prev'
+        if self.Success:
+            if self.first_src:
+                pos = self._search_prev()
+                if pos:
+                    self.pos = pos
+                    self.select_src()
+                elif self.Loop:
+                    mes = _('No more matches, continuing from the bottom!')
+                    objs.get_mes(f,mes).show_info()
+                    self.pos = 'end'
+                    self.pos = self._search_prev()
+                    self.select_src()
+                else:
+                    mes = _('No more matches!')
+                    objs.get_mes(f,mes).show_info()
+            else:
+                mes = _('No matches!')
+                objs.get_mes(f,mes).show_info()
+        else:
+            com.cancel(f)
+    
+    def search_next(self):
+        f = '[shared] shared.SearchBox.search_next'
+        if self.Success:
+            if self.first_src:
+                if self.pos not in ('1.0','start','end'):
+                    self.pos = '{}+1c'.format(self.pos)
+                pos = self.search (pattern = self.pattern
+                                  ,start = self.pos
+                                  ,Case = self.Case
+                                  )
+                if pos:
+                    self.pos = pos
+                    self.select_src()
+                elif self.Loop:
+                    mes = _('No more matches, continuing from the top!')
+                    objs.get_mes(f,mes).show_info()
+                    self.pos = self.first_src
+                    self.select_src()
+                else:
+                    mes = _('No more matches!')
+                    objs.get_mes(f,mes).show_info()
+            else:
+                mes = _('No matches!')
+                objs.get_mes(f,mes).show_info()
+        else:
+            com.cancel(f)
+
+
+
+class Reference(SearchBox):
+    
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.logic = lg.Reference()
+    
+    def select_ref2(self,ref):
+        f = '[shared] shared.Reference.select_ref2'
+        if ref:
+            pattern, index_ = ref[0], ref[1]
+            pos = self.search_by_count (pattern = pattern
+                                       ,Case = True
+                                       ,count = index_ + 1
+                                       )
+            if pos:
+                self.set_word(pos)
+                self.select_word()
+                self.see(pos)
+            else:
+                mes = _('Failed to find reference "{}" with index {}!')
+                mes = mes.format(pattern,index_)
+                objs.get_mes(f,mes,True).show_warning()
+        else:
+            com.rep_empty(f)
+    
+    def get_ref_index(self):
+        f = '[shared] shared.Reference.get_ref_index'
+        pos = self.get_current_word()
+        pattern = self.get_word_text(pos)
+        poses = self.find_all (pattern = pattern
+                              ,Case = True
+                              )
+        if pattern and poses:
+            try:
+                index_ = poses.index(pos)
+                mes = _('Pattern: "{}"; index: {}')
+                mes = mes.format(pattern,index_)
+                objs.get_mes(f,index_,True).show_debug()
+                return(pattern,index_)
+            except ValueError:
+                mes = _('Wrong input data: "{}"!').format(pattern)
+                objs.get_mes(f,mes,True).show_debug()
+        else:
+            com.rep_empty(f)
+    
+    def select_first_ref(self):
+        self.get_after()
+        self.select_word()
+    
+    def select_last_ref(self):
+        self.get_before()
+        self.select_word()
+    
+    def select_ref(self):
+        f = '[shared] shared.Reference.select_ref'
+        dist_before = self.get_before()
+        pos_before = self.get_current_word()
+        dist_after = self.get_after()
+        pos_after = self.get_current_word()
+        if dist_before == -1 and dist_after == -1:
+            mes = _('No reference has been found!')
+            objs.get_mes(f,mes,True).show_debug()
+        elif dist_before == -1:
+            self.select_first_ref()
+        elif dist_after == -1:
+            self.select_last_ref()
+        elif str(dist_before).isdigit() and str(dist_after).isdigit() \
+        and pos_before and pos_after:
+            if dist_before <= dist_after:
+                pos = pos_before
+            else:
+                pos = pos_after
+            self.set_word(pos)
+            self.select_word()
+        else:
+            com.rep_empty(f)
+    
+    def get_before(self,event=None):
+        f = '[shared] shared.Reference.get_before'
+        old = pos = self.get_pointer()
+        pos = self.get_word_start(pos)
+        if pos:
+            self.set_word(pos)
+            while True:
+                borders = self.get_word_borders(pos)
+                word = self.get_word_text(pos)
+                if old and borders:
+                    if pos == '1.0':
+                        mes = _('The start of the text has been reached!')
+                        objs.get_mes(f,mes,True).show_debug()
+                        return -1
+                    elif self.logic.has_ref(word):
+                        break
+                else:
+                    com.rep_empty(f)
+                    break
+                pos = self.set_prev_word()
+            fragm = self.get (pos1 = pos
+                             ,pos2 = old
+                             ,Strip = False
+                             )
+            mes = '"{}"'.format(fragm)
+            objs.get_mes(f,mes,True).show_debug()
+            mes = _('Distance: {} symbols').format(len(fragm))
+            objs.get_mes(f,mes,True).show_debug()
+            return len(fragm)
+        else:
+            com.rep_empty(f)
+    
+    def get_after(self,event=None):
+        f = '[shared] shared.Reference.get_after'
+        old = pos = self.get_pointer()
+        pos = self.get_word_start(pos)
+        if pos:
+            self.set_word(pos)
+            while True:
+                borders = self.get_word_borders(pos)
+                word = self.get_word_text(pos)
+                if old and borders:
+                    if self.is_last_word():
+                        mes = _('The end of the text has been reached!')
+                        objs.get_mes(f,mes,True).show_debug()
+                        return -1
+                    elif self.logic.has_ref(word):
+                        break
+                else:
+                    com.rep_empty(f)
+                    break
+                pos = self.set_next_word()
+            fragm = self.get (pos1 = old
+                             ,pos2 = pos
+                             ,Strip = False
+                             )
+            mes = '"{}"'.format(fragm)
+            objs.get_mes(f,mes,True).show_debug()
+            mes = _('Distance: {} symbols').format(len(fragm))
+            objs.get_mes(f,mes,True).show_debug()
+            return len(fragm)
+        else:
+            com.rep_empty(f)
 
 
 com = Commands()

@@ -6,9 +6,9 @@ import random
 import skl_shared.shared as sh
 from skl_shared.localize import _
 
-ICON  = '/home/pete/bin/Yatube/resources/icon_64x64_yatube.gif'
+ICON = sh.objs.get_pdir().add('..','resources','icon_64x64_cpt.gif')
 ICON2 = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
-FILE  = '/home/pete/base/[unmusic] corrupted tags.txt'
+FILE = '/home/pete/base/[unmusic] corrupted tags.txt'
 
 SILENT = False
 
@@ -17,6 +17,20 @@ class Commands:
     
     def __init__(self):
         pass
+    
+    def run_parallel_texts(self):
+        #text1 = '1. Ничего (10) еще не предрешено (α) заранее (b10).'
+        #text2 = '1. Nothing (10) has been determined (α) earlier (b10).'
+        text1 = sh.ReadTextFile('/home/pete/tmp/large_file.txt').get()
+        text2 = sh.ReadTextFile('/home/pete/tmp/large_file2.txt').get()
+        text3 = text1
+        text4 = text2
+        ipanes = sh.Panes (text1 = text1
+                          ,text2 = text2
+                          ,text3 = text3
+                          ,text4 = text4
+                          )
+        ipanes.show()
     
     def create_button(self):
         self.btn = sh.Button (parent   = sh.Top()
@@ -40,7 +54,6 @@ class Commands:
         self.run_frameless()
         self.run_geometry()
         '''
-        #cur
         self.run_listbox()
         self.run_listboxc()
         self.run_messages()
@@ -1166,11 +1179,159 @@ class Anchors:
                         ).run()
 
 
+
+class TestBox:
+
+    def __init__(self):
+        #self.text = 'Здесь был вася, Васян, Вася, Вася и еще раз Вася.'
+        self.pattern = 'Вася'
+        self.text = sh.ReadTextFile('/home/pete/tmp/large_file.txt').get()
+        self.top = sh.Top (icon = ICON
+                          ,title = _('Text:')
+                          )
+        self.itxt = sh.SearchBox(parent=self.top)
+        self.itxt.insert (text = self.text
+                         ,mode = 'top'
+                         )
+    
+    def is_last_word(self,event=None):
+        f = '[shared] tests.TestBox.is_last_word'
+        pos = self.itxt.get_pointer()
+        pos = self.itxt.get_word_start(pos)
+        self.itxt.set_word(pos)
+        res = self.itxt.is_end(pos)
+        mes = 'IsEnd: {}'.format(res)
+        sh.objs.get_mes(f,mes,True).show_debug()
+        res = self.itxt.is_last_word()
+        mes = 'IsLastWord: {}'.format(res)
+        sh.objs.get_mes(f,mes,True).show_debug()
+    
+    def bind_last_word(self):
+        sh.com.bind (obj = self.top
+                    ,bindings = '<ButtonRelease-1>'
+                    ,action = self.is_last_word
+                    )
+        self.top.show()
+    
+    def print_word(self,event=None):
+        pos = self.itxt.get_pointer()
+        self.itxt.get_word_text(pos)
+    
+    def bind_print_word(self):
+        sh.com.bind (obj = self.top
+                    ,bindings = '<ButtonRelease-1>'
+                    ,action = self.print_word
+                    )
+        self.top.show()
+    
+    def select_prev_word(self,event=None):
+        self.itxt.set_prev_word()
+        self.itxt.select_word()
+    
+    def select_next_word(self,event=None):
+        self.itxt.set_next_word()
+        self.itxt.select_word()
+    
+    def navigate_words(self):
+        self.itxt.set_word()
+        sh.com.bind (obj = self.top
+                    ,bindings = '<Left>'
+                    ,action = self.select_prev_word
+                    )
+        sh.com.bind (obj = self.top
+                    ,bindings = '<Right>'
+                    ,action = self.select_next_word
+                    )
+        self.top.show()
+    
+    def bind_select_word(self):
+        sh.com.bind (obj = self.top
+                    ,bindings = '<ButtonRelease-1>'
+                    ,action = self.select_word
+                    )
+        self.top.show()
+    
+    def select_word(self,event=None):
+        f = '[SearchBox] tests.TestBox.select_word'
+        pos = self.itxt.obj.get_pointer()
+        borders = self.itxt.get_word_borders(pos)
+        if borders:
+            pos1, pos2 = borders[0], borders[1]
+            self.itxt.tag_add_ (tag = 'word'
+                               ,pos1 = pos1
+                               ,pos2 = pos2
+                               )
+            self.itxt.tag_config (tag = 'word'
+                                 ,bg = 'MediumOrchid1'
+                                 )
+        else:
+            sh.com.rep_empty(f)
+    
+    def print_pointer(self,event=None):
+        f = '[SearchBox] tests.TestBox.print_pointer'
+        if event:
+            pos = self.itxt.obj.get_pointer()
+            mes = '"{}"'.format(pos)
+            sh.objs.get_mes(f,mes,True).show_debug()
+        else:
+            sh.com.rep_empty(f)
+    
+    def print_cursor(self,event=None):
+        f = '[SearchBox] tests.TestBox.print_cursor'
+        mes = '"{}"'.format(self.itxt.obj.get_cursor())
+        sh.objs.get_mes(f,mes,True).show_debug()
+    
+    def get_cursor(self):
+        sh.com.bind (obj = self.itxt.gui.parent
+                    ,bindings = '<ButtonRelease-1>'
+                    ,action = self.print_cursor
+                    )
+        self.top.show()
+    
+    def get_pointer(self):
+        sh.com.bind (obj = self.itxt.gui.parent
+                    ,bindings = '<ButtonRelease-1>'
+                    ,action = self.print_pointer
+                    )
+        self.top.show()
+    
+    def run_select_all(self):
+        self.itxt.select_all (pattern = self.pattern
+                             ,Case = False
+                             ,tag = 'select_all'
+                             ,bg = 'MediumOrchid1'
+                             )
+        self.top.show()
+    
+    def run_select_by_count(self):
+        self.itxt.select_by_count (pattern = self.pattern
+                                  ,start = '1.0'
+                                  ,end = 'end'
+                                  ,Case = True
+                                  ,count = 4
+                                  ,tag = 'count'
+                                  ,bg = 'red'
+                                  )
+        self.top.show()
+    
+    def run_search_box(self):
+        self.itxt.reset_src (Case = False
+                            ,Loop = True
+                            )
+        self.itxt.focus()
+        self.top.show()
+
+
 com = Commands()
 
 
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    com.run_all()
+    #com.run_all()
+    #TestBox().run_search_box()
+    #FIX
+    #TestBox().navigate_words()
+    #TestBox().bind_last_word()
+    com.run_parallel_texts()
     sh.com.end()

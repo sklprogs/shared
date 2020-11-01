@@ -18,10 +18,10 @@ class Panes:
                  ):
         self.parent = parent
         self.widget = self.parent.widget
-        self.pane1  = pane1
-        self.pane2  = pane2
-        self.pane3  = pane3
-        self.pane4  = pane4
+        self.pane1 = pane1
+        self.pane2 = pane2
+        self.pane3 = pane3
+        self.pane4 = pane4
     
     def set_icon(self,path=''):
         self.parent.set_icon(path)
@@ -1070,9 +1070,9 @@ class Geometry:
 class Top:
     
     def __init__(self,Lock=True):
-        self.parent     = objs.get_root()
-        self.Lock       = Lock
-        self.widget     = tk.Toplevel(self.parent.widget)
+        self.parent = objs.get_root()
+        self.Lock = Lock
+        self.widget = tk.Toplevel(self.parent.widget)
         self.tk_trigger = tk.BooleanVar()
         self.widget.protocol("WM_DELETE_WINDOW",self.close)
     
@@ -1298,7 +1298,7 @@ class WidgetObject:
     this beneath 'if __name__'
 '''
 objs = Objects()
-com  = Commands()
+com = Commands()
 
 
 if __name__ == '__main__':

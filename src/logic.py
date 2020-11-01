@@ -3608,537 +3608,26 @@ class Grep:
 
 
 
-class Word:
-
-    def __init__(self):
-        ''' 'p': word with punctuation
-            'n': 'p' without punctuation, lower case
-            'nm': normal form of 'n'
-            'pf': position of the 1st symbol of 'p'
-            'pl': position of the last symbol of 'p'
-            'nf': position of the 1st symbol of 'n'
-            'nl': position of the last symbol of 'n'
-            'nmf': position of the 1st symbol of 'nm'  # 'matches'
-            'nml': position of the last symbol of 'nm' # 'matches'
-        '''
-        self.nm = self.nmf = self.nml = self.pf = self.pl = self.nf \
-                = self.nl = self.cyr = self.lat = self.greek \
-                = self.digit = self.empty = self.ref = self.sentno \
-                = self.spell = self.sentslen = self.tf = self.tl = None
-
-    def is_empty(self):
-        if self.empty is None:
-            self.empty = True
-            for sym in self.p:
-                if sym.isalpha():
-                    self.empty = False
-                    break
-        return self.empty
-
-    def has_digit(self):
-        if self.digit is None:
-            self.digit = False
-            for sym in self.p:
-                if sym.isdigit():
-                    self.digit = True
-                    break
-        return self.digit
-
-    def has_cyr(self):
-        if self.cyr is None:
-            self.cyr = False
-            for sym in ru_alphabet_low:
-                if sym in self.n:
-                    self.cyr = True
-                    break
-        return self.cyr
-
-    def has_lat(self):
-        if self.lat is None:
-            self.lat = False
-            for sym in lat_alphabet_low:
-                if sym in self.n:
-                    self._lat = True
-                    break
-        return self.lat
-
-    def has_greek(self):
-        if self.greek is None:
-            self.greek = False
-            for sym in greek_alphabet_low:
-                if sym in self.n:
-                    self.greek = True
-                    break
-        return self.greek
-
-    # Do only after Words.sent_nos
-    def print(self,no=0):
-        f = '[shared] logic.Word.print'
-        mes = 'no: {}; p: {}; n: {}; nm: {}; pf: {}; pl: {}; nf: {}; nl: {}; cyr: {}; lat: {}; greek: {}; digit: {}; empty: {}; ref: {}; sentno: {}; sentslen: {}; spell: {}; nmf: {}; nml: {}'
-        mes = mes.format (no,self.p,self.n,self.nm,self.pf,self.pl
-                         ,self.nf,self.nl,self.cyr,self.lat
-                         ,self.greek,self.digit,self.empty,self.ref
-                         ,self.sentno,self.sentslen,self.spell
-                         ,self.nmf,self.nml)
-        objs.get_mes(f,mes,True).show_debug()
-
-    def get_nm(self):
-        if self.nm is None:
-            if self.has_ref():
-                ''' #NOTE: Setting 'nm' to '' allows to find longer
-                    matches (without references), but requires replacing
-                    duplicate spaces in 'textnm' with ordinary ones and
-                    using another word numbering for 'nm'.
-                '''
-                #self.nm = ''
-                self.nm = self.n
-            else:
-                result = Decline (text = self.n
-                                 ,Auto = False
-                                 ).get_normal().get()
-                if result:
-                    self.nm = result.replace('ё','е')
-                else:
-                    self.nm = self.n
-        return self.nm
-
-    def has_ref(self):
-        ''' Criteria for setting the 'reference' mark:
-            - The word has digits
-            - The word has Greek characters (that are treated as
-              variables. Greek should NOT be a predominant language)
-            - The word has Latin characters in the predominantly Russian
-              text (inexact)
-            - The word has '-' (inexact) (#NOTE: when finding matches,
-              set the condition of ''.join(set(ref)) != '-')
-        '''
-        if self.ref is None:
-            if self.has_lat() or self.has_digit() or self.has_greek():
-                self.ref = True
-            else:
-                self.ref = False
-        return self.ref
-
-    def check_spell_ru(self):
-        return objs.get_enchant(lang='ru').check(self.n)
-    
-    def check_spell_yo(self):
-        words = []
-        for i in range(len(self.n)):
-            if self.n[i] == 'е':
-                word    = list(self.n)
-                word[i] = 'ё'
-                word    = ''.join(word)
-                words.append(word)
-        for word in words:
-            if objs.get_enchant(lang='ru').check(word):
-                return True
-    
-    def check_spell_us(self):
-        return objs.get_enchant(lang='us').check(self.n)
-    
-    def check_spell_gb(self):
-        return objs.get_enchant(lang='gb').check(self.n)
-    
-    def check_spell(self):
-        ''' Enchant:
-            1) Lower-case, upper-case and words where the first letter
-               is capital, are all accepted. Mixed case is not accepted;
-            2) Punctuation is not accepted;
-            3) Empty input raises an exception;
-            4) 'е' instead of 'ё' returns False, however, 'ё' in
-               a wrong place returns True.
-        '''
-        if self.spell is None:
-            self.spell = False
-            if self.n:
-                if Text(self.n).has_digits():
-                    self.spell = True
-                elif Text(self.n).has_cyrillic():
-                    if self.check_spell_ru() or self.check_spell_yo():
-                        self.spell = True
-                elif Text(self.n).has_latin():
-                    if self.check_spell_us() or self.check_spell_gb():
-                        self.spell = True
-                else:
-                    self.spell = True
-            else:
-                self.spell = True
-        return self.spell
-
-    # Wrong selection upon search: see an annotation to SearchBox
-    def get_tf(self):
-        f = '[shared] logic.Word.get_tf'
-        if self.tf is None:
-            self.tf = '1.0'
-            # This could happen if double line breaks were not deleted
-            if self.sentno is None:
-                com.rep_empty(f)
-            else:
-                # This is easier, but assigning a tag throws an error
-                #self.tf = '1.0+%dc' % (self.pf - self.sentno)
-                result = self.pf - self.sentslen
-                if self.sentno > 0 and result > 0:
-                    result -= 1
-                self.tf = '%d.%d' % (self.sentno + 1,result)
-                #objs.get_mes(f,str(self.tf),True).show_debug()
-        return self.tf
-
-    def get_tl(self):
-        f = '[shared] logic.Word.get_tl'
-        if self.tl is None:
-            self.tl = '1.1'
-            # This could happen if double line breaks were not deleted
-            if self.sentno is None:
-                com.rep_empty(f)
-            else:
-                # This is easier, but assigning a tag throws an error
-                #self.tl = '1.0+%dc' % (self.pl - self.sentno + 1)
-                result = self.pl - self.sentslen
-                if self.sentno > 0 and result > 0:
-                    result -= 1
-                self.tl = '%d.%d' % (self.sentno + 1,result + 1)
-                #objs.get_mes(f,str(self.tl),True).show_debug()
-        return self.tl
-
-
-
-# Use cases: case-insensitive search; spellchecking; text comparison
-# Requires Search, Text
-class Words:
-
-    def __init__(self,text,Auto=False):
-        f = '[shared] logic.Words.__init__'
-        self.Success = True
-        self.Auto    = Auto
-        self.set_values()
-        if text:
-            mes = _('Analyze the text')
-            objs.get_mes(f,mes,True).show_info()
-            ''' This is MUCH faster than using old symbol-per-symbol
-                algorithm for finding words. We must, however, drop
-                double space cases.
-            '''
-            self.textorig = Text(text=text,Auto=self.Auto).text
-            self.linebr   = Search(self.textorig,'\n').get_next_loop()
-            self.textp    = Text(text=self.textorig).delete_line_breaks()
-            self.textn    = Text(text=self.textp).delete_punctuation().lower()
-            self.split()
-        else:
-            self.Success = False
-            com.cancel(f)
-                       
-    def set_values(self):
-        self.no       = 0
-        self.words    = []
-        self.linebr   = []
-        self.listnm   = []
-        self.textnm   = None
-        self.textorig = ''
-        self.textp    = ''
-        self.textn    = ''
-
-    def split(self):
-        f = '[shared] logic.Words.split'
-        if self.Success:
-            if not self.get_len():
-                lst_p = self.textp.split(' ')
-                lst_n = self.textn.split(' ')
-                assert len(lst_p) == len(lst_n)
-                cur_len_p = cur_len_n = 0
-                for i in range(len(lst_p)):
-                    if i > 0:
-                        cur_len_p += 2
-                        cur_len_n += 2
-                    cur_word = Word()
-                    cur_word.p = lst_p[i]
-                    cur_word.n = lst_n[i]
-                    cur_word.pf = cur_len_p
-                    cur_word.nf = cur_len_n
-                    cur_len_p = cur_word.pl = cur_word.pf \
-                                            + len(cur_word.p) - 1
-                    cur_len_n = cur_word.nl = cur_word.nf \
-                                            + len(cur_word.n) - 1
-                    self.words.append(cur_word)
-        else:
-            com.cancel(f)
-
-    def print(self):
-        f = '[shared] logic.Words.print'
-        if self.Success:
-            for i in range(self.get_len()):
-                self.words[i].print(no=i)
-        else:
-            com.cancel(f)
-
-    # Running 'range(self.get_len())' does not re-run 'get_len'
-    def get_len(self):
-        return len(self.words)
-
-    def _set_sent_nos(self):
-        no = sents_len = 0
-        for i in range(self.get_len()):
-            condition1 = self.words[i].pf - 1 in self.linebr
-            if self.Auto:
-                condition = condition1
-            else:
-                # In case duplicate spaces/line breaks were not deleted
-                condition2 = self.words[i].p == '\n' \
-                             or self.words[i].p == '\r' \
-                             or self.words[i].p == '\r\n'
-                condition = condition1 or condition2
-            if condition:
-                no += 1
-                sents_len = self.words[i].pf - 1
-            self.words[i].sentno = no
-            self.words[i].sentslen = sents_len
-
-    def set_sent_nos(self):
-        f = '[shared] logic.Words.set_sent_nos'
-        if self.Success:
-            if self.get_len() > 0:
-                if self.words[self.no].sentno is None:
-                    self._set_sent_nos()
-        else:
-            com.cancel(f)
-
-    def get_sent_p(self):
-        f = '[shared] logic.Words.get_sent_p'
-        if self.Success:
-            sent_no = self.get_sent_no()
-            sent_no = Input(f,sent_no).get_integer()
-            old     = self.no
-            result = []
-            for self.no in range(self.get_len()):
-                if self.words[self.no].sentno == sent_no:
-                    result.append(self.words[self.no].p)
-            self.no = old
-            return ' '.join(result)
-        else:
-            com.cancel(f)
-
-    def get_sent_no(self):
-        f = '[shared] logic.Words.get_sent_no'
-        if self.Success:
-            self.set_sent_nos()
-            return self.words[self.no].sentno
-        else:
-            com.cancel(f)
-
-    def get_next_ref(self):
-        f = '[shared] logic.Words.get_next_ref'
-        if self.Success:
-            old = self.no
-            Found = False
-            while self.no < self.get_len():
-                if self.words[self.no].has_ref():
-                    Found = True
-                    break
-                else:
-                    self.no += 1
-            if not Found:
-                self.no = old
-            return self.no
-        else:
-            com.cancel(f)
-
-    def get_prev_ref(self):
-        f = '[shared] logic.Words.get_prev_ref'
-        if self.Success:
-            old = self.no
-            Found = False
-            while self.no >= 0:
-                if self.words[self.no].ref():
-                    Found = True
-                    break
-                else:
-                    self.no -= 1
-            if not Found:
-                self.no = old
-            return self.no
-        else:
-            com.cancel(f)
-
-    def check_spell(self):
-        f = '[shared] logic.Words.check_spell'
-        if self.Success:
-            if self.get_len() > 0:
-                if self.words[0].spell is None:
-                    for i in range(self.get_len()):
-                        self.words[i].check_spell()
-        else:
-            com.cancel(f)
-
-    def _set_refs(self):
-        for i in range(self.get_len()):
-            self.words[i].has_ref()
-
-    def set_refs(self):
-        f = '[shared] logic.Words.set_refs'
-        if self.Success:
-            if self.get_len() > 0:
-                if self.words[0].ref is None:
-                    self._set_refs()
-        else:
-            com.cancel(f)
-
-    # Needed for text comparison
-    def get_list_nm(self):
-        f = '[shared] logic.Words.get_list_nm'
-        if self.Success:
-            if not self.listnm:
-                cur_len_nm = 0
-                for i in range(self.get_len()):
-                    self.listnm.append(self.words[i].get_nm())
-                    if i > 0:
-                        cur_len_nm += 2
-                    cur_word     = self.words[i]
-                    cur_word.nmf = cur_len_nm
-                    cur_len_nm   = cur_word.nml = cur_word.nmf \
-                                                + len(cur_word.nm) - 1
-            return self.listnm
-        else:
-            com.cancel(f)
-
-    # Needed for text comparison
-    def get_text_nm(self):
-        f = '[shared] logic.Words.get_text_nm'
-        if self.Success:
-            if not self.textnm:
-                self.textnm = ' '.join(self.get_list_nm())
-            return self.textnm
-        else:
-            com.cancel(f)
-
-    def get_no_by_pos_p(self,pos):
-        f = '[shared] logic.Words.get_no_by_pos_p'
-        if self.Success:
-            result = self.no
-            for i in range(self.get_len()):
-                if self.words[i].pf - 1 <= pos <= self.words[i].pl + 1:
-                    result = i
-                    break
-            return result
-        else:
-            com.cancel(f)
-
-    def get_no_by_pos_n(self,pos):
-        f = '[shared] logic.Words.get_no_by_pos_n'
-        if self.Success:
-            result = self.no
-            for i in range(self.get_len()):
-                if self.words[i].nf - 1 <= pos <= self.words[i].nl + 1:
-                    result = i
-                    break
-            return result
-        else:
-            com.cancel(f)
-
-    # Call 'get_list_nm()' first
-    def get_no_by_pos_nm(self,pos):
-        f = '[shared] logic.Words.get_no_by_pos_nm'
-        if self.Success:
-            result = self.no
-            for i in range(self.get_len()):
-                if self.words[i].nmf - 1 <= pos <= self.words[i].nml+1:
-                    result = i
-                    break
-            return result
-        else:
-            com.cancel(f)
-
-    def get_no_by_tk(self,tkpos):
-        f = '[shared] logic.Words.get_no_by_tk'
-        if self.Success:
-            if tkpos:
-                lst = tkpos.split('.')
-                if len(lst) == 2:
-                    lst[0] = Text(text=lst[0]).str2int()
-                    if lst[0] > 0:
-                        lst[0] -= 1
-                    lst[1] = Text(text=lst[1]).str2int()
-                    result = None
-                    for i in range(self.get_len()):
-                        if self.words[i].sentno == lst[0]:
-                            result = self.words[i].sentslen
-                            break
-                    if result is not None:
-                        if lst[1] == 0:
-                            result += 1
-                        elif lst[0] == 0:
-                            result += lst[1]
-                        else:
-                            result += lst[1] + 1
-                        mes = '{} -> {}'.format(tkpos,result)
-                        objs.get_mes(f,mes,True).show_debug()
-                        return self.get_no_by_pos_p(pos=result)
-                else:
-                    mes = _('Wrong input data: "{}"!').format(lst)
-                    objs.get_mes(f,mes).show_warning()
-            else:
-                com.rep_empty(f)
-        else:
-            com.cancel(f)
-
-    def get_nos_by_sent_no(self,sent_no=0):
-        f = '[shared] logic.Words.get_nos_by_sent_no'
-        result = (0,0)
-        if self.Success:
-            sent_no = Input(f,sent_no).get_integer()
-            old = self.no
-            nos = []
-            for self.no in range(self.get_len()):
-                if sent_no == self.get_sent_no():
-                    nos.append(self.no)
-            self.no = old
-            if nos:
-                # Valid for one-word paragraph
-                result = (min(nos),max(nos))
-            else:
-                mes = _('Failed to find words of paragraph #{}!')
-                mes = mes.format(sent_no)
-                objs.get_mes(f,mes,True).show_warning()
-        else:
-            com.cancel(f)
-        return result
-
-    def complete(self):
-        f = '[shared] logic.Words.complete'
-        if self.Success:
-            self.set_sent_nos()
-            for i in range(self.get_len()):
-                self.words[i].is_empty()
-                self.words[i].has_ref()
-                self.words[i].get_nm()
-                self.words[i].check_spell()
-                self.words[i].get_tf()
-                self.words[i].get_tl()
-            self.get_text_nm()
-        else:
-            com.cancel(f)
-
-
-
 class Search:
 
     def __init__(self,text=None,pattern=None):
-        self.Success  = False
-        self.i        = 0
+        self.Success = False
+        self.i = 0
         self.nextloop = []
         self.prevloop = []
         if text and pattern:
-            self.reset (text    = text
+            self.reset (text = text
                        ,pattern = pattern
                        )
 
     def reset(self,text,pattern):
         f = '[shared] logic.Search.reset'
-        self.Success  = True
-        self.i        = 0
+        self.Success = True
+        self.i = 0
         self.nextloop = []
         self.prevloop = []
-        self.text     = text
-        self.pattern  = pattern
+        self.text = text
+        self.pattern = pattern
         if not self.pattern or not self.text:
             self.Success = False
             mes = _('Wrong input data!')
@@ -4765,116 +4254,6 @@ class Get:
 
 
 
-class References:
-    
-    def __init__(self,words1,words2):
-        f = '[shared] logic.References.__init__'
-        self.words1 = words1
-        self.words2 = words2
-        if self.words1 and self.words2 and len(self.words1.words) \
-        and len(self.words2.words):
-            self.Success = True
-            self.words1.set_sent_nos()
-            self.words2.set_sent_nos()
-            self.words1.set_refs()
-        else:
-            self.Success = False
-            com.rep_empty(f)
-        
-    def get_ref_before(self,word_no):
-        f = '[shared] logic.References.get_ref_before'
-        if self.Success:
-            if word_no < len(self.words1.words):
-                while word_no >= 0:
-                    if self.words1.words[word_no].ref:
-                        break
-                    else:
-                        word_no -= 1
-                return word_no
-            else:
-                sub = '{} < {}'.format(word_no,len(self.words1.words))
-                mes = _('The condition "{}" is not observed!')
-                mes = mes.format(sub)
-                objs.get_mes(f,mes).show_error()
-        else:
-            com.cancel(f)
-        
-    def get_ref_after(self,word_no):
-        f = '[shared] logic.References.get_ref_after'
-        if self.Success:
-            if word_no < len(self.words1.words):
-                while word_no < len(self.words1.words):
-                    if self.words1.words[word_no].ref:
-                        return word_no
-                    else:
-                        word_no += 1
-                return -1
-            else:
-                sub = '{} < {}'.format(word_no,len(self.words1.words))
-                mes = _('The condition "{}" is not observed!')
-                mes = mes.format(sub)
-                objs.get_mes(f,mes).show_error()
-        else:
-            com.cancel(f)
-    
-    def get_nearest_ref(self,word_no):
-        f = '[shared] logic.References.get_nearest_ref'
-        if self.Success:
-            word_no1 = self.get_ref_before(word_no)
-            word_no2 = self.get_ref_after(word_no)
-            if word_no1 == -1 and word_no2 == -1:
-                mes = _('No references have been found!')
-                objs.get_mes(f,mes,True).show_info()
-                return word_no
-            elif word_no1 >= 0 and word_no2 == -1:
-                mes = _('No references to the right!')
-                objs.get_mes(f,mes,True).show_info()
-                return word_no1
-            elif word_no2 >= 0 and word_no1 == -1:
-                mes = _('No references to the left!')
-                objs.get_mes(f,mes,True).show_info()
-                return word_no2
-            else:
-                delta_before = word_no - word_no1
-                delta_after  = word_no2 - word_no
-                if min(delta_before,delta_after) == delta_before:
-                    return word_no1
-                else:
-                    return word_no2
-        else:
-            com.cancel(f)
-                
-    def get_repeated(self,word_no):
-        f = '[shared] logic.References.get_repeated'
-        if self.Success:
-            if word_no < len(self.words1.words):
-                count = 0
-                for i in range(word_no+1):
-                    if self.words1.words[i].n == self.words1.words[word_no].n:
-                        count += 1
-                return count
-            else:
-                sub = '{} < {}'.format(word_no,len(self.words1.words))
-                mes = _('The condition "{}" is not observed!')
-                mes = mes.format(sub)
-                objs.get_mes(f,mes).show_error()
-        else:
-            com.cancel(f)
-        
-    def get_repeated2(self,word_n,count):
-        f = '[shared] logic.References.get_repeated2'
-        if self.Success:
-            tmp = 0
-            for i in range(len(self.words2.words)):
-                if self.words2.words[i].n == word_n:
-                   tmp += 1
-                   if tmp == count:
-                       return i
-        else:
-            com.cancel(f)
-
-
-
 class Links:
     
     def __init__(self,text,root='href="'):
@@ -5368,13 +4747,36 @@ class Commands:
                 ).show_info()
 
 
+
+class Reference:
+
+    def has_ref(self,word):
+        ''' Criteria for setting the 'reference' mark:
+            - The word has digits
+            - The word has Greek characters (that are treated as
+              variables. Greek should NOT be a predominant language)
+            - The word has Latin characters in the predominantly Russian
+              text (inexact)
+            - The word has '-' (inexact) (#NOTE: when finding matches,
+              set the condition of ''.join(set(ref)) != '-')
+        '''
+        f = '[shared] logic.Reference.has_ref'
+        # An empty input is common, so we do warn here
+        if word:
+            itext = Text(word)
+            if itext.has_latin() or itext.has_digits() \
+            or itext.has_greek():
+                return True
+
+
+
 ''' If there are problems with import or tkinter's wait_variable, put
     this beneath 'if __name__'
 '''
-com  = Commands()
-log  = Log (Use   = True
-           ,Short = False
-           )
+com = Commands()
+log = Log (Use = True
+          ,Short = False
+          )
 objs = Objects()
 
 
