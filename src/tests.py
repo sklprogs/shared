@@ -190,15 +190,10 @@ class Commands:
         f = '[shared] tests.Commands.run_textboxro'
         mes = _('Run "{}". Press any key to continue').format(f)
         input(mes)
-        text  = sh.ReadTextFile(FILE).get()
-        words = sh.Words (text = text
-                         ,Auto = True
-                         )
-        words.get_sent_nos()
+        text = sh.ReadTextFile(FILE).get()
         itxt = sh.TextBoxRO (Maximize = False
-                            ,title    = 'TextBoxRO with Selection and Search'
-                            ,icon     = ICON
-                            ,words    = words
+                            ,title = 'TextBoxRO with Selection and Search'
+                            ,icon = ICON
                             )
         itxt.insert(text)
         itxt.focus()
@@ -211,16 +206,14 @@ class Commands:
         f = '[shared] tests.Commands.run_textboxrw'
         mes = _('Run "{}". Press any key to continue').format(f)
         input(mes)
-        text  = sh.ReadTextFile(FILE).get()
-        text  = text.strip()
-        words = sh.Words (text = text
-                         ,Auto = True
-                         )
-        words.get_sent_nos()
+        text = sh.ReadTextFile(FILE).get()
+        text = text.strip()
+        text = sh.Text (text = text
+                       ,Auto = True
+                       ).text
         itxt = sh.TextBoxRW (Maximize = False
-                            ,title    = 'TextBoxRW with Selection and Search'
-                            ,icon     = ICON
-                            ,words    = words
+                            ,title = 'TextBoxRW with Selection and Search'
+                            ,icon = ICON
                             )
         itxt.insert(text)
         itxt.focus()
@@ -233,15 +226,13 @@ class Commands:
         f = '[shared] tests.Commands.run_textboxc'
         mes = _('Run "{}". Press any key to continue').format(f)
         input(mes)
-        text  = sh.ReadTextFile(FILE).get()
-        words = sh.Words (text = text
-                         ,Auto = True
-                         )
-        words.get_sent_nos()
+        text = sh.ReadTextFile(FILE).get()
+        text = sh.Text (text = text
+                       ,Auto = True
+                       ).text
         itxt = sh.TextBoxC (Maximize = False
-                           ,title    = 'TextBoxC with Selection and Search'
-                           ,icon     = ICON
-                           ,words    = words
+                           ,title = 'TextBoxC with Selection and Search'
+                           ,icon = ICON
                            )
         itxt.insert(text)
         itxt.check_spell()
@@ -255,49 +246,37 @@ class Commands:
         f = '[shared] tests.Commands.set_panes'
         mes = _('Run "{}". Press any key to continue').format(f)
         input(mes)
-        text  = sh.ReadTextFile(FILE).get()
-        words = sh.Words (text = text
-                         ,Auto = True
-                         )
-        words.get_sent_nos()
-        ipanes = sh.Panes (bg     = 'old lace'
+        text = sh.ReadTextFile(FILE).get()
+        text = sh.Text (text = text
+                       ,Auto = True
+                       ).text
+        ipanes = sh.Panes (bg = 'old lace'
                           ,Extend = True
                           )
-        '''
-        ipanes = sh.Panes (bg     = 'old lace'
-                          ,Extend = True
-                          ,words1 = words
-                          ,words2 = words
-                          ,words3 = words
-                          ,words4 = words
-                          )
-        '''
-        ipanes.reset(words,words,words,words)
+        ipanes.reset(text,text,text,text)
         ipanes.show()
     
     def run_textbox(self):
         f = '[shared] tests.Commands.run_textbox'
         mes = _('Run "{}". Press any key to continue').format(f)
         input(mes)
-        text  = sh.ReadTextFile(FILE).get()
-        words = sh.Words (text = text
-                         ,Auto = True
-                         )
-        words.get_sent_nos()
+        text = sh.ReadTextFile(FILE).get()
+        text = sh.Text (text = text
+                       ,Auto = True
+                       ).text
         parent = sh.Top (title = 'TextBox with Selection and Search'
                         ,icon  = ICON
                         ,AutoCr = False
                         )
-        itxt = sh.TextBox (parent  = parent
-                          ,expand  = 1
-                          ,side    = None
-                          ,fill    = 'both'
-                          ,words   = words
-                          ,font    = 'Serif 14'
+        itxt = sh.TextBox (parent = parent
+                          ,expand = 1
+                          ,side = None
+                          ,fill = 'both'
+                          ,font = 'Serif 14'
                           ,ScrollX = True
                           ,ScrollY = True
-                          ,wrap    = 'word'
-                          ,icon    = ICON
+                          ,wrap = 'word'
+                          ,icon = ICON
                           )
         itxt.insert(text)
         itxt.focus()

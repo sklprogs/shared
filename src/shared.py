@@ -310,7 +310,7 @@ class WriteTextFile(lg.WriteTextFile):
 
 
 
-# Select words only
+#TODO: del # Select words only
 class Selection:
     ''' Usage:
         com.bind(itxt,'<ButtonRelease-1>',action)
@@ -322,12 +322,10 @@ class Selection:
         isel.get()
         isel.set()
     '''
-    def __init__(self,itxt,words=None):
+    def __init__(self,itxt):
         self.itxt = itxt
-        self.reset(words=words)
 
     def reset (self
-              ,words = None
               ,pos1  = None
               ,pos2  = None
               ,bg    = None
@@ -439,14 +437,13 @@ class Selection:
 class TextBoxC:
     
     def __init__ (self,Maximize=False,title=''
-                 ,icon='',words=None,font=FONT1
+                 ,icon='',font=FONT1
                  ):
         self.Active = False
         self.Maximize = Maximize
         self.title = title
         self.icon = icon
         self.font = font
-        self.words = words
         self.set_gui()
         self.focus()
     
@@ -509,10 +506,12 @@ class TextBoxC:
                         ,mode = mode
                         )
     
-    def reset(self,words=None,title=''):
-        self.words = words
-        self.obj.reset(self.words)
-        self.set_title(title)
+    def reset(self,text='',mode='top',title=''):
+        self.obj.reset (text = text
+                       ,mode = mode
+                       )
+        if title:
+            self.set_title(title)
     
     def set_gui(self):
         self.parent = Top (Maximize = self.Maximize
@@ -603,11 +602,13 @@ class TextBoxRO(TextBoxC):
         super().__init__(*args,**kwargs)
         self.set_ro_gui()
     
-    def reset(self,words=None,title=''):
+    def reset(self,text='',mode='top',title=''):
         self.enable()
-        self.words = words
-        self.obj.reset(self.words)
-        self.set_title(title)
+        self.obj.reset (text = text
+                       ,mode = mode
+                       )
+        if title:
+            self.set_title(title)
         self.disable()
     
     def insert (self,text=''
@@ -672,11 +673,13 @@ class TextBoxRW(TextBoxC):
                         ,mode = mode
                         )
     
-    def reset(self,words=None,title=''):
+    def reset(self,text='',mode='top',title=''):
         self.Save = False
-        self.words = words
-        self.obj.reset(self.words)
-        self.set_title(title)
+        self.obj.reset (text = text
+                       ,mode = mode
+                       )
+        if title:
+            self.set_title(title)
     
     def reload(self,event=None):
         self.reset()
@@ -693,27 +696,27 @@ class TextBoxRW(TextBoxC):
         self.close()
     
     def set_rw_buttons(self):
-        self.btn_cls = Button (parent   = self.frm_btl
-                              ,action   = self.close
-                              ,text     = _('Close')
-                              ,hint     = _('Reject and close')
-                              ,side     = 'left'
+        self.btn_cls = Button (parent = self.frm_btl
+                              ,action = self.close
+                              ,text = _('Close')
+                              ,hint = _('Reject and close')
+                              ,side = 'left'
                               ,bindings = ('<Escape>','<Control-w>'
                                           ,'<Control-q>'
                                           )
                               )
-        self.btn_rst = Button (parent   = self.frm_btl
-                              ,action   = self.reload
-                              ,text     = _('Reset')
-                              ,hint     = _('Restore the text')
-                              ,side     = 'right'
+        self.btn_rst = Button (parent = self.frm_btl
+                              ,action = self.reload
+                              ,text = _('Reset')
+                              ,hint = _('Restore the text')
+                              ,side = 'right'
                               ,bindings = ('<F5>','<Control-r>')
                               )
-        self.btn_sav = Button (parent   = self.frm_btr
-                              ,action   = self.save
-                              ,text     = _('Save')
-                              ,hint     = _('Accept and close')
-                              ,side     = 'right'
+        self.btn_sav = Button (parent = self.frm_btr
+                              ,action = self.save
+                              ,text = _('Save')
+                              ,hint = _('Accept and close')
+                              ,side = 'right'
                               ,bindings = ('<F2>','<Control-s>')
                               )
     
@@ -725,23 +728,23 @@ class TextBoxRW(TextBoxC):
     def set_rw_frames(self):
         self.frm_btn = Frame (parent = self.gui.parent
                              ,expand = False
-                             ,side   = 'bottom'
+                             ,side = 'bottom'
                              )
         self.frm_btl = Frame (parent = self.frm_btn
-                             ,side   = 'left'
+                             ,side = 'left'
                              )
         self.frm_btr = Frame (parent = self.frm_btn
-                             ,side   = 'right'
+                             ,side = 'right'
                              )
     
     def set_rw_bindings(self):
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = ('<F2>','<Control-s>')
-                 ,action   = self.save
+                 ,action = self.save
                  )
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = ('<F5>','<Control-r>')
-                 ,action   = self.reload
+                 ,action = self.reload
                  )
 
 
@@ -750,24 +753,21 @@ class TextBox:
 
     def __init__ (self,parent,expand=True
                  ,side=None,fill='both'
-                 ,words=None,font=FONT1
-                 ,ScrollX=False,ScrollY=True
-                 ,wrap='word',icon=''
+                 ,font=FONT1,ScrollX=False
+                 ,ScrollY=True,wrap='word'
+                 ,icon=''
                  ):
         self.set_values()
         self.parent = parent
         self.expand = expand
         self.side = side
         self.fill = fill
-        self.words = words
         self.font = font
         self.ScrollX = ScrollX
         self.ScrollY = ScrollY
         self.wrap = wrap
         
-        self.select = Selection (itxt  = self
-                                ,words = self.words
-                                )
+        self.select = Selection(itxt=self)
         self.set_gui()
     
     def search (self,pattern,start='1.0'
@@ -876,12 +876,14 @@ class TextBox:
                                      )
         self.set_bindings()
 
-    def reset(self,words=None):
+    def reset(self,text='',mode='top'):
         self.clear_text()
         self.clear_tags()
         self.clear_marks()
-        if words:
-            self.words = words
+        if text:
+            self.insert (text = text
+                        ,mode = mode
+                        )
 
     def set_bindings(self):
         # Custom selection
@@ -3757,8 +3759,8 @@ class Objects(lg.Objects):
     
     def get_txt(self,font=FONT1,Maximize=False):
         if self.txt is None:
-            self.txt = TextBoxRW (title    = _('Test:')
-                                 ,font     = font
+            self.txt = TextBoxRW (title = _('Test:')
+                                 ,font = font
                                  ,Maximize = Maximize
                                  )
         return self.txt

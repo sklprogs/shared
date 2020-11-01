@@ -1391,10 +1391,7 @@ class Text:
         self.text = Input('Text.__init__',self.text).get_not_none()
         # This can be useful in many cases, e.g. after OCR
         if Auto:
-            ''' This will remove symbols that cannot be shown in Tcl/Tk.
-                Since in many cases we build 'Words' from the text, we
-                need to synchronize this.
-            '''
+            # This will remove symbols that cannot be shown in Tk
             self.delete_unsupported()
             self.convert_line_breaks()
             self.strip_lines()
