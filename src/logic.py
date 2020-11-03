@@ -12,6 +12,7 @@ import sys
 import configparser
 import calendar
 import datetime
+import enchant
 import pickle
 import shlex
 import shutil
@@ -3763,18 +3764,18 @@ class Decline:
                  ,case='',Auto=True):
         self.set_values()
         if text:
-            self.reset (text   = text
+            self.reset (text = text
                        ,number = number
-                       ,case   = case
-                       ,Auto   = Auto
+                       ,case = case
+                       ,Auto = Auto
                        )
 
     def set_values(self):
-        self.Auto   = True
-        self.orig   = ''
+        self.Auto = True
+        self.orig = ''
         self.number = 'sing'
-        self.case   = 'nomn'
-        self.lst    = []
+        self.case = 'nomn'
+        self.lst = []
     
     def reset(self,text,number='',case='',Auto=True):
         ''' #TODO:
@@ -3873,11 +3874,19 @@ class Objects:
         through different programs both using 'shared.py').
     '''
     def __init__(self):
-        self.enchant_ru = self.morph = self.pretty_table \
-                         = self.pdir = self.online = self.tmpfile \
-                         = self.os = self.mes = self.sections = None
+        self.spell = self.morph = self.pretty_table = self.pdir \
+                   = self.online = self.tmpfile = self.os = self.mes \
+                   = self.sections = None
         self.icon = ''
 
+    def get_spell(self):
+        ''' Importing 'enchant' is fast, but dictionary loading takes
+            some time.
+        '''
+        if self.spell is None:
+            self.spell = Spelling()
+        return self.spell
+    
     def get_sections(self):
         if self.sections is None:
             self.sections = Sections()
@@ -3912,24 +3921,6 @@ class Objects:
         if not self.pdir:
             self.pdir = ProgramDir()
         return self.pdir
-
-    def get_enchant(self,lang='ru'):
-        import enchant
-        if not self.enchant_ru:
-            self.enchant_ru = enchant.Dict('ru_RU')
-            self.enchant_gb = enchant.Dict('en_GB')
-            self.enchant_us = enchant.Dict('en_US')
-        if lang == 'ru':
-            return self.enchant_ru
-        elif lang == 'gb':
-            return self.enchant_gb
-        elif lang == 'us':
-            return self.enchant_us
-        else:
-            mes = 'An unknown mode "{}"!\n\nThe following modes are supported: "{}".'
-            mes = mes.format(lang,'ru; gb; us')
-            objs.get_mes(f,mes).show_error()
-            return self.enchant_ru
 
     def get_morph(self):
         if not self.morph:
@@ -4764,6 +4755,55 @@ class Reference:
             if itext.has_latin() or itext.has_digits() \
             or itext.has_greek():
                 return True
+
+
+
+class Spelling:
+    
+    def __init__(self):
+        ''' Enchant:
+            
+            Does not accept:
+            - an empty input (raises an exception)
+            - mixed case
+            - punctuation
+            
+            Accepts:
+            - lower-case, upper-case and words where the first letter
+               is capital
+            - 'ё' and 'е' (new versions)
+            - non-nominative cases (new versions)
+        '''
+        self.ru = enchant.Dict('ru_RU')
+        self.gb = enchant.Dict('en_GB')
+        self.us = enchant.Dict('en_US')
+    
+    def check(self):
+        f = '[shared] logic.Spelling.check'
+        ''' We do not warn about empty input/output since this happens
+            quite often. Moreover, we return True in such cases since
+            this is actually not a spelling error.
+        '''
+        if self.word:
+            self.word = self.word.strip()
+            itext = Text(self.word)
+            self.word = itext.delete_punctuation()
+            if self.word and not itext.has_digits():
+                if len(self.word) == 1:
+                    return True
+                elif itext.has_cyrillic():
+                    return self.ru.check(self.word)
+                elif itext.has_latin():
+                    return self.gb.check(self.word) \
+                    or self.us.check(self.word)
+            else:
+                # Ignore an empty input and words with digits
+                return True
+        else:
+            return True
+    
+    def reset(self,word):
+        self.word = word
 
 
 

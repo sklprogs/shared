@@ -18,6 +18,16 @@ class Commands:
     def __init__(self):
         pass
     
+    def check_spelling(self):
+        f = '[shared] tests.Commands.check_spelling'
+        text = sh.ReadTextFile('/home/pete/tmp/check_spelling.txt').get()
+        sh.objs.get_txt().reset(text)
+        timer = sh.Timer(f)
+        timer.start()
+        sh.objs.txt.obj.check_spell()
+        timer.end()
+        sh.objs.txt.show()
+    
     def run_parallel_texts(self):
         #text1 = '1. Ничего (10) еще не предрешено (α) заранее (b10).'
         #text2 = '1. Nothing (10) has been determined (α) earlier (b10).'
@@ -1162,9 +1172,9 @@ class Anchors:
 class TestBox:
 
     def __init__(self):
-        #self.text = 'Здесь был вася, Васян, Вася, Вася и еще раз Вася.'
+        self.text = 'Здесь был вася, Васян, переВася, Вася и еще раз Вася.'
         self.pattern = 'Вася'
-        self.text = sh.ReadTextFile('/home/pete/tmp/large_file.txt').get()
+        #self.text = sh.ReadTextFile('/home/pete/tmp/large_file.txt').get()
         self.top = sh.Top (icon = ICON
                           ,title = _('Text:')
                           )
@@ -1312,5 +1322,6 @@ if __name__ == '__main__':
     #FIX
     #TestBox().navigate_words()
     #TestBox().bind_last_word()
-    com.run_parallel_texts()
+    #com.run_parallel_texts()
+    com.check_spelling()
     sh.com.end()

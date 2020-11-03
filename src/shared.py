@@ -340,7 +340,6 @@ class Selection:
         if not self.bg and not self.fg:
             self.bg = 'cyan'
         self.tag = tag
-        self.words = words
 
     def clear(self,tag='sel',pos1='1.0',pos2='end'):
         self.itxt.tag_remove (tag  = tag
@@ -452,7 +451,7 @@ class TextBoxC:
     
     def mark_add(self,mark='insert',pos='1.0'):
         self.obj.mark_add (mark = mark
-                          ,pos  = pos
+                          ,pos = pos
                           )
     
     def clear_marks(self,event=None):
@@ -464,9 +463,9 @@ class TextBoxC:
     def tag_config (self,tag='sel',bg=None
                    ,fg=None,font=None
                    ):
-        self.obj.tag_config (tag  = tag
-                            ,bg   = bg
-                            ,fg   = fg
+        self.obj.tag_config (tag = tag
+                            ,bg = bg
+                            ,fg = fg
                             ,font = font
                             )
     
@@ -474,7 +473,7 @@ class TextBoxC:
                    ,pos1='1.0'
                    ,pos2='end'
                    ):
-        self.obj.tag_remove (tag  = tag
+        self.obj.tag_remove (tag = tag
                             ,pos1 = pos1
                             ,pos2 = pos2
                             )
@@ -482,9 +481,9 @@ class TextBoxC:
     def tag_add (self,tag='sel',pos1='1.0'
                 ,pos2='end',DelPrev=True
                 ):
-        self.obj.tag_add (tag     = tag
-                         ,pos1    = pos1
-                         ,pos2    = pos2
+        self.obj.tag_add (tag = tag
+                         ,pos1 = pos1
+                         ,pos2 = pos2
                          ,DelPrev = DelPrev
                          )
     
@@ -502,7 +501,7 @@ class TextBoxC:
                ,pos='1.0',mode=None
                ):
         self.obj.insert (text = text
-                        ,pos  = pos
+                        ,pos = pos
                         ,mode = mode
                         )
     
@@ -515,54 +514,18 @@ class TextBoxC:
     
     def set_gui(self):
         self.parent = Top (Maximize = self.Maximize
-                          ,title    = self.title
-                          ,icon     = self.icon
+                          ,title = self.title
+                          ,icon = self.icon
                           )
         self.widget = self.parent.widget
         self.gui = gi.TextBoxC(self.parent)
-        self.obj = TextBox (parent  = self.parent
-                           ,words   = self.words
-                           ,ScrollX = False
-                           ,ScrollY = True
-                           ,icon    = self.icon
-                           ,font    = self.font
-                           )
+        self.obj = SearchBox (parent = self.parent
+                             ,ScrollX = False
+                             ,ScrollY = True
+                             ,icon = self.icon
+                             ,font = self.font
+                             )
         self.set_bindings()
-    
-    def check_spell(self):
-        ''' Tags can be marked only after text is inserted; thus, call
-            this procedure separately before '.show'.
-        '''
-        f = '[shared] shared.TextBox.check_spell'
-        if self.words:
-            self.words.set_sent_nos()
-            result = []
-            for i in range(self.words.get_len()):
-                if not self.words.words[i].check_spell():
-                    result.append(i)
-            if result:
-                self.clear_tags()
-                for i in range(len(result)):
-                    no   = self.words.no = result[i]
-                    pos1 = self.words.words[no].get_tf()
-                    pos2 = self.words.words[no].get_tl()
-                    if pos1 and pos2:
-                        self.tag_add (tag     = 'spell'
-                                     ,pos1    = pos1
-                                     ,pos2    = pos2
-                                     ,DelPrev = False
-                                     )
-                
-                mes = _('{} tags to assign').format(len(result))
-                objs.get_mes(f,mes,True).show_debug()
-                self.tag_config (tag = 'spell'
-                                ,bg  = 'red'
-                                )
-            else:
-                mes = _('Spelling seems to be correct.')
-                objs.get_mes(f,mes,True).show_info()
-        else:
-            com.rep_empty(f)
     
     def set_icon(self,path=''):
         if path:
@@ -587,9 +550,9 @@ class TextBoxC:
         self.gui.close()
     
     def set_bindings(self):
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = ('<Escape>','<Control-w>','<Control-q>')
-                 ,action   = self.close
+                 ,action = self.close
                  )
         # This is to remember the 'Active' status
         self.widget.protocol("WM_DELETE_WINDOW",self.close)
@@ -909,15 +872,17 @@ class TextBox:
         pos1, pos2 = self.select.get()
         self.clear_sel()
         self.insert (text = text
-                    ,pos  = self.get_cursor()
+                    ,pos = self.get_cursor()
                     )
         if pos1 and pos2:
             self.select.reset (pos1 = pos1
                               ,pos2 = pos2
-                              ,tag  = 'sel'
-                              ,bg   = 'gray'
+                              ,tag = 'sel'
+                              ,bg = 'gray'
                               )
-            self.select.set(DelPrev=0,AutoScroll=0)
+            self.select.set (DelPrev = 0
+                            ,AutoScroll = 0
+                            )
         else:
             com.rep_empty(f)
         return 'break'
@@ -4629,6 +4594,31 @@ class TextBoxTk(TextBox):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.set_word()
+    
+    def check_spell(self):
+        f = '[shared] shared.TextBoxTk.check_spell'
+        self.set_word('1.0')
+        while not self.is_last_word():
+            pos = self.set_next_word()
+            # Stripping is done here
+            word = self.get_word_text (pos = pos
+                                      ,Strip = False
+                                      )
+            objs.get_spell().reset(word)
+            if not objs.spell.check():
+                # Spelling returns True on an empty input
+                if word[0] in lg.punc_array \
+                or word[0] in lg.punc_ext_array:
+                    pos = '{}+1c'.format(pos)
+                pos2 = '{}+{}c'.format(pos,len(objs.spell.word))
+                self.tag_add (tag = 'misspell'
+                             ,pos1 = pos
+                             ,pos2 = pos2
+                             ,DelPrev = False
+                             )
+        self.tag_config (tag = 'misspell'
+                        ,bg = 'red'
+                        )
     
     def get_end(self):
         return self.get_index('end')
