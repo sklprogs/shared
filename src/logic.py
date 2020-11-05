@@ -1792,6 +1792,14 @@ class List:
         else:
             self.lst2 = list(lst2)
 
+    def find(self):
+        len_ = len(self.lst2)
+        for index_ in (i for i,e in enumerate(self.lst1) \
+                       if e == self.lst2[0]
+                      ):
+            if self.lst1[index_:index_+len_] == self.lst2:
+                return(index_, index_ + len_ - 1)
+    
     def get_shared(self):
         return [item for item in self.lst2 if item in self.lst1]
     
