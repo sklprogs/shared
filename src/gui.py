@@ -99,12 +99,12 @@ class TextBox:
                  ):
         self.parent = parent
         self.widget = tk.Text (master = self.parent.widget
-                              ,font   = font
-                              ,wrap   = wrap
+                              ,font = font
+                              ,wrap = wrap
                               )
         self.widget.pack (expand = expand
-                         ,fill   = fill
-                         ,side   = side
+                         ,fill = fill
+                         ,side = side
                          )
     
     def get_marks(self):

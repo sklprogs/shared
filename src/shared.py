@@ -310,129 +310,6 @@ class WriteTextFile(lg.WriteTextFile):
 
 
 
-#TODO: del # Select words only
-class Selection:
-    ''' Usage:
-        com.bind(itxt,'<ButtonRelease-1>',action)
-
-    def action(event=None):
-        """ Refresh coordinates (or set isel.pos1, isel.pos2
-            manually).
-        """
-        isel.get()
-        isel.set()
-    '''
-    def __init__(self,itxt):
-        self.itxt = itxt
-
-    def reset (self
-              ,pos1  = None
-              ,pos2  = None
-              ,bg    = None
-              ,fg    = None
-              ,tag   = 'tag'
-              ):
-        self.pos1 = pos1
-        self.pos2 = pos2
-        self.text = ''
-        self.bg = bg
-        self.fg = fg
-        if not self.bg and not self.fg:
-            self.bg = 'cyan'
-        self.tag = tag
-
-    def clear(self,tag='sel',pos1='1.0',pos2='end'):
-        self.itxt.tag_remove (tag  = tag
-                             ,pos1 = pos1
-                             ,pos2 = pos2
-                             )
-
-    def get_pos1(self):
-        if self.pos1 is None:
-            self.get()
-        return self.pos1
-
-    def get_pos2(self):
-        if self.pos2 is None:
-            self.get()
-        return self.pos2
-
-    def get(self,event=None):
-        f = '[shared] shared.Selection.get'
-        try:
-            self.pos1, self.pos2 = self.itxt.gui.get_sel_index()
-        except Exception as e:
-            self.pos1, self.pos2 = None, None
-            e = str(e)
-            if "text doesn't contain any characters tagged with" in e:
-                mes = _('No selection!')
-                objs.get_mes(f,mes,True).show_info()
-            else:
-                com.rep_failed(f,e)
-        # Too frequent
-        '''
-        mes = '{}-{}'.format(self.pos1,self.pos2)
-        objs.get_mes(f,mes,True).show_debug()
-        '''
-        return(self.pos1,self.pos2)
-
-    def get_text(self):
-        f = '[shared] shared.Selection.get_text'
-        ''' #TODO: do not use self.variables so we don't have to reset
-            this class (or, even better, delete this class from all
-            projects).
-        '''
-        self.text = ''
-        try:
-            self.text = self.itxt.gui.get_sel()
-            self.text = self.text.replace('\r','').replace('\n','')
-        except:
-            ''' Tkinter will throw an exception if there is no
-                selection, so we just ignore this exception.
-            '''
-            pass
-        return self.text
-
-    def select_all(self):
-        self.itxt.select_all()
-
-    def set(self,DelPrev=True,AutoScroll=True):
-        if self.get_pos1() and self.get_pos2():
-            mark = self.pos1
-            self.itxt.tag_add (pos1    = self.pos1
-                              ,pos2    = self.pos2
-                              ,tag     = self.tag
-                              ,DelPrev = DelPrev
-                              )
-        else:
-            # Just need to return something w/o warnings
-            cursor = mark = self.itxt.get_cursor()
-            self.itxt.tag_add (tag     = self.tag
-                              ,pos1    = cursor
-                              ,pos2    = cursor
-                              ,DelPrev = DelPrev
-                              )
-        
-        if self.bg:
-            ''' This is not necessary for 'sel' tag which is hardcoded
-                for selection and permanently colored with gray.
-                A 'background' attribute cannot be changed for a 'sel'
-                tag.
-            '''
-            self.itxt.tag_config (tag = self.tag
-                                 ,bg  = self.bg
-                                 )
-        elif self.fg:
-            self.itxt.tag_config (tag = self.tag
-                                 ,fg  = self.fg
-                                 )
-        #TODO: select either 'see' or 'autoscroll'
-        if AutoScroll:
-            #self.itxt.see(mark)
-            self.itxt.autoscroll(mark)
-
-
-
 class TextBoxC:
     
     def __init__ (self,Maximize=False,title=''
@@ -729,9 +606,21 @@ class TextBox:
         self.ScrollX = ScrollX
         self.ScrollY = ScrollY
         self.wrap = wrap
-        
-        self.select = Selection(itxt=self)
         self.set_gui()
+    
+    def get_sel_index(self,event=None):
+        f = '[shared] shared.TextBox.get_sel_index'
+        try:
+            return self.gui.get_sel_index()
+        except Exception as e:
+            com.rep_failed(f,e)
+    
+    def get_sel(self,event=None):
+        f = '[shared] shared.TextBox.get_sel'
+        try:
+            return self.gui.get_sel()
+        except Exception as e:
+            com.rep_failed(f,e)
     
     def search (self,pattern,start='1.0'
                ,end='end',Case=True
@@ -850,41 +739,42 @@ class TextBox:
 
     def set_bindings(self):
         # Custom selection
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = '<Control-a>'
-                 ,action   = self.select_all
+                 ,action = self.select_all
                  )
         ''' Tkinter does not delete the selection before pasting, so we
             do custom pasting here.
         '''
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = '<Control-v>'
-                 ,action   = self.paste
+                 ,action = self.paste
                  )
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = '<Control-Alt-u>'
-                 ,action   = self.toggle_case
+                 ,action = self.toggle_case
                  )
 
     def toggle_case(self,event=None):
         f = '[shared] shared.TextBox.toggle_case'
-        text = Text(text=self.select.get_text()).toggle_case()
-        pos1, pos2 = self.select.get()
-        self.clear_sel()
-        self.insert (text = text
-                    ,pos = self.get_cursor()
-                    )
-        if pos1 and pos2:
-            self.select.reset (pos1 = pos1
-                              ,pos2 = pos2
-                              ,tag = 'sel'
-                              ,bg = 'gray'
-                              )
-            self.select.set (DelPrev = 0
-                            ,AutoScroll = 0
+        selection = self.get_sel()
+        sel_index = self.get_sel_index()
+        if selection and sel_index:
+            text = Text(selection).toggle_case()
+            self.clear_sel()
+            self.insert (text = text
+                        ,pos = self.get_cursor()
+                        )
+            self.tag_add (tag = 'sel'
+                         ,pos1 = sel_index[0]
+                         ,pos2 = sel_index[1]
+                         )
+            self.tag_config (tag = 'sel'
+                            ,bg = 'gray'
                             )
         else:
-            com.rep_empty(f)
+            mes = _('No selection!')
+            objs.get_mes(f,mes,True).show_info()
         return 'break'
 
     def _get(self,pos1='1.0',pos2='end'):
@@ -1029,11 +919,9 @@ class TextBox:
 
     def clear_sel(self,event=None):
         f = '[shared] shared.TextBox.clear_sel'
-        pos1, pos2 = self.select.get()
-        if pos1 and pos2:
-            self.clear_text (pos1 = pos1
-                            ,pos2 = pos2
-                            )
+        self.clear_text (pos1 = 'sel.first'
+                        ,pos2 = 'sel.last'
+                        )
 
     def goto(self,GoTo=''):
         f = '[shared] shared.TextBox.goto'
@@ -1324,24 +1212,24 @@ class Entry:
         self.gui.enable()
 
     def set_bindings(self):
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = '<Control-a>'
-                 ,action   = self.select_all
+                 ,action = self.select_all
                  )
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = '<Control-v>'
-                 ,action   = self.paste
+                 ,action = self.paste
                  )
     
     def set_extra_bind(self):
         if self.AddBind:
-            com.bind (obj      = self.gui
+            com.bind (obj = self.gui
                      ,bindings = '<ButtonRelease-2>'
-                     ,action   = self.paste
+                     ,action = self.paste
                      )
-            com.bind (obj      = self.gui
+            com.bind (obj = self.gui
                      ,bindings = '<ButtonRelease-3>'
-                     ,action   = self.clear
+                     ,action = self.clear
                      )
 
     def _get(self):
@@ -1407,7 +1295,7 @@ class MultCBoxesC:
         self.font = font
         self.set_gui()
         self.set_title()
-        self.reset (text    = text
+        self.reset (text = text
                    ,MarkAll = MarkAll
                    )
     
@@ -1421,11 +1309,11 @@ class MultCBoxesC:
         self.obj.toggle()
     
     def set_bindings(self):
-        com.bind (obj      = self.parent
+        com.bind (obj = self.parent
                  ,bindings = ('<Control-q>','<Control-w>','<Escape>')
-                 ,action   = self.close
+                 ,action = self.close
                  )
-        self.obj.cvs_prm.set_top_bindings (top  = self.parent
+        self.obj.cvs_prm.set_top_bindings (top = self.parent
                                           ,Ctrl = False
                                           )
     

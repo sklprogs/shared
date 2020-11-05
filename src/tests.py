@@ -1321,7 +1321,7 @@ if __name__ == '__main__':
     #TestBox().run_search_box()
     #FIX
     #TestBox().navigate_words()
-    #TestBox().bind_last_word()
+    TestBox().bind_last_word()
     #com.run_parallel_texts()
-    com.check_spelling()
+    #com.check_spelling()
     sh.com.end()
