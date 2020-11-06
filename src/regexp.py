@@ -83,23 +83,23 @@ class Record:
             cond5 = self.what5 and self.with5
             if cond1 or cond2 or cond3 or cond4 or cond5:
                 if cond1:
-                    self.what  = self.what1
+                    self.what = self.what1
                     self.with_ = self.with1
                     self._check()
                 if self.Success and cond2:
-                    self.what  = self.what2
+                    self.what = self.what2
                     self.with_ = self.with2
                     self._check()
                 if self.Success and cond3:
-                    self.what  = self.what3
+                    self.what = self.what3
                     self.with_ = self.with3
                     self._check()
                 if self.Success and cond4:
-                    self.what  = self.what4
+                    self.what = self.what4
                     self.with_ = self.with4
                     self._check()
                 if self.Success and cond5:
-                    self.what  = self.what5
+                    self.what = self.what5
                     self.with_ = self.with5
                     self._check()
             else:
@@ -118,7 +118,7 @@ if __name__ == '__main__':
     #text = 'Records 200 - 300 have undergone a regular procedure...'
     what1 = 'pages 1-2'
     with1 = 'pages 1-2'
-    rec = Record (orig  = orig
+    rec = Record (orig = orig
                  ,final = final
                  ,what1 = what1
                  ,with1 = with1

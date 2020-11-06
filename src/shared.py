@@ -456,22 +456,22 @@ class TextBoxRO(TextBoxC):
                ):
         self.enable()
         self.obj.insert (text = text
-                        ,pos  = pos
+                        ,pos = pos
                         ,mode = mode
                         )
         self.disable()
     
     def set_ro_buttons(self):
-        self.btn_cls = Button (parent   = self.frm_btn
-                              ,action   = self.close
-                              ,text     = _('Close')
-                              ,hint     = _('Close this window')
-                              ,side     = 'left'
+        self.btn_cls = Button (parent = self.frm_btn
+                              ,action = self.close
+                              ,text = _('Close')
+                              ,hint = _('Close this window')
+                              ,side = 'left'
                               ,bindings = ('<Escape>','<Control-w>'
                                           ,'<Control-q>','<Return>'
                                           ,'<KP_Enter>'
                                           )
-                              ,expand   = True
+                              ,expand = True
                               )
     
     def set_ro_gui(self):
@@ -482,16 +482,16 @@ class TextBoxRO(TextBoxC):
     def set_ro_frames(self):
         self.frm_btn = Frame (parent = self.gui.parent
                              ,expand = False
-                             ,side   = 'bottom'
+                             ,side = 'bottom'
                              )
     
     def set_ro_bindings(self):
         # Do not add a new line
         self.gui.unbind('<Return>')
         self.gui.unbind('<KP_Enter>')
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = ('<Return>','<KP_Enter>')
-                 ,action   = self.close
+                 ,action = self.close
                  )
 
 
@@ -509,7 +509,7 @@ class TextBoxRW(TextBoxC):
                ):
         self.rw_text = text
         self.obj.insert (text = text
-                        ,pos  = pos
+                        ,pos = pos
                         ,mode = mode
                         )
     
@@ -683,38 +683,38 @@ class TextBox:
 
     def set_frames(self):
         self.frm_prm = Frame (parent = self.parent
-                             ,side   = self.side
+                             ,side = self.side
                              ,expand = self.expand
-                             ,fill   = self.fill
+                             ,fill = self.fill
                              )
         self.frm_sec = Frame (parent = self.frm_prm
-                             ,side   = 'top'
+                             ,side = 'top'
                              )
         self.frm_trt = Frame (parent = self.frm_sec
-                             ,side   = 'left'
+                             ,side = 'left'
                              )
         self.frm_ver = Frame (parent = self.frm_sec
-                             ,side   = 'right'
+                             ,side = 'right'
                              ,expand = False
-                             ,fill   = 'y'
+                             ,fill = 'y'
                              )
         self.frm_txt = Frame (parent = self.frm_trt
-                             ,side   = 'top'
+                             ,side = 'top'
                              )
         self.frm_hor = Frame (parent = self.frm_trt
-                             ,side   = 'bottom'
+                             ,side = 'bottom'
                              ,expand = False
-                             ,fill   = 'x'
+                             ,fill = 'x'
                              )
     
     def set_gui(self):
         self.set_frames()
         self.gui = gi.TextBox (parent = self.frm_txt
-                              ,wrap   = self.wrap
+                              ,wrap = self.wrap
                               ,expand = self.expand
-                              ,side   = self.side
-                              ,fill   = self.fill
-                              ,font   = self.font
+                              ,side = self.side
+                              ,fill = self.fill
+                              ,font = self.font
                               )
         self.widget = self.gui.widget
         if self.ScrollY:
@@ -724,7 +724,7 @@ class TextBox:
         if self.ScrollX:
             self.scr_hor = Scrollbar (parent = self.frm_hor
                                      ,scroll = self.gui
-                                     ,Horiz  = True
+                                     ,Horiz = True
                                      )
         self.set_bindings()
 
@@ -803,7 +803,7 @@ class TextBox:
             text = ''
         try:
             self.gui.insert (text = text
-                            ,pos  = pos
+                            ,pos = pos
                             )
         except Exception as e:
             com.rep_failed(f,e)
@@ -836,7 +836,7 @@ class TextBox:
     def paste(self,event=None):
         self.clear_sel()
         self.insert (text = Clipboard().paste()
-                    ,pos  = self.get_cursor()
+                    ,pos = self.get_cursor()
                     )
         return 'break'
 
@@ -845,7 +845,7 @@ class TextBox:
             (which is added automatically by 'tkinter'). For this
             to work correctly, strip the text first.
         '''
-        self.tag_add (tag  = 'sel'
+        self.tag_add (tag = 'sel'
                      ,pos1 = '1.0'
                      ,pos2 = 'end-1c'
                      )
@@ -855,7 +855,7 @@ class TextBox:
     def tag_remove(self,tag='sel',pos1='1.0',pos2='end'):
         f = '[shared] shared.TextBox.tag_remove'
         try:
-            self.gui.tag_remove (tag  = tag
+            self.gui.tag_remove (tag = tag
                                 ,pos1 = pos1
                                 ,pos2 = pos2
                                 )
@@ -870,7 +870,7 @@ class TextBox:
             if DelPrev:
                 self.tag_remove(tag)
             try:
-                self.gui.tag_add (tag  = tag
+                self.gui.tag_add (tag = tag
                                  ,pos1 = pos1
                                  ,pos2 = pos2
                                  )
@@ -896,7 +896,7 @@ class TextBox:
         f = '[shared] shared.TextBox.mark_add'
         try:
             self.gui.mark_add (mark = mark
-                              ,pos  = pos
+                              ,pos = pos
                               )
         except Exception as e:
             com.rep_failed(f,e)
@@ -999,7 +999,7 @@ class EntryC:
     
     def insert(self,text='text',pos=0):
         self.obj.insert (text = text
-                        ,pos  = pos
+                        ,pos = pos
                         )
     
     def select_all(self,event=None):
@@ -1031,15 +1031,15 @@ class EntryC:
     
     def set_gui(self):
         self.parent = Top (AutoCr = False
-                          ,title  = self.title
-                          ,icon   = self.icon
+                          ,title = self.title
+                          ,icon = self.icon
                           )
         self.gui = gi.EntryC(self.parent)
         self.widget = self.gui.widget
         self.set_frames()
-        self.obj = Entry (parent   = self.frm_ent
-                         ,expand   = True
-                         ,fill     = 'x'
+        self.obj = Entry (parent = self.frm_ent
+                         ,expand = True
+                         ,fill = 'x'
                          ,ClearAll = self.ClearAll
                          )
         self.set_buttons()
@@ -1047,18 +1047,18 @@ class EntryC:
     
     def set_frames(self):
         self.frm_ent = Frame (parent = self.parent
-                             ,side   = 'top'
+                             ,side = 'top'
                              ,expand = False
                              )
         self.frm_btn = Frame (parent = self.parent
-                             ,side   = 'bottom'
+                             ,side = 'bottom'
                              ,expand = False
                              )
         self.frm_btl = Frame (parent = self.frm_btn
-                             ,side   = 'left'
+                             ,side = 'left'
                              )
         self.frm_btr = Frame (parent = self.frm_btn
-                             ,side   = 'right'
+                             ,side = 'right'
                              )
     
     def get(self,event=None):
@@ -1081,40 +1081,40 @@ class EntryC:
     def set_buttons(self):
         self.btn_cls = Button (parent = self.frm_btl
                               ,action = self.close
-                              ,hint   = _('Reject and close')
-                              ,text   = _('Close')
-                              ,side   = 'left'
-                              ,hdir   = 'bottom'
+                              ,hint = _('Reject and close')
+                              ,text = _('Close')
+                              ,side = 'left'
+                              ,hdir = 'bottom'
                               )
         self.btn_clr = Button (parent = self.frm_btl
                               ,action = self.clear
-                              ,hint   = _('Clear the field')
-                              ,text   = _('Clear')
-                              ,side   = 'right'
-                              ,hdir   = 'bottom'
+                              ,hint = _('Clear the field')
+                              ,text = _('Clear')
+                              ,side = 'right'
+                              ,hdir = 'bottom'
                               )
         self.btn_sav = Button (parent = self.frm_btr
                               ,action = self.save
-                              ,hint   = _('Accept and close')
-                              ,text   = _('Save and close')
-                              ,side   = 'right'
-                              ,hdir   = 'bottom'
+                              ,hint = _('Accept and close')
+                              ,text = _('Save and close')
+                              ,side = 'right'
+                              ,hdir = 'bottom'
                               )
     
     def set_bindings(self):
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = ('<Escape>','<Control-q>','<Control-w>')
-                 ,action   = self.close
+                 ,action = self.close
                  )
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = ('<F5>','<Control-r>')
-                 ,action   = self.clear
+                 ,action = self.clear
                  )
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = ('<Return>','<KP_Enter>'
                              ,'<F2>','<Control-s>'
                              )
-                 ,action   = self.save
+                 ,action = self.save
                  )
     
     def save(self,event=None):
@@ -1181,21 +1181,21 @@ class Entry:
                    ,pos2 = pos2
                    )
         self.insert (text = Clipboard().paste()
-                    ,pos  = self.get_cursor()
+                    ,pos = self.get_cursor()
                     )
         return 'break'
     
     def set_gui(self):
-        self.gui = gi.Entry (parent  = self.parent
-                            ,side    = self.side
-                            ,ipadx   = self.ipadx
-                            ,ipady   = self.ipady
-                            ,fill    = self.fill_
-                            ,width   = self.width
-                            ,expand  = self.expand
-                            ,font    = self.font
-                            ,bg      = self.bg
-                            ,fg      = self.fg
+        self.gui = gi.Entry (parent = self.parent
+                            ,side = self.side
+                            ,ipadx = self.ipadx
+                            ,ipady = self.ipady
+                            ,fill = self.fill_
+                            ,width = self.width
+                            ,expand = self.expand
+                            ,font = self.font
+                            ,bg = self.bg
+                            ,fg = self.fg
                             ,justify = self.justify
                             )
         self.widget = self.gui.widget
@@ -1324,7 +1324,7 @@ class MultCBoxesC:
     
     def reset(self,text='',MarkAll=False):
         self.text = lg.com.sanitize(text)
-        self.obj.reset (text    = text
+        self.obj.reset (text = text
                        ,MarkAll = MarkAll
                        )
     
@@ -1332,17 +1332,17 @@ class MultCBoxesC:
         self.frm_prm = Frame (parent = self.parent)
         self.frm_ver = Frame (parent = self.frm_prm
                              ,expand = False
-                             ,fill   = 'y'
-                             ,side   = 'right'
+                             ,fill = 'y'
+                             ,side = 'right'
                              )
         self.frm_bth = Frame (parent = self.parent
                              ,expand = False
-                             ,fill   = 'both'
+                             ,fill = 'both'
                              )
         self.frm_hor = Frame (parent = self.frm_prm
                              ,expand = False
-                             ,fill   = 'x'
-                             ,side   = 'bottom'
+                             ,fill = 'x'
+                             ,side = 'bottom'
                              )
         self.frm_sec = Frame (parent = self.frm_prm)
         
@@ -1357,15 +1357,15 @@ class MultCBoxesC:
     
     def set_widgets(self):
         self.btn_sel = Button (parent = self.frm_bth
-                              ,text   = _('Toggle all')
-                              ,hint   = _('Mark/unmark all checkboxes')
-                              ,side   = 'left'
+                              ,text = _('Toggle all')
+                              ,hint = _('Mark/unmark all checkboxes')
+                              ,side = 'left'
                               ,action = self.toggle
                               )
         self.btn_cls = Button (parent = self.frm_bth
-                              ,text   = _('Close')
-                              ,hint   = _('Close this window')
-                              ,side   = 'right'
+                              ,text = _('Close')
+                              ,hint = _('Close this window')
+                              ,side = 'right'
                               ,action = self.close
                               )
     
@@ -1378,8 +1378,8 @@ class MultCBoxesC:
         self.gui = gi.MultCBoxesC(self.parent)
         self.widget = self.gui.widget
         self.set_frames()
-        self.obj = MultCBoxes (parent  = self.frm_sec
-                              ,font    = self.font
+        self.obj = MultCBoxes (parent = self.frm_sec
+                              ,font = self.font
                               )
         self.set_widgets()
         self.set_scroll()
@@ -1411,7 +1411,7 @@ class MultCBoxes:
         self.font = font
         self.set_values()
         self.set_gui()
-        self.reset (text    = text
+        self.reset (text = text
                    ,MarkAll = MarkAll
                    )
     
@@ -1430,8 +1430,8 @@ class MultCBoxes:
         f = '[shared] shared.MultCBoxes.set_region'
         if self.frms:
             objs.get_root().update_idle()
-            self.cvs_prm.set_region (x       = self.frm_emb.get_reqwidth()
-                                    ,y       = self.frm_emb.get_reqheight()
+            self.cvs_prm.set_region (x = self.frm_emb.get_reqwidth()
+                                    ,y = self.frm_emb.get_reqheight()
                                     ,xborder = 5
                                     ,yborder = 10
                                     )
@@ -1455,16 +1455,16 @@ class MultCBoxes:
                     ,expand = False
                     )
         cbx = CheckBox (parent = frm
-                       ,side   = 'left'
+                       ,side = 'left'
                        )
         lbl = Label (parent = frm
-                    ,text   = text
-                    ,side   = 'left'
-                    ,font   = self.font
+                    ,text = text
+                    ,side = 'left'
+                    ,font = self.font
                     )
-        com.bind (obj      = lbl
+        com.bind (obj = lbl
                  ,bindings = '<ButtonRelease-1>'
-                 ,action   = cbx.toggle
+                 ,action = cbx.toggle
                  )
         self.frms.append(frm)
         self.cboxes.append(cbx)
@@ -1510,7 +1510,7 @@ class CheckBox:
         self.side = side
         self.action = action
         self.gui = gi.CheckBox (parent = self.parent
-                               ,side   = self.side
+                               ,side = self.side
                                )
         self.widget = self.gui.widget
         self.reset (Active = Active
@@ -1603,13 +1603,13 @@ class ProgressBar:
         self.frm_prm = Frame (parent = self.parent)
         self.frm_hor = Frame (parent = self.frm_prm
                              ,expand = False
-                             ,fill   = 'x'
-                             ,side   = 'bottom'
+                             ,fill = 'x'
+                             ,side = 'bottom'
                              )
         self.frm_ver = Frame (parent = self.frm_prm
                              ,expand = False
-                             ,fill   = 'y'
-                             ,side   = 'right'
+                             ,fill = 'y'
+                             ,side = 'right'
                              )
         # This frame must be created after the bottom frame
         self.frm_sec = Frame (parent = self.frm_prm)
@@ -1632,8 +1632,8 @@ class ProgressBar:
     
     def set_gui(self):
         self.parent = self.obj = Top (title = self.title
-                                     ,icon  = self.icon
-                                     ,Lock  = False
+                                     ,icon = self.icon
+                                     ,Lock = False
                                      )
         self.widget = self.parent.widget
         Geometry(self.parent).set('%dx%d' % (self.width,self.height))
@@ -1647,18 +1647,18 @@ class ProgressBar:
         self.set_bindings()
         
     def set_bindings(self):
-        com.bind (obj      = self.parent
+        com.bind (obj = self.parent
                  ,bindings = ('<Control-q>','<Control-w>','<Escape>')
-                 ,action   = self.close
+                 ,action = self.close
                  )
-        self.canvas.set_top_bindings (top  = self.parent
+        self.canvas.set_top_bindings (top = self.parent
                                      ,Ctrl = False
                                      )
     
     def set_widgets(self):
         self.canvas = Canvas(parent = self.frm_sec)
         self.label = Label (parent = self.frm_sec
-                           ,text   = 'ProgressBar'
+                           ,text = 'ProgressBar'
                            ,expand = True
                            ,fill   = 'both'
                            )
@@ -1683,8 +1683,8 @@ class ProgressBar:
         mes = _('Widget sizes: {}').format(sub)
         objs.get_mes(f,mes,True).show_debug()
         '''
-        self.canvas.set_region (x       = max_x
-                               ,y       = max_y
+        self.canvas.set_region (x = max_x
+                               ,y = max_y
                                ,xborder = 50
                                ,yborder = 20
                                )
@@ -1711,22 +1711,22 @@ class ProgressBarItem:
         self.gui = gi.ProgressBarItem (parent = self.frame2
                                       ,orient = self.orient
                                       ,length = self.length
-                                      ,mode   = self.mode
+                                      ,mode = self.mode
                                       )
         self.widget = self.gui.widget
         
     def set_frames(self):
-        self.frame  = Frame (parent = self.parent
-                            ,expand = False
-                            ,fill   = 'x'
-                            )
+        self.frame = Frame (parent = self.parent
+                           ,expand = False
+                           ,fill = 'x'
+                           )
         self.frame1 = Frame(parent=self.frame)
         self.frame2 = Frame(parent=self.frame)
         
     def set_labels(self):
         self.label = Label (parent = self.frame1
-                           ,side   = 'left'
-                           ,font   = 'Mono 11'
+                           ,side = 'left'
+                           ,font = 'Mono 11'
                            )
 
     def set_text(self,text=None):
@@ -1846,53 +1846,53 @@ class Canvas:
     def set_top_bindings(self,top,Ctrl=True):
         f = '[shared] shared.Canvas.set_top_bindings'
         if top:
-            com.bind (obj      = top
+            com.bind (obj = top
                      ,bindings = '<Down>'
-                     ,action   = self.move_down
+                     ,action = self.move_down
                      )
-            com.bind (obj      = top
+            com.bind (obj = top
                      ,bindings = '<Up>'
-                     ,action   = self.move_up
+                     ,action = self.move_up
                      )
-            com.bind (obj      = top
+            com.bind (obj = top
                      ,bindings = '<Left>'
-                     ,action   = self.move_left
+                     ,action = self.move_left
                      )
-            com.bind (obj      = top
+            com.bind (obj = top
                      ,bindings = '<Right>'
-                     ,action   = self.move_right
+                     ,action = self.move_right
                      )
-            com.bind (obj      = top
+            com.bind (obj = top
                      ,bindings = '<Next>'
-                     ,action   = self.move_page_down
+                     ,action = self.move_page_down
                      )
-            com.bind (obj      = top
+            com.bind (obj = top
                      ,bindings = '<Prior>'
-                     ,action   = self.move_page_up
+                     ,action = self.move_page_up
                      )
-            com.bind (obj      = top
+            com.bind (obj = top
                      ,bindings = ('<MouseWheel>','<Button 4>'
                                  ,'<Button 5>'
                                  )
-                     ,action   = self.set_mouse_wheel
+                     ,action = self.set_mouse_wheel
                      )
             if Ctrl:
-                com.bind (obj      = top
+                com.bind (obj = top
                          ,bindings = '<Control-Home>'
-                         ,action   = self.move_top
+                         ,action = self.move_top
                          )
-                com.bind (obj      = top
+                com.bind (obj = top
                          ,bindings = '<Control-End>'
-                         ,action   = self.move_bottom
+                         ,action = self.move_bottom
                          )
             else:
-                com.bind (obj      = top
+                com.bind (obj = top
                          ,bindings = '<Home>'
-                         ,action   = self.move_top
+                         ,action = self.move_top
                          )
-                com.bind (obj      = top
+                com.bind (obj = top
                          ,bindings = '<End>'
-                         ,action   = self.move_bottom
+                         ,action = self.move_bottom
                          )
         else:
             com.rep_empty(f)
@@ -1927,8 +1927,8 @@ class Canvas:
         f = '[shared] shared.Canvas.set_region'
         # Both integer and float values are allowed at input
         if x and y:
-            self.gui.set_region (x        = x
-                                ,y        = y
+            self.gui.set_region (x = x
+                                ,y = y
                                 ,xborder = xborder
                                 ,yborder = yborder
                                 )
@@ -2012,7 +2012,7 @@ class SymbolMap:
         self.set_bindings()
         self.reset (items = items
                    ,title = title
-                   ,icon  = icon
+                   ,icon = icon
                    )
     
     def get(self,event=None):
@@ -2045,13 +2045,13 @@ class SymbolMap:
                 self.frm_row = Frame(self.frm_prm)
             self.gui.insert (frame = self.frm_row
                             ,items = items
-                            ,i     = i
+                            ,i = i
                             )
 
     def set_bindings(self):
-        com.bind (obj      = self.parent
+        com.bind (obj = self.parent
                  ,bindings = ('<Escape>','<Control-q>','<Control-w>')
-                 ,action   = self.close
+                 ,action = self.close
                  )
 
     def show(self,event=None):
@@ -2076,17 +2076,17 @@ class OptionMenu:
     '''
     def __init__ (self
                  ,parent
-                 ,items   = ('1','2','3','4','5')
-                 ,side    = 'left'
-                 ,anchor  = 'center'
-                 ,action  = None
-                 ,tfocus  = 1
+                 ,items = ('1','2','3','4','5')
+                 ,side = 'left'
+                 ,anchor = 'center'
+                 ,action = None
+                 ,tfocus = 1
                  ,default = None
-                 ,Combo   = False
-                 ,expand  = False
-                 ,fill    = None
-                 ,font    = None
-                 ,width   = None
+                 ,Combo = False
+                 ,expand = False
+                 ,fill = None
+                 ,font = None
+                 ,width = None
                  ):
         self.parent = parent
         self.items = items
@@ -2103,25 +2103,25 @@ class OptionMenu:
         self.width = width
         
         self.gui = gi.OptionMenu (parent = self.parent
-                                 ,Combo  = self.Combo
-                                 ,side   = self.side
+                                 ,Combo = self.Combo
+                                 ,side = self.side
                                  ,anchor = self.anchor
                                  ,expand = self.expand
-                                 ,fill   = self.fill_
+                                 ,fill = self.fill_
                                  ,tfocus = self.tfocus
-                                 ,font   = self.font
-                                 ,width  = self.width
+                                 ,font = self.font
+                                 ,width = self.width
                                  )
         self.widget = self.gui.widget
         if self.Combo:
-            com.bind (obj      = self
+            com.bind (obj = self
                      ,bindings = '<<ComboboxSelected>>'
-                     ,action   = self.trigger
+                     ,action = self.trigger
                      )
         
-        self.reset (items   = self.items
+        self.reset (items = self.items
                    ,default = self.default
-                   ,action  = self.action
+                   ,action = self.action
                    )
     
     def convert2str(self):
@@ -2187,7 +2187,7 @@ class OptionMenu:
             objs.get_mes(f,mes).show_error()
 
     def fill(self):
-        self.gui.fill (items  = self.items
+        self.gui.fill (items = self.items
                       ,action = self.trigger
                       )
 
@@ -2245,14 +2245,9 @@ class OptionMenu:
 
 class ListBox:
     #TODO: configure a font
-    def __init__(self
-                ,parent
-                ,Multiple = False
-                ,lst      = []
-                ,action   = None
-                ,side     = None
-                ,expand   = True
-                ,fill     = 'both'
+    def __init__(self,parent,Multiple=False
+                ,lst=[],action=None,side=None
+                ,expand=True,fill='both'
                 ):
         self.type = 'ListBox'
         self.state = 'normal'
@@ -2268,16 +2263,16 @@ class ListBox:
         '''
         self.action = action
         
-        self.gui = gi.ListBox (parent   = self.parent
+        self.gui = gi.ListBox (parent = self.parent
                               ,Multiple = self.Multiple
-                              ,side     = self.side
-                              ,expand   = self.expand
-                              ,fill     = self.fill_
+                              ,side = self.side
+                              ,expand = self.expand
+                              ,fill = self.fill_
                               )
         self.widget = self.gui.widget
         self.set_bindings()
         if lst or action:
-            self.reset (lst    = lst
+            self.reset (lst = lst
                        ,action = action
                        )
 
@@ -2318,18 +2313,18 @@ class ListBox:
         self.reset(lst=self.lst)
     
     def set_bindings(self):
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = '<<ListboxSelect>>'
-                 ,action   = self.trigger
+                 ,action = self.trigger
                  )
         if not self.Multiple:
-            com.bind (obj      = self.gui
+            com.bind (obj = self.gui
                      ,bindings = ('<Up>','<Left>')
-                     ,action   = self.move_up
+                     ,action = self.move_up
                      )
-            com.bind (obj      = self.gui
+            com.bind (obj = self.gui
                      ,bindings = ('<Down>','<Right>')
-                     ,action   = self.move_down
+                     ,action = self.move_down
                      )
 
     def resize(self):
@@ -2440,20 +2435,12 @@ class ListBoxC:
     ''' This widget is based on 'Top' which already sanitizes input and
         checks an icon path, so we don't do that.
     '''
-    def __init__(self
-                ,Multiple = False
-                ,lst      = []
-                ,action   = None
-                ,side     = None
-                ,expand   = True
-                ,fill     = 'both'
-                ,title    = 'Title:'
-                ,icon     = None
-                ,ScrollX  = True
-                ,ScrollY  = True
-                ,width    = 300
-                ,height   = 350
-                ):
+    def __init__ (self,Multiple=False,lst=[]
+                 ,action=None,side=None,expand=True
+                 ,fill='both',title='Title:',icon=None
+                 ,ScrollX=True,ScrollY=True,width=300
+                 ,height=350
+                 ):
         self.Save = False
         self.Multiple = Multiple
         self.lst = lst
@@ -2470,13 +2457,13 @@ class ListBoxC:
         self.set_gui()
     
     def set_bindings(self):
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = ('<Return>','<KP_Enter>')
-                 ,action   = self.save
+                 ,action = self.save
                  )
-        com.bind (obj      = self.gui
+        com.bind (obj = self.gui
                  ,bindings = ('<Escape>','<Control-q>','<Control-w>')
-                 ,action   = self.close
+                 ,action = self.close
                  )
     
     def get_index(self,event=None):
@@ -2499,26 +2486,26 @@ class ListBoxC:
               ,icon=''
               ):
         self.Save = False
-        self.lbx_prm.reset (lst    = lst
+        self.lbx_prm.reset (lst = lst
                            ,action = action
                            )
         self.set_title(title)
         self.set_icon(icon)
     
     def set_buttons(self):
-        self.btn_cls = Button (parent   = self.frm_btn
-                              ,action   = self.close
-                              ,hint     = _('Reject and close')
-                              ,text     = _('Close')
+        self.btn_cls = Button (parent = self.frm_btn
+                              ,action = self.close
+                              ,hint = _('Reject and close')
+                              ,text = _('Close')
                               ,bindings = ('<Escape>','<Control-q>'
                                           ,'<Control-w>'
                                           )
                               )
-        self.btn_sav = Button (parent   = self.frm_btn
-                              ,action   = self.save
-                              ,hint     = _('Accept and close')
-                              ,text     = _('Save and close')
-                              ,side     = 'right'
+        self.btn_sav = Button (parent = self.frm_btn
+                              ,action = self.save
+                              ,hint = _('Accept and close')
+                              ,text = _('Save and close')
+                              ,side = 'right'
                               ,bindings = ('<Return>','<KP_Enter>')
                               )
     
@@ -2533,7 +2520,7 @@ class ListBoxC:
         if self.ScrollX:
             Scrollbar (parent = self.frm_hor
                       ,scroll = self.lbx_prm
-                      ,Horiz  = True
+                      ,Horiz = True
                       )
     
     def set_scrolly(self):
@@ -2555,49 +2542,49 @@ class ListBoxC:
     def set_frames(self):
         self.frm_prm = Frame(self.parent)
         self.frm_sec = Frame (parent = self.frm_prm
-                             ,side   = 'top'
+                             ,side = 'top'
                              )
         self.frm_btn = Frame (parent = self.frm_prm
-                             ,side   = 'bottom'
+                             ,side = 'bottom'
                              ,expand = False
-                             ,fill   = 'x'
+                             ,fill = 'x'
                              )
         self.frm_trt = Frame (parent = self.frm_sec
-                             ,side   = 'left'
+                             ,side = 'left'
                              )
         self.frm_ver = Frame (parent = self.frm_sec
-                             ,side   = 'right'
+                             ,side = 'right'
                              ,expand = False
-                             ,fill   = 'y'
+                             ,fill = 'y'
                              )
         ''' Set 'expand' to True and 'propag' to False here, otherwise,
             buttons will not be shown.
         '''
         self.frm_lbx = Frame (parent = self.frm_trt
-                             ,side   = 'top'
+                             ,side = 'top'
                              ,propag = False
                              )
         self.frm_hor = Frame (parent = self.frm_trt
-                             ,side   = 'bottom'
+                             ,side = 'bottom'
                              ,expand = False
-                             ,fill   = 'x'
+                             ,fill = 'x'
                              )
     
     def set_gui(self):
         self.parent = Top (title = self.title
-                          ,icon  = self.icon
+                          ,icon = self.icon
                           )
         self.widget = self.parent.widget
         geom = '{}x{}'.format(self.width,self.height)
         Geometry(self.parent).set(geom)
         self.set_frames()
-        self.lbx_prm = ListBox (parent   = self.frm_lbx
+        self.lbx_prm = ListBox (parent = self.frm_lbx
                                ,Multiple = self.Multiple
-                               ,lst      = self.lst
-                               ,action   = self.action
-                               ,side     = self.side
-                               ,expand   = self.expand
-                               ,fill     = self.fill_
+                               ,lst = self.lst
+                               ,action = self.action
+                               ,side = self.side
+                               ,expand = self.expand
+                               ,fill = self.fill_
                                )
         self.lbx_prm.focus()
         self.gui = gi.ListBoxC(self.parent)
@@ -2667,13 +2654,13 @@ class ToolTipBase:
         self.bind_mouse()
                     
     def bind_mouse(self):
-        com.bind (obj      = self.obj
+        com.bind (obj = self.obj
                  ,bindings = '<Enter>'
-                 ,action   = self.enter
+                 ,action = self.enter
                  )
-        com.bind (obj      = self.obj
+        com.bind (obj = self.obj
                  ,bindings = ('<Leave>','<ButtonPress>')
-                 ,action   = self.leave
+                 ,action = self.leave
                  )
 
     def enter(self,event=None):
@@ -2764,7 +2751,7 @@ class ToolTip(ToolTipBase):
                     self.font = FONT2
                 ifont = Font(self.font)
                 ifont.set_text(self.text)
-                self.width  = ifont.get_width()
+                self.width = ifont.get_width()
                 self.height = ifont.get_height()
             else:
                 com.rep_lazy(f)
@@ -2772,17 +2759,17 @@ class ToolTip(ToolTipBase):
     def showcontents(self):
         # Assign this boolean externally to stop showing hints
         self.frm = Frame (parent = self.tip
-                         ,bg     = self.bcolor
-                         ,bd     = self.bwidth
+                         ,bg = self.bcolor
+                         ,bd = self.bwidth
                          ,expand = False
                          )
-        self.lbl = Label (parent  = self.frm
-                         ,text    = self.text
-                         ,bg      = self.bg
-                         ,width   = self.width
-                         ,height  = self.height
+        self.lbl = Label (parent = self.frm
+                         ,text = self.text
+                         ,bg = self.bg
+                         ,width = self.width
+                         ,height = self.height
                          ,justify = 'center'
-                         ,font    = self.font
+                         ,font = self.font
                          )
 
 
@@ -2791,15 +2778,15 @@ class WaitBox:
 
     def __init__(self,icon=''):
         self.type = 'WaitBox'
-        self.parent = Top (Lock   = False
+        self.parent = Top (Lock = False
                           ,AutoCr = True
-                          ,icon   = icon
+                          ,icon = icon
                           )
         self.widget = self.parent.widget
         self.gui = gi.WaitBox(self.parent)
         Geometry(self.parent).set('300x150')
         self.lbl_pls = Label (parent = self.parent
-                             ,text   = _('Please wait...')
+                             ,text = _('Please wait...')
                              ,expand = True
                              )
 
@@ -2851,31 +2838,13 @@ class WaitBox:
 
 class Button:
 
-    def __init__ (self
-                 ,parent
-                 ,action   = None
-                 ,hint     = None
-                 ,inactive = None
-                 ,active   = None
-                 ,text     = 'Press me'
-                 ,height   = 36
-                 ,width    = 36
-                 ,side     = 'left'
-                 ,expand   = 0
-                 ,bg       = None
-                 ,bg_focus = None
-                 ,fg       = None
-                 ,fg_focus = None
-                 ,bd       = 0
-                 ,hdelay   = 800
-                 ,hbg      = '#ffffe0'
-                 ,hdir     = 'top'
-                 ,hbwidth  = 1
-                 ,hbcolor  = 'navy'
-                 ,bindings = []
-                 ,fill     = 'both'
-                 ,Focus    = False
-                 ,font     = None
+    def __init__ (self,parent,action=None,hint=None
+                 ,inactive=None,active=None,text='Press me'
+                 ,height=36,width=36,side='left',expand=0
+                 ,bg=None,bg_focus=None,fg=None,fg_focus=None
+                 ,bd=0,hdelay=800,hbg='#ffffe0',hdir='top'
+                 ,hbwidth=1,hbcolor='navy',bindings=[]
+                 ,fill='both',Focus=False,font=None
                  ):
         self.Status = False
         self.type = 'Button'
@@ -2902,33 +2871,33 @@ class Button:
         self.text = lg.com.sanitize(text)
         self.width = width
         if active:
-            self.on_img = gi.com.get_image (path   = active
-                                           ,width  = self.width
+            self.on_img = gi.com.get_image (path = active
+                                           ,width = self.width
                                            ,height = self.height
                                            )
         else:
             self.on_img = None
         if inactive:
-            self.off_img = gi.com.get_image (path   = inactive
-                                            ,width  = self.width
+            self.off_img = gi.com.get_image (path = inactive
+                                            ,width = self.width
                                             ,height = self.height
                                             )
         else:
             self.off_img = None
-        self.gui = gi.Button (parent   = parent
-                             ,height   = height
-                             ,width    = width
-                             ,side     = side
-                             ,expand   = expand
-                             ,bg       = bg
+        self.gui = gi.Button (parent = parent
+                             ,height = height
+                             ,width = width
+                             ,side = side
+                             ,expand = expand
+                             ,bg = bg
                              ,bg_focus = bg_focus
-                             ,fg       = fg
+                             ,fg = fg
                              ,fg_focus = fg_focus
-                             ,bd       = bd
-                             ,fill     = fill
-                             ,font     = font
-                             ,on_img   = self.on_img
-                             ,off_img  = self.off_img
+                             ,bd = bd
+                             ,fill = fill
+                             ,font = font
+                             ,on_img = self.on_img
+                             ,off_img = self.off_img
                              )
         self.widget = self.gui.widget
         self.set_title(self.text)
@@ -2938,11 +2907,11 @@ class Button:
         self.set_hint()
     
     def set_bindings(self):
-        com.bind (obj      = self
+        com.bind (obj = self
                  ,bindings = ('<ButtonRelease-1>','<space>'
                              ,'<Return>','<KP_Enter>'
                              )
-                 ,action   = self.click
+                 ,action = self.click
                  )
 
     def set_hint(self):
@@ -2952,12 +2921,12 @@ class Button:
                                  + lg.Hotkeys(self.bindings).run()
             else:
                 self.hextended = self.hint
-            self.tip = ToolTip (obj   = self.gui
-                               ,text  = self.hextended
+            self.tip = ToolTip (obj = self.gui
+                               ,text = self.hextended
                                ,delay = self.hdelay
-                               ,font  = self.font
-                               ,bg    = self.hbg
-                               ,hdir  = self.hdir
+                               ,font = self.font
+                               ,bg = self.hbg
+                               ,hdir = self.hdir
                                )
     
     def set_title(self,button_text='Press me'):
@@ -3015,15 +2984,15 @@ class Frame:
         self.parent = parent
         self.gui = gi.Frame (parent = parent
                             ,expand = expand
-                            ,fill   = fill
-                            ,side   = side
-                            ,padx   = padx
-                            ,pady   = pady
-                            ,ipadx  = ipadx
-                            ,ipady  = ipady
-                            ,bd     = bd
-                            ,bg     = bg
-                            ,width  = width
+                            ,fill = fill
+                            ,side = side
+                            ,padx = padx
+                            ,pady = pady
+                            ,ipadx = ipadx
+                            ,ipady = ipady
+                            ,bd = bd
+                            ,bg = bg
+                            ,width = width
                             ,height = height
                             ,propag = propag
                             )
@@ -3292,20 +3261,20 @@ class Label:
         self.height = height
         # Usually the alignment is done by tuning the parent
         self.justify = justify
-        self.gui = gi.Label (parent  = self.parent
-                            ,side    = self.side
-                            ,fill    = self.fill
-                            ,expand  = self.expand
-                            ,ipadx   = self.ipadx
-                            ,ipady   = self.ipady
-                            ,padx    = self.padx
-                            ,pady    = self.pady
-                            ,image   = self.image
-                            ,fg      = self.fg
-                            ,bg      = self.bg
-                            ,anchor  = self.anchor
-                            ,width   = self.width
-                            ,height  = self.height
+        self.gui = gi.Label (parent = self.parent
+                            ,side = self.side
+                            ,fill = self.fill
+                            ,expand = self.expand
+                            ,ipadx = self.ipadx
+                            ,ipady = self.ipady
+                            ,padx = self.padx
+                            ,pady = self.pady
+                            ,image = self.image
+                            ,fg = self.fg
+                            ,bg = self.bg
+                            ,anchor = self.anchor
+                            ,width = self.width
+                            ,height = self.height
                             ,justify = self.justify
                             )
         self.widget = self.gui.widget
@@ -3357,13 +3326,13 @@ class Label:
             reset config options. Use them altogether to prevent such 
             behavior.
         '''
-        self.widget.config (text   = self.text
-                           ,font   = self.font
+        self.widget.config (text = self.text
+                           ,font = self.font
                            #,image = self.image
-                           ,bg     = self.bg
-                           ,fg     = self.fg
+                           ,bg = self.bg
+                           ,fg = self.fg
                            ,anchor = self.anchor
-                           ,width  = self.width
+                           ,width = self.width
                            ,height = self.height
                            )
 
@@ -3563,7 +3532,7 @@ class Top:
         self.gui.set_title(text)
     
     def set_values(self):
-        self.type  = 'Toplevel'
+        self.type = 'Toplevel'
         self.count = 0
 
     def close(self,event=None):
@@ -3638,42 +3607,42 @@ class Objects(lg.Objects):
     
     def get_error(self):
         if self.error is None:
-            self.error = MessageBuilder (level  = _('ERROR')
+            self.error = MessageBuilder (level = _('ERROR')
                                         ,Single = True
-                                        ,YesNo  = False
+                                        ,YesNo = False
                                         )
         return self.error
     
     def get_warning(self):
         if self.warning is None:
-            self.warning = MessageBuilder (level  = _('WARNING')
+            self.warning = MessageBuilder (level = _('WARNING')
                                           ,Single = True
-                                          ,YesNo  = False
+                                          ,YesNo = False
                                           )
         return self.warning
     
     def get_debug(self):
         # Reusing the same 'info' object may result in GUI glitches
         if self.debug is None:
-            self.debug = MessageBuilder (level  = _('INFO')
+            self.debug = MessageBuilder (level = _('INFO')
                                         ,Single = True
-                                        ,YesNo  = False
+                                        ,YesNo = False
                                         )
         return self.debug
     
     def get_info(self):
         if self.info is None:
-            self.info = MessageBuilder (level  = _('INFO')
+            self.info = MessageBuilder (level = _('INFO')
                                        ,Single = True
-                                       ,YesNo  = False
+                                       ,YesNo = False
                                        )
         return self.info
     
     def get_question(self):
         if self.question is None:
-            self.question = MessageBuilder (level  = _('QUESTION')
+            self.question = MessageBuilder (level = _('QUESTION')
                                            ,Single = False
-                                           ,YesNo  = True
+                                           ,YesNo = True
                                            )
         return self.question
 
@@ -3705,34 +3674,34 @@ class MessageBuilder:
         self.txt.insert(text)
     
     def set_bindings(self):
-        com.bind (obj      = self
+        com.bind (obj = self
                  ,bindings = ('<Control-q>','<Control-w>','<Escape>')
-                 ,action   = self.close_no
+                 ,action = self.close_no
                  )
         self.widget.protocol("WM_DELETE_WINDOW",self.close)
     
     def set_frames(self):
         self.frm_prm = Frame (parent = self.gui.parent)
         self.frm_top = Frame (parent = self.frm_prm
-                             ,side   = 'top'
+                             ,side = 'top'
                              )
         self.frm_btm = Frame (parent = self.frm_prm
                              ,expand = False
-                             ,side   = 'bottom'
+                             ,side = 'bottom'
                              )
         self.frm_tpl = Frame (parent = self.frm_top
                              ,expand = False
-                             ,side   = 'left'
+                             ,side = 'left'
                              )
         self.frm_tpr = Frame (parent = self.frm_top
-                             ,side   = 'right'
+                             ,side = 'right'
                              ,propag = False
                              )
         self.frm_btl = Frame (parent = self.frm_btm
-                             ,side   = 'left'
+                             ,side = 'left'
                              )
         self.frm_btr = Frame (parent = self.frm_btm
-                             ,side   = 'right'
+                             ,side = 'right'
                              )
     
     def set_buttons(self):
@@ -3745,24 +3714,24 @@ class MessageBuilder:
         if self.Single:
             self.btn_yes = Button (parent = self.frm_btl
                                   ,action = self.close_yes
-                                  ,hint   = _('Accept and close')
-                                  ,text   = YesName
-                                  ,Focus  = 1
-                                  ,side   = 'right'
+                                  ,hint = _('Accept and close')
+                                  ,text = YesName
+                                  ,Focus = 1
+                                  ,side = 'right'
                                   )
         else:
             self.btn_no = Button (parent = self.frm_btl
                                  ,action = self.close_no
-                                 ,hint   = _('Reject and close')
-                                 ,text   = NoName
-                                 ,side   = 'left'
+                                 ,hint = _('Reject and close')
+                                 ,text = NoName
+                                 ,side = 'left'
                                  )
             self.btn_yes = Button (parent = self.frm_btr
                                   ,action = self.close_yes
-                                  ,hint   = _('Accept and close')
-                                  ,text   = YesName
-                                  ,Focus  = 1
-                                  ,side   = 'right'
+                                  ,hint = _('Accept and close')
+                                  ,text = YesName
+                                  ,Focus = 1
+                                  ,side = 'right'
                                   )
     
     def close_yes(self,event=None):
@@ -3784,7 +3753,7 @@ class MessageBuilder:
         self.gui.close()
     
     def reset(self,title='',text=''):
-        self.logic.reset (text  = text
+        self.logic.reset (text = text
                          ,title = title
                          )
         self.update(self.logic.text)
@@ -3804,13 +3773,13 @@ class MessageBuilder:
         f = '[shared] shared.MessageBuilder.set_image'
         if self.logic.icon and os.path.exists(self.logic.icon):
             iimage = self.gui.set_image (path = self.logic.icon
-                                        ,obj  = self.frm_tpl
+                                        ,obj = self.frm_tpl
                                         )
             ''' We need to assign self.variable to Label, otherwise,
                 it gets destroyed.
             '''
             self.lbl_img = Label (parent = self.frm_tpl
-                                 ,image  = iimage
+                                 ,image = iimage
                                  )
         else:
             com.rep_empty(f)
@@ -3827,51 +3796,51 @@ class Message:
     def show_debug(self):
         if GUI_MES and not self.Silent:
             objs.get_debug().reset (title = self.func
-                                   ,text  = self.message
+                                   ,text = self.message
                                    )
             objs.debug.show()
         # Duplicate the message to the console
-        lg.Message (func    = self.func
+        lg.Message (func = self.func
                    ,message = self.message
                    ).show_debug()
     
     def show_error(self):
         if GUI_MES and not self.Silent:
             objs.get_error().reset (title = self.func
-                                   ,text  = self.message
+                                   ,text = self.message
                                    )
             objs.error.show()
         # Duplicate the message to the console
-        lg.Message (func    = self.func
+        lg.Message (func = self.func
                    ,message = self.message
                    ).show_error()
 
     def show_info(self):
         if GUI_MES and not self.Silent:
             objs.get_info().reset (title = self.func
-                                  ,text  = self.message
+                                  ,text = self.message
                                   )
             objs.info.show()
         # Duplicate the message to the console
-        lg.Message (func    = self.func
+        lg.Message (func = self.func
                    ,message = self.message
                    ).show_info()
                        
     def show_warning(self):
         if GUI_MES and not self.Silent:
             objs.get_warning().reset (title = self.func
-                                     ,text  = self.message
+                                     ,text = self.message
                                      )
             objs.warning.show()
         # Duplicate the message to the console
-        lg.Message (func    = self.func
+        lg.Message (func = self.func
                    ,message = self.message
                    ).show_warning()
 
     def show_question(self):
         if GUI_MES and not self.Silent:
             objs.get_question().reset (title = self.func
-                                      ,text  = self.message
+                                      ,text = self.message
                                       )
             objs.question.show()
             lg.log.append (self.func
@@ -3879,12 +3848,12 @@ class Message:
                           ,self.message
                           )
             answer = objs.question.ask()
-            lg.Message (func    = self.func
+            lg.Message (func = self.func
                        ,message = str(answer)
                        ).show_debug()
             return answer
         else:
-            return lg.Message (func    = self.func
+            return lg.Message (func = self.func
                               ,message = self.message
                               ).show_question()
 
@@ -3923,8 +3892,8 @@ class Commands(lg.Commands):
             iterable = [sections,keys,values]
             headers = (_('SECTION'),_('KEY'),_('VALUE'))
             mes = FastTable (iterable = iterable
-                            ,headers  = headers
-                            ,maxrow   = 50
+                            ,headers = headers
+                            ,maxrow = 50
                             ).run()
             self.run_fast_debug(f,mes)
         else:
@@ -3955,7 +3924,7 @@ class Commands(lg.Commands):
         return objs.txt.get()
     
     def run_fast_debug(self,title=_('Test:'),text=''):
-        objs.get_txt (font     = 'Mono 11'
+        objs.get_txt (font = 'Mono 11'
                      ,Maximize = True
                      ).reset()
         objs.txt.set_title(title)
@@ -4009,13 +3978,13 @@ class Font:
     def __init__(self,name,xborder=20,yborder=20):
         self.font = None
         self.gui = gi.Font()
-        self.logic = lg.Font (name    = name
+        self.logic = lg.Font (name = name
                              ,xborder = xborder
                              ,yborder = yborder
                              )
     
     def reset(self,name,xborder=20,yborder=20):
-        self.logic.reset (name    = name
+        self.logic.reset (name = name
                          ,xborder = xborder
                          ,yborder = yborder
                          )
@@ -4028,7 +3997,7 @@ class Font:
         if not self.font:
             if self.logic.family and self.logic.size:
                 self.font = self.gui.get_font (family = self.logic.family
-                                              ,size   = self.logic.size
+                                              ,size = self.logic.size
                                               )
             else:
                 com.rep_empty(f)
@@ -4053,10 +4022,10 @@ class Font:
             if self.get_font() and self.logic.text:
                 try:
                     max_line = sorted (self.logic.text.splitlines()
-                                      ,key     = len
+                                      ,key = len
                                       ,reverse = True
                                       )[0]
-                    self.logic.width = self.gui.get_width (font     = self.font
+                    self.logic.width = self.gui.get_width (font = self.font
                                                           ,max_line = max_line
                                                           )
                 except Exception as e:

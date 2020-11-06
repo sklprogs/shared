@@ -6,7 +6,7 @@ import tkinter.font
 import tkinter.filedialog
 import tkinter.ttk
 # Load PIL only after loading tkinter
-from PIL import Image   as pilimage
+from PIL import Image as pilimage
 from PIL import ImageTk as piltk
 from skl_shared.localize import _
 
@@ -152,10 +152,10 @@ class TextBox:
     def tag_config (self,tag='sel',bg=None
                    ,fg=None,font=None
                    ):
-        self.widget.tag_config (tagName    = tag
+        self.widget.tag_config (tagName = tag
                                ,background = bg
                                ,foreground = fg
-                               ,font       = font
+                               ,font = font
                                )
     
     def tag_add (self,tag='sel',pos1='1.0'
@@ -228,17 +228,17 @@ class Entry:
                  ,justify='left'
                  ):
         self.parent = parent
-        self.widget = tk.Entry (master  = self.parent.widget
-                               ,font    = font
-                               ,bg      = bg
-                               ,fg      = fg
-                               ,width   = width
+        self.widget = tk.Entry (master = self.parent.widget
+                               ,font = font
+                               ,bg = bg
+                               ,fg = fg
+                               ,width = width
                                ,justify = justify
                                )
-        self.widget.pack (side   = side
-                         ,ipadx  = ipadx
-                         ,ipady  = ipady
-                         ,fill   = fill
+        self.widget.pack (side = side
+                         ,ipadx = ipadx
+                         ,ipady = ipady
+                         ,fill = fill
                          ,expand = expand
                          )
     
@@ -304,7 +304,7 @@ class CheckBox:
     '''
     def __init__(self,parent,side=None):
         self.parent = parent
-        self.side   = side
+        self.side = side
         self.status = tk.IntVar()
         self.set_gui()
     
@@ -330,7 +330,7 @@ class CheckBox:
         self.parent.show()
     
     def set_gui(self):
-        self.widget = tk.Checkbutton (master   = self.parent.widget
+        self.widget = tk.Checkbutton (master = self.parent.widget
                                      ,variable = self.status
                                      )
         self.widget.pack(side=self.side)
@@ -367,14 +367,14 @@ class ProgressBarItem:
         self.parent = parent
         self.orient = orient
         self.length = length
-        self.mode   = mode
+        self.mode = mode
         self.set_gui()
     
     def set_gui(self):
         self.widget = tkinter.ttk.Progressbar (master = self.parent.widget
                                               ,orient = self.orient
                                               ,length = self.length
-                                              ,mode   = self.mode
+                                              ,mode = self.mode
                                               )
         self.widget.pack()
 
@@ -402,11 +402,11 @@ class Canvas:
                  ):
         self.parent = parent
         self.region = region
-        self.width  = width
+        self.width = width
         self.height = height
         self.expand = expand
-        self.side   = side
-        self.fill   = fill
+        self.side = side
+        self.fill = fill
         self.set_gui()
     
     def close(self,event=None):
@@ -473,14 +473,14 @@ class Canvas:
         self.widget.xview_moveto(0)
     
     def set_gui(self):
-        self.widget = tk.Canvas (master       = self.parent.widget
+        self.widget = tk.Canvas (master = self.parent.widget
                                 ,scrollregion = self.region
-                                ,width        = self.width
-                                ,height       = self.height
+                                ,width = self.width
+                                ,height = self.height
                                 )
         self.widget.pack (expand = self.expand
-                         ,side   = self.side
-                         ,fill   = self.fill
+                         ,side = self.side
+                         ,fill = self.fill
                          )
     
     def move_top(self,event=None):
@@ -534,12 +534,12 @@ class SymbolMap:
             - In Windows, GUI looks better when 'width' and 'height'
               are set.
         '''
-        return tk.Button (master  = frame.widget
-                         ,text    = items[i]
+        return tk.Button (master = frame.widget
+                         ,text = items[i]
                          ,command = lambda i=i:self.set(items[i])
-                         ,width   = 2
-                         ,height  = 2
-                         ).pack (side   = 'left'
+                         ,width = 2
+                         ,height = 2
+                         ).pack (side = 'left'
                                 ,expand = True
                                 )
     
@@ -560,15 +560,15 @@ class OptionMenu:
                  ,width=None
                  ):
         self.parent = parent
-        self.Combo  = Combo
-        self.side   = side
+        self.Combo = Combo
+        self.side = side
         self.anchor = anchor
         self.expand = expand
-        self.fill_  = fill
+        self.fill_ = fill
         self.tfocus = tfocus
-        self.font   = font
-        self.width  = width
-        self.var    = tk.StringVar(self.parent.widget)
+        self.font = font
+        self.width = width
+        self.var = tk.StringVar(self.parent.widget)
         self.set_gui()
     
     def focus(self,event=None):
@@ -583,7 +583,7 @@ class OptionMenu:
         else:
             self.widget['menu'].delete(0,'end')
             for item in items:
-                self.widget["menu"].add_command (label   = item
+                self.widget["menu"].add_command (label = item
                                                 ,command = tk._setit (self.var
                                                                      ,item
                                                                      ,action
@@ -604,7 +604,7 @@ class OptionMenu:
     
     def set_gui(self):
         if self.Combo:
-            self.widget = tkinter.ttk.Combobox (master       = self.parent.widget
+            self.widget = tkinter.ttk.Combobox (master = self.parent.widget
                                                ,textvariable = self.var
                                                )
         else:
@@ -614,14 +614,14 @@ class OptionMenu:
                                         ,*('1','2','3','4','5')
                                         ,command = None
                                         )
-        self.widget.pack (side   = self.side
+        self.widget.pack (side = self.side
                          ,anchor = self.anchor
                          ,expand = self.expand
-                         ,fill   = self.fill_
+                         ,fill = self.fill_
                          )
         self.widget.configure (takefocus = self.tfocus
-                              ,font      = self.font
-                              ,width     = self.width
+                              ,font = self.font
+                              ,width = self.width
                               )
 
 
@@ -651,18 +651,14 @@ class ListBoxC:
 
 class ListBox:
     #TODO: configure a font
-    def __init__ (self
-                 ,parent
-                 ,Multiple = False
-                 ,side     = None
-                 ,expand   = 1
-                 ,fill     = 'both'
+    def __init__ (self,parent,Multiple=False
+                 ,side=None,expand=1,fill='both'
                  ):
-        self.parent   = parent
+        self.parent = parent
         self.Multiple = Multiple
-        self.expand   = expand
-        self.side     = side
-        self.fill_    = fill
+        self.expand = expand
+        self.side = side
+        self.fill_ = fill
         self.set_gui()
     
     def get(self,ind):
@@ -696,18 +692,18 @@ class ListBox:
     
     def set_gui(self):
         if self.Multiple:
-            self.widget = tk.Listbox (master          = self.parent.widget
+            self.widget = tk.Listbox (master = self.parent.widget
                                      ,exportselection = 0
-                                     ,selectmode      = tk.MULTIPLE
+                                     ,selectmode = tk.MULTIPLE
                                      )
         else:
-            self.widget = tk.Listbox (master          = self.parent.widget
+            self.widget = tk.Listbox (master = self.parent.widget
                                      ,exportselection = 0
-                                     ,selectmode      = tk.SINGLE
+                                     ,selectmode = tk.SINGLE
                                      )
         self.widget.pack (expand = self.expand
-                         ,fill   = self.fill_
-                         ,side   = self.side
+                         ,fill = self.fill_
+                         ,side = self.side
                          )
 
 
@@ -731,8 +727,8 @@ class Scrollbar:
                                    ,orient = tk.HORIZONTAL
                                    )
         self.widget.pack (expand = True
-                         ,fill   = 'x'
-                         ,side   = None
+                         ,fill = 'x'
+                         ,side = None
                          )
     
     def create_y(self):
@@ -740,8 +736,8 @@ class Scrollbar:
                                    ,orient = tk.VERTICAL
                                    )
         self.widget.pack (expand = True
-                         ,fill   = 'y'
-                         ,side   = 'right'
+                         ,fill = 'y'
+                         ,side = 'right'
                          )
 
 
@@ -749,7 +745,7 @@ class Scrollbar:
 class ToolTipBase:
 
     def __init__(self,obj):
-        self.obj    = obj
+        self.obj = obj
         self.widget = self.obj.widget
     
     def get_height(self):
@@ -780,7 +776,7 @@ class WaitBox:
 
     def set_icon(self,file):
         image = tk.PhotoImage (master = self.widget
-                              ,file   = file
+                              ,file = file
                               )
         self.widget.tk.call('wm','iconphoto',self.widget._w,image)
     
@@ -797,50 +793,40 @@ class WaitBox:
 
 class Button:
 
-    def __init__ (self
-                 ,parent
-                 ,off_img  = None
-                 ,on_img   = None
-                 ,height   = 36
-                 ,width    = 36
-                 ,side     = 'left'
-                 ,expand   = 0
-                 ,bg       = None
-                 ,bg_focus = None
-                 ,fg       = None
-                 ,fg_focus = None
-                 ,bd       = 0
-                 ,fill     = 'both'
-                 ,font     = None
+    def __init__ (self,parent,off_img=None,on_img=None
+                 ,height=36,width=36,side='left'
+                 ,expand=0,bg=None,bg_focus=None
+                 ,fg=None,fg_focus=None,bd=0,fill='both'
+                 ,font=None
                  ):
-        self.parent   = parent
-        self.bd       = bd
-        self.bg       = bg
+        self.parent = parent
+        self.bd = bd
+        self.bg = bg
         self.bg_focus = bg_focus
-        self.expand   = expand
-        self.fg       = fg
+        self.expand = expand
+        self.fg = fg
         self.fg_focus = fg_focus
-        self.fill     = fill
-        self.font     = font
-        self.height   = height
-        self.side     = side
-        self.width    = width
-        self.on_img   = on_img
-        self.off_img  = off_img
+        self.fill = fill
+        self.font = font
+        self.height = height
+        self.side = side
+        self.width = width
+        self.on_img = on_img
+        self.off_img = off_img
         self.set_gui()
     
     def set_gui(self):
         if self.off_img:
-            self.widget = tk.Button (master           = self.parent.widget
-                                    ,image            = self.off_img
-                                    ,height           = self.height
-                                    ,width            = self.width
-                                    ,bd               = self.bd
-                                    ,bg               = self.bg
-                                    ,fg               = self.fg
+            self.widget = tk.Button (master = self.parent.widget
+                                    ,image = self.off_img
+                                    ,height = self.height
+                                    ,width = self.width
+                                    ,bd = self.bd
+                                    ,bg = self.bg
+                                    ,fg = self.fg
                                     ,activebackground = self.bg_focus
                                     ,activeforeground = self.fg_focus
-                                    ,font             = self.font
+                                    ,font = self.font
                                     )
         else:
             ''' A text button does not require setting a default width
@@ -848,17 +834,17 @@ class Button:
                 automatically. Moreover, a border should be used for
                 text buttons in a majority of cases.
             '''
-            self.widget = tk.Button (master           = self.parent.widget
-                                    ,bd               = 1
-                                    ,bg               = self.bg
-                                    ,fg               = self.fg
+            self.widget = tk.Button (master = self.parent.widget
+                                    ,bd = 1
+                                    ,bg = self.bg
+                                    ,fg = self.fg
                                     ,activebackground = self.bg_focus
                                     ,activeforeground = self.fg_focus
-                                    ,font             = self.font
+                                    ,font = self.font
                                     )
         self.widget.pack (expand = self.expand
-                         ,side   = self.side
-                         ,fill   = self.fill
+                         ,side = self.side
+                         ,fill = self.fill
                          )
     
     def set_title(self,button_text=''):
@@ -899,9 +885,9 @@ class Frame:
                  ):
         self.parent = parent
         self.widget = tk.Frame (master = self.parent.widget
-                               ,bd     = bd
-                               ,bg     = bg
-                               ,width  = width
+                               ,bd = bd
+                               ,bg = bg
+                               ,width = width
                                ,height = height
                                )
         ''' 'pack_propagate' should be set before 'pack' to 'False'
@@ -913,12 +899,12 @@ class Frame:
         '''
         self.widget.pack_propagate(propag)
         self.widget.pack (expand = expand
-                         ,fill   = fill
-                         ,side   = side
-                         ,padx   = padx
-                         ,pady   = pady
-                         ,ipadx  = ipadx
-                         ,ipady  = ipady
+                         ,fill = fill
+                         ,side = side
+                         ,padx = padx
+                         ,pady = pady
+                         ,ipadx = ipadx
+                         ,ipady = ipady
                          )
 
     def get_height(self):
@@ -949,7 +935,7 @@ class Frame:
 
 class Label:
     
-    def __init__(self,parent,side=None,fill=None
+    def __init__ (self,parent,side=None,fill=None
                  ,expand=False,ipadx=None,ipady=None
                  ,image=None,fg=None,bg=None
                  ,anchor=None,width=None
@@ -957,18 +943,18 @@ class Label:
                  ,padx=None,pady=None
                  ):
         self.parent = parent
-        self.side   = side
-        self.fill   = fill
+        self.side = side
+        self.fill = fill
         self.expand = expand
-        self.ipadx  = ipadx
-        self.ipady  = ipady
-        self.padx   = padx
-        self.pady   = pady
-        self.image  = image
-        self.bg     = bg
-        self.fg     = fg
+        self.ipadx = ipadx
+        self.ipady = ipady
+        self.padx = padx
+        self.pady = pady
+        self.image = image
+        self.bg = bg
+        self.fg = fg
         self.anchor = anchor
-        self.width  = width
+        self.width = width
         self.height = height
         # Usually the alignment is done by tuning the parent
         self.justify = justify
@@ -1010,19 +996,19 @@ class Label:
     
     def set_gui(self):
         self.widget = tk.Label (master = self.parent.widget
-                               ,image  = self.image
-                               ,bg     = self.bg
-                               ,fg     = self.fg
-                               ,width  = self.width
+                               ,image = self.image
+                               ,bg = self.bg
+                               ,fg = self.fg
+                               ,width = self.width
                                ,height = self.height
                                )
-        self.widget.pack (side   = self.side
-                         ,fill   = self.fill
+        self.widget.pack (side = self.side
+                         ,fill = self.fill
                          ,expand = self.expand
-                         ,ipadx  = self.ipadx
-                         ,ipady  = self.ipady
-                         ,padx   = self.padx
-                         ,pady   = self.pady
+                         ,ipadx = self.ipadx
+                         ,ipady = self.ipady
+                         ,padx = self.padx
+                         ,pady = self.pady
                          ,anchor = self.anchor
                          )
 
@@ -1078,7 +1064,7 @@ class Top:
     
     def set_icon(self,file):
         image = tk.PhotoImage (master = self.widget
-                              ,file   = file
+                              ,file = file
                               )
         self.widget.tk.call('wm','iconphoto',self.widget._w,image)
     
@@ -1117,9 +1103,9 @@ class Top:
 class Commands:
     
     def get_image(self,path,width,height):
-        return tk.PhotoImage (file   = path
+        return tk.PhotoImage (file = path
                              ,master = objs.get_root().widget
-                             ,width  = width
+                             ,width = width
                              ,height = height
                              )
         
@@ -1160,7 +1146,7 @@ class MessageBuilder:
             "image pyimage1 doesn't exist".
         '''
         return tk.PhotoImage (master = obj.widget
-                             ,file   = path
+                             ,file = path
                              )
         
     def set_title(self,text=''):
@@ -1185,7 +1171,7 @@ class Font:
             first (no 'gi.objs.start').
         '''
         return tkinter.font.Font (family = family
-                                 ,size   = size
+                                 ,size = size
                                  )
 
 
@@ -1193,12 +1179,12 @@ class Font:
 class Root:
 
     def __init__(self):
-        self.type   = 'Root'
+        self.type = 'Root'
         self.widget = tk.Tk()
 
     def set_icon(self,file):
         image = tk.PhotoImage (master = self.widget
-                              ,file   = file
+                              ,file = file
                               )
         self.widget.tk.call('wm','iconphoto',self.widget._w,image)
 
@@ -1260,28 +1246,28 @@ class Objects:
     def get_warning(self):
         if not self.warning:
             self.warning = MessageBuilder (parent = self.get_root()
-                                          ,level  = _('WARNING')
+                                          ,level = _('WARNING')
                                           )
         return self.warning
 
     def get_error(self):
         if not self.error:
             self.error = MessageBuilder (parent = self.get_root()
-                                        ,level  = _('ERROR')
+                                        ,level = _('ERROR')
                                         )
         return self.error
 
     def get_question(self):
         if not self.question:
             self.question = MessageBuilder (parent = self.get_root()
-                                           ,level  = _('QUESTION')
+                                           ,level = _('QUESTION')
                                            )
         return self.question
 
     def get_info(self):
         if not self.info:
             self.info = MessageBuilder (parent = self.get_root()
-                                       ,level  = _('INFO')
+                                       ,level = _('INFO')
                                        )
         return self.info
 

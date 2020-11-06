@@ -431,35 +431,37 @@ class MessageBuilder:
                 prefix = 'question'
             else:
                 prefix = 'error'
-            self.icon = objs.get_pdir().add('..','resources',prefix+'.gif')
+            self.icon = objs.get_pdir().add ('..','resources'
+                                            ,prefix + '.gif'
+                                            )
         if not os.path.exists(self.icon):
             self.icon = ''
             message = _('File "{}" was not found!').format(self.icon)
-            Message (func    = f
+            Message (func = f
                     ,message = message
                     ).show_error()
     
     def reset(self,text='',title=''):
-        self.text  = text
+        self.text = text
         self.title = title
         self.sanitize()
     
     def set_values(self):
-        self.text  = ''
+        self.text = ''
         self.title = ''
-        self.icon  = ''
+        self.icon = ''
         self.level = _('INFO')
     
     def sanitize(self):
         self.title = com.sanitize(self.title) + ':'
-        self.text  = com.sanitize(self.text)
+        self.text = com.sanitize(self.text)
 
 
 
 class Message:
 
     def __init__(self,func,message,Silent=True):
-        self.func    = func
+        self.func = func
         self.message = message
 
     def show_error(self):
@@ -511,7 +513,7 @@ class Font:
     def __init__(self,name,xborder=0,yborder=0):
         self.set_values()
         if name:
-            self.reset (name    = name
+            self.reset (name = name
                        ,xborder = xborder
                        ,yborder = yborder
                        )
@@ -524,13 +526,13 @@ class Font:
             com.rep_empty(f)
     
     def set_values(self):
-        self.font    = None
-        self.family  = ''
-        self.name    = ''
-        self.text    = ''
-        self.size    = 0
-        self.height  = 0
-        self.width   = 0
+        self.font = None
+        self.family = ''
+        self.name = ''
+        self.text = ''
+        self.size = 0
+        self.height = 0
+        self.width = 0
         self.xborder = 0
         self.yborder = 0
     
@@ -539,7 +541,7 @@ class Font:
         if self.width:
             self.width += self.xborder
             '''
-            Message (func    = f
+            Message (func = f
                     ,message = '%d' % self.width
                     ).show_debug()
             '''
@@ -552,7 +554,7 @@ class Font:
                 self.height = self.height * lines
             self.height += self.yborder
             '''
-            Message (func    = f
+            Message (func = f
                     ,message = '%d' % self.height
                     ).show_debug()
             '''
@@ -561,7 +563,7 @@ class Font:
     
     def reset(self,name,xborder=0,yborder=0):
         self.set_values()
-        self.name    = name
+        self.name = name
         self.xborder = xborder
         self.yborder = yborder
         self.set_attr()
@@ -572,10 +574,10 @@ class Font:
             match = re.match('([aA-zZ].*) (\d+)',self.name)
             if match:
                 self.family = match.group(1)
-                self.size   = int(match.group(2))
+                self.size = int(match.group(2))
             else:
                 message = _('Wrong input data: "{}"!').format(self.name)
-                Message (func    = f
+                Message (func = f
                         ,message = message
                         ).show_error()
         else:
@@ -592,7 +594,7 @@ class Hotkeys:
     def __init__(self,hotkeys,sep='; '):
         self.Success = True
         self.hotkeys = hotkeys
-        self.sep     = sep
+        self.sep = sep
         self.check()
     
     def check(self):
@@ -727,7 +729,7 @@ class Hotkeys:
             match = re.match('.*-([A-Z])$',key)
             if match:
                 group = match.group(1)
-                key = key.replace ('-'       + group
+                key = key.replace ('-' + group
                                   ,'-Shift-' + group
                                   )
             ''' We make letters upper-case in order to avoid confusion,
@@ -823,7 +825,7 @@ class Launch:
             self.TargetExists = False
 
     def set_values(self):
-        self.custom_app  = ''
+        self.custom_app = ''
         self.custom_args = []
     
     def _launch(self):
@@ -868,7 +870,7 @@ class Launch:
             objs.get_mes(f,mes).show_error()
 
     def launch_app(self,custom_app='',custom_args=[]):
-        self.custom_app  = custom_app
+        self.custom_app = custom_app
         self.custom_args = custom_args
         if self.custom_app:
             if self.custom_args and len(self.custom_args) > 0:
@@ -954,7 +956,7 @@ class WriteTextFile:
         if self.Success:
             self.text = text
             if self.text:
-                if com.rewrite (file    = self.file
+                if com.rewrite (file = self.file
                                ,Rewrite = self.Rewrite
                                ):
                     return self._write('w')
@@ -968,14 +970,13 @@ class WriteTextFile:
 
 class Log:
 
-    def __init__ (self,Use=True,Short=False
-                 ):
-        self.func    = 'shared.Log.__init__'
+    def __init__(self,Use=True,Short=False):
+        self.func = 'shared.Log.__init__'
         self.Success = True
-        self.level   = _('INFO')
+        self.level = _('INFO')
         self.message = 'Test'
-        self.count   = 1
-        self.Short   = Short
+        self.count = 1
+        self.Short = Short
         if not Use:
             self.Success = False
 
@@ -1010,9 +1011,7 @@ class Log:
                     except, we do not specify an exception type.
                 '''
                 sub = 'Cannot print the message! ({})'.format(e)
-                mes = '{}:{}:{}'.format (f,'WARNING'
-                                        ,sub
-                                        )
+                mes = '{}:{}:{}'.format(f,'WARNING',sub)
                 print(mes)
 
     def append (self,func='shared.Log.append'
@@ -1020,8 +1019,8 @@ class Log:
                ):
         if self.Success:
             if func and level and message:
-                self.func    = func
-                self.level   = level
+                self.func = func
+                self.level = level
                 self.message = str(message)
                 self.print()
                 self.count += 1
@@ -1031,9 +1030,9 @@ class Log:
 class TextDic:
 
     def __init__(self,file,Sortable=False):
-        self.file     = file
+        self.file = file
         self.Sortable = Sortable
-        self.iread    = ReadTextFile(self.file)
+        self.iread = ReadTextFile(self.file)
         self.reset()
 
     ''' This is might be needed only for those dictionaries that
@@ -1066,7 +1065,7 @@ class TextDic:
         f = '[shared] logic.TextDic._join'
         if len(self.orig) == len(self.transl):
             self.lines = len(self.orig)
-            self.lst   = []
+            self.lst = []
             for i in range(self.lines):
                 self.lst.append(self.orig[i]+'\t'+self.transl[i])
             self.text = '\n'.join(self.lst)
@@ -1081,8 +1080,8 @@ class TextDic:
         f = '[shared] logic.TextDic._split'
         if self.get():
             self.Success = True
-            self.orig    = []
-            self.transl  = []
+            self.orig = []
+            self.transl = []
             ''' Building lists takes ~0.1 longer without temporary
                 variables (now self._split() takes ~0.256)
             '''
@@ -1170,11 +1169,11 @@ class TextDic:
         return self.lst
 
     def reset(self):
-        self.text   = self.iread.load()
-        self.orig   = []
+        self.text = self.iread.load()
+        self.orig = []
         self.transl = []
-        self.lst    = self.get().splitlines()
-        self.lines  = len(self.lst)
+        self.lst = self.get().splitlines()
+        self.lines = len(self.lst)
         self._split()
 
     # Sort a dictionary with the longest lines going first
@@ -1191,10 +1190,9 @@ class TextDic:
                                 ]
                 tmp_list.sort(key=lambda x: x[0],reverse=True)
                 for i in range(len(self.lst)):
-                    self.orig[i]   = tmp_list[i][1]
+                    self.orig[i] = tmp_list[i][1]
                     self.transl[i] = tmp_list[i][2]
-                    self.lst[i]    = self.orig[i] + '\t' \
-                                                  + self.transl[i]
+                    self.lst[i] = self.orig[i] + '\t' + self.transl[i]
                 self.text = '\n'.join(self.lst)
             else:
                 mes = _('File "{}" is not sortable!').format(self.file)
@@ -1223,7 +1221,7 @@ class TextDic:
     def write(self):
         f = '[shared] logic.TextDic.write'
         if self.Success:
-            WriteTextFile (file    = self.file
+            WriteTextFile (file = self.file
                           ,Rewrite = True
                           ).write(self.get())
         else:
@@ -1235,9 +1233,9 @@ class ReadTextFile:
 
     def __init__(self,file):
         f = '[shared] logic.ReadTextFile.__init__'
-        self.file    = file
-        self.text    = ''
-        self.lst     = []
+        self.file = file
+        self.text = ''
+        self.lst = []
         self.Success = True
         if self.file and os.path.isfile(self.file):
             pass
@@ -1535,7 +1533,7 @@ class Text:
             for i in range(min_val):
                 if opening_parentheses[i] < closing_parentheses[i]:
                     self.text = self.text[0:opening_parentheses[i]] \
-                                + self.text[closing_parentheses[i]+1:]
+                              + self.text[closing_parentheses[i]+1:]
             self.text = ''.join(self.text)
             ''' Further steps: self.delete_duplicate_spaces(),
                 self.text.strip()
@@ -1901,8 +1899,8 @@ class Time:
     ''' We constantly recalculate each value because they depend on each
         other.
     '''
-    def __init__ (self,tstamp=None,pattern='%Y-%m-%d'):
-        self.reset (tstamp  = tstamp
+    def __init__(self,tstamp=None,pattern='%Y-%m-%d'):
+        self.reset (tstamp = tstamp
                    ,pattern = pattern
                    )
 
@@ -1914,7 +1912,7 @@ class Time:
     def reset(self,tstamp=None,pattern='%Y-%m-%d'):
         self.set_values()
         self.pattern = pattern
-        self.tstamp  = tstamp
+        self.tstamp = tstamp
         # Prevent recursion
         if self.tstamp is None:
             self.get_todays_date()
@@ -2074,8 +2072,8 @@ class File:
         f = '[shared] logic.File.__init__'
         self.Success = True
         self.Rewrite = Rewrite
-        self.file    = file
-        self.dest    = dest
+        self.file = file
+        self.dest = dest
         # This will allow to skip some checks for destination
         if not self.dest:
             self.dest = self.file
@@ -2175,7 +2173,7 @@ class File:
                 mes = _('Unable to copy the file "{}" to iself!')
                 mes = mes.format(self.file)
                 objs.get_mes(f,mes).show_error()
-            elif com.rewrite (file    = self.dest
+            elif com.rewrite (file = self.dest
                              ,Rewrite = self.Rewrite
                              ):
                 Success = self._copy()
@@ -2222,7 +2220,7 @@ class File:
                 mes = _('Moving is not necessary, because the source and destination are identical ({}).')
                 mes = mes.format(self.file)
                 objs.get_mes(f,mes).show_warning()
-            elif com.rewrite (file    = self.dest
+            elif com.rewrite (file = self.dest
                              ,Rewrite = self.Rewrite
                              ):
                 Success = self._move()
@@ -2398,11 +2396,11 @@ class WriteBinary:
     def __init__(self,file,obj,Rewrite=True):
         f = '[shared] logic.WriteBinary.__init__'
         self.Success = True
-        self.file    = file
-        self.obj     = obj
+        self.file = file
+        self.obj = obj
         if self.file and self.obj:
             self.Rewrite = Rewrite
-            self.fragm   = None
+            self.fragm = None
         else:
             self.Success = False
             com.rep_empty(f)
@@ -2442,7 +2440,7 @@ class WriteBinary:
     def write(self):
         f = '[shared] logic.WriteBinary.write'
         if self.Success:
-            if com.rewrite (file    = self.file
+            if com.rewrite (file = self.file
                            ,Rewrite = self.Rewrite
                            ):
                 self._write(mode='w+b')
@@ -2457,10 +2455,10 @@ class WriteBinary:
 class Dic:
 
     def __init__(self,file,Sortable=False):
-        self.file     = file
+        self.file = file
         self.Sortable = Sortable
-        self.errors   = []
-        self.iread    = ReadTextFile(self.file)
+        self.errors = []
+        self.iread = ReadTextFile(self.file)
         self.reset()
 
     def _delete_duplicates(self):
@@ -2493,7 +2491,7 @@ class Dic:
         f = '[shared] logic.Dic._join'
         if len(self.orig) == len(self.transl):
             self.lines = len(self.orig)
-            self.lst   = []
+            self.lst = []
             for i in range(self.lines):
                 self.lst.append(self.orig[i]+'\t'+self.transl[i])
             self.text = '\n'.join(self.lst)
@@ -2507,8 +2505,8 @@ class Dic:
         '''
         if self.get():
             self.Success = True
-            self.orig    = []
-            self.transl  = []
+            self.orig = []
+            self.transl = []
             ''' Building lists takes ~0.1 longer without temporary
                 variables (now self._split() takes ~0.256)
             '''
@@ -2609,15 +2607,15 @@ class Dic:
         return self.lst
 
     def reset(self):
-        self.text   = self.iread.load()
-        self.orig   = []
+        self.text = self.iread.load()
+        self.orig = []
         self.transl = []
-        self.lst    = self.get().splitlines()
+        self.lst = self.get().splitlines()
         # Delete empty and commented lines
         self.lst = [line for line in self.lst if line \
                     and not line.startswith('#')
                    ]
-        self.text  = '\n'.join(self.lst)
+        self.text = '\n'.join(self.lst)
         self.lines = len(self.lst)
         self._split()
 
@@ -2666,7 +2664,7 @@ class Dic:
     def write(self):
         f = '[shared] logic.Dic.write'
         if self.Success:
-            WriteTextFile (file    = self.file
+            WriteTextFile (file = self.file
                           ,Rewrite = True
                           ).write(self.get())
         else:
@@ -2677,9 +2675,9 @@ class Dic:
 class ReadBinary:
 
     def __init__(self,file):
-        self.file    = file
-        self.obj     = None
-        h_file       = File(self.file)
+        self.file = file
+        self.obj = None
+        h_file = File(self.file)
         self.Success = h_file.Success
 
     def _load(self):
@@ -2794,14 +2792,14 @@ class Directory:
     def set_values(self):
         self.Success = True
         # Assigning lists must be one per line
-        self.lst      = []
-        self.rellist  = []
-        self.files    = []
+        self.lst = []
+        self.rellist = []
+        self.files = []
         self.relfiles = []
-        self.dirs     = []
-        self.reldirs  = []
-        self.exts     = []
-        self.extslow  = []
+        self.dirs = []
+        self.reldirs = []
+        self.exts = []
+        self.extslow = []
         self.subfiles = []
     
     def get_ext(self): # with a dot
@@ -3109,9 +3107,9 @@ class Online:
     def __init__ (self,base='%s',pattern=''
                  ,coding='UTF-8'
                  ):
-        self.reset (base    = base
+        self.reset (base = base
                    ,pattern = pattern
-                   ,coding  = coding
+                   ,coding = coding
                    )
 
     def get_bytes(self):
@@ -3125,8 +3123,8 @@ class Online:
     def browse(self):
         f = '[shared] logic.Online.browse'
         try:
-            webbrowser.open (url       = self.get_url()
-                            ,new       = 2
+            webbrowser.open (url = self.get_url()
+                            ,new = 2
                             ,autoraise = True
                             )
         except Exception as e:
@@ -3146,10 +3144,10 @@ class Online:
     def reset (self,base='',pattern=''
               ,coding='UTF-8'
               ):
-        self.bytes   = None
-        self.url     = None
-        self.coding  = coding
-        self.base    = base
+        self.bytes = None
+        self.url = None
+        self.coding = coding
+        self.base = base
         self.pattern = pattern
 
 
@@ -3157,19 +3155,19 @@ class Online:
 class Diff:
 
     def __init__(self,text1='',text2='',file=None):
-        self.Custom     = False
+        self.Custom = False
         ''' Some browsers update web-page as soon as we rewrite it, and
             some even do not open the same file again. So, we have to
             create a new temporary file each time.
         '''
-        self.wda_html   = com.get_tmpfile(suffix='.htm',Delete=0)
-        self.iwda_write = WriteTextFile (file    = self.wda_html
+        self.wda_html = com.get_tmpfile(suffix='.htm',Delete=0)
+        self.iwda_write = WriteTextFile (file = self.wda_html
                                         ,Rewrite = True
                                         )
         if text1 or text2:
             self.reset (text1 = text1
                        ,text2 = text2
-                       ,file  = file
+                       ,file = file
                        )
 
     def reset(self,text1,text2,file=None):
@@ -3177,28 +3175,28 @@ class Diff:
         self.text1 = text1
         self.text2 = text2
         if file:
-            self.Custom  = True
-            self.file    = file
-            self.header  = ''
-            self.iwrite  = WriteTextFile (file    = self.file
-                                         ,Rewrite = False
-                                         )
-            self.ipath   = Path(self.file)
+            self.Custom = True
+            self.file = file
+            self.header = ''
+            self.iwrite = WriteTextFile (file = self.file
+                                        ,Rewrite = False
+                                        )
+            self.ipath = Path(self.file)
         else:
-            self.Custom  = False
-            self.file    = self.wda_html
-            self.header  = '<title>%s</title>' % _('Differences:')
-            self.iwrite  = self.iwda_write
+            self.Custom = False
+            self.file = self.wda_html
+            self.header = '<title>%s</title>' % _('Differences:')
+            self.iwrite = self.iwda_write
         return self
 
     def set_diff(self):
         self.text1 = self.text1.split(' ')
         self.text2 = self.text2.split(' ')
-        self.diff  = difflib.HtmlDiff().make_file(self.text1,self.text2)
+        self.diff = difflib.HtmlDiff().make_file(self.text1,self.text2)
         # Avoid a bug in HtmlDiff()
-        self.diff  = self.diff.replace ('charset=ISO-8859-1'
-                                       ,'charset=UTF-8'
-                                       )
+        self.diff = self.diff.replace ('charset=ISO-8859-1'
+                                      ,'charset=UTF-8'
+                                      )
 
     def set_header(self):
         if self.Custom:
@@ -3233,7 +3231,7 @@ class Shortcut:
     def __init__(self,symlink='',path=''):
         f = '[shared] logic.Shortcut.__init__'
         self.Success = True
-        self.path    = path
+        self.path = path
         self.symlink = symlink
         if not self.path and not self.symlink:
             self.Success = False
@@ -3375,10 +3373,10 @@ class Email:
                  ,message='',attach=''
                  ):
         if email:
-            self.reset (email   = email
+            self.reset (email = email
                        ,subject = subject
                        ,message = message
-                       ,attach  = attach
+                       ,attach = attach
                        )
     
     def reset (self,email,subject=''
@@ -3390,10 +3388,10 @@ class Email:
             all mail agents support ';'). #note that, however, Outlook
             supports ONLY ';' and Evolution - only ','!
         '''
-        self.email   = email
+        self.email = email
         self.subject = Input(f,subject).get_not_none()
         self.message = Input(f,message).get_not_none()
-        self.attach  = attach
+        self.attach = attach
         if not self.email:
             self.Success = False
             com.rep_empty(f)
@@ -3450,7 +3448,7 @@ class Email:
             and not self.run_outlook():
                 self.subject = self.sanitize(self.subject)
                 self.message = self.sanitize(self.message)
-                self.attach  = self.sanitize(self.attach)
+                self.attach = self.sanitize(self.attach)
                 self.browser()
         else:
             com.cancel(f)
@@ -3462,10 +3460,10 @@ class Email:
             try:
                 import win32com.client
                 #https://stackoverflow.com/a/51993450
-                outlook       = win32com.client.dynamic.Dispatch('outlook.application')
-                mail          = outlook.CreateItem(0)
-                mail.To       = self.email.replace(',',';')
-                mail.Subject  = self.subject
+                outlook = win32com.client.dynamic.Dispatch('outlook.application')
+                mail = outlook.CreateItem(0)
+                mail.To = self.email.replace(',',';')
+                mail.Subject = self.subject
                 mail.HtmlBody = '<html><body><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">%s</body></html>'\
                                 % self.message
                 if self.attach:
@@ -3543,12 +3541,12 @@ class Grep:
     def __init__ (self,lst,start=[]
                  ,middle=[],end=[]
                  ):
-        self.lst    = lst
-        self.start  = start
+        self.lst = lst
+        self.start = start
         self.middle = middle
-        self.end    = end
-        self.found  = []
-        self.i      = 0
+        self.end = end
+        self.found = []
+        self.i = 0
         self.sanitize()
 
     def sanitize(self):
@@ -4197,8 +4195,8 @@ class Get:
         '''
         f = '[shared] logic.Get._get'
         try:
-            req = urllib.request.Request (url     = self.url
-                                         ,data    = None
+            req = urllib.request.Request (url = self.url
+                                         ,data = None
                                          ,headers = {'User-Agent': \
                                                      'Mozilla'
                                                     }
@@ -4269,11 +4267,11 @@ class Links:
                 self.links[i] = urllib.parse.unquote(self.links[i])
     
     def set_values(self):
-        self.pos   = 0
+        self.pos = 0
         self.links = []
     
     def get_poses(self):
-        search = Search (text    = self.text
+        search = Search (text = self.text
                         ,pattern = self.root
                         )
         loop = search.get_next_loop()
@@ -4327,9 +4325,9 @@ class FilterList:
         Blacklist is a list of patterns, not obligatory full names.
     '''
     def __init__(self,path,blacklist=[]):
-        self.lst     = []
-        self.path    = path
-        self.block   = blacklist
+        self.lst = []
+        self.path = path
+        self.block = blacklist
         self.Success = Directory(self.path).Success \
                        and isinstance(self.block,list)
     
@@ -4495,30 +4493,30 @@ class Commands:
                     ,( _('Web-page')         ,'.html')
                     ,( _('All files')        ,'*'    )
                     )
-        options                = {}
+        options = {}
         options['initialfile'] = ''
-        options['filetypes']   = types
-        options['title']       = _('Save As:')
+        options['filetypes'] = types
+        options['title'] = _('Save As:')
         return options
     
     def rep_lazy(self,func=_('Logic error!')):
-        Message (func    = func
+        Message (func = func
                 ,message = _('Nothing to do!')
                 ).show_debug()
     
     def show_warning (self,func=_('Logic error!')
                      ,message=_('Logic error!')
                      ):
-        objs.get_mes (func    = func
-                     ,level   = _('WARNING')
+        objs.get_mes (func = func
+                     ,level = _('WARNING')
                      ,message = message
                      )
     
     def show_info (self,func=_('Logic error!')
                   ,message=_('Logic error!')
                   ):
-        objs.get_mes (func    = func
-                     ,level   = _('INFO')
+        objs.get_mes (func = func
+                     ,level = _('INFO')
                      ,message = message
                      )
         
@@ -4527,14 +4525,14 @@ class Commands:
         result = '%d %s' % (0,_('B'))
         if bsize:
             tebibytes = bsize // pow(2,40)
-            cursize   = tebibytes * pow(2,40)
+            cursize = tebibytes * pow(2,40)
             gibibytes = (bsize - cursize) // pow(2,30)
-            cursize  += gibibytes * pow(2,30)
+            cursize += gibibytes * pow(2,30)
             mebibytes = (bsize - cursize) // pow(2,20)
-            cursize  += mebibytes * pow(2,20)
+            cursize += mebibytes * pow(2,20)
             kibibytes = (bsize - cursize) // pow(2,10)
-            cursize  += kibibytes * pow(2,10)
-            rbytes    = bsize - cursize
+            cursize += kibibytes * pow(2,10)
+            rbytes = bsize - cursize
             mes = []
             if tebibytes:
                 mes.append('%d %s' % (tebibytes,_('TiB')))
@@ -4552,7 +4550,7 @@ class Commands:
         return result
     
     def split_time(self,length=0):
-        hours   = length // 3600
+        hours = length // 3600
         all_sec = hours * 3600
         minutes = (length - all_sec) // 60
         all_sec += minutes * 60
@@ -4617,8 +4615,8 @@ class Commands:
         result = 0
         if length:
             if isinstance(length,str) and length[0] == 'P':
-                days    = 0
-                hours   = 0
+                days = 0
+                hours = 0
                 minutes = 0
                 seconds = 0
                 match = re.search(r'(\d+)D',length)
@@ -4676,10 +4674,10 @@ class Commands:
             globs['ui_lang'] = 'en'
     
     def get_tmpfile(self,suffix='.htm',Delete=0):
-        return tempfile.NamedTemporaryFile (mode     = 'w'
+        return tempfile.NamedTemporaryFile (mode = 'w'
                                            ,encoding = 'UTF-8'
-                                           ,suffix   = suffix
-                                           ,delete   = Delete
+                                           ,suffix = suffix
+                                           ,delete = Delete
                                            ).name
     
     def get_human_time(self,delta):
@@ -4690,15 +4688,15 @@ class Commands:
             if isinstance(delta,int) or isinstance(delta,float):
                 # 'datetime' will output years even for small integers
                 # https://kalkulator.pro/year-to-second.html
-                years   = delta // 31536000.00042889
+                years = delta // 31536000.00042889
                 all_sec = years * 31536000.00042889
-                months  = (delta - all_sec) // 2592000.0000000005
+                months = (delta - all_sec) // 2592000.0000000005
                 all_sec += months * 2592000.0000000005
-                weeks   = (delta - all_sec) // 604800
+                weeks = (delta - all_sec) // 604800
                 all_sec += weeks * 604800
-                days    = (delta - all_sec) // 86400
+                days = (delta - all_sec) // 86400
                 all_sec += days * 86400
-                hours   = (delta - all_sec) // 3600
+                hours = (delta - all_sec) // 3600
                 all_sec += hours * 3600
                 minutes = (delta - all_sec) // 60
                 all_sec += minutes * 60
@@ -4722,7 +4720,7 @@ class Commands:
                     result = ' '.join(mes)
             else:
                 mes = _('Wrong input data: "{}"!').format(delta)
-                Message (func    = f
+                Message (func = f
                         ,message = mes
                         ).show_warning()
         else:
@@ -4730,17 +4728,17 @@ class Commands:
         return result
     
     def cancel(self,func):
-        Message (func    = func
+        Message (func = func
                 ,message = _('Operation has been canceled.')
                 ).show_warning()
     
     def rep_empty(self,func):
-        Message (func    = func
+        Message (func = func
                 ,message = _('Empty input is not allowed!')
                 ).show_warning()
     
     def rep_not_ready(self,func):
-        Message (func    = func
+        Message (func = func
                 ,message = _('Not implemented yet!')
                 ).show_info()
 

@@ -43,10 +43,10 @@ class Commands:
         ipanes.show()
     
     def create_button(self):
-        self.btn = sh.Button (parent   = sh.Top()
+        self.btn = sh.Button (parent = sh.Top()
                              ,inactive = '/home/pete/bin/mclient/resources/buttons/icon_36x36_block_off.gif'
-                             ,active   = '/home/pete/bin/mclient/resources/buttons/icon_36x36_block_on.gif'
-                             ,Focus    = True
+                             ,active = '/home/pete/bin/mclient/resources/buttons/icon_36x36_block_on.gif'
+                             ,Focus = True
                              )
     
     def run_all(self):
@@ -123,7 +123,7 @@ class Commands:
                    )
         headers  = ('NO','DIRECTORY','FILE')
         mes = sh.FastTable (iterable = iterable
-                           ,headers  = headers
+                           ,headers = headers
                            ).run()
         
         self.iwrite.write(mes)
@@ -141,7 +141,7 @@ class Commands:
                    ,(1,'/home','Trash.info')
                    ,(2,'/','bash')
                    )
-        mes = sh.FastTable (iterable  = iterable
+        mes = sh.FastTable (iterable = iterable
                            ,Transpose = True
                            ).run()
         
@@ -161,8 +161,8 @@ class Commands:
                    ,(2,'/','bash')
                    ]
         headers  = ['NO','DIRECTORY','FILE']
-        mes = sh.FastTable (iterable  = iterable
-                           ,headers   = headers
+        mes = sh.FastTable (iterable = iterable
+                           ,headers = headers
                            ,Transpose = True
                            ).run()
         
@@ -311,16 +311,16 @@ class Commands:
         mes = _('Run "{}". Press any key to continue').format(f)
         input(mes)
         parent = sh.Top()
-        ient = sh.Entry (parent  = parent
-                        ,side    = 'left'
-                        ,ipadx   = 5
-                        ,ipady   = 5
-                        ,fill    = 'x'
-                        ,width   = 10
-                        ,expand  = None
-                        ,font    = 'Sans 11'
-                        ,bg      = 'blue'
-                        ,fg      = 'red'
+        ient = sh.Entry (parent = parent
+                        ,side = 'left'
+                        ,ipadx = 5
+                        ,ipady = 5
+                        ,fill = 'x'
+                        ,width = 10
+                        ,expand = None
+                        ,font = 'Sans 11'
+                        ,bg = 'blue'
+                        ,fg = 'red'
                         ,justify = 'right'
                         )
         ient.focus()
@@ -333,12 +333,12 @@ class Commands:
         mes = _('Run "{}". Press any key to continue').format(f)
         input(mes)
         text = '\n'.join([str(i+1) for i in range(100)])
-        imult = sh.MultCBoxesC (text    = text
-                               ,width   = 550
-                               ,height  = 400
-                               ,font    = 'Sans 11'
+        imult = sh.MultCBoxesC (text = text
+                               ,width = 550
+                               ,height = 400
+                               ,font = 'Sans 11'
                                ,MarkAll = False
-                               ,icon    = ICON
+                               ,icon = ICON
                                )
         imult.show()
         mes = imult.get_selected()
@@ -349,9 +349,9 @@ class Commands:
         mes = _('Run "{}". Press any key to continue').format(f)
         input(mes)
         parent = sh.Top()
-        imult = sh.MultCBoxes (parent  = parent
-                              ,text    = 'Hello\nBye\nHello again'
-                              ,font    = 'Sans 11'
+        imult = sh.MultCBoxes (parent = parent
+                              ,text = 'Hello\nBye\nHello again'
+                              ,font = 'Sans 11'
                               ,MarkAll = False
                               )
         parent.show()
@@ -370,16 +370,16 @@ class Commands:
         parent.set_title('CheckBox')
         self.cbx = sh.CheckBox (parent = parent
                                ,Active = False
-                               ,side   = 'left'
+                               ,side = 'left'
                                ,action = self.trigger_cbox
                                )
         self.lbl = sh.Label (parent = parent
-                            ,text   = 'Label'
-                            ,side   = 'left'
+                            ,text = 'Label'
+                            ,side = 'left'
                             )
-        sh.com.bind (obj      = self.lbl
+        sh.com.bind (obj = self.lbl
                     ,bindings = '<ButtonRelease-1>'
-                    ,action   = self.trigger_cbox
+                    ,action = self.trigger_cbox
                     )
         parent.show()
     
@@ -387,12 +387,12 @@ class Commands:
         f = '[shared] tests.Commands.run_progressbar'
         mes = _('Run "{}". Press any key to continue').format(f)
         input(mes)
-        top   = sh.Top(AutoCr=False)
-        iprog = sh.ProgressBar (width   = 750
-                               ,height  = 200
+        top = sh.Top(AutoCr=False)
+        iprog = sh.ProgressBar (width = 750
+                               ,height = 200
                                ,YScroll = True
-                               ,title   = 'Load dictionaries'
-                               ,icon    = ICON
+                               ,title = 'Load dictionaries'
+                               ,icon = ICON
                                )
         for i in range(10):
             iprog.add()
@@ -404,11 +404,11 @@ class Commands:
         mes = _('Run "{}". Press any key to continue').format(f)
         input(mes)
         parent = sh.Top()
-        iprog  = sh.ProgressBarItem (parent = parent
-                                    ,orient = 'horizontal'
-                                    ,length = 100
-                                    ,mode   = 'determinate'
-                                    )
+        iprog = sh.ProgressBarItem (parent = parent
+                                   ,orient = 'horizontal'
+                                   ,length = 100
+                                   ,mode = 'determinate'
+                                   )
         parent.show()
     
     def run_canvas(self):
@@ -419,11 +419,11 @@ class Commands:
         parent.set_title('Canvas')
         icanvas = sh.Canvas (parent = parent
                             ,expand = True
-                            ,side   = None
+                            ,side = None
                             ,region = None
-                            ,width  = None
+                            ,width = None
                             ,height = None
-                            ,fill   = 'both'
+                            ,fill = 'both'
                             )
         sh.Geometry(parent=parent).set('1024x768')
         frame = sh.Frame (parent = parent)
@@ -433,10 +433,10 @@ class Commands:
 
         label = sh.Label (parent = frame1
                          ,expand = True
-                         ,fill   = 'both'
-                         ,text   = 'Hello, Canvas!'
-                         ,fg     = 'white'
-                         ,bg     = 'blue'
+                         ,fill = 'both'
+                         ,text = 'Hello, Canvas!'
+                         ,fg = 'white'
+                         ,bg = 'blue'
                          )
 
         icanvas.embed(frame)
@@ -470,7 +470,7 @@ class Commands:
         input(mes)
         imap = sh.SymbolMap (items = 'àáâäāãæßćĉçèéêēёëəғĝģĥìíîïīĵķļñņòóôõöōœøšùúûūŭũüýÿžжҗқңәөүұÀÁÂÄĀÃÆSSĆĈÇÈÉÊĒЁËƏҒĜĢĤÌÍÎÏĪĴĶĻÑŅÒÓÔÕÖŌŒØŠÙÚÛŪŬŨÜÝŸŽЖҖҚҢӘӨҮҰ'
                             ,title = ''
-                            ,icon  = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
+                            ,icon = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
                             )
         imap.show()
         mes = _('Your input: "{}"').format(imap.get())
@@ -490,23 +490,23 @@ class Commands:
         parent = sh.Top()
         sh.Geometry(parent).set('300x40')
         parent.set_title('OptionMenu')
-        self.opt_prm = sh.OptionMenu (parent  = parent
-                                     ,items   = None
-                                     ,side    = 'left'
-                                     ,anchor  = 'center'
-                                     ,action  = self.optionmenu_trigger
-                                     ,tfocus  = 1
+        self.opt_prm = sh.OptionMenu (parent = parent
+                                     ,items = None
+                                     ,side = 'left'
+                                     ,anchor = 'center'
+                                     ,action = self.optionmenu_trigger
+                                     ,tfocus = 1
                                      ,default = None
-                                     ,Combo   = True
-                                     ,expand  = False
-                                     ,fill    = None
-                                     ,font    = 'Sans 11'
+                                     ,Combo = True
+                                     ,expand = False
+                                     ,fill = None
+                                     ,font = 'Sans 11'
                                      )
         parent.show()
         parent.set_title(_('New settings'))
-        self.opt_prm.reset (items   = (33,34,345,345)
+        self.opt_prm.reset (items = (33,34,345,345)
                            ,default = 345
-                           ,action  = self.optionmenu_trigger
+                           ,action = self.optionmenu_trigger
                            )
         parent.show()
     
@@ -517,23 +517,23 @@ class Commands:
         #lst = [i for i in range(15)]
         lst = sh.Directory(sh.Home().get_home()).get_files()
         self.lbx_prm = sh.ListBoxC (Multiple = False
-                                   ,lst      = lst
-                                   ,action   = None
-                                   ,side     = None
-                                   ,expand   = True
-                                   ,fill     = 'both'
-                                   ,title    = 'ListBox (All)'
-                                   ,icon     = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
-                                   ,ScrollX  = True
-                                   ,ScrollY  = True
+                                   ,lst = lst
+                                   ,action = None
+                                   ,side = None
+                                   ,expand = True
+                                   ,fill = 'both'
+                                   ,title = 'ListBox (All)'
+                                   ,icon = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
+                                   ,ScrollX = True
+                                   ,ScrollY = True
                                    )
         self.lbx_prm.show()
         mes = _('Your final selection: "{}"').format(self.lbx_prm.get())
         sh.objs.get_mes(f,mes,SILENT).show_debug()
         '''
-        self.lbx_prm.reset (lst   = (_('Mexico'),_('Canada'),_('Russia'))
+        self.lbx_prm.reset (lst = (_('Mexico'),_('Canada'),_('Russia'))
                            ,title = _('New settings')
-                           ,icon  = ICON
+                           ,icon = ICON
                            )
         self.lbx_prm.show()
         print('Your final selection: "{}"'.format(self.lbx_prm.get()))
@@ -552,13 +552,13 @@ class Commands:
         parent = sh.Top()
         parent.title('ListBox')
         lst = [i for i in range(15)]
-        self.lbx_prm = sh.ListBox (parent   = parent
+        self.lbx_prm = sh.ListBox (parent = parent
                                   ,Multiple = False
-                                  ,lst      = lst
-                                  ,action   = self._trigger_lbx
-                                  ,side     = None
-                                  ,expand   = True
-                                  ,fill     = 'both'
+                                  ,lst = lst
+                                  ,action = self._trigger_lbx
+                                  ,side = None
+                                  ,expand = True
+                                  ,fill = 'both'
                                   )
         self.lbx_prm.focus()
         parent.show()
@@ -570,26 +570,26 @@ class Commands:
         text = '\n'.join([('('+str(i)+')'+f+' ')*(i+1) for i in range(100)])
         parent = sh.Top()
         parent.title('Y Scrollbar')
-        ''' #note: when the widget width is <580, the scrollbar will not
+        ''' #NOTE: when the widget width is <580, the scrollbar will not
             be visible.
         '''
         sh.Geometry(parent).set('600x400')
         
         frm_prm = sh.Frame (parent = parent
-                           ,side   = 'left'
+                           ,side = 'left'
                            )
         frm_ver = sh.Frame (parent = parent
-                           ,side   = 'right'
+                           ,side = 'right'
                            ,expand = False
-                           ,fill   = 'y'
+                           ,fill = 'y'
                            )
         frm_txt = sh.Frame (parent = frm_prm
-                           ,side   = 'top'
+                           ,side = 'top'
                            )
         frm_hor = sh.Frame (parent = frm_prm
-                           ,side   = 'bottom'
+                           ,side = 'bottom'
                            ,expand = False
-                           ,fill   = 'x'
+                           ,fill = 'x'
                            )
         
         #TODO: use 'TextBox'
@@ -602,11 +602,11 @@ class Commands:
         
         sh.Scrollbar (parent = frm_hor
                      ,scroll = txt
-                     ,Horiz  = True
+                     ,Horiz = True
                      )
         sh.Scrollbar (parent = frm_ver
                      ,scroll = txt
-                     ,Horiz  = False
+                     ,Horiz = False
                      )
         parent.show()
     
@@ -618,7 +618,7 @@ class Commands:
         icon1 = ICON
         icon2 = ICON2
         sh.objs.get_waitbox().set_icon(icon1)
-        sh.objs.waitbox.reset (func    = f
+        sh.objs.waitbox.reset (func = f
                               ,message = None
                               )
         sh.objs.waitbox.show()
@@ -626,7 +626,7 @@ class Commands:
         sh.objs.waitbox.close()
         
         sh.objs.waitbox.set_icon(icon2)
-        sh.objs.waitbox.reset (func    = f
+        sh.objs.waitbox.reset (func = f
                               ,message = 'Hello! I\'m still here!'
                               )
         sh.objs.waitbox.show()
@@ -665,37 +665,37 @@ class Commands:
         input(mes)
         parent = sh.Top()
         parent.title(_('Button'))
-        self.btn_trg = sh.Button (parent   = parent
-                                 ,side     = 'top'
-                                 ,action   = self.button_trigger
-                                 ,text     = _('Trigger an event')
-                                 ,font     = 'Sans 14 bold'
-                                 ,hint     = 'A sample hint'
+        self.btn_trg = sh.Button (parent = parent
+                                 ,side = 'top'
+                                 ,action = self.button_trigger
+                                 ,text = _('Trigger an event')
+                                 ,font = 'Sans 14 bold'
+                                 ,hint = 'A sample hint'
                                  ,bindings = ('<Control-s>','<F2>')
                                  )
-        self.btn_img = sh.Button (parent   = parent
-                                 ,action   = None
-                                 ,hint     = 'This is a hint'
+        self.btn_img = sh.Button (parent = parent
+                                 ,action = None
+                                 ,hint = 'This is a hint'
                                  ,inactive = '/home/pete/bin/mclient/resources/buttons/icon_36x36_watch_clipboard_off.gif'
-                                 ,active   = '/home/pete/bin/mclient/resources/buttons/icon_36x36_watch_clipboard_on.gif'
-                                 ,text     = 'Press me'
-                                 ,height   = 36
-                                 ,width    = 36
-                                 ,side     = 'top'
-                                 ,expand   = 0
-                                 ,bg       = None
+                                 ,active = '/home/pete/bin/mclient/resources/buttons/icon_36x36_watch_clipboard_on.gif'
+                                 ,text = 'Press me'
+                                 ,height = 36
+                                 ,width = 36
+                                 ,side = 'top'
+                                 ,expand = 0
+                                 ,bg = None
                                  ,bg_focus = None
-                                 ,fg       = None
+                                 ,fg = None
                                  ,fg_focus = None
-                                 ,bd       = 0
-                                 ,hdelay   = 800
-                                 ,hbg      = '#ffffe0'
-                                 ,hdir     = 'top'
-                                 ,hbwidth  = 1
-                                 ,hbcolor  = 'navy'
-                                 ,fill     = 'both'
-                                 ,Focus    = True
-                                 ,font     = None
+                                 ,bd = 0
+                                 ,hdelay = 800
+                                 ,hbg = '#ffffe0'
+                                 ,hdir = 'top'
+                                 ,hbwidth = 1
+                                 ,hbcolor = 'navy'
+                                 ,fill = 'both'
+                                 ,Focus = True
+                                 ,font = None
                                  )
         parent.show()
     
@@ -705,23 +705,23 @@ class Commands:
         input(mes)
         iframe = sh.Frame (parent = sh.Top()
                           ,expand = 1
-                          ,fill   = 'both'
-                          ,side   = None
-                          ,padx   = 10
-                          ,pady   = 10
-                          ,ipadx  = None
-                          ,ipady  = None
-                          ,bd     = 2
-                          ,bg     = 'blue'
-                          ,width  = 200
+                          ,fill = 'both'
+                          ,side = None
+                          ,padx = 10
+                          ,pady = 10
+                          ,ipadx = None
+                          ,ipady = None
+                          ,bd = 2
+                          ,bg = 'blue'
+                          ,width = 200
                           ,height = 200
                           ,propag = False
                           )
         iframe.set_title('Frame')
         sh.Label (parent = iframe
-                 ,text   = 'Label'
-                 ,bg     = 'red'
-                 ,fg     = 'orange'
+                 ,text = 'Label'
+                 ,bg = 'red'
+                 ,fg = 'orange'
                  )
         iframe.show()
     
@@ -759,12 +759,12 @@ class Commands:
         f = '[shared] tests.Commands.run_frameless'
         mes = _('Run "{}". Press any key to continue').format(f)
         input(mes)
-        top  = sh.Top()
+        top = sh.Top()
         top1 = sh.Top (AutoCr = False
-                      ,Lock   = False
+                      ,Lock = False
                       )
         top2 = sh.Top (AutoCr = False
-                      ,Lock   = False
+                      ,Lock = False
                       )
         top.set_title('Host')
         sh.Geometry(top).set('150x150')
@@ -773,25 +773,25 @@ class Commands:
         top2.widget.wm_overrideredirect(1)
         
         sh.Label (parent = top
-                 ,text   = 'HOST'
-                 ,bg     = 'black'
-                 ,fg     = 'red'
+                 ,text = 'HOST'
+                 ,bg = 'black'
+                 ,fg = 'red'
                  ,expand = True
-                 ,fill   = 'both'
+                 ,fill = 'both'
                  )
         sh.Label (parent = top1
-                 ,text   = 'TOP1'
-                 ,bg     = 'green'
-                 ,fg     = 'orange'
+                 ,text = 'TOP1'
+                 ,bg = 'green'
+                 ,fg = 'orange'
                  ,expand = True
-                 ,fill   = 'both'
+                 ,fill = 'both'
                  )
         sh.Label (parent = top2
-                 ,text   = 'TOP2'
-                 ,bg     = 'red'
-                 ,fg     = 'orange'
+                 ,text = 'TOP2'
+                 ,bg = 'red'
+                 ,fg = 'orange'
                  ,expand = True
-                 ,fill   = 'both'
+                 ,fill = 'both'
                  )
         
         w1, w2 = com._get_size_range()
@@ -819,20 +819,20 @@ class Commands:
         f = '[shared] tests.Commands.set_label'
         mes = _('Run "{}". Press any key to continue').format(f)
         input(mes)
-        lbl = sh.Label (parent  = sh.Top()
-                       ,text    = 'Hello! It\'s me again'
-                       ,font    = 'Sans 14'
-                       ,side    = 'right'
-                       ,fill    = 'both'
-                       ,expand  = False
-                       ,ipadx   = 30
-                       ,ipady   = 10
-                       ,image   = None
-                       ,fg      = 'orange'
-                       ,bg      = 'green'
-                       ,anchor  = None
-                       ,width   = None
-                       ,height  = None
+        lbl = sh.Label (parent = sh.Top()
+                       ,text = 'Hello! It\'s me again'
+                       ,font = 'Sans 14'
+                       ,side = 'right'
+                       ,fill = 'both'
+                       ,expand = False
+                       ,ipadx = 30
+                       ,ipady = 10
+                       ,image = None
+                       ,fg = 'orange'
+                       ,bg = 'green'
+                       ,anchor = None
+                       ,width = None
+                       ,height = None
                        ,justify = 'left'
                        )
         lbl.set_title('Label test')
@@ -884,10 +884,10 @@ class Commands:
         input(mes)
         icon_path = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
         itop = sh.Top (Maximize = False
-                      ,AutoCr   = True
-                      ,Lock     = True
-                      ,icon     = icon_path
-                      ,title    = 'Welcome to shared'
+                      ,AutoCr = True
+                      ,Lock = True
+                      ,icon = icon_path
+                      ,title = 'Welcome to shared'
                       )
         itop.show()
     
@@ -933,7 +933,7 @@ class Commands:
         ifont = sh.Font('Serif 11')
         ifont.set_text('Hello, I am here and here!')
         ifont.gui.set_font('Sans',11)
-        width  = ifont.width()
+        width = ifont.width()
         height = ifont.height()
         mes = _('Font size: {}x{}').format(width,height)
         sh.objs.get_mes(f,mes,SILENT).show_debug()
@@ -1040,17 +1040,17 @@ class Commands:
         input(mes)
         pb = sh.ProgressBar()
         for i in range(100):
-            item     = pb.add()
-            file     = 'File #%d' % i
-            total    = random.randint(1,100)
+            item = pb.add()
+            file = 'File #%d' % i
+            total = random.randint(1,100)
             cur_size = random.randint(0,total)
-            rate     = random.randint(1,5000)
-            eta      = int((total*1000)/rate)
-            item.text (file     = file
+            rate = random.randint(1,5000)
+            eta = int((total*1000)/rate)
+            item.text (file = file
                       ,cur_size = cur_size
-                      ,total    = total
-                      ,rate     = rate
-                      ,eta      = eta
+                      ,total = total
+                      ,rate = rate
+                      ,eta = eta
                       )
         pb.show()
 
@@ -1059,7 +1059,7 @@ class Commands:
 class Anchors:
     
     def __init__(self):
-        self.count   = 0
+        self.count = 0
         self.anchors = ('N' ,'NE','NW','E' 
                        ,'EN','ES','S' ,'SE'
                        ,'SW','W','WN','WS'
@@ -1089,12 +1089,12 @@ class Anchors:
     def run(self,event=None):
         f = '[shared] tests.Anchors.run'
 
-        self.top  = sh.Top()
+        self.top = sh.Top()
         self.top1 = sh.Top (AutoCr = False
-                           ,Lock   = False
+                           ,Lock = False
                            )
         self.top2 = sh.Top (AutoCr = False
-                           ,Lock   = False
+                           ,Lock = False
                            )
         self.top.set_title('HOST')
         sh.Geometry(self.top).set('550x150')
@@ -1105,23 +1105,23 @@ class Anchors:
         
         mes = _('Press Return to place widgets randomly')
         self.lbl_top = sh.Label (parent = self.top
-                                ,text   = mes
+                                ,text = mes
                                 ,expand = True
-                                ,fill   = 'both'
+                                ,fill = 'both'
                                 )
         sh.Label (parent = self.top1
-                 ,text   = 'WIDGET1'
-                 ,bg     = 'green'
-                 ,fg     = 'orange'
+                 ,text = 'WIDGET1'
+                 ,bg = 'green'
+                 ,fg = 'orange'
                  ,expand = True
-                 ,fill   = 'both'
+                 ,fill = 'both'
                  )
         sh.Label (parent = self.top2
-                 ,text   = 'WIDGET2'
-                 ,bg     = 'red'
-                 ,fg     = 'orange'
+                 ,text = 'WIDGET2'
+                 ,bg = 'red'
+                 ,fg = 'orange'
                  ,expand = True
-                 ,fill   = 'both'
+                 ,fill = 'both'
                  )
         
         self.place_widgets()
@@ -1129,17 +1129,17 @@ class Anchors:
         mes = _('Anchor: {}').format(self.anchor)
         sh.Message(f,mes,True).show_info()
         
-        sh.com.bind (obj      = self.top
+        sh.com.bind (obj = self.top
                     ,bindings = '<Return>'
-                    ,action   = self.adjust
+                    ,action = self.adjust
                     )
-        sh.com.bind (obj      = self.top1
+        sh.com.bind (obj = self.top1
                     ,bindings = '<Return>'
-                    ,action   = self.adjust
+                    ,action = self.adjust
                     )
-        sh.com.bind (obj      = self.top2
+        sh.com.bind (obj = self.top2
                     ,bindings = '<Return>'
-                    ,action   = self.adjust
+                    ,action = self.adjust
                     )
         
         self.top1.show()
@@ -1162,8 +1162,8 @@ class Anchors:
         geom.restore()
     
     def attach(self,event=None):
-        sh.AttachWidget (obj1   = self.top1
-                        ,obj2   = self.top2
+        sh.AttachWidget (obj1 = self.top1
+                        ,obj2 = self.top2
                         ,anchor = self.anchor
                         ).run()
 
@@ -1246,10 +1246,10 @@ class TestBox:
         borders = self.itxt.get_word_borders(pos)
         if borders:
             pos1, pos2 = borders[0], borders[1]
-            self.itxt.tag_add_ (tag = 'word'
-                               ,pos1 = pos1
-                               ,pos2 = pos2
-                               )
+            self.itxt.tag_add (tag = 'word'
+                              ,pos1 = pos1
+                              ,pos2 = pos2
+                              )
             self.itxt.tag_config (tag = 'word'
                                  ,bg = 'MediumOrchid1'
                                  )
