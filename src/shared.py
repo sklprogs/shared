@@ -642,8 +642,8 @@ class TextBox:
                                              ,forwards = forwards
                                              ,backwards = backwards
                                              )
-                mes = '"{}"'.format(pos)
-                objs.get_mes(f,mes,True).show_debug()
+                #mes = '"{}"'.format(pos)
+                #objs.get_mes(f,mes,True).show_debug()
                 return pos
             except Exception as e:
                 mes = _('Operation has failed!\n\nDetails: {}')

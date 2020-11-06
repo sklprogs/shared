@@ -1681,7 +1681,7 @@ class Text:
                      )
         self.grow (max_len = max_len
                   ,FromEnd = FromEnd
-                  ,sym     = sym
+                  ,sym = sym
                   )
         return self.text
 
@@ -3797,7 +3797,9 @@ class Decline:
         self.case = case
         self.Auto = Auto
         if self.Auto:
-            result = Text(text=self.orig).delete_punctuation()
+            itext = Text(text=self.orig)
+            itext.delete_punctuation()
+            result = itext.delete_line_breaks()
         else:
             result = self.orig
         self.lst = result.split(' ')
