@@ -98,8 +98,8 @@ def _get_lang_env_var():
 
 
 if OS_WINDOWS:
-    setup_env    = setup_env_windows
+    setup_env = setup_env_windows
     get_language = get_language_windows
 else:
-    setup_env    = setup_env_other
+    setup_env = setup_env_other
     get_language = get_language_other

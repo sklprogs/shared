@@ -121,7 +121,7 @@ class Commands:
                    ,['/home/pete','/home','/']
                    ,['notes.txt','Trash.info','bash']
                    )
-        headers  = ('NO','DIRECTORY','FILE')
+        headers = ('NO','DIRECTORY','FILE')
         mes = sh.FastTable (iterable = iterable
                            ,headers = headers
                            ).run()
@@ -160,7 +160,7 @@ class Commands:
                    ,(1,'/home','Trash.info')
                    ,(2,'/','bash')
                    ]
-        headers  = ['NO','DIRECTORY','FILE']
+        headers = ['NO','DIRECTORY','FILE']
         mes = sh.FastTable (iterable = iterable
                            ,headers = headers
                            ,Transpose = True
@@ -275,7 +275,7 @@ class Commands:
                        ,Auto = True
                        ).text
         parent = sh.Top (title = 'TextBox with Selection and Search'
-                        ,icon  = ICON
+                        ,icon = ICON
                         ,AutoCr = False
                         )
         itxt = sh.TextBox (parent = parent
@@ -300,7 +300,7 @@ class Commands:
         mes = _('Run "{}". Press any key to continue').format(f)
         input(mes)
         ient = sh.EntryC (title = 'This is an Entry'
-                         ,icon  = ICON
+                         ,icon = ICON
                          )
         ient.show()
         mes = _('Output: "{}"').format(ient.get())

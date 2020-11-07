@@ -1349,7 +1349,7 @@ class MultCBoxesC:
     def set_scroll(self):
         self.scr_hor = Scrollbar (parent = self.frm_hor
                                  ,scroll = self.obj.cvs_prm
-                                 ,Horiz  = True
+                                 ,Horiz = True
                                  )
         self.scr_ver = Scrollbar (parent = self.frm_ver
                                  ,scroll = self.obj.cvs_prm
@@ -1660,7 +1660,7 @@ class ProgressBar:
         self.label = Label (parent = self.frm_sec
                            ,text = 'ProgressBar'
                            ,expand = True
-                           ,fill   = 'both'
+                           ,fill = 'both'
                            )
         self.canvas.embed(self.label)
         if self.YScroll:

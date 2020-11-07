@@ -2368,8 +2368,8 @@ class Path:
         '''
         if self.path != '/':
             self.path = self.path.rstrip('//')
-        self.basename = self.dirname = self.extension \
-                      = self.filename = self.split = self.date = ''
+        self.basename = self.dirname = self.extension = self.filename \
+                      = self.split = self.date = ''
         self.parts = []
 
     def split(self):
