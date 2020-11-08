@@ -1172,9 +1172,9 @@ class Anchors:
 class TestBox:
 
     def __init__(self):
-        self.text = 'Здесь был вася, Васян, переВася, Вася и еще раз Вася.'
+        #self.text = 'Здесь был вася, Васян, переВася, Вася и еще раз Вася.'
         self.pattern = 'Вася'
-        #self.text = sh.ReadTextFile('/home/pete/tmp/large_file.txt').get()
+        self.text = sh.ReadTextFile('/home/pete/tmp/large_file.txt').get()
         self.top = sh.Top (icon = ICON
                           ,title = _('Text:')
                           )
@@ -1320,8 +1320,8 @@ if __name__ == '__main__':
     #com.run_all()
     #TestBox().run_search_box()
     #FIX
-    #TestBox().navigate_words()
-    TestBox().bind_last_word()
+    TestBox().navigate_words()
+    #TestBox().bind_last_word()
     #com.run_parallel_texts()
     #com.check_spelling()
     sh.com.end()

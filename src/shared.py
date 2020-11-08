@@ -4544,11 +4544,14 @@ class TextBoxTk(TextBox):
         f = '[shared] shared.TextBoxTk.set_next_word'
         pos = self.get_current_word()
         if pos:
-            if pos == self.get_end():
+            if self.is_last_word():
                 com.rep_lazy(f)
             else:
                 pos = self.get_word_end(pos)
                 if pos:
+                    # Prevent stopping at line start
+                    if pos.endswith('.0'):
+                        pos = '{}+1c'.format(pos)
                     pos = self.get_word_start(pos)
                     self.set_word(pos)
                     return pos
