@@ -915,7 +915,10 @@ class TextBox:
                                 ,pos2 = pos2
                                 )
         except Exception as e:
-            com.rep_failed(f,e)
+            if 'text doesn\'t contain any characters tagged with "sel"' in str(e):
+                com.rep_lazy(f)
+            else:
+                com.rep_failed(f,e)
 
     def clear_sel(self,event=None):
         f = '[shared] shared.TextBox.clear_sel'
