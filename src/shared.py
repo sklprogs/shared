@@ -4660,8 +4660,10 @@ class TextBoxTk(TextBox):
         else:
             com.rep_empty(f)
     
-    def select_all(self,pattern,Case=False,tag='select_all',bg='red'):
-        f = '[shared] shared.TextBoxTk.select_all'
+    def select_all_search (self,pattern,Case=False
+                          ,tag='select_all_search',bg='red'
+                          ):
+        f = '[shared] shared.TextBoxTk.select_all_search'
         poses = self.find_all (pattern = pattern
                               ,Case = Case
                               )
