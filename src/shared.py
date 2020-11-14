@@ -4723,6 +4723,11 @@ class SearchBox(TextBoxTk):
     
     def set_src_bindings(self):
         f = '[shared] shared.SearchBox.set_src_bindings'
+        ''' We can recursively find Toplevel, however, for some reason,
+            in such case an external binding to the search action is
+            needed, so we just try the first level widget here in order
+            not to make the code too clunky.
+        '''
         if 'Top' in str(type(self.parent)):
             com.bind (obj = self.parent
                      ,bindings = ('<Control-f>','<Control-F3>')
