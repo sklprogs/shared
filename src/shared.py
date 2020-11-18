@@ -613,7 +613,11 @@ class TextBox:
         try:
             return self.gui.get_sel_index()
         except Exception as e:
-            com.rep_failed(f,e)
+            if 'text doesn\'t contain any characters tagged with "sel"' in str(e):
+                mes = _('No selection!')
+                objs.get_mes(f,mes,True).show_info()
+            else:
+                com.rep_failed(f,e)
     
     def get_sel(self,event=None):
         f = '[shared] shared.TextBox.get_sel'
