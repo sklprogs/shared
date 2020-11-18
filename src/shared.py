@@ -740,6 +740,8 @@ class TextBox:
             self.insert (text = text
                         ,mode = mode
                         )
+        self.mark_add()
+        self.scroll('1.0')
 
     def set_bindings(self):
         # Custom selection
@@ -966,6 +968,7 @@ class TextBox:
         else:
             self.gui.see(mark)
 
+    #TODO: move to 'gui'
     def is_visible(self,tk_pos):
         if self.widget.bbox(tk_pos):
             return True
