@@ -4459,6 +4459,13 @@ class TextBoxTk(TextBox):
         super().__init__(*args,**kwargs)
         self.set_word()
     
+    def compare(self,pos1,op,pos2,event=None):
+        f = '[shared] shared.TextBoxTk.compare'
+        try:
+            return self.gui.compare(pos1,op,pos2)
+        except Exception as e:
+            com.rep_failed(f,e)
+    
     def check_spell(self):
         f = '[shared] shared.TextBoxTk.check_spell'
         self.set_word('1.0')

@@ -107,6 +107,9 @@ class TextBox:
                          ,side = side
                          )
     
+    def compare(self,pos1,op,pos2):
+        return self.widget.compare(pos1,op,pos2)
+    
     def get_marks(self):
         return self.widget.mark_names()
     
