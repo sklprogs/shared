@@ -1790,6 +1790,25 @@ class List:
         else:
             self.lst2 = list(lst2)
 
+    def find_by_count(self,max_count=1):
+        count = 0
+        old = list(self.lst1)
+        start = 0
+        while True:
+            self.lst1 = old[start:]
+            poses = self.find()
+            if poses:
+                count += 1
+                poses[0] += start
+                poses[1] += start
+                start = poses[1] + 1
+                if count == max_count:
+                    break
+            else:
+                break
+        self.lst1 = old
+        return poses
+    
     def find_all(self):
         old = list(self.lst1)
         start = 0
