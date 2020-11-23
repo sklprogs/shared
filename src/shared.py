@@ -628,10 +628,14 @@ class TextBox:
     
     def search (self,pattern,start='1.0'
                ,end='end',Case=True
-               ,Forward=True
+               ,Forward=True,Regexp=False
+               ,WordsOnly=False
                ):
         f = '[shared] shared.TextBox.search'
         if start and end:
+            if WordsOnly:
+                pattern = '\\y' + pattern + '\\y'
+                Regexp = True
             if Forward:
                 forwards = True
                 backwards = None
@@ -645,6 +649,7 @@ class TextBox:
                                              ,nocase = not Case
                                              ,forwards = forwards
                                              ,backwards = backwards
+                                             ,regexp = Regexp
                                              )
                 #mes = '"{}"'.format(pos)
                 #objs.get_mes(f,mes,True).show_debug()
@@ -4631,6 +4636,7 @@ class TextBoxTk(TextBox):
     def select_by_count (self,pattern,start='1.0'
                         ,end='end',Case=True
                         ,count=1,tag='count',bg='red'
+                        ,Regexp=False,WordsOnly=True
                         ):
         f = '[shared] shared.TextBoxTk.select_by_count'
         pos = self.search_by_count (pattern = pattern
@@ -4638,6 +4644,8 @@ class TextBoxTk(TextBox):
                                    ,end = end
                                    ,Case = Case
                                    ,count = count
+                                   ,Regexp = Regexp
+                                   ,WordsOnly = WordsOnly
                                    )
         if pos:
             self.tag_add (tag = tag
@@ -4652,7 +4660,8 @@ class TextBoxTk(TextBox):
     
     def search_by_count (self,pattern,start='1.0'
                         ,end='end',Case=True
-                        ,count=1
+                        ,count=1,Regexp=False
+                        ,WordsOnly=True
                         ):
         f = '[shared] shared.TextBoxTk.search_by_count'
         if pattern and start and end and count:
@@ -4664,6 +4673,8 @@ class TextBoxTk(TextBox):
                                   ,start = pos
                                   ,end = end
                                   ,Case = Case
+                                  ,Regexp = Regexp
+                                  ,WordsOnly = WordsOnly
                                   )
                 if pos and count < limit:
                     pos = '{}+{}c'.format(pos,len(pattern))
@@ -4676,10 +4687,13 @@ class TextBoxTk(TextBox):
     
     def select_all_search (self,pattern,Case=False
                           ,tag='select_all_search',bg='red'
+                          ,Regexp=False,WordsOnly=True
                           ):
         f = '[shared] shared.TextBoxTk.select_all_search'
         poses = self.find_all (pattern = pattern
                               ,Case = Case
+                              ,Regexp = Regexp
+                              ,WordsOnly = WordsOnly
                               )
         for pos in poses:
             self.tag_add (tag = tag
@@ -4691,7 +4705,7 @@ class TextBoxTk(TextBox):
                         ,bg = bg
                         )
     
-    def find_all(self,pattern,Case=False):
+    def find_all(self,pattern,Case=False,Regexp=False,WordsOnly=True):
         f = '[shared] shared.TextBoxTk.find_all'
         poses = []
         if pattern:
@@ -4700,6 +4714,8 @@ class TextBoxTk(TextBox):
                 pos = self.search (pattern = pattern
                                   ,start = pos
                                   ,Case = Case
+                                  ,Regexp = Regexp
+                                  ,WordsOnly = WordsOnly
                                   )
                 if pos:
                     poses.append(pos)

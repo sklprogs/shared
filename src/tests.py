@@ -1172,9 +1172,9 @@ class Anchors:
 class TestBox:
 
     def __init__(self):
-        #self.text = 'Здесь был вася, Васян, переВася, Вася и еще раз Вася.'
+        self.text = 'Здесь был вася, Васян, переВася, Вася и еще раз Вася.'
         self.pattern = 'Вася'
-        self.text = sh.ReadTextFile('/home/pete/tmp/large_file.txt').get()
+        #self.text = sh.ReadTextFile('/home/pete/tmp/large_file.txt').get()
         self.top = sh.Top (icon = ICON
                           ,title = _('Text:')
                           )
@@ -1182,6 +1182,13 @@ class TestBox:
         self.itxt.insert (text = self.text
                          ,mode = 'top'
                          )
+    
+    def select_all_search(self):
+        self.itxt.select_all_search (pattern = self.pattern
+                                    ,Case = False
+                                    ,WordsOnly = True
+                                    )
+        self.top.show()
     
     def is_last_word(self,event=None):
         f = '[shared] tests.TestBox.is_last_word'
@@ -1320,8 +1327,9 @@ if __name__ == '__main__':
     #com.run_all()
     #TestBox().run_search_box()
     #FIX
-    TestBox().navigate_words()
+    #TestBox().navigate_words()
     #TestBox().bind_last_word()
     #com.run_parallel_texts()
     #com.check_spelling()
+    TestBox().select_all_search()
     sh.com.end()
