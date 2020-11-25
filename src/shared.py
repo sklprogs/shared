@@ -634,6 +634,10 @@ class TextBox:
         f = '[shared] shared.TextBox.search'
         if start and end:
             if WordsOnly:
+                ''' #NOTE: Plain text will be processed as a regular
+                    expression and may throw an exception
+                    (e.g., if the text comprises '(').
+                '''
                 pattern = '\\y' + pattern + '\\y'
                 Regexp = True
             if Forward:
@@ -4636,7 +4640,7 @@ class TextBoxTk(TextBox):
     def select_by_count (self,pattern,start='1.0'
                         ,end='end',Case=True
                         ,count=1,tag='count',bg='red'
-                        ,Regexp=False,WordsOnly=True
+                        ,Regexp=False,WordsOnly=False
                         ):
         f = '[shared] shared.TextBoxTk.select_by_count'
         pos = self.search_by_count (pattern = pattern
@@ -4661,7 +4665,7 @@ class TextBoxTk(TextBox):
     def search_by_count (self,pattern,start='1.0'
                         ,end='end',Case=True
                         ,count=1,Regexp=False
-                        ,WordsOnly=True
+                        ,WordsOnly=False
                         ):
         f = '[shared] shared.TextBoxTk.search_by_count'
         if pattern and start and end and count:
@@ -4687,7 +4691,7 @@ class TextBoxTk(TextBox):
     
     def select_all_search (self,pattern,Case=False
                           ,tag='select_all_search',bg='red'
-                          ,Regexp=False,WordsOnly=True
+                          ,Regexp=False,WordsOnly=False
                           ):
         f = '[shared] shared.TextBoxTk.select_all_search'
         poses = self.find_all (pattern = pattern
@@ -4705,7 +4709,7 @@ class TextBoxTk(TextBox):
                         ,bg = bg
                         )
     
-    def find_all(self,pattern,Case=False,Regexp=False,WordsOnly=True):
+    def find_all(self,pattern,Case=False,Regexp=False,WordsOnly=False):
         f = '[shared] shared.TextBoxTk.find_all'
         poses = []
         if pattern:
