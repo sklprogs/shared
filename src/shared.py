@@ -4696,7 +4696,7 @@ class TextBoxTk(TextBox):
     
     def select_all_search (self,pattern,Case=False
                           ,tag='select_all_search',bg='red'
-                          ,Regexp=False,WordsOnly=False
+                          ,Regexp=False,WordsOnly=False,fg=None
                           ):
         f = '[shared] shared.TextBoxTk.select_all_search'
         poses = self.find_all (pattern = pattern
@@ -4712,6 +4712,7 @@ class TextBoxTk(TextBox):
                          )
         self.tag_config (tag = tag
                         ,bg = bg
+                        ,fg = fg
                         )
     
     def find_all(self,pattern,Case=False,Regexp=False,WordsOnly=False):
