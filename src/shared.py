@@ -637,7 +637,7 @@ class TextBox:
                ,WordsOnly=False
                ):
         f = '[shared] shared.TextBox.search'
-        if start and end:
+        if pattern and start and end:
             if WordsOnly:
                 ''' #NOTE: Plain text will be processed as a regular
                     expression and may throw an exception
@@ -805,15 +805,17 @@ class TextBox:
             com.rep_failed(f,e)
 
     def get(self,pos1='1.0',pos2='end',Strip=True):
-        result = self._get(pos1,pos2)
-        if result:
-            if Strip:
-                return result.strip()
-            else:
-                return result.strip('\n')
+        if pos1 and pos2:
+            result = self._get(pos1,pos2)
+            if result:
+                if Strip:
+                    return result.strip()
+                else:
+                    return result.strip('\n')
         else:
-            # Always return a string
-            return ''
+            com.rep_empty(f)
+        # Always return a string
+        return ''
 
     def insert (self,text='',pos='1.0'
                ,mode=None
@@ -874,13 +876,16 @@ class TextBox:
 
     def tag_remove(self,tag='sel',pos1='1.0',pos2='end'):
         f = '[shared] shared.TextBox.tag_remove'
-        try:
-            self.gui.tag_remove (tag = tag
-                                ,pos1 = pos1
-                                ,pos2 = pos2
-                                )
-        except Exception as e:
-            com.rep_failed(f,e)
+        if tag and pos1 and pos2:
+            try:
+                self.gui.tag_remove (tag = tag
+                                    ,pos1 = pos1
+                                    ,pos2 = pos2
+                                    )
+            except Exception as e:
+                com.rep_failed(f,e)
+        else:
+            com.rep_empty(f)
 
     def tag_add (self,tag='sel',pos1='1.0'
                 ,pos2='end',DelPrev=True
@@ -903,42 +908,54 @@ class TextBox:
                    ,fg=None,font=None
                    ):
         f = '[shared] shared.TextBox.tag_config'
-        try:
-            self.gui.tag_config (tag = tag
-                                ,bg = bg
-                                ,fg = fg
-                                ,font = font
-                                )
-        except Exception as e:
-            com.rep_failed(f,e)
+        if tag:
+            try:
+                self.gui.tag_config (tag = tag
+                                    ,bg = bg
+                                    ,fg = fg
+                                    ,font = font
+                                    )
+            except Exception as e:
+                com.rep_failed(f,e)
+        else:
+            com.rep_empty(f)
 
     def mark_add(self,mark='insert',pos='1.0'):
         f = '[shared] shared.TextBox.mark_add'
-        try:
-            self.gui.mark_add (mark = mark
-                              ,pos = pos
-                              )
-        except Exception as e:
-            com.rep_failed(f,e)
+        if mark and pos:
+            try:
+                self.gui.mark_add (mark = mark
+                                  ,pos = pos
+                                  )
+            except Exception as e:
+                com.rep_failed(f,e)
+        else:
+            com.rep_empty(f)
 
     def mark_remove(self,mark='insert'):
         f = '[shared] shared.TextBox.mark_remove'
-        try:
-            self.gui.mark_remove(mark)
-        except Exception as e:
-            com.rep_failed(f,e)
+        if mark:
+            try:
+                self.gui.mark_remove(mark)
+            except Exception as e:
+                com.rep_failed(f,e)
+        else:
+            com.rep_empty(f)
 
     def clear_text(self,pos1='1.0',pos2='end'):
         f = '[shared] shared.TextBox.clear_text'
-        try:
-            self.gui.clear_text (pos1 = pos1
-                                ,pos2 = pos2
-                                )
-        except Exception as e:
-            if 'text doesn\'t contain any characters tagged with "sel"' in str(e):
-                com.rep_lazy(f)
-            else:
-                com.rep_failed(f,e)
+        if pos1 and pos2:
+            try:
+                self.gui.clear_text (pos1 = pos1
+                                    ,pos2 = pos2
+                                    )
+            except Exception as e:
+                if 'text doesn\'t contain any characters tagged with "sel"' in str(e):
+                    com.rep_lazy(f)
+                else:
+                    com.rep_failed(f,e)
+        else:
+            com.rep_empty(f)
 
     def clear_sel(self,event=None):
         f = '[shared] shared.TextBox.clear_sel'
@@ -962,10 +979,13 @@ class TextBox:
     # Scroll screen to a tkinter position or a mark (tags do not work)
     def scroll(self,mark):
         f = '[shared] shared.TextBox.scroll'
-        try:
-            self.gui.scroll(mark)
-        except Exception as e:
-            com.rep_failed(f,e)
+        if mark:
+            try:
+                self.gui.scroll(mark)
+            except Exception as e:
+                com.rep_failed(f,e)
+        else:
+            com.rep_empty(f)
 
     def autoscroll(self,mark='1.0'):
         ''' Scroll screen to a tkinter position or a mark if they
@@ -977,15 +997,19 @@ class TextBox:
     #TODO: select either 'see' or 'autoscroll'
     def see(self,mark):
         f = '[shared] shared.TextBox.see'
-        if mark is None:
-            com.rep_empty(f)
-        else:
+        if mark:
             self.gui.see(mark)
+        else:
+            com.rep_empty(f)
 
-    #TODO: move to 'gui'
     def is_visible(self,tk_pos):
-        if self.widget.bbox(tk_pos):
-            return True
+        f = '[shared] shared.TextBox.is_visible'
+        if tk_pos:
+            #TODO: move to 'gui'
+            if self.widget.bbox(tk_pos):
+                return True
+        else:
+            com.rep_empty(f)
 
     def get_cursor(self,event=None):
         f = '[shared] shared.TextBox.get_cursor'
