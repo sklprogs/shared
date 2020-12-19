@@ -4777,6 +4777,11 @@ class Commands:
         Message (func = func
                 ,message = _('Not implemented yet!')
                 ).show_info()
+    
+    def rep_out(self,func):
+        Message (func = func
+                ,message = _('Empty output is not allowed!')
+                ).show_warning()
 
 
 
