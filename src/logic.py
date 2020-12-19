@@ -2798,7 +2798,7 @@ class Directory:
         Success = True
         if self.Success:
             if os.path.exists(self.dest):
-                mes = _('"{}" already exists!').format(self.dest)
+                mes = _('Path "{}" already exists!').format(self.dest)
                 objs.get_mes(f,mes,True).show_warning()
                 Success = False
             elif self.dir.lower() == self.dest.lower():
