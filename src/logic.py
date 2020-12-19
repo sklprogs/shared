@@ -2180,10 +2180,10 @@ class File:
         objs.get_mes(f,mes,True).show_info()
         try:
             shutil.move(self.file,self.dest)
-        except:
+        except Exception as e:
             Success = False
-            mes = _('Failed to move "{}" to "{}"!')
-            mes = mes.format(self.file,self.dest)
+            mes = _('Failed to move "{}" to "{}"!\n\nDetails: {}')
+            mes = mes.format(self.file,self.dest,e)
             objs.get_mes(f,mes).show_error()
         return Success
 
@@ -2265,7 +2265,7 @@ class File:
                 objs.get_mes(f,mes,True).show_info()
         else:
             com.cancel(f)
-        return Success
+        return self.Success and Success
 
     def set_time(self):
         f = '[shared] logic.File.set_time'
@@ -2778,7 +2778,39 @@ class Directory:
             self.Success = False
             mes = _('Wrong input data: "{}"!').format(self.dir)
             objs.get_mes(f,mes).show_warning()
+    
+    def _move(self):
+        f = '[shared] logic.Directory._move'
+        Success = True
+        mes = _('Move "{}" to "{}"').format(self.dir,self.dest)
+        objs.get_mes(f,mes,True).show_info()
+        try:
+            shutil.move(self.dir,self.dest)
+        except Exception as e:
+            Success = False
+            mes = _('Failed to move "{}" to "{}"!\n\nDetails: {}')
+            mes = mes.format(self.dir,self.dest,e)
+            objs.get_mes(f,mes).show_error()
+        return Success
 
+    def move(self):
+        f = '[shared] logic.Directory.move'
+        Success = True
+        if self.Success:
+            if os.path.exists(self.dest):
+                mes = _('"{}" already exists!').format(self.dest)
+                objs.get_mes(f,mes,True).show_warning()
+                Success = False
+            elif self.dir.lower() == self.dest.lower():
+                mes = _('Moving is not necessary, because the source and destination are identical ({}).')
+                mes = mes.format(self.dir)
+                objs.get_mes(f,mes).show_warning()
+            else:
+                Success = self._move()
+        else:
+            com.cancel(f)
+        return self.Success and Success
+    
     def get_subfiles(self,Follow=True):
         # Include files in subfolders
         f = '[shared] logic.Directory.get_subfiles'
