@@ -4884,10 +4884,10 @@ class SearchBox(TextBoxTk):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-        self.Case = True
+        self.Case = False
+        self.Loop = True
         self.pos = '1.0'
         self.first_src = None
-        self.Loop = False
         self.pattern = ''
         self.src_entry = None
         self.Success = True
