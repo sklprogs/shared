@@ -28,18 +28,28 @@ class Commands:
         timer.end()
         sh.objs.txt.show()
     
-    def run_parallel_texts(self):
+    def run_panes4(self):
         #text1 = '1. Ничего (10) еще не предрешено (α) заранее (b10).'
         #text2 = '1. Nothing (10) has been determined (α) earlier (b10).'
         text1 = sh.ReadTextFile('/home/pete/tmp/large_file.txt').get()
         text2 = sh.ReadTextFile('/home/pete/tmp/large_file2.txt').get()
         text3 = text1
         text4 = text2
-        ipanes = sh.Panes (text1 = text1
-                          ,text2 = text2
-                          ,text3 = text3
-                          ,text4 = text4
-                          )
+        ipanes = sh.Panes4 (text1 = text1
+                           ,text2 = text2
+                           ,text3 = text3
+                           ,text4 = text4
+                           )
+        ipanes.show()
+    
+    def run_panes2(self):
+        #text1 = '1. Ничего (10) еще не предрешено (α) заранее (b10).'
+        #text2 = '1. Nothing (10) has been determined (α) earlier (b10).'
+        text1 = sh.ReadTextFile('/home/pete/tmp/large_file.txt').get()
+        text2 = sh.ReadTextFile('/home/pete/tmp/large_file2.txt').get()
+        ipanes = sh.Panes2 (text1 = text1
+                           ,text2 = text2
+                           )
         ipanes.show()
     
     def create_button(self):
@@ -260,9 +270,9 @@ class Commands:
         text = sh.Text (text = text
                        ,Auto = True
                        ).text
-        ipanes = sh.Panes (bg = 'old lace'
-                          ,Extend = True
-                          )
+        ipanes = sh.Panes4 (bg = 'old lace'
+                           ,Extend = True
+                           )
         ipanes.reset(text,text,text,text)
         ipanes.show()
     
@@ -1329,7 +1339,8 @@ if __name__ == '__main__':
     #FIX
     #TestBox().navigate_words()
     #TestBox().bind_last_word()
-    #com.run_parallel_texts()
+    com.run_panes4()
+    #com.run_panes2()
     #com.check_spelling()
-    TestBox().select_all_search()
+    #TestBox().select_all_search()
     sh.com.end()

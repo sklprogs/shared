@@ -15,6 +15,178 @@ FONT1 = 'Serif 14'
 FONT2 = 'Sans 11'
 
 
+class Panes2:
+    
+    def __init__ (self,bg='old lace'
+                 ,text1='',text2=''
+                 ):
+        self.icon = lg.objs.get_pdir().add ('..','resources'
+                                           ,'icon_64x64_cpt.gif'
+                                           )
+        self.bg = bg
+        self.set_gui()
+        self.cpane = self.pane1
+        self.reset (text1 = text1
+                   ,text2 = text2
+                   )
+    
+    def search_prev_auto(self,event=None):
+        self.cpane.run_search_prev()
+    
+    def search_next_auto(self,event=None):
+        self.cpane.run_search_next()
+    
+    def run_new_auto(self,event=None):
+        self.cpane.run_new_now()
+    
+    def synchronize1(self,event=None):
+        f = '[shared] shared.Panes.synchronize1'
+        self.select1()
+        self.pane1.select_ref()
+        result = self.pane1.get_ref_index()
+        self.pane2.select_ref2(result)
+    
+    def set_frames(self):
+        self.frm_prm = Frame (parent = self.parent)
+        self.frm_pn1 = Frame (parent = self.frm_prm
+                             ,side = 'left'
+                             ,propag = False
+                             ,height = 1
+                             )
+        self.frm_pn2 = Frame (parent = self.frm_prm
+                             ,side = 'right'
+                             ,propag = False
+                             ,height = 1
+                             )
+
+    def set_panes(self):
+        self.pane1 = Reference(self.frm_pn1)
+        self.pane2 = Reference(self.frm_pn2)
+    
+    def set_gui(self):
+        self.parent = Top (icon = self.icon
+                          ,title = _('Compare texts:')
+                          ,Maximize = True
+                          )
+        self.widget = self.parent.widget
+        self.set_frames()
+        self.set_panes()
+        self.pane1.focus()
+        self.gui = gi.Panes (parent = self.parent
+                            ,pane1 = self.pane1
+                            ,pane2 = self.pane2
+                            )
+        self.set_bindings()
+        
+    def set_title(self,text):
+        if not text:
+            text = _('Compare texts:')
+        self.gui.set_title(text)
+        
+    def show(self,event=None):
+        self.gui.show()
+        
+    def close(self,event=None):
+        self.gui.close()
+        
+    def set_bindings(self):
+        ''' - We do not bind 'select1' to 'pane1' and 'select2' to
+              'pane3' since we need to further synchronize references
+              by LMB anyway, and this further binding will rewrite
+              the current binding.
+            - We do not use 'Control' for bindings. If we use it,
+              Tkinter will execute its internal bindings for
+              '<Control-Down/Up>' and '<Control-Left/Right>' before
+              executing our own. Even though we can return 'break'
+              in 'select1'-4, we should not do that because we need
+              internal bindings for '<Control-Left>' and
+              '<Control-Right>'. Thus, we should not use 'Control' at
+              all because we cannot replace 'Alt' with 'Control'
+              for all actions.
+        '''
+        com.bind (obj = self.gui
+                 ,bindings = ('<Control-q>','<Control-w>')
+                 ,action = self.close
+                 )
+        com.bind (obj = self.gui
+                 ,bindings = '<Escape>'
+                 ,action = Geometry(parent=self.gui).minimize
+                 )
+        com.bind (obj = self.gui
+                 ,bindings = ('<Alt-Key-1>','<Control-Key-1>')
+                 ,action = self.select1
+                 )
+        com.bind (obj = self.gui
+                 ,bindings = ('<Alt-Key-2>','<Control-Key-2>')
+                 ,action = self.select2
+                 )
+        com.bind (obj = self.pane1
+                 ,bindings = '<ButtonRelease-1>'
+                 ,action = self.synchronize1
+                 )
+        com.bind (obj = self.pane2
+                 ,bindings = '<ButtonRelease-1>'
+                 ,action = self.select2
+                 )
+        com.bind (obj = self.pane1
+                 ,bindings = '<Alt-Right>'
+                 ,action = self.select2
+                 )
+        com.bind (obj = self.pane2
+                 ,bindings = '<Alt-Left>'
+                 ,action = self.select1
+                 )
+        com.bind (obj = self.parent
+                 ,bindings = ('<Control-f>','<Control-F3>')
+                 ,action = self.run_new_auto
+                 )
+        com.bind (obj = self.parent
+                 ,bindings = '<F3>'
+                 ,action = self.search_next_auto
+                 )
+        com.bind (obj = self.parent
+                 ,bindings = '<Shift-F3>'
+                 ,action = self.search_prev_auto
+                 )
+        com.bind (obj = self.pane1
+                 ,bindings = '<Alt-Down>'
+                 ,action = self.select2
+                 )
+        com.bind (obj = self.pane2
+                 ,bindings = '<Alt-Up>'
+                 ,action = self.select1
+                 )
+             
+    def decolorize(self):
+        self.gui.config_pane1(bg='white')
+        self.gui.config_pane2(bg='white')
+    
+    def select1(self,event=None):
+        # Without this the search doesn't work (the pane is inactive)
+        self.pane1.focus()
+        self.decolorize()
+        self.gui.config_pane1(bg=self.bg)
+        self.cpane = self.pane1
+        
+    def select2(self,event=None):
+        # Without this the search doesn't work (the pane is inactive)
+        self.pane2.focus()
+        self.decolorize()
+        self.gui.config_pane2(bg=self.bg)
+        self.cpane = self.pane2
+        
+    def set_icon(self,path=None):
+        if not path:
+            path = self.icon
+        self.gui.set_icon(path)
+                          
+    def reset(self,text1,text2):
+        self.pane1.reset(text1)
+        self.pane2.reset(text2)
+        self.select1()
+
+
+
 class DummyMessage:
 
     def __init__(self,*args):
@@ -4085,17 +4257,16 @@ class Font:
 
 
 
-class Panes:
+class Panes4:
     
     def __init__ (self,bg='old lace'
                  ,text1='',text2=''
                  ,text3='',text4=''
                  ):
+        self.icon = lg.objs.get_pdir().add ('..','resources'
+                                           ,'icon_64x64_cpt.gif'
+                                           )
         self.bg = bg
-        if text3 and text4:
-            self.Extend = True
-        else:
-            self.Extend = False
         self.set_gui()
         self.cpane = self.pane1
         self.reset (text1 = text1
@@ -4114,7 +4285,7 @@ class Panes:
         self.cpane.run_new_now()
     
     def synchronize1(self,event=None):
-        f = '[shared] shared.Panes.synchronize1'
+        f = '[shared] shared.Panes4.synchronize1'
         self.select1()
         self.pane1.select_ref()
         result = self.pane1.get_ref_index()
@@ -4144,30 +4315,25 @@ class Panes:
                              ,propag = False
                              ,height = 1
                              )
-        if self.Extend:
-            self.frm_pn3 = Frame (parent = self.frm_btm
-                                 ,side = 'left'
-                                 ,propag = False
-                                 ,height = 1
-                                 )
-            self.frm_pn4 = Frame (parent = self.frm_btm
-                                 ,side = 'right'
-                                 ,propag = False
-                                 ,height = 1
-                                 )
+        self.frm_pn3 = Frame (parent = self.frm_btm
+                             ,side = 'left'
+                             ,propag = False
+                             ,height = 1
+                             )
+        self.frm_pn4 = Frame (parent = self.frm_btm
+                             ,side = 'right'
+                             ,propag = False
+                             ,height = 1
+                             )
 
     def set_panes(self):
         self.pane1 = Reference(self.frm_pn1)
         self.pane2 = Reference(self.frm_pn2)
-        if self.Extend:
-            self.pane3 = Reference(self.frm_pn3)
-            self.pane4 = Reference(self.frm_pn4)
+        self.pane3 = Reference(self.frm_pn3)
+        self.pane4 = Reference(self.frm_pn4)
     
     def set_gui(self):
-        icon = lg.objs.get_pdir().add ('..','resources'
-                                      ,'icon_64x64_cpt.gif'
-                                      )
-        self.parent = Top (icon = icon
+        self.parent = Top (icon = self.icon
                           ,title = _('Compare texts:')
                           ,Maximize = True
                           )
@@ -4175,19 +4341,13 @@ class Panes:
         self.set_frames()
         self.set_panes()
         self.pane1.focus()
-        if self.Extend:
-            pane3 = self.pane3
-            pane4 = self.pane4
-        else:
-            pane3, pane4 = None, None
         self.gui = gi.Panes (parent = self.parent
                             ,pane1 = self.pane1
                             ,pane2 = self.pane2
-                            ,pane3 = pane3
-                            ,pane4 = pane4
+                            ,pane3 = self.pane3
+                            ,pane4 = self.pane4
                             )
-        if self.Extend:
-            self.gui.config_pane1(bg=self.bg)
+        self.gui.config_pane1(bg=self.bg)
         self.set_bindings()
         
     def set_title(self,text):
@@ -4260,71 +4420,60 @@ class Panes:
                  ,bindings = '<Shift-F3>'
                  ,action = self.search_prev_auto
                  )
-        if self.Extend:
-            com.bind (obj = self.gui
-                     ,bindings = ('<Alt-Key-3>','<Control-Key-3>')
-                     ,action = self.select3
-                     )
-            com.bind (obj = self.gui
-                     ,bindings = ('<Alt-Key-4>','<Control-Key-4>')
-                     ,action = self.select4
-                     )
-            com.bind (obj = self.pane3
-                     ,bindings = '<ButtonRelease-1>'
-                     ,action = self.synchronize3
-                     )
-            com.bind (obj = self.pane4
-                     ,bindings = '<ButtonRelease-1>'
-                     ,action = self.select4
-                     )
-            com.bind (obj = self.pane2
-                     ,bindings = '<Alt-Right>'
-                     ,action = self.select3
-                     )
-            com.bind (obj = self.pane3
-                     ,bindings = '<Alt-Right>'
-                     ,action = self.select4
-                     )
-            com.bind (obj = self.pane3
-                     ,bindings = '<Alt-Left>'
-                     ,action = self.select2
-                     )
-            com.bind (obj = self.pane4
-                     ,bindings = '<Alt-Left>'
-                     ,action = self.select3
-                     )
-            com.bind (obj = self.pane1
-                     ,bindings = '<Alt-Down>'
-                     ,action = self.select3
-                     )
-            com.bind (obj = self.pane2
-                     ,bindings = '<Alt-Down>'
-                     ,action = self.select4
-                     )
-            com.bind (obj = self.pane3
-                     ,bindings = '<Alt-Up>'
-                     ,action = self.select1
-                     )
-            com.bind (obj = self.pane4
-                     ,bindings = '<Alt-Up>'
-                     ,action = self.select2
-                     )
-        else:
-            com.bind (obj = self.pane1
-                     ,bindings = '<Alt-Down>'
-                     ,action = self.select2
-                     )
-            com.bind (obj = self.pane2
-                     ,bindings = '<Alt-Up>'
-                     ,action = self.select1
-                     )
+        com.bind (obj = self.gui
+                 ,bindings = ('<Alt-Key-3>','<Control-Key-3>')
+                 ,action = self.select3
+                 )
+        com.bind (obj = self.gui
+                 ,bindings = ('<Alt-Key-4>','<Control-Key-4>')
+                 ,action = self.select4
+                 )
+        com.bind (obj = self.pane3
+                 ,bindings = '<ButtonRelease-1>'
+                 ,action = self.synchronize3
+                 )
+        com.bind (obj = self.pane4
+                 ,bindings = '<ButtonRelease-1>'
+                 ,action = self.select4
+                 )
+        com.bind (obj = self.pane2
+                 ,bindings = '<Alt-Right>'
+                 ,action = self.select3
+                 )
+        com.bind (obj = self.pane3
+                 ,bindings = '<Alt-Right>'
+                 ,action = self.select4
+                 )
+        com.bind (obj = self.pane3
+                 ,bindings = '<Alt-Left>'
+                 ,action = self.select2
+                 )
+        com.bind (obj = self.pane4
+                 ,bindings = '<Alt-Left>'
+                 ,action = self.select3
+                 )
+        com.bind (obj = self.pane1
+                 ,bindings = '<Alt-Down>'
+                 ,action = self.select3
+                 )
+        com.bind (obj = self.pane2
+                 ,bindings = '<Alt-Down>'
+                 ,action = self.select4
+                 )
+        com.bind (obj = self.pane3
+                 ,bindings = '<Alt-Up>'
+                 ,action = self.select1
+                 )
+        com.bind (obj = self.pane4
+                 ,bindings = '<Alt-Up>'
+                 ,action = self.select2
+                 )
              
     def decolorize(self):
         self.gui.config_pane1(bg='white')
         self.gui.config_pane2(bg='white')
-        if self.Extend:
-            self.gui.config_pane3(bg='white')
-            self.gui.config_pane4(bg='white')
+        self.gui.config_pane3(bg='white')
+        self.gui.config_pane4(bg='white')
     
     def select1(self,event=None):
         # Without this the search doesn't work (the pane is inactive)
@@ -4341,60 +4490,31 @@ class Panes:
         self.cpane = self.pane2
         
     def select3(self,event=None):
-        f = '[shared] shared.Panes.select3'
-        if self.Extend:
-            ''' Without this the search doesn't work (the pane is
-                inactive).
-            '''
-            self.pane3.focus()
-            self.decolorize()
-            self.gui.config_pane3(bg=self.bg)
-            self.cpane = self.pane3
-        else:
-            mes = _('Logic error!')
-            objs.get_mes(f,mes,True).show_error()
+        f = '[shared] shared.Panes4.select3'
+        # Without this the search doesn't work (the pane is inactive)
+        self.pane3.focus()
+        self.decolorize()
+        self.gui.config_pane3(bg=self.bg)
+        self.cpane = self.pane3
         
     def select4(self,event=None):
         f = '[shared] shared.Panes.select4'
-        if self.Extend:
-            ''' Without this the search doesn't work (the pane is
-                inactive).
-            '''
-            self.pane4.focus()
-            self.decolorize()
-            self.gui.config_pane4(bg=self.bg)
-            self.cpane = self.pane4
-        else:
-            mes = _('Logic error!')
-            objs.get_mes(f,mes,True).show_error()
+        # Without this the search doesn't work (the pane is inactive)
+        self.pane4.focus()
+        self.decolorize()
+        self.gui.config_pane4(bg=self.bg)
+        self.cpane = self.pane4
         
     def set_icon(self,path=None):
-        if path:
-            self.gui.set_icon(path)
-        else:
-            self.gui.set_icon (lg.objs.get_pdir().add ('..','resources'
-                                                      ,'icon_64x64_cpt.gif'
-                                                      )
-                              )
+        if not path:
+            path = self.icon
+        self.gui.set_icon(self.icon)
                           
     def reset(self,text1,text2,text3='',text4=''):
-        self.pane1.reset()
-        self.pane2.reset()
-        self.pane1.insert (text = text1
-                          ,mode = 'top'
-                          )
-        self.pane2.insert (text = text2
-                          ,mode = 'top'
-                          )
-        if self.Extend:
-            self.pane3.reset()
-            self.pane4.reset()
-            self.pane3.insert (text = text3
-                              ,mode = 'top'
-                              )
-            self.pane4.insert (text = text4
-                              ,mode = 'top'
-                              )
+        self.pane1.reset(text1)
+        self.pane2.reset(text2)
+        self.pane3.reset(text3)
+        self.pane4.reset(text4)
         self.select1()
 
 
