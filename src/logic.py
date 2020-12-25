@@ -3297,14 +3297,16 @@ class Diff:
 class Shortcut:
 
     def __init__(self,symlink='',path=''):
-        f = '[shared] logic.Shortcut.__init__'
         self.Success = True
         self.path = path
         self.symlink = symlink
+        self.check()
+    
+    def check(self):
+        f = '[shared] logic.Shortcut.check'
         if not self.path and not self.symlink:
             self.Success = False
-            mes = _('Wrong input data!')
-            objs.get_mes(f,mes).show_warning()
+            sh.com.rep_empty(f)
 
     # http://timgolden.me.uk/python/win32_how_do_i/read-a-shortcut.html
     def _get_win(self):
