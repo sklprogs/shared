@@ -1281,9 +1281,9 @@ class EntryC:
                              ,side = 'right'
                              )
     
-    def get(self,event=None):
+    def get(self,event=None,Strip=False):
         if self.Save:
-            return self.obj.get()
+            return self.obj.get(Strip)
         else:
             return ''
     
