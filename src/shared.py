@@ -3819,6 +3819,8 @@ class Objects(lg.Objects):
     
     def get_waitbox(self,icon=''):
         if self.waitbox is None:
+            if not icon:
+                icon = self.icon
             self.waitbox = WaitBox(icon)
         return self.waitbox
     
