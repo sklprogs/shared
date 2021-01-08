@@ -2025,6 +2025,7 @@ class Image:
         return self.image
         
     def get_bytes(self,ext='PNG'):
+        f = '[shared] shared.Image.get_bytes'
         if self.loader:
             bytes_ = io.BytesIO()
             try:
