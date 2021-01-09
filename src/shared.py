@@ -1967,75 +1967,126 @@ class Image:
     '''
     def __init__(self):
         self.image = self.bytes_ = self.loader = None
+        self.Success = True
         self.gui = gi.Image()
         
+    def convert2rgb(self):
+        # This is sometimes required in order to produce a JPEG file
+        f = '[shared] shared.Image.convert2rgb'
+        if self.Success:
+            if self.loader:
+                try:
+                    self.loader = self.loader.convert('RGB')
+                except Exception as e:
+                    self.show_error(f,e)
+            else:
+                com.rep_empty(f)
+        else:
+            com.cancel(f)
+    
     def show_error(self,f,e):
+        self.Success = False
         mes = _('Third-party module has failed!\n\nDetails: {}')
         mes = mes.format(e)
         objs.get_mes(f,mes).show_error()
     
     def save(self,path,ext='PNG'):
         f = '[shared] shared.Image.save'
-        if self.loader:
-            if com.rewrite(path):
-                try:
-                    self.loader.save(path,ext)
-                except Exception as e:
-                    self.show_error(f,e)
+        if self.Success:
+            if self.loader:
+                if com.rewrite(path):
+                    try:
+                        self.loader.save(path,ext)
+                    except Exception as e:
+                        self.show_error(f,e)
+                else:
+                    mes = _('Operation has been canceled by the user.')
+                    objs.get_mes(f,mes,True).show_info()
             else:
-                mes = _('Operation has been canceled by the user.')
-                objs.get_mes(f,mes,True).show_info()
+                com.rep_empty(f)
         else:
-            com.rep_empty(f)
+            com.cancel(f)
     
     def open(self,path):
-        if lg.File(file=path).Success:
-            self.loader = self.gui.get_loader(path)
-            self.image = self.gui.get_image(self.loader)
-        return self.image
+        f = '[shared] shared.Image.open'
+        if self.Success:
+            if path:
+                if lg.File(path).Success:
+                    try:
+                        self.loader = self.gui.get_loader(path)
+                        self.image = self.gui.get_image(self.loader)
+                        return self.image
+                    except Exception as e:
+                        self.show_error(f,e)
+                else:
+                    # No need to warn, the error is already GUI-based
+                    self.Success = False
+            else:
+                self.Success = False
+                com.rep_empty(f)
+        else:
+            com.cancel(f)
             
     def get_loader(self):
         f = '[shared] shared.Image.get_loader'
-        if self.bytes_:
-            self.loader = self.gui.get_loader(io.BytesIO(self.bytes_))
+        if self.Success:
+            if self.bytes_:
+                try:
+                    self.loader = self.gui.get_loader(io.BytesIO(self.bytes_))
+                    return self.loader
+                except Exception as e:
+                    self.show_error(f,e)
+            else:
+                com.rep_empty(f)
         else:
-            com.rep_empty(f)
-        return self.loader
+            com.cancel(f)
         
     def get_thumbnail(self,x,y):
         ''' Resize an image to x,y limits. PIL will keep an original
             aspect ratio.
         '''
         f = '[shared] shared.Image.get_thumbnail'
-        if self.loader:
-            try:
-                self.loader.thumbnail([x,y])
-            except Exception as e:
-                self.show_error(f,e)
+        if self.Success:
+            if self.loader:
+                try:
+                    self.loader.thumbnail([x,y])
+                    return self.loader
+                except Exception as e:
+                    self.show_error(f,e)
+            else:
+                com.rep_empty(f)
         else:
-            com.rep_empty(f)
-        return self.loader
+            com.cancel(f)
     
     def get_image(self):
         f = '[shared] shared.Image.get_image'
-        if self.loader:
-            self.image = self.gui.get_image(self.loader)
+        if self.Success:
+            if self.loader:
+                try:
+                    self.image = self.gui.get_image(self.loader)
+                    return self.image
+                except Exception as e:
+                    self.show_error(f,e)
+            else:
+                com.rep_empty(f)
         else:
-            com.rep_empty(f)
-        return self.image
+            com.cancel(f)
         
     def get_bytes(self,ext='PNG'):
         f = '[shared] shared.Image.get_bytes'
-        if self.loader:
-            bytes_ = io.BytesIO()
-            try:
-                self.loader.save(bytes_,format=ext)
-                self.bytes_ = bytes_.getvalue()
-            except Exception as e:
-                self.show_error(f,e)
+        if self.Success:
+            if self.loader:
+                bytes_ = io.BytesIO()
+                try:
+                    self.loader.save(bytes_,format=ext)
+                    self.bytes_ = bytes_.getvalue()
+                    return self.bytes_
+                except Exception as e:
+                    self.show_error(f,e)
+            else:
+                com.rep_empty(f)
         else:
-            com.rep_empty(f)
-        return self.bytes_
+            com.cancel(f)
 
 
 
