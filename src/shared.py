@@ -2977,13 +2977,13 @@ class ToolTipBase:
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(self.dir,'top, bottom')
             objs.get_mes(f,mes,True).show_error()
-        # Keep widget inside screen
+        # Keep widget within screen
         maxx, maxy = gi.objs.get_root().get_resolution()
-        if self.width + widget_x + widget_width > maxx:
+        if x + self.width > maxx:
             newx = maxx - self.width - 1
             if newx > 0:
                 x = newx
-        if self.height + widget_y + widget_height > maxy:
+        if y + self.height > maxy:
             newy = maxy - widget_height - self.height - 1
             if newy > 0:
                 y = newy
