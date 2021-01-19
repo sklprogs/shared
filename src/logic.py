@@ -1939,6 +1939,12 @@ class Time:
         self.reset (tstamp = tstamp
                    ,pattern = pattern
                    )
+    
+    def fail(self,f,e):
+        self.Success = False
+        mes = _('Set time parameters are incorrect or not supported.\n\nDetails: {}')
+        mes = mes.format(e)
+        objs.get_mes(f,mes).show_error()
 
     def set_values(self):
         self.Success = True
@@ -1961,10 +1967,8 @@ class Time:
             try:
                 self.inst = self.get_instance() \
                           + datetime.timedelta(days=days_delta)
-            except:
-                self.Success = False
-                mes = _('Set time parameters are incorrect or not supported.')
-                objs.get_mes(f,mes).show_warning()
+            except Exception as e:
+                self.fail(f,e)
         else:
             com.cancel(f)
 
@@ -1973,10 +1977,8 @@ class Time:
         if self.Success:
             try:
                 self.date = self.get_instance().strftime(self.pattern)
-            except:
-                self.Success = False
-                mes = _('Set time parameters are incorrect or not supported.')
-                objs.get_mes(f,mes).show_warning()
+            except Exception as e:
+                self.fail(f,e)
         else:
             com.cancel(f)
         return self.date
@@ -1990,10 +1992,7 @@ class Time:
                 try:
                     self.inst = datetime.datetime.fromtimestamp(self.tstamp)
                 except Exception as e:
-                    self.Success = False
-                    mes = _('Set time parameters are incorrect or not supported.\n\nDetails: {}')
-                    mes = mes.format(e)
-                    objs.get_mes(f,mes).show_warning()
+                    self.fail(f,e)
         else:
             com.cancel(f)
         return self.inst
@@ -2005,10 +2004,8 @@ class Time:
                 self.get_date()
             try:
                 self.tstamp = time.mktime(datetime.datetime.strptime(self.date,self.pattern).timetuple())
-            except:
-                self.Success = False
-                mes = _('Set time parameters are incorrect or not supported.')
-                objs.get_mes(f,mes).show_warning()
+            except Exception as e:
+                self.fail(f,e)
         else:
             com.cancel(f)
         return self.tstamp
@@ -2092,10 +2089,8 @@ class Time:
                 self.get_instance()
             try:
                 self.year = self.inst.strftime("%Y")
-            except:
-                self.Success = False
-                mes = _('Set time parameters are incorrect or not supported.')
-                objs.get_mes(f,mes).show_warning()
+            except Exception as e:
+                self.fail(f,e)
         else:
             com.cancel(f)
         return self.year

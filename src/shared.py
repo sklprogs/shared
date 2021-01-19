@@ -3013,7 +3013,7 @@ class ToolTip(ToolTipBase):
         self.bwidth = bwidth
         self.font = font
         self.calc_hint()
-        ToolTipBase.__init__(self,obj=obj)
+        ToolTipBase.__init__(self,obj)
 
     def calc_hint(self):
         f = '[shared] shared.ToolTip.calc_hint'
