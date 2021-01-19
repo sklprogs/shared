@@ -2983,6 +2983,8 @@ class ToolTipBase:
             newx = maxx - self.width - 1
             if newx > 0:
                 x = newx
+        elif x < 0:
+            x = 0
         if y + self.height > maxy:
             newy = maxy - widget_height - self.height - 1
             if newy > 0:
