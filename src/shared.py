@@ -2963,16 +2963,31 @@ class ToolTipBase:
             Tip coordinates are calculated such that, despite different
             sizes, centers of a horizontal tip and button would match.
         '''
-        x = self.gui.get_rootx() + self.gui.get_width()/2 - self.width/2
+        widget_width = self.gui.get_width()
+        widget_height = self.gui.get_height()
+        widget_x = self.gui.get_rootx()
+        widget_y = self.gui.get_rooty()
+        x = widget_x + widget_width/2 - self.width/2
         if self.dir == 'bottom':
-            y = self.gui.get_rooty() + self.gui.get_height() + 1
+            y = widget_y + widget_height + 1
         elif self.dir == 'top':
-            y = self.gui.get_rooty() - self.height - 1
+            y = widget_y - self.height - 1
         else:
             y = 0
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(self.dir,'top, bottom')
             objs.get_mes(f,mes,True).show_error()
+        # Keep widget inside screen
+        maxx, maxy = gi.objs.get_root().get_resolution()
+        if self.width + widget_x + widget_width > maxx:
+            newx = maxx - self.width - 1
+            if newx > 0:
+                x = newx
+        if self.height + widget_y + widget_height > maxy:
+            newy = maxy - widget_height - self.height - 1
+            if newy > 0:
+                y = newy
+        # Set dimensions
         self.tip = Top(Lock=False)
         self.tip.widget.wm_overrideredirect(1)
         # "+%d+%d" is not enough!
@@ -2981,7 +2996,7 @@ class ToolTipBase:
                                                             ,x,y
                                                             )
         objs.get_mes(f,mes,True).show_debug()
-        self.tip.widget.wm_geometry ("%dx%d+%d+%d" % (self.width
+        self.tip.widget.wm_geometry ('%dx%d+%d+%d' % (self.width
                                                      ,self.height
                                                      ,x, y
                                                      )
