@@ -995,6 +995,7 @@ class TextBox:
         f = '[shared] shared.TextBox.insert'
         if text is None:
             text = ''
+        text = lg.com.sanitize(text)
         try:
             self.gui.insert (text = text
                             ,pos = pos
@@ -1471,6 +1472,7 @@ class Entry:
 
     def insert(self,text='text',pos=0):
         f = '[shared] shared.Entry.insert'
+        text = lg.com.sanitize(text)
         self.enable()
         try:
             self.widget.insert(pos,text)
@@ -2581,6 +2583,7 @@ class ListBox:
             pos = 0
         else:
             pos = len(self.lst)
+        string = lg.com.sanitize(string)
         self.lst.insert(pos,string)
         self.reset(lst=self.lst)
     
@@ -3112,11 +3115,9 @@ class WaitBox:
         self.gui.close()
 
     def set_title(self,text=''):
-        text = lg.com.sanitize(text)
         self.gui.set_title(text)
 
     def set_message(self,text=''):
-        text = lg.com.sanitize(text)
         if text:
             text += '\n\n' + _('Please wait...')
         else:
@@ -3205,6 +3206,7 @@ class Button:
 
     def set_hint(self):
         if self.hint:
+            self.hint = lg.com.sanitize(self.hint)
             if self.bindings:
                 self.hextended = self.hint + '\n' \
                                  + lg.Hotkeys(self.bindings).run()
@@ -3615,6 +3617,7 @@ class Label:
             reset config options. Use them altogether to prevent such 
             behavior.
         '''
+        self.text = lg.com.sanitize(self.text)
         self.widget.config (text = self.text
                            ,font = self.font
                            #,image = self.image
@@ -3940,8 +3943,9 @@ class Objects(lg.Objects):
 
 
 class MessageBuilder:
-    ''' Not using tkinter.messagebox because it blocks main GUI (even
-        if we specify a non-root parent).
+    ''' - Not using tkinter.messagebox because it blocks main GUI (even
+          if we specify a non-root parent).
+        - Symbols not supported by Tk are already deleted in 'Message'.
     '''
     def __init__(self,level,Single=True,YesNo=False):
         self.level = level
@@ -4081,7 +4085,7 @@ class Message:
 
     def __init__(self,func,message,Silent=False):
         self.func = func
-        self.message = message
+        self.message = lg.com.sanitize(message)
         self.Silent = Silent
 
     def show_debug(self):
@@ -4281,6 +4285,7 @@ class Font:
                          )
     
     def set_text(self,text):
+        text = lg.com.sanitize(text)
         self.logic.set_text(text)
     
     def get_font(self):
