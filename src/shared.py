@@ -4664,7 +4664,9 @@ class SearchEntry:
         return text
     
     def show(self,event=None):
-        self.get_gui().show()
+        self.get_gui()
+        self.ent_src.select_all()
+        self.gui.show()
     
     def close(self,event=None):
         self.get_gui().close()

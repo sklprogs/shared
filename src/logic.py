@@ -3944,7 +3944,7 @@ class Decline:
 
 class Objects:
     ''' Values here will be kept through different modules (but not
-        through different programs both using 'shared.py').
+        through different programs all of them using 'shared.py').
     '''
     def __init__(self):
         self.spell = self.morph = self.pretty_table = self.pdir \
