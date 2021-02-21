@@ -1553,8 +1553,8 @@ class Text:
         return self.text
 
     # Apply 'convert_line_breaks' first
-    def delete_line_breaks(self):
-        self.text = self.text.replace('\n',' ')
+    def delete_line_breaks(self,rep=' '):
+        self.text = self.text.replace('\n',rep)
         return self.text
 
     def delete_duplicate_line_breaks(self):
@@ -3862,7 +3862,7 @@ class Decline:
         if self.Auto:
             itext = Text(text=self.orig)
             itext.delete_punctuation()
-            result = itext.delete_line_breaks()
+            result = itext.delete_line_breaks('')
         else:
             result = self.orig
         self.lst = result.split(' ')
