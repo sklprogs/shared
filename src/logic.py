@@ -1390,8 +1390,6 @@ class Text:
         self.text = Input('Text.__init__',self.text).get_not_none()
         # This can be useful in many cases, e.g. after OCR
         if Auto:
-            # This will remove symbols that cannot be shown in Tk
-            self.delete_unsupported()
             self.convert_line_breaks()
             self.strip_lines()
             self.delete_duplicate_line_breaks()
@@ -3823,7 +3821,7 @@ class OCR:
 
 
 class Decline:
-    ''' #note ABOUT PYMORPHY2:
+    ''' #NOTE ABOUT PYMORPHY2:
         1) Input must be stripped of punctuation, otherwise, the program
            fails.
         2) Output keeps unstripped spaces to the left, however, spaces
