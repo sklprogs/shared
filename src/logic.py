@@ -3337,7 +3337,7 @@ class Shortcut:
                 self._get_win()
             else:
                 self._get_unix()
-            mes = _('Shortcut "{}" points to "{}"').format (self.symlink
+            mes = _('Shortcut "{}" refers to "{}"').format (self.symlink
                                                            ,self.path
                                                            )
             objs.get_mes(f,mes,True).show_debug()
