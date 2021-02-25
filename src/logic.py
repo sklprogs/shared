@@ -64,6 +64,33 @@ reserved_win = ['CON','PRN','AUX','NUL','COM1','COM2','COM3','COM4'
                ,'LPT4','LPT5','LPT6','LPT7','LPT8','LPT9'
                ]
 
+''' Do not put this into a procedure or class since modules should be
+    imported as global variables and may not be accessed otherwise.
+'''
+if 'win' in sys.platform:
+    #http://mail.python.org/pipermail/python-win32/2012-July/012493.html
+    _tz = os.getenv('TZ')
+    if _tz is not None and '/' in _tz:
+        os.unsetenv('TZ')
+    import pythoncom, win32com, win32com.client, win32api
+    # Required by 'Geometry'
+    import win32gui, win32con, ctypes
+    # Other ways of importing make 'shell' attribute inaccessible
+    from win32com.shell import shell as win32shell
+    if win32com.client.gencache.is_readonly:
+        win32com.client.gencache.is_readonly = False
+        ''' Under p2exe/cx_freeze the call in gencache to __init__()
+            does not happen so we use Rebuild() to force the creation
+            of the gen_py folder.
+            The contents of library.zip\win32com shall be unpacked to
+            exe.win32 - 3.3\win32com.
+            See also the section where EnsureDispatch is called.
+        '''
+        win32com.client.gencache.Rebuild()
+    ''' 'datetime' may have to be imported last due to the problems
+        with TZ.
+    '''
+
 
 class Section:
     
@@ -753,7 +780,6 @@ class OSSpecific:
 
     def __init__(self):
         self.name = ''
-        self.import_win()
 
     def get_shift_tab(self):
         if self.is_lin():
@@ -781,29 +807,6 @@ class OSSpecific:
             else:
                 self.name = 'unknown'
         return self.name
-
-    def import_win(self):
-        if self.is_win():
-            #http://mail.python.org/pipermail/python-win32/2012-July/012493.html
-            _tz = os.getenv('TZ')
-            if _tz is not None and '/' in _tz:
-                os.unsetenv('TZ')
-            import pythoncom, win32com, win32com.client, win32api
-            # Required by 'Geometry'
-            import win32gui, win32con, ctypes
-            if win32com.client.gencache.is_readonly:
-                win32com.client.gencache.is_readonly = False
-                ''' Under p2exe/cx_freeze the call in gencache to
-                    __init__() does not happen so we use Rebuild() to
-                    force the creation of the gen_py folder.
-                    The contents of library.zip\win32com shall be
-                    unpacked to exe.win32 - 3.3\win32com.
-                    See also the section where EnsureDispatch is called.
-                '''
-                win32com.client.gencache.Rebuild()
-            ''' 'datetime' may have to be imported last due to
-                the problems with TZ.
-            '''
 
 
 
@@ -3303,28 +3306,41 @@ class Shortcut:
 
     # http://timgolden.me.uk/python/win32_how_do_i/read-a-shortcut.html
     def _get_win(self):
-        link = pythoncom.CoCreateInstance (win32com.shell.shell.CLSID_ShellLink
-                                          ,None
-                                          ,pythoncom.CLSCTX_INPROC_SERVER
-                                          ,win32com.shell.shell.IID_IShellLink
-                                          )
-        link.QueryInterface(pythoncom.IID_IPersistFile).Load(self.symlink)
-        ''' GetPath returns the name and a WIN32_FIND_DATA structure
-            which we're ignoring. The parameter indicates whether
-            shortname, UNC or the "raw path" are to be returned.
-            Bizarrely, the docs indicate that the flags can be combined.
-        '''
-        self.path,_=link.GetPath(win32com.shell.shell.SLGP_UNCPRIORITY)
+        f = '[shared] logic.Shortcut._get_win'
+        try:
+            link = pythoncom.CoCreateInstance (win32shell.CLSID_ShellLink
+                                              ,None
+                                              ,pythoncom.CLSCTX_INPROC_SERVER
+                                              ,win32shell.IID_IShellLink
+                                              )
+            link.QueryInterface(pythoncom.IID_IPersistFile).Load(self.symlink)
+            ''' GetPath returns the name and a WIN32_FIND_DATA structure
+                which we're ignoring. The parameter indicates whether
+                shortname, UNC or the "raw path" are to be returned.
+                Bizarrely, the docs indicate that the flags can be
+                combined.
+            '''
+            self.path, arg = link.GetPath(win32shell.SLGP_UNCPRIORITY)
+        except Exception as e:
+            self.Success = False
+            mes = _('Third-party module has failed!\n\nDetails: {}')
+            mes = mes.format(e)
+            objs.get_mes(f,mes).show_error()
 
     def _get_unix(self):
         self.path = os.path.realpath(self.symlink)
 
     def get(self):
+        f = '[shared] logic.Shortcut.get'
         if self.Success and not self.path:
             if objs.get_os().is_win():
                 self._get_win()
             else:
                 self._get_unix()
+            mes = _('Shortcut "{}" points to "{}"').format (self.symlink
+                                                           ,self.path
+                                                           )
+            objs.get_mes(f,mes,True).show_debug()
         return self.path
 
     def _delete(self):
