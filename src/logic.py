@@ -4806,25 +4806,39 @@ class Commands:
             self.rep_empty(f)
         return result
     
-    def cancel(self,func):
+    def cancel(self,func=_('Logic error!')):
         Message (func = func
                 ,message = _('Operation has been canceled.')
                 ).show_warning()
     
-    def rep_empty(self,func):
+    def rep_empty(self,func=_('Logic error!')):
         Message (func = func
                 ,message = _('Empty input is not allowed!')
                 ).show_warning()
     
-    def rep_not_ready(self,func):
+    def rep_not_ready(self,func=_('Logic error!')):
         Message (func = func
                 ,message = _('Not implemented yet!')
                 ).show_info()
     
-    def rep_out(self,func):
+    def rep_out(self,func=_('Logic error!')):
         Message (func = func
                 ,message = _('Empty output is not allowed!')
                 ).show_warning()
+    
+    def rep_deleted(self,func=_('Logic error!'),count=0):
+        if count:
+            message = _('{} blocks have been deleted').format(count)
+            Message (func = func
+                    ,message = message
+                    ).show_debug()
+    
+    def rep_matches(self,func=_('Logic error!'),count=0):
+        if count:
+            message = _('{} matches').format(count)
+            Message (func = func
+                    ,message = message
+                    ).show_debug()
 
 
 
