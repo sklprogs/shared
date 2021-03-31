@@ -129,11 +129,15 @@ class Panes2:
                  ,action = self.select2
                  )
         com.bind (obj = self.pane1
-                 ,bindings = '<Alt-Right>'
+                 ,bindings = ('<Alt-Left>','<Alt-Right>','<Alt-Up>'
+                             ,'<Alt-Down>'
+                             )
                  ,action = self.select2
                  )
         com.bind (obj = self.pane2
-                 ,bindings = '<Alt-Left>'
+                 ,bindings = ('<Alt-Left>','<Alt-Right>','<Alt-Up>'
+                             ,'<Alt-Down>'
+                             )
                  ,action = self.select1
                  )
         com.bind (obj = self.parent
@@ -147,14 +151,6 @@ class Panes2:
         com.bind (obj = self.parent
                  ,bindings = '<Shift-F3>'
                  ,action = self.search_prev_auto
-                 )
-        com.bind (obj = self.pane1
-                 ,bindings = '<Alt-Down>'
-                 ,action = self.select2
-                 )
-        com.bind (obj = self.pane2
-                 ,bindings = '<Alt-Up>'
-                 ,action = self.select1
                  )
              
     def decolorize(self):
