@@ -4164,6 +4164,7 @@ class Commands(lg.Commands):
         sections = []
         keys = []
         values = []
+        mes = ''
         if lg.globs:
             for abbr in objs.get_sections().abbr:
                 if 'dict' in str(type(lg.globs[abbr])):
@@ -4190,9 +4191,9 @@ class Commands(lg.Commands):
                             ,headers = headers
                             ,maxrow = 50
                             ).run()
-            self.run_fast_debug(f,mes)
         else:
             com.rep_empty(f)
+        return f + ':\n' + mes
     
     def get_mod_color(self,color,delta=76): # ~30%
         ''' Make a color (a color name (/usr/share/X11/rgb.txt) or
