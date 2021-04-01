@@ -1184,6 +1184,13 @@ class Root:
     def __init__(self):
         self.type = 'Root'
         self.widget = tk.Tk()
+    
+    def get_focus(self):
+        ''' Get a widget that has focus. Parent has focus by default.
+            Use 'widget' attribute of a GUI class to compare with
+            the result.
+        '''
+        return self.widget.focus_get()
 
     def set_icon(self,file):
         image = tk.PhotoImage (master = self.widget
