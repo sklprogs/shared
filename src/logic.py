@@ -2709,8 +2709,7 @@ class ReadBinary:
     def __init__(self,file):
         self.file = file
         self.obj = None
-        h_file = File(self.file)
-        self.Success = h_file.Success
+        self.Success = File(self.file).Success
 
     def _load(self):
         f = '[shared] logic.ReadBinary._load'
