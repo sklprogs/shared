@@ -5,9 +5,6 @@ import tkinter as tk
 import tkinter.font
 import tkinter.filedialog
 import tkinter.ttk
-# Load PIL only after loading tkinter
-from PIL import Image as pilimage
-from PIL import ImageTk as piltk
 from skl_shared.localize import _
 
 
@@ -380,19 +377,6 @@ class ProgressBarItem:
                                               ,mode = self.mode
                                               )
         self.widget.pack()
-
-
-
-class Image:
-    ''' Load an image from a file, convert this image to bytes and
-        convert bytes back to the image.
-    '''
-    # Accepts both path and 'io.BytesIO(image_bytes)'
-    def get_loader(self,path):
-        return pilimage.open(path)
-    
-    def get_image(self,loader):
-        return piltk.PhotoImage(loader)
 
 
 
