@@ -4702,31 +4702,6 @@ class TextBoxTk(TextBox):
         except Exception as e:
             com.rep_failed(f,e)
     
-    def check_spell(self):
-        f = '[shared] shared.TextBoxTk.check_spell'
-        self.set_word('1.0')
-        while not self.is_last_word():
-            pos = self.set_next_word()
-            # Stripping is done here
-            word = self.get_word_text (pos = pos
-                                      ,Strip = False
-                                      )
-            objs.get_spell().reset(word)
-            if not objs.spell.check():
-                # Spelling returns True on an empty input
-                if word[0] in lg.punc_array \
-                or word[0] in lg.punc_ext_array:
-                    pos = '{}+1c'.format(pos)
-                pos2 = '{}+{}c'.format(pos,len(objs.spell.word))
-                self.tag_add (tag = 'misspell'
-                             ,pos1 = pos
-                             ,pos2 = pos2
-                             ,DelPrev = False
-                             )
-        self.tag_config (tag = 'misspell'
-                        ,bg = 'red'
-                        )
-    
     def get_end(self):
         return self.get_index('end')
     

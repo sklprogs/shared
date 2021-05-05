@@ -20,13 +20,16 @@ class Commands:
     
     def check_spelling(self):
         f = '[shared] tests.Commands.check_spelling'
+        import skl_shared.spelling as sp
         text = sh.ReadTextFile('/home/pete/tmp/check_spelling.txt').get()
-        sh.objs.get_txt().reset(text)
+        itop = sh.Top(title=_('Spellchecker'))
+        itxt = sp.TextBoxTk(itop)
+        itxt.reset(text)
         timer = sh.Timer(f)
         timer.start()
-        sh.objs.txt.obj.check_spell()
+        itxt.check_spell()
         timer.end()
-        sh.objs.txt.show()
+        itop.show()
     
     def run_panes4(self):
         #text1 = '1. Ничего (10) еще не предрешено (α) заранее (b10).'
@@ -1339,8 +1342,8 @@ if __name__ == '__main__':
     #FIX
     #TestBox().navigate_words()
     #TestBox().bind_last_word()
-    com.run_panes4()
+    #com.run_panes4()
     #com.run_panes2()
-    #com.check_spelling()
+    com.check_spelling()
     #TestBox().select_all_search()
     sh.com.end()
