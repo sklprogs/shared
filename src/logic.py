@@ -3827,9 +3827,7 @@ class OCR:
         # 1С => 1C (Cyrillic)
         self.text = re.sub(r'(\d+)С',r'\1C',self.text)
         # Fix a degree sign
-        self.text = re.sub (r'[\s]{0,1}[°o][\s]{0,1}[CС](\W)'
-                           ,r'°C',self.text
-                           )
+        self.text = re.sub(r'[\s]{0,1}[°o][CС](\W)',r'°C\1',self.text)
         return self.text
 
 
