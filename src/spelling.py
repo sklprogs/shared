@@ -8,9 +8,9 @@
 
 import enchant
 
-import skl_shared.shared as sh
-import skl_shared.logic as lg
 from skl_shared.localize import _
+import skl_shared.logic as lg
+import skl_shared.shared as sh
 
 
 class TextBoxTk(sh.TextBoxTk):
@@ -94,10 +94,10 @@ class Spelling:
 
 
 
-class SearchBox(TextBoxTk):
+class SearchBox(sh.SearchBox,TextBoxTk):
     
     def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+        super(SearchBox,self).__init__(*args,**kwargs)
 
 
 
@@ -123,10 +123,14 @@ class TextBoxC(sh.TextBoxC):
 
 
 
-class TextBoxRW(TextBoxC):
+class TextBoxRW(sh.TextBoxRW,TextBoxC):
     
     def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+        ''' Inheriting both instances allows to keep old bindings that
+            run in 'sh.TextBoxRW.__init__' and, at the same time, to
+            override procedures.
+        '''
+        super(TextBoxRW,self).__init__(*args,**kwargs)
 
 
 

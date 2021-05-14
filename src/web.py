@@ -4,8 +4,8 @@
 import html
 import lxml.etree
 
-import skl_shared.shared as sh
 from skl_shared.localize import _
+import skl_shared.shared as sh
 
 
 class WebPage:
