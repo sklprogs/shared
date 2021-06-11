@@ -1789,6 +1789,27 @@ class List:
             self.lst2 = []
         else:
             self.lst2 = list(lst2)
+    
+    def split_by_gaps(self):
+        ''' Split an integer sequence where the next item does not
+            increment the preceding one.
+        '''
+        if len(self.lst1) > 0:
+            cuts = []
+            cut = [self.lst1[0]]
+            i = 1
+            while i < len(self.lst1):
+                if self.lst1[i-1] + 1 == self.lst1[i]:
+                    cut.append(self.lst1[i])
+                else:
+                    cuts.append(cut)
+                    cut = [self.lst1[i]]
+                i += 1
+            if cut:
+                cuts.append(cut)
+            return cuts
+        else:
+            return self.lst1
 
     def find_by_count(self,max_count=1):
         count = 0
