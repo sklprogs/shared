@@ -2500,6 +2500,11 @@ class ListBox:
     def select(self):
         self.clear_sel()
         self.gui.select(self.index)
+    
+    def select_mult(self,indexes=[]):
+        # This may be used several times, so clear selection manually
+        for index_ in indexes:
+            self.gui.select(index_)
 
     def set(self,item):
         f = '[shared] shared.ListBox.set'
