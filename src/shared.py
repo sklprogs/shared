@@ -2518,6 +2518,7 @@ class ListBox:
             self.gui.insert(item)
 
     def get_index(self):
+        # Single selection only
         selection = self.gui.get_sel()
         if selection and len(selection) > 0:
             ''' #NOTE: selection[0] is a number in Python 3.4, however,
@@ -2529,6 +2530,9 @@ class ListBox:
         else:
             self.index = 0
         return self.index
+    
+    def get_index_mult(self):
+        return self.gui.get_sel()
 
     def index_add(self):
         if self.get_index() < len(self.lst) - 1:
@@ -4855,6 +4859,7 @@ class SearchBox(TextBoxTk):
     
     def get_src_entry(self):
         if self.src_entry is None:
+            #TODO: Recursively find parent and set icon
             if hasattr(self.parent,'icon'):
                 icon = self.parent.icon
             else:
