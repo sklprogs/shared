@@ -3037,17 +3037,17 @@ class Button:
         self.text = lg.com.sanitize(text)
         self.width = width
         if active:
-            self.on_img = gi.com.get_image (path = active
-                                           ,width = self.width
-                                           ,height = self.height
-                                           )
+            self.on_img = com.get_image (path = active
+                                        ,width = self.width
+                                        ,height = self.height
+                                        )
         else:
             self.on_img = None
         if inactive:
-            self.off_img = gi.com.get_image (path = inactive
-                                            ,width = self.width
-                                            ,height = self.height
-                                            )
+            self.off_img = com.get_image (path = inactive
+                                         ,width = self.width
+                                         ,height = self.height
+                                         )
         else:
             self.off_img = None
         self.gui = gi.Button (parent = parent
@@ -4034,6 +4034,18 @@ class Commands(lg.Commands):
     
     def __init__(self):
         super().__init__()
+        
+    def get_image(self,path,width,height):
+        f = '[shared] shared.Commands.get_image'
+        try:
+            return gi.com.get_image (path = path
+                                    ,width = width
+                                    ,height = height
+                                    )
+        except Exception as e:
+            mes = _('Third-party module has failed!\n\nDetails: {}')
+            mes = mes.format(e)
+            objs.get_mes(f,mes,True).show_warning()
     
     def debug_globs(self):
         f = '[shared] shared.Commands.debug_globs'
