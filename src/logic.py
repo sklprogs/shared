@@ -251,20 +251,22 @@ class FastTable:
                  ,Transpose=False
                  ,maxrow=0,FromEnd=False
                  ,maxrows=0,encloser=''
+                 ,ShowGap=True
                  ):
         ''' #NOTE: In case of tuple, do not forget to add commas,
             e.g.: ((1,),).
         '''
+        self.Success = True
+        self.lens = []
         self.encloser = encloser
         self.FromEnd = FromEnd
         self.headers = headers
-        self.lens = []
         self.lst = iterable
         self.maxrow = maxrow
         self.maxrows = maxrows
         self.sep = sep
-        self.Success = True
         self.Transpose = Transpose
+        self.ShowGap = ShowGap
     
     def set_max_rows(self):
         f = '[shared] logic.FastTable.set_max_rows'
@@ -296,6 +298,7 @@ class FastTable:
                     for j in range(len(self.lst[i])):
                         self.lst[i][j] = Text(str(self.lst[i][j])).shorten (max_len = max_len
                                                                            ,FromEnd = self.FromEnd
+                                                                           ,ShowGap = self.ShowGap
                                                                            )
         else:
             com.cancel(f)
@@ -1789,6 +1792,10 @@ class List:
             self.lst2 = []
         else:
             self.lst2 = list(lst2)
+    
+    def split_by_len(self,len_):
+        # Get successive len_-sized chunks
+        return [self.lst1[i:i+len_] for i in range(0,len(self.lst1),len_)]
     
     def split_by_gaps(self):
         ''' Split an integer sequence where the next item does not
