@@ -4757,7 +4757,7 @@ class Commands:
     
     def set_lang(self):
         result = locale.getdefaultlocale()
-        if result and len(result) > 0 and result[0]:
+        if result and result[0]:
             if 'ru' in result[0]:
                 globs['ui_lang'] = 'ru'
                 globs['license_url'] = gpl3_url_ru
