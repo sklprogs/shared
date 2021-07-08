@@ -912,12 +912,18 @@ class Launch:
 class WriteTextFile:
 
     def __init__(self,file,Rewrite=False,Empty=False):
-        self.Success = True
-        self.text = ''
+        self.set_values()
         self.file = file
         self.Rewrite = Rewrite
         self.Empty = Empty
         self.check()
+    
+    def set_values(self):
+        self.Success = True
+        self.text = ''
+        self.file = ''
+        self.Rewrite = False
+        self.Empty = False
     
     def check(self):
         f = '[shared] logic.WriteTextFile.check'
@@ -1240,12 +1246,21 @@ class TextDic:
 
 class ReadTextFile:
 
-    def __init__(self,file):
-        f = '[shared] logic.ReadTextFile.__init__'
+    def __init__(self,file,Empty=False):
+        self.set_values()
         self.file = file
-        self.text = ''
-        self.lst = []
+        self.Empty = Empty
+        self.check()
+    
+    def set_values(self):
         self.Success = True
+        self.Empty = False
+        self.text = ''
+        self.file = ''
+        self.lst = []
+    
+    def check(self):
+        f = '[shared] logic.ReadTextFile.check'
         if self.file and os.path.isfile(self.file):
             pass
         elif not self.file:
@@ -1262,12 +1277,14 @@ class ReadTextFile:
             objs.get_mes(f,mes).show_warning()
 
     def _read(self,encoding):
+        f = '[shared] logic.ReadTextFile._read'
         try:
             with open(self.file,'r',encoding=encoding) as fl:
                 self.text = fl.read()
-        except:
+        except Exception as e:
             # Avoid UnicodeDecodeError, access errors, etc.
-            pass
+            mes = _('Operation has failed!\nDetails: {}').format(e)
+            objs.get_mes(f,mes).show_warning()
 
     def delete_bom(self):
         f = '[shared] logic.ReadTextFile.delete_bom'
@@ -1318,9 +1335,9 @@ class ReadTextFile:
                 self._read('windows-1251')
             if not self.text:
                 self._read('windows-1252')
-            if not self.text:
+            if not self.text and not self.Empty:
                 ''' The file cannot be read OR the file is empty (we
-                    don't need empty files)
+                    usually don't need empty files)
                     #TODO: Update the message
                 '''
                 self.Success = False
@@ -3332,7 +3349,7 @@ class Shortcut:
         f = '[shared] logic.Shortcut.check'
         if not self.path and not self.symlink:
             self.Success = False
-            sh.com.rep_empty(f)
+            com.rep_empty(f)
 
     # http://timgolden.me.uk/python/win32_how_do_i/read-a-shortcut.html
     def _get_win(self):
