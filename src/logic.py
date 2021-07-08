@@ -911,12 +911,16 @@ class Launch:
 
 class WriteTextFile:
 
-    def __init__(self,file,Rewrite=False):
-        f = '[shared] logic.WriteTextFile.__init__'
-        self.file = file
-        self.text = ''
-        self.Rewrite = Rewrite
+    def __init__(self,file,Rewrite=False,Empty=False):
         self.Success = True
+        self.text = ''
+        self.file = file
+        self.Rewrite = Rewrite
+        self.Empty = Empty
+        self.check()
+    
+    def check(self):
+        f = '[shared] logic.WriteTextFile.check'
         if not self.file:
             self.Success = False
             mes = _('Not enough input data!')
@@ -960,7 +964,7 @@ class WriteTextFile:
         f = '[shared] logic.WriteTextFile.write'
         if self.Success:
             self.text = text
-            if self.text:
+            if self.text or self.Empty:
                 if com.rewrite (file = self.file
                                ,Rewrite = self.Rewrite
                                ):
