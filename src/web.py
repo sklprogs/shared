@@ -15,18 +15,18 @@ class WebPage:
     
     def make_pretty(self):
         f = '[shared] web.WebPage.make_pretty'
-        result = ''
         if self.code:
             try:
                 bytes_ = lxml.etree.tostring (lxml.etree.XML(self.code)
                                              ,pretty_print = True
                                              )
                 result = bytes_.decode('utf-8')
-                result = html.unescape(result)
+                return html.unescape(result)
             except Exception as e:
                 mes = _('Third-party module has failed!\n\nDetails: {}')
                 mes = mes.format(e)
                 sh.objs.get_mes(f,mes).show_error()
+                return self.code
         else:
             sh.com.rep_empty(f)
-        return result
+        return ''
