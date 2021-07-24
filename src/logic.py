@@ -1431,6 +1431,9 @@ class Text:
             '''
             self.text = self.text.strip()
 
+    def split_by_len(self,len_):
+        return [self.text[i:i+len_] for i in range(0,len(self.text),len_)]
+    
     def delete_embraced_figs(self):
         self.text = re.sub('\s\(\d+\)','',self.text)
         self.text = re.sub('\s\[\d+\]','',self.text)
