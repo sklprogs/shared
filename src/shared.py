@@ -3678,6 +3678,36 @@ class Top:
         if title:
             self.set_title(title)
         
+    def get_sizes(self):
+        f = '[shared] shared.Top.get_sizes'
+        try:
+            return self.gui.get_sizes()
+        except Exception as e:
+            mes = _('The operation has failed!\n\nDetails: {}')
+            mes = mes.format(e)
+            objs.get_mes(f,mes,True).show_error()
+        return(0,0)
+    
+    def get_width(self):
+        f = '[shared] shared.Top.get_width'
+        try:
+            return self.gui.get_width()
+        except Exception as e:
+            mes = _('The operation has failed!\n\nDetails: {}')
+            mes = mes.format(e)
+            objs.get_mes(f,mes,True).show_error()
+        return 0
+    
+    def get_height(self):
+        f = '[shared] shared.Top.get_height'
+        try:
+            return self.gui.get_height()
+        except Exception as e:
+            mes = _('The operation has failed!\n\nDetails: {}')
+            mes = mes.format(e)
+            objs.get_mes(f,mes,True).show_error()
+        return 0
+    
     def kill(self,event=None):
         self.widget.destroy()
     

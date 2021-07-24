@@ -1049,6 +1049,27 @@ class Top:
         self.tk_trigger = tk.BooleanVar()
         self.widget.protocol("WM_DELETE_WINDOW",self.close)
     
+    def _get_height(self):
+        return self.widget.winfo_height()
+    
+    def _get_width(self):
+        return self.widget.winfo_width()
+    
+    def get_sizes(self):
+        # May work without updating idle tasks, but we want to be sure
+        self.update_idle()
+        return (self._get_width(),self._get_height())
+    
+    def get_width(self):
+        # May work without updating idle tasks, but we want to be sure
+        self.update_idle()
+        return self._get_width()
+    
+    def get_height(self):
+        # May work without updating idle tasks, but we want to be sure
+        self.update_idle()
+        return self._get_height()
+    
     def set_icon(self,file):
         image = tk.PhotoImage (master = self.widget
                               ,file = file
