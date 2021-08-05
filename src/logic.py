@@ -844,6 +844,7 @@ class Launch:
                     subprocess.call(self.custom_args)
                 else:
                     subprocess.Popen(self.custom_args)
+                return True
             except:
                 mes = _('Failed to run "{}"!').format(self.custom_args)
                 objs.get_mes(f,mes).show_error()
@@ -854,6 +855,7 @@ class Launch:
         f = '[shared] logic.Launch._launch_lin'
         try:
             os.system("xdg-open " + self.ipath.escape() + "&")
+            return True
         except OSError:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
             objs.get_mes(f,mes).show_error()
@@ -862,6 +864,7 @@ class Launch:
         f = '[shared] logic.Launch._launch_mac'
         try:
             os.system("open " + self.target)
+            return True
         except:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
             objs.get_mes(f,mes).show_error()
@@ -870,6 +873,7 @@ class Launch:
         f = '[shared] logic.Launch._launch_win'
         try:
             os.startfile(self.target)
+            return True
         except:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
             objs.get_mes(f,mes).show_error()
@@ -885,13 +889,13 @@ class Launch:
                     self.custom_args.append(self.target)
             else:
                 self.custom_args = [self.custom_app]
-        self._launch()
+        return self._launch()
 
     def launch_custom(self):
         f = '[shared] logic.Launch.launch_custom'
         if self.TargetExists:
             self.custom_args = [self.custom_app,self.target]
-            self._launch()
+            return self._launch()
         else:
             com.cancel(f)
 
@@ -899,11 +903,11 @@ class Launch:
         f = '[shared] logic.Launch.launch_default'
         if self.TargetExists:
             if objs.get_os().is_lin():
-                self._launch_lin()
+                return self._launch_lin()
             elif objs.os.is_mac():
-                self._launch_mac()
+                return self._launch_mac()
             elif objs.os.is_win():
-                self._launch_win()
+                return self._launch_win()
         else:
             com.cancel(f)
 
