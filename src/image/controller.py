@@ -2,9 +2,9 @@
 # -*- coding: UTF-8 -*-
 
 import io
-from skl_shared.localize import _
 import skl_shared.shared as sh
-import skl_shared.image_gui as gi
+from skl_shared.localize import _
+from . import gui as gi
 
 
 class Image:
@@ -18,7 +18,7 @@ class Image:
         
     def convert2rgb(self):
         # This is sometimes required in order to produce a JPEG file
-        f = '[shared] image.Image.convert2rgb'
+        f = '[shared] image.controller.Image.convert2rgb'
         if self.Success:
             if self.loader:
                 try:
@@ -37,7 +37,7 @@ class Image:
         sh.objs.get_mes(f,mes).show_error()
     
     def save(self,path,ext='PNG'):
-        f = '[shared] image.Image.save'
+        f = '[shared] image.controller.Image.save'
         if self.Success:
             if self.loader:
                 if sh.com.rewrite(path):
@@ -54,7 +54,7 @@ class Image:
             sh.com.cancel(f)
     
     def open(self,path):
-        f = '[shared] image.Image.open'
+        f = '[shared] image.controller.Image.open'
         if self.Success:
             if path:
                 if sh.File(path).Success:
@@ -74,7 +74,7 @@ class Image:
             sh.com.cancel(f)
             
     def get_loader(self):
-        f = '[shared] image.Image.get_loader'
+        f = '[shared] image.controller.Image.get_loader'
         if self.Success:
             if self.bytes_:
                 try:
@@ -91,7 +91,7 @@ class Image:
         ''' Resize an image to x,y limits. PIL will keep an original
             aspect ratio.
         '''
-        f = '[shared] image.Image.get_thumbnail'
+        f = '[shared] image.controller.Image.get_thumbnail'
         if self.Success:
             if self.loader:
                 try:
@@ -105,7 +105,7 @@ class Image:
             sh.com.cancel(f)
     
     def get_image(self):
-        f = '[shared] image.Image.get_image'
+        f = '[shared] image.controller.Image.get_image'
         if self.Success:
             if self.loader:
                 try:
@@ -119,7 +119,7 @@ class Image:
             sh.com.cancel(f)
         
     def get_bytes(self,ext='PNG'):
-        f = '[shared] image.Image.get_bytes'
+        f = '[shared] image.controller.Image.get_bytes'
         if self.Success:
             if self.loader:
                 bytes_ = io.BytesIO()
