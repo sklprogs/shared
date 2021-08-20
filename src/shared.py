@@ -5,9 +5,9 @@ import sys, os
 import re
 import io
 import pyperclip
+from skl_shared.localize import _
 import skl_shared.logic as lg
 import skl_shared.gui as gi
-from skl_shared.localize import _
 
 GUI_MES = True
 STOP_MES = False
@@ -5174,6 +5174,130 @@ class Reference(SearchBox):
             return len(fragm)
         else:
             com.rep_empty(f)
+
+
+
+class Scrollable:
+    
+    def __init__(self,parent,ScrollX=True,xborder=0,yborder=0):
+        self.parent = parent
+        self.ScrollX = ScrollX
+        self.xborder = xborder
+        self.yborder = yborder
+        self.set_gui()
+    
+    def adjust_by_content(self):
+        # This should be done externally, after a content is filled in
+        self.set_dimensions()
+        self.cvs_prm.move_left_corner()
+    
+    def set_dimensions(self):
+        # This should be done externally, after a content is filled in
+        objs.get_root().update_idle()
+        self.cvs_prm.set_region (x = self.frm_sec.get_reqwidth()
+                                ,y = self.frm_sec.get_reqheight()
+                                ,xborder = self.xborder
+                                ,yborder = self.yborder
+                                )
+        self.cvs_prm.scroll()
+    
+    def set_scroll(self):
+        Scrollbar (parent = self.frm_ver
+                  ,scroll = self.cvs_prm
+                  )
+        if self.ScrollX:
+            Scrollbar (parent = self.frm_hor
+                      ,scroll = self.cvs_prm
+                      ,Horiz = True
+                      )
+    
+    def set_gui(self):
+        self.set_frames()
+        self.set_scroll()
+
+    def set_frames(self):
+        ''' This frame should be created before others, otherwise,
+            the scrollbar will have incorrect sizes.
+        '''
+        self.frm_ver = Frame (parent = self.parent
+                             ,expand = False
+                             ,fill = 'y'
+                             ,side = 'right'
+                             )
+        self.frm_prm = Frame (parent = self.parent
+                             ,fill = 'both'
+                             )
+        self.widget = self.frm_prm.widget
+        self.cvs_prm = Canvas(self.frm_prm)
+        self.frm_sec = Frame (parent = self.frm_prm
+                             ,fill = 'both'
+                             )
+        self.cvs_prm.embed(self.frm_sec)
+        self.frm_cnt = Frame (parent = self.frm_sec
+                             ,expand = True
+                             ,fill = 'both'
+                             )
+        if self.ScrollX:
+            self.frm_hor = Frame (parent = self.frm_prm
+                                 ,expand = False
+                                 ,fill = 'x'
+                                 ,side = 'bottom'
+                                 )
+
+
+
+class ScrollableC:
+
+    def __init__ (self,ScrollX=True,title=_('Scrollable widget')
+                 ,icon='',width=800,height=600,xborder=0,yborder=0
+                 ,Maximize=False
+                 ):
+        self.ScrollX = ScrollX
+        self.title = title
+        self.icon = icon
+        self.width = width
+        self.height = height
+        self.xborder = xborder
+        self.yborder = yborder
+        self.Maximize = Maximize
+        self.set_gui()
+    
+    def get_content_frame(self):
+        return self.obj.frm_cnt
+    
+    def adjust_by_content(self):
+        self.obj.adjust_by_content()
+    
+    def set_bindings(self):
+        self.obj.cvs_prm.set_top_bindings(self.parent)
+        com.bind (obj = self.parent
+                 ,bindings = ('<Escape>','<Control-q>')
+                 ,action = self.close
+                 )
+
+    def set_parent(self):
+        self.parent = Top (icon = self.icon
+                          ,title = self.title
+                          ,Maximize = self.Maximize
+                          )
+        if not self.Maximize:
+            sub = '{}x{}'.format(self.width,self.height)
+            Geometry(self.parent).set(sub)
+    
+    def set_gui(self):
+        self.set_parent()
+        self.obj = Scrollable (parent = self.parent
+                              ,ScrollX = self.ScrollX
+                              ,xborder = self.xborder
+                              ,yborder = self.yborder
+                              )
+        self.set_bindings()
+
+    def close(self,event=None):
+        self.parent.close()
+
+    def show(self,event=None):
+        self.parent.show()
 
 
 com = Commands()

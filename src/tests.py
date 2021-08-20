@@ -3,20 +3,131 @@
 
 import io
 import random
-import skl_shared.shared as sh
 from skl_shared.localize import _
+import skl_shared.shared as sh
+import skl_shared.image.controller as im
+
 
 ICON = sh.objs.get_pdir().add('..','resources','icon_64x64_cpt.gif')
 ICON2 = '/home/pete/bin/mclient/resources/icon_64x64_mclient.gif'
 FILE = '/home/pete/base/[unmusic] corrupted tags.txt'
-
 SILENT = False
+
+
+class Scrollable:
+
+    def __init__ (self,mode='img',image_path='',ScrollX=True
+                 ,title=_('Scrollable widget'),icon=''
+                 ,width=800,height=600,xborder=5,yborder=0
+                 ,Maximize=False
+                 ):
+        self.modes = ('lbl','img')
+        self.label_no = 1
+        self.mode = mode
+        self.image_path = image_path
+        self.title = title
+        self.icon = icon
+        self.width = width
+        self.height = height
+        self.xborder = xborder
+        self.yborder = yborder
+        self.ScrollX = ScrollX
+        self.Maximize = Maximize
+    
+    def run(self):
+        self.iscroll = sh.ScrollableC (ScrollX = self.ScrollX
+                                      ,title = self.title
+                                      ,icon = self.icon
+                                      ,width = self.width
+                                      ,height = self.height
+                                      ,xborder = self.xborder
+                                      ,yborder = self.yborder
+                                      ,Maximize = self.Maximize
+                                      )
+        self.set_widgets()
+        # Do this only after filling the widget with a content
+        self.iscroll.adjust_by_content()
+        self.iscroll.show()
+    
+    def add_row(self):
+        sub = []
+        for i in range(30):
+            sub.append('hello {}'.format(i+1))
+        sub = _('Label {}').format(self.label_no) + ' ' + ' '.join(sub)
+        self.label_no += 1
+        frm_row = sh.Frame (parent = self.iscroll.get_content_frame()
+                           ,expand = False
+                           ,fill = 'x'
+                           ,side = 'top'
+                           )
+        cbx_row = sh.CheckBox (parent = frm_row
+                              ,side = 'left'
+                              )
+        lbl_row = sh.Label (parent = frm_row
+                           ,side = 'left'
+                           ,text = sub
+                           )
+    
+    def set_image(self):
+        f = '[shared] tests.Scrollable.set_image'
+        if self.image_path:
+            if sh.File(self.image_path).Success:
+                iimage = im.Image()
+                iimage.open(self.image_path)
+                self.lbl_img.widget.config(image=iimage.image)
+                ''' This prevents the garbage collector from deleting
+                    the image.
+                '''
+                self.lbl_img.widget.image = iimage.image
+            else:
+                mes = _('Wrong input data!')
+                sh.objs.get_mes(f,mes,True).show_warning()
+        else:
+            sh.com.rep_empty(f)
+    
+    def set_labels(self):
+        for i in range(50):
+            self.add_row()
+    
+    def set_image_label(self):
+        self.lbl_img = sh.Label (parent = self.iscroll.get_content_frame()
+                                ,text = _('Image')
+                                )
+    
+    def set_widgets(self):
+        f = '[shared] tests.Scrollable.set_widgets'
+        if self.mode == 'lbl':
+            self.set_labels()
+        elif self.mode == 'img':
+            self.set_image_label()
+            self.set_image()
+        else:
+            mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
+            mes = mes.format(self.mode,'; '.join(self.modes))
+            sh.objs.get_mes(f,mes).show_error()
+
 
 
 class Commands:
     
     def __init__(self):
         pass
+    
+    def run_scrollable(self):
+        iscroll = Scrollable (mode = 'lbl'
+                             ,image_path = '/home/pete/bin/ImageViewer/resources/Gnu_(PSF).png'
+                             ,ScrollX = 1
+                             ,title = _('Hello!')
+                             ,icon = ICON
+                             ,width = 1024
+                             ,height = 800
+                             ,xborder = 10
+                             ,yborder = 10
+                             ,Maximize = 0
+                             )
+        iscroll.run()
+        iscroll.mode = 'img'
+        iscroll.run()
     
     def check_spelling(self):
         f = '[shared] tests.Commands.check_spelling'
@@ -1331,6 +1442,7 @@ class TestBox:
         self.top.show()
 
 
+
 com = Commands()
 
 
@@ -1344,6 +1456,7 @@ if __name__ == '__main__':
     #TestBox().bind_last_word()
     #com.run_panes4()
     #com.run_panes2()
-    com.check_spelling()
+    #com.check_spelling()
     #TestBox().select_all_search()
+    com.run_scrollable()
     sh.com.end()
