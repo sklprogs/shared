@@ -5291,6 +5291,7 @@ class ScrollableC:
                               ,xborder = self.xborder
                               ,yborder = self.yborder
                               )
+        self.widget = self.parent.widget
         self.set_bindings()
 
     def close(self,event=None):
