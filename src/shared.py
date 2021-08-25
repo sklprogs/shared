@@ -1735,6 +1735,13 @@ class CheckBox:
                    ,action = action
                    )
 
+    def set_state(self,Enable=True):
+        if Enable:
+            state = 'normal'
+        else:
+            state = 'disabled'
+        self.widget.config(state=state)
+    
     def reset(self,Active=False,action=None):
         if Active:
             self.enable()

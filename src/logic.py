@@ -143,7 +143,7 @@ class Sections:
         if abbr:
             try:
                 index_ = self.abbr.index(abbr)
-                return self.sections[index_]   
+                return self.sections[index_]
             except (ValueError,IndexError) as e:
                 mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
                 mes = mes.format(abbr,'; '.join(self.abbr))
@@ -323,7 +323,7 @@ class FastTable:
         if self.Success:
             if self.Transpose:
                 try:
-                    ''' Works only in Python >=3.5. 
+                    ''' Works only in Python >=3.5.
                         'eval' is needed since we cannot catch
                         'SyntaxError' in runtime.
                     '''
