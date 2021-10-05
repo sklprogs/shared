@@ -322,21 +322,7 @@ class FastTable:
         f = '[shared] logic.FastTable.transpose'
         if self.Success:
             if self.Transpose:
-                try:
-                    ''' Works only in Python >=3.5.
-                        'eval' is needed since we cannot catch
-                        'SyntaxError' in runtime.
-                    '''
-                    self.lst = eval('[*zip(*self.lst)]')
-                except SyntaxError:
-                    # 10x slower (with already imported numpy)
-                    try:
-                        import numpy
-                        self.lst = numpy.array(lst).transpose()
-                    except ImportError:
-                        mes = _('You need to install "{}"!')
-                        mes = mes.format('numpy')
-                        objs.get_mes(f,mes).show_error()
+                self.lst = [*zip(*self.lst)]
                 # 'zip' produces tuples
                 self.lst = [list(item) for item in self.lst]
         else:
