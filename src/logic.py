@@ -800,7 +800,7 @@ class OSSpecific:
 
 class Launch:
     #NOTE: 'Block' works only when a 'custom_app' is set
-    def __init__(self,target='',Block=False):
+    def __init__(self,target='',Block=False,GetOutput=False):
         self.set_values()
         self.target = target
         self.Block = Block
@@ -814,10 +814,33 @@ class Launch:
             self.TargetExists = True
         else:
             self.TargetExists = False
+        if GetOutput:
+            if Block:
+                mes = _('Reading standard output is not supported in a blocking mode!')
+                sh.objs.get_mes(f,mes).show_error()
+            else:
+                self.stdout = subprocess.PIPE
 
     def set_values(self):
         self.custom_app = ''
         self.custom_args = []
+        self.stdout = None
+        self.process = None
+    
+    def get_output(self):
+        ''' #NOTE: if the program being called is already running
+            (and a new instance is not created), then the output will
+            be provided to the terminal in which it is running. You may
+            need to close the program first for this code to work. 
+        '''
+        f = '[shared] logic.Launch.get_output'
+        if self.process and self.process.stdout:
+            result = self.process.stdout
+            result = [str(item,'utf-8') for item in result]
+            return ''.join(result)
+        else:
+            com.rep_empty(f)
+        return ''
     
     def _launch(self):
         f = '[shared] logic.Launch._launch'
@@ -827,9 +850,11 @@ class Launch:
             try:
                 # Block the script till the called program is closed
                 if self.Block:
-                    subprocess.call(self.custom_args)
+                    subprocess.call(self.custom_args,self.stdout)
                 else:
-                    subprocess.Popen(self.custom_args)
+                    self.process = subprocess.Popen (args = self.custom_args
+                                                    ,stdout = self.stdout
+                                                    )
                 return True
             except:
                 mes = _('Failed to run "{}"!').format(self.custom_args)
