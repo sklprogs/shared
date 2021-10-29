@@ -1355,6 +1355,7 @@ class Entry:
                  ,expand=None,font=FONT2
                  ,bg=None,fg=None,justify='left'
                  ,AddBind=True,ClearAll=False
+                 ,Password=False
                 ):
         self.type = 'Entry'
         self.parent = parent
@@ -1370,6 +1371,7 @@ class Entry:
         self.justify = justify
         self.AddBind = AddBind
         self.ClearAll = ClearAll
+        self.Password = Password
         self.set_gui()
 
     def get_sel(self,event=None):
@@ -1403,6 +1405,10 @@ class Entry:
         return 'break'
     
     def set_gui(self):
+        if self.Password:
+            show = '●'
+        else:
+            show = None
         self.gui = gi.Entry (parent = self.parent
                             ,side = self.side
                             ,ipadx = self.ipadx
@@ -1414,6 +1420,7 @@ class Entry:
                             ,bg = self.bg
                             ,fg = self.fg
                             ,justify = self.justify
+                            ,show = show
                             )
         self.widget = self.gui.widget
         self.set_bindings()

@@ -225,7 +225,7 @@ class Entry:
                  ,fill=None,width=None
                  ,expand=None,font='Sans 11'
                  ,bg=None,fg=None
-                 ,justify='left'
+                 ,justify='left',show=None
                  ):
         self.parent = parent
         self.widget = tk.Entry (master = self.parent.widget
@@ -234,6 +234,7 @@ class Entry:
                                ,fg = fg
                                ,width = width
                                ,justify = justify
+                               ,show = show
                                )
         self.widget.pack (side = side
                          ,ipadx = ipadx
