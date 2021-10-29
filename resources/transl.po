@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-29 21:41+0300\n"
-"PO-Revision-Date: 2021-10-29 21:45+0300\n"
+"PO-Revision-Date: 2021-10-29 21:54+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -627,7 +627,7 @@ msgstr "Укажите пароль:"
 #: password/controller.py:78 tests.py:122
 #| msgid "Your input: \"{}\""
 msgid "Login: \"{}\""
-msgstr "Имя входа: \"{}\""
+msgstr "Учетная запись: \"{}\""
 
 #: password/controller.py:80 tests.py:124
 msgid "Password: \"{}\""
@@ -643,7 +643,7 @@ msgstr "OK"
 
 #: password/gui.py:55
 msgid "Login:"
-msgstr "Имя входа:"
+msgstr "Учетная запись:"
 
 #: password/gui.py:61
 msgid "Password:"
