@@ -9,7 +9,7 @@ from . import gui
 
 class Password:
     
-    def __init__(self,icon=None,title=_('Set your password:')):
+    def __init__(self,icon=None,title=_('Set your credentials:')):
         self.icon = icon
         self.title = title
         self.gui = None

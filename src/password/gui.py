@@ -7,7 +7,7 @@ import skl_shared.shared as sh
 
 class Password:
     
-    def __init__(self,icon=None,title=_('Set your password:')):
+    def __init__(self,icon=None,title=_('Set your credentials:')):
         self.icon = icon
         self.title = title
         self.set_gui()

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-29 21:41+0300\n"
-"PO-Revision-Date: 2021-10-29 21:54+0300\n"
+"POT-Creation-Date: 2021-10-29 21:58+0300\n"
+"PO-Revision-Date: 2021-10-29 21:59+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -621,11 +621,10 @@ msgid "{} matches"
 msgstr "{} совпадений"
 
 #: password/controller.py:12 password/gui.py:10
-msgid "Set your password:"
-msgstr "Укажите пароль:"
+msgid "Set your credentials:"
+msgstr "Укажите данные для входа:"
 
 #: password/controller.py:78 tests.py:122
-#| msgid "Your input: \"{}\""
 msgid "Login: \"{}\""
 msgstr "Учетная запись: \"{}\""
 
