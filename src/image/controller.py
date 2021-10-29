@@ -4,7 +4,7 @@
 import io
 import skl_shared.shared as sh
 from skl_shared.localize import _
-from . import gui as gi
+from . import gui
 
 
 class Image:
@@ -14,7 +14,7 @@ class Image:
     def __init__(self):
         self.image = self.bytes_ = self.loader = None
         self.Success = True
-        self.gui = gi.Image()
+        self.gui = gui.Image()
         
     def convert2rgb(self):
         # This is sometimes required in order to produce a JPEG file

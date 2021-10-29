@@ -6,6 +6,7 @@ import random
 from skl_shared.localize import _
 import skl_shared.shared as sh
 import skl_shared.image.controller as im
+import skl_shared.password.controller as pw
 
 
 ICON = sh.objs.get_pdir().add('..','resources','icon_64x64_cpt.gif')
@@ -112,6 +113,16 @@ class Commands:
     
     def __init__(self):
         pass
+    
+    def run_password(self):
+        ipass = pw.Password()
+        ipass.show()
+        login = ipass.get_login()
+        password = ipass.get_password()
+        mes = _('Login: "{}"').format(login)
+        sh.objs.get_mes(f,mes,True).show_info()
+        mes = _('Password: "{}"').format(password)
+        sh.objs.get_mes(f,mes,True).show_info()
     
     def run_scrollable(self):
         iscroll = Scrollable (mode = 'lbl'
@@ -1458,5 +1469,6 @@ if __name__ == '__main__':
     #com.run_panes2()
     #com.check_spelling()
     #TestBox().select_all_search()
-    com.run_scrollable()
+    #com.run_scrollable()
+    com.run_password()
     sh.com.end()
