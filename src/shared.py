@@ -3623,27 +3623,12 @@ class Geometry:
         else:
             com.rep_empty(f)
 
-    def activate(self,event=None,MouseClicked=False):
+    def activate(self,event=None):
         self._activate()
         if objs.get_os().is_win():
             #TODO: learn how to properly import modules
             import ctypes
             self.parent.widget.wm_attributes('-topmost',1)
-            self.parent.widget.wm_attributes('-topmost',0)
-            ''' Without this, a button click will fire a button action
-                where it is not needed.
-            '''
-            if MouseClicked:
-                ''' It's an ugly hack, but we cannot set a focus on
-                    a widget without this (we manage without this
-                    in Linux/Windows XP, however, this is required in
-                    Windows 7/8).
-                '''
-                # Emulate a mouse button click
-                # left mouse button down
-                ctypes.windll.user32.mouse_event(2, 0, 0, 0, 0)
-                # left mouse button up
-                ctypes.windll.user32.mouse_event(4, 0, 0, 0, 0)
 
     def get_hwnd(self,event=None):
         f = '[shared] shared.Geometry.get_hwnd'
