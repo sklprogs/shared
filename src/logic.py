@@ -4368,7 +4368,7 @@ class Get:
             # Safely use URL as a string
             if isinstance(self.url,str):
                 if self.Verbose:
-                    timer = Timer(func_title=f)
+                    timer = Timer(f)
                     timer.start()
                 self._get()
                 self.decode()
