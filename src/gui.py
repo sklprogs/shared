@@ -1007,7 +1007,7 @@ class Geometry:
     def __init__(self,parent):
         self.parent = parent
     
-    def _activate(self):
+    def activate(self):
         self.parent.widget.deiconify()
         #self.parent.widget.focus_set()
         self.parent.widget.lift()

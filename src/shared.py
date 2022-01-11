@@ -3616,19 +3616,12 @@ class Geometry:
         else:
             com.rep_empty(f)
 
-    def _activate(self):
-        f = '[shared] shared.Geometry._activate'
+    def activate(self,event=None):
+        f = '[shared] shared.Geometry.activate'
         if self.parent:
-            self.gui._activate()
+            self.gui.activate()
         else:
             com.rep_empty(f)
-
-    def activate(self,event=None):
-        self._activate()
-        if objs.get_os().is_win():
-            #TODO: learn how to properly import modules
-            import ctypes
-            self.parent.widget.wm_attributes('-topmost',1)
 
     def get_hwnd(self,event=None):
         f = '[shared] shared.Geometry.get_hwnd'
