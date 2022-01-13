@@ -1007,6 +1007,9 @@ class Geometry:
     def __init__(self,parent):
         self.parent = parent
     
+    def bring_to_top(self):
+        self.parent.widget.wm_attributes('-topmost',1)
+
     def activate(self):
         self.parent.widget.deiconify()
         #self.parent.widget.focus_set()
