@@ -3620,8 +3620,9 @@ class Geometry:
         f = '[shared] shared.Geometry.activate'
         if self.parent:
             self.gui.activate()
-            if objs.get_os().is_win():
-                self.gui.bring_to_top()
+            #TODO: Fix
+            #if objs.get_os().is_win():
+            #    self.gui.bring_to_top()
         else:
             com.rep_empty(f)
 

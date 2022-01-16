@@ -1011,8 +1011,6 @@ class Geometry:
         self.parent.widget.wm_attributes('-topmost',1)
 
     def activate(self):
-        self.parent.widget.deiconify()
-        #self.parent.widget.focus_set()
         self.parent.widget.lift()
     
     def lift(self):
