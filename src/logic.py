@@ -817,7 +817,7 @@ class Launch:
         if GetOutput:
             if Block:
                 mes = _('Reading standard output is not supported in a blocking mode!')
-                sh.objs.get_mes(f,mes).show_error()
+                objs.get_mes(f,mes).show_error()
             else:
                 self.stdout = subprocess.PIPE
 
@@ -3796,7 +3796,8 @@ class Search:
             if result != -1:
                 self.i = result
                 self.add()
-            return result
+                # Do not allow -1 as output
+                return result
         else:
             com.cancel(f)
 
