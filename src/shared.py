@@ -3524,10 +3524,10 @@ class Geometry:
     ''' Window behavior is not uniform through different platforms or
         even through different Windows versions.
     '''
-    def __init__(self,parent=None,title=None,hwnd=None):
+    def __init__(self,parent=None,title=None,handle=None):
         self.parent = parent
         self.title = title
-        self.hwnd = hwnd
+        self.handle = handle
         self.geom = None
         self.gui = gi.Geometry(parent)
     
@@ -3560,17 +3560,34 @@ class Geometry:
         else:
             com.rep_empty(f)
 
+    def _focus_win(self):
+        f = '[shared] shared.Geometry._focus_win'
+        self.set_handle()
+        if not self.handle:
+            com.rep_empty(f)
+            return
+        try:
+            self.gui.focus_win(self.handle)
+        except:
+            mes = _('Failed to change window properties!')
+            objs.get_mes(f,mes,True).show_error()
+    
+    def _set_foreground_win(self):
+        f = '[shared] shared.Geometry._set_foreground_win'
+        self.set_handle()
+        if not self.handle:
+            com.rep_empty(f)
+            return
+        try:
+            self.gui.set_foreground_win(self.handle)
+        except:
+            mes = _('Failed to change window properties!')
+            objs.get_mes(f,mes,True).show_error()
+    
     def set_foreground(self,event=None):
         f = '[shared] shared.Geometry.set_foreground'
         if objs.get_os().is_win():
-            if self.get_hwnd():
-                try:
-                    win32gui.SetForegroundWindow(self.hwnd)
-                except:
-                    mes = _('Failed to change window properties!')
-                    objs.get_mes(f,mes,True).show_error()
-            else:
-                com.rep_empty(f)
+            self._set_foreground_win()
         elif self.parent:
             self.gui.set_foreground()
         else:
@@ -3586,7 +3603,6 @@ class Geometry:
     def maximize(self,event=None):
         f = '[shared] shared.Geometry.maximize'
         if lg.objs.get_os().is_win():
-            #win32gui.ShowWindow(self.get_hwnd(),win32con.SW_MAXIMIZE)
             self.gui.maximize_win()
         elif self.parent:
             self.gui.maximize_nix()
@@ -3596,7 +3612,7 @@ class Geometry:
     def focus(self,event=None):
         f = '[shared] shared.Geometry.focus'
         if lg.objs.get_os().is_win():
-            win32gui.SetActiveWindow(self.get_hwnd())
+            self._focus_win()
         elif self.parent:
             self.gui.focus()
         else:
@@ -3616,18 +3632,23 @@ class Geometry:
         else:
             com.rep_empty(f)
 
-    def get_hwnd(self,event=None):
-        f = '[shared] shared.Geometry.get_hwnd'
-        if not self.hwnd:
-            if self.title:
-                try:
-                    self.hwnd = win32gui.FindWindow(None,self.title)
-                except win32ui.error:
-                    mes = _('Failed to get the window handle!')
-                    objs.get_mes(f,mes,True).show_error()
-            else:
-                com.rep_empty(f)
-        return self.hwnd
+    def _set_handle_win(self):
+        try:
+            self.handle = self.gui.get_handle_win(self.title)
+        except win32ui.error:
+            mes = _('Failed to get the window handle!')
+            objs.get_mes(f,mes,True).show_error()
+    
+    def set_handle(self,event=None):
+        f = '[shared] shared.Geometry.set_handle'
+        if not self.title:
+            com.rep_empty(f)
+            return
+        if objs.get_os().is_win():
+            self._set_handle_win()
+        else:
+            mes = _('Not implemented yet!')
+            objs.get_mes(f,mes,True).show_info()
 
     def set(self,arg='800x600'):
         self.geom = arg

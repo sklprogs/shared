@@ -73,7 +73,7 @@ if 'win' in sys.platform:
         os.unsetenv('TZ')
     import pythoncom, win32com, win32com.client, win32api
     # Required by 'Geometry'
-    import win32gui, win32con, ctypes
+    import win32gui, win32ui, win32con
     # Other ways of importing make 'shell' attribute inaccessible
     from win32com.shell import shell as win32shell
     if win32com.client.gencache.is_readonly:

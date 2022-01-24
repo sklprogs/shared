@@ -1007,6 +1007,12 @@ class Geometry:
     def __init__(self,parent):
         self.parent = parent
     
+    def get_handle_win(self,title):
+        return win32gui.FindWindow(None,title)
+    
+    def focus_win(self,handle):
+        win32gui.SetActiveWindow(handle)
+    
     def activate(self):
         self.parent.widget.deiconify()
         self.parent.widget.lift()
@@ -1028,6 +1034,9 @@ class Geometry:
     
     def set_foreground(self):
         self.parent.widget.lift()
+    
+    def set_foreground_win(self,handle):
+        win32gui.SetForegroundWindow(handle)
     
     def update(self):
         objs.get_root().widget.update_idletasks()
