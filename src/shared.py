@@ -3579,13 +3579,6 @@ class Geometry:
     def minimize(self,event=None):
         f = '[shared] shared.Geometry.minimize'
         if self.parent:
-            ''' # Does not always work
-                if objs.get_os().is_win():
-                    win32gui.ShowWindow (self.get_hwnd()
-                                        ,win32con.SW_MINIMIZE
-                                        )
-                else:
-            '''
             self.gui.minimize()
         else:
             com.rep_empty(f)
@@ -3620,9 +3613,6 @@ class Geometry:
         f = '[shared] shared.Geometry.activate'
         if self.parent:
             self.gui.activate()
-            #TODO: Fix
-            #if objs.get_os().is_win():
-            #    self.gui.bring_to_top()
         else:
             com.rep_empty(f)
 
