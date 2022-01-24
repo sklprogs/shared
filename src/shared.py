@@ -3525,10 +3525,10 @@ class Geometry:
         even through different Windows versions.
     '''
     def __init__(self,parent=None,title=None,handle=None):
+        self.geom = None
         self.parent = parent
         self.title = title
         self.handle = handle
-        self.geom = None
         self.gui = gi.Geometry(parent)
     
     def update(self):
@@ -3625,19 +3625,36 @@ class Geometry:
         else:
             com.rep_empty(f)
 
+    def _fail(self,f,e):
+        mes = _('The operation has failed!\n\nDetails: {}').format(e)
+        objs.get_mes(f,mes,True).show_error()
+    
+    def _activate_win(self):
+        f = '[shared] shared.Geometry._activate_win'
+        self._set_handle_win()
+        if not self.handle:
+            com.rep_empty(f)
+            return
+        try:
+            self.gui.activate_win(self.handle)
+        except Exception as e:
+            self._fail(f,e)
+    
     def activate(self,event=None):
         f = '[shared] shared.Geometry.activate'
-        if self.parent:
-            self.gui.activate()
-        else:
+        if not self.parent:
             com.rep_empty(f)
+            return
+        self.gui.activate()
+        if objs.get_os().is_win():
+            self._activate_win()            
 
     def _set_handle_win(self):
+        f = '[shared] shared.Geometry._set_handle_win'
         try:
             self.handle = self.gui.get_handle_win(self.title)
-        except win32ui.error:
-            mes = _('Failed to get the window handle!')
-            objs.get_mes(f,mes,True).show_error()
+        except Exception as e:
+            self._fail(f,e)
     
     def set_handle(self,event=None):
         f = '[shared] shared.Geometry.set_handle'
