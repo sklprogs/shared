@@ -3821,7 +3821,7 @@ class Search:
                 self.i = 0
                 while True:
                     result = self.get_next()
-                    if result == -1:
+                    if result is None:
                         break
                     else:
                         self.nextloop.append(result)
@@ -3836,7 +3836,7 @@ class Search:
                 self.i = len(self.text)
                 while True:
                     result = self.get_prev()
-                    if result == -1:
+                    if result is None:
                         break
                     else:
                         self.prevloop.append(result)
