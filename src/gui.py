@@ -1003,9 +1003,17 @@ class Label:
 
 
 class Geometry:
-    
+    #TODO: Make OS-specific
     def __init__(self,parent):
         self.parent = parent
+    
+    def enumerate_win(self,callback,title):
+        import win32gui
+        win32gui.EnumWindows(callback,title)
+    
+    def get_title_win(self,handle):
+        import win32gui
+        return win32gui.GetWindowText(handle)
     
     def activate_win(self,handle):
         import win32gui

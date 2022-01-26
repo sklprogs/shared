@@ -3531,6 +3531,16 @@ class Geometry:
         self.handle = handle
         self.gui = gi.Geometry(parent)
     
+    def _find_handle_win(self):
+        f = '[shared] shared.Geometry._find_handle_win'
+        self.gui.enumerate_win(self._enumerate_win,self.title)
+        mes = _('Title: "{}"; handle: {}').format(self.title,self.handle)
+        objs.get_mes(f,mes,True).show_debug()
+    
+    def _enumerate_win(self,handle):
+        if re.match(self.title,str(self.gui.get_title_win(handle))) is not None:
+            self.handle = handle
+    
     def update(self):
         self.gui.update()
 
@@ -3631,6 +3641,7 @@ class Geometry:
     
     def _activate_win(self):
         f = '[shared] shared.Geometry._activate_win'
+        self._find_handle_win()
         self._set_handle_win()
         if not self.handle:
             com.rep_empty(f)
