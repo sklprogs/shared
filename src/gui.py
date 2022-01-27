@@ -1009,7 +1009,7 @@ class Geometry:
     
     def enumerate_win(self,callback,title):
         import win32gui
-        win32gui.EnumWindows(callback,title)
+        return win32gui.EnumWindows(callback,title)
     
     def get_title_win(self,handle):
         import win32gui
@@ -1025,7 +1025,7 @@ class Geometry:
     
     def focus_win(self,handle):
         import win32gui
-        win32gui.SetActiveWindow(handle)
+        return win32gui.SetActiveWindow(handle)
     
     def activate(self):
         self.parent.widget.deiconify()

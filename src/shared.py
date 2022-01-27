@@ -3642,9 +3642,13 @@ class Geometry:
     def _activate_win(self):
         f = '[shared] shared.Geometry._activate_win'
         self._find_handle_win()
+        self._focus_win()
         self._set_handle_win()
         if not self.handle:
             com.rep_empty(f)
+            #cur
+            mes = _('No handle has been found!')
+            objs.get_mes(f,mes).show_warning()
             return
         try:
             self.gui.activate_win(self.handle)
@@ -3656,9 +3660,19 @@ class Geometry:
         if not self.parent:
             com.rep_empty(f)
             return
-        self.gui.activate()
         if objs.get_os().is_win():
-            self._activate_win()            
+            #self.parent.widget.deiconify()
+            #self._activate_win()
+            import win32gui, win32con
+            handle = win32gui.FindWindow(None,'MClient')
+            if handle:
+                win32gui.ShowWindow(handle,win32con.SW_NORMAL)
+                win32gui.SetForegroundWindow(handle)
+            else:
+                mes = _('No handle has been found!')
+                objs.get_mes(f,mes).show_warning()
+        else:
+            self.gui.activate()
 
     def _set_handle_win(self):
         f = '[shared] shared.Geometry._set_handle_win'
