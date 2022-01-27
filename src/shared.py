@@ -3666,7 +3666,11 @@ class Geometry:
             import win32gui, win32con
             handle = win32gui.FindWindow(None,'MClient')
             if handle:
-                win32gui.ShowWindow(handle,win32con.SW_NORMAL)
+                ''' It is important to choose the right flag. SW_SHOW
+                    does not work, SW_SHOWNORMAL will change sizes of
+                    the maximized window.
+                '''
+                win32gui.ShowWindow(handle,win32con.SW_RESTORE)
                 win32gui.SetForegroundWindow(handle)
             else:
                 mes = _('No handle has been found!')
