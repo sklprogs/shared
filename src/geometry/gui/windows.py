@@ -24,11 +24,13 @@ class Geometry:
         self.parent.widget.focus_set()
     
     def activate(self,handle=''):
-        ''' It is important to choose the right flag. SW_SHOW does not
-            work, SW_SHOWNORMAL will change sizes of the maximized
-            window.
+        ''' It is important to choose the right flag, the window may not
+            be shown otherwise.
         '''
-        win32gui.ShowWindow(handle,win32con.SW_RESTORE)
+        if win32gui.GetWindowPlacement(handle)[1] == win32con.SW_SHOWMINIMIZED:
+            win32gui.ShowWindow(handle,win32con.SW_RESTORE)
+        else:
+            win32gui.ShowWindow(handle,win32con.SW_SHOW)
         win32gui.SetForegroundWindow(handle)
     
     def maximize(self):
