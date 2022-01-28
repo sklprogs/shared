@@ -3551,7 +3551,8 @@ class Geometry:
             com.rep_failed(f,e)
         return ''
     
-    def enumerate(self,handle):
+    def enumerate(self,handle,arg=None):
+        # An extra argument is required by win32gui.EnumWindows
         if self.keyword in self.get_title(handle):
             self.handle = handle
     
