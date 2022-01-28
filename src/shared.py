@@ -3524,21 +3524,35 @@ class Geometry:
     ''' Window behavior is not uniform through different platforms or
         even through different Windows versions.
     '''
-    def __init__(self,parent=None,title=None,handle=None):
+    def __init__(self,parent=None,keyword='',handle=''):
         self.geom = None
+        self.title = ''
         self.parent = parent
-        self.title = title
+        self.keyword = keyword
         self.handle = handle
-        self.gui = gi.Geometry(parent)
+        if objs.get_os().is_win():
+            import skl_shared.geometry.gui.windows as geom_gui
+        else:
+            import skl_shared.geometry.gui.linux as geom_gui
+        self.gui = geom_gui.Geometry(self.parent)
     
-    def _find_handle_win(self):
-        f = '[shared] shared.Geometry._find_handle_win'
-        self.gui.enumerate_win(self._enumerate_win,self.title)
-        mes = _('Title: "{}"; handle: {}').format(self.title,self.handle)
-        objs.get_mes(f,mes,True).show_debug()
+    def find_handle(self):
+        f = '[shared] shared.Geometry.find_handle'
+        try:
+            self.gui.enumerate(self.enumerate,self.keyword)
+        except Exception as e:
+            com.rep_failed(f,e)
     
-    def _enumerate_win(self,handle):
-        if re.match(self.title,str(self.gui.get_title_win(handle))) is not None:
+    def get_title(self,handle):
+        f = '[shared] shared.Geometry.find_handle'
+        try:
+            return self.gui.get_title(handle)
+        except Exception as e:
+            com.rep_failed(f,e)
+        return ''
+    
+    def enumerate(self,handle):
+        if self.keyword in self.get_title(handle):
             self.handle = handle
     
     def update(self):
@@ -3570,39 +3584,6 @@ class Geometry:
         else:
             com.rep_empty(f)
 
-    def _focus_win(self):
-        f = '[shared] shared.Geometry._focus_win'
-        self.set_handle()
-        if not self.handle:
-            com.rep_empty(f)
-            return
-        try:
-            self.gui.focus_win(self.handle)
-        except:
-            mes = _('Failed to change window properties!')
-            objs.get_mes(f,mes,True).show_error()
-    
-    def _set_foreground_win(self):
-        f = '[shared] shared.Geometry._set_foreground_win'
-        self.set_handle()
-        if not self.handle:
-            com.rep_empty(f)
-            return
-        try:
-            self.gui.set_foreground_win(self.handle)
-        except:
-            mes = _('Failed to change window properties!')
-            objs.get_mes(f,mes,True).show_error()
-    
-    def set_foreground(self,event=None):
-        f = '[shared] shared.Geometry.set_foreground'
-        if objs.get_os().is_win():
-            self._set_foreground_win()
-        elif self.parent:
-            self.gui.set_foreground()
-        else:
-            com.rep_empty(f)
-
     def minimize(self,event=None):
         f = '[shared] shared.Geometry.minimize'
         if self.parent:
@@ -3612,89 +3593,25 @@ class Geometry:
 
     def maximize(self,event=None):
         f = '[shared] shared.Geometry.maximize'
-        if lg.objs.get_os().is_win():
-            self.gui.maximize_win()
-        elif self.parent:
-            self.gui.maximize_nix()
-        else:
-            com.rep_empty(f)
+        try:
+            self.gui.maximize()
+        except Exception as e:
+            com.rep_failed(f,e)
 
     def focus(self,event=None):
         f = '[shared] shared.Geometry.focus'
-        if lg.objs.get_os().is_win():
-            self._focus_win()
-        elif self.parent:
-            self.gui.focus()
-        else:
-            com.rep_empty(f)
-
-    def lift(self,event=None):
-        f = '[shared] shared.Geometry.lift'
-        if self.parent:
-            self.gui.lift()
-        else:
-            com.rep_empty(f)
-
-    def _fail(self,f,e):
-        mes = _('The operation has failed!\n\nDetails: {}').format(e)
-        objs.get_mes(f,mes,True).show_error()
-    
-    def _activate_win(self):
-        f = '[shared] shared.Geometry._activate_win'
-        self._find_handle_win()
-        self._focus_win()
-        self._set_handle_win()
-        if not self.handle:
-            com.rep_empty(f)
-            #cur
-            mes = _('No handle has been found!')
-            objs.get_mes(f,mes).show_warning()
-            return
         try:
-            self.gui.activate_win(self.handle)
+            self.gui.focus()
         except Exception as e:
-            self._fail(f,e)
+            com.rep_failed(f,e)
     
     def activate(self,event=None):
         f = '[shared] shared.Geometry.activate'
         if not self.parent:
             com.rep_empty(f)
             return
-        if objs.get_os().is_win():
-            #self.parent.widget.deiconify()
-            #self._activate_win()
-            import win32gui, win32con
-            handle = win32gui.FindWindow(None,'MClient')
-            if handle:
-                ''' It is important to choose the right flag. SW_SHOW
-                    does not work, SW_SHOWNORMAL will change sizes of
-                    the maximized window.
-                '''
-                win32gui.ShowWindow(handle,win32con.SW_RESTORE)
-                win32gui.SetForegroundWindow(handle)
-            else:
-                mes = _('No handle has been found!')
-                objs.get_mes(f,mes).show_warning()
-        else:
-            self.gui.activate()
-
-    def _set_handle_win(self):
-        f = '[shared] shared.Geometry._set_handle_win'
-        try:
-            self.handle = self.gui.get_handle_win(self.title)
-        except Exception as e:
-            self._fail(f,e)
-    
-    def set_handle(self,event=None):
-        f = '[shared] shared.Geometry.set_handle'
-        if not self.title:
-            com.rep_empty(f)
-            return
-        if objs.get_os().is_win():
-            self._set_handle_win()
-        else:
-            mes = _('Not implemented yet!')
-            objs.get_mes(f,mes,True).show_info()
+        self.find_handle()
+        self.gui.activate(self.handle)
 
     def set(self,arg='800x600'):
         self.geom = arg
@@ -5362,5 +5279,6 @@ lg.objs.mes = Message
 if __name__ == '__main__':
     f = '[shared] shared.__main__'
     com.start()
-    lg.ReadTextFile('/tmp/aaa').get()
+    #lg.ReadTextFile('/tmp/aaa').get()
+    Geometry(Top()).activate()
     com.end()

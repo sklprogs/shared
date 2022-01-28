@@ -1002,68 +1002,6 @@ class Label:
 
 
 
-class Geometry:
-    #TODO: Make OS-specific
-    def __init__(self,parent):
-        self.parent = parent
-    
-    def enumerate_win(self,callback,title):
-        import win32gui
-        return win32gui.EnumWindows(callback,title)
-    
-    def get_title_win(self,handle):
-        import win32gui
-        return win32gui.GetWindowText(handle)
-    
-    def activate_win(self,handle):
-        import win32gui
-        win32gui.ShowWindow(handle,5)
-    
-    def get_handle_win(self,title):
-        import win32gui
-        return win32gui.FindWindow(None,title)
-    
-    def focus_win(self,handle):
-        import win32gui
-        return win32gui.SetActiveWindow(handle)
-    
-    def activate(self):
-        self.parent.widget.deiconify()
-        self.parent.widget.lift()
-    
-    def lift(self):
-        self.parent.widget.lift()
-    
-    def focus(self):
-        self.parent.widget.focus_set()
-    
-    def maximize_win(self):
-        self.parent.widget.wm_state(newstate='zoomed')
-    
-    def maximize_nix(self):
-        self.parent.widget.wm_attributes('-zoomed',True)
-    
-    def minimize(self):
-        self.parent.widget.iconify()
-    
-    def set_foreground(self):
-        self.parent.widget.lift()
-    
-    def set_foreground_win(self,handle):
-        import win32gui
-        win32gui.SetForegroundWindow(handle)
-    
-    def update(self):
-        objs.get_root().widget.update_idletasks()
-    
-    def set_geometry(self):
-        return self.parent.widget.geometry()
-    
-    def restore(self,position):
-        self.parent.widget.geometry(position)
-
-
-
 class Top:
     
     def __init__(self,Lock=True):
