@@ -27,9 +27,10 @@ class Geometry:
         ''' It is important to choose the right flag, the window may not
             be shown otherwise.
         '''
-        state = int(win32gui.GetWindowPlacement(handle)[1])
-        # win32con.SW_SHOWMINIMIZED, win32con.SW_MINIMIZE
-        if state in (2,6):
+        if win32gui.IsIconic(handle):
+            win32gui.ShowWindow(handle,win32con.SW_RESTORE)
+        elif win32gui.GetWindowPlacement(handle)[1] in (win32con.SW_SHOWMAXIMIZED,win32con.SW_MAXIMIZE):
+            win32gui.ShowWindow(handle,win32con.SW_MINIMIZE)
             win32gui.ShowWindow(handle,win32con.SW_RESTORE)
         else:
             win32gui.ShowWindow(handle,win32con.SW_SHOW)

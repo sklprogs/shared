@@ -3612,7 +3612,12 @@ class Geometry:
             com.rep_empty(f)
             return
         self.find_handle()
-        self.gui.activate(self.handle)
+        try:
+            self.gui.activate(self.handle)
+        except Exception as e:
+            mes = _('Third-party module has failed!\n\nDetails: {}')
+            mes = mes.format(e)
+            objs.get_mes(f,mes,True).show_warning()
 
     def set(self,arg='800x600'):
         self.geom = arg
