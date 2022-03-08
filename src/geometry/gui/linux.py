@@ -19,6 +19,8 @@ class Geometry:
         # The input argument is for compliance with the general method
         self.parent.widget.deiconify()
         self.parent.widget.lift()
+        # Cannot take focus without this, 'focus_set' is not enough
+        self.parent.widget.focus_force()
     
     def get_handle(self,title):
         # Orphaned for now. Not implemented yet.
