@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-29 21:58+0300\n"
-"PO-Revision-Date: 2021-10-29 21:59+0300\n"
+"POT-Creation-Date: 2022-03-27 17:52+0300\n"
+"PO-Revision-Date: 2022-03-27 17:52+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -18,26 +18,26 @@ msgstr ""
 "X-Poedit-Basepath: ../src\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: gui.py:1265 logic.py:443 logic.py:490 logic.py:1028 logic.py:4644
-#: shared.py:3832
+#: gui.py:1230 logic.py:443 logic.py:490 logic.py:1028 logic.py:4646
+#: shared.py:3800
 msgid "WARNING"
 msgstr "ПРЕДУПРЕЖДЕНИЕ"
 
-#: gui.py:1272 logic.py:484 logic.py:1028 shared.py:3824
+#: gui.py:1237 logic.py:484 logic.py:1028 shared.py:3792
 msgid "ERROR"
 msgstr "ОШИБКА"
 
-#: gui.py:1279 logic.py:445 logic.py:508 shared.py:3857 shared.py:4062
+#: gui.py:1244 logic.py:445 logic.py:508 shared.py:3825 shared.py:4030
 msgid "QUESTION"
 msgstr "ВОПРОС"
 
-#: gui.py:1286 logic.py:441 logic.py:468 logic.py:496 logic.py:1006
-#: logic.py:1048 logic.py:4652 shared.py:3841 shared.py:3849
+#: gui.py:1251 logic.py:441 logic.py:468 logic.py:496 logic.py:1006
+#: logic.py:1048 logic.py:4654 shared.py:3809 shared.py:3817
 msgid "INFO"
 msgstr "ИНФОРМАЦИЯ"
 
-#: image/controller.py:35 logic.py:3119 logic.py:3223 logic.py:3391
-#: shared.py:4090 web.py:26
+#: image/controller.py:35 logic.py:3119 logic.py:3224 logic.py:3392
+#: shared.py:3625 shared.py:4058 web.py:26
 msgid ""
 "Third-party module has failed!\n"
 "\n"
@@ -68,7 +68,7 @@ msgid "Strings"
 msgstr "Строки"
 
 #: logic.py:134 logic.py:148 logic.py:964 logic.py:2523 shared.py:1020
-#: shared.py:2327 shared.py:2340 shared.py:2870 shared.py:3251 shared.py:3331
+#: shared.py:2328 shared.py:2341 shared.py:2871 shared.py:3258 shared.py:3338
 #: tests.py:106
 msgid ""
 "An unknown mode \"{}\"!\n"
@@ -87,7 +87,7 @@ msgstr ""
 "# ВНИМАНИЕ: Данный файл был создан автоматически. Можно вручную менять "
 "значения ключей, однако, все остальное будет перезаписано."
 
-#: logic.py:275 logic.py:4190
+#: logic.py:275 logic.py:4192
 msgid "Set the max number of rows to {}"
 msgstr "Задать максимальное число столбцов: {}"
 
@@ -96,7 +96,7 @@ msgid "Set the max column width to {} symbols"
 msgstr "Ограничить максимальную ширину столбца {} символами"
 
 #: logic.py:346 logic.py:1161 logic.py:1180 logic.py:2666 logic.py:2686
-#: shared.py:4145
+#: shared.py:4113
 msgid "The condition \"{}\" is not observed!"
 msgstr "Условие \"{}\" не выполнено!"
 
@@ -112,8 +112,8 @@ msgstr "ОТЛАДКА"
 msgid "File \"{}\" was not found!"
 msgstr "Файл \"{}\" не найден!"
 
-#: logic.py:594 logic.py:622 logic.py:2368 logic.py:2840 logic.py:4576
-#: logic.py:4736 logic.py:4770 logic.py:4855 shared.py:2377 shared.py:5091
+#: logic.py:594 logic.py:622 logic.py:2368 logic.py:2840 logic.py:4578
+#: logic.py:4738 logic.py:4772 logic.py:4857 shared.py:2378 shared.py:5059
 msgid "Wrong input data: \"{}\"!"
 msgstr "Недопустимые входные данные: \"{}\"!"
 
@@ -141,7 +141,7 @@ msgstr "Чтение стандартного вывода не поддержи
 msgid "Custom arguments: \"{}\""
 msgstr "Дополнительные параметры: \"{}\""
 
-#: logic.py:860 logic.py:3647 logic.py:3675
+#: logic.py:860 logic.py:3648 logic.py:3676
 msgid "Failed to run \"{}\"!"
 msgstr "Не удалось запустить \"{}\"!"
 
@@ -174,8 +174,8 @@ msgid "File \"{}\" is not sortable!"
 msgstr "Файл \"{}\" не подлежит сортировке!"
 
 #: logic.py:1103 logic.py:1291 logic.py:1388 logic.py:2131 logic.py:2597
-#: logic.py:3449 logic.py:3781 logic.py:4426 shared.py:2103 shared.py:2798
-#: shared.py:3244 shared.py:4193 tests.py:84
+#: logic.py:3450 logic.py:3782 logic.py:4428 shared.py:2104 shared.py:2799
+#: shared.py:3251 shared.py:4161 tests.py:84
 msgid "Wrong input data!"
 msgstr "Недопустимые входные данные!"
 
@@ -183,16 +183,16 @@ msgstr "Недопустимые входные данные!"
 msgid "Dictionary \"{}\": Incorrect line #{}: \"{}\"!"
 msgstr "Словарь \"{}\": Неправильная строка №{}: \"{}\"!"
 
-#: logic.py:1283 logic.py:2191 logic.py:4870
+#: logic.py:1283 logic.py:2191 logic.py:4872
 msgid "Empty input is not allowed!"
 msgstr "Пустые входные данные не допускаются!"
 
-#: logic.py:1287 logic.py:2195 shared.py:2981 shared.py:3737
+#: logic.py:1287 logic.py:2195 shared.py:2982 shared.py:3705
 msgid "File \"{}\" has not been found!"
 msgstr "Файл \"{}\" не найден!"
 
 #: logic.py:1301 logic.py:2218 logic.py:2364 logic.py:2889 logic.py:2915
-#: logic.py:2999 logic.py:3618
+#: logic.py:2999 logic.py:3619
 msgid ""
 "Operation has failed!\n"
 "Details: {}"
@@ -414,23 +414,23 @@ msgstr "Нельзя скопировать \"{}\" сам в себя!"
 msgid "Failed to copy \"{}\" to \"{}\"!"
 msgstr "Не удалось скопировать \"{}\" в \"{}\"!"
 
-#: logic.py:3188
-msgid "Keys loaded in total: {}"
-msgstr "Всего загружено ключей: {}"
-
-#: logic.py:3191
-msgid "Missing sections: {}"
-msgstr "Отсутствующие разделы: {}"
+#: logic.py:3192
+msgid "Keys loaded in total:"
+msgstr "Всего загружено ключей:"
 
 #: logic.py:3195
-msgid "Missing keys: {}"
-msgstr "Отсутствующие ключи: {}"
+msgid "Missing sections:"
+msgstr "Отсутствующие разделы:"
 
-#: logic.py:3199
-msgid "Modified keys: {}"
-msgstr "Измененные ключи: {}"
+#: logic.py:3198
+msgid "Missing keys:"
+msgstr "Отсутствующие ключи:"
 
-#: logic.py:3260
+#: logic.py:3201
+msgid "Modified keys:"
+msgstr "Измененные ключи:"
+
+#: logic.py:3261
 msgid ""
 "Failed to open URL \"{}\" in a default browser!\n"
 "\n"
@@ -440,85 +440,85 @@ msgstr ""
 "\n"
 "Подробности: {}"
 
-#: logic.py:3317
+#: logic.py:3318
 msgid "Differences:"
 msgstr "Различия:"
 
-#: logic.py:3342
+#: logic.py:3343
 msgid "Texts are identical!"
 msgstr "Различий нет!"
 
-#: logic.py:3405
+#: logic.py:3406
 msgid "Shortcut \"{}\" refers to \"{}\""
 msgstr "Ссылка \"{}\" указывает на \"{}\""
 
-#: logic.py:3413
+#: logic.py:3414
 msgid "Delete the symbolic link \"{}\""
 msgstr "Удаление ярлыка \"{}\""
 
-#: logic.py:3418
+#: logic.py:3419
 msgid "Failed to remove shortcut \"{}\". Remove it manually and press OK."
 msgstr "Не удается удалить ярлык \"{}\". Удалите его вручную и нажмите OK."
 
-#: logic.py:3432 logic.py:3456
+#: logic.py:3433 logic.py:3457
 msgid "Create a symbolic link \"{}\""
 msgstr "Создание ярлыка \"{}\""
 
-#: logic.py:3437 logic.py:3465
+#: logic.py:3438 logic.py:3466
 msgid "Failed to create shortcut \"{}\". Create it manually and press OK."
 msgstr "Не удается создать ярлык \"{}\". Создайте его вручную и нажмите OK."
 
-#: logic.py:3583
+#: logic.py:3584
 msgid "Failed to load an e-mail client."
 msgstr "Не удалось загрузить почтовый клиент."
 
-#: logic.py:3621
+#: logic.py:3622
 msgid "This operation cannot be executed on your operating system."
 msgstr "Эта операция не может быть выполнена на вашей операционной системе."
 
-#: logic.py:4036 logic.py:4037 logic.py:4635 logic.py:4640 logic.py:4641
-#: logic.py:4648 logic.py:4649 logic.py:4863 logic.py:4868 logic.py:4873
-#: logic.py:4878 logic.py:4883 logic.py:4890
+#: logic.py:4038 logic.py:4039 logic.py:4637 logic.py:4642 logic.py:4643
+#: logic.py:4650 logic.py:4651 logic.py:4865 logic.py:4870 logic.py:4875
+#: logic.py:4880 logic.py:4885 logic.py:4892
 msgid "Logic error!"
 msgstr "Логическая ошибка!"
 
-#: logic.py:4103 logic.py:4111
+#: logic.py:4105 logic.py:4113
 msgid "The pool is empty!"
 msgstr "Пул пуст!"
 
-#: logic.py:4146
+#: logic.py:4148
 msgid "The operation has taken {} s."
 msgstr "Операция завершена за {} с."
 
-#: logic.py:4322
+#: logic.py:4324
 msgid "Unable to use unverified certificates!"
 msgstr "Не удается использовать неподтвержденные сертификаты!"
 
-#: logic.py:4340
+#: logic.py:4342
 msgid "[OK]: \"{}\""
 msgstr "[Успешно]: \"{}\""
 
-#: logic.py:4344
+#: logic.py:4346
 msgid "[FAILED]: \"{}\". Details: {}"
 msgstr "[ОШИБКА]: \"{}\". Подробности: {}"
 
-#: logic.py:4360
+#: logic.py:4362
 msgid "Unable to decode \"{}\"!"
 msgstr "Не удается изменить кодировку \"{}\"!"
 
-#: logic.py:4379
+#: logic.py:4381
 msgid "Wrong input data: {}!"
 msgstr "Недопустимые входные данные: \"{}\"!"
 
-#: logic.py:4418
+#: logic.py:4420
 msgid "Unexpected end of text!"
 msgstr "Неожиданный конец текста!"
 
-#: logic.py:4594
+#: logic.py:4596
 msgid ","
 msgstr "."
 
-#: logic.py:4606 shared.py:835
+#: logic.py:4608 shared.py:835
 msgid ""
 "Operation has failed!\n"
 "\n"
@@ -528,95 +528,95 @@ msgstr ""
 "\n"
 "Подробности: {}"
 
-#: logic.py:4624
+#: logic.py:4626
 msgid "Plain text (UTF-8)"
 msgstr "Обычный текст (UTF-8)"
 
-#: logic.py:4625 logic.py:4626
+#: logic.py:4627 logic.py:4628
 msgid "Web-page"
 msgstr "Веб-страница"
 
-#: logic.py:4627
+#: logic.py:4629
 msgid "All files"
 msgstr "Все файлы"
 
-#: logic.py:4632
+#: logic.py:4634
 msgid "Save As:"
 msgstr "Сохранить как:"
 
-#: logic.py:4637
+#: logic.py:4639
 msgid "Nothing to do!"
 msgstr "Действие не требуется."
 
-#: logic.py:4658 logic.py:4680
+#: logic.py:4660 logic.py:4682
 msgid "B"
 msgstr "Б"
 
-#: logic.py:4671
+#: logic.py:4673
 msgid "TiB"
 msgstr "ТиБ"
 
-#: logic.py:4673
+#: logic.py:4675
 msgid "GiB"
 msgstr "ГиБ"
 
-#: logic.py:4675
+#: logic.py:4677
 msgid "MiB"
 msgstr "МиБ"
 
-#: logic.py:4678
+#: logic.py:4680
 msgid "KiB"
 msgstr "КиБ"
 
-#: logic.py:4788
+#: logic.py:4790
 msgid "ATTENTION: Do yo really want to rewrite file \"{}\"?"
 msgstr "ВНИМАНИЕ: Перезаписать файл \"{}\"?"
 
-#: logic.py:4818 logic.py:4851
+#: logic.py:4820 logic.py:4853
 msgid "sec"
 msgstr "сек"
 
-#: logic.py:4839
+#: logic.py:4841
 msgid "yrs"
 msgstr "лет"
 
-#: logic.py:4841
+#: logic.py:4843
 msgid "mths"
 msgstr "мес"
 
-#: logic.py:4843
+#: logic.py:4845
 msgid "wks"
 msgstr "нед"
 
-#: logic.py:4845
+#: logic.py:4847
 msgid "days"
 msgstr "дн"
 
-#: logic.py:4847
+#: logic.py:4849
 msgid "hrs"
 msgstr "ч"
 
-#: logic.py:4849
+#: logic.py:4851
 msgid "min"
 msgstr "мин"
 
-#: logic.py:4865
+#: logic.py:4867
 msgid "Operation has been canceled."
 msgstr "Операция отменена."
 
-#: logic.py:4875
+#: logic.py:4877
 msgid "Not implemented yet!"
 msgstr "Еще не реализовано!"
 
-#: logic.py:4880
+#: logic.py:4882
 msgid "Empty output is not allowed!"
 msgstr "Пустые выходные данные не допускаются!"
 
-#: logic.py:4885
+#: logic.py:4887
 msgid "{} blocks have been deleted"
 msgstr "{} блоков удалено"
 
-#: logic.py:4892
+#: logic.py:4894
 msgid "{} matches"
 msgstr "{} совпадений"
 
@@ -632,7 +632,7 @@ msgstr "Учетная запись: \"{}\""
 msgid "Password: \"{}\""
 msgstr "Пароль: \"{}\""
 
-#: password/gui.py:34 shared.py:3928
+#: password/gui.py:34 shared.py:3896
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -664,19 +664,19 @@ msgstr ""
 "получили\n"
 "\"{}\"."
 
-#: shared.py:68 shared.py:83 shared.py:4346 shared.py:4364
+#: shared.py:68 shared.py:83 shared.py:4314 shared.py:4332
 msgid "Compare texts:"
 msgstr "Сравните тексты:"
 
-#: shared.py:635 shared.py:709 shared.py:1302 shared.py:1591 shared.py:2664
+#: shared.py:635 shared.py:709 shared.py:1302 shared.py:1592 shared.py:2665
 msgid "Close"
 msgstr "Закрыть"
 
-#: shared.py:636 shared.py:1592
+#: shared.py:636 shared.py:1593
 msgid "Close this window"
 msgstr "Закрыть это окно"
 
-#: shared.py:710 shared.py:1301 shared.py:2663 shared.py:3940
+#: shared.py:710 shared.py:1301 shared.py:2664 shared.py:3908
 msgid "Reject and close"
 msgstr "Отказаться и закрыть"
 
@@ -692,7 +692,7 @@ msgstr "Восстановить текст"
 msgid "Save"
 msgstr "Сохранить"
 
-#: shared.py:726 shared.py:1315 shared.py:2671 shared.py:3932 shared.py:3946
+#: shared.py:726 shared.py:1315 shared.py:2672 shared.py:3900 shared.py:3914
 msgid "Accept and close"
 msgstr "Принять и закрыть"
 
@@ -708,92 +708,84 @@ msgstr "Очистить поле"
 msgid "Clear"
 msgstr "Очистить"
 
-#: shared.py:1316 shared.py:2672
+#: shared.py:1316 shared.py:2673
 msgid "Save and close"
 msgstr "Запомнить и выйти"
 
-#: shared.py:1585
+#: shared.py:1586
 msgid "Toggle all"
 msgstr "Переключить все"
 
-#: shared.py:1586
+#: shared.py:1587
 msgid "Mark/unmark all checkboxes"
 msgstr "Добавить/убрать все пометы"
 
-#: shared.py:1618
+#: shared.py:1619
 msgid "Select files:"
 msgstr "Выберите файлы:"
 
-#: shared.py:1793 shared.py:1808 shared.py:1968 shared.py:2971 shared.py:3012
-#: shared.py:3014
+#: shared.py:1794 shared.py:1809 shared.py:1969 shared.py:2972 shared.py:3013
+#: shared.py:3015
 msgid "Please wait..."
 msgstr "Подождите..."
 
-#: shared.py:1811 shared.py:1826 shared.py:1971
+#: shared.py:1812 shared.py:1827 shared.py:1972
 msgid "The required widget has not been created yet!"
 msgstr "Требуемый виджет еще не был создан!"
 
-#: shared.py:2151
+#: shared.py:2152
 msgid "Clipboard is empty!"
 msgstr "Буфер обмена пуст!"
 
-#: shared.py:2181
+#: shared.py:2182
 msgid "Paste a special symbol"
 msgstr "Вставить специальный символ"
 
-#: shared.py:2453
+#: shared.py:2454
 msgid "Remove item #{}"
 msgstr "Удаление элемента №{}"
 
-#: shared.py:2456
+#: shared.py:2457
 msgid "No item #{}!"
 msgstr "Элемент №{} отсутствует!"
 
-#: shared.py:2530
+#: shared.py:2531
 msgid "Item \"{}\" is not in list!"
 msgstr "Элемент \"{}\" не в списке!"
 
-#: shared.py:2889
+#: shared.py:2890
 msgid "Set the geometry to \"{}x{}+{}+{}\""
 msgstr "Изменение геометрии виджета на \"{}x{}+{}+{}\""
 
-#: shared.py:3348
+#: shared.py:3355
 msgid "Widget width ({}) should not exceed screen width ({})!"
 msgstr "Ширина виджета ({}) не должна превышать ширины экрана ({})!"
 
-#: shared.py:3359
+#: shared.py:3366
 msgid "Widget height ({}) should not exceed screen height ({})!"
 msgstr "Высота виджета ({}) не должна превышать высоту экрана ({})!"
 
-#: shared.py:3388
+#: shared.py:3395
 msgid "Widget 1 geometry: {}x{}+{}+{}"
 msgstr "Геометрия виджета 1: {}x{}+{}+{}"
 
-#: shared.py:3394
+#: shared.py:3401
 msgid "Widget 2 geometry: {}x{}+{}+{}"
 msgstr "Геометрия виджета 2: {}x{}+{}+{}"
 
-#: shared.py:3491
+#: shared.py:3498
 msgid "Wrong font: \"{}\"!"
 msgstr "Неправильный шрифт: \"{}\"!"
 
-#: shared.py:3542
+#: shared.py:3574
 msgid "Save geometry: {}"
 msgstr "Сохранение геометрии: {}"
 
-#: shared.py:3551
+#: shared.py:3583
 msgid "Restore geometry: {}"
 msgstr "Восстановление геометрии: {}"
 
-#: shared.py:3570
-msgid "Failed to change window properties!"
-msgstr "Не удалось изменить свойства окна!"
-
-#: shared.py:3655
-msgid "Failed to get the window handle!"
-msgstr "Не удалось получить дескриптор окна!"
-
-#: shared.py:3700 shared.py:3710 shared.py:3720 shared.py:4169
+#: shared.py:3668 shared.py:3678 shared.py:3688 shared.py:4137
 msgid ""
 "The operation has failed!\n"
 "\n"
@@ -803,103 +795,103 @@ msgstr ""
 "\n"
 "Подробности: {}"
 
-#: shared.py:3796 shared.py:4154
+#: shared.py:3764 shared.py:4122
 msgid "Test:"
 msgstr "Тест:"
 
-#: shared.py:3924
+#: shared.py:3892
 msgid "Yes"
 msgstr "Да"
 
-#: shared.py:3925
+#: shared.py:3893
 msgid "No"
 msgstr "Нет"
 
-#: shared.py:4109
+#: shared.py:4077
 msgid "N/A"
 msgstr "Н/Д"
 
-#: shared.py:4121
+#: shared.py:4089
 msgid "SECTION"
 msgstr "СЕКЦИЯ"
 
-#: shared.py:4121
+#: shared.py:4089
 msgid "KEY"
 msgstr "КЛЮЧ"
 
-#: shared.py:4121
+#: shared.py:4089
 msgid "VALUE"
 msgstr "ЗНАЧЕНИЕ"
 
-#: shared.py:4141
+#: shared.py:4109
 msgid "An unknown color \"{}\"!"
 msgstr "Неизвестный цвет \"{}\"!"
 
-#: shared.py:4186
+#: shared.py:4154
 msgid "Failed to enable key combination \"{}\"!"
 msgstr "Не удалось задействовать сочетание клавиш \"{}\"!"
 
-#: shared.py:4190
+#: shared.py:4158
 msgid "Wrong input data: \"{}\""
 msgstr "Недопустимые входные данные: \"{}\"!"
 
-#: shared.py:4552
+#: shared.py:4520
 msgid "Search:"
 msgstr "Поиск:"
 
-#: shared.py:4555
+#: shared.py:4523
 msgid "Enter a string to search:"
 msgstr "Строка для поиска:"
 
-#: shared.py:4574
+#: shared.py:4542
 msgid "Case-sensitive search"
 msgstr "Поиск с учетом регистра"
 
-#: shared.py:4585
+#: shared.py:4553
 msgid "Loop"
 msgstr "Зациклить"
 
-#: shared.py:5008
+#: shared.py:4976
 msgid "No more matches, continuing from the bottom!"
 msgstr "Совпадений больше нет, поиск продолжен с конца!"
 
-#: shared.py:5014 shared.py:5041
+#: shared.py:4982 shared.py:5009
 msgid "No more matches!"
 msgstr "Совпадений больше нет!"
 
-#: shared.py:5017 shared.py:5044
+#: shared.py:4985 shared.py:5012
 msgid "No matches!"
 msgstr "Совпадений нет!"
 
-#: shared.py:5036
+#: shared.py:5004
 msgid "No more matches, continuing from the top!"
 msgstr "Совпадений больше нет, поиск продолжен с начала!"
 
-#: shared.py:5070
+#: shared.py:5038
 msgid "Failed to find reference \"{}\" with index {}!"
 msgstr "Не удалось найти ссылку \"{}\" с индексом {}!"
 
-#: shared.py:5086
+#: shared.py:5054
 msgid "Pattern: \"{}\"; index: {}"
 msgstr "Образец: \"{}\"; индекс: {}"
 
-#: shared.py:5111
+#: shared.py:5079
 msgid "No reference has been found!"
 msgstr "Ссылка не найдена!"
 
-#: shared.py:5139
+#: shared.py:5107
 msgid "The start of the text has been reached!"
 msgstr "Достигнуто начало текста!"
 
-#: shared.py:5154 shared.py:5186
+#: shared.py:5122 shared.py:5154
 msgid "Distance: {} symbols"
 msgstr "Расстояние: {} символов"
 
-#: shared.py:5171
+#: shared.py:5139
 msgid "The end of the text has been reached!"
 msgstr "Достигнут конец текста!"
 
-#: shared.py:5265 tests.py:21
+#: shared.py:5233 tests.py:21
 msgid "Scrollable widget"
 msgstr "Прокручиваемый виджет"
 
@@ -1046,6 +1038,12 @@ msgstr "Привязка: {}"
 #: tests.py:1314
 msgid "Text:"
 msgstr "Текст:"
+
+#~ msgid "Failed to change window properties!"
+#~ msgstr "Не удалось изменить свойства окна!"
+
+#~ msgid "Failed to get the window handle!"
+#~ msgstr "Не удалось получить дескриптор окна!"
 
 #~ msgid "You need to install \"{}\"!"
 #~ msgstr "Необходимо установить \"{}\"!"
