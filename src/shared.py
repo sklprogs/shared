@@ -1360,6 +1360,7 @@ class Entry:
         self.type = 'Entry'
         self.parent = parent
         self.side = side
+        #NOTE: ipadx and ipady are passed but do not seem to work
         self.ipadx = ipadx
         self.ipady = ipady
         self.fill_ = fill
@@ -3024,7 +3025,8 @@ class Button:
                  ,bg=None,bg_focus=None,fg=None,fg_focus=None
                  ,bd=0,hdelay=800,hbg='#ffffe0',hdir='top'
                  ,hbwidth=1,hbcolor='navy',bindings=[]
-                 ,fill='both',Focus=False,font=None
+                 ,fill='both',Focus=False,font=None,ipadx=None
+                 ,ipady=None
                  ):
         self.Status = False
         self.type = 'Button'
@@ -3050,6 +3052,9 @@ class Button:
         self.Focus = Focus
         self.text = lg.com.sanitize(text)
         self.width = width
+        #NOTE: ipadx and ipady are passed but do not seem to work
+        self.ipadx = ipadx
+        self.ipady = ipady
         if active:
             self.on_img = com.get_image (path = active
                                         ,width = self.width
@@ -3078,6 +3083,8 @@ class Button:
                              ,font = font
                              ,on_img = self.on_img
                              ,off_img = self.off_img
+                             ,ipadx = self.ipadx
+                             ,ipady = self.ipady
                              )
         self.widget = self.gui.widget
         self.set_title(self.text)

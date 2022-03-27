@@ -3181,24 +3181,25 @@ class Config:
         else:
             com.cancel(f)
     
+    def _indent(self,lst):
+        keys = [' ' * 4 + item for item in sorted(lst)]
+        return '\n'.join(keys)
+    
     def report(self):
         f = '[shared] logic.Config.report'
         if self.Success:
             mes = []
-            sub = _('Keys loaded in total: {}').format(self.total_keys)
-            mes.append(sub)
+            mes.append(_('Keys loaded in total:'))
+            mes.append(self._indent([str(self.total_keys)]))
             if self.no_sections:
-                sub = _('Missing sections: {}')
-                sub = sub.format('; '.join(sorted(self.no_sections)))
-                mes.append(sub)
+                mes.append(_('Missing sections:'))
+                mes.append(self._indent(self.no_sections))
             if self.no_keys:
-                sub = _('Missing keys: {}')
-                sub = sub.format('; '.join(sorted(self.no_keys)))
-                mes.append(sub)
+                mes.append(_('Missing keys:'))
+                mes.append(self._indent(self.no_keys))
             if self.mod_keys:
-                sub = _('Modified keys: {}')
-                sub = sub.format('; '.join(sorted(self.mod_keys)))
-                mes.append(sub)
+                mes.append(_('Modified keys:'))
+                mes.append(self._indent(self.mod_keys))
             mes = '\n'.join(mes)
             if self.no_keys or self.no_sections:
                 objs.get_mes(f,mes).show_warning()

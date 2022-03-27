@@ -785,7 +785,7 @@ class Button:
                  ,height=36,width=36,side='left'
                  ,expand=0,bg=None,bg_focus=None
                  ,fg=None,fg_focus=None,bd=0,fill='both'
-                 ,font=None
+                 ,font=None,ipadx=None,ipady=None
                  ):
         self.parent = parent
         self.bd = bd
@@ -801,6 +801,8 @@ class Button:
         self.width = width
         self.on_img = on_img
         self.off_img = off_img
+        self.ipadx = ipadx
+        self.ipady = ipady
         self.set_gui()
     
     def set_gui(self):
@@ -833,6 +835,8 @@ class Button:
         self.widget.pack (expand = self.expand
                          ,side = self.side
                          ,fill = self.fill
+                         ,ipadx = self.ipadx
+                         ,ipady = self.ipady
                          )
     
     def set_title(self,button_text=''):
