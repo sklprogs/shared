@@ -1,0 +1,16 @@
+(English)
+- Use DoubleClick in ListBoxC to select & close (if not multichoice)
+- Delete obj.type (e.g., top.type == 'Toplevel') from all projects
+- Delete Selection class in shared and all projects
+- EntryC, Entry: rename 'clear_text' to 'clear' in all projects
+- Elaborate 'sh.Input' error messages (since we always get a string
+  when reading TextBox/Entry)
+- Delete 'sh.Input.not_none'
+- (?) Remove unnecessary files in the build
+
+(Russian)
+! Text: не назначать self.text там, где это не нужно
+! ListBox: заменить аргумент lst на tuple
+! ListBox: возможность скрытия по Esc
+! создавать горизонтальный ползунок для ListBox, если текст в него
+  не вмещается. Проверить на mclient.History

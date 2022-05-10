@@ -1,0 +1,23 @@
+
+- Text.delete_embraced_figs: the very 1st word is not processed
+- Panes4 or SearchBox: search does not work for duplicates of the very
+  1st word
+- pasting on selection does not erase it
+- STOP_MES does not work for all messages (suppressing messages from
+  shared, but still processing messages from the main program) - maybe,
+  sh.lg. is to blame
+- tests.com.textboxc: a wrong selection is returned when searching
+  from the end
+- MessageBuilder: it is impossible to quit the GUI program correctly
+  if a message is ignored several times in a row
+- sh.Path.basename works incorrectly for cases like file.dict.dz
+- Use ord() just like in mclient to get rid of chars not supported
+  by Tcl before pasting the text into text widgets
+
+(Russian)
+- objs.pdir: В сборке возвращает некорректный путь, из-за этого нельзя
+  найти, например, resources
+- Table.print: если в БД 3 записи и используется Shorten=1, то будут
+  показаны только записи №1 и 3.
+- ListBox: баг (проявляется, например, в Commands.handle_dic): вывод
+  ListBox не пустой при закрытии окна с активным выделением в ListBox

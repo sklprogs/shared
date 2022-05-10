@@ -1,0 +1,6 @@
+- When a widget (e.g., 'MessageBuilder') is based on Top, calling
+  'Top.close' in inappropriate places (e.g., in
+  'MessageBuilder.__init__' after packing the widget) results in
+  'Top' having zero sizes (even when 'Geometry.set' is used).
+  This is avoided if we set 'AutoCr' to 'False' when creating widgets
+  requiring 'Top.close' before 'show' for the 1st time (e.g., 'EntryC').
