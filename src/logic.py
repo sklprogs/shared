@@ -4048,8 +4048,8 @@ class Objects:
         through different programs all of them using 'shared.py').
     '''
     def __init__(self):
-        self.morph = self.pretty_table = self.pdir = self.online \
-        = self.tmpfile = self.os = self.mes = self.sections = None
+        self.morph = self.pdir = self.online = self.tmpfile = self.os \
+                   = self.mes = self.sections = None
         self.icon = ''
     
     def get_sections(self):
@@ -4092,12 +4092,6 @@ class Objects:
             import pymorphy2
             self.morph = pymorphy2.MorphAnalyzer()
         return self.morph
-
-    def get_pretty_table(self):
-        if not self.pretty_table:
-            from prettytable import PrettyTable
-            self.pretty_table = PrettyTable
-        return self.pretty_table
 
 
 
@@ -4170,85 +4164,6 @@ class Timer:
         mes = _('The operation has taken {} s.').format(delta)
         objs.get_mes(self.func_title,mes,True).show_debug()
         return delta
-
-
-
-class Table:
-
-    def __init__ (self,headers,rows
-                 ,Shorten=True,MaxRow=18
-                 ,MaxRows=20
-                 ):
-        f = '[shared] logic.Table.__init__'
-        self.headers = headers
-        self.rows = rows
-        self.Shorten = Shorten
-        self.MaxRow = MaxRow
-        self.MaxRows = MaxRows
-        if self.headers and self.rows:
-            self.Success = True
-        else:
-            self.Success = False
-            com.rep_empty(f)
-
-    def _shorten_headers(self):
-        self._headers = [Text(text=header).shorten(max_len=self.MaxRow)\
-                         for header in self.headers
-                        ]
-        # prettytable.py, 302: Exception: Field names must be unique!
-        headers = list(set(self.headers))
-        ''' prettytable.py, 818: Exception: Row has incorrect number of
-            values
-        '''
-        if len(headers) != len(self.headers):
-            result = List (lst1 = headers
-                          ,lst2 = self.headers
-                          ).equalize()
-            if result:
-                self.headers = result[0]
-
-    def _shorten_rows(self):
-        f = '[shared] logic.Table._shorten_rows'
-        if self.MaxRows < 2 or self.MaxRows > len(self.rows):
-            self.MaxRows = len(self.rows)
-            mes = _('Set the max number of rows to {}')
-            mes = mes.format(self.MaxRows)
-            objs.get_mes(f,mes,True).show_info()
-        self.MaxRows = int(self.MaxRows / 2)
-        pos3 = len(self.rows)
-        pos2 = pos3 - self.MaxRows
-        self.rows = self.rows[0:self.MaxRows] + self.rows[pos2:pos3]
-
-    def _shorten_row(self):
-        # Will not be assigned without using 'for i in range...'
-        for i in range(len(self.rows)):
-            if isinstance(self.rows[i],tuple):
-                self.rows[i] = list(self.rows[i])
-            for j in range(len(self.rows[i])):
-                if isinstance(self.rows[i][j],str):
-                    if len(self.rows[i][j]) > self.MaxRow:
-                        self.rows[i][j] = self.rows[i][j][0:self.MaxRow]
-
-    def shorten(self):
-        f = '[shared] logic.Table.shorten'
-        if self.Success:
-            if self.Shorten:
-                self._shorten_headers()
-                self._shorten_rows()
-                self._shorten_row()
-        else:
-            com.cancel(f)
-
-    def print(self):
-        f = '[shared] logic.Table.print'
-        if self.Success:
-            self.shorten()
-            obj = objs.get_pretty_table()(self.headers)
-            for row in self.rows:
-                obj.add_row(row)
-            print(obj)
-        else:
-            com.cancel(f)
 
 
 

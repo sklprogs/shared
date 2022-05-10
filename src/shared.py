@@ -429,13 +429,6 @@ class Shortcut(lg.Shortcut):
 
 
 
-class Table(lg.Table):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
 class Text(lg.Text):
     
     def __init__(self,*args,**kwargs):
