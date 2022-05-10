@@ -15,6 +15,13 @@ FONT1 = 'Serif 14'
 FONT2 = 'Sans 11'
 
 
+class Button(gi.Button):
+    
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+
+
+
 class DummyMessage:
 
     def __init__(self,*args):
