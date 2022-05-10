@@ -27,7 +27,7 @@ import webbrowser
 import urllib.request, urllib.parse
 import difflib
 import locale
-from skl_shared.localize import _
+from skl_shared_qt.localize import _
 
 
 gpl3_url_en = 'http://www.gnu.org/licenses/gpl.html'
