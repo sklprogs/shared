@@ -7,6 +7,36 @@ from skl_shared_qt.localize import _
 import skl_shared_qt.shared as sh
 
 
+class OptionMenu:
+    
+    def __init__(self,parent):
+        self.parent = parent
+        self.widget = PyQt5.QtWidgets.QComboBox(self.parent)
+    
+    def enable(self):
+        self.widget.setEnabled(True)
+    
+    def disable(self):
+        self.widget.setEnabled(False)
+        
+    def set(self,item):
+        self.widget.setCurrentText(item)
+    
+    def fill(self,items):
+        self.widget.clear()
+        self.widget.addItems(items)
+
+    def get(self):
+        return self.widget.currentText()
+    
+    def get_index(self):
+        return self.widget.currentIndex()
+    
+    def set_index(self,index_):
+        return self.widget.setCurrentIndex(index_)
+
+
+
 class Button:
     
     def __init__ (self,parent,text='',action=None,width=36

@@ -15,6 +15,68 @@ FONT1 = 'Serif 14'
 FONT2 = 'Sans 11'
 
 
+class OptionMenu:
+    
+    def __init__(self,parent):
+        self.parent = parent
+        self.gui = gi.OptionMenu(self.parent)
+    
+    def enable(self):
+        self.gui.enable()
+    
+    def disable(self):
+        self.gui.disable()
+        
+    def set(self,item):
+        f = '[shared] shared.OptionMenu.set'
+        item = str(item)
+        if item in self.items:
+            self.gui.set(item)
+        else:
+            mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
+            mes = mes.format(item,'; '.join(self.items))
+            objs.get_mes(f,mes).show_error()
+    
+    def fill(self):
+        self.gui.fill(self.items)
+
+    def reset(self,items=[],default=None):
+        self.items = [str(item) for item in items]
+        self.fill()
+        if default is not None:
+            self.set(default)
+        if len(self.items) < 2:
+            self.disable()
+        else:
+            self.enable()
+
+    def get(self):
+        return self.gui.get()
+    
+    def get_index(self):
+        return self.gui.get_index()
+    
+    def set_index(self,index_):
+        return self.gui.set_index(index_)
+
+    def set_prev(self):
+        index_ = self.get_index()
+        if index_ == 0:
+            index_ = len(self.items) - 1
+        else:
+            index_ -= 1
+        self.set_index(index_)
+
+    def set_next(self):
+        index_ = self.get_index()
+        if index_ == len(self.items) - 1:
+            index_ = 0
+        else:
+            index_ += 1
+        self.set_index(index_)
+
+
+
 class Button(gi.Button):
     
     def __init__(self,*args,**kwargs):
