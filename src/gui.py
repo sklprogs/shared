@@ -7,6 +7,25 @@ from skl_shared_qt.localize import _
 import skl_shared_qt.shared as sh
 
 
+class Top(PyQt5.QtWidgets.QWidget):
+
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.set_gui()
+    
+    def add_widget(self,widget):
+        self.layout.addWidget(widget)
+    
+    def bind(self,hotkey,action):
+        PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey),self).activated.connect(action)
+    
+    def set_gui(self):
+        self.layout = PyQt5.QtWidgets.QVBoxLayout()
+        self.layout.setContentsMargins(0,0,0,0)
+        self.setLayout(self.layout)
+
+
+
 class OptionMenu:
     
     def __init__(self,parent):

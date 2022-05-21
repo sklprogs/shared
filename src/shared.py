@@ -15,11 +15,47 @@ FONT1 = 'Serif 14'
 FONT2 = 'Sans 11'
 
 
+class Top:
+
+    def __init__(self):
+        self.gui = gi.Top()
+    
+    def add_widget(self,item):
+        if hasattr(item,'widget'):
+            self.gui.add_widget(item.widget)
+        else:
+            mes = _('Wrong input data!')
+            objs.get_mes(f,mes,True).show_error()
+    
+    def show(self):
+        self.gui.show()
+    
+    def close(self):
+        self.gui.close()
+    
+    def bind(self,hotkey,action):
+        self.gui.bind(hotkey,action)
+
+
+
+class TestTop(Top):
+    
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.set_bindings()
+    
+    def set_bindings(self):
+        self.bind('Ctrl+Q',self.close)
+        self.bind('Esc',self.close)
+
+
+
 class OptionMenu:
     
     def __init__(self,parent):
         self.parent = parent
         self.gui = gi.OptionMenu(self.parent)
+        self.widget = self.gui.widget
     
     def enable(self):
         self.gui.enable()
