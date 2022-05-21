@@ -14,8 +14,20 @@ class Entry:
         self.parent = None
         self.set_gui()
     
+    def bind(self,hotkey,action):
+        PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey),self.widget).activated.connect(action)
+    
     def set_gui(self):
         self.widget = PyQt5.QtWidgets.QLineEdit(self.parent)
+    
+    def clear(self):
+        self.widget.clear()
+    
+    def get(self):
+        return self.widget.text()
+    
+    def insert(self,text):
+        self.widget.setText(text)
     
     def focus(self):
         self.widget.setFocus()
@@ -35,6 +47,7 @@ class Top(PyQt5.QtWidgets.QWidget):
         PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey),self).activated.connect(action)
     
     def set_gui(self):
+        self.widget = self
         self.layout = PyQt5.QtWidgets.QVBoxLayout()
         self.layout.setContentsMargins(0,0,0,0)
         self.setLayout(self.layout)

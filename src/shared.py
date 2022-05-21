@@ -21,6 +21,18 @@ class Entry:
         self.gui = gi.Entry()
         self.widget = self.gui.widget
     
+    def bind(self,hotkey,action):
+        self.gui.bind(hotkey,action)
+    
+    def clear(self):
+        self.gui.clear()
+    
+    def get(self):
+        return self.gui.get()
+    
+    def insert(self,text):
+        self.gui.insert(str(text))
+    
     def focus(self):
         self.gui.focus()
 
@@ -30,6 +42,7 @@ class Top:
 
     def __init__(self):
         self.gui = gi.Top()
+        self.widget = self.gui.widget
     
     def add_widget(self,item):
         f = '[shared] shared.Top.add_widget'
