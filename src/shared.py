@@ -52,7 +52,7 @@ class TestTop(Top):
 
 class OptionMenu:
     
-    def __init__(self,parent):
+    def __init__(self,parent=None):
         self.parent = parent
         self.gui = gi.OptionMenu(self.parent)
         self.widget = self.gui.widget

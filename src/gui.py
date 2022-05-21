@@ -29,7 +29,7 @@ class Top(PyQt5.QtWidgets.QWidget):
 
 class OptionMenu:
     
-    def __init__(self,parent):
+    def __init__(self,parent=None):
         self.parent = parent
         self.widget = PyQt5.QtWidgets.QComboBox(self.parent)
     
@@ -59,7 +59,7 @@ class OptionMenu:
 
 class Button:
     
-    def __init__ (self,parent,text='',action=None,width=36
+    def __init__ (self,parent=None,text='',action=None,width=36
                  ,height=36,hint='',active='',inactive=''
                  ):
         self.Status = False
@@ -154,7 +154,7 @@ class MessageBuilder:
     ''' Not using tkinter.messagebox because it blocks main GUI (even
         if we specify a non-root parent).
     '''
-    def __init__(self,parent):
+    def __init__(self,parent=None):
         self.parent = parent
         self.widget = self.parent.widget
     
