@@ -8,6 +8,20 @@ from skl_shared_qt.localize import _
 import skl_shared_qt.shared as sh
 
 
+class Entry:
+    
+    def __init__(self,parent=None):
+        self.parent = None
+        self.set_gui()
+    
+    def set_gui(self):
+        self.widget = PyQt5.QtWidgets.QLineEdit(self.parent)
+    
+    def focus(self):
+        self.widget.setFocus()
+
+
+
 class Top(PyQt5.QtWidgets.QWidget):
 
     def __init__(self,*args,**kwargs):

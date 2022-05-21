@@ -15,12 +15,24 @@ FONT1 = 'Serif 14'
 FONT2 = 'Sans 11'
 
 
+class Entry:
+    
+    def __init__(self):
+        self.gui = gi.Entry()
+        self.widget = self.gui.widget
+    
+    def focus(self):
+        self.gui.focus()
+
+
+
 class Top:
 
     def __init__(self):
         self.gui = gi.Top()
     
     def add_widget(self,item):
+        f = '[shared] shared.Top.add_widget'
         if hasattr(item,'widget'):
             self.gui.add_widget(item.widget)
         else:
