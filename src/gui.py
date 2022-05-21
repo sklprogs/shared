@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
+import sys
 import PyQt5
 import PyQt5.QtWidgets
 from skl_shared_qt.localize import _
@@ -185,19 +186,16 @@ class Objects:
         self.root = self.warning = self.error = self.question \
                   = self.info = self.entry = None
     
-    def get_root(self,Close=True):
+    def get_root(self):
         if not self.root:
-            self.root = Root()
-            if Close:
-                self.root.close()
+            self.root = PyQt5.QtWidgets.QApplication(sys.argv)
         return self.root
 
-    def start(self,Close=True):
-        self.get_root(Close=Close)
+    def start(self):
+        self.get_root()
 
     def end(self):
-        self.get_root().kill()
-        self.root.run()
+        sys.exit(self.root.exec())
 
     def get_warning(self):
         if not self.warning:
