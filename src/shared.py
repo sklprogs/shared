@@ -506,8 +506,8 @@ class Objects(lg.Objects):
             self.waitbox = WaitBox(icon)
         return self.waitbox
     
-    def get_root(self,Close=True):
-        return gi.objs.get_root(Close)
+    def get_root(self):
+        return gi.objs.get_root()
     
     def get_error(self):
         if self.error is None:
