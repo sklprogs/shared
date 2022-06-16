@@ -391,6 +391,13 @@ class Shortcut(lg.Shortcut):
 
 
 
+class Text(lg.Text):
+    
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+
+
+
 class TextDic(lg.TextDic):
     
     def __init__(self,*args,**kwargs):

@@ -446,7 +446,7 @@ class MessageBuilder:
                 prefix = 'question'
             else:
                 prefix = 'error'
-            self.icon = objs.get_pdir().add ('..','resources'
+            self.icon = objs.get_pdir().add ('..','resources_qt'
                                             ,prefix + '.gif'
                                             )
         if not os.path.exists(self.icon):

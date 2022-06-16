@@ -3,10 +3,11 @@
 
 import io
 import random
-from skl_shared.localize import _
-import skl_shared.shared as sh
-import skl_shared.image.controller as im
-import skl_shared.password.controller as pw
+
+from skl_shared_qt.localize import _
+import skl_shared_qt.shared as sh
+import skl_shared_qt.image.controller as im
+import skl_shared_qt.password.controller as pw
 
 
 ICON = sh.objs.get_pdir().add('..','resources','icon_64x64_cpt.gif')
