@@ -521,166 +521,26 @@ class Objects(lg.Objects):
             self.error = gi.Message().get_error()
         return self.error
     
+    def get_warning(self):
+        if self.warning is None:
+            self.warning = gi.Message().get_warning()
+        return self.warning
+    
     def get_debug(self):
         # Reusing the same 'info' object may result in GUI glitches
         if self.debug is None:
-            self.debug = MessageBuilder (level = _('INFO')
-                                        ,Single = True
-                                        ,YesNo = False
-                                        )
+            self.debug = gi.Message().get_debug()
         return self.debug
     
     def get_info(self):
         if self.info is None:
-            self.info = MessageBuilder (level = _('INFO')
-                                       ,Single = True
-                                       ,YesNo = False
-                                       )
+            self.info = gi.Message().get_info()
         return self.info
     
     def get_question(self):
         if self.question is None:
-            self.question = MessageBuilder (level = _('QUESTION')
-                                           ,Single = False
-                                           ,YesNo = True
-                                           )
+            self.question = gi.Message().get_question()
         return self.question
-
-
-
-class MessageBuilder:
-
-    def __init__(self,level,Single=True,YesNo=False):
-        self.level = level
-        self.Single = Single
-        self.YesNo = YesNo
-        self.logic = lg.MessageBuilder(self.level)
-        self.parent = Top()
-        self.widget = self.parent.widget
-        self.gui = gi.MessageBuilder(self.parent)
-        Geometry(parent=self.parent).set('400x250')
-        self.set_frames()
-        self.txt = TextBox(self.frm_tpr)
-        self.set_buttons()
-        self.set_icon()
-        self.set_image()
-        self.set_bindings()
-    
-    def update(self,text=''):
-        #NOTE: Control-c does not work with read-only fields
-        self.txt.clear_text()
-        self.txt.insert(text)
-    
-    def set_bindings(self):
-        com.bind (obj = self
-                 ,bindings = ('<Control-q>','<Control-w>','<Escape>')
-                 ,action = self.close_no
-                 )
-        self.widget.protocol("WM_DELETE_WINDOW",self.close)
-    
-    def set_frames(self):
-        self.frm_prm = Frame (parent = self.gui.parent)
-        self.frm_top = Frame (parent = self.frm_prm
-                             ,side = 'top'
-                             )
-        self.frm_btm = Frame (parent = self.frm_prm
-                             ,expand = False
-                             ,side = 'bottom'
-                             )
-        self.frm_tpl = Frame (parent = self.frm_top
-                             ,expand = False
-                             ,side = 'left'
-                             )
-        self.frm_tpr = Frame (parent = self.frm_top
-                             ,side = 'right'
-                             ,propag = False
-                             )
-        self.frm_btl = Frame (parent = self.frm_btm
-                             ,side = 'left'
-                             )
-        self.frm_btr = Frame (parent = self.frm_btm
-                             ,side = 'right'
-                             )
-    
-    def set_buttons(self):
-        if self.YesNo:
-            YesName = _('Yes')
-            NoName = _('No')
-        else:
-            YesName = 'OK'
-            NoName = _('Cancel')
-        if self.Single:
-            self.btn_yes = Button (parent = self.frm_btl
-                                  ,action = self.close_yes
-                                  ,hint = _('Accept and close')
-                                  ,text = YesName
-                                  ,Focus = 1
-                                  ,side = 'right'
-                                  )
-        else:
-            self.btn_no = Button (parent = self.frm_btl
-                                 ,action = self.close_no
-                                 ,hint = _('Reject and close')
-                                 ,text = NoName
-                                 ,side = 'left'
-                                 )
-            self.btn_yes = Button (parent = self.frm_btr
-                                  ,action = self.close_yes
-                                  ,hint = _('Accept and close')
-                                  ,text = YesName
-                                  ,Focus = 1
-                                  ,side = 'right'
-                                  )
-    
-    def close_yes(self,event=None):
-        self.Yes = True
-        self.close()
-
-    def close_no(self,event=None):
-        self.Yes = False
-        self.close()
-    
-    def ask(self,event=None):
-        return self.Yes
-    
-    def show(self,event=None):
-        self.btn_yes.focus()
-        self.gui.show()
-    
-    def close(self,event=None):
-        self.gui.close()
-    
-    def reset(self,title='',text=''):
-        self.logic.reset (text = text
-                         ,title = title
-                         )
-        self.update(self.logic.text)
-        self.set_title()
-    
-    def set_title(self):
-        self.gui.set_title(self.logic.title)
-    
-    def set_icon(self):
-        f = '[shared] shared.MessageBuilder.set_icon'
-        if self.logic.icon and os.path.exists(self.logic.icon):
-            self.gui.set_icon(self.logic.icon)
-        else:
-            com.rep_empty(f)
-
-    def set_image(self,event=None):
-        f = '[shared] shared.MessageBuilder.set_image'
-        if self.logic.icon and os.path.exists(self.logic.icon):
-            iimage = self.gui.set_image (path = self.logic.icon
-                                        ,obj = self.frm_tpl
-                                        )
-            ''' We need to assign self.variable to Label, otherwise,
-                it gets destroyed.
-            '''
-            self.lbl_img = Label (parent = self.frm_tpl
-                                 ,image = iimage
-                                 )
-        else:
-            com.rep_empty(f)
 
 
 
@@ -688,15 +548,17 @@ class Message:
 
     def __init__(self,func,message,Silent=False):
         self.func = func
-        sub = _('Code block: {}').format(func)
-        self.message = '{}\n\n{}'.format(message,sub)
+        self.message = str(message)
         self.Silent = Silent
+        self.set_detailed()
 
+    def set_detailed(self):
+        sub = _('Code block: {}').format(self.func)
+        self.detailed = '{}\n\n{}'.format(self.message,sub)
+    
     def show_debug(self):
         if GUI_MES and not self.Silent:
-            objs.get_debug().reset (title = self.func
-                                   ,text = self.message
-                                   )
+            objs.get_debug().set_text(self.detailed)
             objs.debug.show()
         # Duplicate the message to the console
         lg.Message (func = self.func
@@ -705,7 +567,7 @@ class Message:
     
     def show_error(self):
         if GUI_MES and not self.Silent:
-            objs.get_error().set_text(self.message)
+            objs.get_error().set_text(self.detailed)
             objs.error.show()
         # Duplicate the message to the console
         lg.Message (func = self.func
@@ -714,9 +576,7 @@ class Message:
 
     def show_info(self):
         if GUI_MES and not self.Silent:
-            objs.get_info().reset (title = self.func
-                                  ,text = self.message
-                                  )
+            objs.get_info().set_text(self.detailed)
             objs.info.show()
         # Duplicate the message to the console
         lg.Message (func = self.func
@@ -725,9 +585,7 @@ class Message:
                        
     def show_warning(self):
         if GUI_MES and not self.Silent:
-            objs.get_warning().reset (title = self.func
-                                     ,text = self.message
-                                     )
+            objs.get_warning().set_text(self.detailed)
             objs.warning.show()
         # Duplicate the message to the console
         lg.Message (func = self.func
@@ -736,19 +594,17 @@ class Message:
 
     def show_question(self):
         if GUI_MES and not self.Silent:
-            objs.get_question().reset (title = self.func
-                                      ,text = self.message
-                                      )
+            objs.get_question().set_text(self.detailed)
             objs.question.show()
-            lg.log.append (self.func
-                          ,_('QUESTION')
-                          ,self.message
-                          )
+            lg.log.append(self.func,'question',self.message)
+            #cur
+            '''
             answer = objs.question.ask()
             lg.Message (func = self.func
                        ,message = str(answer)
                        ).show_debug()
             return answer
+            '''
         else:
             return lg.Message (func = self.func
                               ,message = self.message

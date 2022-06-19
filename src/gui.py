@@ -195,6 +195,26 @@ class Message(PyQt5.QtWidgets.QMessageBox):
         self.set_title(_('Error'))
         self.set_icon(PyQt5.QtWidgets.QMessageBox.Critical)
         return self
+    
+    def get_warning(self):
+        self.set_title(_('Warning'))
+        self.set_icon(PyQt5.QtWidgets.QMessageBox.Warning)
+        return self
+    
+    def get_info(self):
+        self.set_title(_('Info'))
+        self.set_icon(PyQt5.QtWidgets.QMessageBox.Information)
+        return self
+    
+    def get_debug(self):
+        self.set_title(_('Debug'))
+        self.set_icon(PyQt5.QtWidgets.QMessageBox.Information)
+        return self
+    
+    def get_question(self):
+        self.set_title(_('Question'))
+        self.set_icon(PyQt5.QtWidgets.QMessageBox.Question)
+        return self
 
 
 
