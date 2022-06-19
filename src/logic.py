@@ -428,51 +428,6 @@ class FastTable:
 
 
 
-class MessageBuilder:
-    
-    def __init__(self,level):
-        self.set_values()
-        self.level = level
-        self.set_icon()
-    
-    def set_icon(self):
-        f = '[shared] logic.MessageBuilder.set_icon'
-        if not self.icon:
-            if self.level in (_('INFO'),_('DEBUG')):
-                prefix = 'info'
-            elif self.level == _('WARNING'):
-                prefix = 'warning'
-            elif self.level == _('QUESTION'):
-                prefix = 'question'
-            else:
-                prefix = 'error'
-            self.icon = objs.get_pdir().add ('..','resources_qt'
-                                            ,prefix + '.gif'
-                                            )
-        if not os.path.exists(self.icon):
-            self.icon = ''
-            message = _('File "{}" was not found!').format(self.icon)
-            Message (func = f
-                    ,message = message
-                    ).show_error()
-    
-    def reset(self,text='',title=''):
-        self.text = text
-        self.title = title
-        self.sanitize()
-    
-    def set_values(self):
-        self.text = ''
-        self.title = ''
-        self.icon = ''
-        self.level = _('INFO')
-    
-    def sanitize(self):
-        self.title = com.sanitize(self.title) + ':'
-        self.text = com.sanitize(self.text)
-
-
-
 class Message:
 
     def __init__(self,func,message,Silent=True):
@@ -480,34 +435,19 @@ class Message:
         self.message = message
 
     def show_error(self):
-        log.append (self.func
-                   ,_('ERROR')
-                   ,self.message
-                   )
+        log.append(self.func,'error',self.message)
     
     def show_warning(self):
-        log.append (self.func
-                   ,_('WARNING')
-                   ,self.message
-                   )
+        log.append(self.func,'warning',self.message)
     
     def show_info(self):
-        log.append (self.func
-                   ,_('INFO')
-                   ,self.message
-                   )
+        log.append(self.func,'info',self.message)
     
     def show_debug(self):
-        log.append (self.func
-                   ,_('DEBUG')
-                   ,self.message
-                   )
+        log.append(self.func,'debug',self.message)
     
     def show_question(self):
-        log.append (self.func
-                   ,_('QUESTION')
-                   ,self.message
-                   )
+        log.append(self.func,'question',self.message)
         try:
             answer = input()
         except (EOFError, KeyboardInterrupt):

@@ -177,9 +177,9 @@ class Commands:
 
 
 
-class MessageBuilder(PyQt5.QtWidgets.QMessageBox):
+class Message(PyQt5.QtWidgets.QMessageBox):
     
-    def __init__(self):
+    def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         
     def set_text(self,text):
@@ -190,6 +190,11 @@ class MessageBuilder(PyQt5.QtWidgets.QMessageBox):
         
     def set_icon(self,obj):
         self.setIcon(obj)
+    
+    def get_error(self):
+        self.set_title(_('Error'))
+        self.set_icon(PyQt5.QtWidgets.QMessageBox.Critical)
+        return self
 
 
 
@@ -212,16 +217,12 @@ class Objects:
 
     def get_warning(self):
         if not self.warning:
-            self.warning = MessageBuilder (parent = self.get_root()
-                                          ,level = _('WARNING')
-                                          )
+            self.warning = Message().get_warning()
         return self.warning
 
     def get_error(self):
         if not self.error:
-            self.error = MessageBuilder (parent = self.get_root()
-                                        ,level = _('ERROR')
-                                        )
+            self.error = Message().get_error()
         return self.error
 
     def get_question(self):

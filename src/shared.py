@@ -518,19 +518,8 @@ class Objects(lg.Objects):
     
     def get_error(self):
         if self.error is None:
-            self.error = MessageBuilder (level = _('ERROR')
-                                        ,Single = True
-                                        ,YesNo = False
-                                        )
+            self.error = gi.Message().get_error()
         return self.error
-    
-    def get_warning(self):
-        if self.warning is None:
-            self.warning = MessageBuilder (level = _('WARNING')
-                                          ,Single = True
-                                          ,YesNo = False
-                                          )
-        return self.warning
     
     def get_debug(self):
         # Reusing the same 'info' object may result in GUI glitches
@@ -698,6 +687,7 @@ class MessageBuilder:
 class Message:
 
     def __init__(self,func,message,Silent=False):
+        self.func = func
         sub = _('Code block: {}').format(func)
         self.message = '{}\n\n{}'.format(message,sub)
         self.Silent = Silent
@@ -715,9 +705,7 @@ class Message:
     
     def show_error(self):
         if GUI_MES and not self.Silent:
-            objs.get_error().reset (title = self.func
-                                   ,text = self.message
-                                   )
+            objs.get_error().set_text(self.message)
             objs.error.show()
         # Duplicate the message to the console
         lg.Message (func = self.func
