@@ -177,33 +177,19 @@ class Commands:
 
 
 
-class MessageBuilder:
-    ''' Not using tkinter.messagebox because it blocks main GUI (even
-        if we specify a non-root parent).
-    '''
-    def __init__(self,parent=None):
-        self.parent = parent
-        self.widget = self.parent.widget
+class MessageBuilder(PyQt5.QtWidgets.QMessageBox):
     
-    def show(self,event=None):
-        self.parent.show()
-    
-    def close(self,event=None):
-        self.parent.close()
-    
-    def set_image(self,path,obj):
-        ''' Without explicitly indicating 'master', we get
-            "image pyimage1 doesn't exist".
-        '''
-        return tk.PhotoImage (master = obj.widget
-                             ,file = path
-                             )
+    def __init__(self):
+        super().__init__(*args,**kwargs)
         
-    def set_title(self,text=''):
-        self.parent.set_title(text)
+    def set_text(self,text):
+        self.setText(text)
+    
+    def set_title(self,text):
+        self.setWindowTitle(text)
         
-    def set_icon(self,path):
-        self.parent.set_icon(path)
+    def set_icon(self,obj):
+        self.setIcon(obj)
 
 
 

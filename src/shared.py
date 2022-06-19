@@ -560,10 +560,7 @@ class Objects(lg.Objects):
 
 
 class MessageBuilder:
-    ''' - Not using tkinter.messagebox because it blocks main GUI (even
-          if we specify a non-root parent).
-        - Symbols not supported by Tk are already deleted in 'Message'.
-    '''
+
     def __init__(self,level,Single=True,YesNo=False):
         self.level = level
         self.Single = Single
@@ -701,8 +698,8 @@ class MessageBuilder:
 class Message:
 
     def __init__(self,func,message,Silent=False):
-        self.func = func
-        self.message = lg.com.sanitize(message)
+        sub = _('Code block: {}').format(func)
+        self.message = '{}\n\n{}'.format(message,sub)
         self.Silent = Silent
 
     def show_debug(self):
