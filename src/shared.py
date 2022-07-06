@@ -21,6 +21,9 @@ class Entry:
         self.gui = gi.Entry()
         self.widget = self.gui.widget
     
+    def set_min_width(self,width):
+        self.gui.set_min_width(width)
+    
     def bind(self,hotkey,action):
         self.gui.bind(hotkey,action)
     

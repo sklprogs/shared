@@ -14,6 +14,9 @@ class Entry:
         self.parent = None
         self.set_gui()
     
+    def set_min_width(self,width):
+        self.widget.setMinimumWidth(width)
+    
     def bind(self,hotkey,action):
         PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey),self.widget).activated.connect(action)
     
