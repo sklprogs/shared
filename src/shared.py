@@ -39,7 +39,7 @@ class Font:
             com.cancel(f)
             return
         try:
-            self.gui.set_parent(self.font,self.widget)
+            self.gui.set_parent(self.widget,self.font)
         except Exception as e:
             self.fail(f,e)
     
@@ -50,6 +50,16 @@ class Font:
             return
         try:
             self.gui.set_family(self.font,self.family)
+        except Exception as e:
+            self.fail(f,e)
+    
+    def set_size(self):
+        f = '[SharedQt] shared.Font.set_size'
+        if not self.Success:
+            com.cancel(f)
+            return
+        try:
+            self.gui.set_size(self.font,self.size)
         except Exception as e:
             self.fail(f,e)
     
@@ -81,6 +91,7 @@ class Font:
     def run(self):
         self.set_font()
         self.set_family()
+        self.set_size()
         self.set_parent()
 
 
