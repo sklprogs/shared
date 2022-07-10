@@ -8,6 +8,19 @@ from skl_shared_qt.localize import _
 import skl_shared_qt.shared as sh
 
 
+class Font:
+    
+    def get_font(self):
+        return PyQt5.QtGui.QFont()
+    
+    def set_parent(self,ifont,widget):
+        widget.setFont(ifont)
+    
+    def set_family(self,ifont,family):
+        ifont.setFamily(family)
+
+
+
 class Entry:
     
     def __init__(self,parent=None):

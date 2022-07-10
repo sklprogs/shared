@@ -15,6 +15,76 @@ FONT1 = 'Serif 14'
 FONT2 = 'Sans 11'
 
 
+class Font:
+    
+    def __init__(self,widget,family,size):
+        self.Success = True
+        self.font = None
+        self.family = ''
+        self.gui = gi.Font()
+        self.widget = widget
+        self.family = family
+        self.size = size
+        self.check()
+    
+    def fail(self,f,e):
+        self.Success = False
+        mes = _('Third-party module has failed!\n\nDetails: {}')
+        mes = mes.format(e)
+        objs.get_mes(f,mes).show_error()
+    
+    def set_parent(self):
+        f = '[SharedQt] shared.Font.set_parent'
+        if not self.Success:
+            com.cancel(f)
+            return
+        try:
+            self.gui.set_parent(self.font,self.widget)
+        except Exception as e:
+            self.fail(f,e)
+    
+    def set_family(self):
+        f = '[SharedQt] shared.Font.set_family'
+        if not self.Success:
+            com.cancel(f)
+            return
+        try:
+            self.gui.set_family(self.font,self.family)
+        except Exception as e:
+            self.fail(f,e)
+    
+    def set_font(self):
+        f = '[SharedQt] shared.Font.set_font'
+        if not self.Success:
+            com.cancel(f)
+            return
+        try:
+            self.font = self.gui.get_font()
+        except Exception as e:
+            self.fail(f,e)
+        
+    def check(self):
+        f = '[SharedQt] shared.Font.check'
+        if not self.widget:
+            com.rep_empty(f)
+            self.Success = False
+            return
+        if not self.family:
+            com.rep_empty(f)
+            self.Success = False
+            return
+        if not self.size:
+            com.rep_empty(f)
+            self.Success = False
+            return
+    
+    def run(self):
+        self.set_font()
+        self.set_family()
+        self.set_parent()
+
+
+
 class Entry:
     
     def __init__(self):
@@ -48,7 +118,7 @@ class Top:
         self.widget = self.gui.widget
     
     def add_widget(self,item):
-        f = '[shared] shared.Top.add_widget'
+        f = '[SharedQt] shared.Top.add_widget'
         if hasattr(item,'widget'):
             self.gui.add_widget(item.widget)
         else:
@@ -92,7 +162,7 @@ class OptionMenu:
         self.gui.disable()
         
     def set(self,item):
-        f = '[shared] shared.OptionMenu.set'
+        f = '[SharedQt] shared.OptionMenu.set'
         item = str(item)
         if item in self.items:
             self.gui.set(item)
@@ -452,7 +522,7 @@ class Clipboard:
         self.gui = gi.Clipboard()
 
     def copy(self,text,CopyEmpty=True):
-        f = '[shared] shared.Clipboard.copy'
+        f = '[SharedQt] shared.Clipboard.copy'
         if text or CopyEmpty:
             text = lg.com.sanitize(text)
             try:
@@ -463,7 +533,7 @@ class Clipboard:
             com.rep_empty(f)
 
     def paste(self):
-        f = '[shared] shared.Clipboard.paste'
+        f = '[SharedQt] shared.Clipboard.paste'
         try:
             text = str(self.gui.paste())
         except Exception as e:
@@ -621,7 +691,7 @@ class Commands(lg.Commands):
         super().__init__()
         
     def get_image(self,path,width,height):
-        f = '[shared] shared.Commands.get_image'
+        f = '[SharedQt] shared.Commands.get_image'
         try:
             return gi.com.get_image (path = path
                                     ,width = width
@@ -633,7 +703,7 @@ class Commands(lg.Commands):
             objs.get_mes(f,mes,True).show_warning()
     
     def debug_globs(self):
-        f = '[shared] shared.Commands.debug_globs'
+        f = '[SharedQt] shared.Commands.debug_globs'
         sections = []
         keys = []
         values = []
@@ -673,7 +743,7 @@ class Commands(lg.Commands):
             a hex value) brighter (positive delta) or darker
             (negative delta).
         '''
-        f = '[shared] shared.Commands.get_mod_color'
+        f = '[SharedQt] shared.Commands.get_mod_color'
         if -255 <= delta <= 255:
             rgb = gi.com.get_mod_color(color)
             if rgb:
@@ -701,7 +771,7 @@ class Commands(lg.Commands):
         objs.txt.show()
     
     def show_save_dialog(self,types=()):
-        f = '[shared] shared.Commands.show_save_dialog'
+        f = '[SharedQt] shared.Commands.show_save_dialog'
         options = lg.com.show_save_dialog(types)
         try:
             file = gi.com.show_save_dialog(options)
@@ -716,7 +786,7 @@ class Commands(lg.Commands):
         ''' Bind keyboard or mouse keys to an action
             Input: object, str/list, function
         '''
-        f = '[shared] shared.Commands.bind'
+        f = '[SharedQt] shared.Commands.bind'
         if hasattr(obj,'widget'):
             if isinstance(bindings,str) or isinstance(bindings,list) \
             or isinstance(bindings,tuple):
@@ -749,7 +819,7 @@ lg.objs.mes = Message
 
 
 if __name__ == '__main__':
-    f = '[shared] shared.__main__'
+    f = '[SharedQt] shared.__main__'
     com.start()
     #lg.ReadTextFile('/tmp/aaa').get()
     Geometry(Top()).activate()
