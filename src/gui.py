@@ -20,7 +20,7 @@ class Font:
         ifont.setFamily(family)
     
     def set_size(self,ifont,size):
-        ifont.setPixelSize(size)
+        ifont.setPointSize(size)
 
 
 
