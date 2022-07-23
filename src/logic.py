@@ -3011,7 +3011,7 @@ class Directory:
         f = '[shared] logic.Directory.get_rel_dirs'
         if self.Success:
             if not self.reldirs:
-                self.dirs()
+                self.get_dirs()
         else:
             com.cancel(f)
         return self.reldirs
