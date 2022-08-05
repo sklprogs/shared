@@ -1904,8 +1904,8 @@ class List:
     def get_shared(self):
         return [item for item in self.lst2 if item in self.lst1]
     
-    # Check if 'lst1' fully comprises 'lst2'
     def eats(self):
+        # Check if 'lst1' fully comprises 'lst2'
         for item in self.lst2:
             if not item in self.lst1:
                 return False
@@ -1925,8 +1925,8 @@ class List:
             i -= 1
         return self.lst1
     
-    # Remove duplicate items (positioned after original items)
     def delete_duplicates(self):
+        # Remove duplicate items (positioned after original items)
         i = len(self.lst1) - 1
         while i >= 0:
             ind = self.lst1.index(self.lst1[i])
@@ -1935,8 +1935,8 @@ class List:
             i -= 1
         return self.lst1
     
-    # Add a space where necessary and convert to a string
     def space_items(self,MultSpaces=False):
+        # Add a space where necessary and convert to a string
         text = ''
         for i in range(len(self.lst1)):
             if not self.lst1[i] == '':
@@ -1975,8 +1975,8 @@ class List:
                     text += ' ' + self.lst1[i]
         return text
 
-    # Adjust the lists at input to have the same length
     def equalize(self):
+        # Adjust the lists at input to have the same length
         max_range = max(len(self.lst1),len(self.lst2))
         if max_range == len(self.lst1):
             for i in range(len(self.lst1)-len(self.lst2)):
@@ -1986,15 +1986,19 @@ class List:
                 self.lst1.append('')
         return(self.lst1,self.lst2)
 
-    # Find different elements (strict order)
-    # Based on http://stackoverflow.com/a/788780
     def get_diff(self):
+        # Find different elements (strict order)
+        # Based on http://stackoverflow.com/a/788780
         seqm = difflib.SequenceMatcher(a=self.lst1,b=self.lst2)
         output = []
         for opcode, a0, a1, b0, b1 in seqm.get_opcodes():
             if opcode != 'equal':
                 output += seqm.a[a0:a1]
         return output
+    
+    def get_diff_any(self):
+        # Find different elements (any order, the 1st list is max)
+        return [item for item in self.lst1 if item not in self.lst2]
 
 
 
