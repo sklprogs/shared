@@ -163,7 +163,8 @@ class Button:
         self.resize()
         self.set_icon()
         self.set_size()
-        #self.set_border()
+        #FIX: this may cause the button to not show itself in complex widgets
+        self.set_border()
         self.set_hint()
         self.set_action()
 

@@ -4772,7 +4772,13 @@ class Commands:
             Message (func = func
                     ,message = message
                     ).show_debug()
-
+    
+    def rep_third_party(self,func=_('Logic error!'),message=_('Logic error!')):
+        message = _('Third-party module has failed!\n\nDetails: {}')
+        message = message.format(message)
+        Message (func = func
+                ,message = message
+                ).show_error()
 
 
 
