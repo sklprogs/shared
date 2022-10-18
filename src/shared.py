@@ -3557,7 +3557,11 @@ class Geometry:
             self.handle = handle
     
     def update(self):
-        self.gui.update()
+        f = '[shared] shared.Geometry.update'
+        try:
+            self.gui.update()
+        except Exception as e:
+            com.rep_failed(f,e)
 
     def save(self):
         f = '[shared] shared.Geometry.save'
@@ -3571,26 +3575,29 @@ class Geometry:
 
     def restore(self):
         f = '[shared] shared.Geometry.restore'
-        if self.parent:
-            if self.geom:
-                mes = _('Restore geometry: {}').format(self.geom)
-                objs.get_mes(f,mes,True).show_debug()
-                ''' In case of invalid geometry (e.g., too big values),
-                    we will have a BadAlloc (insufficient resources for
-                    operation) error, but we cannot catch it.
-                '''
-                self.gui.restore(self.geom)
-            else:
-                com.rep_empty(f)
-        else:
+        if not self.parent or not self.geom:
             com.rep_empty(f)
+            return
+        mes = _('Restore geometry: {}').format(self.geom)
+        objs.get_mes(f,mes,True).show_debug()
+        ''' In case of invalid geometry (e.g., too big values), we will have a
+            BadAlloc (insufficient resources for operation) error, but we
+            cannot catch it.
+        '''
+        try:
+            self.gui.restore(self.geom)
+        except Exception as e:
+            com.rep_failed(f,e)
 
     def minimize(self,event=None):
         f = '[shared] shared.Geometry.minimize'
-        if self.parent:
-            self.gui.minimize()
-        else:
+        if not self.parent:
             com.rep_empty(f)
+            return
+        try:
+            self.gui.minimize()
+        except Exception as e:
+            com.rep_failed(f,e)
 
     def maximize(self,event=None):
         f = '[shared] shared.Geometry.maximize'
