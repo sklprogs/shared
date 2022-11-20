@@ -823,6 +823,27 @@ class Commands(lg.Commands):
 
 
 
+class CheckBox:
+    
+    def __init__(self,text=''):
+        self.gui = gi.CheckBox()
+        self.widget = self.gui.widget
+        self.gui.set_text(text)
+    
+    def get(self):
+        return self.gui.get()
+    
+    def enable(self):
+        self.gui.enable()
+    
+    def disable(self):
+        self.gui.disable()
+    
+    def toggle(self):
+        self.gui.toggle()
+
+
+
 com = Commands()
 objs = Objects()
 # Use GUI dialogs for logic-only modules

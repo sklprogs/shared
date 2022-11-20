@@ -281,6 +281,35 @@ class Objects:
 
 
 
+class CheckBox:
+    
+    def __init__(self):
+        self.set_gui()
+    
+    def set_gui(self):
+        self.widget = PyQt5.QtWidgets.QCheckBox()
+    
+    def get(self):
+        return self.widget.isChecked()
+    
+    def enable(self):
+        self.widget.setChecked(True)
+    
+    def disable(self):
+        self.widget.setChecked(False)
+    
+    def toggle(self):
+        if self.get():
+            self.disable()
+        else:
+            self.enable()
+    
+    def set_text(self,text=''):
+        if text:
+            self.widget.setText(text)
+
+
+
 ''' If there are problems with import or tkinter's wait_variable, put
     this beneath 'if __name__'
 '''
