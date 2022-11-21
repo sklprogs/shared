@@ -844,6 +844,20 @@ class CheckBox:
 
 
 
+class Label:
+    
+    def __init__(self,text=''):
+        self.gui = gi.Label()
+        self.widget = self.gui.widget
+        self.set_text(text)
+    
+    def set_text(self,text):
+        if not text:
+            text = '[SharedQt] shared.Label.set_text'
+        self.gui.set_text(text)
+
+
+
 com = Commands()
 objs = Objects()
 # Use GUI dialogs for logic-only modules

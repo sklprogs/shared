@@ -310,6 +310,19 @@ class CheckBox:
 
 
 
+class Label:
+    
+    def __init__(self):
+        self.set_gui()
+    
+    def set_gui(self):
+        self.widget = PyQt5.QtWidgets.QLabel()
+    
+    def set_text(self,text):
+        self.widget.setText(text)
+
+
+
 ''' If there are problems with import or tkinter's wait_variable, put
     this beneath 'if __name__'
 '''
