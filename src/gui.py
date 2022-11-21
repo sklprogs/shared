@@ -105,7 +105,7 @@ class OptionMenu:
 
 class Button:
     
-    def __init__ (self,parent=None,text='',action=None,width=36
+    def __init__ (self,text='',action=None,parent=None,width=36
                  ,height=36,hint='',active='',inactive=''
                  ):
         self.Status = False
