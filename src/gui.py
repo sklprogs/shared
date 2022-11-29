@@ -180,10 +180,12 @@ class Commands:
                              )
         
     def get_mod_color(self,color):
-        try:
-            return objs.get_root().widget.winfo_rgb(color=color)
-        except tk._tkinter.TclError:
-            pass
+        qcolor = PyQt5.QtGui.QColor(color)
+        return(qcolor.red(),qcolor.green(),qcolor.blue())
+    
+    def get_color_name(self,rgb):
+        color = PyQt5.QtGui.QColor(rgb[0],rgb[1],rgb[2])
+        return color.name()
     
     def show_save_dialog(self,options=()):
         return tkinter.filedialog.asksaveasfilename(**options)

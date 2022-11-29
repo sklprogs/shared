@@ -4493,10 +4493,24 @@ class Commands:
         return text
     
     def get_mod_color(self,rgb,delta):
-        rgb = list(max(min(255,x/256+delta),0) for x in rgb)
+        #rgb = list(max(min(255,x/256+delta),0) for x in rgb)
         # We need to have integers here. I had a float once.
-        rgb = tuple(int(item) for item in rgb)
-        return '#%02x%02x%02x' % rgb
+        #rgb = tuple(int(item) for item in rgb)
+        rgb = list(rgb)
+        if max(rgb) == rgb[0]: # Red
+            rgb[0] += delta
+            rgb[1] -= delta
+            rgb[2] -= delta
+        elif max(rgb) == rgb[1]: # Green
+            rgb[0] -= delta
+            rgb[1] += delta
+            rgb[2] -= delta
+        elif max(rgb) == rgb[2]: # Blue
+            rgb[0] -= delta
+            rgb[1] -= delta
+            rgb[2] += delta
+        #return '#%02x%02x%02x' % tuple(rgb)
+        return rgb
     
     def show_save_dialog(self,types=()):
         if not types:
