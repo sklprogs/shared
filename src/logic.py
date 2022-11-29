@@ -4492,10 +4492,7 @@ class Commands:
             text = Text(str(text)).delete_unsupported()
         return text
     
-    def get_mod_color(self,rgb,delta):
-        #rgb = list(max(min(255,x/256+delta),0) for x in rgb)
-        # We need to have integers here. I had a float once.
-        #rgb = tuple(int(item) for item in rgb)
+    def _increase(self,rgb,delta):
         rgb = list(rgb)
         if max(rgb) == rgb[0]: # Red
             rgb[0] += delta
@@ -4509,8 +4506,29 @@ class Commands:
             rgb[0] -= delta
             rgb[1] -= delta
             rgb[2] += delta
-        #return '#%02x%02x%02x' % tuple(rgb)
         return rgb
+    
+    def _decrease(self,rgb,delta):
+        rgb = list(rgb)
+        if max(rgb) == rgb[0]: # Red
+            rgb[0] -= delta
+            rgb[1] += delta
+            rgb[2] += delta
+        elif max(rgb) == rgb[1]: # Green
+            rgb[0] += delta
+            rgb[1] -= delta
+            rgb[2] += delta
+        elif max(rgb) == rgb[2]: # Blue
+            rgb[0] += delta
+            rgb[1] += delta
+            rgb[2] -= delta
+        return rgb
+    
+    def get_mod_color(self,rgb,delta):
+        if delta > 0:
+            return self._increase(rgb,delta)
+        else:
+            return self._decrease(rgb,delta)
     
     def show_save_dialog(self,types=()):
         if not types:
