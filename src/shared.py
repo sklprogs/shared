@@ -756,12 +756,14 @@ class Commands(lg.Commands):
         '''
         f = '[SharedQt] shared.Commands.get_mod_color'
         if -255 <= delta <= 255:
-            rgb = gi.com.get_mod_color(color)
-            if rgb:
-                return lg.com.get_mod_color(rgb,delta)
-            else:
-                mes = _('An unknown color "{}"!').format(color)
-                objs.get_mes(f,mes).show_error()
+            try:
+                mod_color = gi.com.get_mod_color(color,delta)
+            except Exception as e:
+                com.rep_third_party(f,e)
+                return
+            mes = _('Modified color: {}').format(mod_color)
+            objs.get_mes(f,mes,True).show_debug()
+            return mod_color
         else:
             sub = '-255 <= {} <= 255'.format(delta)
             mes = _('The condition "{}" is not observed!').format(sub)

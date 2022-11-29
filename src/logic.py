@@ -4492,12 +4492,6 @@ class Commands:
             text = Text(str(text)).delete_unsupported()
         return text
     
-    def get_mod_color(self,rgb,delta):
-        rgb = list(max(min(255,x/256+delta),0) for x in rgb)
-        # We need to have integers here. I had a float once.
-        rgb = tuple(int(item) for item in rgb)
-        return '#%02x%02x%02x' % rgb
-    
     def show_save_dialog(self,types=()):
         if not types:
             types = ((_('Plain text (UTF-8)'),'.txt' )
