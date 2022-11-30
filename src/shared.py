@@ -758,8 +758,9 @@ class Commands(lg.Commands):
         if -255 <= delta <= 255:
             rgb = gi.com.get_rgb(color)
             if rgb:
-                rgb = lg.com.get_mod_color(rgb,delta)
-                return gi.com.get_color_name(rgb)
+                #rgb = lg.com.get_mod_color(rgb,delta)
+                #return gi.com.get_color_name(rgb)
+                return lg.com.get_mod_color(rgb,delta)
             else:
                 mes = _('An unknown color "{}"!').format(color)
                 objs.get_mes(f,mes).show_error()

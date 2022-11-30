@@ -4492,6 +4492,14 @@ class Commands:
             text = Text(str(text)).delete_unsupported()
         return text
     
+    def _conform(self,rgb):
+        for i in range(len(rgb)):
+            if rgb[i] < 0:
+                rgb[i] = 0
+            elif rgb[i] > 255:
+                rgb[i] = 255
+        return rgb
+    
     def _increase(self,rgb,delta):
         rgb = list(rgb)
         if max(rgb) == rgb[0]: # Red
@@ -4506,6 +4514,7 @@ class Commands:
             rgb[0] -= delta
             rgb[1] -= delta
             rgb[2] += delta
+        rgb = self._conform(rgb)
         return rgb
     
     def _decrease(self,rgb,delta):
@@ -4522,13 +4531,26 @@ class Commands:
             rgb[0] += delta
             rgb[1] += delta
             rgb[2] -= delta
+        rgb = self._conform(rgb)
         return rgb
     
     def get_mod_color(self,rgb,delta):
+        print('OLD RGB:',rgb)
         if delta > 0:
-            return self._increase(rgb,delta)
+            rgb = self._increase(rgb,abs(delta))
         else:
-            return self._decrease(rgb,delta)
+            rgb = self._decrease(rgb,abs(delta))
+        print('New RGB:',rgb)
+        #rgb = list(max(min(255,x/256+delta),0) for x in rgb)
+        # We need to have integers here. I had a float once.
+        #rgb = tuple(int(item) for item in rgb)
+        #return '#%02x%02x%02x' % (rgb[0],rgb[1],rgb[2])
+        print('rgb[0]:',rgb[0])
+        print('rgb[1]:',rgb[1])
+        print('rgb[2]:',rgb[2])
+        color = '#%02x%02x%02x' % (rgb[0],rgb[1],rgb[2])
+        print('Color:',color)
+        return color
     
     def show_save_dialog(self,types=()):
         if not types:
