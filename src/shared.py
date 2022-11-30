@@ -756,7 +756,7 @@ class Commands(lg.Commands):
         '''
         f = '[SharedQt] shared.Commands.get_mod_color'
         if -255 <= delta <= 255:
-            rgb = gi.com.get_mod_color(color)
+            rgb = gi.com.get_rgb(color)
             if rgb:
                 rgb = lg.com.get_mod_color(rgb,delta)
                 return gi.com.get_color_name(rgb)

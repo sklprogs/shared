@@ -179,7 +179,7 @@ class Commands:
                              ,height = height
                              )
         
-    def get_mod_color(self,color):
+    def get_rgb(self,color):
         qcolor = PyQt5.QtGui.QColor(color)
         return(qcolor.red(),qcolor.green(),qcolor.blue())
     
