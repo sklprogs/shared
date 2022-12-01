@@ -91,6 +91,92 @@ if 'win' in sys.platform:
     '''
 
 
+class RGBMod:
+    
+    def __init__(self,rgb,delta):
+        self.set_values()
+    
+    def set_values(self):
+        self.Success = True
+        self.rgb = ()
+        self.delta = 0
+    
+    def reset(self,rgb,delta):
+        self.set_values()
+        self.rgb = rgb
+        self.delta = delta
+    
+    def run(self):
+        self.check()
+    
+    def check(self):
+        f = '[SharedQt] RGBMod.conform'
+        if not self.rgb:
+            self.Success = False
+            com.rep_empty(f)
+            return
+        if not -255 <= self.delta <= 255:
+            self.Success = False
+            mes = '{} <= {} <= {}'.format(-255,self.delta,255)
+            com.rep_condition(f,mes)
+            return
+
+    def _conform(self):
+        f = '[SharedQt] RGB._conform'
+        for i in range(len(self.rgb)):
+            if self.rgb[i] < 0:
+                self.rgb[i] = 0
+            elif self.rgb[i] > 255:
+                self.rgb[i] = 255
+    
+    def _increase(self):
+        delta = abs(self.delta)
+        if max(self.rgb) == self.rgb[0]:   # Red
+            self.rgb[0] += delta
+            self.rgb[1] -= delta
+            self.rgb[2] -= delta
+        elif max(self.rgb) == self.rgb[1]: # Green
+            self.rgb[0] -= delta
+            self.rgb[1] += delta
+            self.rgb[2] -= delta
+        elif max(self.rgb) == self.rgb[2]: # Blue
+            self.rgb[0] -= delta
+            self.rgb[1] -= delta
+            self.rgb[2] += delta
+    
+    def _decrease(self):
+        delta = abs(self.delta)
+        if max(self.rgb) == self.rgb[0]:  # Red
+            self.rgb[0] -= delta
+            self.rgb[1] += delta
+            self.rgb[2] += delta
+        elif max(self.rgb) == self.rgb[1]: # Green
+            self.rgb[0] += delta
+            self.rgb[1] -= delta
+            self.rgb[2] += delta
+        elif max(self.rgb) == self.rgb[2]: # Blue
+            self.rgb[0] += delta
+            self.rgb[1] += delta
+            self.rgb[2] -= delta
+    
+    def get_mod_color(self):
+        f = '[SharedQt] RGBMod.get_mod_color'
+        if not self.Success:
+            com.cancel(f)
+            return
+        old = self.rgb
+        if delta > 0:
+            self._increase()
+        else:
+            self._decrease()
+        self._conform()
+        color = '#%02x%02x%02x' % (self.rgb[0],self.rgb[1],self.rgb[2])
+        mes = '{} -> {} ({})'.format(old,self.rgb,color)
+        objs.get_mes(f,mes,True).show_debug()
+        return color
+
+
+
 class Section:
     
     def __init__(self,section,comment=''):
@@ -4492,66 +4578,6 @@ class Commands:
             text = Text(str(text)).delete_unsupported()
         return text
     
-    def _conform(self,rgb):
-        for i in range(len(rgb)):
-            if rgb[i] < 0:
-                rgb[i] = 0
-            elif rgb[i] > 255:
-                rgb[i] = 255
-        return rgb
-    
-    def _increase(self,rgb,delta):
-        rgb = list(rgb)
-        if max(rgb) == rgb[0]: # Red
-            rgb[0] += delta
-            rgb[1] -= delta
-            rgb[2] -= delta
-        elif max(rgb) == rgb[1]: # Green
-            rgb[0] -= delta
-            rgb[1] += delta
-            rgb[2] -= delta
-        elif max(rgb) == rgb[2]: # Blue
-            rgb[0] -= delta
-            rgb[1] -= delta
-            rgb[2] += delta
-        rgb = self._conform(rgb)
-        return rgb
-    
-    def _decrease(self,rgb,delta):
-        rgb = list(rgb)
-        if max(rgb) == rgb[0]: # Red
-            rgb[0] -= delta
-            rgb[1] += delta
-            rgb[2] += delta
-        elif max(rgb) == rgb[1]: # Green
-            rgb[0] += delta
-            rgb[1] -= delta
-            rgb[2] += delta
-        elif max(rgb) == rgb[2]: # Blue
-            rgb[0] += delta
-            rgb[1] += delta
-            rgb[2] -= delta
-        rgb = self._conform(rgb)
-        return rgb
-    
-    def get_mod_color(self,rgb,delta):
-        print('OLD RGB:',rgb)
-        if delta > 0:
-            rgb = self._increase(rgb,abs(delta))
-        else:
-            rgb = self._decrease(rgb,abs(delta))
-        print('New RGB:',rgb)
-        #rgb = list(max(min(255,x/256+delta),0) for x in rgb)
-        # We need to have integers here. I had a float once.
-        #rgb = tuple(int(item) for item in rgb)
-        #return '#%02x%02x%02x' % (rgb[0],rgb[1],rgb[2])
-        print('rgb[0]:',rgb[0])
-        print('rgb[1]:',rgb[1])
-        print('rgb[2]:',rgb[2])
-        color = '#%02x%02x%02x' % (rgb[0],rgb[1],rgb[2])
-        print('Color:',color)
-        return color
-    
     def show_save_dialog(self,types=()):
         if not types:
             types = ((_('Plain text (UTF-8)'),'.txt' )
@@ -4833,6 +4859,10 @@ class Commands:
         Message (func = func
                 ,message = message
                 ).show_error()
+    
+    def rep_condition(self,func=_('Logic error!'),message=_('Logic error!'),Silent=True):
+        mes = _('The condition "{}" is not observed!').format(message)
+        objs.get_mes(f,mes,Silent).show_warning()
 
 
 
