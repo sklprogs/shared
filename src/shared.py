@@ -749,25 +749,22 @@ class Commands(lg.Commands):
             com.rep_empty(f)
         return f + ':\n' + mes
     
-    def get_mod_color(self,color,delta=76): # ~30%
+    def get_mod_color(self,color,delta=30):
         ''' Make a color (a color name (/usr/share/X11/rgb.txt) or
             a hex value) brighter (positive delta) or darker
             (negative delta).
         '''
         f = '[SharedQt] shared.Commands.get_mod_color'
-        if -255 <= delta <= 255:
-            rgb = gi.com.get_rgb(color)
-            if rgb:
-                #rgb = lg.com.get_mod_color(rgb,delta)
-                #return gi.com.get_color_name(rgb)
-                return lg.com.get_mod_color(rgb,delta)
-            else:
-                mes = _('An unknown color "{}"!').format(color)
-                objs.get_mes(f,mes).show_error()
+        if not color:
+            com.rep_empty(f)
+            return
+        rgb = gi.com.get_rgb(color)
+        new_color = lg.RGBMod(rgb,delta).run()
+        if new_color:
+            return new_color
         else:
-            sub = '-255 <= {} <= 255'.format(delta)
-            mes = _('The condition "{}" is not observed!').format(sub)
-            objs.get_mes(f,mes).show_warning()
+            com.rep_out(f)
+            return old_color
     
     def run_fast_txt(self,text='',font=FONT1,Maximize=False):
         objs.get_txt(font,Maximize).reset()

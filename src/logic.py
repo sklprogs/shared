@@ -95,19 +95,17 @@ class RGBMod:
     
     def __init__(self,rgb,delta):
         self.set_values()
+        self.rgb = rgb
+        self.delta = delta
     
     def set_values(self):
         self.Success = True
         self.rgb = ()
         self.delta = 0
     
-    def reset(self,rgb,delta):
-        self.set_values()
-        self.rgb = rgb
-        self.delta = delta
-    
     def run(self):
         self.check()
+        return self.get_mod_color()
     
     def check(self):
         f = '[SharedQt] RGBMod.conform'
@@ -116,13 +114,11 @@ class RGBMod:
             com.rep_empty(f)
             return
         if not -255 <= self.delta <= 255:
-            self.Success = False
+            # We actually do not need to fail here
             mes = '{} <= {} <= {}'.format(-255,self.delta,255)
             com.rep_condition(f,mes)
-            return
 
     def _conform(self):
-        f = '[SharedQt] RGB._conform'
         for i in range(len(self.rgb)):
             if self.rgb[i] < 0:
                 self.rgb[i] = 0
@@ -164,8 +160,9 @@ class RGBMod:
         if not self.Success:
             com.cancel(f)
             return
+        self.rgb = list(self.rgb)
         old = self.rgb
-        if delta > 0:
+        if self.delta > 0:
             self._increase()
         else:
             self._decrease()
