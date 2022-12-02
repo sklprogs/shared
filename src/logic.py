@@ -91,89 +91,6 @@ if 'win' in sys.platform:
     '''
 
 
-class RGBMod:
-    
-    def __init__(self,rgb,delta):
-        self.set_values()
-        self.rgb = rgb
-        self.delta = delta
-    
-    def set_values(self):
-        self.Success = True
-        self.rgb = ()
-        self.delta = 0
-    
-    def run(self):
-        self.check()
-        return self.get_mod_color()
-    
-    def check(self):
-        f = '[SharedQt] RGBMod.conform'
-        if not self.rgb:
-            self.Success = False
-            com.rep_empty(f)
-            return
-        if not -255 <= self.delta <= 255:
-            # We actually do not need to fail here
-            mes = '{} <= {} <= {}'.format(-255,self.delta,255)
-            com.rep_condition(f,mes)
-
-    def _conform(self):
-        for i in range(len(self.rgb)):
-            if self.rgb[i] < 0:
-                self.rgb[i] = 0
-            elif self.rgb[i] > 255:
-                self.rgb[i] = 255
-    
-    def _increase(self):
-        delta = abs(self.delta)
-        if max(self.rgb) == self.rgb[0]:   # Red
-            self.rgb[0] += delta
-            self.rgb[1] -= delta
-            self.rgb[2] -= delta
-        elif max(self.rgb) == self.rgb[1]: # Green
-            self.rgb[0] -= delta
-            self.rgb[1] += delta
-            self.rgb[2] -= delta
-        elif max(self.rgb) == self.rgb[2]: # Blue
-            self.rgb[0] -= delta
-            self.rgb[1] -= delta
-            self.rgb[2] += delta
-    
-    def _decrease(self):
-        delta = abs(self.delta)
-        if max(self.rgb) == self.rgb[0]:  # Red
-            self.rgb[0] -= delta
-            self.rgb[1] += delta
-            self.rgb[2] += delta
-        elif max(self.rgb) == self.rgb[1]: # Green
-            self.rgb[0] += delta
-            self.rgb[1] -= delta
-            self.rgb[2] += delta
-        elif max(self.rgb) == self.rgb[2]: # Blue
-            self.rgb[0] += delta
-            self.rgb[1] += delta
-            self.rgb[2] -= delta
-    
-    def get_mod_color(self):
-        f = '[SharedQt] RGBMod.get_mod_color'
-        if not self.Success:
-            com.cancel(f)
-            return
-        self.rgb = list(self.rgb)
-        old = self.rgb
-        if self.delta > 0:
-            self._increase()
-        else:
-            self._decrease()
-        self._conform()
-        color = '#%02x%02x%02x' % (self.rgb[0],self.rgb[1],self.rgb[2])
-        mes = '{} -> {} ({})'.format(old,self.rgb,color)
-        objs.get_mes(f,mes,True).show_debug()
-        return color
-
-
-
 class Section:
     
     def __init__(self,section,comment=''):
@@ -4857,9 +4774,11 @@ class Commands:
                 ,message = message
                 ).show_error()
     
-    def rep_condition(self,func=_('Logic error!'),message=_('Logic error!'),Silent=True):
-        mes = _('The condition "{}" is not observed!').format(message)
-        objs.get_mes(f,mes,Silent).show_warning()
+    def rep_condition(self,func=_('Logic error!'),message=_('Logic error!')):
+        message = _('The condition "{}" is not observed!').format(message)
+        Message (func = func
+                ,message = message
+                ).show_warning()
 
 
 

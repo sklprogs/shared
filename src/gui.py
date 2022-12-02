@@ -179,13 +179,11 @@ class Commands:
                              ,height = height
                              )
         
-    def get_rgb(self,color):
+    def get_mod_colors(self,color,total):
         qcolor = PyQt5.QtGui.QColor(color)
-        return(qcolor.red(),qcolor.green(),qcolor.blue())
-    
-    def get_color_name(self,rgb):
-        color = PyQt5.QtGui.QColor(rgb[0],rgb[1],rgb[2])
-        return color.name()
+        darker = qcolor.darker(total).name()
+        lighter = qcolor.lighter(total).name()
+        return(darker,lighter)
     
     def show_save_dialog(self,options=()):
         return tkinter.filedialog.asksaveasfilename(**options)
