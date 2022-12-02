@@ -755,18 +755,20 @@ class Commands(lg.Commands):
             (negative delta).
         '''
         f = '[SharedQt] shared.Commands.get_mod_colors'
+        # Qt does not assign a color for an empty name, no error is thrown
+        color1 = color2 = ''
         if not color:
             com.rep_empty(f)
-            return
+            return(color1,color2)
         if factor <= 0:
             mes = '{} > {}'.format(factor,0)
             com.rep_condition(f,mes)
-            return
+            return(color1,color2)
         try:
             color1, color2 = gi.com.get_mod_colors(color,factor)
         except Exception as e:
             com.rep_third_party(f,e)
-            return
+            return(color1,color2)
         mes = _('Color: {}, darker: {}, lighter: {}')
         mes = mes.format(color,color1,color2)
         objs.get_mes(f,mes,True).show_debug()

@@ -179,10 +179,10 @@ class Commands:
                              ,height = height
                              )
         
-    def get_mod_colors(self,color,total):
+    def get_mod_colors(self,color,factor):
         qcolor = PyQt5.QtGui.QColor(color)
-        darker = qcolor.darker(total).name()
-        lighter = qcolor.lighter(total).name()
+        darker = qcolor.darker(factor).name()
+        lighter = qcolor.lighter(factor).name()
         return(darker,lighter)
     
     def show_save_dialog(self,options=()):
