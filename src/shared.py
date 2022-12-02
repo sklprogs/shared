@@ -750,29 +750,28 @@ class Commands(lg.Commands):
         return f + ':\n' + mes
     
     def get_mod_colors(self,color,factor=150):
-        ''' Make a color (a color name (/usr/share/X11/rgb.txt) or
-            a hex value) brighter (positive delta) or darker
-            (negative delta).
+        ''' Make a color (a color name (/usr/share/X11/rgb.txt) or a hex value)
+            brighter and darker.
         '''
         f = '[SharedQt] shared.Commands.get_mod_colors'
         # Qt does not assign a color for an empty name, no error is thrown
-        color1 = color2 = ''
+        darker = lighter = ''
         if not color:
             com.rep_empty(f)
-            return(color1,color2)
+            return(darker,lighter)
         if factor <= 0:
             mes = '{} > {}'.format(factor,0)
             com.rep_condition(f,mes)
-            return(color1,color2)
+            return(darker,lighter)
         try:
-            color1, color2 = gi.com.get_mod_colors(color,factor)
+            darker, lighter = gi.com.get_mod_colors(color,factor)
         except Exception as e:
             com.rep_third_party(f,e)
-            return(color1,color2)
+            return(darker,lighter)
         mes = _('Color: {}, darker: {}, lighter: {}')
-        mes = mes.format(color,color1,color2)
+        mes = mes.format(color,darker,lighter)
         objs.get_mes(f,mes,True).show_debug()
-        return(color1,color2)
+        return(darker,lighter)
     
     def run_fast_txt(self,text='',font=FONT1,Maximize=False):
         objs.get_txt(font,Maximize).reset()
