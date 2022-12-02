@@ -154,7 +154,9 @@ class Button:
         if self.icon:
             self.widget.setStyleSheet('border: 0px')
     
-    def set_action(self):
+    def set_action(self,action=None):
+        if action:
+            self.action = action
         if self.action:
             self.widget.clicked.connect(self.action)
     
