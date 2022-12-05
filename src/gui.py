@@ -255,7 +255,7 @@ class Objects:
         self.get_root()
 
     def end(self):
-        sys.exit(self.root.exec())
+        sys.exit(self.root.exec_())
 
     def get_warning(self):
         if not self.warning:
