@@ -6,8 +6,6 @@ import random
 
 from skl_shared_qt.localize import _
 import skl_shared_qt.shared as sh
-import skl_shared_qt.image.controller as im
-import skl_shared_qt.password.controller as pw
 
 
 ICON = sh.objs.get_pdir().add('..','resources','icon_64x64_cpt.gif')
@@ -592,9 +590,11 @@ class Commands:
         sub = sh.Clipboard().paste()
         mes = _('Clipboard contents: "{}"').format(sub)
         sh.objs.get_mes(f,mes).show_debug()
+        input(_('Press any key to continue'))
         sub = 'Hello! Это тест! αβàáҖҚŸ'
         mes = _('The following will be copied: "{}"').format(sub)
         sh.objs.get_mes(f,mes).show_info()
+        input(_('Press any key to continue'))
         sh.Clipboard().copy(sub)
         sub = sh.Clipboard().paste()
         mes = _('Clipboard contents: "{}"').format(sub)
@@ -1461,15 +1461,5 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    #com.run_all()
-    #TestBox().run_search_box()
-    #FIX
-    #TestBox().navigate_words()
-    #TestBox().bind_last_word()
-    #com.run_panes4()
-    #com.run_panes2()
-    #com.check_spelling()
-    #TestBox().select_all_search()
-    #com.run_scrollable()
-    com.run_password()
+    com.run_clipboard()
     sh.com.end()

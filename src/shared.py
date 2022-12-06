@@ -4,7 +4,6 @@
 import sys, os
 import re
 import io
-import pyperclip
 from skl_shared_qt.localize import _
 import skl_shared_qt.logic as lg
 import skl_shared_qt.gui as gi
@@ -520,41 +519,26 @@ class WriteTextFile(lg.WriteTextFile):
 class Clipboard:
 
     def __init__(self,Silent=False):
-        ''' I use a combined approach of different methods here.
-            On Linux text seems to be put in a wrong buffer when
-            copying using Tkinter (Wine apps read clipboard filled
-            by other Linux apps but *sometimes* fail to read mine
-            (a previous buffer is returned)). At the same time,
-            my Tkinter apps freeze upon Ctrl-V when pasting using
-            pyperclip.paste(). So, I use pyperclip to copy and
-            Tkinter to paste.
-        '''
         self.Silent = Silent
         self.gui = gi.Clipboard()
 
     def copy(self,text,CopyEmpty=True):
         f = '[SharedQt] shared.Clipboard.copy'
-        if text or CopyEmpty:
-            text = lg.com.sanitize(text)
-            try:
-                pyperclip.copy(text)
-            except Exception as e:
-                com.rep_failed(f,e,self.Silent)
-        else:
+        if not (text or CopyEmpty):
             com.rep_empty(f)
+            return
+        try:
+            self.gui.copy(text)
+        except Exception as e:
+            com.rep_failed(f,e,self.Silent)
 
     def paste(self):
         f = '[SharedQt] shared.Clipboard.paste'
         try:
-            text = str(self.gui.paste())
+            text = self.gui.paste()
         except Exception as e:
             text = ''
-            e = str(e)
-            if "CLIPBOARD selection doesn't exist" in e:
-                mes = _('Clipboard is empty!')
-                objs.get_mes(f,mes,True).show_warning()
-            else:
-                com.rep_failed(f,e,self.Silent)
+            com.rep_failed(f,e,self.Silent)
         # Further possible actions: strip, delete double line breaks
         return text
 

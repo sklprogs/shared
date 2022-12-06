@@ -8,6 +8,19 @@ from skl_shared_qt.localize import _
 import skl_shared_qt.shared as sh
 
 
+class Clipboard:
+    
+    def __init__(self):
+        self.clipboard = objs.get_root().clipboard()
+    
+    def copy(self,text):
+        self.clipboard.setText(text)
+    
+    def paste(self):
+        return self.clipboard.text()
+
+
+
 class Font:
     
     def get_font(self):
