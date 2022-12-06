@@ -61,6 +61,9 @@ class Entry:
     def insert(self,text):
         self.widget.insert(text)
     
+    def set_text(self,text):
+        self.widget.setText(text)
+    
     def focus(self):
         self.widget.setFocus()
 

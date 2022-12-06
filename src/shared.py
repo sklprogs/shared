@@ -116,6 +116,10 @@ class Entry:
     def insert(self,text):
         self.gui.insert(str(text))
     
+    def set_text(self,text):
+        # Clear the entry and insert clipboard contents
+        self.gui.set_text(str(text))
+    
     def focus(self):
         self.gui.focus()
 
