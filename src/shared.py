@@ -366,13 +366,6 @@ class Home(lg.Home):
 
 
 
-class Hotkeys(lg.Hotkeys):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
 class Input(lg.Input):
     
     def __init__(self,*args,**kwargs):
