@@ -815,10 +815,11 @@ class Commands(lg.Commands):
 
 class CheckBox:
     
-    def __init__(self,text=''):
+    def __init__(self,text='',font_family='Sans',font_size=11):
         self.gui = gi.CheckBox()
         self.widget = self.gui.widget
         self.gui.set_text(text)
+        self.gui.set_font(font_family,font_size)
     
     def get(self):
         return self.gui.get()

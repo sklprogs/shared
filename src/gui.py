@@ -307,6 +307,9 @@ class CheckBox:
     def set_gui(self):
         self.widget = PyQt5.QtWidgets.QCheckBox()
     
+    def set_font(self,family,size):
+        self.widget.setFont(PyQt5.QtGui.QFont(family,size))
+    
     def get(self):
         return self.widget.isChecked()
     
