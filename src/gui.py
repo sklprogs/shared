@@ -94,9 +94,11 @@ class Top(PyQt5.QtWidgets.QWidget):
 
 class OptionMenu:
     
-    def __init__(self,parent=None):
-        self.parent = parent
-        self.widget = PyQt5.QtWidgets.QComboBox(self.parent)
+    def __init__(self):
+        self.widget = PyQt5.QtWidgets.QComboBox()
+    
+    def set_font(self,family,size):
+        self.widget.setFont(PyQt5.QtGui.QFont(family,size))
     
     def enable(self):
         self.widget.setEnabled(True)

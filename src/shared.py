@@ -169,9 +169,10 @@ class TestTop(Top):
 
 class OptionMenu:
     
-    def __init__(self,items=[],default=None):
+    def __init__(self,items=[],default=None,font_family='Sans',font_size=11):
         self.gui = gi.OptionMenu()
         self.widget = self.gui.widget
+        self.gui.set_font(font_family,font_size)
         if items:
             self.reset(items,default)
     
