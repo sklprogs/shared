@@ -104,6 +104,9 @@ class Entry:
     def set_min_width(self,width):
         self.gui.set_min_width(width)
     
+    def set_max_width(self,width):
+        self.gui.set_max_width(width)
+    
     def bind(self,hotkey,action):
         self.gui.bind(hotkey,action)
     
@@ -837,10 +840,11 @@ class CheckBox:
 
 class Label:
     
-    def __init__(self,text=''):
+    def __init__(self,text='',font_family='Sans',font_size=11):
         self.gui = gi.Label()
         self.widget = self.gui.widget
         self.set_text(text)
+        self.gui.set_font(font_family,font_size)
     
     def set_text(self,text):
         if not text:

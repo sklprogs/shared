@@ -46,6 +46,9 @@ class Entry:
     def set_min_width(self,width):
         self.widget.setMinimumWidth(width)
     
+    def set_max_width(self,width):
+        self.widget.setMaximumWidth(width)
+    
     def bind(self,hotkey,action):
         PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey),self.widget).activated.connect(action)
     
@@ -341,6 +344,9 @@ class Label:
     
     def set_text(self,text):
         self.widget.setText(text)
+    
+    def set_font(self,family,size):
+        self.widget.setFont(PyQt5.QtGui.QFont(family,size))
 
 
 
