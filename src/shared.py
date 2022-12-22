@@ -127,9 +127,11 @@ class Entry:
 
 class Top:
 
-    def __init__(self):
+    def __init__(self,title='',icon=''):
         self.gui = gi.Top()
         self.widget = self.gui.widget
+        self.title = title
+        self.icon = icon
     
     def add_widget(self,item):
         f = '[SharedQt] shared.Top.add_widget'
@@ -164,10 +166,11 @@ class TestTop(Top):
 
 class OptionMenu:
     
-    def __init__(self,parent=None):
-        self.parent = parent
-        self.gui = gi.OptionMenu(self.parent)
+    def __init__(self,items=[],default=None):
+        self.gui = gi.OptionMenu()
         self.widget = self.gui.widget
+        if items:
+            self.reset(items,default)
     
     def enable(self):
         self.gui.enable()
