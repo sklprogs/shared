@@ -169,10 +169,12 @@ class TestTop(Top):
 
 class OptionMenu:
     
-    def __init__(self,items=[],default=None,font_family='Sans',font_size=11):
+    def __init__(self,items=[],default=None,font_family=None,font_size=None):
         self.gui = gi.OptionMenu()
         self.widget = self.gui.widget
-        self.gui.set_font(font_family,font_size)
+        # Qt changes default font family upon receiving None
+        if font_family and font_size:
+            self.gui.set_font(font_family,font_size)
         if items:
             self.reset(items,default)
     
@@ -819,11 +821,13 @@ class Commands(lg.Commands):
 
 class CheckBox:
     
-    def __init__(self,text='',font_family='Sans',font_size=11):
+    def __init__(self,text='',font_family=None,font_size=None):
         self.gui = gi.CheckBox()
         self.widget = self.gui.widget
         self.gui.set_text(text)
-        self.gui.set_font(font_family,font_size)
+        # Qt changes default font family upon receiving None
+        if font_family and font_size:
+            self.gui.set_font(font_family,font_size)
     
     def get(self):
         return self.gui.get()
@@ -841,11 +845,13 @@ class CheckBox:
 
 class Label:
     
-    def __init__(self,text='',font_family='Sans',font_size=11):
+    def __init__(self,text='',font_family=None,font_size=None):
         self.gui = gi.Label()
         self.widget = self.gui.widget
         self.set_text(text)
-        self.gui.set_font(font_family,font_size)
+        # Qt changes default font family upon receiving None
+        if font_family and font_size:
+            self.gui.set_font(font_family,font_size)
     
     def set_text(self,text):
         if not text:
