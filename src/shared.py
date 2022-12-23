@@ -178,6 +178,18 @@ class OptionMenu:
         if items:
             self.reset(items,default)
     
+    def change_font_size(self,delta=1):
+        f = '[SharedQt] shared.OptionMenu.change_font_size'
+        size = self.gui.get_font_size()
+        if not size:
+            com.rep_empty(f)
+            return
+        if size + delta <= 0:
+            mes = f'{size} + {delta} > 0'
+            com.rep_condition(f,mes)
+            return
+        self.gui.set_font_size(size+delta)
+    
     def enable(self):
         self.gui.enable()
     
@@ -829,6 +841,18 @@ class CheckBox:
         if font_family and font_size:
             self.gui.set_font(font_family,font_size)
     
+    def change_font_size(self,delta=1):
+        f = '[SharedQt] shared.CheckBox.change_font_size'
+        size = self.gui.get_font_size()
+        if not size:
+            com.rep_empty(f)
+            return
+        if size + delta <= 0:
+            mes = f'{size} + {delta} > 0'
+            com.rep_condition(f,mes)
+            return
+        self.gui.set_font_size(size+delta)
+    
     def get(self):
         return self.gui.get()
     
@@ -852,6 +876,18 @@ class Label:
         # Qt changes default font family upon receiving None
         if font_family and font_size:
             self.gui.set_font(font_family,font_size)
+    
+    def change_font_size(self,delta=1):
+        f = '[SharedQt] shared.Label.change_font_size'
+        size = self.gui.get_font_size()
+        if not size:
+            com.rep_empty(f)
+            return
+        if size + delta <= 0:
+            mes = f'{size} + {delta} > 0'
+            com.rep_condition(f,mes)
+            return
+        self.gui.set_font_size(size+delta)
     
     def set_text(self,text):
         if not text:

@@ -97,6 +97,17 @@ class OptionMenu:
     def __init__(self):
         self.widget = PyQt5.QtWidgets.QComboBox()
     
+    def get_font_size(self):
+        size = self.widget.font().pointSize()
+        # We will get -1 if the font size was specified in pixels
+        if size > 0:
+            return size
+    
+    def set_font_size(self,size):
+        qfont = self.widget.font()
+        qfont.setPointSize(size)
+        self.widget.setFont(qfont)
+    
     def set_font(self,family,size):
         self.widget.setFont(PyQt5.QtGui.QFont(family,size))
     
@@ -309,6 +320,17 @@ class CheckBox:
     def __init__(self):
         self.set_gui()
     
+    def get_font_size(self):
+        size = self.widget.font().pointSize()
+        # We will get -1 if the font size was specified in pixels
+        if size > 0:
+            return size
+    
+    def set_font_size(self,size):
+        qfont = self.widget.font()
+        qfont.setPointSize(size)
+        self.widget.setFont(qfont)
+    
     def set_gui(self):
         self.widget = PyQt5.QtWidgets.QCheckBox()
     
@@ -340,6 +362,17 @@ class Label:
     
     def __init__(self):
         self.set_gui()
+    
+    def get_font_size(self):
+        size = self.widget.font().pointSize()
+        # We will get -1 if the font size was specified in pixels
+        if size > 0:
+            return size
+    
+    def set_font_size(self,size):
+        qfont = self.widget.font()
+        qfont.setPointSize(size)
+        self.widget.setFont(qfont)
     
     def set_gui(self):
         self.widget = PyQt5.QtWidgets.QLabel()
