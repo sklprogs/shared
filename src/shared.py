@@ -177,6 +177,8 @@ class OptionMenu:
             self.gui.set_font(font_family,font_size)
         if items:
             self.reset(items,default)
+        else:
+            self.items = []
     
     def change_font_size(self,delta=1):
         f = '[SharedQt] shared.OptionMenu.change_font_size'
