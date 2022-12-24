@@ -110,6 +110,9 @@ class Entry:
     def bind(self,hotkey,action):
         self.gui.bind(hotkey,action)
     
+    def reset(self):
+        self.clear()
+    
     def clear(self):
         self.gui.clear()
     
