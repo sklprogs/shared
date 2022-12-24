@@ -858,6 +858,12 @@ class CheckBox:
     def get(self):
         return self.gui.get()
     
+    def set(self,value):
+        if value:
+            self.enable()
+        else:
+            self.disable()
+    
     def enable(self):
         self.gui.enable()
     
