@@ -123,7 +123,7 @@ class Entry:
         self.gui.insert(str(text))
     
     def set_text(self,text):
-        # Clear the entry and insert clipboard contents
+        # Unlike with 'insert', no need to clear the entry first
         self.gui.set_text(str(text))
     
     def focus(self):
