@@ -172,7 +172,10 @@ class TestTop(Top):
 
 class OptionMenu:
     
-    def __init__(self,items=[],default=None,font_family=None,font_size=None):
+    def __init__ (self,items=[],default=None,font_family=None,font_size=None
+                 ,action=None):
+        self.items = []
+        self.action = action
         self.gui = gi.OptionMenu()
         self.widget = self.gui.widget
         # Qt changes default font family upon receiving None
@@ -180,8 +183,13 @@ class OptionMenu:
             self.gui.set_font(font_family,font_size)
         if items:
             self.reset(items,default)
-        else:
-            self.items = []
+        self.set_action()
+        
+    def set_action(self,action=None):
+        if action:
+            self.action = action
+        if self.action:
+            self.widget.activated.connect(self.action)
     
     def change_font_size(self,delta=1):
         f = '[SharedQt] shared.OptionMenu.change_font_size'
