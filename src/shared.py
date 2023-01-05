@@ -14,6 +14,32 @@ FONT1 = 'Serif 14'
 FONT2 = 'Sans 11'
 
 
+class ProgressBar:
+    
+    def __init__(self,*args,**kwargs):
+        pass
+    
+    def set_text(self,text=None):
+        pass
+    
+    def set_title(self,text=''):
+        pass
+    
+    def add(self):
+        pass
+    
+    def show(self):
+        pass
+    
+    def close(self):
+        pass
+    
+    def update(self,count,limit):
+        f = '[SharedQt] shared.ProgressBar.update'
+        pass
+
+
+
 class Font:
     
     def __init__(self,widget,family,size):
