@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-copyright = 'Copyright 2015-2022, Peter Sklyar'
+copyright = 'Copyright 2015-2023, Peter Sklyar'
 license = 'GPL v.3'
 email = 'skl.progs@gmail.com'
 
@@ -2591,9 +2591,8 @@ class CreateInstance:
 
 
 
-#TODO: fix: does not work with a root dir ('/')
 class Directory:
-
+    #TODO: fix: does not work with a root dir ('/')
     def __init__(self,path,dest=''):
         f = '[SharedQt] logic.Directory.__init__'
         self.set_values()

@@ -8,6 +8,35 @@ from skl_shared_qt.localize import _
 import skl_shared_qt.shared as sh
 
 
+ICON = ''
+
+
+class FileDialog:
+    
+    def __init__(self,parent=None,caption='',folder='',filter_=''):
+        #NOTE: A widget is required here, not a wrapper
+        self.parent = parent
+        self.caption = caption
+        self.folder = folder
+        self.filter_ = filter_
+    
+    def set_icon(self):
+        self.parent.setWindowIcon(objs.get_icon())
+    
+    def set_parent(self):
+        if not self.parent:
+            self.parent = PyQt5.QtWidgets.QWidget()
+    
+    def save(self):
+        # Empty output is ('', '')
+        return PyQt5.QtWidgets.QFileDialog.getSaveFileName (parent = self.parent
+                                                           ,caption = self.caption
+                                                           ,directory = self.folder
+                                                           ,filter = self.filter_
+                                                           )[0]
+
+
+
 class Clipboard:
     
     def __init__(self):
@@ -219,14 +248,6 @@ class Commands:
         lighter = qcolor.lighter(factor).name()
         return(darker,lighter)
     
-    def show_save_dialog(self,parent=None,caption='',directory='',filter_=''):
-        # Empty output is ('', '')
-        return PyQt5.QtWidgets.QFileDialog.getSaveFileName (parent = parent
-                                                           ,caption = caption
-                                                           ,directory = directory
-                                                           ,filter = filter_
-                                                           )[0]
-    
     def bind(self,obj,binding,action):
         try:
             obj.widget.bind(binding,action)
@@ -281,10 +302,15 @@ class Objects:
 
     def __init__(self):
         self.root = self.warning = self.error = self.question \
-                  = self.info = self.entry = None
+                  = self.info = self.entry = self.icon = None
+    
+    def get_icon(self):
+        if self.icon is None:
+            self.icon = PyQt5.QtGui.QIcon(ICON)
+        return self.icon
     
     def get_root(self):
-        if not self.root:
+        if self.root is None:
             self.root = PyQt5.QtWidgets.QApplication(sys.argv)
         return self.root
 
@@ -295,24 +321,24 @@ class Objects:
         sys.exit(self.root.exec_())
 
     def get_warning(self):
-        if not self.warning:
+        if self.warning is None:
             self.warning = Message().get_warning()
         return self.warning
 
     def get_error(self):
-        if not self.error:
+        if self.error is None:
             self.error = Message().get_error()
         return self.error
 
     def get_question(self):
-        if not self.question:
+        if self.question is None:
             self.question = MessageBuilder (parent = self.get_root()
                                            ,level = _('QUESTION')
                                            )
         return self.question
 
     def get_info(self):
-        if not self.info:
+        if self.info is None:
             self.info = MessageBuilder (parent = self.get_root()
                                        ,level = _('INFO')
                                        )

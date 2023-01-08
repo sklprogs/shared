@@ -115,16 +115,20 @@ class Commands:
     
     def run_save_dialog(self):
         f = '[SharedQt] tests.Commands.run_save_dialog'
-        #caption = '',directory,filter
+        sh.gi.ICON = sh.objs.get_pdir().add('..','resources','question.gif')
+        #1
         mes = _('A save dialog with default settings:')
         sh.objs.get_mes(f,mes,True).show_info()
-        mes = f'"{sh.com.show_save_dialog()}"'
+        file = sh.FileDialog().save()
+        mes = f'"{file}"'
         sh.objs.get_mes(f,mes,True).show_debug()
+        
+        #2
         mes = _('Directory: /tmp. Filter: *.htm, *.html')
         sh.objs.get_mes(f,mes,True).show_info()
-        file = sh.com.show_save_dialog (directory = '/tmp'
-                                       ,filter_ = _('Web-pages (*.htm, *.html)')
-                                       )
+        file = sh.FileDialog (folder = '/tmp'
+                             ,filter_ = _('Web-pages (*.htm, *.html)')
+                             ).save()
         mes = f'"{file}"'
         sh.objs.get_mes(f,mes,True).show_debug()
     

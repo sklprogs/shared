@@ -14,6 +14,44 @@ FONT1 = 'Serif 14'
 FONT2 = 'Sans 11'
 
 
+class FileDialog:
+    
+    def __init__(self,caption='',folder='',filter_=''):
+        self.caption = caption
+        self.folder = folder
+        self.filter_ = filter_
+        self.gui = gi.FileDialog (caption = caption
+                                 ,folder = folder
+                                 ,filter_ = filter_
+                                 )
+        self.gui.set_parent()
+        self.set_icon()
+        self.set_folder()
+        self.set_filter()
+    
+    def set_folder(self):
+        if not self.folder or not Directory(self.folder).Success:
+            self.folder = Home().get_home()
+    
+    def set_filter(self):
+        if not self.filter_:
+            self.filter_ = _('All files (*.*)')
+    
+    def set_icon(self):
+        self.gui.set_icon()
+    
+    def save(self):
+        if not self.caption:
+            self.caption = _('Save File As:')
+            self.gui.caption = self.caption
+        try:
+            file = self.gui.save()
+        except Exception as e:
+            com.rep_third_party(f,e)
+        return file
+
+
+
 class ProgressBar:
     
     def __init__(self,*args,**kwargs):
@@ -827,26 +865,6 @@ class Commands(lg.Commands):
         objs.txt.set_title(title)
         objs.txt.insert(text)
         objs.txt.show()
-    
-    def show_save_dialog (self,caption=_('Save File As:'),directory=''
-                         ,filter_=''
-                         ):
-        f = '[SharedQt] shared.Commands.show_save_dialog'
-        if not directory or not Directory(directory).Success:
-            directory = Home().get_home()
-        if not filter_:
-            filter_ = _('All files (*.*)')
-        try:
-            file = gi.com.show_save_dialog (caption = caption
-                                           ,directory = directory
-                                           ,filter_ = filter_
-                                           )
-        except Exception as e:
-            file = ''
-            mes = _('The operation has failed!\n\nDetails: {}')
-            mes = mes.format(e)
-            objs.get_mes(f,mes,True).show_error()
-        return file
     
     def bind(self,obj,bindings,action):
         ''' Bind keyboard or mouse keys to an action
