@@ -828,11 +828,19 @@ class Commands(lg.Commands):
         objs.txt.insert(text)
         objs.txt.show()
     
-    def show_save_dialog(self,types=()):
+    def show_save_dialog (self,caption=_('Save File As:'),directory=''
+                         ,filter_=''
+                         ):
         f = '[SharedQt] shared.Commands.show_save_dialog'
-        options = lg.com.show_save_dialog(types)
+        if not directory or not Directory(directory).Success:
+            directory = Home().get_home()
+        if not filter_:
+            filter_ = _('All files (*.*)')
         try:
-            file = gi.com.show_save_dialog(options)
+            file = gi.com.show_save_dialog (caption = caption
+                                           ,directory = directory
+                                           ,filter_ = filter_
+                                           )
         except Exception as e:
             file = ''
             mes = _('The operation has failed!\n\nDetails: {}')

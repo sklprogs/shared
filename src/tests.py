@@ -113,6 +113,21 @@ class Commands:
     def __init__(self):
         pass
     
+    def run_save_dialog(self):
+        f = '[SharedQt] tests.Commands.run_save_dialog'
+        #caption = '',directory,filter
+        mes = _('A save dialog with default settings:')
+        sh.objs.get_mes(f,mes,True).show_info()
+        mes = f'"{sh.com.show_save_dialog()}"'
+        sh.objs.get_mes(f,mes,True).show_debug()
+        mes = _('Directory: /tmp. Filter: *.htm, *.html')
+        sh.objs.get_mes(f,mes,True).show_info()
+        file = sh.com.show_save_dialog (directory = '/tmp'
+                                       ,filter_ = _('Web-pages (*.htm, *.html)')
+                                       )
+        mes = f'"{file}"'
+        sh.objs.get_mes(f,mes,True).show_debug()
+    
     def run_password(self):
         ipass = pw.Password()
         ipass.show()
@@ -1461,5 +1476,5 @@ com = Commands()
 if __name__ == '__main__':
     f = '[shared] tests.__main__'
     sh.com.start()
-    com.run_clipboard()
+    com.run_save_dialog()
     sh.com.end()

@@ -219,8 +219,13 @@ class Commands:
         lighter = qcolor.lighter(factor).name()
         return(darker,lighter)
     
-    def show_save_dialog(self,options=()):
-        return tkinter.filedialog.asksaveasfilename(**options)
+    def show_save_dialog(self,parent=None,caption='',directory='',filter_=''):
+        # Empty output is ('', '')
+        return PyQt5.QtWidgets.QFileDialog.getSaveFileName (parent = parent
+                                                           ,caption = caption
+                                                           ,directory = directory
+                                                           ,filter = filter_
+                                                           )[0]
     
     def bind(self,obj,binding,action):
         try:

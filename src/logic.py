@@ -4328,19 +4328,6 @@ class Commands:
             text = Text(str(text)).delete_unsupported()
         return text
     
-    def show_save_dialog(self,types=()):
-        if not types:
-            types = ((_('Plain text (UTF-8)'),'.txt' )
-                    ,( _('Web-page')         ,'.htm' )
-                    ,( _('Web-page')         ,'.html')
-                    ,( _('All files')        ,'*'    )
-                    )
-        options = {}
-        options['initialfile'] = ''
-        options['filetypes'] = types
-        options['title'] = _('Save As:')
-        return options
-    
     def rep_lazy(self,func=_('Logic error!')):
         Message (func = func
                 ,message = _('Nothing to do!')
