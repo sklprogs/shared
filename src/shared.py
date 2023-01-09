@@ -16,18 +16,18 @@ FONT2 = 'Sans 11'
 
 class FileDialog:
     
-    def __init__(self,caption='',folder='',filter_=''):
-        self.caption = caption
-        self.folder = folder
+    def __init__(self,parent=None,filter_='',folder='',caption=''):
         self.filter_ = filter_
-        self.gui = gi.FileDialog (caption = caption
+        self.folder = folder
+        self.set_folder()
+        self.set_filter()
+        self.gui = gi.FileDialog (parent = parent
+                                 ,caption = caption
                                  ,folder = folder
                                  ,filter_ = filter_
                                  )
         self.gui.set_parent()
-        self.set_icon()
-        self.set_folder()
-        self.set_filter()
+        self.gui.set_icon()
     
     def set_folder(self):
         if not self.folder or not Directory(self.folder).Success:
@@ -37,13 +37,9 @@ class FileDialog:
         if not self.filter_:
             self.filter_ = _('All files (*.*)')
     
-    def set_icon(self):
-        self.gui.set_icon()
-    
     def save(self):
-        if not self.caption:
-            self.caption = _('Save File As:')
-            self.gui.caption = self.caption
+        if not self.gui.caption:
+            self.gui.caption = _('Save File As:')
         try:
             file = self.gui.save()
         except Exception as e:

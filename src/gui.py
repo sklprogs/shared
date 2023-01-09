@@ -13,12 +13,12 @@ ICON = ''
 
 class FileDialog:
     
-    def __init__(self,parent=None,caption='',folder='',filter_=''):
+    def __init__(self,filter_='',folder='',caption='',parent=None):
+        self.filter_ = filter_
+        self.folder = folder
+        self.caption = caption
         #NOTE: A widget is required here, not a wrapper
         self.parent = parent
-        self.caption = caption
-        self.folder = folder
-        self.filter_ = filter_
     
     def set_icon(self):
         self.parent.setWindowIcon(objs.get_icon())
