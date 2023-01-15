@@ -20,21 +20,19 @@ class Color:
         self.color = color
         self.gui = gi.Color(color)
     
-    def get_rgb(self):
-        f = '[SharedQt] shared.Color.get_rgb'
+    def get_hex(self):
+        f = '[SharedQt] shared.Color.get_hex'
+        # Both None and '' are accepted by Qt, but we need transparency here
         if not self.color:
             sh.com.rep_empty(f)
-            return
-        if self.color.startswith('#'):
-            return self.color
-        return self.gui.get_rgb()
+        return self.gui.get_hex()
     
     def modify(self,factor=150):
         ''' Make a color (a color name (/usr/share/X11/rgb.txt) or a hex value)
             brighter and darker.
         '''
         f = '[SharedQt] shared.Color.modify'
-        # Qt does not assign a color for an empty name, no error is thrown
+        # Qt does not throw errors on empty input
         darker = lighter = ''
         if not self.color:
             com.rep_empty(f)

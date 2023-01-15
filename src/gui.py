@@ -14,16 +14,17 @@ ICON = ''
 class Color:
     
     def __init__(self,color):
-        self.color = color
+        ''' This accepts everything without exceptions - None, '', hex value,
+            color name, even gibberish. Default color is black.
+        '''
+        self.qcolor = PyQt5.QtGui.QColor(color)
     
-    def get_rgb(self):
-        qcolor = PyQt5.QtGui.QColor(self.color)
-        return qcolor.get_rgb()
+    def get_hex(self):
+        return self.qcolor.name()
     
     def modify(self,factor):
-        qcolor = PyQt5.QtGui.QColor(self.color)
-        darker = qcolor.darker(factor).name()
-        lighter = qcolor.lighter(factor).name()
+        darker = self.qcolor.darker(factor).name()
+        lighter = self.qcolor.lighter(factor).name()
         return(darker,lighter)
 
 
