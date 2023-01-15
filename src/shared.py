@@ -14,6 +14,47 @@ FONT1 = 'Serif 14'
 FONT2 = 'Sans 11'
 
 
+class Color:
+    # Should accept a color name (/usr/share/X11/rgb.txt) or a hex value
+    def __init__(self,color):
+        self.color = color
+        self.gui = gi.Color(color)
+    
+    def get_rgb(self):
+        f = '[SharedQt] shared.Color.get_rgb'
+        if not self.color:
+            sh.com.rep_empty(f)
+            return
+        if self.color.startswith('#'):
+            return self.color
+        return self.gui.get_rgb()
+    
+    def modify(self,factor=150):
+        ''' Make a color (a color name (/usr/share/X11/rgb.txt) or a hex value)
+            brighter and darker.
+        '''
+        f = '[SharedQt] shared.Color.modify'
+        # Qt does not assign a color for an empty name, no error is thrown
+        darker = lighter = ''
+        if not self.color:
+            com.rep_empty(f)
+            return(darker,lighter)
+        if factor <= 0:
+            mes = '{} > {}'.format(factor,0)
+            com.rep_condition(f,mes)
+            return(darker,lighter)
+        try:
+            darker, lighter = self.gui.modify(factor)
+        except Exception as e:
+            com.rep_third_party(f,e)
+            return(darker,lighter)
+        mes = _('Color: {}, darker: {}, lighter: {}')
+        mes = mes.format(self.color,darker,lighter)
+        objs.get_mes(f,mes,True).show_debug()
+        return(darker,lighter)
+
+
+
 class FileDialog:
     
     def __init__(self,parent=None,filter_='',folder='',caption=''):
@@ -823,30 +864,6 @@ class Commands(lg.Commands):
         else:
             com.rep_empty(f)
         return f + ':\n' + mes
-    
-    def get_mod_colors(self,color,factor=150):
-        ''' Make a color (a color name (/usr/share/X11/rgb.txt) or a hex value)
-            brighter and darker.
-        '''
-        f = '[SharedQt] shared.Commands.get_mod_colors'
-        # Qt does not assign a color for an empty name, no error is thrown
-        darker = lighter = ''
-        if not color:
-            com.rep_empty(f)
-            return(darker,lighter)
-        if factor <= 0:
-            mes = '{} > {}'.format(factor,0)
-            com.rep_condition(f,mes)
-            return(darker,lighter)
-        try:
-            darker, lighter = gi.com.get_mod_colors(color,factor)
-        except Exception as e:
-            com.rep_third_party(f,e)
-            return(darker,lighter)
-        mes = _('Color: {}, darker: {}, lighter: {}')
-        mes = mes.format(color,darker,lighter)
-        objs.get_mes(f,mes,True).show_debug()
-        return(darker,lighter)
     
     def run_fast_txt(self,text='',font=FONT1,Maximize=False):
         objs.get_txt(font,Maximize).reset()

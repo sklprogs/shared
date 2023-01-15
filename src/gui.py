@@ -11,6 +11,23 @@ import skl_shared_qt.shared as sh
 ICON = ''
 
 
+class Color:
+    
+    def __init__(self,color):
+        self.color = color
+    
+    def get_rgb(self):
+        qcolor = PyQt5.QtGui.QColor(self.color)
+        return qcolor.get_rgb()
+    
+    def modify(self,factor):
+        qcolor = PyQt5.QtGui.QColor(self.color)
+        darker = qcolor.darker(factor).name()
+        lighter = qcolor.lighter(factor).name()
+        return(darker,lighter)
+
+
+
 class FileDialog:
     
     def __init__(self,filter_='',folder='',caption='',parent=None):
@@ -241,12 +258,6 @@ class Commands:
                              ,width = width
                              ,height = height
                              )
-        
-    def get_mod_colors(self,color,factor):
-        qcolor = PyQt5.QtGui.QColor(color)
-        darker = qcolor.darker(factor).name()
-        lighter = qcolor.lighter(factor).name()
-        return(darker,lighter)
     
     def bind(self,obj,binding,action):
         try:
