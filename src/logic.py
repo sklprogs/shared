@@ -1210,12 +1210,7 @@ class Text:
             self.convert_line_breaks()
             self.strip_lines()
             self.delete_duplicate_line_breaks()
-            self.tabs2spaces()
-            self.delete_trash()
-            self.replace_x()
             self.delete_duplicate_spaces()
-            self.replace_yo()
-            self.text = OCR(text=self.text).run_common()
             self.delete_space_with_punctuation()
             ''' This is necessary even if we do strip for each line (we
                 need to strip '\n' at the beginning/end).
