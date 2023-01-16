@@ -56,15 +56,13 @@ class Color:
 class FileDialog:
     
     def __init__(self,parent=None,filter_='',folder='',caption=''):
-        self.filter_ = filter_
+        self.parent = parent
+        self.filter = filter_
         self.folder = folder
+        self.caption = caption
         self.set_folder()
         self.set_filter()
-        self.gui = gi.FileDialog (parent = parent
-                                 ,caption = caption
-                                 ,folder = folder
-                                 ,filter_ = filter_
-                                 )
+        self.gui = gi.FileDialog(self.parent)
         self.gui.set_parent()
         self.gui.set_icon()
     
@@ -73,14 +71,17 @@ class FileDialog:
             self.folder = Home().get_home()
     
     def set_filter(self):
-        if not self.filter_:
-            self.filter_ = _('All files (*.*)')
+        if not self.filter:
+            self.filter = _('All files (*.*)')
     
     def save(self):
-        if not self.gui.caption:
-            self.gui.caption = _('Save File As:')
+        if not self.caption:
+            self.caption = _('Save File As:')
         try:
-            file = self.gui.save()
+            file = self.gui.save (caption = self.caption
+                                 ,folder = self.folder
+                                 ,filter_ = self.filter
+                                 )
         except Exception as e:
             com.rep_third_party(f,e)
         return file

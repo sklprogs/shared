@@ -31,10 +31,7 @@ class Color:
 
 class FileDialog:
     
-    def __init__(self,filter_='',folder='',caption='',parent=None):
-        self.filter_ = filter_
-        self.folder = folder
-        self.caption = caption
+    def __init__(self,parent=None):
         #NOTE: A widget is required here, not a wrapper
         self.parent = parent
     
@@ -45,12 +42,12 @@ class FileDialog:
         if not self.parent:
             self.parent = PyQt5.QtWidgets.QWidget()
     
-    def save(self):
+    def save(self,caption,folder,filter_):
         # Empty output is ('', '')
         return PyQt5.QtWidgets.QFileDialog.getSaveFileName (parent = self.parent
-                                                           ,caption = self.caption
-                                                           ,directory = self.folder
-                                                           ,filter = self.filter_
+                                                           ,caption = caption
+                                                           ,directory = folder
+                                                           ,filter = filter_
                                                            )[0]
 
 
