@@ -1553,14 +1553,14 @@ class Text:
         self.text = self.text.replace('\t',' ')
         return self.text
 
-    # This allows to shorten dictionaries
     def replace_yo(self):
+        # This allows to shorten dictionaries
         self.text = self.text.replace('Ё','Е')
         self.text = self.text.replace('ё','е')
         return self.text
 
-    # Delete everything but alphas and digits
     def get_alphanum(self):
+        # Delete everything but alphas and digits
         self.text = ''.join([x for x in self.text if x.isalnum()])
         return self.text
         
@@ -1580,8 +1580,8 @@ class Text:
                 return True
                 
     def delete_unsupported(self):
-        ''' Remove characters from a range not supported by Tcl 
-            (and causing a Tkinter error).
+        ''' Remove characters from a range not supported by Tcl (and causing
+            a Tkinter error).
         '''
         self.text = ''.join ([char for char in self.text if ord(char) \
                               in range(65536)
@@ -1603,6 +1603,16 @@ class List:
         else:
             self.lst2 = list(lst2)
     
+    def split_by_item(self,item):
+        f = '[SharedQt] logic.List.split_by_item'
+        try:
+            index_ = self.lst1.index(item)
+            self.lst2 = self.lst1[index_+1:]
+            self.lst1 = self.lst1[:index_]
+        except ValueError:
+            mes = _('Wrong input data: "{}"!').format(item)
+            objs.get_mes(f,mes,True).show_warning()
+    
     def split_by_len(self,len_):
         # Get successive len_-sized chunks
         return [self.lst1[i:i+len_] for i in range(0,len(self.lst1),len_)]
@@ -1611,22 +1621,21 @@ class List:
         ''' Split an integer sequence where the next item does not
             increment the preceding one.
         '''
-        if len(self.lst1) > 0:
-            cuts = []
-            cut = [self.lst1[0]]
-            i = 1
-            while i < len(self.lst1):
-                if self.lst1[i-1] + 1 == self.lst1[i]:
-                    cut.append(self.lst1[i])
-                else:
-                    cuts.append(cut)
-                    cut = [self.lst1[i]]
-                i += 1
-            if cut:
-                cuts.append(cut)
-            return cuts
-        else:
+        if len(self.lst1) <= 0:
             return self.lst1
+        cuts = []
+        cut = [self.lst1[0]]
+        i = 1
+        while i < len(self.lst1):
+            if self.lst1[i-1] + 1 == self.lst1[i]:
+                cut.append(self.lst1[i])
+            else:
+                cuts.append(cut)
+                cut = [self.lst1[i]]
+            i += 1
+        if cut:
+            cuts.append(cut)
+        return cuts
 
     def find_by_count(self,max_count=1):
         count = 0
@@ -1654,37 +1663,34 @@ class List:
         while True:
             self.lst1 = old[start:]
             res = self.find()
-            if res:
-                res[0] += start
-                res[1] += start
-                start = res[1] + 1
-                poses.append(res)
-            else:
+            if not res:
                 break
+            res[0] += start
+            res[1] += start
+            start = res[1] + 1
+            poses.append(res)
         self.lst1 = old
         return poses
     
     def find(self):
         len_ = len(self.lst2)
-        for index_ in (i for i,e in enumerate(self.lst1) \
-                       if e == self.lst2[0]
-                      ):
+        for index_ in (i for i,e in enumerate(self.lst1) if e == self.lst2[0]):
             if self.lst1[index_:index_+len_] == self.lst2:
                 return([index_, index_ + len_ - 1])
     
     def get_shared(self):
         return [item for item in self.lst2 if item in self.lst1]
     
-    # Check if 'lst1' fully comprises 'lst2'
     def eats(self):
+        # Check if 'lst1' fully comprises 'lst2'
         for item in self.lst2:
             if not item in self.lst1:
                 return False
         return True
     
     def get_duplicates_low(self):
-        ''' Remove (case-insensitively) duplicate items (positioned
-            after original items). Both lists must consist of strings.
+        ''' Remove (case-insensitively) duplicate items (positioned after
+            original items). Both lists must consist of strings.
         '''
         cilst = [item.lower() for item in self.lst1]
         i = len(cilst) - 1
@@ -1696,8 +1702,8 @@ class List:
             i -= 1
         return self.lst1
     
-    # Remove duplicate items (positioned after original items)
     def delete_duplicates(self):
+        # Remove duplicate items (positioned after original items)
         i = len(self.lst1) - 1
         while i >= 0:
             ind = self.lst1.index(self.lst1[i])
@@ -1706,48 +1712,46 @@ class List:
             i -= 1
         return self.lst1
     
-    # Add a space where necessary and convert to a string
     def space_items(self,MultSpaces=False):
+        # Add a space where necessary and convert to a string
         text = ''
         for i in range(len(self.lst1)):
-            if not self.lst1[i] == '':
-                if text == '':
-                    text += self.lst1[i]
-                elif self.lst1[i] and self.lst1[i][0] in punc_array \
-                or self.lst1[i][0] in '”»])}':
-                    text += self.lst1[i]
-                elif len(text) > 1 and text[-2].isspace() \
-                and text[-1] == '"':
-                    ''' We do not know for sure where quotes should be
-                        placed, but we cannot leave out cases like ' " '
-                    '''
-                    text += self.lst1[i]
-                elif len(text) > 1 and text[-2].isspace() \
-                and text[-1] == "'":
-                    text += self.lst1[i]
-                # Only after "text == ''"
-                elif text[-1] in '“«[{(':
-                    text += self.lst1[i]
-                elif text[-1].isspace() and self.lst1[i] \
-                and self.lst1[i][0].isspace() and not MultSpaces:
-                    tmp = self.lst1[i].lstrip()
-                    if tmp:
-                        text += tmp
-                elif text[-1].isspace():
-                    text += self.lst1[i]
-                elif i == len(self.lst1) - 1 and self.lst1[i] \
-                in punc_array:
-                    text += self.lst1[i]
-                # Do not allow ' "' in the end
-                elif i == len(self.lst1) - 1 and self.lst1[i] \
-                in ('”','»',']',')','}','"',"'"):
-                    text += self.lst1[i]
-                else:
-                    text += ' ' + self.lst1[i]
+            if self.lst1[i] == '':
+                return text
+            if text == '':
+                text += self.lst1[i]
+            elif self.lst1[i] and self.lst1[i][0] in punc_array \
+            or self.lst1[i][0] in '”»])}':
+                text += self.lst1[i]
+            elif len(text) > 1 and text[-2].isspace() and text[-1] == '"':
+                ''' We do not know for sure where quotes should be placed, but
+                    we cannot leave out cases like ' " '
+                '''
+                text += self.lst1[i]
+            elif len(text) > 1 and text[-2].isspace() and text[-1] == "'":
+                text += self.lst1[i]
+            # Only after "text == ''"
+            elif text[-1] in '“«[{(':
+                text += self.lst1[i]
+            elif text[-1].isspace() and self.lst1[i] \
+            and self.lst1[i][0].isspace() and not MultSpaces:
+                tmp = self.lst1[i].lstrip()
+                if tmp:
+                    text += tmp
+            elif text[-1].isspace():
+                text += self.lst1[i]
+            elif i == len(self.lst1) - 1 and self.lst1[i] in punc_array:
+                text += self.lst1[i]
+            # Do not allow ' "' in the end
+            elif i == len(self.lst1) - 1 and self.lst1[i] \
+            in ('”','»',']',')','}','"',"'"):
+                text += self.lst1[i]
+            else:
+                text += ' ' + self.lst1[i]
         return text
 
-    # Adjust the lists at input to have the same length
     def equalize(self):
+        # Adjust the lists at input to have the same length
         max_range = max(len(self.lst1),len(self.lst2))
         if max_range == len(self.lst1):
             for i in range(len(self.lst1)-len(self.lst2)):
@@ -1757,9 +1761,9 @@ class List:
                 self.lst1.append('')
         return(self.lst1,self.lst2)
 
-    # Find different elements (strict order)
-    # Based on http://stackoverflow.com/a/788780
     def get_diff(self):
+        # Find different elements (strict order)
+        # Based on http://stackoverflow.com/a/788780
         seqm = difflib.SequenceMatcher(a=self.lst1,b=self.lst2)
         output = []
         for opcode, a0, a1, b0, b1 in seqm.get_opcodes():
@@ -1812,64 +1816,64 @@ class Time:
 
     def get_date(self):
         f = '[SharedQt] logic.Time.get_date'
-        if self.Success:
-            try:
-                self.date = self.get_instance().strftime(self.pattern)
-            except Exception as e:
-                self.fail(f,e)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        try:
+            self.date = self.get_instance().strftime(self.pattern)
+        except Exception as e:
+            self.fail(f,e)
         return self.date
 
     def get_instance(self):
         f = '[SharedQt] logic.Time.get_instance'
-        if self.Success:
-            if self.inst is None:
-                if self.tstamp is None:
-                    self.get_timestamp()
-                try:
-                    self.inst = datetime.datetime.fromtimestamp(self.tstamp)
-                except Exception as e:
-                    self.fail(f,e)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if self.inst is None:
+            if self.tstamp is None:
+                self.get_timestamp()
+            try:
+                self.inst = datetime.datetime.fromtimestamp(self.tstamp)
+            except Exception as e:
+                self.fail(f,e)
         return self.inst
 
     def get_timestamp(self):
         f = '[SharedQt] logic.Time.get_timestamp'
-        if self.Success:
-            if not self.date:
-                self.get_date()
-            try:
-                self.tstamp = time.mktime(datetime.datetime.strptime(self.date,self.pattern).timetuple())
-            except Exception as e:
-                self.fail(f,e)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not self.date:
+            self.get_date()
+        try:
+            self.tstamp = time.mktime(datetime.datetime.strptime(self.date,self.pattern).timetuple())
+        except Exception as e:
+            self.fail(f,e)
         return self.tstamp
 
     def is_monday(self):
         f = '[SharedQt] logic.Time.is_monday'
-        if self.Success:
-            if not self.inst:
-                self.get_instance()
-            if datetime.datetime.weekday(self.inst) == 0:
-                return True
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not self.inst:
+            self.get_instance()
+        if datetime.datetime.weekday(self.inst) == 0:
+            return True
 
     def get_month_name(self):
         f = '[SharedQt] logic.Time.get_month_name'
-        if self.Success:
-            if not self.inst:
-                self.get_instance()
-            self.month_name = calendar.month_name \
-                              [Text (text = self.inst.strftime("%m")
-                                    ,Auto = False
-                                    ).str2int()
-                              ]
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not self.inst:
+            self.get_instance()
+        self.month_name = calendar.month_name \
+                            [Text (text = self.inst.strftime("%m")
+                                  ,Auto = False
+                                  ).str2int()
+                            ]
         return self.month_name
 
     def localize_month_abbr(self):
@@ -1905,16 +1909,16 @@ class Time:
     
     def get_month_abbr(self):
         f = '[SharedQt] logic.Time.get_month_abbr'
-        if self.Success:
-            if not self.inst:
-                self.get_instance()
-            self.month_abbr = calendar.month_abbr \
-                              [Text (text = self.inst.strftime("%m")
-                                    ,Auto = False
-                                    ).str2int()
-                              ]
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not self.inst:
+            self.get_instance()
+        self.month_abbr = calendar.month_abbr \
+                            [Text (text = self.inst.strftime("%m")
+                                  ,Auto = False
+                                  ).str2int()
+                              ]
         return self.month_abbr
 
     def get_todays_date(self):
@@ -1922,15 +1926,15 @@ class Time:
 
     def get_year(self):
         f = '[SharedQt] logic.Time.get_year'
-        if self.Success:
-            if not self.inst:
-                self.get_instance()
-            try:
-                self.year = self.inst.strftime("%Y")
-            except Exception as e:
-                self.fail(f,e)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not self.inst:
+            self.get_instance()
+        try:
+            self.year = self.inst.strftime("%Y")
+        except Exception as e:
+            self.fail(f,e)
         return self.year
 
 
@@ -1951,7 +1955,7 @@ class File:
         # This already checks existence
         if self.file and os.path.isfile(self.file):
             ''' If the destination directory does not exist, this will
-                be caught in try-except while copying/moving
+                be caught in try-except while copying/moving.
             '''
             if os.path.isdir(self.dest):
                 self.dest = os.path.join (self.dest
@@ -1973,23 +1977,22 @@ class File:
     def get_size(self,Follow=True):
         f = '[SharedQt] logic.File.get_size'
         result = 0
-        if self.Success:
-            try:
-                if Follow:
-                    cond = not os.path.islink(self.file)
-                else:
-                    cond = True
-                if cond:
-                    result = os.path.getsize(self.file)
-            except Exception as e:
-                ''' Along with other errors, 'No such file or directory'
-                    error will be raised if Follow=False and this is
-                    a broken symbolic link.
-                '''
-                mes = _('Operation has failed!\nDetails: {}').format(e)
-                objs.get_mes(f,mes).show_warning()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        try:
+            if Follow:
+                cond = not os.path.islink(self.file)
+            else:
+                cond = True
+            if cond:
+                result = os.path.getsize(self.file)
+        except Exception as e:
+            ''' Along with other errors, 'No such file or directory' error will
+                be raised if Follow=False and this is a broken symbolic link.
+            '''
+            mes = _('Operation has failed!\nDetails: {}').format(e)
+            objs.get_mes(f,mes).show_warning()
         return result
     
     def _copy(self):
@@ -2022,99 +2025,98 @@ class File:
 
     def get_access_time(self):
         f = '[SharedQt] logic.File.get_access_time'
-        if self.Success:
-            try:
-                self.atime = os.path.getatime(self.file)
-                # Further steps: datetime.date.fromtimestamp(self.atime).strftime(self.pattern)
-                return self.atime
-            except:
-                mes = _('Failed to get the date of the file "{}"!')
-                mes = mes.format(self.file)
-                objs.get_mes(f,mes).show_error()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        try:
+            self.atime = os.path.getatime(self.file)
+            # Further steps: datetime.date.fromtimestamp(self.atime).strftime(self.pattern)
+            return self.atime
+        except:
+            mes = _('Failed to get the date of the file "{}"!')
+            mes = mes.format(self.file)
+            objs.get_mes(f,mes).show_error()
 
     def copy(self):
         f = '[SharedQt] logic.File.copy'
         Success = True
-        if self.Success:
-            if self.file.lower() == self.dest.lower():
-                mes = _('Unable to copy the file "{}" to iself!')
-                mes = mes.format(self.file)
-                objs.get_mes(f,mes).show_error()
-            elif com.rewrite (file = self.dest
-                             ,Rewrite = self.Rewrite
-                             ):
-                Success = self._copy()
-            else:
-                mes = _('Operation has been canceled by the user.')
-                objs.get_mes(f,mes,True).show_info()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if self.file.lower() == self.dest.lower():
+            mes = _('Unable to copy the file "{}" to iself!').format(self.file)
+            objs.get_mes(f,mes).show_error()
+        elif com.rewrite (file = self.dest
+                         ,Rewrite = self.Rewrite
+                         ):
+            Success = self._copy()
+        else:
+            mes = _('Operation has been canceled by the user.')
+            objs.get_mes(f,mes,True).show_info()
         return Success
 
     def delete(self):
         f = '[SharedQt] logic.File.delete'
-        if self.Success:
-            mes = _('Delete "{}"').format(self.file)
-            objs.get_mes(f,mes,True).show_info()
-            try:
-                os.remove(self.file)
-                return True
-            except:
-                mes = _('Failed to delete file "{}"!').format(self.file)
-                objs.get_mes(f,mes).show_error()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        mes = _('Delete "{}"').format(self.file)
+        objs.get_mes(f,mes,True).show_info()
+        try:
+            os.remove(self.file)
+            return True
+        except:
+            mes = _('Failed to delete file "{}"!').format(self.file)
+            objs.get_mes(f,mes).show_error()
 
     def get_modification_time(self):
         f = '[SharedQt] logic.File.get_modification_time'
-        if self.Success:
-            try:
-                self.mtime = os.path.getmtime(self.file)
-                # Further steps: datetime.date.fromtimestamp(self.mtime).strftime(self.pattern)
-                return self.mtime
-            except:
-                mes = _('Failed to get the date of the file "{}"!')
-                mes = mes.format(self.file)
-                objs.get_mes(f,mes).show_error()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        try:
+            self.mtime = os.path.getmtime(self.file)
+            # Further steps: datetime.date.fromtimestamp(self.mtime).strftime(self.pattern)
+            return self.mtime
+        except:
+            mes = _('Failed to get the date of the file "{}"!')
+            mes = mes.format(self.file)
+            objs.get_mes(f,mes).show_error()
 
     def move(self):
         f = '[SharedQt] logic.File.move'
         Success = True
-        if self.Success:
-            if self.file.lower() == self.dest.lower():
-                mes = _('Moving is not necessary, because the source and destination are identical ({}).')
-                mes = mes.format(self.file)
-                objs.get_mes(f,mes).show_warning()
-            elif com.rewrite (file = self.dest
-                             ,Rewrite = self.Rewrite
-                             ):
-                Success = self._move()
-            else:
-                mes = _('Operation has been canceled by the user.')
-                objs.get_mes(f,mes,True).show_info()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if self.file.lower() == self.dest.lower():
+            mes = _('Moving is not necessary, because the source and destination are identical ({}).')
+            mes = mes.format(self.file)
+            objs.get_mes(f,mes).show_warning()
+        elif com.rewrite (file = self.dest
+                         ,Rewrite = self.Rewrite
+                         ):
+            Success = self._move()
+        else:
+            mes = _('Operation has been canceled by the user.')
+            objs.get_mes(f,mes,True).show_info()
         return self.Success and Success
 
     def set_time(self):
         f = '[SharedQt] logic.File.set_time'
-        if self.Success:
-            if self.atime and self.mtime:
-                mes = _('Change the time of the file "{}" to {}')
-                mes = mes.format(self.file,(self.atime,self.mtime))
-                objs.get_mes(f,mes,True).show_info()
-                try:
-                    os.utime(self.file,(self.atime,self.mtime))
-                except:
-                    mes = _('Failed to change the time of the file "{}" to "{}"!')
-                    mes = mes.format(self.file,(self.atime,self.mtime))
-                    objs.get_mes(f,mes).show_error()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if self.atime and self.mtime:
+            mes = _('Change the time of the file "{}" to {}')
+            mes = mes.format(self.file,(self.atime,self.mtime))
+            objs.get_mes(f,mes,True).show_info()
+            try:
+                os.utime(self.file,(self.atime,self.mtime))
+            except:
+                mes = _('Failed to change the time of the file "{}" to "{}"!')
+                mes = mes.format(self.file,(self.atime,self.mtime))
+                objs.get_mes(f,mes).show_error()
 
 
 
@@ -2126,20 +2128,19 @@ class Path:
     def get_free_space(self):
         f = '[SharedQt] logic.Path.get_free_space'
         result = 0
-        if self.path:
-            if os.path.exists(self.path):
-                try:
-                    istat = os.statvfs(self.path)
-                    result = istat.f_bavail * istat.f_bsize
-                except Exception as e:
-                    mes = _('Operation has failed!\nDetails: {}')
-                    mes = mes.format(e)
-                    objs.get_mes(f,mes).show_error()
-            else:
-                mes = _('Wrong input data: "{}"!').format(self.path)
-                objs.get_mes(f,mes).show_warning()
-        else:
+        if not self.path:
             com.rep_empty(f)
+            return result
+        if not os.path.exists(self.path):
+            mes = _('Wrong input data: "{}"!').format(self.path)
+            objs.get_mes(f,mes).show_warning()
+            return result
+        try:
+            istat = os.statvfs(self.path)
+            result = istat.f_bavail * istat.f_bsize
+        except Exception as e:
+            mes = _('Operation has failed!\nDetails: {}').format(e)
+            objs.get_mes(f,mes).show_error()
         return result
     
     def _split_path(self):
@@ -2160,31 +2161,28 @@ class Path:
         f = '[SharedQt] logic.Path.create'
         # We actually don't need to fail the class globally
         Success = True
-        if self.path:
-            if os.path.exists(self.path):
-                if os.path.isdir(self.path):
-                    mes = _('Directory "{}" already exists.')
-                    mes = mes.format(self.path)
-                    objs.get_mes(f,mes,True).show_info()
-                else:
-                    Success = False
-                    mes = _('The path "{}" is invalid!')
-                    mes = mes.format(self.path)
-                    objs.get_mes(f,mes).show_warning()
-            else:
-                mes = _('Create directory "{}"').format(self.path)
-                objs.get_mes(f,mes,True).show_info()
-                try:
-                    #TODO: consider os.mkdir
-                    os.makedirs(self.path)
-                except:
-                    Success = False
-                    mes = _('Failed to create directory "{}"!')
-                    mes = mes.format(self.path)
-                    objs.get_mes(f,mes).show_error()
-        else:
+        if not self.path:
             Success = False
             com.rep_empty(f)
+            return Success
+        if os.path.exists(self.path):
+            if os.path.isdir(self.path):
+                mes = _('Directory "{}" already exists.').format(self.path)
+                objs.get_mes(f,mes,True).show_info()
+            else:
+                Success = False
+                mes = _('The path "{}" is invalid!').format(self.path)
+                objs.get_mes(f,mes).show_warning()
+        else:
+            mes = _('Create directory "{}"').format(self.path)
+            objs.get_mes(f,mes,True).show_info()
+            try:
+                #TODO: consider os.mkdir
+                os.makedirs(self.path)
+            except:
+                Success = False
+                mes = _('Failed to create directory "{}"!').format(self.path)
+                objs.get_mes(f,mes).show_error()
         return Success
 
     def delete_inappropriate_symbols(self):
@@ -2242,20 +2240,21 @@ class Path:
         self.parts = []
 
     def split(self):
-        if not self.parts:
-            #TODO: use os.path.split
-            self.parts = self.path.split(os.path.sep)
-            i = 0
-            tmp_str = ''
-            while i < len(self.parts):
-                if self.parts[i]:
-                    self.parts[i] = tmp_str + self.parts[i]
-                    tmp_str = ''
-                else:
-                    tmp_str += os.path.sep
-                    del self.parts[i]
-                    i -= 1
-                i += 1
+        if self.parts:
+            return self.parts
+        #TODO: use os.path.split
+        self.parts = self.path.split(os.path.sep)
+        i = 0
+        tmp_str = ''
+        while i < len(self.parts):
+            if self.parts[i]:
+                self.parts[i] = tmp_str + self.parts[i]
+                tmp_str = ''
+            else:
+                tmp_str += os.path.sep
+                del self.parts[i]
+                i -= 1
+            i += 1
         return self.parts
 
 
