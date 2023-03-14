@@ -1607,11 +1607,12 @@ class List:
         f = '[SharedQt] logic.List.split_by_item'
         try:
             index_ = self.lst1.index(item)
-            self.lst2 = self.lst1[index_+1:]
+            self.lst2 = self.lst1[index_:]
             self.lst1 = self.lst1[:index_]
         except ValueError:
             mes = _('Wrong input data: "{}"!').format(item)
             objs.get_mes(f,mes,True).show_warning()
+        return(self.lst1,self.lst2)
     
     def split_by_len(self,len_):
         # Get successive len_-sized chunks
