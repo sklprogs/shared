@@ -545,12 +545,6 @@ class OSSpecific:
     def __init__(self):
         self.name = ''
 
-    def get_shift_tab(self):
-        if self.is_lin():
-            return '<Shift-ISO_Left_Tab>'
-        else:
-            return '<Shift-KeyPress-Tab>'
-
     def is_win(self):
         return 'win' in sys.platform
 
@@ -561,15 +555,16 @@ class OSSpecific:
         return 'mac' in sys.platform
 
     def get_name(self):
-        if not self.name:
-            if self.is_win():
-                self.name = 'win'
-            elif self.is_lin():
-                self.name = 'lin'
-            elif self.is_mac():
-                self.name = 'mac'
-            else:
-                self.name = 'unknown'
+        if self.name:
+            return self.name
+        if self.is_win():
+            self.name = 'win'
+        elif self.is_lin():
+            self.name = 'lin'
+        elif self.is_mac():
+            self.name = 'mac'
+        else:
+            self.name = 'unknown'
         return self.name
 
 
