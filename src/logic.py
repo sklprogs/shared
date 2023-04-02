@@ -126,30 +126,30 @@ class Sections:
     
     def get_abbr(self,section):
         f = '[SharedQt] logic.Sections.get_abbr'
-        if section:
-            try:
-                index_ = self.sections.index(section)
-                return self.abbr[index_]   
-            except (ValueError,IndexError) as e:
-                mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
-                mes = mes.format(section,'; '.join(self.sections))
-                objs.get_mes(f,mes).show_error()
-        else:
+        if not section:
             com.rep_empty(f)
+            return ''
+        try:
+            index_ = self.sections.index(section)
+            return self.abbr[index_]   
+        except (ValueError,IndexError) as e:
+            mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
+            mes = mes.format(section,'; '.join(self.sections))
+            objs.get_mes(f,mes).show_error()
         return ''
     
     def get_section(self,abbr):
         f = '[SharedQt] logic.Sections.get_section'
-        if abbr:
-            try:
-                index_ = self.abbr.index(abbr)
-                return self.sections[index_]
-            except (ValueError,IndexError) as e:
-                mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
-                mes = mes.format(abbr,'; '.join(self.abbr))
-                objs.get_mes(f,mes).show_error()
-        else:
+        if not abbr:
             com.rep_empty(f)
+            return ''
+        try:
+            index_ = self.abbr.index(abbr)
+            return self.sections[index_]
+        except (ValueError,IndexError) as e:
+            mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
+            mes = mes.format(abbr,'; '.join(self.abbr))
+            objs.get_mes(f,mes).show_error()
         return ''
 
 
@@ -253,9 +253,7 @@ class FastTable:
                  ,maxrows=0,encloser=''
                  ,ShowGap=True
                  ):
-        ''' #NOTE: In case of tuple, do not forget to add commas,
-            e.g.: ((1,),).
-        '''
+        # #NOTE: In case of tuple, do not forget to add commas, e.g.: ((1,),)
         self.Success = True
         self.lens = []
         self.encloser = encloser
@@ -270,150 +268,148 @@ class FastTable:
     
     def set_max_rows(self):
         f = '[SharedQt] logic.FastTable.set_max_rows'
-        if self.Success:
-            if self.maxrows > 0:
-                mes = _('Set the max number of rows to {}')
-                mes = mes.format(self.maxrows)
-                objs.get_mes(f,mes,True).show_debug()
-                for i in range(len(self.lst)):
-                    # +1 for a header
-                    self.lst[i] = self.lst[i][0:self.maxrows+1]
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if self.maxrows <= 0:
+            return
+        mes = _('Set the max number of rows to {}').format(self.maxrows)
+        objs.get_mes(f,mes,True).show_debug()
+        for i in range(len(self.lst)):
+            # +1 for a header
+            self.lst[i] = self.lst[i][0:self.maxrows+1]
     
     def set_max_width(self):
         f = '[SharedQt] logic.FastTable.set_max_width'
-        if self.Success:
-            if self.maxrow > 0:
-                mes = _('Set the max column width to {} symbols')
-                mes = mes.format(self.maxrow)
-                objs.get_mes(f,mes,True).show_debug()
-                if self.encloser:
-                    max_len = self.maxrow - len(self.encloser)
-                    if max_len < 0:
-                        max_len = 0
-                else:
-                    max_len = self.maxrow
-                for i in range(len(self.lst)):
-                    for j in range(len(self.lst[i])):
-                        self.lst[i][j] = Text(str(self.lst[i][j])).shorten (max_len = max_len
-                                                                           ,FromEnd = self.FromEnd
-                                                                           ,ShowGap = self.ShowGap
-                                                                           )
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if self.maxrow <= 0:
+            return
+        mes = _('Set the max column width to {} symbols').format(self.maxrow)
+        objs.get_mes(f,mes,True).show_debug()
+        if self.encloser:
+            max_len = self.maxrow - len(self.encloser)
+            if max_len < 0:
+                max_len = 0
+        else:
+            max_len = self.maxrow
+        for i in range(len(self.lst)):
+            for j in range(len(self.lst[i])):
+                self.lst[i][j] = Text(str(self.lst[i][j])).shorten (max_len = max_len
+                                                                   ,FromEnd = self.FromEnd
+                                                                   ,ShowGap = self.ShowGap
+                                                                   )
     
     def enclose(self):
         ''' Passing 'encloser' in 'Text.shorten' is not enough since it
             does not enclose items shorter than 'max_len'.
         '''
         f = '[SharedQt] logic.FastTable.enclose'
-        if self.Success:
-            if self.enclose:
-                for i in range(len(self.lst)):
-                    j = 1
-                    while j < len(self.lst[i]):
-                        self.lst[i][j] = Text(self.lst[i][j]).enclose(self.encloser)
-                        j += 1
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not self.enclose:
+            return
+        for i in range(len(self.lst)):
+            j = 1
+            while j < len(self.lst[i]):
+                self.lst[i][j] = Text(self.lst[i][j]).enclose(self.encloser)
+                j += 1
     
     def transpose(self):
         f = '[SharedQt] logic.FastTable.transpose'
-        if self.Success:
-            if self.Transpose:
-                self.lst = [*zip(*self.lst)]
-                # 'zip' produces tuples
-                self.lst = [list(item) for item in self.lst]
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if self.Transpose:
+            self.lst = [*zip(*self.lst)]
+            # 'zip' produces tuples
+            self.lst = [list(item) for item in self.lst]
     
     def set_headers(self):
         f = '[SharedQt] logic.FastTable.set_headers'
-        if self.Success:
-            if self.headers:
-                ''' If there is a condition mismatch when everything is
-                    seemingly correct, check that headers are provided
-                    in the form of ('NO1','NO2') instead of ('NO1,NO2').
-                '''
-                if len(self.headers) == len(self.lst):
-                    for i in range(len(self.lst)):
-                        self.lst[i].insert(0,self.headers[i])
-                else:
-                    sub = '{} == {}'.format (len(self.headers)
-                                            ,len(self.lst)
-                                            )
-                    mes = _('The condition "{}" is not observed!')
-                    mes = mes.format(sub)
-                    objs.get_mes(f,mes).show_warning()
-            else:
-                com.rep_lazy(f)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not self.headers:
+            com.rep_lazy(f)
+            return
+        ''' If there is a condition mismatch when everything is seemingly
+            correct, check that headers are provided in the form of
+            ('NO1','NO2') instead of ('NO1,NO2').
+        '''
+        if len(self.headers) == len(self.lst):
+            for i in range(len(self.lst)):
+                self.lst[i].insert(0,self.headers[i])
+        else:
+            sub = '{} == {}'.format (len(self.headers)
+                                    ,len(self.lst)
+                                    )
+            mes = _('The condition "{}" is not observed!').format(sub)
+            objs.get_mes(f,mes).show_warning()
     
     def report(self):
         f = '[SharedQt] logic.FastTable.report'
         result = ''
-        if self.Success:
-            iwrite = io.StringIO()
-            for j in range(len(self.lst[0])):
-                for i in range(len(self.lst)):
-                    delta = self.lens[i] - len(self.lst[i][j])
-                    iwrite.write(self.lst[i][j])
-                    iwrite.write(' ' * delta)
-                    if i + 1 < len(self.lst):
-                        iwrite.write(self.sep)
-                iwrite.write('\n')
-            result = iwrite.getvalue()
-            iwrite.close()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        iwrite = io.StringIO()
+        for j in range(len(self.lst[0])):
+            for i in range(len(self.lst)):
+                delta = self.lens[i] - len(self.lst[i][j])
+                iwrite.write(self.lst[i][j])
+                iwrite.write(' ' * delta)
+                if i + 1 < len(self.lst):
+                    iwrite.write(self.sep)
+            iwrite.write('\n')
+        result = iwrite.getvalue()
+        iwrite.close()
         return result
     
     def add_gap(self):
         f = '[SharedQt] logic.FastTable.add_gap'
-        if self.Success:
-            lst = [len(item) for item in self.lst]
-            if lst:
-                maxl = max(lst)
-                for i in range(len(self.lst)):
-                    delta = maxl - len(self.lst[i])
-                    for j in range(delta):
-                        self.lst[i].append('')
-            else:
-                self.Success = False
-                com.rep_empty(f)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        lst = [len(item) for item in self.lst]
+        if not lst:
+            self.Success = False
+            com.rep_empty(f)
+            return
+        maxl = max(lst)
+        for i in range(len(self.lst)):
+            delta = maxl - len(self.lst[i])
+            for j in range(delta):
+                self.lst[i].append('')
     
     def get_lens(self):
         f = '[SharedQt] logic.FastTable.get_lens'
-        if self.Success:
-            for item in self.lst:
-                tmp = sorted(item,key=len,reverse=True)
-                self.lens.append(len(tmp[0]))
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        for item in self.lst:
+            tmp = sorted(item,key=len,reverse=True)
+            self.lens.append(len(tmp[0]))
     
     def make_list(self):
         f = '[SharedQt] logic.FastTable.make_list'
-        if self.Success:
-            if self.lst:
-                try:
-                    self.lst = list(self.lst)
-                    for i in range(len(self.lst)):
-                        self.lst[i] = [str(item) \
-                                       for item in self.lst[i]
-                                      ]
-                except TypeError:
-                    self.Success = False
-                    mes = _('Only iterable objects are supported!')
-                    objs.get_mes(f,mes).show_warning()
-            else:
-                self.Success = False
-                com.rep_empty(f)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not self.lst:
+            self.Success = False
+            com.rep_empty(f)
+            return
+        try:
+            self.lst = list(self.lst)
+            for i in range(len(self.lst)):
+                self.lst[i] = [str(item) for item in self.lst[i]]
+        except TypeError:
+            self.Success = False
+            mes = _('Only iterable objects are supported!')
+            objs.get_mes(f,mes).show_warning()
     
     def run(self):
         self.make_list()
@@ -475,10 +471,10 @@ class Font:
     
     def set_text(self,text):
         f = '[SharedQt] logic.Font.set_text'
-        if text:
-            self.text = text
-        else:
+        if not text:
             com.rep_empty(f)
+            return
+        self.text = text
     
     def set_values(self):
         self.font = None
@@ -503,18 +499,18 @@ class Font:
     
     def set_height(self):
         f = '[SharedQt] logic.Font.set_height'
-        if self.set_height:
-            lines = len(self.text.splitlines())
-            if lines:
-                self.height = self.height * lines
-            self.height += self.yborder
-            '''
-            Message (func = f
-                    ,message = '%d' % self.height
-                    ).show_debug()
-            '''
-        else:
+        if not self.set_height:
             com.rep_empty(f)
+            return
+        lines = len(self.text.splitlines())
+        if lines:
+            self.height = self.height * lines
+        self.height += self.yborder
+        '''
+        Message (func = f
+                ,message = '%d' % self.height
+                ).show_debug()
+        '''
     
     def reset(self,name,xborder=0,yborder=0):
         self.set_values()
@@ -525,18 +521,18 @@ class Font:
     
     def set_attr(self):
         f = '[SharedQt] logic.Font.set_attr'
-        if self.name:
-            match = re.match('([aA-zZ].*) (\d+)',self.name)
-            if match:
-                self.family = match.group(1)
-                self.size = int(match.group(2))
-            else:
-                message = _('Wrong input data: "{}"!').format(self.name)
-                Message (func = f
-                        ,message = message
-                        ).show_error()
-        else:
+        if not self.name:
             com.rep_empty(f)
+            return
+        match = re.match('([aA-zZ].*) (\d+)',self.name)
+        if not match:
+            message = _('Wrong input data: "{}"!').format(self.name)
+            Message (func = f
+                    ,message = message
+                    ).show_error()
+            return
+        self.family = match.group(1)
+        self.size = int(match.group(2))
 
 
 
@@ -605,33 +601,32 @@ class Launch:
             need to close the program first for this code to work. 
         '''
         f = '[SharedQt] logic.Launch.get_output'
-        if self.process and self.process.stdout:
-            result = self.process.stdout
-            result = [str(item,'utf-8') for item in result]
-            return ''.join(result)
-        else:
+        if not self.process or not self.process.stdout:
             com.rep_empty(f)
-        return ''
+            return ''
+        result = self.process.stdout
+        result = [str(item,'utf-8') for item in result]
+        return ''.join(result)
     
     def _launch(self):
         f = '[SharedQt] logic.Launch._launch'
-        if self.custom_args:
-            mes = _('Custom arguments: "{}"').format(self.custom_args)
-            objs.get_mes(f,mes,True).show_debug()
-            try:
-                # Block the script till the called program is closed
-                if self.Block:
-                    subprocess.call(self.custom_args,self.stdout)
-                else:
-                    self.process = subprocess.Popen (args = self.custom_args
-                                                    ,stdout = self.stdout
-                                                    )
-                return True
-            except:
-                mes = _('Failed to run "{}"!').format(self.custom_args)
-                objs.get_mes(f,mes).show_error()
-        else:
+        if not self.custom_args:
             com.rep_empty(f)
+            return
+        mes = _('Custom arguments: "{}"').format(self.custom_args)
+        objs.get_mes(f,mes,True).show_debug()
+        try:
+            # Block the script till the called program is closed
+            if self.Block:
+                subprocess.call(self.custom_args,self.stdout)
+            else:
+                self.process = subprocess.Popen (args = self.custom_args
+                                                ,stdout = self.stdout
+                                                )
+            return True
+        except:
+            mes = _('Failed to run "{}"!').format(self.custom_args)
+            objs.get_mes(f,mes).show_error()
 
     def _launch_lin(self):
         f = '[SharedQt] logic.Launch._launch_lin'
@@ -666,8 +661,7 @@ class Launch:
         if self.custom_app:
             if self.custom_args and len(self.custom_args) > 0:
                 self.custom_args.insert(0,self.custom_app)
-                if self.TargetExists \
-                and not self.target in self.custom_args:
+                if self.TargetExists and not self.target in self.custom_args:
                     self.custom_args.append(self.target)
             else:
                 self.custom_args = [self.custom_app]
@@ -675,23 +669,23 @@ class Launch:
 
     def launch_custom(self):
         f = '[SharedQt] logic.Launch.launch_custom'
-        if self.TargetExists:
-            self.custom_args = [self.custom_app,self.target]
-            return self._launch()
-        else:
+        if not self.TargetExists:
             com.cancel(f)
+            return
+        self.custom_args = [self.custom_app,self.target]
+        return self._launch()
 
     def launch_default(self):
         f = '[SharedQt] logic.Launch.launch_default'
-        if self.TargetExists:
-            if objs.get_os().is_lin():
-                return self._launch_lin()
-            elif objs.os.is_mac():
-                return self._launch_mac()
-            elif objs.os.is_win():
-                return self._launch_win()
-        else:
+        if not self.TargetExists:
             com.cancel(f)
+            return
+        if objs.get_os().is_lin():
+            return self._launch_lin()
+        elif objs.os.is_mac():
+            return self._launch_mac()
+        elif objs.os.is_win():
+            return self._launch_win()
 
 
 
@@ -720,52 +714,52 @@ class WriteTextFile:
 
     def _write(self,mode='w'):
         f = '[SharedQt] logic.WriteTextFile._write'
-        if mode == 'w' or mode == 'a':
-            mes = _('Write file "{}"').format(self.file)
-            objs.get_mes(f,mes,True).show_info()
-            try:
-                with open(self.file,mode,encoding='UTF-8') as fl:
-                    fl.write(self.text)
-            except:
-                self.Success = False
-                mes = _('Unable to write file "{}"!').format(self.file)
-                objs.get_mes(f,mes).show_error()
-            return self.Success
-        else:
+        if mode != 'w' and mode != 'a':
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(mode,'a, w')
             objs.get_mes(f,mes).show_error()
+            return
+        mes = _('Write file "{}"').format(self.file)
+        objs.get_mes(f,mes,True).show_info()
+        try:
+            with open(self.file,mode,encoding='UTF-8') as fl:
+                fl.write(self.text)
+        except:
+            self.Success = False
+            mes = _('Unable to write file "{}"!').format(self.file)
+            objs.get_mes(f,mes).show_error()
+        return self.Success
 
     def append(self,text=''):
         f = '[SharedQt] logic.WriteTextFile.append'
-        if self.Success:
-            self.text = text
-            if self.text:
-                ''' #TODO: In the append mode the file is created if it
-                    does not exist, but should we warn the user that we
-                    create it from scratch?
-                '''
-                self._write('a')
-            else:
-                mes = _('Not enough input data!')
-                objs.get_mes(f,mes).show_warning()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        self.text = text
+        if not self.text:
+            ''' #TODO: In the append mode the file is created if it does not
+                exist, but should we warn the user that we create it from
+                scratch?
+            '''
+            mes = _('Not enough input data!')
+            objs.get_mes(f,mes).show_warning()
+            return
+        self._write('a')
 
     def write(self,text=''):
         f = '[SharedQt] logic.WriteTextFile.write'
-        if self.Success:
-            self.text = text
-            if self.text or self.Empty:
-                if com.rewrite (file = self.file
-                               ,Rewrite = self.Rewrite
-                               ):
-                    return self._write('w')
-            else:
-                mes = _('Not enough input data!')
-                objs.get_mes(f,mes).show_warning()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        self.text = text
+        if not self.text and not self.Empty:
+            mes = _('Not enough input data!')
+            objs.get_mes(f,mes).show_warning()
+            return
+        if com.rewrite (file = self.file
+                       ,Rewrite = self.Rewrite
+                       ):
+            return self._write('w')
 
 
 
@@ -794,37 +788,38 @@ class Log:
     
     def print(self):
         f = '[SharedQt] logic.Log.print'
-        if self.Success:
-            try:
-                if self.level in ('warning','error'):
-                    print(self._warn(self._generate()))
-                elif self.Short:
-                    pass
-                elif self.level == 'debug':
-                    print(self._debug(self._generate()))
-                else:
-                    print(self._generate())
-            except Exception as e:
-                ''' Rarely somehing like "UnicodeEncodeError:
-                    'utf-8' codec can't encode character '\udce9' in
-                    position 175: surrogates not allowed" occurs.
-                    Since there are to many Unicode exceptions to
-                    except, we do not specify an exception type.
-                '''
-                sub = 'Cannot print the message! ({})'.format(e)
-                mes = '{}:{}:{}'.format(f,_('WARNING'),sub)
-                print(mes)
+        if not self.Success:
+            return
+        try:
+            if self.level in ('warning','error'):
+                print(self._warn(self._generate()))
+            elif self.Short:
+                pass
+            elif self.level == 'debug':
+                print(self._debug(self._generate()))
+            else:
+                print(self._generate())
+        except Exception as e:
+            ''' Rarely somehing like "UnicodeEncodeError: 'utf-8' codec can't
+                encode character '\udce9' in position 175: surrogates not
+                allowed" occurs. Since there are to many Unicode exceptions to
+                except, we do not specify an exception type.
+            '''
+            sub = 'Cannot print the message! ({})'.format(e)
+            mes = '{}:{}:{}'.format(f,_('WARNING'),sub)
+            print(mes)
 
     def append (self,func='[SharedQt] logic.Log.append'
                ,level='info',message='Test'
                ):
-        if self.Success:
-            if func and level and message:
-                self.func = func
-                self.level = level
-                self.message = str(message)
-                self.print()
-                self.count += 1
+        if not self.Success:
+            return
+        if func and level and message:
+            self.func = func
+            self.level = level
+            self.message = str(message)
+            self.print()
+            self.count += 1
 
 
 
@@ -836,69 +831,68 @@ class TextDic:
         self.iread = ReadTextFile(self.file)
         self.reset()
 
-    ''' This is might be needed only for those dictionaries that
-        already may contain duplicates (dictionaries with newly added
-        entries do not have duplicates due to new algorithms)
-    '''
     def _delete_duplicates(self):
+        ''' This is might be needed only for those dictionaries that already
+            may contain duplicates (dictionaries with newly added entries do
+            not have duplicates due to new algorithms).
+        '''
         f = '[SharedQt] logic.TextDic._delete_duplicates'
-        if self.Success:
-            if self.Sortable:
-                old = self.lines()
-                self.lst = list(set(self.get_list()))
-                new = self.lines = len(self.lst)
-                mes = _('Entries deleted: {} ({}-{})')
-                mes = mes.format(old-new,old,new)
-                objs.get_mes(f,mes,True).show_info()
-                self.text = '\n'.join(self.lst)
-                # Update original and translation
-                self._split()
-                # After using set(), the original order was lost
-                self.sort()
-            else:
-                mes = _('File "{}" is not sortable!').format(self.file)
-                objs.get_mes(f,mes).show_warning()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not self.Sortable:
+            mes = _('File "{}" is not sortable!').format(self.file)
+            objs.get_mes(f,mes).show_warning()
+            return
+        old = self.lines()
+        self.lst = list(set(self.get_list()))
+        new = self.lines = len(self.lst)
+        mes = _('Entries deleted: {} ({}-{})').format(old-new,old,new)
+        objs.get_mes(f,mes,True).show_info()
+        self.text = '\n'.join(self.lst)
+        # Update original and translation
+        self._split()
+        # After using set(), the original order was lost
+        self.sort()
 
-    # We can use this as an updater, even without relying on Success
     def _join(self):
+        # We can use this as an updater, even without relying on Success
         f = '[SharedQt] logic.TextDic._join'
-        if len(self.orig) == len(self.transl):
-            self.lines = len(self.orig)
-            self.lst = []
-            for i in range(self.lines):
-                self.lst.append(self.orig[i]+'\t'+self.transl[i])
-            self.text = '\n'.join(self.lst)
-        else:
+        if len(self.orig) != len(self.transl):
             mes = _('Wrong input data!')
             objs.get_mes(f,mes).show_warning()
+            return
+        self.lines = len(self.orig)
+        self.lst = []
+        for i in range(self.lines):
+            self.lst.append(self.orig[i]+'\t'+self.transl[i])
+        self.text = '\n'.join(self.lst)
 
     def _split(self):
         ''' We can use this to check integrity and/or update original
             and translation lists.
         '''
         f = '[SharedQt] logic.TextDic._split'
-        if self.get():
-            self.Success = True
-            self.orig = []
-            self.transl = []
-            ''' Building lists takes ~0.1 longer without temporary
-                variables (now self._split() takes ~0.256)
-            '''
-            for i in range(self.lines):
-                tmp_lst = self.lst[i].split('\t')
-                if len(tmp_lst) == 2:
-                    self.orig.append(tmp_lst[0])
-                    self.transl.append(tmp_lst[1])
-                else:
-                    self.Success = False
-                    # i+1: Count from 1
-                    mes = _('Dictionary "{}": Incorrect line #{}: "{}"!')
-                    mes = mes.format(self.file,i+1,self.lst[i])
-                    objs.get_mes(f,mes).show_warning()
-        else:
+        if not self.get():
             self.Success = False
+            return
+        self.Success = True
+        self.orig = []
+        self.transl = []
+        ''' Building lists takes ~0.1 longer without temporary variables (now
+            self._split() takes ~0.256).
+        '''
+        for i in range(self.lines):
+            tmp_lst = self.lst[i].split('\t')
+            if len(tmp_lst) == 2:
+                self.orig.append(tmp_lst[0])
+                self.transl.append(tmp_lst[1])
+            else:
+                self.Success = False
+                # i+1: Count from 1
+                mes = _('Dictionary "{}": Incorrect line #{}: "{}"!')
+                mes = mes.format(self.file,i+1,self.lst[i])
+                objs.get_mes(f,mes).show_warning()
 
     def append(self,original,translation):
         ''' #TODO: skip repetitions
@@ -906,53 +900,51 @@ class TextDic:
             to memory.
         '''
         f = '[SharedQt] logic.TextDic.append'
-        if self.Success:
-            if original and translation:
-                self.orig.append(original)
-                self.transl.append(translation)
-                self._join()
-            else:
-                com.rep_empty(f)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not original or not translation:
+            com.rep_empty(f)
+            return
+        self.orig.append(original)
+        self.transl.append(translation)
+        self._join()
 
     def delete_entry(self,entry_no): # Count from 1
         ''' #TODO: #FIX: an entry which is only one in a dictionary is
             not deleted.
         '''
         f = '[SharedQt] logic.TextDic.delete_entry'
-        if self.Success:
-            entry_no -= 1
-            if entry_no >= 0 and entry_no < self.get_lines():
-                del self.orig[entry_no]
-                del self.transl[entry_no]
-                self._join()
-            else:
-                sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
-                mes = _('The condition "{}" is not observed!')
-                mes = mes.format(sub)
-                objs.get_mes(f,mes).show_error()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        entry_no -= 1
+        if entry_no < 0 or entry_no >= self.get_lines():
+            sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
+            mes = _('The condition "{}" is not observed!').format(sub)
+            objs.get_mes(f,mes).show_error()
+            return
+        del self.orig[entry_no]
+        del self.transl[entry_no]
+        self._join()
 
     def edit_entry(self,entry_no,orig,transl): # Count from 1
         ''' #TODO: Add checking orig and transl (where needed) for
             a wrapper function.
         '''
         f = '[SharedQt] logic.TextDic.edit_entry'
-        if self.Success:
-            entry_no -= 1
-            if entry_no >= 0 and entry_no < self.get_lines():
-                self.orig[entry_no] = orig
-                self.transl[entry_no] = transl
-                self._join()
-            else:
-                sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
-                mes = _('The condition "{}" is not observed!')
-                mes = mes.format(sub)
-                objs.get_mes(f,mes).show_error()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        entry_no -= 1
+        if entry_no < 0 or entry_no >= self.get_lines():
+            sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
+            mes = _('The condition "{}" is not observed!').format(sub)
+            objs.get_mes(f,mes).show_error()
+            return
+        self.orig[entry_no] = orig
+        self.transl[entry_no] = transl
+        self._join()
 
     def get(self):
         if not self.text:
@@ -977,56 +969,55 @@ class TextDic:
         self.lines = len(self.lst)
         self._split()
 
-    # Sort a dictionary with the longest lines going first
     def sort(self):
+        # Sort a dictionary with the longest lines going first
         f = '[SharedQt] logic.TextDic.sort'
-        if self.Success:
-            if self.Sortable:
-                tmp_list = []
-                for i in range(len(self.lst)):
-                    tmp_list += [[len(self.orig[i])
-                                 ,self.orig[i]
-                                 ,self.transl[i]
-                                 ]
-                                ]
-                tmp_list.sort(key=lambda x: x[0],reverse=True)
-                for i in range(len(self.lst)):
-                    self.orig[i] = tmp_list[i][1]
-                    self.transl[i] = tmp_list[i][2]
-                    self.lst[i] = self.orig[i] + '\t' + self.transl[i]
-                self.text = '\n'.join(self.lst)
-            else:
-                mes = _('File "{}" is not sortable!').format(self.file)
-                objs.get_mes(f,mes).show_warning()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not self.Sortable:
+            mes = _('File "{}" is not sortable!').format(self.file)
+            objs.get_mes(f,mes).show_warning()
+            return
+        tmp_list = []
+        for i in range(len(self.lst)):
+            tmp_list += [[len(self.orig[i])
+                         ,self.orig[i]
+                         ,self.transl[i]
+                         ]
+                        ]
+        tmp_list.sort(key=lambda x: x[0],reverse=True)
+        for i in range(len(self.lst)):
+            self.orig[i] = tmp_list[i][1]
+            self.transl[i] = tmp_list[i][2]
+            self.lst[i] = self.orig[i] + '\t' + self.transl[i]
+        self.text = '\n'.join(self.lst)
 
     def tail(self):
         f = '[SharedQt] logic.TextDic.tail'
         tail_text = ''
-        if self.Success:
-            tail_len = globs['int']['tail_len']
-            if tail_len > self.get_lines():
-                tail_len = self.get_lines()
-            i = self.get_lines() - tail_len
-            # We count from 1, therefore it is < and not <=
-            while i < self.lines():
-                # i+1 by the same reason
-                tail_text += str(i+1) + ':' + '"' + self.get_list()[i] \
-                                      + '"\n'
-                i += 1
-        else:
+        if not self.Success:
             com.cancel(f)
+            return tail_text
+        tail_len = globs['int']['tail_len']
+        if tail_len > self.get_lines():
+            tail_len = self.get_lines()
+        i = self.get_lines() - tail_len
+        # We count from 1, therefore it is < and not <=
+        while i < self.lines():
+            # i + 1 by the same reason
+            tail_text += str(i+1) + ':' + '"' + self.get_list()[i] + '"\n'
+            i += 1
         return tail_text
 
     def write(self):
         f = '[SharedQt] logic.TextDic.write'
-        if self.Success:
-            WriteTextFile (file = self.file
-                          ,Rewrite = True
-                          ).write(self.get())
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        WriteTextFile (file = self.file
+                      ,Rewrite = True
+                      ).write(self.get())
 
 
 
@@ -1074,64 +1065,65 @@ class ReadTextFile:
 
     def delete_bom(self):
         f = '[SharedQt] logic.ReadTextFile.delete_bom'
-        if self.Success:
-            self.text = self.text.replace('\N{ZERO WIDTH NO-BREAK SPACE}','')
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        self.text = self.text.replace('\N{ZERO WIDTH NO-BREAK SPACE}','')
 
-    # Return the text from memory (or load the file first)
     def get(self):
+        # Return the text from memory (or load the file first)
         f = '[SharedQt] logic.ReadTextFile.get'
-        if self.Success:
-            if not self.text:
-                self.load()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return self.text
+        if not self.text:
+            self.load()
         return self.text
 
     # Return a number of lines in the file. Returns 0 for an empty file.
     def get_lines(self):
         f = '[SharedQt] logic.ReadTextFile.get_lines'
-        if self.Success:
-            return len(self.get_list())
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        return len(self.get_list())
 
     def get_list(self):
         f = '[SharedQt] logic.ReadTextFile.get_list'
-        if self.Success:
-            if not self.lst:
-                self.lst = self.get().splitlines()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return self.lst
+        if not self.lst:
+            self.lst = self.get().splitlines()
         # len(None) causes an error
         return self.lst
 
     def load(self):
         f = '[SharedQt] logic.ReadTextFile.load'
-        if self.Success:
-            mes = _('Load file "{}"').format(self.file)
-            Message(f,mes).show_info()
-            ''' We can try to define an encoding automatically, however,
-                this often spoils some symbols, so we just proceed with
-                try-except and the most popular encodings.
-            '''
-            self._read('UTF-8')
-            if not self.text:
-                self._read('windows-1251')
-            if not self.text:
-                self._read('windows-1252')
-            if not self.text and not self.Empty:
-                ''' The file cannot be read OR the file is empty (we
-                    usually don't need empty files)
-                    #TODO: Update the message
-                '''
-                self.Success = False
-                mes = _('Unable to read file "{}"!').format(self.file)
-                objs.get_mes(f,mes).show_warning()
-            self.delete_bom()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return self.text
+        mes = _('Load file "{}"').format(self.file)
+        Message(f,mes).show_info()
+        ''' We can try to define an encoding automatically, however, this often
+            spoils some symbols, so we just proceed with try-except and the
+            most popular encodings.
+        '''
+        self._read('UTF-8')
+        if not self.text:
+            self._read('windows-1251')
+        if not self.text:
+            self._read('windows-1252')
+        if not self.text and not self.Empty:
+            ''' The file cannot be read OR the file is empty (we usually don't
+                need empty files)
+                #TODO: Update the message
+            '''
+            self.Success = False
+            mes = _('Unable to read file "{}"!').format(self.file)
+            objs.get_mes(f,mes).show_warning()
+            return self.text
+        self.delete_bom()
         return self.text
 
 
@@ -1143,9 +1135,7 @@ class Input:
         self.value = value
 
     def check_float(self):
-        if isinstance(self.value,float):
-            return self.value
-        else:
+        if not isinstance(self.value,float):
             mes = _('Float is required at input, but found "{}"! Return 0.0')
             mes = mes.format(self.value)
             objs.get_mes(self.title,mes).show_warning()
@@ -1153,38 +1143,36 @@ class Input:
         return self.value
     
     def get_list(self):
-        if isinstance(self.value,list):
-            return self.value
-        else:
+        if not isinstance(self.value,list):
             mes = _('Wrong input data!')
             objs.get_mes(self.title,mes,True).show_warning()
             return []
+        return self.value
     
     def get_integer(self,Negative=False):
         if isinstance(self.value,int):
             return self.value
+        # Avoid exceptions if the input is not an integer or string
+        self.value = str(self.value)
+        if self.value.isdigit():
+            self.value = int(self.value)
+            # Too frequent, almost useless
+            #mes = _('Convert "{}" to an integer').format(self.value)
+            #objs.get_mes(self.title,mes,True).show_debug()
+        elif Negative and re.match('-\d+$',self.value):
+            ''' 'isinstance' will detect negative integers too, however, we can
+                also have a string at input.
+            '''
+            old = self.value
+            self.value = int(self.value.replace('-','',1))
+            self.value -= self.value * 2
+            mes = _('Convert "{}" to an integer').format(old)
+            objs.get_mes(self.title,mes,True).show_debug()
         else:
-            # Avoid exceptions if the input is not an integer or string
-            self.value = str(self.value)
-            if self.value.isdigit():
-                self.value = int(self.value)
-                # Too frequent, almost useless
-                #mes = _('Convert "{}" to an integer').format(self.value)
-                #objs.get_mes(self.title,mes,True).show_debug()
-            elif Negative and re.match('-\d+$',self.value):
-                ''' 'isinstance' will detect negative integers too,
-                    however, we can also have a string at input.
-                '''
-                old = self.value
-                self.value = int(self.value.replace('-','',1))
-                self.value -= self.value * 2
-                mes = _('Convert "{}" to an integer').format(old)
-                objs.get_mes(self.title,mes,True).show_debug()
-            else:
-                mes = _('Integer is required at input, but found "{}"! Return 0')
-                mes = mes.format(self.value)
-                objs.get_mes(self.title,mes).show_warning()
-                self.value = 0
+            mes = _('Integer is required at input, but found "{}"! Return 0')
+            mes = mes.format(self.value)
+            objs.get_mes(self.title,mes).show_warning()
+            self.value = 0
         return self.value
 
     # Insert '' instead of 'None' into text widgets
@@ -1252,8 +1240,8 @@ class Text:
         self.text = '\n'.join(self.text)
         return self.text
     
-    # Getting rid of some useless symbols
     def delete_trash(self):
+        # Getting rid of some useless symbols
         self.text = self.text.replace('· ','').replace('• ','')
         self.text = self.text.replace('¬','')
     
@@ -1282,11 +1270,10 @@ class Text:
         return self.text
 
     def get_country(self):
-        if len(self.text) > 4:
-            if self.text[-4:-2] == ', ':
-                if self.text[-1].isalpha() and self.text[-1].isupper() \
-                and self.text[-2].isalpha() and self.text[-2].isupper():
-                    return self.text[-2:]
+        if len(self.text) > 4 and self.text[-4:-2] == ', ' and \
+        self.text[-1].isalpha() and self.text[-1].isupper() \
+        and self.text[-2].isalpha() and self.text[-2].isupper():
+            return self.text[-2:]
 
     def reset(self,text):
         self.text = text
@@ -1296,8 +1283,8 @@ class Text:
         self.text = self.text.replace('\xa0',' ').replace('\x07',' ')
         return self.text
 
-    #TODO: check
     def delete_alphabetic_numeration(self):
+        #TODO: check
         my_expr = ' [\(,\[]{0,1}[aA-zZ,аА-яЯ][\.,\),\]]( \D)'
         match = re.search(my_expr,self.text)
         while match:
@@ -1312,41 +1299,7 @@ class Text:
             the same).
         '''
         f = '[SharedQt] logic.Text.delete_embraced_text'
-        if self.text.count(opening_sym) == self.text.count(closing_sym):
-            opening_parentheses = []
-            closing_parentheses = []
-            for i in range(len(self.text)):
-                if self.text[i] == opening_sym:
-                    opening_parentheses.append(i)
-                elif self.text[i] == closing_sym:
-                    closing_parentheses.append(i)
-
-            min_val = min (len(opening_parentheses)
-                          ,len(closing_parentheses)
-                          )
-
-            opening_parentheses = opening_parentheses[::-1]
-            closing_parentheses = closing_parentheses[::-1]
-
-            # Ignore non-matching parentheses
-            i = 0
-            while i < min_val:
-                if opening_parentheses[i] >= closing_parentheses[i]:
-                    del closing_parentheses[i]
-                    i -= 1
-                    min_val -= 1
-                i += 1
-
-            self.text = list(self.text)
-            for i in range(min_val):
-                if opening_parentheses[i] < closing_parentheses[i]:
-                    self.text = self.text[0:opening_parentheses[i]] \
-                              + self.text[closing_parentheses[i]+1:]
-            self.text = ''.join(self.text)
-            ''' Further steps: self.delete_duplicate_spaces(),
-                self.text.strip()
-            '''
-        else:
+        if self.text.count(opening_sym) != self.text.count(closing_sym):
             mes = _('Different number of opening and closing brackets: "{}": {}; "{}": {}!')
             mes = mes.format (opening_sym
                              ,self.text.count(opening_sym)
@@ -1354,14 +1307,46 @@ class Text:
                              ,self.text.count(closing_sym)
                              )
             objs.get_mes(f,mes).show_warning()
+            return self.text
+        opening_parentheses = []
+        closing_parentheses = []
+        for i in range(len(self.text)):
+            if self.text[i] == opening_sym:
+                opening_parentheses.append(i)
+            elif self.text[i] == closing_sym:
+                closing_parentheses.append(i)
+
+        min_val = min (len(opening_parentheses)
+                      ,len(closing_parentheses)
+                      )
+
+        opening_parentheses = opening_parentheses[::-1]
+        closing_parentheses = closing_parentheses[::-1]
+
+        # Ignore non-matching parentheses
+        i = 0
+        while i < min_val:
+            if opening_parentheses[i] >= closing_parentheses[i]:
+                del closing_parentheses[i]
+                i -= 1
+                min_val -= 1
+            i += 1
+
+        self.text = list(self.text)
+        for i in range(min_val):
+            if opening_parentheses[i] < closing_parentheses[i]:
+                self.text = self.text[0:opening_parentheses[i]] \
+                          + self.text[closing_parentheses[i]+1:]
+        self.text = ''.join(self.text)
+        # Further steps: self.delete_duplicate_spaces(), self.text.strip()
         return self.text
 
     def convert_line_breaks(self):
         self.text = self.text.replace('\r\n','\n').replace('\r','\n')
         return self.text
 
-    # Apply 'convert_line_breaks' first
     def delete_line_breaks(self,rep=' '):
+        # Apply 'convert_line_breaks' first
         self.text = self.text.replace('\n',rep)
         return self.text
 
@@ -1380,17 +1365,16 @@ class Text:
             (useful when extracting features with CompareField).
         '''
         f = '[SharedQt] logic.Text.delete_end_punc'
-        if len(self.text) > 0:
-            if Extended:
-                while self.text[-1] == ' ' or self.text[-1] \
-                in punc_array or self.text[-1] in punc_ext_array:
-                    self.text = self.text[:-1]
-            else:
-                while self.text[-1] == ' ' or self.text[-1] \
-                in punc_array:
-                    self.text = self.text[:-1]
-        else:
+        if len(self.text) <= 0:
             com.rep_empty(f)
+            return self.text
+        if Extended:
+            while self.text[-1] == ' ' or self.text[-1] in punc_array \
+            or self.text[-1] in punc_ext_array:
+                self.text = self.text[:-1]
+        else:
+            while self.text[-1] == ' ' or self.text[-1] in punc_array:
+                self.text = self.text[:-1]
         return self.text
 
     def delete_figures(self):
@@ -1423,8 +1407,8 @@ class Text:
         self.text = self.text.replace('{ ','{').replace(' }','}')
         return self.text
 
-    # Only for pattern '(YYYY-MM-DD)'
     def extract_date(self):
+        # Only for pattern '(YYYY-MM-DD)'
         expr = '\((\d\d\d\d-\d\d-\d\d)\)'
         if self.text:
             match = re.search(expr,self.text)
@@ -1640,14 +1624,13 @@ class List:
         while True:
             self.lst1 = old[start:]
             poses = self.find()
-            if poses:
-                count += 1
-                poses[0] += start
-                poses[1] += start
-                start = poses[1] + 1
-                if count == max_count:
-                    break
-            else:
+            if not poses:
+                break
+            count += 1
+            poses[0] += start
+            poses[1] += start
+            start = poses[1] + 1
+            if count == max_count:
                 break
         self.lst1 = old
         return poses
@@ -1770,9 +1753,7 @@ class List:
 
 
 class Time:
-    ''' We constantly recalculate each value because they depend on each
-        other.
-    '''
+    # We constantly recalculate each value because they depend on each other
     def __init__(self,tstamp=None,pattern='%Y-%m-%d'):
         self.reset (tstamp = tstamp
                    ,pattern = pattern
@@ -1801,14 +1782,14 @@ class Time:
 
     def add_days(self,days_delta):
         f = '[SharedQt] logic.Time.add_days'
-        if self.Success:
-            try:
-                self.inst = self.get_instance() \
-                          + datetime.timedelta(days=days_delta)
-            except Exception as e:
-                self.fail(f,e)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        try:
+            self.inst = self.get_instance() \
+                      + datetime.timedelta(days=days_delta)
+        except Exception as e:
+            self.fail(f,e)
 
     def get_date(self):
         f = '[SharedQt] logic.Time.get_date'
@@ -2103,16 +2084,17 @@ class File:
         if not self.Success:
             com.cancel(f)
             return
-        if self.atime and self.mtime:
-            mes = _('Change the time of the file "{}" to {}')
+        if not self.atime or not self.mtime:
+            return
+        mes = _('Change the time of the file "{}" to {}')
+        mes = mes.format(self.file,(self.atime,self.mtime))
+        objs.get_mes(f,mes,True).show_info()
+        try:
+            os.utime(self.file,(self.atime,self.mtime))
+        except:
+            mes = _('Failed to change the time of the file "{}" to "{}"!')
             mes = mes.format(self.file,(self.atime,self.mtime))
-            objs.get_mes(f,mes,True).show_info()
-            try:
-                os.utime(self.file,(self.atime,self.mtime))
-            except:
-                mes = _('Failed to change the time of the file "{}" to "{}"!')
-                mes = mes.format(self.file,(self.atime,self.mtime))
-                objs.get_mes(f,mes).show_error()
+            objs.get_mes(f,mes).show_error()
 
 
 
@@ -2152,10 +2134,10 @@ class Path:
     def get_basename_low(self):
         return self.get_basename().lower()
 
-    # This will recursively (by design) create self.path
     def create(self):
-        f = '[SharedQt] logic.Path.create'
+        # This will recursively (by design) create self.path
         # We actually don't need to fail the class globally
+        f = '[SharedQt] logic.Path.create'
         Success = True
         if not self.path:
             Success = False
@@ -2192,13 +2174,13 @@ class Path:
             self.dirname = os.path.dirname(self.path)
         return self.dirname
 
-    # In order to use xdg-open, we need to escape some characters first
     def escape(self):
+        # In order to use xdg-open, we need to escape some characters first
         self.path = shlex.quote(self.path)
         return self.path
 
-    # An extension with a dot
     def get_ext(self):
+        # An extension with a dot
         if not self.extension:
             if len(self._split_path()) > 1:
                 self.extension = self._split_path()[1]
@@ -2225,9 +2207,9 @@ class Path:
               instead of os.path.sep
             - As an alternative, import ntpath, posixpath
         '''
-        ''' We remove a separator from the end, because basename and
-            dirname work differently in this case ('' and the last
-            directory, correspondingly)
+        ''' We remove a separator from the end, because basename and dirname
+            work differently in this case ('' and the last directory,
+            correspondingly).
         '''
         if self.path != '/':
             self.path = self.path.rstrip('//')
@@ -2273,46 +2255,46 @@ class WriteBinary:
         f = '[SharedQt] logic.WriteBinary._write'
         mes = _('Write file "{}"').format(self.file)
         objs.get_mes(f,mes,True).show_info()
-        if mode == 'w+b' or mode == 'a+b':
-            try:
-                with open(self.file,mode) as fl:
-                    if mode == 'w+b':
-                        pickle.dump(self.obj,fl)
-                    elif mode == 'a+b':
-                        pickle.dump(self.fragm,fl)
-            except Exception as e:
-                self.Success = False
-                mes = _('Unable to write file "{}"!\n\nDetails: {}')
-                mes = mes.format(self.file,e)
-                objs.get_mes(f,mes).show_error()
-        else:
+        if mode != 'w+b' and mode != 'a+b':
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(mode,'w+b, a+b')
+            objs.get_mes(f,mes).show_error()
+            return
+        try:
+            with open(self.file,mode) as fl:
+                if mode == 'w+b':
+                    pickle.dump(self.obj,fl)
+                elif mode == 'a+b':
+                    pickle.dump(self.fragm,fl)
+        except Exception as e:
+            self.Success = False
+            mes = _('Unable to write file "{}"!\n\nDetails: {}')
+            mes = mes.format(self.file,e)
             objs.get_mes(f,mes).show_error()
 
     def append(self,fragm):
         f = '[SharedQt] logic.WriteBinary.append'
-        if self.Success:
-            self.fragm = fragm
-            if self.fragm:
-                self._write(mode='a+b')
-            else:
-                com.rep_empty(f)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        self.fragm = fragm
+        if not self.fragm:
+            com.rep_empty(f)
+            return
+        self._write(mode='a+b')
 
     def write(self):
         f = '[SharedQt] logic.WriteBinary.write'
-        if self.Success:
-            if com.rewrite (file = self.file
-                           ,Rewrite = self.Rewrite
-                           ):
-                self._write(mode='w+b')
-            else:
-                mes = _('Operation has been canceled by the user.')
-                Message(f,mes).show_info()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if com.rewrite (file = self.file
+                       ,Rewrite = self.Rewrite
+                       ):
+            self._write(mode='w+b')
+        else:
+            mes = _('Operation has been canceled by the user.')
+            Message(f,mes).show_info()
 
 
 
@@ -2326,69 +2308,68 @@ class Dic:
         self.reset()
 
     def _delete_duplicates(self):
-        ''' This is might be needed only for those dictionaries that
-            already may contain duplicates (dictionaries with newly
-            added entries do not have duplicates due to new algorithms).
+        ''' This is might be needed only for those dictionaries that already
+            may contain duplicates (dictionaries with newly added entries do
+            not have duplicates due to new algorithms).
         '''
         f = '[SharedQt] logic.Dic._delete_duplicates'
-        if self.Success:
-            if self.Sortable:
-                old = self.get_lines()
-                self.lst = list(set(self.get_list()))
-                new = self.lines = len(self.lst)
-                mes = _('Entries deleted: {} ({}-{})')
-                mes = mes.format(old-new,old,new)
-                objs.get_mes(f,mes,True).show_info()
-                self.text = '\n'.join(self.lst)
-                # Update original and translation
-                self._split()
-                # After using set(), the original order was lost
-                self.sort()
-            else:
-                mes = _('File "{}" is not sortable!').format(self.file)
-                objs.get_mes(f,mes).show_warning()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not self.Sortable:
+            mes = _('File "{}" is not sortable!').format(self.file)
+            objs.get_mes(f,mes).show_warning()
+            return
+        old = self.get_lines()
+        self.lst = list(set(self.get_list()))
+        new = self.lines = len(self.lst)
+        mes = _('Entries deleted: {} ({}-{})').format(old-new,old,new)
+        objs.get_mes(f,mes,True).show_info()
+        self.text = '\n'.join(self.lst)
+        # Update original and translation
+        self._split()
+        # After using set(), the original order was lost
+        self.sort()
 
-    # We can use this as an updater, even without relying on Success
     def _join(self):
+        # We can use this as an updater, even without relying on Success
         f = '[SharedQt] logic.Dic._join'
-        if len(self.orig) == len(self.transl):
-            self.lines = len(self.orig)
-            self.lst = []
-            for i in range(self.lines):
-                self.lst.append(self.orig[i]+'\t'+self.transl[i])
-            self.text = '\n'.join(self.lst)
-        else:
+        if len(self.orig) != len(self.transl):
             mes = _('Wrong input data!')
             objs.get_mes(f,mes).show_warning()
+            return
+        self.lines = len(self.orig)
+        self.lst = []
+        for i in range(self.lines):
+            self.lst.append(self.orig[i]+'\t'+self.transl[i])
+        self.text = '\n'.join(self.lst)
 
     def _split(self):
-        ''' We can use this to check integrity and/or update original
-            and translation lists.
+        ''' We can use this to check integrity and/or update original and
+            translation lists.
         '''
-        if self.get():
-            self.Success = True
-            self.orig = []
-            self.transl = []
-            ''' Building lists takes ~0.1 longer without temporary
-                variables (now self._split() takes ~0.256)
-            '''
-            for i in range(self.lines):
-                tmp_lst = self.lst[i].split('\t')
-                if len(tmp_lst) == 2:
-                    self.orig.append(tmp_lst[0])
-                    self.transl.append(tmp_lst[1])
-                else:
-                    ''' Lines that were successfully parsed can be
-                        further processed upon correcting 'self.lines'
-                    '''
-                    self.Success = False
-                    self.errors.append(str(i))
-            self.warn()
-            if not self.orig or not self.transl:
+        if not self.get():
+            self.Success = False
+            return
+        self.Success = True
+        self.orig = []
+        self.transl = []
+        ''' Building lists takes ~0.1 longer without temporary variables (now
+            self._split() takes ~0.256)
+        '''
+        for i in range(self.lines):
+            tmp_lst = self.lst[i].split('\t')
+            if len(tmp_lst) == 2:
+                self.orig.append(tmp_lst[0])
+                self.transl.append(tmp_lst[1])
+            else:
+                ''' Lines that were successfully parsed can be further
+                    processed upon correcting 'self.lines'
+                '''
                 self.Success = False
-        else:
+                self.errors.append(str(i))
+        self.warn()
+        if not self.orig or not self.transl:
             self.Success = False
             
     def warn(self):
@@ -2402,58 +2383,54 @@ class Dic:
     def append(self,original,translation):
         ''' #TODO: write a dictionary in an append mode after appending
                    to memory.
-            #TODO: skip repetitions
+            #TODO: skip repetitions.
         '''
         f = '[SharedQt] logic.Dic.append'
-        if self.Success:
-            if original and translation:
-                self.orig.append(original)
-                self.transl.append(translation)
-                self._join()
-            else:
-                com.rep_empty(f)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not original or not translation:
+            com.rep_empty(f)
+            return
+        self.orig.append(original)
+        self.transl.append(translation)
+        self._join()
 
-    # Count from 1
     def delete_entry(self,entry_no):
-        ''' #TODO: fix: an entry which is only one in a dictionary is
-            not deleted.
-        '''
+        # Count from 1
+        #FIX: an entry which is only one in a dictionary is not deleted
         f = '[SharedQt] logic.Dic.delete_entry'
-        if self.Success:
-            entry_no -= 1
-            if entry_no >= 0 and entry_no < self.get_lines():
-                del self.orig[entry_no]
-                del self.transl[entry_no]
-                self._join()
-            else:
-                sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
-                mes = _('The condition "{}" is not observed!')
-                mes = mes.format(sub)
-                objs.get_mes(f,mes).show_error()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        entry_no -= 1
+        if entry_no < 0 or entry_no >= self.get_lines():
+            sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
+            mes = _('The condition "{}" is not observed!').format(sub)
+            objs.get_mes(f,mes).show_error()
+            return
+        del self.orig[entry_no]
+        del self.transl[entry_no]
+        self._join()
 
-    # Count from 1
     def edit_entry(self,entry_no,orig,transl):
-        ''' #TODO: Add checking orig and transl (where needed) for
-            a wrapper function.
+        # Count from 1
+        ''' #TODO: Add checking orig and transl (where needed) for a wrapper
+            function.
         '''
         f = '[SharedQt] logic.Dic.edit_entry'
-        if self.Success:
-            entry_no -= 1
-            if entry_no >= 0 and entry_no < self.get_lines():
-                self.orig[entry_no] = orig
-                self.transl[entry_no] = transl
-                self._join()
-            else:
-                sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
-                mes = _('The condition "{}" is not observed!')
-                mes = mes.format(sub)
-                objs.get_mes(f,mes).show_error()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        entry_no -= 1
+        if entry_no < 0 or entry_no >= self.get_lines():
+            sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
+            mes = _('The condition "{}" is not observed!').format(sub)
+            objs.get_mes(f,mes).show_error()
+            return
+        self.orig[entry_no] = orig
+        self.transl[entry_no] = transl
+        self._join()
 
     def get(self):
         if not self.text:
@@ -2483,56 +2460,55 @@ class Dic:
         self.lines = len(self.lst)
         self._split()
 
-    # Sort a dictionary with the longest lines going first
     def sort(self):
+        # Sort a dictionary with the longest lines going first
         f = '[SharedQt] logic.Dic.sort'
-        if self.Success:
-            if self.Sortable:
-                tmp_list = []
-                for i in range(len(self.lst)):
-                    tmp_list += [[len(self.orig[i])
-                                 ,self.orig[i]
-                                 ,self.transl[i]
-                                 ]
-                                ]
-                tmp_list.sort(key=lambda x: x[0],reverse=True)
-                for i in range(len(self.lst)):
-                    self.orig[i] = tmp_list[i][1]
-                    self.transl[i] = tmp_list[i][2]
-                    self.lst[i] = self.orig[i] + '\t' + self.transl[i]
-                self.text = '\n'.join(self.lst)
-            else:
-                mes = _('File "{}" is not sortable!').format(self.file)
-                objs.get_mes(f,mes).show_warning()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not self.Sortable:
+            mes = _('File "{}" is not sortable!').format(self.file)
+            objs.get_mes(f,mes).show_warning()
+            return
+        tmp_list = []
+        for i in range(len(self.lst)):
+            tmp_list += [[len(self.orig[i])
+                         ,self.orig[i]
+                         ,self.transl[i]
+                         ]
+                        ]
+        tmp_list.sort(key=lambda x: x[0],reverse=True)
+        for i in range(len(self.lst)):
+            self.orig[i] = tmp_list[i][1]
+            self.transl[i] = tmp_list[i][2]
+            self.lst[i] = self.orig[i] + '\t' + self.transl[i]
+        self.text = '\n'.join(self.lst)
 
     def tail(self):
         f = '[SharedQt] logic.Dic.tail'
         tail_text = ''
-        if self.Success:
-            tail_len = globs['int']['tail_len']
-            if tail_len > self.get_lines():
-                tail_len = self.get_lines()
-            i = self.get_lines() - tail_len
-            # We count from 1, therefore it is < and not <=
-            while i < self.get_lines():
-                # i+1 by the same reason
-                tail_text += str(i+1) + ':' + '"' + self.get_list()[i] \
-                             + '"\n'
-                i += 1
-        else:
+        if not self.Success:
             com.cancel(f)
+            return tail_text
+        tail_len = globs['int']['tail_len']
+        if tail_len > self.get_lines():
+            tail_len = self.get_lines()
+        i = self.get_lines() - tail_len
+        # We count from 1, therefore it is < and not <=
+        while i < self.get_lines():
+            # i+1 by the same reason
+            tail_text += str(i+1) + ':' + '"' + self.get_list()[i] + '"\n'
+            i += 1
         return tail_text
 
     def write(self):
         f = '[SharedQt] logic.Dic.write'
-        if self.Success:
-            WriteTextFile (file = self.file
-                          ,Rewrite = True
-                          ).write(self.get())
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        WriteTextFile (file = self.file
+                      ,Rewrite = True
+                      ).write(self.get())
 
 
 
@@ -2559,13 +2535,13 @@ class ReadBinary:
             mes = mes.format(self.file,e)
             objs.get_mes(f,mes).show_error()
 
-    #TODO: load fragments appended to a binary
     def load(self):
+        #TODO: load fragments appended to a binary
         f = '[SharedQt] logic.ReadBinary.load'
-        if self.Success:
-            self._load()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return self.obj
+        self._load()
         return self.obj
 
     def get(self):
@@ -2575,8 +2551,8 @@ class ReadBinary:
 
 
 
-# Do not forget to import this class if it was used to pickle an object
 class CreateInstance:
+    # Do not forget to import this class if it was used to pickle an object
     pass
 
 
@@ -2622,65 +2598,63 @@ class Directory:
     def move(self):
         f = '[SharedQt] logic.Directory.move'
         Success = True
-        if self.Success:
-            if os.path.exists(self.dest):
-                mes = _('Path "{}" already exists!').format(self.dest)
-                objs.get_mes(f,mes,True).show_warning()
-                Success = False
-            elif self.dir.lower() == self.dest.lower():
-                mes = _('Moving is not necessary, because the source and destination are identical ({}).')
-                mes = mes.format(self.dir)
-                objs.get_mes(f,mes).show_warning()
-            else:
-                Success = self._move()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if os.path.exists(self.dest):
+            mes = _('Path "{}" already exists!').format(self.dest)
+            objs.get_mes(f,mes,True).show_warning()
+            Success = False
+        elif self.dir.lower() == self.dest.lower():
+            mes = _('Moving is not necessary, because the source and destination are identical ({}).')
+            mes = mes.format(self.dir)
+            objs.get_mes(f,mes).show_warning()
+        else:
+            Success = self._move()
         return self.Success and Success
     
     def get_subfiles(self,Follow=True):
         # Include files in subfolders
         f = '[SharedQt] logic.Directory.get_subfiles'
-        if self.Success:
-            if not self.subfiles:
-                try:
-                    for dirpath, dirnames, fnames \
-                    in os.walk(self.dir,followlinks=Follow):
-                        for name in fnames:
-                            obj = os.path.join(dirpath,name)
-                            if os.path.isfile(obj):
-                                self.subfiles.append(obj)
-                    self.subfiles.sort(key=lambda x: x.lower())
-                except Exception as e:
-                    mes = _('Operation has failed!\nDetails: {}')
-                    mes = mes.format(e)
-                    objs.get_mes(f,mes).show_error()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return []
+        if self.subfiles:
+            return self.subfiles
+        try:
+            for dirpath, dirnames, fnames \
+            in os.walk(self.dir,followlinks=Follow):
+                for name in fnames:
+                    obj = os.path.join(dirpath,name)
+                    if os.path.isfile(obj):
+                        self.subfiles.append(obj)
+            self.subfiles.sort(key=lambda x: x.lower())
+        except Exception as e:
+            mes = _('Operation has failed!\nDetails: {}').format(e)
+            objs.get_mes(f,mes).show_error()
         return self.subfiles
     
     def get_size(self,Follow=True):
         f = '[SharedQt] logic.Directory.get_size'
         result = 0
-        if self.Success:
-            try:
-                for dirpath, dirnames, filenames in os.walk(self.dir):
-                    for name in filenames:
-                        obj = os.path.join(dirpath,name)
-                        if Follow:
-                            cond = not os.path.islink(obj)
-                        else:
-                            cond = True
-                        if cond:
-                            result += os.path.getsize(obj)
-            except Exception as e:
-                ''' Along with other errors, 'No such file or directory'
-                    error will be raised if Follow=False and there are
-                    broken symbolic links.
-                '''
-                mes = _('Operation has failed!\nDetails: {}').format(e)
-                objs.get_mes(f,mes).show_error()
-        else:
-            com.cancel(f)
+        if not self.Success:
+            return result
+        try:
+            for dirpath, dirnames, filenames in os.walk(self.dir):
+                for name in filenames:
+                    obj = os.path.join(dirpath,name)
+                    if Follow:
+                        cond = not os.path.islink(obj)
+                    else:
+                        cond = True
+                    if cond:
+                        result += os.path.getsize(obj)
+        except Exception as e:
+            ''' Along with other errors, 'No such file or directory' error will
+                be raised if Follow=False and there are broken symbolic links.
+            '''
+            mes = _('Operation has failed!\nDetails: {}').format(e)
+            objs.get_mes(f,mes).show_error()
         return result
     
     def set_values(self):
@@ -2698,23 +2672,23 @@ class Directory:
     
     def get_ext(self): # with a dot
         f = '[SharedQt] logic.Directory.get_ext'
-        if self.Success:
-            if not self.exts:
-                for file in self.get_rel_files():
-                    ext = Path(path=file).get_ext()
-                    self.exts.append(ext)
-                    self.extslow.append(ext.lower())
-        else:
+        if not self.Success:
             com.cancel(f)
+            return self.exts
+        if not self.exts:
+            for file in self.get_rel_files():
+                ext = Path(path=file).get_ext()
+                self.exts.append(ext)
+                self.extslow.append(ext.lower())
         return self.exts
 
     def get_ext_low(self): # with a dot
         f = '[SharedQt] logic.Directory.get_ext_low'
-        if self.Success:
-            if not self.extslow:
-                self.get_ext()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return self.extslow
+        if not self.extslow:
+            self.get_ext()
         return self.extslow
 
     def delete_empty(self):
