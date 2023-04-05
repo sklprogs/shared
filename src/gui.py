@@ -248,23 +248,6 @@ class Button:
 
 
 
-class Commands:
-    
-    def get_image(self,path,width,height):
-        return tk.PhotoImage (file = path
-                             ,master = objs.get_root().widget
-                             ,width = width
-                             ,height = height
-                             )
-    
-    def bind(self,obj,binding,action):
-        try:
-            obj.widget.bind(binding,action)
-            return True
-        except tk.TclError:
-            pass
-
-
 
 class Message(PyQt5.QtWidgets.QMessageBox):
     
@@ -425,11 +408,10 @@ class Label:
 
 
 
-''' If there are problems with import or tkinter's wait_variable, put
-    this beneath 'if __name__'
+''' If there are problems with import or tkinter's wait_variable, put this
+    beneath 'if __name__'.
 '''
 objs = Objects()
-com = Commands()
 
 
 if __name__ == '__main__':

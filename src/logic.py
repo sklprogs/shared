@@ -12,7 +12,6 @@ import sys
 import configparser
 import calendar
 import datetime
-import pickle
 import shlex
 import shutil
 import ssl
@@ -25,7 +24,6 @@ import webbrowser
     follows:
 '''
 import urllib.request, urllib.parse
-import difflib
 import locale
 from skl_shared_qt.localize import _
 
@@ -2541,23 +2539,16 @@ class ReadBinary:
 
 
 
-class CreateInstance:
-    # Do not forget to import this class if it was used to pickle an object
-    pass
-
-
-
 class Directory:
     #TODO: fix: does not work with a root dir ('/')
     def __init__(self,path,dest=''):
         f = '[SharedQt] logic.Directory.__init__'
         self.set_values()
         if path:
-            ''' Remove trailing slashes and follow symlinks. No error is
-                thrown for broken symlinks, but further checks will fail
-                for them. Failing a real path (e.g., pointing to
-                the volume that is not mounted yet) is more
-                apprehensible than failing a symlink.
+            ''' Remove trailing slashes and follow symlinks. No error is thrown
+                for broken symlinks, but further checks will fail for them.
+                Failing a real path (e.g., pointing to the volume that is not
+                mounted yet) is more apprehensible than failing a symlink.
             '''
             self.dir = os.path.realpath(path)
         else:
@@ -3033,80 +3024,6 @@ class Online:
 
 
 
-class Diff:
-
-    def __init__(self,text1='',text2='',file=None):
-        self.Custom = False
-        ''' Some browsers update web-page as soon as we rewrite it, and
-            some even do not open the same file again. So, we have to
-            create a new temporary file each time.
-        '''
-        self.wda_html = com.get_tmpfile(suffix='.htm',Delete=0)
-        self.iwda_write = WriteTextFile (file = self.wda_html
-                                        ,Rewrite = True
-                                        )
-        if text1 or text2:
-            self.reset (text1 = text1
-                       ,text2 = text2
-                       ,file = file
-                       )
-
-    def reset(self,text1,text2,file=None):
-        self.diff = ''
-        self.text1 = text1
-        self.text2 = text2
-        if file:
-            self.Custom = True
-            self.file = file
-            self.header = ''
-            self.iwrite = WriteTextFile (file = self.file
-                                        ,Rewrite = False
-                                        )
-            self.ipath = Path(self.file)
-        else:
-            self.Custom = False
-            self.file = self.wda_html
-            self.header = '<title>%s</title>' % _('Differences:')
-            self.iwrite = self.iwda_write
-        return self
-
-    def set_diff(self):
-        self.text1 = self.text1.split(' ')
-        self.text2 = self.text2.split(' ')
-        self.diff = difflib.HtmlDiff().make_file(self.text1,self.text2)
-        # Avoid a bug in HtmlDiff()
-        self.diff = self.diff.replace ('charset=ISO-8859-1'
-                                      ,'charset=UTF-8'
-                                      )
-
-    def set_header(self):
-        if self.Custom:
-            self.header = self.ipath.basename()
-            self.header = self.header.replace(self.ipath.get_ext(),'')
-            self.header = '<title>' + self.header + '</title>'
-        self.diff = self.diff.replace('<title></title>',self.header)
-        self.diff += '\n'
-
-    def compare(self):
-        f = '[SharedQt] logic.Diff.compare'
-        if self.text1 and self.text2:
-            if self.text1 == self.text2:
-                mes = _('Texts are identical!')
-                objs.get_mes(f,mes).show_info()
-            else:
-                self.set_diff()
-                self.set_header()
-                self.iwrite.write(self.diff)
-                if self.iwrite.Success:
-                    ''' Cannot reuse the class instance because the
-                        temporary file might be missing
-                    '''
-                    Launch(target=self.file).launch_default()
-        else:
-            com.rep_empty(f)
-
-
-
 class Shortcut:
 
     def __init__(self,symlink='',path=''):
@@ -3432,82 +3349,6 @@ class Email:
 
 
 
-class Grep:
-
-    def __init__ (self,lst,start=[]
-                 ,middle=[],end=[]
-                 ):
-        self.lst = lst
-        self.start = start
-        self.middle = middle
-        self.end = end
-        self.found = []
-        self.i = 0
-        self.sanitize()
-
-    def sanitize(self):
-        ''' Get rid of constructs like [None] instead of checking
-            arguments when parameterizing.
-        '''
-        if len(self.lst) == 1:
-            if not self.lst[0]:
-                self.lst = []
-        if len(self.start) == 1:
-            if not self.start[0]:
-                self.start = []
-        if len(self.middle) == 1:
-            if not self.middle[0]:
-                self.middle = []
-        if len(self.end) == 1:
-            if not self.end[0]:
-                self.end = []
-
-    def match_start(self):
-        if not self.start:
-            return True
-        found = False
-        for i in range(len(self.start)):
-            if self.start[i] \
-            and self.lst[self.i].startswith(self.start[i]):
-                found = True
-        return found
-
-    def match_middle(self):
-        if not self.middle:
-            return True
-        found = False
-        for i in range(len(self.middle)):
-            if self.middle[i] and self.middle[i] in self.lst[self.i]:
-                found = True
-        return found
-
-    def match_end(self):
-        if not self.end:
-            return True
-        found = False
-        for i in range(len(self.end)):
-            if self.end[i] and self.lst[self.i].endswith(self.end[i]):
-                found = True
-        return found
-
-    # Return all matches as a list
-    def get(self):
-        if not self.found:
-            for i in range(len(self.lst)):
-                self.i = i
-                if self.match_start() and self.match_middle() \
-                and self.match_end():
-                    self.found.append(self.lst[i])
-        return self.found
-
-    # Return the 1st match as a string
-    def get_first(self):
-        self.get()
-        if self.found:
-            return self.found[0]
-
-
-
 class Search:
 
     def __init__(self,text=None,pattern=None):
@@ -3598,187 +3439,13 @@ class Search:
 
 
 
-class OCR:
-
-    def __init__(self,text):
-        self.text = text
-
-    # Texts in Latin characters only
-    def cyr2lat(self):
-        ''' 'У' -> 'Y' is not actually an OCR error, but rather a human
-            one.
-        '''
-        cyr = ['А','В','Е','К','М','Н','О','Р','С','Т','У','Х','Ь','а'
-              ,'е','о','р','с','у'
-              ]
-        lat = ['A','B','E','K','M','H','O','P','C','T','Y','X','b','a'
-              ,'e','o','p','c','y'
-              ]
-        for i in range(len(cyr)):
-            self.text = self.text.replace(cyr[i],lat[i])
-        return self.text
-
-    # Digits only
-    def letter2digit(self):
-        self.text = self.text.replace('З','3').replace('з','3')
-        self.text = self.text.replace('O','0').replace('О','0')
-        self.text = self.text.replace('б','6')
-        return self.text
-
-    def run_common(self):
-        # 100o => 100°
-        self.text = re.sub(r'(\d+)[oо]',r'\1°',self.text)
-        # 106а => 106a (Cyrillic)
-        self.text = re.sub(r'(\d+)а',r'\1a',self.text)
-        # 106е => 106e (Cyrillic)
-        self.text = re.sub(r'(\d+)е',r'\1e',self.text)
-        # 106Ь => 106b
-        self.text = re.sub(r'(\d+)Ь',r'\1b',self.text)
-        # А1 => A1 (Cyrillic)
-        self.text = re.sub(r'А(\d+)',r'A\1',self.text)
-        # 1А => 1A (Cyrillic)
-        self.text = re.sub(r'(\d+)А',r'\1A',self.text)
-        # В1 => B1 (Cyrillic)
-        self.text = re.sub(r'В(\d+)',r'B\1',self.text)
-        # 1В => 1B (Cyrillic)
-        self.text = re.sub(r'(\d+)В',r'\1B',self.text)
-        # С1 => C1 (Cyrillic)
-        self.text = re.sub(r'С(\d+)',r'C\1',self.text)
-        # 1С => 1C (Cyrillic)
-        self.text = re.sub(r'(\d+)С',r'\1C',self.text)
-        # Fix a degree sign
-        self.text = re.sub(r'[\s]{0,1}[°o][CС](\W)',r'°C\1',self.text)
-        return self.text
-
-
-
-class Decline:
-    ''' #NOTE ABOUT PYMORPHY2:
-        1) Input must be stripped of punctuation, otherwise, the program
-           fails.
-        2) Output keeps unstripped spaces to the left, however, spaces
-           to the right fail the program.
-        3) Input can have any register. The output is lower-case.
-        4) Output can have 'ё' irrespectively of input.
-    '''
-    def __init__ (self,text='',number=''
-                 ,case='',Auto=True):
-        self.set_values()
-        if text:
-            self.reset (text = text
-                       ,number = number
-                       ,case = case
-                       ,Auto = Auto
-                       )
-
-    def set_values(self):
-        self.Auto = True
-        self.orig = ''
-        self.number = 'sing'
-        self.case = 'nomn'
-        self.lst = []
-    
-    def reset(self,text,number='',case='',Auto=True):
-        ''' #TODO:
-            1) Restore punctuation
-            2) Optional leading/trailing spaces
-        '''
-        self.set_values()
-        self.orig = text
-        self.number = number
-        # 'nomn', 'gent', 'datv', 'accs', 'ablt', 'loct'
-        self.case = case
-        self.Auto = Auto
-        if self.Auto:
-            itext = Text(text=self.orig)
-            itext.delete_punctuation()
-            result = itext.delete_line_breaks('')
-        else:
-            result = self.orig
-        self.lst = result.split(' ')
-        ''' Returning 'self' allows to call 'get' in the same line, e.g.
-            Decline(text='текст').get_normal().get()
-        '''
-        return self
-
-    def get(self):
-        result = ' '.join(self.lst)
-        if self.Auto:
-            result = result.replace('ё','е')
-        return result
-
-    def decline(self):
-        f = '[SharedQt] logic.Decline.decline'
-        for i in range(len(self.lst)):
-            # Inflecting '', None, digits and Latin words *only* fails
-            ''' mes = _('Decline "{}" in "{}" number and "{}" case')
-                mes = mes.format (self.lst[i]
-                                 ,self.number()
-                                 ,self.case()
-                                 )
-                objs.get_mes(f,mes,True).show_debug()
-            '''
-            try:
-                form = objs.get_morph().parse(self.lst[i])[0]
-                form = form.inflect({self.get_number(),self.get_case()})
-                form = form.word
-                self.lst[i] = form
-            except AttributeError:
-                pass
-        return self
-
-    # If input is a phrase, 'normal' each word of it
-    def get_normal(self):
-        for i in range(len(self.lst)):
-            form = objs.get_morph().parse(self.lst[i])[0]
-            self.lst[i] = form.normal_form
-        return self
-
-    def get_number(self):
-        f = '[SharedQt] logic.Decline.get_number'
-        if not self.number:
-            self.number = 'sing'
-            # Needed by 'max'
-            if self.lst:
-                tmp = []
-                for i in range(len(self.lst)):
-                    if self.lst[i]:
-                        # Returns 'sing', 'plur' or None
-                        tmp.append(objs.get_morph().parse(self.lst[i])[0].tag.number)
-                if tmp and max(tmp,key=tmp.count) == 'plur':
-                    self.number = 'plur'
-            ''' mes = str(self.number)
-                objs.get_mes(f,mes,True).show_debug()
-            '''
-        return self.number
-
-    def get_case(self):
-        f = '[SharedQt] logic.Decline.get_case'
-        if not self.case:
-            self.case = 'nomn'
-            # Needed by 'max'
-            if self.lst:
-                tmp = []
-                for i in range(len(self.lst)):
-                    if self.lst[i]:
-                        form = objs.get_morph().parse(self.lst[i])[0]
-                        tmp.append(form.tag.case)
-                result = max(tmp,key=tmp.count)
-                if result:
-                    self.case = result
-            mes = str(self.case)
-            objs.get_mes(f,mes,True).show_debug()
-        return self.case
-
-
-
 class Objects:
-    ''' Values here will be kept through different modules (but not
-        through different programs all of them using 'shared.py').
+    ''' Values here will be kept through different modules (but not through
+        different programs all of them using 'shared.py').
     '''
     def __init__(self):
-        self.morph = self.pretty_table = self.pdir = self.online \
-        = self.tmpfile = self.os = self.mes = self.sections = None
+        self.pretty_table = self.pdir = self.online = self.tmpfile = self.os \
+                          = self.mes = self.sections = None
         self.icon = ''
     
     def get_sections(self):
@@ -3816,54 +3483,6 @@ class Objects:
             self.pdir = ProgramDir()
         return self.pdir
 
-    def get_morph(self):
-        if not self.morph:
-            import pymorphy2
-            self.morph = pymorphy2.MorphAnalyzer()
-        return self.morph
-
-
-
-class MessagePool:
-
-    def __init__(self,max_size=5):
-        self.max_size = max_size
-        self.pool = []
-
-    def free(self):
-        if len(self.pool) == self.max_size:
-            self.delete_first()
-
-    def add(self,message):
-        f = '[SharedQt] logic.MessagePool.add'
-        if message:
-            self.free()
-            self.pool.append(message)
-        else:
-            com.rep_empty(f)
-
-    def delete_first(self):
-        f = '[SharedQt] logic.MessagePool.delete_first'
-        if len(self.pool) > 0:
-            del self.pool[0]
-        else:
-            mes = _('The pool is empty!')
-            objs.get_mes(f,mes,True).show_warning()
-
-    def delete_last(self):
-        f = '[SharedQt] logic.MessagePool.delete_last'
-        if len(self.pool) > 0:
-            del self.pool[-1]
-        else:
-            mes = _('The pool is empty!')
-            objs.get_mes(f,mes,True).show_warning()
-
-    def clear(self):
-        self.pool = []
-
-    def get(self):
-        return List(lst1=self.pool).space_items()
-
 
 
 class ProgramDir:
@@ -3893,66 +3512,6 @@ class Timer:
         mes = _('The operation has taken {} s.').format(delta)
         objs.get_mes(self.func_title,mes,True).show_debug()
         return delta
-
-
-
-class FixBaseName:
-    ''' Return a path base name that would comply with OS-specific
-        rules. We should not use absolute paths at input because we
-        cannot tell for sure that the path separator is actually
-        a separator and not an illegal character.
-    '''
-    def __init__(self,basename,AllOS=False,max_len=0):
-        self.AllOS = AllOS
-        self.name = basename
-        self.max_len = max_len
-        
-    def set_length(self):
-        if self.max_len:
-            self.name = self.name[:self.max_len]
-    
-    def run_win(self):
-        self.name = [char for char in self.name if not char \
-                     in forbidden_win
-                    ]
-        self.name = ''.join(self.name)
-        if self.name.endswith('.'):
-            self.name = self.name[:-1]
-        self.name = self.name.strip()
-        if self.name.upper() in reserved_win:
-            self.name = ''
-        
-    def run_lin(self):
-        self.name = [char for char in self.name if not char \
-                     in forbidden_lin
-                    ]
-        self.name = ''.join(self.name)
-        self.name = self.name.strip()
-        
-    def run_mac(self):
-        self.name = [char for char in self.name if not char \
-                     in forbidden_mac
-                    ]
-        self.name = ''.join(self.name)
-        self.name = self.name.strip()
-        
-    def run(self):
-        if self.AllOS:
-            self.run_win()
-            self.run_lin()
-            self.run_mac()
-        elif objs.get_os().is_win():
-            self.run_win()
-        elif objs.os.is_lin():
-            self.run_lin()
-        elif objs.os.is_mac():
-            self.run_mac()
-        else:
-            self.run_win()
-            self.run_lin()
-            self.run_mac()
-        self.set_length()
-        return self.name
 
 
 
@@ -4048,128 +3607,6 @@ class Get:
                 objs.get_mes(f,mes).show_warning()
         else:
             com.rep_empty(f)
-
-
-
-class Links:
-    
-    def __init__(self,text,root='href="'):
-        self.set_values()
-        self.text = text
-        # Some sites omit 'http(s):' for their links
-        self.text = self.text.replace('"//www.','"http://www.')
-        self.root = root
-        
-    def redirect(self):
-        for i in range(len(self.links)):
-            if '?url' in self.links[i]:
-                self.links[i] = re.sub('.*\?url=','',self.links[i])
-                # Replace '%3A%2F%2F' with '://' and so on
-                self.links[i] = urllib.parse.unquote(self.links[i])
-    
-    def set_values(self):
-        self.pos = 0
-        self.links = []
-    
-    def get_poses(self):
-        search = Search (text = self.text
-                        ,pattern = self.root
-                        )
-        loop = search.get_next_loop()
-        for self.pos in loop:
-            self.get_link()
-            
-    def get_link(self):
-        f = '[SharedQt] logic.Links.get_link'
-        pos = self.pos + len(self.root)
-        if pos >= len(self.text):
-            mes = _('Unexpected end of text!')
-            objs.get_mes(f,mes,True).show_warning()
-        else:
-            text = self.text[pos:]
-            try:
-                pos = text.index('"')
-                self.links.append(text[:pos])
-            except ValueError:
-                mes = _('Wrong input data!')
-                objs.get_mes(f,mes,True).show_warning()
-                              
-    def delete_duplicates(self):
-        ''' Sometimes there are duplicate URLs on a page - we delete
-            them there. We may need to preserve an original sorting so
-            do not use 'set'.
-        '''
-        i = len(self.links) - 1
-        while i >= 0:
-            ind = self.links.index(self.links[i])
-            if ind < i:
-                del self.links[i]
-            i -= 1
-        return self.links
-    
-    def add_root(self,root):
-        for i in range(len(self.links)):
-            if self.links[i].startswith('/'):
-                self.links[i] = root + self.links[i]
-        return self.links
-        
-    def get_valid(self):
-        self.links = [link for link in self.links \
-                      if link.startswith('http')
-                     ]
-        return self.links
-
-
-
-class FilterList:
-    ''' Filter base names (case-ignorant) of files & folders in a path.
-        Blacklist is a list of patterns, not obligatory full names.
-    '''
-    def __init__(self,path,blacklist=[]):
-        self.lst = []
-        self.path = path
-        self.block = blacklist
-        self.Success = Directory(self.path).Success \
-                       and isinstance(self.block,list)
-    
-    def set_block(self):
-        f = '[SharedQt] logic.FilterList.set_block'
-        if self.Success:
-            # Actually, there is no reason to use 'strip' here
-            self.block = [item.lower() for item in self.block if item]
-        else:
-            com.cancel(f)
-    
-    def get_list(self):
-        f = '[SharedQt] logic.FilterList.get_list'
-        if self.Success:
-            if not self.lst:
-                # Those are base names
-                self.lst = os.listdir(self.path)
-            return self.lst
-        else:
-            com.cancel(f)
-    
-    def filter(self):
-        f = '[SharedQt] logic.FilterList.filter'
-        if self.Success:
-            match = []
-            for item in self.lst:
-                for pattern in self.block:
-                    if pattern in item.lower():
-                        match.append(item)
-                        break
-            # This allows us to return matches as well if necessary
-            mismatch = list(set(self.lst) - set(match))
-            mismatch.sort()
-            return [os.path.join(self.path,item) for item in mismatch]
-        else:
-            com.cancel(f)
-        
-    def run(self):
-        self.set_block()
-        self.get_list()
-        return self.filter()
 
 
 

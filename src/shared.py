@@ -441,21 +441,7 @@ class CreateConfig(lg.CreateConfig):
 
 
 
-class CreateInstance(lg.CreateInstance):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
 class Config(lg.Config):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
-class Decline(lg.Decline):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -470,13 +456,6 @@ class DefaultKeys(lg.DefaultKeys):
 
 
 class Dic(lg.Dic):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
-class Diff(lg.Diff):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -511,28 +490,7 @@ class File(lg.File):
 
 
 
-class FilterList(lg.FilterList):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
-class FixBaseName(lg.FixBaseName):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
 class Get(lg.Get):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
-class Grep(lg.Grep):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -560,13 +518,6 @@ class Launch(lg.Launch):
 
 
 
-class Links(lg.Links):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
 class List(lg.List):
     
     def __init__(self,*args,**kwargs):
@@ -575,20 +526,6 @@ class List(lg.List):
 
 
 class Log(lg.Log):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
-class MessagePool(lg.MessagePool):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
-class OCR(lg.OCR):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -609,14 +546,14 @@ class Online(lg.Online):
 
 
 
-class Path(lg.Path):
+class ProgramDir(lg.ProgramDir):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
 
 
 
-class ProgramDir(lg.ProgramDir):
+class Path(lg.Path):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
