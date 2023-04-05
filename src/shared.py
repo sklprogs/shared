@@ -560,13 +560,6 @@ class Path(lg.Path):
 
 
 
-class ReadBinary(lg.ReadBinary):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
 class ReadTextFile(lg.ReadTextFile):
     
     def __init__(self,*args,**kwargs):
@@ -575,13 +568,6 @@ class ReadTextFile(lg.ReadTextFile):
 
 
 class Search(lg.Search):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
-class Shortcut(lg.Shortcut):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
