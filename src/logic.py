@@ -821,204 +821,6 @@ class Log:
 
 
 
-class TextDic:
-
-    def __init__(self,file,Sortable=False):
-        self.file = file
-        self.Sortable = Sortable
-        self.iread = ReadTextFile(self.file)
-        self.reset()
-
-    def _delete_duplicates(self):
-        ''' This is might be needed only for those dictionaries that already
-            may contain duplicates (dictionaries with newly added entries do
-            not have duplicates due to new algorithms).
-        '''
-        f = '[SharedQt] logic.TextDic._delete_duplicates'
-        if not self.Success:
-            com.cancel(f)
-            return
-        if not self.Sortable:
-            mes = _('File "{}" is not sortable!').format(self.file)
-            objs.get_mes(f,mes).show_warning()
-            return
-        old = self.lines()
-        self.lst = list(set(self.get_list()))
-        new = self.lines = len(self.lst)
-        mes = _('Entries deleted: {} ({}-{})').format(old-new,old,new)
-        objs.get_mes(f,mes,True).show_info()
-        self.text = '\n'.join(self.lst)
-        # Update original and translation
-        self._split()
-        # After using set(), the original order was lost
-        self.sort()
-
-    def _join(self):
-        # We can use this as an updater, even without relying on Success
-        f = '[SharedQt] logic.TextDic._join'
-        if len(self.orig) != len(self.transl):
-            mes = _('Wrong input data!')
-            objs.get_mes(f,mes).show_warning()
-            return
-        self.lines = len(self.orig)
-        self.lst = []
-        for i in range(self.lines):
-            self.lst.append(self.orig[i]+'\t'+self.transl[i])
-        self.text = '\n'.join(self.lst)
-
-    def _split(self):
-        ''' We can use this to check integrity and/or update original
-            and translation lists.
-        '''
-        f = '[SharedQt] logic.TextDic._split'
-        if not self.get():
-            self.Success = False
-            return
-        self.Success = True
-        self.orig = []
-        self.transl = []
-        ''' Building lists takes ~0.1 longer without temporary variables (now
-            self._split() takes ~0.256).
-        '''
-        for i in range(self.lines):
-            tmp_lst = self.lst[i].split('\t')
-            if len(tmp_lst) == 2:
-                self.orig.append(tmp_lst[0])
-                self.transl.append(tmp_lst[1])
-            else:
-                self.Success = False
-                # i+1: Count from 1
-                mes = _('Dictionary "{}": Incorrect line #{}: "{}"!')
-                mes = mes.format(self.file,i+1,self.lst[i])
-                objs.get_mes(f,mes).show_warning()
-
-    def append(self,original,translation):
-        ''' #TODO: skip repetitions
-            #TODO: write a dictionary in an append mode after appending
-            to memory.
-        '''
-        f = '[SharedQt] logic.TextDic.append'
-        if not self.Success:
-            com.cancel(f)
-            return
-        if not original or not translation:
-            com.rep_empty(f)
-            return
-        self.orig.append(original)
-        self.transl.append(translation)
-        self._join()
-
-    def delete_entry(self,entry_no): # Count from 1
-        ''' #TODO: #FIX: an entry which is only one in a dictionary is
-            not deleted.
-        '''
-        f = '[SharedQt] logic.TextDic.delete_entry'
-        if not self.Success:
-            com.cancel(f)
-            return
-        entry_no -= 1
-        if entry_no < 0 or entry_no >= self.get_lines():
-            sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
-            mes = _('The condition "{}" is not observed!').format(sub)
-            objs.get_mes(f,mes).show_error()
-            return
-        del self.orig[entry_no]
-        del self.transl[entry_no]
-        self._join()
-
-    def edit_entry(self,entry_no,orig,transl): # Count from 1
-        ''' #TODO: Add checking orig and transl (where needed) for
-            a wrapper function.
-        '''
-        f = '[SharedQt] logic.TextDic.edit_entry'
-        if not self.Success:
-            com.cancel(f)
-            return
-        entry_no -= 1
-        if entry_no < 0 or entry_no >= self.get_lines():
-            sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
-            mes = _('The condition "{}" is not observed!').format(sub)
-            objs.get_mes(f,mes).show_error()
-            return
-        self.orig[entry_no] = orig
-        self.transl[entry_no] = transl
-        self._join()
-
-    def get(self):
-        if not self.text:
-            self.text = self.iread.load()
-        return self.text
-
-    def get_lines(self):
-        if self.lines == 0:
-            self.lines = len(self.get_list())
-        return self.lines
-
-    def get_list(self):
-        if not self.lst:
-            self.lst = self.get().splitlines()
-        return self.lst
-
-    def reset(self):
-        self.text = self.iread.load()
-        self.orig = []
-        self.transl = []
-        self.lst = self.get().splitlines()
-        self.lines = len(self.lst)
-        self._split()
-
-    def sort(self):
-        # Sort a dictionary with the longest lines going first
-        f = '[SharedQt] logic.TextDic.sort'
-        if not self.Success:
-            com.cancel(f)
-            return
-        if not self.Sortable:
-            mes = _('File "{}" is not sortable!').format(self.file)
-            objs.get_mes(f,mes).show_warning()
-            return
-        tmp_list = []
-        for i in range(len(self.lst)):
-            tmp_list += [[len(self.orig[i])
-                         ,self.orig[i]
-                         ,self.transl[i]
-                         ]
-                        ]
-        tmp_list.sort(key=lambda x: x[0],reverse=True)
-        for i in range(len(self.lst)):
-            self.orig[i] = tmp_list[i][1]
-            self.transl[i] = tmp_list[i][2]
-            self.lst[i] = self.orig[i] + '\t' + self.transl[i]
-        self.text = '\n'.join(self.lst)
-
-    def tail(self):
-        f = '[SharedQt] logic.TextDic.tail'
-        tail_text = ''
-        if not self.Success:
-            com.cancel(f)
-            return tail_text
-        tail_len = globs['int']['tail_len']
-        if tail_len > self.get_lines():
-            tail_len = self.get_lines()
-        i = self.get_lines() - tail_len
-        # We count from 1, therefore it is < and not <=
-        while i < self.lines():
-            # i + 1 by the same reason
-            tail_text += str(i+1) + ':' + '"' + self.get_list()[i] + '"\n'
-            i += 1
-        return tail_text
-
-    def write(self):
-        f = '[SharedQt] logic.TextDic.write'
-        if not self.Success:
-            com.cancel(f)
-            return
-        WriteTextFile (file = self.file
-                      ,Rewrite = True
-                      ).write(self.get())
-
-
-
 class ReadTextFile:
 
     def __init__(self,file,Empty=False):
@@ -2225,67 +2027,6 @@ class Path:
 
 
 
-class WriteBinary:
-
-    def __init__(self,file,obj,Rewrite=True):
-        f = '[SharedQt] logic.WriteBinary.__init__'
-        self.Success = True
-        self.file = file
-        self.obj = obj
-        if self.file and self.obj:
-            self.Rewrite = Rewrite
-            self.fragm = None
-        else:
-            self.Success = False
-            com.rep_empty(f)
-
-    def _write(self,mode='w+b'):
-        f = '[SharedQt] logic.WriteBinary._write'
-        mes = _('Write file "{}"').format(self.file)
-        objs.get_mes(f,mes,True).show_info()
-        if mode != 'w+b' and mode != 'a+b':
-            mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
-            mes = mes.format(mode,'w+b, a+b')
-            objs.get_mes(f,mes).show_error()
-            return
-        try:
-            with open(self.file,mode) as fl:
-                if mode == 'w+b':
-                    pickle.dump(self.obj,fl)
-                elif mode == 'a+b':
-                    pickle.dump(self.fragm,fl)
-        except Exception as e:
-            self.Success = False
-            mes = _('Unable to write file "{}"!\n\nDetails: {}')
-            mes = mes.format(self.file,e)
-            objs.get_mes(f,mes).show_error()
-
-    def append(self,fragm):
-        f = '[SharedQt] logic.WriteBinary.append'
-        if not self.Success:
-            com.cancel(f)
-            return
-        self.fragm = fragm
-        if not self.fragm:
-            com.rep_empty(f)
-            return
-        self._write(mode='a+b')
-
-    def write(self):
-        f = '[SharedQt] logic.WriteBinary.write'
-        if not self.Success:
-            com.cancel(f)
-            return
-        if com.rewrite (file = self.file
-                       ,Rewrite = self.Rewrite
-                       ):
-            self._write(mode='w+b')
-        else:
-            mes = _('Operation has been canceled by the user.')
-            Message(f,mes).show_info()
-
-
-
 class Dic:
 
     def __init__(self,file,Sortable=False):
@@ -2491,6 +2232,204 @@ class Dic:
 
     def write(self):
         f = '[SharedQt] logic.Dic.write'
+        if not self.Success:
+            com.cancel(f)
+            return
+        WriteTextFile (file = self.file
+                      ,Rewrite = True
+                      ).write(self.get())
+
+
+
+class TextDic:
+
+    def __init__(self,file,Sortable=False):
+        self.file = file
+        self.Sortable = Sortable
+        self.iread = ReadTextFile(self.file)
+        self.reset()
+
+    def _delete_duplicates(self):
+        ''' This is might be needed only for those dictionaries that already
+            may contain duplicates (dictionaries with newly added entries do
+            not have duplicates due to new algorithms).
+        '''
+        f = '[SharedQt] logic.TextDic._delete_duplicates'
+        if not self.Success:
+            com.cancel(f)
+            return
+        if not self.Sortable:
+            mes = _('File "{}" is not sortable!').format(self.file)
+            objs.get_mes(f,mes).show_warning()
+            return
+        old = self.lines()
+        self.lst = list(set(self.get_list()))
+        new = self.lines = len(self.lst)
+        mes = _('Entries deleted: {} ({}-{})').format(old-new,old,new)
+        objs.get_mes(f,mes,True).show_info()
+        self.text = '\n'.join(self.lst)
+        # Update original and translation
+        self._split()
+        # After using set(), the original order was lost
+        self.sort()
+
+    def _join(self):
+        # We can use this as an updater, even without relying on Success
+        f = '[SharedQt] logic.TextDic._join'
+        if len(self.orig) != len(self.transl):
+            mes = _('Wrong input data!')
+            objs.get_mes(f,mes).show_warning()
+            return
+        self.lines = len(self.orig)
+        self.lst = []
+        for i in range(self.lines):
+            self.lst.append(self.orig[i]+'\t'+self.transl[i])
+        self.text = '\n'.join(self.lst)
+
+    def _split(self):
+        ''' We can use this to check integrity and/or update original
+            and translation lists.
+        '''
+        f = '[SharedQt] logic.TextDic._split'
+        if not self.get():
+            self.Success = False
+            return
+        self.Success = True
+        self.orig = []
+        self.transl = []
+        ''' Building lists takes ~0.1 longer without temporary variables (now
+            self._split() takes ~0.256).
+        '''
+        for i in range(self.lines):
+            tmp_lst = self.lst[i].split('\t')
+            if len(tmp_lst) == 2:
+                self.orig.append(tmp_lst[0])
+                self.transl.append(tmp_lst[1])
+            else:
+                self.Success = False
+                # i+1: Count from 1
+                mes = _('Dictionary "{}": Incorrect line #{}: "{}"!')
+                mes = mes.format(self.file,i+1,self.lst[i])
+                objs.get_mes(f,mes).show_warning()
+
+    def append(self,original,translation):
+        ''' #TODO: skip repetitions
+            #TODO: write a dictionary in an append mode after appending
+            to memory.
+        '''
+        f = '[SharedQt] logic.TextDic.append'
+        if not self.Success:
+            com.cancel(f)
+            return
+        if not original or not translation:
+            com.rep_empty(f)
+            return
+        self.orig.append(original)
+        self.transl.append(translation)
+        self._join()
+
+    def delete_entry(self,entry_no): # Count from 1
+        ''' #TODO: #FIX: an entry which is only one in a dictionary is
+            not deleted.
+        '''
+        f = '[SharedQt] logic.TextDic.delete_entry'
+        if not self.Success:
+            com.cancel(f)
+            return
+        entry_no -= 1
+        if entry_no < 0 or entry_no >= self.get_lines():
+            sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
+            mes = _('The condition "{}" is not observed!').format(sub)
+            objs.get_mes(f,mes).show_error()
+            return
+        del self.orig[entry_no]
+        del self.transl[entry_no]
+        self._join()
+
+    def edit_entry(self,entry_no,orig,transl): # Count from 1
+        ''' #TODO: Add checking orig and transl (where needed) for
+            a wrapper function.
+        '''
+        f = '[SharedQt] logic.TextDic.edit_entry'
+        if not self.Success:
+            com.cancel(f)
+            return
+        entry_no -= 1
+        if entry_no < 0 or entry_no >= self.get_lines():
+            sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
+            mes = _('The condition "{}" is not observed!').format(sub)
+            objs.get_mes(f,mes).show_error()
+            return
+        self.orig[entry_no] = orig
+        self.transl[entry_no] = transl
+        self._join()
+
+    def get(self):
+        if not self.text:
+            self.text = self.iread.load()
+        return self.text
+
+    def get_lines(self):
+        if self.lines == 0:
+            self.lines = len(self.get_list())
+        return self.lines
+
+    def get_list(self):
+        if not self.lst:
+            self.lst = self.get().splitlines()
+        return self.lst
+
+    def reset(self):
+        self.text = self.iread.load()
+        self.orig = []
+        self.transl = []
+        self.lst = self.get().splitlines()
+        self.lines = len(self.lst)
+        self._split()
+
+    def sort(self):
+        # Sort a dictionary with the longest lines going first
+        f = '[SharedQt] logic.TextDic.sort'
+        if not self.Success:
+            com.cancel(f)
+            return
+        if not self.Sortable:
+            mes = _('File "{}" is not sortable!').format(self.file)
+            objs.get_mes(f,mes).show_warning()
+            return
+        tmp_list = []
+        for i in range(len(self.lst)):
+            tmp_list += [[len(self.orig[i])
+                         ,self.orig[i]
+                         ,self.transl[i]
+                         ]
+                        ]
+        tmp_list.sort(key=lambda x: x[0],reverse=True)
+        for i in range(len(self.lst)):
+            self.orig[i] = tmp_list[i][1]
+            self.transl[i] = tmp_list[i][2]
+            self.lst[i] = self.orig[i] + '\t' + self.transl[i]
+        self.text = '\n'.join(self.lst)
+
+    def tail(self):
+        f = '[SharedQt] logic.TextDic.tail'
+        tail_text = ''
+        if not self.Success:
+            com.cancel(f)
+            return tail_text
+        tail_len = globs['int']['tail_len']
+        if tail_len > self.get_lines():
+            tail_len = self.get_lines()
+        i = self.get_lines() - tail_len
+        # We count from 1, therefore it is < and not <=
+        while i < self.lines():
+            # i + 1 by the same reason
+            tail_text += str(i+1) + ':' + '"' + self.get_list()[i] + '"\n'
+            i += 1
+        return tail_text
+
+    def write(self):
+        f = '[SharedQt] logic.TextDic.write'
         if not self.Success:
             com.cancel(f)
             return

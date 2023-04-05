@@ -602,13 +602,6 @@ class Timer(lg.Timer):
 
 
 
-class WriteBinary(lg.WriteBinary):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-
-
-
 class WriteTextFile(lg.WriteTextFile):
     
     def __init__(self,*args,**kwargs):
