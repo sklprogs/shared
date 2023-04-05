@@ -928,6 +928,6 @@ lg.objs.mes = Message
 if __name__ == '__main__':
     f = '[SharedQt] shared.__main__'
     com.start()
-    #lg.ReadTextFile('/tmp/aaa').get()
-    Geometry(Top()).activate()
+    lg.ReadTextFile('/tmp/aaa').get()
+    #Geometry(Top()).activate()
     com.end()

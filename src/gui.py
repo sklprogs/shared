@@ -5,7 +5,6 @@ import sys
 import PyQt5
 import PyQt5.QtWidgets
 from skl_shared_qt.localize import _
-import skl_shared_qt.shared as sh
 
 
 ICON = ''
