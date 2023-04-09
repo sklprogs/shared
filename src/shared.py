@@ -14,6 +14,39 @@ FONT1 = 'Serif 14'
 FONT2 = 'Sans 11'
 
 
+class Debug:
+    
+    def __init__(self,func='__main__',mes=''):
+        self.set_gui()
+        if mes:
+            self.reset(func,mes)
+    
+    def reset(self,func,mes):
+        self.set_title(func)
+        self.fill(mes)
+    
+    def set_gui(self):
+        self.gui = gi.Debug()
+        self.gui.set_icon()
+        self.set_bindings()
+    
+    def set_bindings(self):
+        self.gui.bind('Escape',self.close)
+    
+    def fill(self,text):
+        self.gui.fill(text)
+    
+    def set_title(self,title):
+        self.gui.set_title(title)
+    
+    def show(self):
+        self.gui.show_maximized()
+    
+    def close(self):
+        self.gui.close()
+
+
+
 class Geometry:
     ''' Window behavior is not uniform through different platforms or even
         through different Windows versions.
@@ -645,17 +678,8 @@ class Objects(lg.Objects):
             'logic'. Use 'logic' methods to set attributes.
         '''
         super().__init__()
-        self.question = self.info = self.warning = self.debug \
-                      = self.error = self.mes = self.waitbox \
-                      = self.txt = None
-    
-    def get_txt(self,font=FONT1,Maximize=False):
-        if self.txt is None:
-            self.txt = TextBoxRW (title = _('Test:')
-                                 ,font = font
-                                 ,Maximize = Maximize
-                                 )
-        return self.txt
+        self.question = self.info = self.warning = self.debug = self.error \
+                      = self.mes = self.waitbox = None
     
     def get_mes (self,func='Logic error'
                 ,message='Logic error'
@@ -786,8 +810,7 @@ class Commands(lg.Commands):
                                     ,height = height
                                     )
         except Exception as e:
-            mes = _('Third-party module has failed!\n\nDetails: {}')
-            mes = mes.format(e)
+            mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
             objs.get_mes(f,mes,True).show_warning()
     
     def debug_globs(self):
@@ -796,49 +819,35 @@ class Commands(lg.Commands):
         keys = []
         values = []
         mes = ''
-        if lg.globs:
-            for abbr in objs.get_sections().abbr:
-                if 'dict' in str(type(lg.globs[abbr])):
-                    for key in sorted(lg.globs[abbr].keys()):
-                        sections.append(objs.sections.get_section(abbr))
-                        keys.append(key)
-                        values.append(lg.globs[abbr][key])
-                else:
-                    sections.append(objs.sections.get_section(abbr))
-                    keys.append(_('N/A'))
-                    values.append(lg.globs[abbr])
-            if len(sections) > 1:
-                i = 1
-                cur_sec = sections[0]
-                while i < len(sections):
-                    if sections[i] == cur_sec:
-                        sections[i] = ''
-                    else:
-                        cur_sec = sections[i]
-                    i += 1
-            iterable = [sections,keys,values]
-            headers = (_('SECTION'),_('KEY'),_('VALUE'))
-            mes = FastTable (iterable = iterable
-                            ,headers = headers
-                            ,maxrow = 50
-                            ).run()
-        else:
+        if not lg.globs:
             com.rep_empty(f)
+            return f + ':\n' + mes
+        for abbr in objs.get_sections().abbr:
+            if 'dict' in str(type(lg.globs[abbr])):
+                for key in sorted(lg.globs[abbr].keys()):
+                    sections.append(objs.sections.get_section(abbr))
+                    keys.append(key)
+                    values.append(lg.globs[abbr][key])
+            else:
+                sections.append(objs.sections.get_section(abbr))
+                keys.append(_('N/A'))
+                values.append(lg.globs[abbr])
+        if len(sections) > 1:
+            i = 1
+            cur_sec = sections[0]
+            while i < len(sections):
+                if sections[i] == cur_sec:
+                    sections[i] = ''
+                else:
+                    cur_sec = sections[i]
+                i += 1
+        iterable = [sections,keys,values]
+        headers = (_('SECTION'),_('KEY'),_('VALUE'))
+        mes = FastTable (iterable = iterable
+                        ,headers = headers
+                        ,maxrow = 50
+                        ).run()
         return f + ':\n' + mes
-    
-    def run_fast_txt(self,text='',font=FONT1,Maximize=False):
-        objs.get_txt(font,Maximize).reset()
-        objs.txt.insert(text)
-        objs.txt.show()
-        return objs.txt.get()
-    
-    def run_fast_debug(self,title=_('Test:'),text=''):
-        objs.get_txt (font = 'Mono 11'
-                     ,Maximize = True
-                     ).reset()
-        objs.txt.set_title(title)
-        objs.txt.insert(text)
-        objs.txt.show()
     
     def start(self):
         gi.objs.start()
@@ -928,6 +937,9 @@ lg.objs.mes = Message
 if __name__ == '__main__':
     f = '[SharedQt] shared.__main__'
     com.start()
-    lg.ReadTextFile('/tmp/aaa').get()
+    #lg.ReadTextFile('/tmp/aaa').get()
     #Geometry(Top()).activate()
+    idebug = Debug(f,'Here should be some debug info')
+    # This MUST be on a separate line, the widget will not be shown otherwise
+    idebug.show()
     com.end()
