@@ -3467,13 +3467,6 @@ class Commands:
         mes = _('Operation has failed!\n\nDetails: {}').format(e)
         objs.get_mes(f,mes,Silent).show_error()
     
-    def sanitize(self,text):
-        if text is None:
-            text = ''
-        else:
-            text = Text(str(text)).delete_unsupported()
-        return text
-    
     def rep_lazy(self,func=_('Logic error!')):
         Message (func = func
                 ,message = _('Nothing to do!')
