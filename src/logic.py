@@ -12,6 +12,7 @@ import sys
 import configparser
 import calendar
 import datetime
+import difflib
 import shlex
 import shutil
 import ssl
@@ -76,17 +77,14 @@ if 'win' in sys.platform:
     from win32com.shell import shell as win32shell
     if win32com.client.gencache.is_readonly:
         win32com.client.gencache.is_readonly = False
-        ''' Under p2exe/cx_freeze the call in gencache to __init__()
-            does not happen so we use Rebuild() to force the creation
-            of the gen_py folder.
-            The contents of library.zip\win32com shall be unpacked to
-            exe.win32 - 3.3\win32com.
-            See also the section where EnsureDispatch is called.
+        ''' Under p2exe/cx_freeze the call in gencache to __init__() does not
+            happen so we use Rebuild() to force the creation of the gen_py
+            folder. The contents of library.zip\win32com shall be unpacked to
+            exe.win32 - 3.3\win32com. See also the section where EnsureDispatch
+            is called.
         '''
         win32com.client.gencache.Rebuild()
-    ''' 'datetime' may have to be imported last due to the problems
-        with TZ.
-    '''
+    # 'datetime' may have to be imported last due to the problems with TZ
 
 
 class Section:
@@ -130,7 +128,7 @@ class Sections:
         try:
             index_ = self.sections.index(section)
             return self.abbr[index_]   
-        except (ValueError,IndexError) as e:
+        except (ValueError,IndexError):
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(section,'; '.join(self.sections))
             objs.get_mes(f,mes).show_error()
@@ -144,7 +142,7 @@ class Sections:
         try:
             index_ = self.abbr.index(abbr)
             return self.sections[index_]
-        except (ValueError,IndexError) as e:
+        except (ValueError,IndexError):
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(abbr,'; '.join(self.abbr))
             objs.get_mes(f,mes).show_error()
@@ -486,14 +484,8 @@ class Font:
         self.yborder = 0
     
     def set_width(self):
-        f = '[SharedQt] logic.Font.set_width'
         if self.width:
             self.width += self.xborder
-            '''
-            Message (func = f
-                    ,message = '%d' % self.width
-                    ).show_debug()
-            '''
     
     def set_height(self):
         f = '[SharedQt] logic.Font.set_height'
@@ -504,11 +496,6 @@ class Font:
         if lines:
             self.height = self.height * lines
         self.height += self.yborder
-        '''
-        Message (func = f
-                ,message = '%d' % self.height
-                ).show_debug()
-        '''
     
     def reset(self,name,xborder=0,yborder=0):
         self.set_values()
@@ -3439,7 +3426,6 @@ class Commands:
         return result
     
     def set_figure_commas(self,figure):
-        f = '[SharedQt] logic.Commands.set_figure_commas'
         figure = str(figure)
         if figure.startswith('-'):
             Minus = True
