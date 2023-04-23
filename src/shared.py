@@ -1,9 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-import sys, os
-import re
-import io
 from skl_shared_qt.localize import _
 import skl_shared_qt.logic as lg
 import skl_shared_qt.gui as gi
@@ -103,7 +100,7 @@ class Color:
         f = '[SharedQt] shared.Color.get_hex'
         # Both None and '' are accepted by Qt, but we need transparency here
         if not self.color:
-            sh.com.rep_empty(f)
+            com.rep_empty(f)
         return self.gui.get_hex()
     
     def modify(self,factor=150):
@@ -188,7 +185,7 @@ class ProgressBar:
         pass
     
     def update(self,count,limit):
-        f = '[SharedQt] shared.ProgressBar.update'
+        #f = '[SharedQt] shared.ProgressBar.update'
         pass
 
 
@@ -695,7 +692,9 @@ class Objects(lg.Objects):
         if self.waitbox is None:
             if not icon:
                 icon = self.icon
-            self.waitbox = WaitBox(icon)
+            #TODO: Implement
+            self.waitbox = None
+            #self.waitbox = WaitBox(icon)
         return self.waitbox
     
     def get_root(self):
