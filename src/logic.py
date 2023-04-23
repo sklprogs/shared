@@ -3638,47 +3638,47 @@ class Commands:
         f = '[SharedQt] logic.Commands.get_human_time'
         result = '%d %s' % (0,_('sec'))
         # Allows to use 'None'
-        if delta:
-            if isinstance(delta,int) or isinstance(delta,float):
-                # 'datetime' will output years even for small integers
-                # https://kalkulator.pro/year-to-second.html
-                years = delta // 31536000.00042889
-                all_sec = years * 31536000.00042889
-                months = (delta - all_sec) // 2592000.0000000005
-                all_sec += months * 2592000.0000000005
-                weeks = (delta - all_sec) // 604800
-                all_sec += weeks * 604800
-                days = (delta - all_sec) // 86400
-                all_sec += days * 86400
-                hours = (delta - all_sec) // 3600
-                all_sec += hours * 3600
-                minutes = (delta - all_sec) // 60
-                all_sec += minutes * 60
-                seconds = delta - all_sec
-                mes = []
-                if years:
-                    mes.append('%d %s' % (years,_('yrs')))
-                if months:
-                    mes.append('%d %s' % (months,_('mths')))
-                if weeks:
-                    mes.append('%d %s' % (weeks,_('wks')))
-                if days:
-                    mes.append('%d %s' % (days,_('days')))
-                if hours:
-                    mes.append('%d %s' % (hours,_('hrs')))
-                if minutes:
-                    mes.append('%d %s' % (minutes,_('min')))
-                if seconds:
-                    mes.append('%d %s' % (seconds,_('sec')))
-                if mes:
-                    result = ' '.join(mes)
-            else:
-                mes = _('Wrong input data: "{}"!').format(delta)
-                Message (func = f
-                        ,message = mes
-                        ).show_warning()
-        else:
+        if not delta:
             self.rep_empty(f)
+            return result
+        if not isinstance(delta,int) and not isinstance(delta,float):
+            mes = _('Wrong input data: "{}"!').format(delta)
+            Message (func = f
+                    ,message = mes
+                    ).show_warning()
+            return result
+        # 'datetime' will output years even for small integers
+        # https://kalkulator.pro/year-to-second.html
+        years = delta // 31536000.00042889
+        all_sec = years * 31536000.00042889
+        months = (delta - all_sec) // 2592000.0000000005
+        all_sec += months * 2592000.0000000005
+        weeks = (delta - all_sec) // 604800
+        all_sec += weeks * 604800
+        days = (delta - all_sec) // 86400
+        all_sec += days * 86400
+        hours = (delta - all_sec) // 3600
+        all_sec += hours * 3600
+        minutes = (delta - all_sec) // 60
+        all_sec += minutes * 60
+        seconds = delta - all_sec
+        mes = []
+        if years:
+            mes.append('%d %s' % (years,_('yrs')))
+        if months:
+            mes.append('%d %s' % (months,_('mths')))
+        if weeks:
+            mes.append('%d %s' % (weeks,_('wks')))
+        if days:
+            mes.append('%d %s' % (days,_('days')))
+        if hours:
+            mes.append('%d %s' % (hours,_('hrs')))
+        if minutes:
+            mes.append('%d %s' % (minutes,_('min')))
+        if seconds:
+            mes.append('%d %s' % (seconds,_('sec')))
+        if mes:
+            result = ' '.join(mes)
         return result
     
     def cancel(self,func=_('Logic error!')):
