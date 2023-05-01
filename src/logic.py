@@ -3415,19 +3415,19 @@ class Commands:
     
     def get_additives(self,number):
         f = '[SharedQt] logic.Commands.get_additives'
-        ''' Return integers by which a set integer is divisible (except
-            for 1 and itself).
+        ''' Return integers by which a set integer is divisible (except for 1
+            and itself).
         '''
-        result = []
-        if str(number).isdigit():
-            i = 2
-            while i < number:
-                if number % i == 0:
-                    result.append(i)
-                i += 1
-        else:
+        if not str(number).isdigit():
             mes = _('Wrong input data: "{}"!').format(number)
             objs.get_mes(f,mes).show_warning()
+            return []
+        result = []
+        i = 2
+        while i < number:
+            if number % i == 0:
+                result.append(i)
+            i += 1
         return result
     
     def set_figure_commas(self,figure):
@@ -3479,33 +3479,34 @@ class Commands:
                      ,message = message
                      )
         
-    # IEC standard
     def get_human_size(self,bsize,LargeOnly=False):
-        result = '%d %s' % (0,_('B'))
-        if bsize:
-            tebibytes = bsize // pow(2,40)
-            cursize = tebibytes * pow(2,40)
-            gibibytes = (bsize - cursize) // pow(2,30)
-            cursize += gibibytes * pow(2,30)
-            mebibytes = (bsize - cursize) // pow(2,20)
-            cursize += mebibytes * pow(2,20)
-            kibibytes = (bsize - cursize) // pow(2,10)
-            cursize += kibibytes * pow(2,10)
-            rbytes = bsize - cursize
-            mes = []
-            if tebibytes:
-                mes.append('%d %s' % (tebibytes,_('TiB')))
-            if gibibytes:
-                mes.append('%d %s' % (gibibytes,_('GiB')))
-            if mebibytes:
-                mes.append('%d %s' % (mebibytes,_('MiB')))
-            if not (LargeOnly and bsize // pow(2,20)):
-                if kibibytes:
-                    mes.append('%d %s' % (kibibytes,_('KiB')))
-                if rbytes:
-                    mes.append('%d %s' % (rbytes,_('B')))
-            if mes:
-                result = ' '.join(mes)
+        # IEC standard
+        result = '0 {}'.format(_('B'))
+        if not bsize:
+            return result
+        tebibytes = bsize // pow(2,40)
+        cursize = tebibytes * pow(2,40)
+        gibibytes = (bsize - cursize) // pow(2,30)
+        cursize += gibibytes * pow(2,30)
+        mebibytes = (bsize - cursize) // pow(2,20)
+        cursize += mebibytes * pow(2,20)
+        kibibytes = (bsize - cursize) // pow(2,10)
+        cursize += kibibytes * pow(2,10)
+        rbytes = bsize - cursize
+        mes = []
+        if tebibytes:
+            mes.append('%d %s' % (tebibytes,_('TiB')))
+        if gibibytes:
+            mes.append('%d %s' % (gibibytes,_('GiB')))
+        if mebibytes:
+            mes.append('%d %s' % (mebibytes,_('MiB')))
+        if not (LargeOnly and bsize // pow(2,20)):
+            if kibibytes:
+                mes.append('%d %s' % (kibibytes,_('KiB')))
+            if rbytes:
+                mes.append('%d %s' % (rbytes,_('B')))
+        if mes:
+            result = ' '.join(mes)
         return result
     
     def split_time(self,length=0):
@@ -3518,52 +3519,50 @@ class Commands:
     
     def get_easy_time(self,length=0):
         f = '[SharedQt] logic.Commands.get_easy_time'
-        result = '00:00:00'
-        if length:
-            hours, minutes, seconds = self.split_time(length)
-            mes = []
-            if hours:
-                mes.append(str(hours))
-            item = str(minutes)
-            if hours and len(item) == 1:
-                item = '0' + item
-            mes.append(item)
-            item = str(seconds)
-            if len(item) == 1:
-                item = '0' + item
-            mes.append(item)
-            result = ':'.join(mes)
-        else:
+        if not length:
             com.rep_empty(f)
-        return result
+            return '00:00:00'
+        hours, minutes, seconds = self.split_time(length)
+        mes = []
+        if hours:
+            mes.append(str(hours))
+        item = str(minutes)
+        if hours and len(item) == 1:
+            item = '0' + item
+        mes.append(item)
+        item = str(seconds)
+        if len(item) == 1:
+            item = '0' + item
+        mes.append(item)
+        return ':'.join(mes)
     
     def get_yt_date(self,date):
         # Convert a date provided by Youtube API to a timestamp
         f = '[SharedQt] logic.Commands.get_yt_date'
-        if date:
-            pattern = '%Y-%m-%dT%H:%M:%S'
-            itime = Time(pattern=pattern)
-            # Prevent errors caused by 'datetime' parsing microseconds
-            tmp = date.split('.')
-            if date != tmp[0]:
-                index_ = date.index('.'+tmp[-1])
-                date = date[0:index_]
-            ''' Sometimes Youtube returns excessive data that are not
-                converted properly by 'datetime'.
-            '''
-            try:
-                index_ = date.index('Z')
-                date = date[:index_]
-            except ValueError:
-                pass
-            try:
-                itime.inst = datetime.datetime.strptime(date,pattern)
-            except ValueError:
-                mes = _('Wrong input data: "{}"!').format(date)
-                objs.get_mes(f,mes).show_warning()
-            return itime.get_timestamp()
-        else:
+        if not date:
             self.rep_empty(f)
+            return
+        pattern = '%Y-%m-%dT%H:%M:%S'
+        itime = Time(pattern=pattern)
+        # Prevent errors caused by 'datetime' parsing microseconds
+        tmp = date.split('.')
+        if date != tmp[0]:
+            index_ = date.index('.'+tmp[-1])
+            date = date[0:index_]
+        ''' Sometimes Youtube returns excessive data that are not converted
+            properly by 'datetime'.
+        '''
+        try:
+            index_ = date.index('Z')
+            date = date[:index_]
+        except ValueError:
+            pass
+        try:
+            itime.inst = datetime.datetime.strptime(date,pattern)
+        except ValueError:
+            mes = _('Wrong input data: "{}"!').format(date)
+            objs.get_mes(f,mes).show_warning()
+        return itime.get_timestamp()
     
     def get_yt_length(self,length):
         ''' Convert a length of a video provided by Youtube API (string)
