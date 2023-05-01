@@ -2011,6 +2011,9 @@ class Path:
                 i -= 1
             i += 1
         return self.parts
+    
+    def get_absolute(self):
+        return os.path.abspath(self.path)
 
 
 
