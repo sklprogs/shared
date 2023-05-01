@@ -3409,6 +3409,8 @@ class Home:
 class Commands:
 
     def __init__(self):
+        self.lang = 'en'
+        self.license_url = gpl3_url_en
         self.set_lang()
     
     def get_additives(self,number):
@@ -3569,32 +3571,30 @@ class Commands:
             Possible variants: PT%dM%dS, PT%dH%dM%dS, P%dDT%dH%dM%dS.
         '''
         f = '[SharedQt] logic.Commands.get_yt_length'
-        result = 0
-        if length:
-            if isinstance(length,str) and length[0] == 'P':
-                days = 0
-                hours = 0
-                minutes = 0
-                seconds = 0
-                match = re.search(r'(\d+)D',length)
-                if match:
-                    days = int(match.group(1))
-                match = re.search(r'(\d+)H',length)
-                if match:
-                    hours = int(match.group(1))
-                match = re.search(r'(\d+)M',length)
-                if match:
-                    minutes = int(match.group(1))
-                match = re.search(r'(\d+)S',length)
-                if match:
-                    seconds = int(match.group(1))
-                result = days * 86400 + hours * 3600 + minutes * 60 \
-                         + seconds
-            else:
-                mes = _('Wrong input data: "{}"!').format(length)
-                objs.get_mes(f,mes).show_warning()
-        else:
+        if not length:
             self.rep_empty(f)
+            return 0
+        if not isinstance(length,str) or length[0] != 'P':
+            mes = _('Wrong input data: "{}"!').format(length)
+            objs.get_mes(f,mes).show_warning()
+            return 0
+        days = 0
+        hours = 0
+        minutes = 0
+        seconds = 0
+        match = re.search(r'(\d+)D',length)
+        if match:
+            days = int(match.group(1))
+        match = re.search(r'(\d+)H',length)
+        if match:
+            hours = int(match.group(1))
+        match = re.search(r'(\d+)M',length)
+        if match:
+            minutes = int(match.group(1))
+        match = re.search(r'(\d+)S',length)
+        if match:
+            seconds = int(match.group(1))
+        result = days * 86400 + hours * 3600 + minutes * 60 + seconds
         return result
     
     def rewrite(self,file,Rewrite=False):
@@ -3619,16 +3619,25 @@ class Commands:
             return True
     
     def set_lang(self):
+        f = '[SharedQt] logic.Commands.set_lang'
         result = locale.getdefaultlocale()
         if result and result[0]:
-            if 'ru' in result[0]:
-                globs['ui_lang'] = 'ru'
-                globs['license_url'] = gpl3_url_ru
-            else:
-                globs['ui_lang'] = 'en'
-                globs['license_url'] = gpl3_url_en
-        else:
-            globs['ui_lang'] = 'en'
+            result = result[0]
+            if 'ru' in result:
+                self.lang = 'ru'
+                self.license_url = gpl3_url_ru
+            elif 'de' in result:
+                self.lang = 'de'
+            elif 'es' in result:
+                self.lang = 'es'
+            elif 'uk' in result:
+                self.lang = 'uk'
+            elif 'pl' in result:
+                self.lang = 'pl'
+            elif 'zh' in result:
+                self.lang = 'zh'
+        mes = f'{result} -> {self.lang}'
+        objs.get_mes(f,mes,True).show_debug()
     
     def get_tmpfile(self,suffix='.htm',Delete=0):
         return tempfile.NamedTemporaryFile (mode = 'w'
@@ -3719,10 +3728,9 @@ class Commands:
                     ).show_debug()
     
     def rep_third_party(self,func=_('Logic error!'),message=_('Logic error!')):
-        message = _('Third-party module has failed!\n\nDetails: {}')
-        message = message.format(message)
+        mes = _('Third-party module has failed!\n\nDetails: {}').format(message)
         Message (func = func
-                ,message = message
+                ,message = mes
                 ).show_error()
     
     def rep_condition(self,func=_('Logic error!'),message=_('Logic error!')):
@@ -3732,15 +3740,11 @@ class Commands:
                 ).show_warning()
 
 
-
-''' If there are problems with import or tkinter's wait_variable, put
-    this beneath 'if __name__'
-'''
-com = Commands()
 log = Log (Use = True
           ,Short = False
           )
 objs = Objects()
+com = Commands()
 
 
 if __name__ == '__main__':
