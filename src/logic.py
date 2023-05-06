@@ -3697,7 +3697,12 @@ class Commands:
                 ,message = _('Operation has been canceled.')
                 ).show_warning()
     
-    def rep_empty(self,func=_('Logic error!')):
+    def rep_input(self, func=_('Logic error!')):
+        Message (func = func
+                ,message = _('Wrong input data!')
+                ).show_warning()
+    
+    def rep_empty(self, func=_('Logic error!')):
         Message (func = func
                 ,message = _('Empty input is not allowed!')
                 ).show_warning()
