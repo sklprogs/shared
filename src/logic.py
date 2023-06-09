@@ -21,9 +21,7 @@ import tempfile
 import time
 import termcolor
 import webbrowser
-''' 'import urllib' does not work in Python 3, importing must be as
-    follows:
-'''
+# 'import urllib' does not work in Python 3, importing must be as follows:
 import urllib.request, urllib.parse
 import locale
 from skl_shared_qt.localize import _
@@ -49,9 +47,9 @@ digits = '0123456789'
 
 punc_array = ['.',',','!','?',':',';']
 #TODO: why there were no opening brackets?
-#punc_ext_array = ['"','”','»',']','}',')']
-punc_ext_array = ['"','“','”','','«','»','[',']'
-                 ,'{','}','(',')','’',"'",'*'
+#punc_ext_array = ['"', '”', '»', ']', '}', ')']
+punc_ext_array = ['"', '“', '”', '', '«', '»', '[', ']', '{', '}', '(', ')'
+                 ,'’', "'", '*'
                  ]
 
 forbidden_win = '/\?%*:|"<>'
