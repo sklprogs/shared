@@ -30,7 +30,7 @@ from skl_shared_qt.localize import _
 gpl3_url_en = 'http://www.gnu.org/licenses/gpl.html'
 gpl3_url_ru = 'http://antirao.ru/gpltrans/gplru.pdf'
 
-globs = {'int':{},'bool':{},'var':{}}
+globs = {'int': {}, 'bool': {}, 'var': {}}
 
 nbspace = ' '
 
@@ -45,7 +45,7 @@ other_alphabet = 'ÀÁÂÆÇÈÉÊÑÒÓÔÖŒÙÚÛÜàáâæßçèéêñòóô
 other_alphabet_low = 'àáâæßçèéêñòóôöœùúûü'
 digits = '0123456789'
 
-punc_array = ['.',',','!','?',':',';']
+punc_array = ['.', ',', '!', '?', ':', ';']
 #TODO: why there were no opening brackets?
 #punc_ext_array = ['"', '”', '»', ']', '}', ')']
 punc_ext_array = ['"', '“', '”', '', '«', '»', '[', ']', '{', '}', '(', ')'
@@ -55,13 +55,13 @@ punc_ext_array = ['"', '“', '”', '', '«', '»', '[', ']', '{', '}', '(', ')
 forbidden_win = '/\?%*:|"<>'
 forbidden_lin = '/'
 forbidden_mac = '/\?*:|"<>'
-reserved_win = ['CON','PRN','AUX','NUL','COM1','COM2','COM3','COM4'
-               ,'COM5','COM6','COM7','COM8','COM9','LPT1','LPT2','LPT3'
-               ,'LPT4','LPT5','LPT6','LPT7','LPT8','LPT9'
+reserved_win = ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4'
+               ,'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3'
+               ,'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9'
                ]
 
-''' Do not put this into a procedure or class since modules should be
-    imported as global variables and may not be accessed otherwise.
+''' Do not put this into a procedure or class since modules should be imported
+    as global variables and may not be accessed otherwise.
 '''
 if 'win' in sys.platform:
     #http://mail.python.org/pipermail/python-win32/2012-July/012493.html
@@ -87,7 +87,7 @@ if 'win' in sys.platform:
 
 class Section:
     
-    def __init__(self,section,comment=''):
+    def __init__(self, section, comment=''):
         self.section = section
         self.comment = comment
         self.set_abbr()
@@ -99,7 +99,7 @@ class Section:
 
 class Key:
     
-    def __init__(self,section,key,value,comment=''):
+    def __init__(self, section, key, value, comment=''):
         self.section = section
         self.key = key
         self.value = value
@@ -113,12 +113,12 @@ class Sections:
         self.set_values()
     
     def set_values(self):
-        self.sections = [_('Booleans'),_('Floatings'),_('Integers')
+        self.sections = [_('Booleans'), _('Floatings'), _('Integers')
                         ,_('Strings')
                         ]
-        self.abbr = ['bool','float','int','str']
+        self.abbr = ['bool', 'float', 'int', 'str']
     
-    def get_abbr(self,section):
+    def get_abbr(self, section):
         f = '[SharedQt] logic.Sections.get_abbr'
         if not section:
             com.rep_empty(f)
@@ -128,11 +128,11 @@ class Sections:
             return self.abbr[index_]   
         except (ValueError,IndexError):
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
-            mes = mes.format(section,'; '.join(self.sections))
-            objs.get_mes(f,mes).show_error()
+            mes = mes.format(section, '; '.join(self.sections))
+            objs.get_mes(f, mes).show_error()
         return ''
     
-    def get_section(self,abbr):
+    def get_section(self, abbr):
         f = '[SharedQt] logic.Sections.get_section'
         if not abbr:
             com.rep_empty(f)
@@ -140,17 +140,17 @@ class Sections:
         try:
             index_ = self.abbr.index(abbr)
             return self.sections[index_]
-        except (ValueError,IndexError):
+        except (ValueError, IndexError):
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
-            mes = mes.format(abbr,'; '.join(self.abbr))
-            objs.get_mes(f,mes).show_error()
+            mes = mes.format(abbr, '; '.join(self.abbr))
+            objs.get_mes(f, mes).show_error()
         return ''
 
 
 
 class CreateConfig:
     
-    def __init__(self,file):
+    def __init__(self, file):
         self.set_values()
         self.file = file
     
@@ -158,7 +158,7 @@ class CreateConfig:
         f = '[SharedQt] logic.CreateConfig.save'
         text = self.generate()
         if self.file and text:
-            WriteTextFile(self.file,True).write(text)
+            WriteTextFile(self.file, True).write(text)
         else:
             com.rep_empty(f)
     
@@ -169,18 +169,18 @@ class CreateConfig:
         self.keys = []
         self.sections = []
     
-    def add_key(self,section,section_abbr,key,comment=''):
+    def add_key(self, section, section_abbr, key, comment=''):
         value = globs[section_abbr][key]
-        self.keys.append(Key(section,key,value,comment))
+        self.keys.append(Key(section, key, value, comment))
     
-    def add_section(self,section,comment=''):
-        self.sections.append(Section(section,comment))
+    def add_section(self, section, comment=''):
+        self.sections.append(Section(section, comment))
     
     def escape(self):
         for key in self.keys:
             if key.section == _('Strings') and '%s' in key.value \
             and not '%%s' in key.value:
-                key.value = key.value.replace('%s','%%s')
+                key.value = key.value.replace('%s', '%%s')
     
     def run(self):
         self.fill()
@@ -210,16 +210,13 @@ class CreateConfig:
         self.body.append(mes)
         for section in self.sections:
             if section.comment:
-                self.body.append('# {}'.format(section.comment))
-            self.body.append('[{}]'.format(section.section))
-            keys = [key for key in self.keys \
-                    if key.section == section.section
-                   ]
+                self.body.append(f'# {section.comment}')
+            self.body.append(f'[{section.section}]')
+            keys = [key for key in self.keys if key.section == section.section]
             for key in keys:
                 if key.comment:
-                    self.body.append('# {}'.format(key.comment))
-                string = '{}={}'.format(key.key,key.value)
-                self.body.append(string)
+                    self.body.append(f'# {key.comment}')
+                self.body.append(f'{key.key}={key.value}')
             self.body.append('')
         return '\n'.join(self.body).strip()
 
@@ -240,13 +237,8 @@ class DefaultKeys:
 
 class FastTable:
     
-    def __init__ (self,iterable=[]
-                 ,headers=[],sep=' '
-                 ,Transpose=False
-                 ,maxrow=0,FromEnd=False
-                 ,maxrows=0,encloser=''
-                 ,ShowGap=True
-                 ):
+    def __init__(self, iterable=[], headers=[], sep=' ', Transpose=False
+                ,maxrow=0, FromEnd=False, maxrows=0, encloser='', ShowGap=True):
         # #NOTE: In case of tuple, do not forget to add commas, e.g.: ((1,),)
         self.Success = True
         self.lens = []
@@ -3274,9 +3266,8 @@ class Get:
         self.use_unverified()
     
     def read(self):
-        ''' This is a dummy function to return the final result.
-            It is needed merely to use 'json' which calls 'read'
-            for input object.
+        ''' This is a dummy function to return the final result. It is needed
+            merely to use 'json' which calls 'read' for input object.
         '''
         return self.html
     
@@ -3287,11 +3278,11 @@ class Get:
         '''
         f = '[SharedQt] logic.Get.unverified'
         if not self.Verify:
-            if hasattr(ssl,'_create_unverified_context'):
+            if hasattr(ssl, '_create_unverified_context'):
                 ssl._create_default_https_context = ssl._create_unverified_context
             else:
                 mes = _('Unable to use unverified certificates!')
-                objs.get_mes(f,mes,True).show_warning()
+                objs.get_mes(f, mes, True).show_warning()
         
     def _get(self):
         ''' Changing UA allows us to avoid a bot protection
@@ -3301,56 +3292,53 @@ class Get:
         try:
             req = urllib.request.Request (url = self.url
                                          ,data = None
-                                         ,headers = {'User-Agent': \
-                                                     'Mozilla'
-                                                    }
+                                         ,headers = {'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'}
                                          )
-            self.html = \
-            urllib.request.urlopen(req,timeout=self.timeout).read()
+            self.html = urllib.request.urlopen(req, timeout=self.timeout).read()
             if self.Verbose:
                 mes = _('[OK]: "{}"').format(self.url)
-                objs.get_mes(f,mes,True).show_info()
+                objs.get_mes(f, mes, True).show_info()
         # Too many possible exceptions
         except Exception as e:
             mes = _('[FAILED]: "{}". Details: {}')
-            mes = mes.format(self.url,e)
-            objs.get_mes(f,mes,True).show_warning()
+            mes = mes.format(self.url, e)
+            objs.get_mes(f, mes, True).show_warning()
     
     def decode(self):
-        ''' Set 'coding' to None to cancel decoding. This is useful
-            if we are downloading a non-text content.
+        ''' Set 'coding' to None to cancel decoding. This is useful if we are
+            downloading a non-text content.
         '''
         f = '[SharedQt] logic.Get.decode'
-        if self.coding:
-            if self.html:
-                try:
-                    self.html = \
-                    self.html.decode(encoding=self.coding)
-                except UnicodeDecodeError:
-                    self.html = str(self.html)
-                    mes = _('Unable to decode "{}"!').format(self.url)
-                    objs.get_mes(f,mes,True).show_warning()
-            else:
-                com.rep_empty(f)
+        if not self.coding:
+            return self.html
+        if not self.html:
+            com.rep_empty(f)
+            return
+        try:
+            self.html = self.html.decode(encoding=self.coding)
+        except UnicodeDecodeError:
+            self.html = str(self.html)
+            mes = _('Unable to decode "{}"!').format(self.url)
+            objs.get_mes(f, mes, True).show_warning()
     
     def run(self):
         f = '[SharedQt] logic.Get.run'
-        if self.url:
-            # Safely use URL as a string
-            if isinstance(self.url,str):
-                if self.Verbose:
-                    timer = Timer(f)
-                    timer.start()
-                self._get()
-                self.decode()
-                if self.Verbose:
-                    timer.end()
-                return self.html
-            else:
-                mes = _('Wrong input data: {}!').format(self.url)
-                objs.get_mes(f,mes).show_warning()
-        else:
+        if not self.url:
             com.rep_empty(f)
+            return
+        # Safely use URL as a string
+        if not isinstance(self.url, str):
+            mes = _('Wrong input data: {}!').format(self.url)
+            objs.get_mes(f, mes).show_warning()
+            return
+        if self.Verbose:
+            timer = Timer(f)
+            timer.start()
+        self._get()
+        self.decode()
+        if self.Verbose:
+            timer.end()
+        return self.html
 
 
 
