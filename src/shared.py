@@ -44,51 +44,6 @@ class Debug:
 
 
 
-class Geometry:
-    ''' Window behavior is not uniform through different platforms or even
-        through different Windows versions.
-    '''
-    def __init__(self, keyword=''):
-        self.title = ''
-        self.handle = ''
-        self.keyword = keyword
-        if objs.get_os().is_win():
-            import skl_shared_qt.geometry.gui.windows as geom_gui
-        else:
-            import skl_shared_qt.geometry.gui.linux as geom_gui
-        self.gui = geom_gui.Geometry()
-    
-    def find_handle(self):
-        f = '[shared] shared.Geometry.find_handle'
-        try:
-            self.gui.enumerate(self.enumerate, self.keyword)
-        except Exception as e:
-            com.rep_failed(f, e)
-    
-    def get_title(self, handle):
-        f = '[shared] shared.Geometry.find_handle'
-        try:
-            return self.gui.get_title(handle)
-        except Exception as e:
-            com.rep_failed(f, e)
-        return ''
-    
-    def enumerate(self, handle, arg=None):
-        # An extra argument is required by win32gui.EnumWindows
-        if self.keyword in self.get_title(handle):
-            self.handle = handle
-    
-    def activate(self):
-        f = '[shared] shared.Geometry.activate'
-        self.find_handle()
-        try:
-            self.gui.activate(self.handle)
-        except Exception as e:
-            mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
-            objs.get_mes(f, mes, True).show_warning()
-
-
-
 class Color:
     # Accepts a color name (/usr/share/X11/rgb.txt) or a hex value
     def __init__(self, color):
