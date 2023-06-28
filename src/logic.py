@@ -60,30 +60,6 @@ reserved_win = ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4'
                ,'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9'
                ]
 
-''' Do not put this into a procedure or class since modules should be imported
-    as global variables and may not be accessed otherwise.
-'''
-if 'win' in sys.platform:
-    #http://mail.python.org/pipermail/python-win32/2012-July/012493.html
-    _tz = os.getenv('TZ')
-    if _tz is not None and '/' in _tz:
-        os.unsetenv('TZ')
-    import pythoncom, win32com, win32com.client, win32api
-    # Required by 'Geometry'
-    import win32gui, win32ui, win32con
-    # Other ways of importing make 'shell' attribute inaccessible
-    from win32com.shell import shell as win32shell
-    if win32com.client.gencache.is_readonly:
-        win32com.client.gencache.is_readonly = False
-        ''' Under p2exe/cx_freeze the call in gencache to __init__() does not
-            happen so we use Rebuild() to force the creation of the gen_py
-            folder. The contents of library.zip\win32com shall be unpacked to
-            exe.win32 - 3.3\win32com. See also the section where EnsureDispatch
-            is called.
-        '''
-        win32com.client.gencache.Rebuild()
-    # 'datetime' may have to be imported last due to the problems with TZ
-
 
 class Section:
     
