@@ -2999,7 +2999,8 @@ class Email:
                                        ]
                 else:
                     self.custom_args = [app, '-compose', "to='%s',subject='%s',body='%s'"\
-                                       % (self.email, self.subject, self.message
+                                       % (self.email, self.subject
+                                         ,self.message
                                          )
                                        ]
                 try:
@@ -3017,16 +3018,16 @@ class Email:
             app = '/usr/bin/evolution'
             if os.path.isfile(app):
                 if self.attach:
-                    self.custom_args = [app,'mailto:%s?subject=%s&body=%s&attach=%s'\
-                                       % (self.email.replace(';',',')
-                                         ,self.subject,self.message
+                    self.custom_args = [app, 'mailto:%s?subject=%s&body=%s&attach=%s'\
+                                       % (self.email.replace(';', ',')
+                                         ,self.subject, self.message
                                          ,self.attach
                                          )
                                        ]
                 else:
-                    self.custom_args = [app,'mailto:%s?subject=%s&body=%s'\
-                                       % (self.email.replace(';',',')
-                                         ,self.subject,self.message
+                    self.custom_args = [app, 'mailto:%s?subject=%s&body=%s'\
+                                       % (self.email.replace(';', ',')
+                                         ,self.subject, self.message
                                          )
                                        ]
                 try:
@@ -3035,7 +3036,7 @@ class Email:
                 except:
                     mes = _('Failed to run "{}"!')
                     mes = mes.format(self.custom_args)
-                    objs.get_mes(f,mes).show_error()
+                    objs.get_mes(f, mes).show_error()
         else:
             com.cancel(f)
 
@@ -3043,7 +3044,7 @@ class Email:
 
 class Search:
 
-    def __init__(self,text=None,pattern=None):
+    def __init__(self, text=None, pattern=None):
         self.Success = False
         self.i = 0
         self.nextloop = []
@@ -3053,7 +3054,7 @@ class Search:
                        ,pattern = pattern
                        )
 
-    def reset(self,text,pattern):
+    def reset(self, text, pattern):
         f = '[SharedQt] logic.Search.reset'
         self.Success = True
         self.i = 0
@@ -3064,7 +3065,7 @@ class Search:
         if not self.pattern or not self.text:
             self.Success = False
             mes = _('Wrong input data!')
-            objs.get_mes(f,mes,True).show_warning()
+            objs.get_mes(f, mes, True).show_warning()
 
     def add(self):
         f = '[SharedQt] logic.Search.add'
@@ -3077,7 +3078,7 @@ class Search:
     def get_next(self):
         f = '[SharedQt] logic.Search.get_next'
         if self.Success:
-            result = self.text.find(self.pattern,self.i)
+            result = self.text.find(self.pattern, self.i)
             if result != -1:
                 self.i = result
                 self.add()
@@ -3089,10 +3090,10 @@ class Search:
     def get_prev(self):
         f = '[SharedQt] logic.Search.get_prev'
         if self.Success:
-            ''' rfind, unlike find, does not include limits, so we can
-                use it to search backwards
+            ''' rfind, unlike find, does not include limits, so we can use it
+                to search backwards.
             '''
-            result = self.text.rfind(self.pattern,0,self.i)
+            result = self.text.rfind(self.pattern, 0, self.i)
             if result != -1:
                 self.i = result
             return result
@@ -3145,20 +3146,19 @@ class Objects:
             self.sections = Sections()
         return self.sections
     
-    def get_mes (self,func=_('Logic error!')
-                ,message=_('Logic error!')
+    def get_mes (self, func=_('Logic error!'), message=_('Logic error!')
                 ,Silent=False
                 ):
         if self.mes is None:
             self.mes = Message
-        return self.mes(func,message,Silent)
+        return self.mes(func, message, Silent)
     
     def get_os(self):
         if self.os is None:
             self.os = OSSpecific()
         return self.os
     
-    def get_tmpfile(self,suffix='.htm',Delete=0):
+    def get_tmpfile(self, suffix='.htm', Delete=0):
         if self.tmpfile is None:
             self.tmpfile = com.get_tmpfile (suffix = suffix
                                            ,Delete = Delete
@@ -3185,14 +3185,14 @@ class ProgramDir:
         if os.path.isfile(self.dir):
             self.dir = Path(path=self.dir).get_dirname()
 
-    def add(self,*args):
-        return os.path.join(self.dir,*args)
+    def add(self, *args):
+        return os.path.join(self.dir, *args)
 
 
 
 class Timer:
 
-    def __init__(self,func_title='__main__'):
+    def __init__(self, func_title='__main__'):
         self.startv = 0
         self.func_title = func_title
 
@@ -3202,15 +3202,14 @@ class Timer:
     def end(self):
         delta = float(time.time()-self.startv)
         mes = _('The operation has taken {} s.').format(delta)
-        objs.get_mes(self.func_title,mes,True).show_debug()
+        objs.get_mes(self.func_title, mes, True).show_debug()
         return delta
 
 
 
 class Get:
     
-    def __init__ (self,url,coding='UTF-8'
-                 ,Verbose=True,Verify=False
+    def __init__ (self, url, coding='UTF-8', Verbose=True, Verify=False
                  ,timeout=6
                  ):
         self.html = ''
@@ -3300,12 +3299,12 @@ class Get:
 
 class Home:
 
-    def __init__(self,app_name='myapp'):
+    def __init__(self, app_name='myapp'):
         self.appname = app_name
         self.confdir = self.sharedir = ''
         
-    def add_share(self,*args):
-        return os.path.join(self.get_share_dir(),*args)
+    def add_share(self, *args):
+        return os.path.join(self.get_share_dir(), *args)
     
     def create_share(self):
         return Path(path=self.get_share_dir()).create()
@@ -3315,7 +3314,7 @@ class Home:
             if objs.get_os().is_win():
                 os_folder = 'Application Data'
             else:
-                os_folder = os.path.join('.local','share')
+                os_folder = os.path.join('.local', 'share')
             self.sharedir = os.path.join (self.get_home()
                                          ,os_folder
                                          ,self.appname
@@ -3340,11 +3339,11 @@ class Home:
                                         )
         return self.confdir
     
-    def add(self,*args):
-        return os.path.join(self.get_home(),*args)
+    def add(self, *args):
+        return os.path.join(self.get_home(), *args)
     
-    def add_config(self,*args):
-        return os.path.join(self.get_conf_dir(),*args)
+    def add_config(self, *args):
+        return os.path.join(self.get_conf_dir(), *args)
 
 
 
@@ -3355,14 +3354,14 @@ class Commands:
         self.license_url = gpl3_url_en
         self.set_lang()
     
-    def get_additives(self,number):
+    def get_additives(self, number):
         f = '[SharedQt] logic.Commands.get_additives'
         ''' Return integers by which a set integer is divisible (except for 1
             and itself).
         '''
         if not str(number).isdigit():
             mes = _('Wrong input data: "{}"!').format(number)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
             return []
         result = []
         i = 2
@@ -3372,7 +3371,7 @@ class Commands:
             i += 1
         return result
     
-    def set_figure_commas(self,figure):
+    def set_figure_commas(self, figure):
         figure = str(figure)
         if figure.startswith('-'):
             Minus = True
@@ -3385,7 +3384,7 @@ class Commands:
             i = 0
             while i < len(figure):
                 if (i + 1) % 4 == 0:
-                    figure.insert(i,_(','))
+                    figure.insert(i, _(','))
                 i += 1
             figure = figure[::-1]
             figure = ''.join(figure)
@@ -3393,73 +3392,66 @@ class Commands:
             figure = '-' + figure
         return figure
     
-    def rep_failed (self,f='Logic error'
-                   ,e='Logic error'
-                   ,Silent=False
-                   ):
+    def rep_failed(self, f='Logic error', e='Logic error', Silent=False):
         mes = _('Operation has failed!\n\nDetails: {}').format(e)
-        objs.get_mes(f,mes,Silent).show_error()
+        objs.get_mes(f, mes, Silent).show_error()
     
-    def rep_lazy(self,func=_('Logic error!')):
+    def rep_lazy(self, func=_('Logic error!')):
         Message (func = func
                 ,message = _('Nothing to do!')
                 ).show_debug()
     
-    def show_warning (self,func=_('Logic error!')
-                     ,message=_('Logic error!')
-                     ):
+    def show_warning(self, func=_('Logic error!'), message=_('Logic error!')):
         objs.get_mes (func = func
                      ,level = _('WARNING')
                      ,message = message
                      )
     
-    def show_info (self,func=_('Logic error!')
-                  ,message=_('Logic error!')
-                  ):
+    def show_info(self, func=_('Logic error!'), message=_('Logic error!')):
         objs.get_mes (func = func
                      ,level = _('INFO')
                      ,message = message
                      )
         
-    def get_human_size(self,bsize,LargeOnly=False):
+    def get_human_size(self, bsize, LargeOnly=False):
         # IEC standard
         result = '0 {}'.format(_('B'))
         if not bsize:
             return result
-        tebibytes = bsize // pow(2,40)
-        cursize = tebibytes * pow(2,40)
-        gibibytes = (bsize - cursize) // pow(2,30)
-        cursize += gibibytes * pow(2,30)
-        mebibytes = (bsize - cursize) // pow(2,20)
-        cursize += mebibytes * pow(2,20)
-        kibibytes = (bsize - cursize) // pow(2,10)
-        cursize += kibibytes * pow(2,10)
+        tebibytes = bsize // pow(2, 40)
+        cursize = tebibytes * pow(2, 40)
+        gibibytes = (bsize - cursize) // pow(2, 30)
+        cursize += gibibytes * pow(2, 30)
+        mebibytes = (bsize - cursize) // pow(2, 20)
+        cursize += mebibytes * pow(2, 20)
+        kibibytes = (bsize - cursize) // pow(2, 10)
+        cursize += kibibytes * pow(2, 10)
         rbytes = bsize - cursize
         mes = []
         if tebibytes:
-            mes.append('%d %s' % (tebibytes,_('TiB')))
+            mes.append('%d %s' % (tebibytes, _('TiB')))
         if gibibytes:
-            mes.append('%d %s' % (gibibytes,_('GiB')))
+            mes.append('%d %s' % (gibibytes, _('GiB')))
         if mebibytes:
-            mes.append('%d %s' % (mebibytes,_('MiB')))
-        if not (LargeOnly and bsize // pow(2,20)):
+            mes.append('%d %s' % (mebibytes, _('MiB')))
+        if not (LargeOnly and bsize // pow(2, 20)):
             if kibibytes:
-                mes.append('%d %s' % (kibibytes,_('KiB')))
+                mes.append('%d %s' % (kibibytes, _('KiB')))
             if rbytes:
-                mes.append('%d %s' % (rbytes,_('B')))
+                mes.append('%d %s' % (rbytes, _('B')))
         if mes:
             result = ' '.join(mes)
         return result
     
-    def split_time(self,length=0):
+    def split_time(self, length=0):
         hours = length // 3600
         all_sec = hours * 3600
         minutes = (length - all_sec) // 60
         all_sec += minutes * 60
         seconds = length - all_sec
-        return(hours,minutes,seconds)
+        return(hours, minutes, seconds)
     
-    def get_easy_time(self,length=0):
+    def get_easy_time(self, length=0):
         f = '[SharedQt] logic.Commands.get_easy_time'
         if not length:
             com.rep_empty(f)
@@ -3478,7 +3470,7 @@ class Commands:
         mes.append(item)
         return ':'.join(mes)
     
-    def get_yt_date(self,date):
+    def get_yt_date(self, date):
         # Convert a date provided by Youtube API to a timestamp
         f = '[SharedQt] logic.Commands.get_yt_date'
         if not date:
@@ -3500,13 +3492,13 @@ class Commands:
         except ValueError:
             pass
         try:
-            itime.inst = datetime.datetime.strptime(date,pattern)
+            itime.inst = datetime.datetime.strptime(date, pattern)
         except ValueError:
             mes = _('Wrong input data: "{}"!').format(date)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
         return itime.get_timestamp()
     
-    def get_yt_length(self,length):
+    def get_yt_length(self, length):
         ''' Convert a length of a video provided by Youtube API (string)
             to seconds.
             Possible variants: PT%dM%dS, PT%dH%dM%dS, P%dDT%dH%dM%dS.
@@ -3515,30 +3507,30 @@ class Commands:
         if not length:
             self.rep_empty(f)
             return 0
-        if not isinstance(length,str) or length[0] != 'P':
+        if not isinstance(length, str) or length[0] != 'P':
             mes = _('Wrong input data: "{}"!').format(length)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
             return 0
         days = 0
         hours = 0
         minutes = 0
         seconds = 0
-        match = re.search(r'(\d+)D',length)
+        match = re.search(r'(\d+)D', length)
         if match:
             days = int(match.group(1))
-        match = re.search(r'(\d+)H',length)
+        match = re.search(r'(\d+)H', length)
         if match:
             hours = int(match.group(1))
-        match = re.search(r'(\d+)M',length)
+        match = re.search(r'(\d+)M', length)
         if match:
             minutes = int(match.group(1))
-        match = re.search(r'(\d+)S',length)
+        match = re.search(r'(\d+)S', length)
         if match:
             seconds = int(match.group(1))
         result = days * 86400 + hours * 3600 + minutes * 60 + seconds
         return result
     
-    def rewrite(self,file,Rewrite=False):
+    def rewrite(self, file, Rewrite=False):
         ''' - We do not put this into File class because we do not need
               to check existence.
             - We use 'Rewrite' just to shorten other procedures (to be
@@ -3552,7 +3544,7 @@ class Commands:
             '''
             mes = _('ATTENTION: Do yo really want to rewrite file "{}"?')
             mes = mes.format(file)
-            return objs.get_mes(f,mes).show_question()
+            return objs.get_mes(f, mes).show_question()
         else:
             ''' We return True so we may proceed with writing
                 if the file has not been found.
@@ -3578,23 +3570,23 @@ class Commands:
             elif 'zh' in result:
                 self.lang = 'zh'
         mes = f'{result} -> {self.lang}'
-        objs.get_mes(f,mes,True).show_debug()
+        objs.get_mes(f, mes, True).show_debug()
     
-    def get_tmpfile(self,suffix='.htm',Delete=0):
+    def get_tmpfile(self, suffix='.htm', Delete=0):
         return tempfile.NamedTemporaryFile (mode = 'w'
                                            ,encoding = 'UTF-8'
                                            ,suffix = suffix
                                            ,delete = Delete
                                            ).name
     
-    def get_human_time(self,delta):
+    def get_human_time(self, delta):
         f = '[SharedQt] logic.Commands.get_human_time'
-        result = '%d %s' % (0,_('sec'))
+        result = '%d %s' % (0, _('sec'))
         # Allows to use 'None'
         if not delta:
             self.rep_empty(f)
             return result
-        if not isinstance(delta,int) and not isinstance(delta,float):
+        if not isinstance(delta, int) and not isinstance(delta, float):
             mes = _('Wrong input data: "{}"!').format(delta)
             Message (func = f
                     ,message = mes
@@ -3617,24 +3609,24 @@ class Commands:
         seconds = delta - all_sec
         mes = []
         if years:
-            mes.append('%d %s' % (years,_('yrs')))
+            mes.append('%d %s' % (years, _('yrs')))
         if months:
-            mes.append('%d %s' % (months,_('mths')))
+            mes.append('%d %s' % (months, _('mths')))
         if weeks:
-            mes.append('%d %s' % (weeks,_('wks')))
+            mes.append('%d %s' % (weeks, _('wks')))
         if days:
-            mes.append('%d %s' % (days,_('days')))
+            mes.append('%d %s' % (days, _('days')))
         if hours:
-            mes.append('%d %s' % (hours,_('hrs')))
+            mes.append('%d %s' % (hours, _('hrs')))
         if minutes:
-            mes.append('%d %s' % (minutes,_('min')))
+            mes.append('%d %s' % (minutes, _('min')))
         if seconds:
-            mes.append('%d %s' % (seconds,_('sec')))
+            mes.append('%d %s' % (seconds, _('sec')))
         if mes:
             result = ' '.join(mes)
         return result
     
-    def cancel(self,func=_('Logic error!')):
+    def cancel(self, func=_('Logic error!')):
         Message (func = func
                 ,message = _('Operation has been canceled.')
                 ).show_warning()
@@ -3649,37 +3641,37 @@ class Commands:
                 ,message = _('Empty input is not allowed!')
                 ).show_warning()
     
-    def rep_not_ready(self,func=_('Logic error!')):
+    def rep_not_ready(self, func=_('Logic error!')):
         Message (func = func
                 ,message = _('Not implemented yet!')
                 ).show_info()
     
-    def rep_out(self,func=_('Logic error!')):
+    def rep_out(self, func=_('Logic error!')):
         Message (func = func
                 ,message = _('Empty output is not allowed!')
                 ).show_warning()
     
-    def rep_deleted(self,func=_('Logic error!'),count=0):
+    def rep_deleted(self, func=_('Logic error!'), count=0):
         if count:
             message = _('{} blocks have been deleted').format(count)
             Message (func = func
                     ,message = message
                     ).show_debug()
     
-    def rep_matches(self,func=_('Logic error!'),count=0):
+    def rep_matches(self, func=_('Logic error!'), count=0):
         if count:
             message = _('{} matches').format(count)
             Message (func = func
                     ,message = message
                     ).show_debug()
     
-    def rep_third_party(self,func=_('Logic error!'),message=_('Logic error!')):
+    def rep_third_party(self, func=_('Logic error!'), message=_('Logic error!')):
         mes = _('Third-party module has failed!\n\nDetails: {}').format(message)
         Message (func = func
                 ,message = mes
                 ).show_error()
     
-    def rep_condition(self,func=_('Logic error!'),message=_('Logic error!')):
+    def rep_condition(self, func=_('Logic error!'), message=_('Logic error!')):
         message = _('The condition "{}" is not observed!').format(message)
         Message (func = func
                 ,message = message
