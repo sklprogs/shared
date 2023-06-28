@@ -855,8 +855,8 @@ class ReadTextFile:
             self.load()
         return self.text
 
-    # Return a number of lines in the file. Returns 0 for an empty file.
     def get_lines(self):
+        # Return a number of lines in the file. Returns 0 for an empty file.
         f = '[SharedQt] logic.ReadTextFile.get_lines'
         if not self.Success:
             com.cancel(f)
@@ -2533,118 +2533,118 @@ class Directory:
 
     def delete_empty(self):
         f = '[SharedQt] logic.Directory.delete_empty'
-        if self.Success:
-            # Do not delete nested folders
-            if not os.listdir(self.dir):
-                self.delete()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        # Do not delete nested folders
+        if not os.listdir(self.dir):
+            self.delete()
     
     def delete(self):
         f = '[SharedQt] logic.Directory.delete'
-        if self.Success:
-            mes = _('Delete "{}"').format(self.dir)
-            objs.get_mes(f, mes, True).show_info()
-            try:
-                shutil.rmtree(self.dir)
-                return True
-            except:
-                mes = _('Failed to delete directory "{}"! Delete it manually.')
-                mes = mes.format(self.dir)
-                objs.get_mes(f, mes).show_error()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        mes = _('Delete "{}"').format(self.dir)
+        objs.get_mes(f, mes, True).show_info()
+        try:
+            shutil.rmtree(self.dir)
+            return True
+        except:
+            mes = _('Failed to delete directory "{}"! Delete it manually.')
+            mes = mes.format(self.dir)
+            objs.get_mes(f, mes).show_error()
 
     def get_rel_list(self):
         # Create a list of objects with a relative path
         f = '[SharedQt] logic.Directory.get_rel_list'
-        if self.Success:
-            if not self.rellist:
-                self.get_list()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not self.rellist:
+            self.get_list()
         return self.rellist
 
     def get_list(self):
         # Create a list of objects with an absolute path
         f = '[SharedQt] logic.Directory.get_list'
-        if self.Success:
-            if not self.lst:
-                try:
-                    self.lst = os.listdir(self.dir)
-                except Exception as e:
-                    # We can encounter, e.g., PermissionError here
-                    self.Success = False
-                    mes = _('Operation has failed!\nDetails: {}')
-                    mes = mes.format(e)
-                    objs.get_mes(f, mes).show_error()
-                self.lst.sort(key=lambda x: x.lower())
-                self.rellist = list(self.lst)
-                for i in range(len(self.lst)):
-                    self.lst[i] = os.path.join(self.dir, self.lst[i])
-        else:
+        if not self.Success:
             com.cancel(f)
+            return self.lst
+        if self.lst:
+            return self.lst
+        try:
+            self.lst = os.listdir(self.dir)
+        except Exception as e:
+            # We can encounter, e.g., PermissionError here
+            self.Success = False
+            mes = _('Operation has failed!\nDetails: {}').format(e)
+            objs.get_mes(f, mes).show_error()
+        self.lst.sort(key=lambda x: x.lower())
+        self.rellist = list(self.lst)
+        for i in range(len(self.lst)):
+            self.lst[i] = os.path.join(self.dir, self.lst[i])
         return self.lst
 
     def get_rel_dirs(self):
         f = '[SharedQt] logic.Directory.get_rel_dirs'
-        if self.Success:
-            if not self.reldirs:
-                self.dirs()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return self.reldirs
+        if not self.reldirs:
+            self.dirs()
         return self.reldirs
 
     def get_rel_files(self):
         f = '[SharedQt] logic.Directory.get_rel_files'
-        if self.Success:
-            if not self.relfiles:
-                self.get_files()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return self.relfiles
+        if not self.relfiles:
+            self.get_files()
         return self.relfiles
 
-    # Needs absolute path
     def get_dirs(self):
+        # Needs absolute path
         f = '[SharedQt] logic.Directory.get_dirs'
-        if self.Success:
-            if not self.dirs:
-                for i in range(len(self.get_list())):
-                    if os.path.isdir(self.lst[i]):
-                        self.dirs.append(self.lst[i])
-                        self.reldirs.append(self.rellist[i])
-        else:
+        if not self.Success:
             com.cancel(f)
+            return self.dirs
+        if self.dirs:
+            return self.dirs
+        for i in range(len(self.get_list())):
+            if os.path.isdir(self.lst[i]):
+                self.dirs.append(self.lst[i])
+                self.reldirs.append(self.rellist[i])
         return self.dirs
 
-    # Needs absolute path
     def get_files(self):
+        # Needs absolute path
         f = '[SharedQt] logic.Directory.get_files'
-        if self.Success:
-            if not self.files:
-                for i in range(len(self.get_list())):
-                    if os.path.isfile(self.lst[i]):
-                        self.files.append(self.lst[i])
-                        self.relfiles.append(self.rellist[i])
-        else:
+        if not self.Success:
             com.cancel(f)
+            return self.files
+        if self.files:
+            return self.files
+        for i in range(len(self.get_list())):
+            if os.path.isfile(self.lst[i]):
+                self.files.append(self.lst[i])
+                self.relfiles.append(self.rellist[i])
         return self.files
 
     def copy(self):
         f = '[SharedQt] logic.Directory.copy'
-        if self.Success:
-            if self.dir.lower() == self.dest.lower():
-                mes = _('Unable to copy "{}" to iself!')
-                mes = mes.format(self.dir)
-                objs.get_mes(f, mes).show_error()
-            elif os.path.isdir(self.dest):
-                mes = _('Directory "{}" already exists.')
-                mes = mes.format(self.dest)
-                objs.get_mes(f, mes).show_info()
-            else:
-                self._copy()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if self.dir.lower() == self.dest.lower():
+            mes = _('Unable to copy "{}" to iself!').format(self.dir)
+            objs.get_mes(f, mes).show_error()
+        elif os.path.isdir(self.dest):
+            mes = _('Directory "{}" already exists.').format(self.dest)
+            objs.get_mes(f, mes).show_info()
+        else:
+            self._copy()
 
     def _copy(self):
         f = '[SharedQt] logic.Directory._copy'
@@ -2654,8 +2654,7 @@ class Directory:
             shutil.copytree(self.dir, self.dest)
         except:
             self.Success = False
-            mes = _('Failed to copy "{}" to "{}"!')
-            mes = mes.format(self.dir, self.dest)
+            mes = _('Failed to copy "{}" to "{}"!').format(self.dir, self.dest)
             objs.get_mes(f, mes).show_error()
 
 
@@ -2670,43 +2669,43 @@ class Config:
     def strip(self):
         f = '[SharedQt] logic.Config.strip'
         # 'Configparser' preserves extra spaces!
-        if self.Success:
-            for option in globs['str'].keys():
-                globs['str'][option] = globs['str'][option].strip()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        for option in globs['str'].keys():
+            globs['str'][option] = globs['str'][option].strip()
     
     def unescape(self):
         f = '[SharedQt] logic.Config.unescape'
-        if self.Success:
-            for option in globs['str'].keys():
-                if not '%%s' in globs['str'][option]:
-                    globs['str'][option] = globs['str'][option].replace('%%s', '%s')
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        for option in globs['str'].keys():
+            if not '%%s' in globs['str'][option]:
+                globs['str'][option] = globs['str'][option].replace('%%s', '%s')
     
     def set_ints(self):
         f = '[SharedQt] logic.Config.load'
-        if self.Success:
-            for option in globs['int'].keys():
-                globs['int'][option] = Input(f, globs['int'][option]).get_integer()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        for option in globs['int'].keys():
+            globs['int'][option] = Input(f, globs['int'][option]).get_integer()
     
     def fail(self, f, e):
         self.Success = False
-        mes = _('Third-party module has failed!\n\nDetails: {}')
-        mes = mes.format(e)
+        mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
         objs.get_mes(f, mes).show_error()
     
     def check(self):
         f = '[SharedQt] logic.Config.check'
-        if self.file:
-            if os.path.exists(self.file):
-                self.Success = File(self.file).Success
-            else:
-                self.Success = False
-                com.rep_empty(f)
+        if not self.file:
+            return
+        if os.path.exists(self.file):
+            self.Success = File(self.file).Success
+        else:
+            self.Success = False
+            com.rep_empty(f)
     
     def run(self):
         self.open()
@@ -2733,31 +2732,27 @@ class Config:
             throw various errors, including content errors, for example, if
             '%s' in the config is not escaped as '%%s'.
         '''
-        if self.Success:
-            sections = objs.get_sections().sections
-            abbr = objs.sections.abbr
-            try:
-                for i in range(len(sections)):
-                    if self.parser.has_section(sections[i]):
-                        for option in globs[abbr[i]]:
-                            self.total_keys += 1
-                            if self.parser.has_option (sections[i]
-                                                      ,option
-                                                      ):
-                                new_val = self.func[i] (sections[i]
-                                                       ,option
-                                                       )
-                                if globs[abbr[i]][option] != new_val:
-                                    self.mod_keys.append(option)
-                                    globs[abbr[i]][option] = new_val
-                            else:
-                                self.no_keys.append(option)
-                    else:
-                        self.no_sections.append(sections[i])
-            except Exception as e:
-                self.fail(f, e)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        sections = objs.get_sections().sections
+        abbr = objs.sections.abbr
+        try:
+            for i in range(len(sections)):
+                if self.parser.has_section(sections[i]):
+                    for option in globs[abbr[i]]:
+                        self.total_keys += 1
+                        if self.parser.has_option(sections[i], option):
+                            new_val = self.func[i](sections[i], option)
+                            if globs[abbr[i]][option] != new_val:
+                                self.mod_keys.append(option)
+                                globs[abbr[i]][option] = new_val
+                        else:
+                            self.no_keys.append(option)
+                else:
+                    self.no_sections.append(sections[i])
+        except Exception as e:
+            self.fail(f, e)
     
     def _indent(self, lst):
         keys = [' ' * 4 + item for item in sorted(lst)]
@@ -2798,34 +2793,31 @@ class Config:
     
     def report(self):
         f = '[SharedQt] logic.Config.report'
-        if self.Success:
-            if self.no_keys or self.no_sections:
-                mes = self._get_formatted_report()
-                objs.get_mes(f, mes).show_warning()
-            else:
-                mes = self._get_plain_report()
-                objs.get_mes(f, mes, True).show_info()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if self.no_keys or self.no_sections:
+            mes = self._get_formatted_report()
+            objs.get_mes(f, mes).show_warning()
+        else:
+            mes = self._get_plain_report()
+            objs.get_mes(f, mes, True).show_info()
 
     def open(self):
         f = '[SharedQt] logic.Config.open'
-        if self.Success:
-            try:
-                self.parser = configparser.ConfigParser()
-                self.func = [self.parser.getboolean
-                            ,self.parser.getfloat
-                            ,self.parser.getint
-                            ,self.parser.get
-                            ]
-                self.parser.read(self.file, 'utf-8')
-            except Exception as e:
-                self.Success = False
-                mes = _('Third-party module has failed!\n\nDetails: {}')
-                mes = mes.format(e)
-                objs.get_mes(f, mes).show_error()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        try:
+            self.parser = configparser.ConfigParser()
+            self.func = [self.parser.getboolean, self.parser.getfloat
+                        ,self.parser.getint, self.parser.get
+                        ]
+            self.parser.read(self.file, 'utf-8')
+        except Exception as e:
+            self.Success = False
+            mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
+            objs.get_mes(f, mes).show_error()
 
 
 
@@ -2918,127 +2910,127 @@ class Email:
     def sanitize(self, value):
         # Escape symbols that may cause problems when composing 'mailto'
         f = '[SharedQt] logic.Email.sanitize'
-        if self.Success:
-            return str(Online(pattern=value).get_url())
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        return str(Online(pattern=value).get_url())
     
     def browser(self):
         f = '[SharedQt] logic.Email.browser'
-        if self.Success:
-            try:
-                if self.attach:
-                    ''' - This is the last resort. Attaching a file worked for
-                          me only with CentOS6 + Palemoon + Thunderbird. Using
-                          another OS/browser/email client will probably call a
-                          default email client without the attachment.
-                        - Quotes are necessary for attachments only, they will
-                          stay visible otherwise.
-                    '''
-                    webbrowser.open ('mailto:%s?subject=%s&body=%s&attach="%s"'\
-                                    % (self.email, self.subject, self.message
-                                      ,self.attach
-                                      )
-                                    )
-                else:
-                    webbrowser.open ('mailto:%s?subject=%s&body=%s' \
-                                    % (self.email, self.subject, self.message)
-                                    )
-            except:
-                mes = _('Failed to load an e-mail client.')
-                objs.get_mes(f, mes).show_error()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        try:
+            if self.attach:
+                ''' - This is the last resort. Attaching a file worked for
+                      me only with CentOS6 + Palemoon + Thunderbird. Using
+                      another OS/browser/email client will probably call a
+                      default email client without the attachment.
+                    - Quotes are necessary for attachments only, they will
+                      stay visible otherwise.
+                '''
+                webbrowser.open ('mailto:%s?subject=%s&body=%s&attach="%s"'\
+                                % (self.email, self.subject, self.message
+                                  ,self.attach
+                                  )
+                                )
+            else:
+                webbrowser.open ('mailto:%s?subject=%s&body=%s' \
+                                % (self.email, self.subject, self.message)
+                                )
+        except:
+            mes = _('Failed to load an e-mail client.')
+            objs.get_mes(f, mes).show_error()
     
     def create(self):
         f = '[SharedQt] logic.Email.create'
-        if self.Success:
-            if not self.run_evolution() and not self.run_thunderbird() \
-            and not self.run_outlook():
-                self.subject = self.sanitize(self.subject)
-                self.message = self.sanitize(self.message)
-                self.attach = self.sanitize(self.attach)
-                self.browser()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if not self.run_evolution() and not self.run_thunderbird() \
+        and not self.run_outlook():
+            self.subject = self.sanitize(self.subject)
+            self.message = self.sanitize(self.message)
+            self.attach = self.sanitize(self.attach)
+            self.browser()
                        
-    #NOTE: this does not work in wine!
     def run_outlook(self):
+        #NOTE: this does not work in wine!
         f = '[SharedQt] logic.Email.run_outlook'
-        if objs.get_os().is_win():
-            try:
-                import win32com.client
-                #https://stackoverflow.com/a/51993450
-                outlook = win32com.client.dynamic.Dispatch('outlook.application')
-                mail = outlook.CreateItem(0)
-                mail.To = self.email.replace(',', ';')
-                mail.Subject = self.subject
-                mail.HtmlBody = '<html><body><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">%s</body></html>'\
-                                % self.message
-                if self.attach:
-                    mail.Attachments.Add(self.attach)
-                mail.Display(True)
-                return True
-            except Exception as e:
-                mes = _('Operation has failed!\nDetails: {}').format(e)
-                objs.get_mes(f, mes).show_error()
-        else:
+        if not objs.get_os().is_win():
             mes = _('This operation cannot be executed on your operating system.')
             objs.get_mes(f, mes).show_info()
+            return
+        try:
+            import win32com.client
+            #https://stackoverflow.com/a/51993450
+            outlook = win32com.client.dynamic.Dispatch('outlook.application')
+            mail = outlook.CreateItem(0)
+            mail.To = self.email.replace(',', ';')
+            mail.Subject = self.subject
+            mail.HtmlBody = '<html><body><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">%s</body></html>'\
+                            % self.message
+            if self.attach:
+                mail.Attachments.Add(self.attach)
+            mail.Display(True)
+            return True
+        except Exception as e:
+            mes = _('Operation has failed!\nDetails: {}').format(e)
+            objs.get_mes(f, mes).show_error()
     
     def run_thunderbird(self):
         f = '[SharedQt] logic.Email.run_thunderbird'
-        if self.Success:
-            app = '/usr/bin/thunderbird'
-            if os.path.isfile(app):
-                if self.attach:
-                    self.custom_args = [app, '-compose', "to='%s',subject='%s',body='%s',attachment='%s'"\
-                                       % (self.email, self.subject
-                                         ,self.message, self.attach
-                                         )
-                                       ]
-                else:
-                    self.custom_args = [app, '-compose', "to='%s',subject='%s',body='%s'"\
-                                       % (self.email, self.subject
-                                         ,self.message
-                                         )
-                                       ]
-                try:
-                    subprocess.Popen(self.custom_args)
-                    return True
-                except:
-                    mes = _('Failed to run "{}"!').format(self.custom_args)
-                    objs.get_mes(f, mes).show_error()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        app = '/usr/bin/thunderbird'
+        if not os.path.isfile(app):
+            return
+        if self.attach:
+            self.custom_args = [app, '-compose', "to='%s',subject='%s',body='%s',attachment='%s'"\
+                               % (self.email, self.subject
+                                 ,self.message, self.attach
+                                 )
+                               ]
+        else:
+            self.custom_args = [app, '-compose', "to='%s',subject='%s',body='%s'"\
+                               % (self.email, self.subject
+                                 ,self.message
+                                 )
+                               ]
+        try:
+            subprocess.Popen(self.custom_args)
+            return True
+        except:
+            mes = _('Failed to run "{}"!').format(self.custom_args)
+            objs.get_mes(f, mes).show_error()
     
     def run_evolution(self):
         f = '[SharedQt] logic.Email.run_evolution'
-        if self.Success:
-            app = '/usr/bin/evolution'
-            if os.path.isfile(app):
-                if self.attach:
-                    self.custom_args = [app, 'mailto:%s?subject=%s&body=%s&attach=%s'\
-                                       % (self.email.replace(';', ',')
-                                         ,self.subject, self.message
-                                         ,self.attach
-                                         )
-                                       ]
-                else:
-                    self.custom_args = [app, 'mailto:%s?subject=%s&body=%s'\
-                                       % (self.email.replace(';', ',')
-                                         ,self.subject, self.message
-                                         )
-                                       ]
-                try:
-                    subprocess.Popen(self.custom_args)
-                    return True
-                except:
-                    mes = _('Failed to run "{}"!')
-                    mes = mes.format(self.custom_args)
-                    objs.get_mes(f, mes).show_error()
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        app = '/usr/bin/evolution'
+        if not os.path.isfile(app):
+            return
+        if self.attach:
+            self.custom_args = [app, 'mailto:%s?subject=%s&body=%s&attach=%s'\
+                               % (self.email.replace(';', ','), self.subject
+                                 ,self.message, self.attach
+                                 )
+                               ]
+        else:
+            self.custom_args = [app, 'mailto:%s?subject=%s&body=%s'\
+                               % (self.email.replace(';', ','), self.subject
+                                 ,self.message
+                                 )
+                               ]
+        try:
+            subprocess.Popen(self.custom_args)
+            return True
+        except:
+            mes = _('Failed to run "{}"!').format(self.custom_args)
+            objs.get_mes(f, mes).show_error()
 
 
 
@@ -3069,65 +3061,67 @@ class Search:
 
     def add(self):
         f = '[SharedQt] logic.Search.add'
-        if self.Success:
-            if len(self.text) > self.i + len(self.pattern) - 1:
-                self.i += len(self.pattern)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        if len(self.text) > self.i + len(self.pattern) - 1:
+            self.i += len(self.pattern)
 
     def get_next(self):
         f = '[SharedQt] logic.Search.get_next'
-        if self.Success:
-            result = self.text.find(self.pattern, self.i)
-            if result != -1:
-                self.i = result
-                self.add()
-                # Do not allow -1 as output
-                return result
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        result = self.text.find(self.pattern, self.i)
+        if result != -1:
+            self.i = result
+            self.add()
+            # Do not allow -1 as output
+            return result
 
     def get_prev(self):
         f = '[SharedQt] logic.Search.get_prev'
-        if self.Success:
-            ''' rfind, unlike find, does not include limits, so we can use it
-                to search backwards.
-            '''
-            result = self.text.rfind(self.pattern, 0, self.i)
-            if result != -1:
-                self.i = result
-            return result
-        else:
+        if not self.Success:
             com.cancel(f)
+            return
+        ''' rfind, unlike find, does not include limits, so we can use it to
+            search backwards.
+        '''
+        result = self.text.rfind(self.pattern, 0, self.i)
+        if result != -1:
+            self.i = result
+        return result
 
     def get_next_loop(self):
         f = '[SharedQt] logic.Search.get_next_loop'
-        if self.Success:
-            if not self.nextloop:
-                self.i = 0
-                while True:
-                    result = self.get_next()
-                    if result is None:
-                        break
-                    else:
-                        self.nextloop.append(result)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return self.nextloop
+        if self.nextloop:
+            return self.nextloop
+        self.i = 0
+        while True:
+            result = self.get_next()
+            if result is None:
+                break
+            else:
+                self.nextloop.append(result)
         return self.nextloop
 
     def get_prev_loop(self):
         f = '[SharedQt] logic.Search.get_prev_loop'
-        if self.Success:
-            if not self.prevloop:
-                self.i = len(self.text)
-                while True:
-                    result = self.get_prev()
-                    if result is None:
-                        break
-                    else:
-                        self.prevloop.append(result)
-        else:
+        if not self.Success:
             com.cancel(f)
+            return self.prevloop
+        if self.prevloop:
+            return self.prevloop
+        self.i = len(self.text)
+        while True:
+            result = self.get_prev()
+            if result is None:
+                break
+            else:
+                self.prevloop.append(result)
         return self.prevloop
 
 

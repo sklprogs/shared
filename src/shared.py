@@ -203,8 +203,7 @@ class Font:
     
     def fail(self, f, e):
         self.Success = False
-        mes = _('Third-party module has failed!\n\nDetails: {}')
-        mes = mes.format(e)
+        mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
         objs.get_mes(f, mes).show_error()
     
     def set_parent(self):
