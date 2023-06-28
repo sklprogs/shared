@@ -6,14 +6,14 @@
 
 class Geometry:
     
-    def enumerate(self,callback,keyword):
+    def enumerate(self, callback, keyword):
         pass
     
-    def get_title(self,handle):
+    def get_title(self, handle):
         return ''
     
-    def activate(self,handle=''):
+    def activate(self, handle=''):
         pass
     
-    def get_handle(self,title):
+    def get_handle(self, title):
         return ''

@@ -126,7 +126,7 @@ class Sections:
         try:
             index_ = self.sections.index(section)
             return self.abbr[index_]   
-        except (ValueError,IndexError):
+        except (ValueError, IndexError):
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(section, '; '.join(self.sections))
             objs.get_mes(f, mes).show_error()
@@ -260,7 +260,7 @@ class FastTable:
         if self.maxrows <= 0:
             return
         mes = _('Set the max number of rows to {}').format(self.maxrows)
-        objs.get_mes(f,mes,True).show_debug()
+        objs.get_mes(f, mes, True).show_debug()
         for i in range(len(self.lst)):
             # +1 for a header
             self.lst[i] = self.lst[i][0:self.maxrows+1]
@@ -273,7 +273,7 @@ class FastTable:
         if self.maxrow <= 0:
             return
         mes = _('Set the max column width to {} symbols').format(self.maxrow)
-        objs.get_mes(f,mes,True).show_debug()
+        objs.get_mes(f, mes, True).show_debug()
         if self.encloser:
             max_len = self.maxrow - len(self.encloser)
             if max_len < 0:
@@ -323,17 +323,17 @@ class FastTable:
             return
         ''' If there is a condition mismatch when everything is seemingly
             correct, check that headers are provided in the form of
-            ('NO1','NO2') instead of ('NO1,NO2').
+            ('NO1', 'NO2') instead of ('NO1, NO2').
         '''
         if len(self.headers) == len(self.lst):
             for i in range(len(self.lst)):
-                self.lst[i].insert(0,self.headers[i])
+                self.lst[i].insert(0, self.headers[i])
         else:
             sub = '{} == {}'.format (len(self.headers)
                                     ,len(self.lst)
                                     )
             mes = _('The condition "{}" is not observed!').format(sub)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
     
     def report(self):
         f = '[SharedQt] logic.FastTable.report'
@@ -376,7 +376,7 @@ class FastTable:
             com.cancel(f)
             return
         for item in self.lst:
-            tmp = sorted(item,key=len,reverse=True)
+            tmp = sorted(item, key=len, reverse=True)
             self.lens.append(len(tmp[0]))
     
     def make_list(self):
@@ -395,7 +395,7 @@ class FastTable:
         except TypeError:
             self.Success = False
             mes = _('Only iterable objects are supported!')
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
     
     def run(self):
         self.make_list()
@@ -412,31 +412,31 @@ class FastTable:
 
 class Message:
 
-    def __init__(self,func,message,Silent=True):
+    def __init__(self, func, message, Silent=True):
         self.func = func
         self.message = message
 
     def show_error(self):
-        log.append(self.func,'error',self.message)
+        log.append(self.func, 'error', self.message)
     
     def show_warning(self):
-        log.append(self.func,'warning',self.message)
+        log.append(self.func, 'warning', self.message)
     
     def show_info(self):
-        log.append(self.func,'info',self.message)
+        log.append(self.func, 'info', self.message)
     
     def show_debug(self):
-        log.append(self.func,'debug',self.message)
+        log.append(self.func, 'debug', self.message)
     
     def show_question(self):
-        log.append(self.func,'question',self.message)
+        log.append(self.func, 'question', self.message)
         try:
             answer = input()
         except (EOFError, KeyboardInterrupt):
             # The user pressed 'Ctrl-c' or 'Ctrl-d'
             answer = ''
         answer = answer.lower().strip()
-        if answer in ('y',''):
+        if answer in ('y', ''):
             return True
         elif answer == 'n':
             return False
@@ -447,7 +447,7 @@ class Message:
 
 class Font:
     
-    def __init__(self,name,xborder=0,yborder=0):
+    def __init__(self, name, xborder=0, yborder=0):
         self.set_values()
         if name:
             self.reset (name = name
@@ -455,7 +455,7 @@ class Font:
                        ,yborder = yborder
                        )
     
-    def set_text(self,text):
+    def set_text(self, text):
         f = '[SharedQt] logic.Font.set_text'
         if not text:
             com.rep_empty(f)
@@ -487,7 +487,7 @@ class Font:
             self.height = self.height * lines
         self.height += self.yborder
     
-    def reset(self,name,xborder=0,yborder=0):
+    def reset(self, name, xborder=0, yborder=0):
         self.set_values()
         self.name = name
         self.xborder = xborder
@@ -499,7 +499,7 @@ class Font:
         if not self.name:
             com.rep_empty(f)
             return
-        match = re.match('([aA-zZ].*) (\d+)',self.name)
+        match = re.match('([aA-zZ].*) (\d+)', self.name)
         if not match:
             message = _('Wrong input data: "{}"!').format(self.name)
             Message (func = f
@@ -542,7 +542,7 @@ class OSSpecific:
 
 class Launch:
     #NOTE: 'Block' works only when a 'custom_app' is set
-    def __init__(self,target='',Block=False,GetOutput=False):
+    def __init__(self, target='', Block=False, GetOutput=False):
         self.set_values()
         self.target = target
         self.Block = Block
@@ -559,7 +559,7 @@ class Launch:
         if GetOutput:
             if Block:
                 mes = _('Reading standard output is not supported in a blocking mode!')
-                objs.get_mes(f,mes).show_error()
+                objs.get_mes(f, mes).show_error()
             else:
                 self.stdout = subprocess.PIPE
 
@@ -570,17 +570,17 @@ class Launch:
         self.process = None
     
     def get_output(self):
-        ''' #NOTE: if the program being called is already running
-            (and a new instance is not created), then the output will
-            be provided to the terminal in which it is running. You may
-            need to close the program first for this code to work. 
+        ''' #NOTE: if the program being called is already running (and a new
+            instance is not created), then the output will be provided to the
+            terminal in which it is running. You may need to close the program
+            first for this code to work. 
         '''
         f = '[SharedQt] logic.Launch.get_output'
         if not self.process or not self.process.stdout:
             com.rep_empty(f)
             return ''
         result = self.process.stdout
-        result = [str(item,'utf-8') for item in result]
+        result = [str(item, 'utf-8') for item in result]
         return ''.join(result)
     
     def _launch(self):
@@ -589,11 +589,11 @@ class Launch:
             com.rep_empty(f)
             return
         mes = _('Custom arguments: "{}"').format(self.custom_args)
-        objs.get_mes(f,mes,True).show_debug()
+        objs.get_mes(f, mes, True).show_debug()
         try:
             # Block the script till the called program is closed
             if self.Block:
-                subprocess.call(self.custom_args,self.stdout)
+                subprocess.call(self.custom_args, self.stdout)
             else:
                 self.process = subprocess.Popen (args = self.custom_args
                                                 ,stdout = self.stdout
@@ -601,7 +601,7 @@ class Launch:
             return True
         except:
             mes = _('Failed to run "{}"!').format(self.custom_args)
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
 
     def _launch_lin(self):
         f = '[SharedQt] logic.Launch._launch_lin'
@@ -610,7 +610,7 @@ class Launch:
             return True
         except OSError:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
 
     def _launch_mac(self):
         f = '[SharedQt] logic.Launch._launch_mac'
@@ -619,7 +619,7 @@ class Launch:
             return True
         except:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
 
     def _launch_win(self):
         f = '[SharedQt] logic.Launch._launch_win'
@@ -628,14 +628,14 @@ class Launch:
             return True
         except:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
 
-    def launch_app(self,custom_app='',custom_args=[]):
+    def launch_app(self, custom_app='', custom_args=[]):
         self.custom_app = custom_app
         self.custom_args = custom_args
         if self.custom_app:
             if self.custom_args and len(self.custom_args) > 0:
-                self.custom_args.insert(0,self.custom_app)
+                self.custom_args.insert(0, self.custom_app)
                 if self.TargetExists and not self.target in self.custom_args:
                     self.custom_args.append(self.target)
             else:
@@ -647,7 +647,7 @@ class Launch:
         if not self.TargetExists:
             com.cancel(f)
             return
-        self.custom_args = [self.custom_app,self.target]
+        self.custom_args = [self.custom_app, self.target]
         return self._launch()
 
     def launch_default(self):
@@ -666,7 +666,7 @@ class Launch:
 
 class WriteTextFile:
 
-    def __init__(self,file,Rewrite=False,Empty=False):
+    def __init__(self, file, Rewrite=False, Empty=False):
         self.set_values()
         self.file = file
         self.Rewrite = Rewrite
@@ -685,27 +685,27 @@ class WriteTextFile:
         if not self.file:
             self.Success = False
             mes = _('Not enough input data!')
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
 
-    def _write(self,mode='w'):
+    def _write(self, mode='w'):
         f = '[SharedQt] logic.WriteTextFile._write'
         if mode != 'w' and mode != 'a':
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
-            mes = mes.format(mode,'a, w')
-            objs.get_mes(f,mes).show_error()
+            mes = mes.format(mode, 'a, w')
+            objs.get_mes(f, mes).show_error()
             return
         mes = _('Write file "{}"').format(self.file)
-        objs.get_mes(f,mes,True).show_info()
+        objs.get_mes(f, mes, True).show_info()
         try:
-            with open(self.file,mode,encoding='UTF-8') as fl:
+            with open(self.file, mode, encoding='UTF-8') as fl:
                 fl.write(self.text)
         except:
             self.Success = False
             mes = _('Unable to write file "{}"!').format(self.file)
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
         return self.Success
 
-    def append(self,text=''):
+    def append(self, text=''):
         f = '[SharedQt] logic.WriteTextFile.append'
         if not self.Success:
             com.cancel(f)
@@ -717,11 +717,11 @@ class WriteTextFile:
                 scratch?
             '''
             mes = _('Not enough input data!')
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
             return
         self._write('a')
 
-    def write(self,text=''):
+    def write(self, text=''):
         f = '[SharedQt] logic.WriteTextFile.write'
         if not self.Success:
             com.cancel(f)
@@ -729,7 +729,7 @@ class WriteTextFile:
         self.text = text
         if not self.text and not self.Empty:
             mes = _('Not enough input data!')
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
             return
         if com.rewrite (file = self.file
                        ,Rewrite = self.Rewrite
@@ -740,7 +740,7 @@ class WriteTextFile:
 
 class Log:
 
-    def __init__(self,Use=True,Short=False):
+    def __init__(self, Use=True, Short=False):
         self.func = '[SharedQt] logic.Log.__init__'
         self.Success = True
         self.level = 'info'
@@ -750,23 +750,21 @@ class Log:
         if not Use:
             self.Success = False
 
-    def _warn(self,mes):
-        return termcolor.colored(mes,'red')
+    def _warn(self, mes):
+        return termcolor.colored(mes, 'red')
     
-    def _debug(self,mes):
-        return termcolor.colored(mes,'yellow')
+    def _debug(self, mes):
+        return termcolor.colored(mes, 'yellow')
     
     def _generate(self):
-        return '{}:{}:{}:{}'.format (self.count,self.func
-                                    ,self.level,self.message
-                                    )
+        return f'{self.count}:{self.func}:{self.level}:{self.message}'
     
     def print(self):
         f = '[SharedQt] logic.Log.print'
         if not self.Success:
             return
         try:
-            if self.level in ('warning','error'):
+            if self.level in ('warning', 'error'):
                 print(self._warn(self._generate()))
             elif self.Short:
                 pass
@@ -781,11 +779,11 @@ class Log:
                 except, we do not specify an exception type.
             '''
             sub = 'Cannot print the message! ({})'.format(e)
-            mes = '{}:{}:{}'.format(f,_('WARNING'),sub)
+            mes = '{}:{}:{}'.format(f, _('WARNING'), sub)
             print(mes)
 
-    def append (self,func='[SharedQt] logic.Log.append'
-               ,level='info',message='Test'
+    def append (self, func='[SharedQt] logic.Log.append', level='info'
+               ,message='Test'
                ):
         if not self.Success:
             return
@@ -800,7 +798,7 @@ class Log:
 
 class ReadTextFile:
 
-    def __init__(self,file,Empty=False):
+    def __init__(self, file, Empty=False):
         self.set_values()
         self.file = file
         self.Empty = Empty
@@ -820,32 +818,32 @@ class ReadTextFile:
         elif not self.file:
             self.Success = False
             mes = _('Empty input is not allowed!')
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
         elif not os.path.exists(self.file):
             self.Success = False
             mes = _('File "{}" has not been found!').format(self.file)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
         else:
             self.Success = False
             mes = _('Wrong input data!')
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
 
-    def _read(self,encoding):
+    def _read(self, encoding):
         f = '[SharedQt] logic.ReadTextFile._read'
         try:
-            with open(self.file,'r',encoding=encoding) as fl:
+            with open(self.file, 'r', encoding=encoding) as fl:
                 self.text = fl.read()
         except Exception as e:
             # Avoid UnicodeDecodeError, access errors, etc.
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
 
     def delete_bom(self):
         f = '[SharedQt] logic.ReadTextFile.delete_bom'
         if not self.Success:
             com.cancel(f)
             return
-        self.text = self.text.replace('\N{ZERO WIDTH NO-BREAK SPACE}','')
+        self.text = self.text.replace('\N{ZERO WIDTH NO-BREAK SPACE}', '')
 
     def get(self):
         # Return the text from memory (or load the file first)
@@ -881,7 +879,7 @@ class ReadTextFile:
             com.cancel(f)
             return self.text
         mes = _('Load file "{}"').format(self.file)
-        Message(f,mes).show_info()
+        Message(f, mes).show_info()
         ''' We can try to define an encoding automatically, however, this often
             spoils some symbols, so we just proceed with try-except and the
             most popular encodings.
@@ -898,7 +896,7 @@ class ReadTextFile:
             '''
             self.Success = False
             mes = _('Unable to read file "{}"!').format(self.file)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
             return self.text
         self.delete_bom()
         return self.text
@@ -907,27 +905,27 @@ class ReadTextFile:
 
 class Input:
 
-    def __init__(self,title='Input',value=''):
+    def __init__(self, title='Input', value=''):
         self.title = title
         self.value = value
 
     def check_float(self):
-        if not isinstance(self.value,float):
+        if not isinstance(self.value, float):
             mes = _('Float is required at input, but found "{}"! Return 0.0')
             mes = mes.format(self.value)
-            objs.get_mes(self.title,mes).show_warning()
+            objs.get_mes(self.title, mes).show_warning()
             self.value = 0.0
         return self.value
     
     def get_list(self):
-        if not isinstance(self.value,list):
+        if not isinstance(self.value, list):
             mes = _('Wrong input data!')
-            objs.get_mes(self.title,mes,True).show_warning()
+            objs.get_mes(self.title, mes, True).show_warning()
             return []
         return self.value
     
-    def get_integer(self,Negative=False):
-        if isinstance(self.value,int):
+    def get_integer(self, Negative=False):
+        if isinstance(self.value, int):
             return self.value
         # Avoid exceptions if the input is not an integer or string
         self.value = str(self.value)
@@ -935,20 +933,20 @@ class Input:
             self.value = int(self.value)
             # Too frequent, almost useless
             #mes = _('Convert "{}" to an integer').format(self.value)
-            #objs.get_mes(self.title,mes,True).show_debug()
-        elif Negative and re.match('-\d+$',self.value):
+            #objs.get_mes(self.title, mes, True).show_debug()
+        elif Negative and re.match('-\d+$', self.value):
             ''' 'isinstance' will detect negative integers too, however, we can
                 also have a string at input.
             '''
             old = self.value
-            self.value = int(self.value.replace('-','',1))
+            self.value = int(self.value.replace('-', '', 1))
             self.value -= self.value * 2
             mes = _('Convert "{}" to an integer').format(old)
-            objs.get_mes(self.title,mes,True).show_debug()
+            objs.get_mes(self.title, mes, True).show_debug()
         else:
             mes = _('Integer is required at input, but found "{}"! Return 0')
             mes = mes.format(self.value)
-            objs.get_mes(self.title,mes).show_warning()
+            objs.get_mes(self.title, mes).show_warning()
             self.value = 0
         return self.value
 
@@ -962,9 +960,9 @@ class Input:
 
 class Text:
 
-    def __init__(self,text,Auto=False):
+    def __init__(self, text, Auto=False):
         self.text = text
-        self.text = Input('Text.__init__',self.text).get_not_none()
+        self.text = Input('Text.__init__', self.text).get_not_none()
         # This can be useful in many cases, e.g. after OCR
         if Auto:
             self.convert_line_breaks()
@@ -977,31 +975,27 @@ class Text:
             '''
             self.text = self.text.strip()
 
-    def split_by_len(self,len_):
-        return [self.text[i:i+len_] for i in range(0,len(self.text),len_)]
+    def split_by_len(self, len_):
+        return [self.text[i:i+len_] for i in range(0, len(self.text), len_)]
     
     def delete_embraced_figs(self):
-        self.text = re.sub('\s\(\d+\)','',self.text)
-        self.text = re.sub('\s\[\d+\]','',self.text)
-        self.text = re.sub('\s\{\d+\}','',self.text)
+        self.text = re.sub('\s\(\d+\)', '', self.text)
+        self.text = re.sub('\s\[\d+\]', '', self.text)
+        self.text = re.sub('\s\{\d+\}', '', self.text)
         return self.text
     
     def replace_sim_syms(self):
-        ''' Replace Cyrillic letters with similar Latin ones. This can
-            be useful for English words in mostly Russian text.
+        ''' Replace Cyrillic letters with similar Latin ones. This can be
+            useful for English words in mostly Russian text.
         '''
-        sim_cyr = ('А','В','Е','К','Н'
-                  ,'О','Р','С','Т','Х'
-                  ,'а','е','о','р','с'
-                  ,'у','х'
+        sim_cyr = ('А', 'В', 'Е', 'К', 'Н', 'О', 'Р', 'С', 'Т', 'Х', 'а', 'е'
+                  ,'о', 'р', 'с', 'у', 'х'
                   )
-        sim_lat = ('A','B','E','K','H'
-                  ,'O','P','C','T','X'
-                  ,'a','e','o','p','c'
-                  ,'y','x'
+        sim_lat = ('A', 'B', 'E', 'K', 'H', 'O', 'P', 'C', 'T', 'X', 'a', 'e'
+                  ,'o', 'p', 'c', 'y', 'x'
                   )
         for i in range(len(sim_cyr)):
-            self.text = self.text.replace(sim_cyr[i],sim_lat[i])
+            self.text = self.text.replace(sim_cyr[i], sim_lat[i])
         return self.text
     
     def has_digits(self):
@@ -1019,8 +1013,8 @@ class Text:
     
     def delete_trash(self):
         # Getting rid of some useless symbols
-        self.text = self.text.replace('· ','').replace('• ','')
-        self.text = self.text.replace('¬','')
+        self.text = self.text.replace('· ', '').replace('• ', '')
+        self.text = self.text.replace('¬', '')
     
     def toggle_case(self):
         if self.text == self.text.lower():
@@ -1030,20 +1024,20 @@ class Text:
         return self.text
 
     def replace_quotes(self):
-        self.text = re.sub(r'"([a-zA-Z\d\(\[\{\(])',r'“\1',self.text)
-        self.text = re.sub(r'([a-zA-Z\d\.\?\!\)])"',r'\1”',self.text)
-        self.text = re.sub(r'"(\.\.\.[a-zA-Z\d])',r'“\1',self.text)
+        self.text = re.sub(r'"([a-zA-Z\d\(\[\{\(])', r'“\1', self.text)
+        self.text = re.sub(r'([a-zA-Z\d\.\?\!\)])"', r'\1”', self.text)
+        self.text = re.sub(r'"(\.\.\.[a-zA-Z\d])', r'“\1', self.text)
         return self.text
 
     def delete_space_with_figure(self):
         expr = '[-\s]\d+'
-        match = re.search(expr,self.text)
+        match = re.search(expr, self.text)
         while match:
             old = self.text
-            self.text = self.text.replace(match.group(0),'')
+            self.text = self.text.replace(match.group(0), '')
             if old == self.text:
                 break
-            match = re.search(expr,self.text)
+            match = re.search(expr, self.text)
         return self.text
 
     def get_country(self):
@@ -1052,28 +1046,27 @@ class Text:
         and self.text[-2].isalpha() and self.text[-2].isupper():
             return self.text[-2:]
 
-    def reset(self,text):
+    def reset(self, text):
         self.text = text
 
     def replace_x(self):
         # \xa0 is a non-breaking space in Latin1 (ISO 8859-1)
-        self.text = self.text.replace('\xa0',' ').replace('\x07',' ')
+        self.text = self.text.replace('\xa0', ' ').replace('\x07', ' ')
         return self.text
 
     def delete_alphabetic_numeration(self):
         #TODO: check
         my_expr = ' [\(,\[]{0,1}[aA-zZ,аА-яЯ][\.,\),\]]( \D)'
-        match = re.search(my_expr,self.text)
+        match = re.search(my_expr, self.text)
         while match:
-            self.text = self.text.replace(match.group(0),match.group(1))
-            match = re.search(my_expr,self.text)
+            self.text = self.text.replace(match.group(0), match.group(1))
+            match = re.search(my_expr, self.text)
         return self.text
 
-    def delete_embraced_text(self,opening_sym='(',closing_sym=')'):
-        ''' If there are some brackets left after performing this
-            operation, ensure that all of them are in the right place
-            (even when the number of opening and closing brackets is
-            the same).
+    def delete_embraced_text(self, opening_sym='(', closing_sym=')'):
+        ''' If there are some brackets left after performing this operation,
+            ensure that all of them are in the right place (even when the
+            number of opening and closing brackets is the same).
         '''
         f = '[SharedQt] logic.Text.delete_embraced_text'
         if self.text.count(opening_sym) != self.text.count(closing_sym):
@@ -1083,7 +1076,7 @@ class Text:
                              ,closing_sym
                              ,self.text.count(closing_sym)
                              )
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
             return self.text
         opening_parentheses = []
         closing_parentheses = []
@@ -1093,9 +1086,7 @@ class Text:
             elif self.text[i] == closing_sym:
                 closing_parentheses.append(i)
 
-        min_val = min (len(opening_parentheses)
-                      ,len(closing_parentheses)
-                      )
+        min_val = min(len(opening_parentheses), len(closing_parentheses))
 
         opening_parentheses = opening_parentheses[::-1]
         closing_parentheses = closing_parentheses[::-1]
@@ -1119,25 +1110,25 @@ class Text:
         return self.text
 
     def convert_line_breaks(self):
-        self.text = self.text.replace('\r\n','\n').replace('\r','\n')
+        self.text = self.text.replace('\r\n', '\n').replace('\r', '\n')
         return self.text
 
-    def delete_line_breaks(self,rep=' '):
+    def delete_line_breaks(self, rep=' '):
         # Apply 'convert_line_breaks' first
-        self.text = self.text.replace('\n',rep)
+        self.text = self.text.replace('\n', rep)
         return self.text
 
     def delete_duplicate_line_breaks(self):
         while '\n\n' in self.text:
-            self.text = self.text.replace('\n\n','\n')
+            self.text = self.text.replace('\n\n', '\n')
         return self.text
 
     def delete_duplicate_spaces(self):
         while '  ' in self.text:
-            self.text = self.text.replace('  ',' ')
+            self.text = self.text.replace('  ', ' ')
         return self.text
 
-    def delete_end_punc(self,Extended=False):
+    def delete_end_punc(self, Extended=False):
         ''' Delete a space and punctuation marks in the end of a line
             (useful when extracting features with CompareField).
         '''
@@ -1155,7 +1146,7 @@ class Text:
         return self.text
 
     def delete_figures(self):
-        self.text = re.sub('\d+','',self.text)
+        self.text = re.sub('\d+', '', self.text)
         return self.text
 
     def delete_cyrillic(self):
@@ -1167,32 +1158,30 @@ class Text:
 
     def delete_punctuation(self):
         for sym in punc_array:
-            self.text = self.text.replace(sym,'')
+            self.text = self.text.replace(sym, '')
         for sym in punc_ext_array:
-            self.text = self.text.replace(sym,'')
+            self.text = self.text.replace(sym, '')
         return self.text
 
     def delete_space_with_punctuation(self):
         # Delete duplicate spaces first
         for i in range(len(punc_array)):
-            self.text = self.text.replace (' ' + punc_array[i]
-                                          ,punc_array[i]
-                                          )
-        self.text = self.text.replace('“ ','“').replace(' ”','”')
-        self.text = self.text.replace('( ','(').replace(' )',')')
-        self.text = self.text.replace('[ ','[').replace(' ]',']')
-        self.text = self.text.replace('{ ','{').replace(' }','}')
+            self.text = self.text.replace(' ' + punc_array[i], punc_array[i])
+        self.text = self.text.replace('“ ', '“').replace(' ”', '”')
+        self.text = self.text.replace('( ', '(').replace(' )', ')')
+        self.text = self.text.replace('[ ', '[').replace(' ]', ']')
+        self.text = self.text.replace('{ ', '{').replace(' }', '}')
         return self.text
 
     def extract_date(self):
         # Only for pattern '(YYYY-MM-DD)'
         expr = '\((\d\d\d\d-\d\d-\d\d)\)'
         if self.text:
-            match = re.search(expr,self.text)
+            match = re.search(expr, self.text)
             if match:
                 return match.group(1)
 
-    def enclose(self,sym='"'):
+    def enclose(self, sym='"'):
         open_sym = close_sym = sym
         if sym == '(':
             close_sym = ')'
@@ -1207,10 +1196,8 @@ class Text:
         self.text = open_sym + self.text + close_sym
         return self.text
     
-    # Shorten a string up to a max length
-    def shorten (self,max_len=10,FromEnd=False
-                ,ShowGap=True,encloser=''
-                ):
+    def shorten(self, max_len=10, FromEnd=False, ShowGap=True, encloser=''):
+        # Shorten a string up to a max length
         if len(self.text) > max_len:
             if encloser:
                 enc_len = 2 * len(encloser)
@@ -1232,7 +1219,7 @@ class Text:
             self.enclose(encloser)
         return self.text
         
-    def grow(self,max_len=20,FromEnd=False,sym=' '):
+    def grow(self, max_len=20, FromEnd=False, sym=' '):
         delta = max_len - len(self.text)
         if delta > 0:
             if FromEnd:
@@ -1241,7 +1228,7 @@ class Text:
                 self.text = delta * sym + self.text
         return self.text
         
-    def fit(self,max_len=20,FromEnd=False,sym=' '):
+    def fit(self, max_len=20, FromEnd=False, sym=' '):
         self.shorten (max_len = max_len
                      ,FromEnd = FromEnd
                      ,ShowGap = False
@@ -1259,10 +1246,10 @@ class Text:
         f = '[SharedQt] logic.Text.split_by_comma'
         if (';' in self.text or ',' in self.text) and '\n' in self.text:
             mes = _('Commas and/or semicolons or line breaks can be used, but not altogether!')
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
         elif ';' in self.text or ',' in self.text:
-            self.text = self.text.replace(',','\n')
-            self.text = self.text.replace(';','\n')
+            self.text = self.text.replace(',', '\n')
+            self.text = self.text.replace(';', '\n')
             self.strip_lines()
         elif '\n' in self.text:
             self.delete_duplicate_line_breaks()
@@ -1281,10 +1268,10 @@ class Text:
         par = 0
         try:
             par = int(self.text)
-        except(ValueError,TypeError):
+        except(ValueError, TypeError):
             mes = _('Failed to convert "{}" to an integer!')
             mes = mes.format(self.text)
-            objs.get_mes(f,mes,True).show_warning()
+            objs.get_mes(f, mes, True).show_warning()
         return par
 
     def str2float(self):
@@ -1292,10 +1279,10 @@ class Text:
         par = 0.0
         try:
             par = float(self.text)
-        except(ValueError,TypeError):
+        except(ValueError, TypeError):
             mes = _('Failed to convert "{}" to a floating-point number!')
             mes = mes.format(self.text)
-            objs.get_mes(f,mes,True).show_warning()
+            objs.get_mes(f, mes, True).show_warning()
         return par
 
     def strip_lines(self):
@@ -1306,13 +1293,13 @@ class Text:
         return self.text
 
     def tabs2spaces(self):
-        self.text = self.text.replace('\t',' ')
+        self.text = self.text.replace('\t', ' ')
         return self.text
 
     def replace_yo(self):
         # This allows to shorten dictionaries
-        self.text = self.text.replace('Ё','Е')
-        self.text = self.text.replace('ё','е')
+        self.text = self.text.replace('Ё', 'Е')
+        self.text = self.text.replace('ё', 'е')
         return self.text
 
     def get_alphanum(self):
@@ -1339,7 +1326,7 @@ class Text:
 
 class List:
 
-    def __init__(self,lst1=[],lst2=[]):
+    def __init__(self, lst1=[], lst2=[]):
         if lst1 is None:
             self.lst1 = []
         else:
@@ -1349,7 +1336,7 @@ class List:
         else:
             self.lst2 = list(lst2)
     
-    def split_by_item(self,item):
+    def split_by_item(self, item):
         f = '[SharedQt] logic.List.split_by_item'
         try:
             index_ = self.lst1.index(item)
@@ -1357,12 +1344,12 @@ class List:
             self.lst1 = self.lst1[:index_]
         except ValueError:
             mes = _('Wrong input data: "{}"!').format(item)
-            objs.get_mes(f,mes,True).show_warning()
-        return(self.lst1,self.lst2)
+            objs.get_mes(f, mes, True).show_warning()
+        return(self.lst1, self.lst2)
     
-    def split_by_len(self,len_):
+    def split_by_len(self, len_):
         # Get successive len_-sized chunks
-        return [self.lst1[i:i+len_] for i in range(0,len(self.lst1),len_)]
+        return [self.lst1[i:i+len_] for i in range(0, len(self.lst1), len_)]
     
     def split_by_gaps(self):
         ''' Split an integer sequence where the next item does not
@@ -1384,7 +1371,7 @@ class List:
             cuts.append(cut)
         return cuts
 
-    def find_by_count(self,max_count=1):
+    def find_by_count(self, max_count=1):
         count = 0
         old = list(self.lst1)
         start = 0
@@ -1420,7 +1407,7 @@ class List:
     
     def find(self):
         len_ = len(self.lst2)
-        for index_ in (i for i,e in enumerate(self.lst1) if e == self.lst2[0]):
+        for index_ in (i for i, e in enumerate(self.lst1) if e == self.lst2[0]):
             if self.lst1[index_:index_+len_] == self.lst2:
                 return([index_, index_ + len_ - 1])
     
@@ -1458,7 +1445,7 @@ class List:
             i -= 1
         return self.lst1
     
-    def space_items(self,MultSpaces=False):
+    def space_items(self, MultSpaces=False):
         # Add a space where necessary and convert to a string
         text = ''
         for i in range(len(self.lst1)):
@@ -1489,8 +1476,8 @@ class List:
             elif i == len(self.lst1) - 1 and self.lst1[i] in punc_array:
                 text += self.lst1[i]
             # Do not allow ' "' in the end
-            elif i == len(self.lst1) - 1 and self.lst1[i] \
-            in ('”','»',']',')','}','"',"'"):
+            elif i == len(self.lst1) - 1 \
+            and self.lst1[i] in ('”', '»', ']', ')', '}', '"', "'"):
                 text += self.lst1[i]
             else:
                 text += ' ' + self.lst1[i]
@@ -1498,19 +1485,19 @@ class List:
 
     def equalize(self):
         # Adjust the lists at input to have the same length
-        max_range = max(len(self.lst1),len(self.lst2))
+        max_range = max(len(self.lst1), len(self.lst2))
         if max_range == len(self.lst1):
             for i in range(len(self.lst1)-len(self.lst2)):
                 self.lst2.append('')
         else:
             for i in range(len(self.lst2)-len(self.lst1)):
                 self.lst1.append('')
-        return(self.lst1,self.lst2)
+        return(self.lst1, self.lst2)
 
     def get_diff(self):
         # Find different elements (strict order)
         # Based on http://stackoverflow.com/a/788780
-        seqm = difflib.SequenceMatcher(a=self.lst1,b=self.lst2)
+        seqm = difflib.SequenceMatcher(a=self.lst1, b=self.lst2)
         output = []
         for opcode, a0, a1, b0, b1 in seqm.get_opcodes():
             if opcode != 'equal':
@@ -1521,23 +1508,23 @@ class List:
 
 class Time:
     # We constantly recalculate each value because they depend on each other
-    def __init__(self,tstamp=None,pattern='%Y-%m-%d'):
+    def __init__(self, tstamp=None, pattern='%Y-%m-%d'):
         self.reset (tstamp = tstamp
                    ,pattern = pattern
                    )
     
-    def fail(self,f,e):
+    def fail(self, f, e):
         self.Success = False
         mes = _('Set time parameters are incorrect or not supported.\n\nDetails: {}')
         mes = mes.format(e)
-        objs.get_mes(f,mes).show_error()
+        objs.get_mes(f, mes).show_error()
 
     def set_values(self):
         self.Success = True
         self.date = self.year = self.month_abbr = self.month_name = ''
         self.inst = None
     
-    def reset(self,tstamp=None,pattern='%Y-%m-%d'):
+    def reset(self, tstamp=None, pattern='%Y-%m-%d'):
         self.set_values()
         self.pattern = pattern
         self.tstamp = tstamp
@@ -1547,7 +1534,7 @@ class Time:
         else:
             self.get_instance()
 
-    def add_days(self,days_delta):
+    def add_days(self, days_delta):
         f = '[SharedQt] logic.Time.add_days'
         if not self.Success:
             com.cancel(f)
@@ -1556,7 +1543,7 @@ class Time:
             self.inst = self.get_instance() \
                       + datetime.timedelta(days=days_delta)
         except Exception as e:
-            self.fail(f,e)
+            self.fail(f, e)
 
     def get_date(self):
         f = '[SharedQt] logic.Time.get_date'
@@ -1566,7 +1553,7 @@ class Time:
         try:
             self.date = self.get_instance().strftime(self.pattern)
         except Exception as e:
-            self.fail(f,e)
+            self.fail(f, e)
         return self.date
 
     def get_instance(self):
@@ -1580,7 +1567,7 @@ class Time:
             try:
                 self.inst = datetime.datetime.fromtimestamp(self.tstamp)
             except Exception as e:
-                self.fail(f,e)
+                self.fail(f, e)
         return self.inst
 
     def get_timestamp(self):
@@ -1591,9 +1578,9 @@ class Time:
         if not self.date:
             self.get_date()
         try:
-            self.tstamp = time.mktime(datetime.datetime.strptime(self.date,self.pattern).timetuple())
+            self.tstamp = time.mktime(datetime.datetime.strptime(self.date, self.pattern).timetuple())
         except Exception as e:
-            self.fail(f,e)
+            self.fail(f, e)
         return self.tstamp
 
     def is_monday(self):
@@ -1648,7 +1635,7 @@ class Time:
             self.month_abbr = _('Dec')
         else:
             mes = _('Wrong input data!')
-            objs.get_mes(f,mes,True).show_warning()
+            objs.get_mes(f, mes, True).show_warning()
         return self.month_abbr
     
     def get_month_abbr(self):
@@ -1678,14 +1665,14 @@ class Time:
         try:
             self.year = self.inst.strftime("%Y")
         except Exception as e:
-            self.fail(f,e)
+            self.fail(f, e)
         return self.year
 
 
 
 class File:
 
-    def __init__(self,file,dest=None,Rewrite=False):
+    def __init__(self, file, dest=None, Rewrite=False):
         f = '[SharedQt] logic.File.__init__'
         self.Success = True
         self.Rewrite = Rewrite
@@ -1698,8 +1685,8 @@ class File:
         self.mtime = ''
         # This already checks existence
         if self.file and os.path.isfile(self.file):
-            ''' If the destination directory does not exist, this will
-                be caught in try-except while copying/moving.
+            ''' If the destination directory does not exist, this will be
+                caught in try-except while copying/moving.
             '''
             if os.path.isdir(self.dest):
                 self.dest = os.path.join (self.dest
@@ -1708,17 +1695,17 @@ class File:
         elif not self.file:
             self.Success = False
             mes = _('Empty input is not allowed!')
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
         elif not os.path.exists(self.file):
             self.Success = False
             mes = _('File "{}" has not been found!').format(self.file)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
         else:
             self.Success = False
             mes = _('The object "{}" is not a file!').format(self.file)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
 
-    def get_size(self,Follow=True):
+    def get_size(self, Follow=True):
         f = '[SharedQt] logic.File.get_size'
         result = 0
         if not self.Success:
@@ -1736,35 +1723,35 @@ class File:
                 be raised if Follow=False and this is a broken symbolic link.
             '''
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
         return result
     
     def _copy(self):
         f = '[SharedQt] logic.File._copy'
         Success = True
-        mes = _('Copy "{}" to "{}"').format(self.file,self.dest)
-        objs.get_mes(f,mes,True).show_info()
+        mes = _('Copy "{}" to "{}"').format(self.file, self.dest)
+        objs.get_mes(f, mes, True).show_info()
         try:
-            shutil.copyfile(self.file,self.dest)
+            shutil.copyfile(self.file, self.dest)
         except:
             Success = False
             mes = _('Failed to copy file "{}" to "{}"!')
-            mes = mes.format(self.file,self.dest)
-            objs.get_mes(f,mes).show_error()
+            mes = mes.format(self.file, self.dest)
+            objs.get_mes(f, mes).show_error()
         return Success
 
     def _move(self):
         f = '[SharedQt] logic.File._move'
         Success = True
-        mes = _('Move "{}" to "{}"').format(self.file,self.dest)
-        objs.get_mes(f,mes,True).show_info()
+        mes = _('Move "{}" to "{}"').format(self.file, self.dest)
+        objs.get_mes(f, mes, True).show_info()
         try:
-            shutil.move(self.file,self.dest)
+            shutil.move(self.file, self.dest)
         except Exception as e:
             Success = False
             mes = _('Failed to move "{}" to "{}"!\n\nDetails: {}')
-            mes = mes.format(self.file,self.dest,e)
-            objs.get_mes(f,mes).show_error()
+            mes = mes.format(self.file, self.dest, e)
+            objs.get_mes(f, mes).show_error()
         return Success
 
     def get_access_time(self):
@@ -1779,7 +1766,7 @@ class File:
         except:
             mes = _('Failed to get the date of the file "{}"!')
             mes = mes.format(self.file)
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
 
     def copy(self):
         f = '[SharedQt] logic.File.copy'
@@ -1789,14 +1776,14 @@ class File:
             return
         if self.file.lower() == self.dest.lower():
             mes = _('Unable to copy the file "{}" to iself!').format(self.file)
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
         elif com.rewrite (file = self.dest
                          ,Rewrite = self.Rewrite
                          ):
             Success = self._copy()
         else:
             mes = _('Operation has been canceled by the user.')
-            objs.get_mes(f,mes,True).show_info()
+            objs.get_mes(f, mes, True).show_info()
         return Success
 
     def delete(self):
@@ -1805,13 +1792,13 @@ class File:
             com.cancel(f)
             return
         mes = _('Delete "{}"').format(self.file)
-        objs.get_mes(f,mes,True).show_info()
+        objs.get_mes(f, mes, True).show_info()
         try:
             os.remove(self.file)
             return True
         except:
             mes = _('Failed to delete file "{}"!').format(self.file)
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
 
     def get_modification_time(self):
         f = '[SharedQt] logic.File.get_modification_time'
@@ -1825,7 +1812,7 @@ class File:
         except:
             mes = _('Failed to get the date of the file "{}"!')
             mes = mes.format(self.file)
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
 
     def move(self):
         f = '[SharedQt] logic.File.move'
@@ -1836,14 +1823,14 @@ class File:
         if self.file.lower() == self.dest.lower():
             mes = _('Moving is not necessary, because the source and destination are identical ({}).')
             mes = mes.format(self.file)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
         elif com.rewrite (file = self.dest
                          ,Rewrite = self.Rewrite
                          ):
             Success = self._move()
         else:
             mes = _('Operation has been canceled by the user.')
-            objs.get_mes(f,mes,True).show_info()
+            objs.get_mes(f, mes, True).show_info()
         return self.Success and Success
 
     def set_time(self):
@@ -1854,20 +1841,20 @@ class File:
         if not self.atime or not self.mtime:
             return
         mes = _('Change the time of the file "{}" to {}')
-        mes = mes.format(self.file,(self.atime,self.mtime))
-        objs.get_mes(f,mes,True).show_info()
+        mes = mes.format(self.file, (self.atime, self.mtime))
+        objs.get_mes(f, mes, True).show_info()
         try:
-            os.utime(self.file,(self.atime,self.mtime))
+            os.utime(self.file, (self.atime, self.mtime))
         except:
             mes = _('Failed to change the time of the file "{}" to "{}"!')
-            mes = mes.format(self.file,(self.atime,self.mtime))
-            objs.get_mes(f,mes).show_error()
+            mes = mes.format(self.file, (self.atime, self.mtime))
+            objs.get_mes(f, mes).show_error()
 
 
 
 class Path:
 
-    def __init__(self,path):
+    def __init__(self, path):
         self.reset(path)
 
     def get_free_space(self):
@@ -1878,14 +1865,14 @@ class Path:
             return result
         if not os.path.exists(self.path):
             mes = _('Wrong input data: "{}"!').format(self.path)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
             return result
         try:
             istat = os.statvfs(self.path)
             result = istat.f_bavail * istat.f_bsize
         except Exception as e:
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
         return result
     
     def _split_path(self):
@@ -1913,28 +1900,28 @@ class Path:
         if os.path.exists(self.path):
             if os.path.isdir(self.path):
                 mes = _('Directory "{}" already exists.').format(self.path)
-                objs.get_mes(f,mes,True).show_info()
+                objs.get_mes(f, mes, True).show_info()
             else:
                 Success = False
                 mes = _('The path "{}" is invalid!').format(self.path)
-                objs.get_mes(f,mes).show_warning()
+                objs.get_mes(f, mes).show_warning()
         else:
             mes = _('Create directory "{}"').format(self.path)
-            objs.get_mes(f,mes,True).show_info()
+            objs.get_mes(f, mes, True).show_info()
             try:
                 #TODO: consider os.mkdir
                 os.makedirs(self.path)
             except:
                 Success = False
                 mes = _('Failed to create directory "{}"!').format(self.path)
-                objs.get_mes(f,mes).show_error()
+                objs.get_mes(f, mes).show_error()
         return Success
 
     def delete_inappropriate_symbols(self):
         ''' These symbols may pose a problem while opening files
             #TODO: check whether this is really necessary
         '''
-        return self.get_filename().replace("'",'').replace("&",'')
+        return self.get_filename().replace("'", '').replace("&", '')
 
     def get_dirname(self):
         if not self.dirname:
@@ -1962,7 +1949,7 @@ class Path:
                 self.filename = self._split_path()[0]
         return self.filename
 
-    def reset(self,path):
+    def reset(self, path):
         # Prevent 'NoneType'
         if path:
             self.path = path
@@ -1970,7 +1957,7 @@ class Path:
             self.path = ''
         ''' Building paths in Windows:
             - Use raw strings (e.g., set path as r'C:\1.txt')
-            - Use os.path.join(mydir,myfile) or os.path.normpath(path)
+            - Use os.path.join(mydir, myfile) or os.path.normpath(path)
               instead of os.path.sep
             - As an alternative, import ntpath, posixpath
         '''
@@ -2009,7 +1996,7 @@ class Path:
 
 class Dic:
 
-    def __init__(self,file,Sortable=False):
+    def __init__(self, file, Sortable=False):
         self.file = file
         self.Sortable = Sortable
         self.errors = []
@@ -2027,13 +2014,13 @@ class Dic:
             return
         if not self.Sortable:
             mes = _('File "{}" is not sortable!').format(self.file)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
             return
         old = self.get_lines()
         self.lst = list(set(self.get_list()))
         new = self.lines = len(self.lst)
-        mes = _('Entries deleted: {} ({}-{})').format(old-new,old,new)
-        objs.get_mes(f,mes,True).show_info()
+        mes = _('Entries deleted: {} ({}-{})').format(old - new, old, new)
+        objs.get_mes(f, mes, True).show_info()
         self.text = '\n'.join(self.lst)
         # Update original and translation
         self._split()
@@ -2045,7 +2032,7 @@ class Dic:
         f = '[SharedQt] logic.Dic._join'
         if len(self.orig) != len(self.transl):
             mes = _('Wrong input data!')
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
             return
         self.lines = len(self.orig)
         self.lst = []
@@ -2087,9 +2074,9 @@ class Dic:
             message = ', '.join(self.errors)
             mes = _('The following lines cannot be parsed:')
             mes += '\n' + message
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
 
-    def append(self,original,translation):
+    def append(self, original, translation):
         ''' #TODO: write a dictionary in an append mode after appending
                    to memory.
             #TODO: skip repetitions.
@@ -2105,7 +2092,7 @@ class Dic:
         self.transl.append(translation)
         self._join()
 
-    def delete_entry(self,entry_no):
+    def delete_entry(self, entry_no):
         # Count from 1
         #FIX: an entry which is only one in a dictionary is not deleted
         f = '[SharedQt] logic.Dic.delete_entry'
@@ -2114,15 +2101,15 @@ class Dic:
             return
         entry_no -= 1
         if entry_no < 0 or entry_no >= self.get_lines():
-            sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
+            sub = f'0 <= {entry_no} < {self.get_lines()}'
             mes = _('The condition "{}" is not observed!').format(sub)
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
             return
         del self.orig[entry_no]
         del self.transl[entry_no]
         self._join()
 
-    def edit_entry(self,entry_no,orig,transl):
+    def edit_entry(self, entry_no, orig, transl):
         # Count from 1
         ''' #TODO: Add checking orig and transl (where needed) for a wrapper
             function.
@@ -2133,9 +2120,9 @@ class Dic:
             return
         entry_no -= 1
         if entry_no < 0 or entry_no >= self.get_lines():
-            sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
+            sub = f'0 <= {entry_no} < {self.get_lines()}'
             mes = _('The condition "{}" is not observed!').format(sub)
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
             return
         self.orig[entry_no] = orig
         self.transl[entry_no] = transl
@@ -2177,16 +2164,12 @@ class Dic:
             return
         if not self.Sortable:
             mes = _('File "{}" is not sortable!').format(self.file)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
             return
         tmp_list = []
         for i in range(len(self.lst)):
-            tmp_list += [[len(self.orig[i])
-                         ,self.orig[i]
-                         ,self.transl[i]
-                         ]
-                        ]
-        tmp_list.sort(key=lambda x: x[0],reverse=True)
+            tmp_list += [[len(self.orig[i]), self.orig[i], self.transl[i]]]
+        tmp_list.sort(key=lambda x: x[0], reverse=True)
         for i in range(len(self.lst)):
             self.orig[i] = tmp_list[i][1]
             self.transl[i] = tmp_list[i][2]
@@ -2223,7 +2206,7 @@ class Dic:
 
 class TextDic:
 
-    def __init__(self,file,Sortable=False):
+    def __init__(self, file, Sortable=False):
         self.file = file
         self.Sortable = Sortable
         self.iread = ReadTextFile(self.file)
@@ -2240,17 +2223,17 @@ class TextDic:
             return
         if not self.Sortable:
             mes = _('File "{}" is not sortable!').format(self.file)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
             return
         old = self.lines()
         self.lst = list(set(self.get_list()))
         new = self.lines = len(self.lst)
-        mes = _('Entries deleted: {} ({}-{})').format(old-new,old,new)
-        objs.get_mes(f,mes,True).show_info()
+        mes = _('Entries deleted: {} ({}-{})').format(old - new, old, new)
+        objs.get_mes(f, mes, True).show_info()
         self.text = '\n'.join(self.lst)
         # Update original and translation
         self._split()
-        # After using set(), the original order was lost
+        # The original order was lost after using set()
         self.sort()
 
     def _join(self):
@@ -2258,7 +2241,7 @@ class TextDic:
         f = '[SharedQt] logic.TextDic._join'
         if len(self.orig) != len(self.transl):
             mes = _('Wrong input data!')
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
             return
         self.lines = len(self.orig)
         self.lst = []
@@ -2289,10 +2272,10 @@ class TextDic:
                 self.Success = False
                 # i+1: Count from 1
                 mes = _('Dictionary "{}": Incorrect line #{}: "{}"!')
-                mes = mes.format(self.file,i+1,self.lst[i])
-                objs.get_mes(f,mes).show_warning()
+                mes = mes.format(self.file, i + 1, self.lst[i])
+                objs.get_mes(f, mes).show_warning()
 
-    def append(self,original,translation):
+    def append(self, original, translation):
         ''' #TODO: skip repetitions
             #TODO: write a dictionary in an append mode after appending
             to memory.
@@ -2308,7 +2291,7 @@ class TextDic:
         self.transl.append(translation)
         self._join()
 
-    def delete_entry(self,entry_no): # Count from 1
+    def delete_entry(self, entry_no): # Count from 1
         ''' #TODO: #FIX: an entry which is only one in a dictionary is
             not deleted.
         '''
@@ -2318,15 +2301,15 @@ class TextDic:
             return
         entry_no -= 1
         if entry_no < 0 or entry_no >= self.get_lines():
-            sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
+            sub = f'0 <= {entry_no} < {self.get_lines()}'
             mes = _('The condition "{}" is not observed!').format(sub)
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
             return
         del self.orig[entry_no]
         del self.transl[entry_no]
         self._join()
 
-    def edit_entry(self,entry_no,orig,transl): # Count from 1
+    def edit_entry(self, entry_no, orig, transl): # Count from 1
         ''' #TODO: Add checking orig and transl (where needed) for
             a wrapper function.
         '''
@@ -2336,9 +2319,9 @@ class TextDic:
             return
         entry_no -= 1
         if entry_no < 0 or entry_no >= self.get_lines():
-            sub = '0 <= {} < {}'.format(entry_no,self.get_lines())
+            sub = f'0 <= {entry_no} < {self.get_lines()}'
             mes = _('The condition "{}" is not observed!').format(sub)
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
             return
         self.orig[entry_no] = orig
         self.transl[entry_no] = transl
@@ -2375,16 +2358,12 @@ class TextDic:
             return
         if not self.Sortable:
             mes = _('File "{}" is not sortable!').format(self.file)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
             return
         tmp_list = []
         for i in range(len(self.lst)):
-            tmp_list += [[len(self.orig[i])
-                         ,self.orig[i]
-                         ,self.transl[i]
-                         ]
-                        ]
-        tmp_list.sort(key=lambda x: x[0],reverse=True)
+            tmp_list += [[len(self.orig[i]), self.orig[i], self.transl[i]]]
+        tmp_list.sort(key=lambda x: x[0], reverse=True)
         for i in range(len(self.lst)):
             self.orig[i] = tmp_list[i][1]
             self.transl[i] = tmp_list[i][2]
@@ -2421,7 +2400,7 @@ class TextDic:
 
 class Directory:
     #TODO: fix: does not work with a root dir ('/')
-    def __init__(self,path,dest=''):
+    def __init__(self, path, dest=''):
         f = '[SharedQt] logic.Directory.__init__'
         self.set_values()
         if path:
@@ -2440,20 +2419,20 @@ class Directory:
         if not os.path.isdir(self.dir):
             self.Success = False
             mes = _('Wrong input data: "{}"!').format(self.dir)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
     
     def _move(self):
         f = '[SharedQt] logic.Directory._move'
         Success = True
-        mes = _('Move "{}" to "{}"').format(self.dir,self.dest)
-        objs.get_mes(f,mes,True).show_info()
+        mes = _('Move "{}" to "{}"').format(self.dir, self.dest)
+        objs.get_mes(f, mes, True).show_info()
         try:
-            shutil.move(self.dir,self.dest)
+            shutil.move(self.dir, self.dest)
         except Exception as e:
             Success = False
             mes = _('Failed to move "{}" to "{}"!\n\nDetails: {}')
-            mes = mes.format(self.dir,self.dest,e)
-            objs.get_mes(f,mes).show_error()
+            mes = mes.format(self.dir, self.dest, e)
+            objs.get_mes(f, mes).show_error()
         return Success
 
     def move(self):
@@ -2464,17 +2443,17 @@ class Directory:
             return
         if os.path.exists(self.dest):
             mes = _('Path "{}" already exists!').format(self.dest)
-            objs.get_mes(f,mes,True).show_warning()
+            objs.get_mes(f, mes, True).show_warning()
             Success = False
         elif self.dir.lower() == self.dest.lower():
             mes = _('Moving is not necessary, because the source and destination are identical ({}).')
             mes = mes.format(self.dir)
-            objs.get_mes(f,mes).show_warning()
+            objs.get_mes(f, mes).show_warning()
         else:
             Success = self._move()
         return self.Success and Success
     
-    def get_subfiles(self,Follow=True):
+    def get_subfiles(self, Follow=True):
         # Include files in subfolders
         f = '[SharedQt] logic.Directory.get_subfiles'
         if not self.Success:
@@ -2484,18 +2463,18 @@ class Directory:
             return self.subfiles
         try:
             for dirpath, dirnames, fnames \
-            in os.walk(self.dir,followlinks=Follow):
+            in os.walk(self.dir, followlinks=Follow):
                 for name in fnames:
-                    obj = os.path.join(dirpath,name)
+                    obj = os.path.join(dirpath, name)
                     if os.path.isfile(obj):
                         self.subfiles.append(obj)
             self.subfiles.sort(key=lambda x: x.lower())
         except Exception as e:
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
         return self.subfiles
     
-    def get_size(self,Follow=True):
+    def get_size(self, Follow=True):
         f = '[SharedQt] logic.Directory.get_size'
         result = 0
         if not self.Success:
@@ -2503,7 +2482,7 @@ class Directory:
         try:
             for dirpath, dirnames, filenames in os.walk(self.dir):
                 for name in filenames:
-                    obj = os.path.join(dirpath,name)
+                    obj = os.path.join(dirpath, name)
                     if Follow:
                         cond = not os.path.islink(obj)
                     else:
@@ -2515,7 +2494,7 @@ class Directory:
                 be raised if Follow=False and there are broken symbolic links.
             '''
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            objs.get_mes(f,mes).show_error()
+            objs.get_mes(f, mes).show_error()
         return result
     
     def set_values(self):
@@ -2565,19 +2544,19 @@ class Directory:
         f = '[SharedQt] logic.Directory.delete'
         if self.Success:
             mes = _('Delete "{}"').format(self.dir)
-            objs.get_mes(f,mes,True).show_info()
+            objs.get_mes(f, mes, True).show_info()
             try:
                 shutil.rmtree(self.dir)
                 return True
             except:
                 mes = _('Failed to delete directory "{}"! Delete it manually.')
                 mes = mes.format(self.dir)
-                objs.get_mes(f,mes).show_error()
+                objs.get_mes(f, mes).show_error()
         else:
             com.cancel(f)
 
-    # Create a list of objects with a relative path
     def get_rel_list(self):
+        # Create a list of objects with a relative path
         f = '[SharedQt] logic.Directory.get_rel_list'
         if self.Success:
             if not self.rellist:
@@ -2586,8 +2565,8 @@ class Directory:
             com.cancel(f)
         return self.rellist
 
-    # Create a list of objects with an absolute path
     def get_list(self):
+        # Create a list of objects with an absolute path
         f = '[SharedQt] logic.Directory.get_list'
         if self.Success:
             if not self.lst:
@@ -2598,11 +2577,11 @@ class Directory:
                     self.Success = False
                     mes = _('Operation has failed!\nDetails: {}')
                     mes = mes.format(e)
-                    objs.get_mes(f,mes).show_error()
+                    objs.get_mes(f, mes).show_error()
                 self.lst.sort(key=lambda x: x.lower())
                 self.rellist = list(self.lst)
                 for i in range(len(self.lst)):
-                    self.lst[i] = os.path.join(self.dir,self.lst[i])
+                    self.lst[i] = os.path.join(self.dir, self.lst[i])
         else:
             com.cancel(f)
         return self.lst
@@ -2657,11 +2636,11 @@ class Directory:
             if self.dir.lower() == self.dest.lower():
                 mes = _('Unable to copy "{}" to iself!')
                 mes = mes.format(self.dir)
-                objs.get_mes(f,mes).show_error()
+                objs.get_mes(f, mes).show_error()
             elif os.path.isdir(self.dest):
                 mes = _('Directory "{}" already exists.')
                 mes = mes.format(self.dest)
-                objs.get_mes(f,mes).show_info()
+                objs.get_mes(f, mes).show_info()
             else:
                 self._copy()
         else:
@@ -2669,21 +2648,21 @@ class Directory:
 
     def _copy(self):
         f = '[SharedQt] logic.Directory._copy'
-        mes = _('Copy "{}" to "{}"').format(self.dir,self.dest)
-        objs.get_mes(f,mes,True).show_info()
+        mes = _('Copy "{}" to "{}"').format(self.dir, self.dest)
+        objs.get_mes(f, mes, True).show_info()
         try:
-            shutil.copytree(self.dir,self.dest)
+            shutil.copytree(self.dir, self.dest)
         except:
             self.Success = False
             mes = _('Failed to copy "{}" to "{}"!')
-            mes = mes.format(self.dir,self.dest)
-            objs.get_mes(f,mes).show_error()
+            mes = mes.format(self.dir, self.dest)
+            objs.get_mes(f, mes).show_error()
 
 
 
 class Config:
 
-    def __init__(self,file):
+    def __init__(self, file):
         self.set_values()
         self.file = file
         self.check()
@@ -2702,7 +2681,7 @@ class Config:
         if self.Success:
             for option in globs['str'].keys():
                 if not '%%s' in globs['str'][option]:
-                    globs['str'][option] = globs['str'][option].replace('%%s','%s')
+                    globs['str'][option] = globs['str'][option].replace('%%s', '%s')
         else:
             com.cancel(f)
     
@@ -2710,15 +2689,15 @@ class Config:
         f = '[SharedQt] logic.Config.load'
         if self.Success:
             for option in globs['int'].keys():
-                globs['int'][option] = Input(f,globs['int'][option]).get_integer()
+                globs['int'][option] = Input(f, globs['int'][option]).get_integer()
         else:
             com.cancel(f)
     
-    def fail(self,f,e):
+    def fail(self, f, e):
         self.Success = False
         mes = _('Third-party module has failed!\n\nDetails: {}')
         mes = mes.format(e)
-        objs.get_mes(f,mes).show_error()
+        objs.get_mes(f, mes).show_error()
     
     def check(self):
         f = '[SharedQt] logic.Config.check'
@@ -2747,13 +2726,12 @@ class Config:
 
     def load(self):
         f = '[SharedQt] logic.Config.load'
-        ''' We can have KeyError on missing sections in 'globs'
-            (a programmer's mistake) but we do not catch them since
-            the program is highly likely to fail in such condition
-            anyway. By the same reason, the further KeyError check
-            is probably useless. 'configparser' can throw various
-            errors, including content errors, for example, if '%s'
-            in the config is not escaped as '%%s'.
+        ''' We can have KeyError on missing sections in 'globs' (a programmer's
+            mistake) but we do not catch them since the program is highly
+            likely to fail in such condition anyway. By the same reason, the
+            further KeyError check is probably useless. 'configparser' can
+            throw various errors, including content errors, for example, if
+            '%s' in the config is not escaped as '%%s'.
         '''
         if self.Success:
             sections = objs.get_sections().sections
@@ -2777,11 +2755,11 @@ class Config:
                     else:
                         self.no_sections.append(sections[i])
             except Exception as e:
-                self.fail(f,e)
+                self.fail(f, e)
         else:
             com.cancel(f)
     
-    def _indent(self,lst):
+    def _indent(self, lst):
         keys = [' ' * 4 + item for item in sorted(lst)]
         return '\n'.join(keys)
     
@@ -2823,10 +2801,10 @@ class Config:
         if self.Success:
             if self.no_keys or self.no_sections:
                 mes = self._get_formatted_report()
-                objs.get_mes(f,mes).show_warning()
+                objs.get_mes(f, mes).show_warning()
             else:
                 mes = self._get_plain_report()
-                objs.get_mes(f,mes,True).show_info()
+                objs.get_mes(f, mes, True).show_info()
         else:
             com.cancel(f)
 
@@ -2840,25 +2818,22 @@ class Config:
                             ,self.parser.getint
                             ,self.parser.get
                             ]
-                self.parser.read(self.file,'utf-8')
+                self.parser.read(self.file, 'utf-8')
             except Exception as e:
                 self.Success = False
                 mes = _('Third-party module has failed!\n\nDetails: {}')
                 mes = mes.format(e)
-                objs.get_mes(f,mes).show_error()
+                objs.get_mes(f, mes).show_error()
         else:
             com.cancel(f)
 
 
 
 class Online:
-    ''' If you get 'TypeError("quote_from_bytes() expected bytes")',
-        then you probably forgot to call 'self.reset' here or
-        in children classes.
+    ''' If you get 'TypeError("quote_from_bytes() expected bytes")', then you
+        probably forgot to call 'self.reset' here or in children classes.
     '''
-    def __init__ (self,base='%s',pattern=''
-                 ,coding='UTF-8'
-                 ):
+    def __init__(self, base='%s', pattern='', coding='UTF-8'):
         self.reset (base = base
                    ,pattern = pattern
                    ,coding = coding
@@ -2866,9 +2841,7 @@ class Online:
 
     def get_bytes(self):
         if not self.bytes:
-            self.bytes = bytes (self.pattern
-                               ,encoding = self.coding
-                               )
+            self.bytes = bytes(self.pattern, encoding=self.coding)
         return self.bytes
 
     # Open a URL in a default browser
@@ -2881,8 +2854,8 @@ class Online:
                             )
         except Exception as e:
             mes = _('Failed to open URL "{}" in a default browser!\n\nDetails: {}')
-            mes = mes.format(self.url,e)
-            objs.get_mes(f,mes).show_error()
+            mes = mes.format(self.url, e)
+            objs.get_mes(f, mes).show_error()
 
     # Create a correct online link (URI => URL)
     def get_url(self):
@@ -2890,12 +2863,10 @@ class Online:
         if not self.url:
             self.url = self.base % urllib.parse.quote(self.get_bytes())
             mes = str(self.url)
-            objs.get_mes(f,mes,True).show_debug()
+            objs.get_mes(f, mes, True).show_debug()
         return self.url
 
-    def reset (self,base='',pattern=''
-              ,coding='UTF-8'
-              ):
+    def reset(self, base='', pattern='', coding='UTF-8'):
         self.bytes = None
         self.url = None
         self.coding = coding
@@ -2906,21 +2877,18 @@ class Online:
 
 class Email:
     ''' Invoke a default email client with the required input.
-        Since there is no conventional way to programatically add
-        an attachment in the default email client, we attempt to call
-        Thunderbird, then Outlook, and finally mailto.
+        Since there is no conventional way to programatically add an attachment
+        in the default email client, we attempt to call Thunderbird, then
+        Outlook, and finally mailto.
         Using 'webbrowser.open' has the following shortcomings:
-        - A web browser is used to parse 'mailto' (we need to launch it
-          first)
-        - Instead of passing arguments to a mail agent, the web browser
-          can search all input online which is a security breach
-        - (AFAIK) Using this method, there is no standard way to add
-          an attachment. Currently, I managed to add attachments only
-          using CentOS6 + Palemoon + Thunderbird.
+        - a web browser is used to parse 'mailto' (we need to launch it first);
+        - instead of passing arguments to a mail agent, the web browser can
+          search all input online which is a security breach;
+        - (AFAIK) using this method, there is no standard way to add an
+          attachment. Currently, I managed to add attachments only using
+          CentOS6 + Palemoon + Thunderbird.
     '''
-    def __init__ (self,email='',subject=''
-                 ,message='',attach=''
-                 ):
+    def __init__(self, email='', subject='', message='', attach=''):
         if email:
             self.reset (email = email
                        ,subject = subject
@@ -2928,18 +2896,16 @@ class Email:
                        ,attach = attach
                        )
     
-    def reset (self,email,subject=''
-              ,message='',attach=''
-              ):
+    def reset(self, email, subject='', message='', attach=''):
         f = '[SharedQt] logic.Email.reset'
         self.Success = True
-        ''' A single address or multiple comma-separated addresses (not
-            all mail agents support ';'). #note that, however, Outlook
-            supports ONLY ';' and Evolution - only ','!
+        ''' A single address or multiple comma-separated addresses (not all
+            mail agents support ';'). #NOTE that, however, Outlook supports
+            ONLY ';' and Evolution - only ','!
         '''
         self.email = email
-        self.subject = Input(f,subject).get_not_none()
-        self.message = Input(f,message).get_not_none()
+        self.subject = Input(f, subject).get_not_none()
+        self.message = Input(f, message).get_not_none()
         self.attach = attach
         if not self.email:
             self.Success = False
@@ -2949,8 +2915,8 @@ class Email:
             if not self.Success:
                 com.cancel(f)
 
-    # Screen symbols that may cause problems when composing 'mailto'
-    def sanitize(self,value):
+    def sanitize(self, value):
+        # Escape symbols that may cause problems when composing 'mailto'
         f = '[SharedQt] logic.Email.sanitize'
         if self.Success:
             return str(Online(pattern=value).get_url())
@@ -2962,31 +2928,25 @@ class Email:
         if self.Success:
             try:
                 if self.attach:
-                    ''' - This is the last resort. Attaching a file
-                          worked for me only with CentOS6 + Palemoon +
-                          Thunderbird. Using another OS/browser/email
-                          client will probably call a default email
-                          client without the attachment.
-                        - Quotes are necessary for attachments only,
-                          they will stay visible otherwise.
+                    ''' - This is the last resort. Attaching a file worked for
+                          me only with CentOS6 + Palemoon + Thunderbird. Using
+                          another OS/browser/email client will probably call a
+                          default email client without the attachment.
+                        - Quotes are necessary for attachments only, they will
+                          stay visible otherwise.
                     '''
                     webbrowser.open ('mailto:%s?subject=%s&body=%s&attach="%s"'\
-                                    % (self.email
-                                      ,self.subject
-                                      ,self.message
+                                    % (self.email, self.subject, self.message
                                       ,self.attach
                                       )
                                     )
                 else:
                     webbrowser.open ('mailto:%s?subject=%s&body=%s' \
-                                    % (self.email
-                                      ,self.subject
-                                      ,self.message
-                                      )
+                                    % (self.email, self.subject, self.message)
                                     )
             except:
                 mes = _('Failed to load an e-mail client.')
-                objs.get_mes(f,mes).show_error()
+                objs.get_mes(f, mes).show_error()
         else:
             com.cancel(f)
     
@@ -3011,7 +2971,7 @@ class Email:
                 #https://stackoverflow.com/a/51993450
                 outlook = win32com.client.dynamic.Dispatch('outlook.application')
                 mail = outlook.CreateItem(0)
-                mail.To = self.email.replace(',',';')
+                mail.To = self.email.replace(',', ';')
                 mail.Subject = self.subject
                 mail.HtmlBody = '<html><body><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">%s</body></html>'\
                                 % self.message
@@ -3021,10 +2981,10 @@ class Email:
                 return True
             except Exception as e:
                 mes = _('Operation has failed!\nDetails: {}').format(e)
-                objs.get_mes(f,mes).show_error()
+                objs.get_mes(f, mes).show_error()
         else:
             mes = _('This operation cannot be executed on your operating system.')
-            objs.get_mes(f,mes).show_info()
+            objs.get_mes(f, mes).show_info()
     
     def run_thunderbird(self):
         f = '[SharedQt] logic.Email.run_thunderbird'
@@ -3032,26 +2992,22 @@ class Email:
             app = '/usr/bin/thunderbird'
             if os.path.isfile(app):
                 if self.attach:
-                    self.custom_args = [app,'-compose'
-                                       ,"to='%s',subject='%s',body='%s',attachment='%s'"\
-                                       % (self.email,self.subject
-                                         ,self.message,self.attach
+                    self.custom_args = [app, '-compose', "to='%s',subject='%s',body='%s',attachment='%s'"\
+                                       % (self.email, self.subject
+                                         ,self.message, self.attach
                                          )
                                        ]
                 else:
-                    self.custom_args = [app,'-compose'
-                                       ,"to='%s',subject='%s',body='%s'"\
-                                       % (self.email,self.subject
-                                         ,self.message
+                    self.custom_args = [app, '-compose', "to='%s',subject='%s',body='%s'"\
+                                       % (self.email, self.subject, self.message
                                          )
                                        ]
                 try:
                     subprocess.Popen(self.custom_args)
                     return True
                 except:
-                    mes = _('Failed to run "{}"!')
-                    mes = mes.format(self.custom_args)
-                    objs.get_mes(f,mes).show_error()
+                    mes = _('Failed to run "{}"!').format(self.custom_args)
+                    objs.get_mes(f, mes).show_error()
         else:
             com.cancel(f)
     

@@ -13,12 +13,12 @@ FONT2 = 'Sans 11'
 
 class Debug:
     
-    def __init__(self,func='__main__',mes=''):
+    def __init__(self, func='__main__', mes=''):
         self.set_gui()
         if mes:
-            self.reset(func,mes)
+            self.reset(func, mes)
     
-    def reset(self,func,mes):
+    def reset(self, func, mes):
         self.set_title(func)
         self.fill(mes)
     
@@ -28,12 +28,12 @@ class Debug:
         self.set_bindings()
     
     def set_bindings(self):
-        self.gui.bind('Escape',self.close)
+        self.gui.bind('Escape', self.close)
     
-    def fill(self,text):
+    def fill(self, text):
         self.gui.fill(text)
     
-    def set_title(self,title):
+    def set_title(self, title):
         self.gui.set_title(title)
     
     def show(self):
@@ -48,7 +48,7 @@ class Geometry:
     ''' Window behavior is not uniform through different platforms or even
         through different Windows versions.
     '''
-    def __init__(self,keyword=''):
+    def __init__(self, keyword=''):
         self.title = ''
         self.handle = ''
         self.keyword = keyword
@@ -61,19 +61,19 @@ class Geometry:
     def find_handle(self):
         f = '[shared] shared.Geometry.find_handle'
         try:
-            self.gui.enumerate(self.enumerate,self.keyword)
+            self.gui.enumerate(self.enumerate, self.keyword)
         except Exception as e:
-            com.rep_failed(f,e)
+            com.rep_failed(f, e)
     
-    def get_title(self,handle):
+    def get_title(self, handle):
         f = '[shared] shared.Geometry.find_handle'
         try:
             return self.gui.get_title(handle)
         except Exception as e:
-            com.rep_failed(f,e)
+            com.rep_failed(f, e)
         return ''
     
-    def enumerate(self,handle,arg=None):
+    def enumerate(self, handle, arg=None):
         # An extra argument is required by win32gui.EnumWindows
         if self.keyword in self.get_title(handle):
             self.handle = handle
@@ -84,15 +84,14 @@ class Geometry:
         try:
             self.gui.activate(self.handle)
         except Exception as e:
-            mes = _('Third-party module has failed!\n\nDetails: {}')
-            mes = mes.format(e)
-            objs.get_mes(f,mes,True).show_warning()
+            mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
+            objs.get_mes(f, mes, True).show_warning()
 
 
 
 class Color:
-    # Should accept a color name (/usr/share/X11/rgb.txt) or a hex value
-    def __init__(self,color):
+    # Accepts a color name (/usr/share/X11/rgb.txt) or a hex value
+    def __init__(self, color):
         self.color = color
         self.gui = gi.Color(color)
     
@@ -103,7 +102,7 @@ class Color:
             com.rep_empty(f)
         return self.gui.get_hex()
     
-    def modify(self,factor=150):
+    def modify(self, factor=150):
         ''' Make a color (a color name (/usr/share/X11/rgb.txt) or a hex value)
             brighter and darker.
         '''
@@ -112,26 +111,26 @@ class Color:
         darker = lighter = ''
         if not self.color:
             com.rep_empty(f)
-            return(darker,lighter)
+            return(darker, lighter)
         if factor <= 0:
-            mes = '{} > {}'.format(factor,0)
-            com.rep_condition(f,mes)
-            return(darker,lighter)
+            mes = f'{factor} > 0'
+            com.rep_condition(f, mes)
+            return(darker, lighter)
         try:
             darker, lighter = self.gui.modify(factor)
         except Exception as e:
-            com.rep_third_party(f,e)
-            return(darker,lighter)
+            com.rep_third_party(f, e)
+            return(darker, lighter)
         mes = _('Color: {}, darker: {}, lighter: {}')
-        mes = mes.format(self.color,darker,lighter)
-        objs.get_mes(f,mes,True).show_debug()
-        return(darker,lighter)
+        mes = mes.format(self.color, darker, lighter)
+        objs.get_mes(f, mes, True).show_debug()
+        return(darker, lighter)
 
 
 
 class FileDialog:
     
-    def __init__(self,parent=None,filter_='',folder='',caption=''):
+    def __init__(self, parent=None, filter_='', folder='', caption=''):
         self.parent = parent
         self.filter = filter_
         self.folder = folder
@@ -159,20 +158,20 @@ class FileDialog:
                                  ,filter_ = self.filter
                                  )
         except Exception as e:
-            com.rep_third_party(f,e)
+            com.rep_third_party(f, e)
         return file
 
 
 
 class ProgressBar:
     
-    def __init__(self,*args,**kwargs):
+    def __init__(self, *args, **kwargs):
         pass
     
-    def set_text(self,text=None):
+    def set_text(self, text=None):
         pass
     
-    def set_title(self,text=''):
+    def set_title(self, text=''):
         pass
     
     def add(self):
@@ -184,7 +183,7 @@ class ProgressBar:
     def close(self):
         pass
     
-    def update(self,count,limit):
+    def update(self, count, limit):
         #f = '[SharedQt] shared.ProgressBar.update'
         pass
 
@@ -192,7 +191,7 @@ class ProgressBar:
 
 class Font:
     
-    def __init__(self,widget,family,size):
+    def __init__(self, widget, family, size):
         self.Success = True
         self.font = None
         self.family = ''
@@ -202,11 +201,11 @@ class Font:
         self.size = size
         self.check()
     
-    def fail(self,f,e):
+    def fail(self, f, e):
         self.Success = False
         mes = _('Third-party module has failed!\n\nDetails: {}')
         mes = mes.format(e)
-        objs.get_mes(f,mes).show_error()
+        objs.get_mes(f, mes).show_error()
     
     def set_parent(self):
         f = '[SharedQt] shared.Font.set_parent'
@@ -214,9 +213,9 @@ class Font:
             com.cancel(f)
             return
         try:
-            self.gui.set_parent(self.widget,self.font)
+            self.gui.set_parent(self.widget, self.font)
         except Exception as e:
-            self.fail(f,e)
+            self.fail(f, e)
     
     def set_family(self):
         f = '[SharedQt] shared.Font.set_family'
@@ -224,9 +223,9 @@ class Font:
             com.cancel(f)
             return
         try:
-            self.gui.set_family(self.font,self.family)
+            self.gui.set_family(self.font, self.family)
         except Exception as e:
-            self.fail(f,e)
+            self.fail(f, e)
     
     def set_size(self):
         f = '[SharedQt] shared.Font.set_size'
@@ -234,9 +233,9 @@ class Font:
             com.cancel(f)
             return
         try:
-            self.gui.set_size(self.font,self.size)
+            self.gui.set_size(self.font, self.size)
         except Exception as e:
-            self.fail(f,e)
+            self.fail(f, e)
     
     def set_font(self):
         f = '[SharedQt] shared.Font.set_font'
@@ -246,7 +245,7 @@ class Font:
         try:
             self.font = self.gui.get_font()
         except Exception as e:
-            self.fail(f,e)
+            self.fail(f, e)
         
     def check(self):
         f = '[SharedQt] shared.Font.check'
@@ -277,14 +276,14 @@ class Entry:
         self.gui = gi.Entry()
         self.widget = self.gui.widget
     
-    def set_min_width(self,width):
+    def set_min_width(self, width):
         self.gui.set_min_width(width)
     
-    def set_max_width(self,width):
+    def set_max_width(self, width):
         self.gui.set_max_width(width)
     
-    def bind(self,hotkey,action):
-        self.gui.bind(hotkey,action)
+    def bind(self, hotkey, action):
+        self.gui.bind(hotkey, action)
     
     def reset(self):
         self.clear()
@@ -295,10 +294,10 @@ class Entry:
     def get(self):
         return self.gui.get()
     
-    def insert(self,text):
+    def insert(self, text):
         self.gui.insert(str(text))
     
-    def set_text(self,text):
+    def set_text(self, text):
         # Unlike with 'insert', no need to clear the entry first
         self.gui.set_text(str(text))
     
@@ -309,19 +308,19 @@ class Entry:
 
 class Top:
 
-    def __init__(self,title='',icon=''):
+    def __init__(self, title='', icon=''):
         self.gui = gi.Top()
         self.widget = self.gui.widget
         self.title = title
         self.icon = icon
     
-    def add_widget(self,item):
+    def add_widget(self, item):
         f = '[SharedQt] shared.Top.add_widget'
-        if hasattr(item,'widget'):
+        if hasattr(item, 'widget'):
             self.gui.add_widget(item.widget)
         else:
             mes = _('Wrong input data!')
-            objs.get_mes(f,mes,True).show_error()
+            objs.get_mes(f, mes, True).show_error()
     
     def show(self):
         self.gui.show()
@@ -329,45 +328,45 @@ class Top:
     def close(self):
         self.gui.close()
     
-    def bind(self,hotkey,action):
-        self.gui.bind(hotkey,action)
+    def bind(self, hotkey, action):
+        self.gui.bind(hotkey, action)
 
 
 
 class TestTop(Top):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.set_bindings()
     
     def set_bindings(self):
-        self.bind('Ctrl+Q',self.close)
-        self.bind('Esc',self.close)
+        self.bind('Ctrl+Q', self.close)
+        self.bind('Esc', self.close)
 
 
 
 class OptionMenu:
     
-    def __init__ (self,items=[],default=None,font_family=None,font_size=None
-                 ,action=None):
+    def __init__ (self, items=[], default=None, font_family=None
+                 ,font_size=None, action=None):
         self.items = []
         self.action = action
         self.gui = gi.OptionMenu()
         self.widget = self.gui.widget
         # Qt changes default font family upon receiving None
         if font_family and font_size:
-            self.gui.set_font(font_family,font_size)
+            self.gui.set_font(font_family, font_size)
         if items:
-            self.reset(items,default)
+            self.reset(items, default)
         self.set_action()
         
-    def set_action(self,action=None):
+    def set_action(self, action=None):
         if action:
             self.action = action
         if self.action:
             self.widget.activated.connect(self.action)
     
-    def change_font_size(self,delta=1):
+    def change_font_size(self, delta=1):
         f = '[SharedQt] shared.OptionMenu.change_font_size'
         size = self.gui.get_font_size()
         if not size:
@@ -375,7 +374,7 @@ class OptionMenu:
             return
         if size + delta <= 0:
             mes = f'{size} + {delta} > 0'
-            com.rep_condition(f,mes)
+            com.rep_condition(f, mes)
             return
         self.gui.set_font_size(size+delta)
     
@@ -385,20 +384,20 @@ class OptionMenu:
     def disable(self):
         self.gui.disable()
         
-    def set(self,item):
+    def set(self, item):
         f = '[SharedQt] shared.OptionMenu.set'
         item = str(item)
         if item in self.items:
             self.gui.set(item)
         else:
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
-            mes = mes.format(item,'; '.join(self.items))
-            objs.get_mes(f,mes).show_error()
+            mes = mes.format(item, '; '.join(self.items))
+            objs.get_mes(f, mes).show_error()
     
     def fill(self):
         self.gui.fill(self.items)
 
-    def reset(self,items=[],default=None):
+    def reset(self, items=[], default=None):
         self.items = [str(item) for item in items]
         self.fill()
         if default is not None:
@@ -414,7 +413,7 @@ class OptionMenu:
     def get_index(self):
         return self.gui.get_index()
     
-    def set_index(self,index_):
+    def set_index(self, index_):
         return self.gui.set_index(index_)
 
     def set_prev(self):
@@ -437,14 +436,14 @@ class OptionMenu:
 
 class Button(gi.Button):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class DummyMessage:
 
-    def __init__(self,*args):
+    def __init__(self, *args):
         pass
 
     def show_debug(self):
@@ -466,186 +465,186 @@ class DummyMessage:
 
 class CreateConfig(lg.CreateConfig):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Config(lg.Config):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class DefaultKeys(lg.DefaultKeys):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Dic(lg.Dic):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Directory(lg.Directory):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Email(lg.Email):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class FastTable(lg.FastTable):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class File(lg.File):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Get(lg.Get):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Home(lg.Home):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Input(lg.Input):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Launch(lg.Launch):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class List(lg.List):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Log(lg.Log):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class OSSpecific(lg.OSSpecific):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Online(lg.Online):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class ProgramDir(lg.ProgramDir):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Path(lg.Path):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class ReadTextFile(lg.ReadTextFile):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Search(lg.Search):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Text(lg.Text):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class TextDic(lg.TextDic):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Time(lg.Time):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Timer(lg.Timer):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class WriteTextFile(lg.WriteTextFile):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 
 class Clipboard:
 
-    def __init__(self,Silent=False):
+    def __init__(self, Silent=False):
         self.Silent = Silent
         self.gui = gi.Clipboard()
 
-    def copy(self,text,CopyEmpty=True):
+    def copy(self, text, CopyEmpty=True):
         f = '[SharedQt] shared.Clipboard.copy'
         if not (text or CopyEmpty):
             com.rep_empty(f)
@@ -653,7 +652,7 @@ class Clipboard:
         try:
             self.gui.copy(text)
         except Exception as e:
-            com.rep_failed(f,e,self.Silent)
+            com.rep_failed(f, e, self.Silent)
 
     def paste(self):
         f = '[SharedQt] shared.Clipboard.paste'
@@ -661,7 +660,7 @@ class Clipboard:
             text = self.gui.paste()
         except Exception as e:
             text = ''
-            com.rep_failed(f,e,self.Silent)
+            com.rep_failed(f, e, self.Silent)
         # Further possible actions: strip, delete double line breaks
         return text
 
@@ -678,17 +677,14 @@ class Objects(lg.Objects):
         self.question = self.info = self.warning = self.debug = self.error \
                       = self.mes = self.waitbox = None
     
-    def get_mes (self,func='Logic error'
-                ,message='Logic error'
-                ,Silent=False
-                ):
+    def get_mes(self, func='Logic error', message='Logic error', Silent=False):
         if STOP_MES:
             return DummyMessage()
         if self.mes is None:
             self.mes = Message
-        return self.mes(func,message,Silent)
+        return self.mes(func, message, Silent)
     
-    def get_waitbox(self,icon=''):
+    def get_waitbox(self, icon=''):
         if self.waitbox is None:
             if not icon:
                 icon = self.icon
@@ -730,7 +726,7 @@ class Objects(lg.Objects):
 
 class Message:
 
-    def __init__(self,func,message,Silent=False):
+    def __init__(self, func, message, Silent=False):
         self.func = func
         self.message = str(message)
         self.Silent = Silent
@@ -738,7 +734,7 @@ class Message:
 
     def set_detailed(self):
         sub = _('Code block: {}').format(self.func)
-        self.detailed = '{}\n\n{}'.format(self.message,sub)
+        self.detailed = f'{self.message}\n\n{sub}'
     
     def show_debug(self):
         if GUI_MES and not self.Silent:
@@ -780,7 +776,7 @@ class Message:
         if GUI_MES and not self.Silent:
             objs.get_question().set_text(self.detailed)
             objs.question.show()
-            lg.log.append(self.func,'question',self.message)
+            lg.log.append(self.func, 'question', self.message)
             #cur
             '''
             answer = objs.question.ask()
@@ -801,7 +797,7 @@ class Commands(lg.Commands):
     def __init__(self):
         super().__init__()
         
-    def get_image(self,path,width,height):
+    def get_image(self, path, width, height):
         f = '[SharedQt] shared.Commands.get_image'
         try:
             return gi.com.get_image (path = path
@@ -810,7 +806,7 @@ class Commands(lg.Commands):
                                     )
         except Exception as e:
             mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
-            objs.get_mes(f,mes,True).show_warning()
+            objs.get_mes(f, mes, True).show_warning()
     
     def debug_globs(self):
         f = '[SharedQt] shared.Commands.debug_globs'
@@ -840,8 +836,8 @@ class Commands(lg.Commands):
                 else:
                     cur_sec = sections[i]
                 i += 1
-        iterable = [sections,keys,values]
-        headers = (_('SECTION'),_('KEY'),_('VALUE'))
+        iterable = [sections, keys, values]
+        headers = (_('SECTION'), _('KEY'), _('VALUE'))
         mes = FastTable (iterable = iterable
                         ,headers = headers
                         ,maxrow = 50
@@ -858,15 +854,15 @@ class Commands(lg.Commands):
 
 class CheckBox:
     
-    def __init__(self,text='',font_family=None,font_size=None):
+    def __init__(self, text='', font_family=None, font_size=None):
         self.gui = gi.CheckBox()
         self.widget = self.gui.widget
         self.gui.set_text(text)
         # Qt changes default font family upon receiving None
         if font_family and font_size:
-            self.gui.set_font(font_family,font_size)
+            self.gui.set_font(font_family, font_size)
     
-    def change_font_size(self,delta=1):
+    def change_font_size(self, delta=1):
         f = '[SharedQt] shared.CheckBox.change_font_size'
         size = self.gui.get_font_size()
         if not size:
@@ -874,14 +870,14 @@ class CheckBox:
             return
         if size + delta <= 0:
             mes = f'{size} + {delta} > 0'
-            com.rep_condition(f,mes)
+            com.rep_condition(f, mes)
             return
         self.gui.set_font_size(size+delta)
     
     def get(self):
         return self.gui.get()
     
-    def set(self,value):
+    def set(self, value):
         if value:
             self.enable()
         else:
@@ -900,15 +896,15 @@ class CheckBox:
 
 class Label:
     
-    def __init__(self,text='',font_family=None,font_size=None):
+    def __init__(self, text='', font_family=None, font_size=None):
         self.gui = gi.Label()
         self.widget = self.gui.widget
         self.set_text(text)
         # Qt changes default font family upon receiving None
         if font_family and font_size:
-            self.gui.set_font(font_family,font_size)
+            self.gui.set_font(font_family, font_size)
     
-    def change_font_size(self,delta=1):
+    def change_font_size(self, delta=1):
         f = '[SharedQt] shared.Label.change_font_size'
         size = self.gui.get_font_size()
         if not size:
@@ -916,11 +912,11 @@ class Label:
             return
         if size + delta <= 0:
             mes = f'{size} + {delta} > 0'
-            com.rep_condition(f,mes)
+            com.rep_condition(f, mes)
             return
         self.gui.set_font_size(size+delta)
     
-    def set_text(self,text):
+    def set_text(self, text):
         if not text:
             text = '[SharedQt] shared.Label.set_text'
         self.gui.set_text(text)
@@ -938,7 +934,7 @@ if __name__ == '__main__':
     com.start()
     #lg.ReadTextFile('/tmp/aaa').get()
     #Geometry(Top()).activate()
-    idebug = Debug(f,'Here should be some debug info')
+    idebug = Debug(f, 'Here should be some debug info')
     # This MUST be on a separate line, the widget will not be shown otherwise
     idebug.show()
     com.end()

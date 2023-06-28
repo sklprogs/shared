@@ -10,7 +10,7 @@ import skl_shared_qt.shared as sh
 
 class WebPage:
     
-    def __init__(self,code):
+    def __init__(self, code):
         self.code = code
     
     def make_pretty(self):
@@ -27,6 +27,6 @@ class WebPage:
         except Exception as e:
             mes = _('Third-party module has failed!\n\nDetails: {}')
             mes = mes.format(e)
-            sh.objs.get_mes(f,mes).show_error()
+            sh.objs.get_mes(f, mes).show_error()
             return self.code
         return ''

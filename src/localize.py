@@ -19,7 +19,7 @@ class Localization:
         self.iloc = None
         self.load()
     
-    def translate(self,string):
+    def translate(self, string):
         if not self.Success:
             return string
         try:
@@ -37,11 +37,11 @@ class Localization:
             print('Failed to localize the app!')
             return
         prefix = os.path.dirname(sys.argv[0])
-        path = os.path.join(prefix,'..','resources','locale')
+        path = os.path.join(prefix, '..', 'resources', 'locale')
         path = os.path.realpath(path)
         print('Search the translation file in "{}"'.format(path))
         try:
-            self.iloc = gettext.translation('transl',path)
+            self.iloc = gettext.translation('transl', path)
         except Exception as e:
             self.Success = False                
             e = str(e)

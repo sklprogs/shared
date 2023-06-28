@@ -12,8 +12,8 @@ ICON = ''
 
 class Debug(PyQt5.QtWidgets.QWidget):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.set_gui()
     
     def set_icon(self):
@@ -23,17 +23,17 @@ class Debug(PyQt5.QtWidgets.QWidget):
     def centralize(self):
         self.move(objs.get_root().desktop().screen().rect().center() - self.rect().center())
     
-    def fill(self,text):
+    def fill(self, text):
         self.textbox.clear()
-        self.cursor.insertText(text,self.char_fmt)
+        self.cursor.insertText(text, self.char_fmt)
         self.textbox.moveCursor(self.cursor.Start)
     
-    def set_title(self,title):
+    def set_title(self, title):
         self.setWindowTitle(title)
     
     def set_layout(self):
         self.layout_ = PyQt5.QtWidgets.QVBoxLayout()
-        self.layout_.setContentsMargins(0,0,0,0)
+        self.layout_.setContentsMargins(0, 0, 0, 0)
     
     def set_gui(self):
         self.set_layout()
@@ -43,13 +43,13 @@ class Debug(PyQt5.QtWidgets.QWidget):
         self.char_fmt = self.cursor.charFormat()
         self.textbox.setDocument(self.doc)
         self.textbox.setReadOnly(True)
-        self.font = PyQt5.QtGui.QFont('Mono',11)
+        self.font = PyQt5.QtGui.QFont('Mono', 11)
         self.char_fmt.setFont(self.font)
         self.layout_.addWidget(self.textbox)
         self.setLayout(self.layout_)
     
-    def bind(self,hotkey,action):
-        PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey),self).activated.connect(action)
+    def bind(self, hotkey, action):
+        PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey), self).activated.connect(action)
     
     def show_maximized(self):
         self.showMaximized()
@@ -58,7 +58,7 @@ class Debug(PyQt5.QtWidgets.QWidget):
 
 class Color:
     
-    def __init__(self,color):
+    def __init__(self, color):
         ''' This accepts everything without exceptions - None, '', hex value,
             color name, even gibberish. Default color is black.
         '''
@@ -67,16 +67,16 @@ class Color:
     def get_hex(self):
         return self.qcolor.name()
     
-    def modify(self,factor):
+    def modify(self, factor):
         darker = self.qcolor.darker(factor).name()
         lighter = self.qcolor.lighter(factor).name()
-        return(darker,lighter)
+        return(darker, lighter)
 
 
 
 class FileDialog:
     
-    def __init__(self,parent=None):
+    def __init__(self, parent=None):
         #NOTE: A widget is required here, not a wrapper
         self.parent = parent
     
@@ -87,7 +87,7 @@ class FileDialog:
         if not self.parent:
             self.parent = PyQt5.QtWidgets.QWidget()
     
-    def save(self,caption,folder,filter_):
+    def save(self, caption, folder, filter_):
         # Empty output is ('', '')
         return PyQt5.QtWidgets.QFileDialog.getSaveFileName (parent = self.parent
                                                            ,caption = caption
@@ -102,7 +102,7 @@ class Clipboard:
     def __init__(self):
         self.clipboard = objs.get_root().clipboard()
     
-    def copy(self,text):
+    def copy(self, text):
         self.clipboard.setText(text)
     
     def paste(self):
@@ -115,31 +115,31 @@ class Font:
     def get_font(self):
         return PyQt5.QtGui.QFont()
     
-    def set_parent(self,widget,ifont):
+    def set_parent(self, widget, ifont):
         widget.setFont(ifont)
     
-    def set_family(self,ifont,family):
+    def set_family(self, ifont, family):
         ifont.setFamily(family)
     
-    def set_size(self,ifont,size):
+    def set_size(self, ifont, size):
         ifont.setPointSize(size)
 
 
 
 class Entry:
     
-    def __init__(self,parent=None):
+    def __init__(self, parent=None):
         self.parent = None
         self.set_gui()
     
-    def set_min_width(self,width):
+    def set_min_width(self, width):
         self.widget.setMinimumWidth(width)
     
-    def set_max_width(self,width):
+    def set_max_width(self, width):
         self.widget.setMaximumWidth(width)
     
-    def bind(self,hotkey,action):
-        PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey),self.widget).activated.connect(action)
+    def bind(self, hotkey, action):
+        PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey), self.widget).activated.connect(action)
     
     def set_gui(self):
         self.widget = PyQt5.QtWidgets.QLineEdit(self.parent)
@@ -150,10 +150,10 @@ class Entry:
     def get(self):
         return self.widget.text()
     
-    def insert(self,text):
+    def insert(self, text):
         self.widget.insert(text)
     
-    def set_text(self,text):
+    def set_text(self, text):
         self.widget.setText(text)
     
     def focus(self):
@@ -163,20 +163,20 @@ class Entry:
 
 class Top(PyQt5.QtWidgets.QWidget):
 
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.set_gui()
     
-    def add_widget(self,widget):
+    def add_widget(self, widget):
         self.layout.addWidget(widget)
     
-    def bind(self,hotkey,action):
-        PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey),self).activated.connect(action)
+    def bind(self, hotkey, action):
+        PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey), self).activated.connect(action)
     
     def set_gui(self):
         self.widget = self
         self.layout = PyQt5.QtWidgets.QVBoxLayout()
-        self.layout.setContentsMargins(0,0,0,0)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.layout)
 
 
@@ -192,13 +192,13 @@ class OptionMenu:
         if size > 0:
             return size
     
-    def set_font_size(self,size):
+    def set_font_size(self, size):
         qfont = self.widget.font()
         qfont.setPointSize(size)
         self.widget.setFont(qfont)
     
-    def set_font(self,family,size):
-        self.widget.setFont(PyQt5.QtGui.QFont(family,size))
+    def set_font(self, family, size):
+        self.widget.setFont(PyQt5.QtGui.QFont(family, size))
     
     def enable(self):
         self.widget.setEnabled(True)
@@ -206,10 +206,10 @@ class OptionMenu:
     def disable(self):
         self.widget.setEnabled(False)
         
-    def set(self,item):
+    def set(self, item):
         self.widget.setCurrentText(item)
     
-    def fill(self,items):
+    def fill(self, items):
         self.widget.clear()
         self.widget.addItems(items)
 
@@ -219,15 +219,15 @@ class OptionMenu:
     def get_index(self):
         return self.widget.currentIndex()
     
-    def set_index(self,index_):
+    def set_index(self, index_):
         return self.widget.setCurrentIndex(index_)
 
 
 
 class Button:
     
-    def __init__ (self,text='',action=None,parent=None,width=36
-                 ,height=36,hint='',active='',inactive=''
+    def __init__ (self, text='', action=None, parent=None, width=36, height=36
+                 ,hint='' ,active='', inactive=''
                  ):
         self.Status = False
         self.parent = parent
@@ -257,7 +257,7 @@ class Button:
             self.widget.setToolTip(self.hint)
     
     def resize(self):
-        self.widget.resize(self.width,self.height)
+        self.widget.resize(self.width, self.height)
     
     def set_icon(self):
         ''' Setting a button image with
@@ -269,20 +269,20 @@ class Button:
     
     def set_size(self):
         if self.width and self.height:
-            self.widget.setIconSize(PyQt5.QtCore.QSize(self.width,self.height))
+            self.widget.setIconSize(PyQt5.QtCore.QSize(self.width, self.height))
     
     def set_border(self):
         if self.icon:
             self.widget.setStyleSheet('border: 0px')
     
-    def set_action(self,action=None):
+    def set_action(self, action=None):
         if action:
             self.action = action
         if self.action:
             self.widget.clicked.connect(self.action)
     
     def set_gui(self):
-        self.widget = PyQt5.QtWidgets.QPushButton(self.text,self.parent)
+        self.widget = PyQt5.QtWidgets.QPushButton(self.text, self.parent)
         self.resize()
         self.set_icon()
         self.set_size()
@@ -296,16 +296,16 @@ class Button:
 
 class Message(PyQt5.QtWidgets.QMessageBox):
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         
-    def set_text(self,text):
+    def set_text(self, text):
         self.setText(text)
     
-    def set_title(self,text):
+    def set_title(self, text):
         self.setWindowTitle(text)
         
-    def set_icon(self,obj):
+    def set_icon(self, obj):
         self.setIcon(obj)
     
     def get_error(self):
@@ -369,16 +369,12 @@ class Objects:
 
     def get_question(self):
         if self.question is None:
-            self.question = MessageBuilder (parent = self.get_root()
-                                           ,level = _('QUESTION')
-                                           )
+            self.question = Message().get_question()
         return self.question
 
     def get_info(self):
         if self.info is None:
-            self.info = MessageBuilder (parent = self.get_root()
-                                       ,level = _('INFO')
-                                       )
+            self.info = Message().get_info()
         return self.info
 
 
@@ -394,7 +390,7 @@ class CheckBox:
         if size > 0:
             return size
     
-    def set_font_size(self,size):
+    def set_font_size(self, size):
         qfont = self.widget.font()
         qfont.setPointSize(size)
         self.widget.setFont(qfont)
@@ -402,8 +398,8 @@ class CheckBox:
     def set_gui(self):
         self.widget = PyQt5.QtWidgets.QCheckBox()
     
-    def set_font(self,family,size):
-        self.widget.setFont(PyQt5.QtGui.QFont(family,size))
+    def set_font(self, family, size):
+        self.widget.setFont(PyQt5.QtGui.QFont(family, size))
     
     def get(self):
         return self.widget.isChecked()
@@ -420,7 +416,7 @@ class CheckBox:
         else:
             self.enable()
     
-    def set_text(self,text=''):
+    def set_text(self, text=''):
         if text:
             self.widget.setText(text)
 
@@ -437,7 +433,7 @@ class Label:
         if size > 0:
             return size
     
-    def set_font_size(self,size):
+    def set_font_size(self, size):
         qfont = self.widget.font()
         qfont.setPointSize(size)
         self.widget.setFont(qfont)
@@ -445,15 +441,15 @@ class Label:
     def set_gui(self):
         self.widget = PyQt5.QtWidgets.QLabel()
     
-    def set_text(self,text):
+    def set_text(self, text):
         self.widget.setText(text)
     
-    def set_font(self,family,size):
-        self.widget.setFont(PyQt5.QtGui.QFont(family,size))
+    def set_font(self, family, size):
+        self.widget.setFont(PyQt5.QtGui.QFont(family, size))
 
 
 
-''' If there are problems with import or tkinter's wait_variable, put this
+''' If there are issues with import or tkinter's wait_variable, put this
     beneath 'if __name__'.
 '''
 objs = Objects()

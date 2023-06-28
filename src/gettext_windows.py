@@ -90,7 +90,7 @@ def get_language_other(system_lang=True):
 
 
 def _get_lang_env_var():
-    for i in ('LANGUAGE','LC_ALL','LC_MESSAGES','LANG'):
+    for i in ('LANGUAGE', 'LC_ALL', 'LC_MESSAGES', 'LANG'):
         lang = os.environ.get(i)
         if lang:
             return lang
