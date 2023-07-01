@@ -3217,7 +3217,7 @@ class Get:
         try:
             req = urllib.request.Request (url = self.url
                                          ,data = None
-                                         ,headers = {'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'}
+                                         ,headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'}
                                          )
             self.html = urllib.request.urlopen(req, timeout=self.timeout).read()
             if self.Verbose:
@@ -3225,8 +3225,7 @@ class Get:
                 objs.get_mes(f, mes, True).show_info()
         # Too many possible exceptions
         except Exception as e:
-            mes = _('[FAILED]: "{}". Details: {}')
-            mes = mes.format(self.url, e)
+            mes = _('[FAILED]: "{}". Details: {}').format(self.url, e)
             objs.get_mes(f, mes, True).show_warning()
     
     def decode(self):
