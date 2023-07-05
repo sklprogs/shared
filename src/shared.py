@@ -230,6 +230,15 @@ class Entry:
         self.gui = gi.Entry()
         self.widget = self.gui.widget
     
+    def get_width(self):
+        return self.gui.get_width()
+    
+    def get_root_y(self):
+        return self.gui.get_root_y()
+    
+    def get_x(self):
+        return self.gui.get_x()
+    
     def set_min_width(self, width):
         self.gui.set_min_width(width)
     

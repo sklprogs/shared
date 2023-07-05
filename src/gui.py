@@ -132,6 +132,15 @@ class Entry:
         self.parent = None
         self.set_gui()
     
+    def get_width(self):
+        return self.widget.width()
+    
+    def get_root_y(self):
+        return self.widget.frameGeometry().y()
+    
+    def get_x(self):
+        return self.widget.pos().x()
+    
     def set_min_width(self, width):
         self.widget.setMinimumWidth(width)
     
