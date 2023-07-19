@@ -28,7 +28,7 @@ class Debug:
         self.set_bindings()
     
     def set_bindings(self):
-        self.gui.bind('Escape', self.close)
+        self.gui.bind(('Escape',), self.close)
     
     def fill(self, text):
         self.gui.fill(text)
@@ -245,8 +245,8 @@ class Entry:
     def set_max_width(self, width):
         self.gui.set_max_width(width)
     
-    def bind(self, hotkey, action):
-        self.gui.bind(hotkey, action)
+    def bind(self, hotkeys, action):
+        self.gui.bind(hotkeys, action)
     
     def reset(self):
         self.clear()
@@ -291,8 +291,8 @@ class Top:
     def close(self):
         self.gui.close()
     
-    def bind(self, hotkey, action):
-        self.gui.bind(hotkey, action)
+    def bind(self, hotkeys, action):
+        self.gui.bind(hotkeys, action)
 
 
 
@@ -303,8 +303,8 @@ class TestTop(Top):
         self.set_bindings()
     
     def set_bindings(self):
-        self.bind('Ctrl+Q', self.close)
-        self.bind('Esc', self.close)
+        self.bind(('Ctrl+Q',), self.close)
+        self.bind(('Esc',), self.close)
 
 
 

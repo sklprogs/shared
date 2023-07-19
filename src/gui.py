@@ -48,8 +48,9 @@ class Debug(PyQt5.QtWidgets.QWidget):
         self.layout_.addWidget(self.textbox)
         self.setLayout(self.layout_)
     
-    def bind(self, hotkey, action):
-        PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey), self).activated.connect(action)
+    def bind(self, hotkeys, action):
+        for hotkey in hotkeys:
+            PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey), self).activated.connect(action)
     
     def show_maximized(self):
         self.showMaximized()
@@ -147,8 +148,9 @@ class Entry:
     def set_max_width(self, width):
         self.widget.setMaximumWidth(width)
     
-    def bind(self, hotkey, action):
-        PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey), self.widget).activated.connect(action)
+    def bind(self, hotkeys, action):
+        for hotkey in hotkeys:
+            PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey), self).activated.connect(action)
     
     def set_gui(self):
         self.widget = PyQt5.QtWidgets.QLineEdit(self.parent)
@@ -179,8 +181,9 @@ class Top(PyQt5.QtWidgets.QWidget):
     def add_widget(self, widget):
         self.layout.addWidget(widget)
     
-    def bind(self, hotkey, action):
-        PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey), self).activated.connect(action)
+    def bind(self, hotkeys, action):
+        for hotkey in hotkeys:
+            PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey), self).activated.connect(action)
     
     def set_gui(self):
         self.widget = self
