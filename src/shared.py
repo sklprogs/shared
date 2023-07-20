@@ -426,34 +426,6 @@ class DummyMessage:
 
 
 
-class CreateConfig(lg.CreateConfig):
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-
-class Config(lg.Config):
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-
-class DefaultKeys(lg.DefaultKeys):
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-
-class Dic(lg.Dic):
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-
 class Directory(lg.Directory):
     
     def __init__(self, *args, **kwargs):
@@ -567,13 +539,6 @@ class Search(lg.Search):
 
 
 class Text(lg.Text):
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-
-class TextDic(lg.TextDic):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -770,42 +735,6 @@ class Commands(lg.Commands):
         except Exception as e:
             mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
             objs.get_mes(f, mes, True).show_warning()
-    
-    def debug_globs(self):
-        f = '[SharedQt] shared.Commands.debug_globs'
-        sections = []
-        keys = []
-        values = []
-        mes = ''
-        if not lg.globs:
-            com.rep_empty(f)
-            return f + ':\n' + mes
-        for abbr in objs.get_sections().abbr:
-            if 'dict' in str(type(lg.globs[abbr])):
-                for key in sorted(lg.globs[abbr].keys()):
-                    sections.append(objs.sections.get_section(abbr))
-                    keys.append(key)
-                    values.append(lg.globs[abbr][key])
-            else:
-                sections.append(objs.sections.get_section(abbr))
-                keys.append(_('N/A'))
-                values.append(lg.globs[abbr])
-        if len(sections) > 1:
-            i = 1
-            cur_sec = sections[0]
-            while i < len(sections):
-                if sections[i] == cur_sec:
-                    sections[i] = ''
-                else:
-                    cur_sec = sections[i]
-                i += 1
-        iterable = [sections, keys, values]
-        headers = (_('SECTION'), _('KEY'), _('VALUE'))
-        mes = FastTable (iterable = iterable
-                        ,headers = headers
-                        ,maxrow = 50
-                        ).run()
-        return f + ':\n' + mes
     
     def start(self):
         gi.objs.start()

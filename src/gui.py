@@ -150,7 +150,7 @@ class Entry:
     
     def bind(self, hotkeys, action):
         for hotkey in hotkeys:
-            PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey), self).activated.connect(action)
+            PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey), self.widget).activated.connect(action)
     
     def set_gui(self):
         self.widget = PyQt5.QtWidgets.QLineEdit(self.parent)
