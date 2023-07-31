@@ -654,10 +654,11 @@ class Objects(lg.Objects):
 
 class Message:
 
-    def __init__(self, func, message, Silent=False):
+    def __init__(self, func, message, Silent=False, Block=True):
         self.func = func
         self.message = str(message)
         self.Silent = Silent
+        self.Block = Block
         self.set_detailed()
 
     def set_detailed(self):
@@ -667,7 +668,10 @@ class Message:
     def show_debug(self):
         if GUI_MES and not self.Silent:
             objs.get_debug().set_text(self.detailed)
-            objs.debug.show()
+            if self.Block:
+                objs.debug.exec()
+            else:
+                objs.debug.show()
         # Duplicate the message to the console
         lg.Message (func = self.func
                    ,message = self.message
@@ -676,7 +680,10 @@ class Message:
     def show_error(self):
         if GUI_MES and not self.Silent:
             objs.get_error().set_text(self.detailed)
-            objs.error.show()
+            if self.Block:
+                objs.error.exec()
+            else:
+                objs.error.show()
         # Duplicate the message to the console
         lg.Message (func = self.func
                    ,message = self.message
@@ -685,7 +692,10 @@ class Message:
     def show_info(self):
         if GUI_MES and not self.Silent:
             objs.get_info().set_text(self.detailed)
-            objs.info.show()
+            if self.Block:
+                objs.info.exec()
+            else:
+                objs.info.show()
         # Duplicate the message to the console
         lg.Message (func = self.func
                    ,message = self.message
@@ -694,7 +704,10 @@ class Message:
     def show_warning(self):
         if GUI_MES and not self.Silent:
             objs.get_warning().set_text(self.detailed)
-            objs.warning.show()
+            if self.Block:
+                objs.warning.exec()
+            else:
+                objs.warning.show()
         # Duplicate the message to the console
         lg.Message (func = self.func
                    ,message = self.message
@@ -703,7 +716,8 @@ class Message:
     def show_question(self):
         if GUI_MES and not self.Silent:
             objs.get_question().set_text(self.detailed)
-            objs.question.show()
+            # There is not reason in showing non-blocking question dialogs
+            objs.question.exec()
             lg.log.append(self.func, 'question', self.message)
             #cur
             '''
