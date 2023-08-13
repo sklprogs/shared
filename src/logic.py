@@ -733,8 +733,13 @@ class Input:
         self.title = title
         self.value = value
 
-    def check_float(self):
-        if not isinstance(self.value, float):
+    def get_float(self):
+        ''' Try-except method allows to convert value from integers and strings
+            (useful for configuration files).
+        '''
+        try:
+            return float(self.value)
+        except ValueError:
             mes = _('Float is required at input, but found "{}"! Return 0.0')
             mes = mes.format(self.value)
             objs.get_mes(self.title, mes).show_warning()
