@@ -306,7 +306,7 @@ class Config:
             return
         if self.ilocal.Success:
             mes = _('Update default configuration')
-            self.new = self.idefault.get() | self.ilocal.get()
+            self.new = Update(self.idefault.get(), self.ilocal.get()).run()
         else:
             mes = _('Use default configuration')
             self._copy()
@@ -361,3 +361,75 @@ class Config:
     def run(self):
         self.load()
         self.update()
+
+
+
+class Update:
+    
+    def __init__(self, d1, d2):
+        ''' Merge two dictionaries such that all existing keys are kept
+            (including those of embedded dictionaries ('branches')), empty
+            branches and diverting non-dictionary items are overwritten.
+            'd1 | d2' is not enough since that will delete sections not present
+            in d2.
+        '''
+        self.new_keys = 0
+        self.mod_keys = 0
+        self.d1 = d1
+        self.d2 = d2
+        ''' Global dictionaries modified inside this class will inherit
+            changes, so we need to create a clone.
+        '''
+        self.new = copy.deepcopy(self.d1)
+
+    def report(self):
+        f = '[SharedQt] config.Update.report'
+        mes = _('Modified keys: {}').format(self.mod_keys)
+        sh.objs.get_mes(f, mes, True).show_info()
+        mes = _('New keys: {}').format(self.new_keys)
+        sh.objs.get_mes(f, mes, True).show_info()
+    
+    def debug(self):
+        f = '[SharedQt] config.Update.debug'
+        try:
+            return json.dumps(self.new, ensure_ascii=False, indent=4)
+        except Exception as e:
+            sh.com.rep_third_party(f, e)
+        return self.new
+    
+    def iterate(self, section1, section2):
+        f = '[SharedQt] config.Update.iterate'
+        for key2 in section2:
+            if not key2 in section1:
+                if isinstance(section2[key2], dict):
+                    mes = _('New branch: "{}"').format(key2)
+                else:
+                    mes = _('New value: "{}"').format(key2)
+                self.new_keys += 1
+                sh.objs.get_mes(f, mes, True).show_debug()
+                section1[key2] = section2[key2]
+        for key1 in section1:
+            if not key1 in section2:
+                continue
+            if section1[key1] == section2[key1]:
+                continue
+            if isinstance(section1[key1], dict) and isinstance(section2[key1], dict):
+                if not section1[key1]:
+                    self.mod_keys += 1
+                    mes = _('Overwrite empty "{}" branch with "{}"')
+                    mes = mes.format(key1, section2[key1])
+                    sh.objs.get_mes(f, mes, True).show_debug()
+                    section1[key1] = section2[key1]
+                    continue
+                self.iterate(section1[key1], section2[key1])
+            elif section1[key1] != section2[key1]:
+                self.mod_keys += 1
+                mes = _('Update "{}" branch value: {} -> {}')
+                mes = mes.format(key1, section1[key1], section2[key1])
+                sh.objs.get_mes(f, mes, True).show_debug()
+                section1[key1] = section2[key1]
+    
+    def run(self):
+        self.iterate(self.new, self.d2)
+        self.report()
+        return self.new
