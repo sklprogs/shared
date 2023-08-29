@@ -804,6 +804,17 @@ class Text:
             '''
             self.text = self.text.strip()
 
+    def center(self, limit):
+        f = '[SharedQt] logic.Text.center'
+        delta = limit - len(self.text)
+        if delta < 2:
+            mes = f'{limit} - {len(self.text)} > 2'
+            com.rep_condition(f, mes)
+            return self.text
+        delta = int(delta / 2)
+        self.text = delta * ' ' + self.text + delta * ' '
+        return self.text
+    
     def split_by_len(self, len_):
         return [self.text[i:i+len_] for i in range(0, len(self.text), len_)]
     
