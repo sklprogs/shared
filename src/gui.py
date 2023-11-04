@@ -10,6 +10,19 @@ from skl_shared_qt.localize import _
 ICON = ''
 
 
+class Screen:
+    
+    def __init__(self):
+        self.screen = sh.objs.get_root().primaryScreen().size()
+    
+    def get_width(self):
+        return self.screen.width()
+    
+    def get_height(self):
+        return self.screen.height()
+
+
+
 class Debug(PyQt5.QtWidgets.QWidget):
     
     def __init__(self, *args, **kwargs):
@@ -241,7 +254,6 @@ class Button:
     def __init__ (self, text='', action=None, parent=None, width=36, height=36
                  ,hint='' ,active='', inactive=''
                  ):
-        self.Status = False
         self.parent = parent
         self.text = text
         self.action = action
@@ -253,14 +265,12 @@ class Button:
         self.set_gui()
     
     def activate(self):
-        if not self.Status:
-            self.Status = True
+        if self.icon == self.inactive:
             self.icon = self.active
             self.set_icon()
 
     def inactivate(self):
-        if self.Status:
-            self.Status = False
+        if self.icon == self.active:
             self.icon = self.inactive
             self.set_icon()
     
@@ -351,7 +361,12 @@ class Objects:
 
     def __init__(self):
         self.root = self.warning = self.error = self.question \
-                  = self.info = self.entry = self.icon = None
+                  = self.info = self.entry = self.icon = self.screen = None
+    
+    def get_screen(self):
+        if self.screen is None:
+            self.screen = Screen()
+        return self.screen
     
     def get_icon(self):
         if self.icon is None:
