@@ -564,13 +564,14 @@ class WriteTextFile:
 
 class Log:
 
-    def __init__(self, Use=True, Short=False):
+    def __init__(self, Use=True, Short=False, limit=200):
         self.func = '[SharedQt] logic.Log.__init__'
         self.Success = True
         self.level = 'info'
         self.message = 'Test'
         self.count = 1
         self.Short = Short
+        self.limit = limit
         if not Use:
             self.Success = False
 
@@ -615,6 +616,7 @@ class Log:
             self.func = func
             self.level = level
             self.message = str(message)
+            self.message = Text(self.message).shorten(self.limit)
             self.print()
             self.count += 1
 
