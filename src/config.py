@@ -295,6 +295,14 @@ class Config:
         self.default = ''
         self.local = ''
         self.new = {}
+        self.local_dump = ''
+    
+    def set_local_dump(self):
+        f = '[SharedQt] config.Config.set_local_dump'
+        if not self.Success:
+            sh.com.cancel(f)
+            return
+        self.local_dump = copy.deepcopy(self.ilocal.dump())
     
     def _copy(self):
         self.new = copy.deepcopy(self.idefault.get())
@@ -353,7 +361,7 @@ class Config:
             sh.com.cancel(f)
             return
         # Do not forget to revert unsupported types back to strings first
-        if self.dump() == self.ilocal.dump():
+        if self.local_dump == self.dump():
             sh.com.rep_lazy(f)
             return
         self.Success = self.ilocal.save(self.new)
