@@ -2,8 +2,8 @@
 # -*- coding: UTF-8 -*-
 
 import sys
-import PyQt5
-import PyQt5.QtWidgets
+import PyQt6
+import PyQt6.QtWidgets
 from skl_shared_qt.localize import _
 
 
@@ -23,7 +23,7 @@ class Screen:
 
 
 
-class Debug(PyQt5.QtWidgets.QWidget):
+class Debug(PyQt6.QtWidgets.QWidget):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -39,31 +39,31 @@ class Debug(PyQt5.QtWidgets.QWidget):
     def fill(self, text):
         self.textbox.clear()
         self.cursor.insertText(text, self.char_fmt)
-        self.textbox.moveCursor(self.cursor.Start)
+        self.textbox.moveCursor(self.cursor.MoveOperation.Start)
     
     def set_title(self, title):
         self.setWindowTitle(title)
     
     def set_layout(self):
-        self.layout_ = PyQt5.QtWidgets.QVBoxLayout()
+        self.layout_ = PyQt6.QtWidgets.QVBoxLayout()
         self.layout_.setContentsMargins(0, 0, 0, 0)
     
     def set_gui(self):
         self.set_layout()
-        self.textbox = PyQt5.QtWidgets.QTextEdit()
-        self.doc = PyQt5.QtGui.QTextDocument()
-        self.cursor = PyQt5.QtGui.QTextCursor(self.doc)
+        self.textbox = PyQt6.QtWidgets.QTextEdit()
+        self.doc = PyQt6.QtGui.QTextDocument()
+        self.cursor = PyQt6.QtGui.QTextCursor(self.doc)
         self.char_fmt = self.cursor.charFormat()
         self.textbox.setDocument(self.doc)
         self.textbox.setReadOnly(True)
-        self.font = PyQt5.QtGui.QFont('Mono', 11)
+        self.font = PyQt6.QtGui.QFont('Mono', 11)
         self.char_fmt.setFont(self.font)
         self.layout_.addWidget(self.textbox)
         self.setLayout(self.layout_)
     
     def bind(self, hotkeys, action):
         for hotkey in hotkeys:
-            PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey), self).activated.connect(action)
+            PyQt6.QtGui.QShortcut(PyQt6.QtGui.QKeySequence(hotkey), self).activated.connect(action)
     
     def show_maximized(self):
         self.showMaximized()
@@ -76,7 +76,7 @@ class Color:
         ''' This accepts everything without exceptions - None, '', hex value,
             color name, even gibberish. Default color is black.
         '''
-        self.qcolor = PyQt5.QtGui.QColor(color)
+        self.qcolor = PyQt6.QtGui.QColor(color)
     
     def get_hex(self):
         return self.qcolor.name()
@@ -99,11 +99,11 @@ class FileDialog:
     
     def set_parent(self):
         if not self.parent:
-            self.parent = PyQt5.QtWidgets.QWidget()
+            self.parent = PyQt6.QtWidgets.QWidget()
     
     def save(self, caption, folder, filter_):
         # Empty output is ('', '')
-        return PyQt5.QtWidgets.QFileDialog.getSaveFileName (parent = self.parent
+        return PyQt6.QtWidgets.QFileDialog.getSaveFileName (parent = self.parent
                                                            ,caption = caption
                                                            ,directory = folder
                                                            ,filter = filter_
@@ -127,7 +127,7 @@ class Clipboard:
 class Font:
     
     def get_font(self):
-        return PyQt5.QtGui.QFont()
+        return PyQt6.QtGui.QFont()
     
     def set_parent(self, widget, ifont):
         widget.setFont(ifont)
@@ -163,10 +163,10 @@ class Entry:
     
     def bind(self, hotkeys, action):
         for hotkey in hotkeys:
-            PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey), self.widget).activated.connect(action)
+            PyQt6.QtGui.QShortcut(PyQt6.QtGui.QKeySequence(hotkey), self.widget).activated.connect(action)
     
     def set_gui(self):
-        self.widget = PyQt5.QtWidgets.QLineEdit(self.parent)
+        self.widget = PyQt6.QtWidgets.QLineEdit(self.parent)
     
     def clear(self):
         self.widget.clear()
@@ -185,7 +185,7 @@ class Entry:
 
 
 
-class Top(PyQt5.QtWidgets.QWidget):
+class Top(PyQt6.QtWidgets.QWidget):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -196,11 +196,11 @@ class Top(PyQt5.QtWidgets.QWidget):
     
     def bind(self, hotkeys, action):
         for hotkey in hotkeys:
-            PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey), self).activated.connect(action)
+            PyQt6.QtGui.QShortcut(PyQt6.QtGui.QKeySequence(hotkey), self).activated.connect(action)
     
     def set_gui(self):
         self.widget = self
-        self.layout = PyQt5.QtWidgets.QVBoxLayout()
+        self.layout = PyQt6.QtWidgets.QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.layout)
 
@@ -209,7 +209,7 @@ class Top(PyQt5.QtWidgets.QWidget):
 class OptionMenu:
     
     def __init__(self):
-        self.widget = PyQt5.QtWidgets.QComboBox()
+        self.widget = PyQt6.QtWidgets.QComboBox()
     
     def get_font_size(self):
         size = self.widget.font().pointSize()
@@ -223,7 +223,7 @@ class OptionMenu:
         self.widget.setFont(qfont)
     
     def set_font(self, family, size):
-        self.widget.setFont(PyQt5.QtGui.QFont(family, size))
+        self.widget.setFont(PyQt6.QtGui.QFont(family, size))
     
     def enable(self):
         self.widget.setEnabled(True)
@@ -287,11 +287,11 @@ class Button:
             tooltip glitches.
         '''
         if self.icon:
-            self.widget.setIcon(PyQt5.QtGui.QIcon(self.icon))
+            self.widget.setIcon(PyQt6.QtGui.QIcon(self.icon))
     
     def set_size(self):
         if self.width and self.height:
-            self.widget.setIconSize(PyQt5.QtCore.QSize(self.width, self.height))
+            self.widget.setIconSize(PyQt6.QtCore.QSize(self.width, self.height))
     
     def set_border(self):
         if self.icon:
@@ -304,7 +304,7 @@ class Button:
             self.widget.clicked.connect(self.action)
     
     def set_gui(self):
-        self.widget = PyQt5.QtWidgets.QPushButton(self.text, self.parent)
+        self.widget = PyQt6.QtWidgets.QPushButton(self.text, self.parent)
         self.resize()
         self.set_icon()
         self.set_size()
@@ -316,7 +316,7 @@ class Button:
 
 
 
-class Message(PyQt5.QtWidgets.QMessageBox):
+class Message(PyQt6.QtWidgets.QMessageBox):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -332,27 +332,27 @@ class Message(PyQt5.QtWidgets.QMessageBox):
     
     def get_error(self):
         self.set_title(_('Error'))
-        self.set_icon(PyQt5.QtWidgets.QMessageBox.Critical)
+        self.set_icon(PyQt6.QtWidgets.QMessageBox.Icon.Critical)
         return self
     
     def get_warning(self):
         self.set_title(_('Warning'))
-        self.set_icon(PyQt5.QtWidgets.QMessageBox.Warning)
+        self.set_icon(PyQt6.QtWidgets.QMessageBox.Warning)
         return self
     
     def get_info(self):
         self.set_title(_('Info'))
-        self.set_icon(PyQt5.QtWidgets.QMessageBox.Information)
+        self.set_icon(PyQt6.QtWidgets.QMessageBox.Information)
         return self
     
     def get_debug(self):
         self.set_title(_('Debug'))
-        self.set_icon(PyQt5.QtWidgets.QMessageBox.Information)
+        self.set_icon(PyQt6.QtWidgets.QMessageBox.Information)
         return self
     
     def get_question(self):
         self.set_title(_('Question'))
-        self.set_icon(PyQt5.QtWidgets.QMessageBox.Question)
+        self.set_icon(PyQt6.QtWidgets.QMessageBox.Icon.Question)
         return self
 
 
@@ -370,19 +370,19 @@ class Objects:
     
     def get_icon(self):
         if self.icon is None:
-            self.icon = PyQt5.QtGui.QIcon(ICON)
+            self.icon = PyQt6.QtGui.QIcon(ICON)
         return self.icon
     
     def get_root(self):
         if self.root is None:
-            self.root = PyQt5.QtWidgets.QApplication(sys.argv)
+            self.root = PyQt6.QtWidgets.QApplication(sys.argv)
         return self.root
 
     def start(self):
         self.get_root()
 
     def end(self):
-        sys.exit(self.root.exec_())
+        sys.exit(self.root.exec())
 
     def get_warning(self):
         if self.warning is None:
@@ -423,10 +423,10 @@ class CheckBox:
         self.widget.setFont(qfont)
     
     def set_gui(self):
-        self.widget = PyQt5.QtWidgets.QCheckBox()
+        self.widget = PyQt6.QtWidgets.QCheckBox()
     
     def set_font(self, family, size):
-        self.widget.setFont(PyQt5.QtGui.QFont(family, size))
+        self.widget.setFont(PyQt6.QtGui.QFont(family, size))
     
     def get(self):
         return self.widget.isChecked()
@@ -466,13 +466,13 @@ class Label:
         self.widget.setFont(qfont)
     
     def set_gui(self):
-        self.widget = PyQt5.QtWidgets.QLabel()
+        self.widget = PyQt6.QtWidgets.QLabel()
     
     def set_text(self, text):
         self.widget.setText(text)
     
     def set_font(self, family, size):
-        self.widget.setFont(PyQt5.QtGui.QFont(family, size))
+        self.widget.setFont(PyQt6.QtGui.QFont(family, size))
 
 
 
