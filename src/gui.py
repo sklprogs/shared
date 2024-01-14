@@ -337,17 +337,17 @@ class Message(PyQt6.QtWidgets.QMessageBox):
     
     def get_warning(self):
         self.set_title(_('Warning'))
-        self.set_icon(PyQt6.QtWidgets.QMessageBox.Warning)
+        self.set_icon(PyQt6.QtWidgets.QMessageBox.Icon.Warning)
         return self
     
     def get_info(self):
         self.set_title(_('Info'))
-        self.set_icon(PyQt6.QtWidgets.QMessageBox.Information)
+        self.set_icon(PyQt6.QtWidgets.QMessageBox.Icon.Information)
         return self
     
     def get_debug(self):
         self.set_title(_('Debug'))
-        self.set_icon(PyQt6.QtWidgets.QMessageBox.Information)
+        self.set_icon(PyQt6.QtWidgets.QMessageBox.Icon.Information)
         return self
     
     def get_question(self):
