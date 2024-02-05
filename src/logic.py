@@ -792,6 +792,9 @@ class Input:
 class Text:
 
     def __init__(self, text, Auto=False):
+        self.punc = ("'", '"', ',', '.', '!', '?', ';')
+        self.opening = ('“', '«', '(', '{', '[')
+        self.closing = ('”', '»', ')', '}', ']')
         self.text = text
         self.text = Input('Text.__init__', self.text).get_not_none()
         # This can be useful in many cases, e.g. after OCR
@@ -806,6 +809,26 @@ class Text:
             '''
             self.text = self.text.strip()
 
+    def join(self, text):
+        self.text = self.text.rstrip()
+        text = str(text).lstrip()
+        if not self.text:
+            self.text = text
+            return self.text
+        if not text:
+            return self.text
+        if self.text[-1] in self.opening or text[0] in self.closing:
+            self.text = self.text + text
+            return self.text
+        if self.text[-1] in self.punc:
+            self.text += ' ' + text
+            return self.text
+        if text[0] in self.punc:
+            self.text += text
+            return self.text
+        self.text += ' ' + text
+        return self.text
+    
     def center(self, limit):
         f = '[SharedQt] logic.Text.center'
         delta = limit - len(self.text)
