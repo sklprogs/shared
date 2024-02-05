@@ -1310,43 +1310,19 @@ class List:
             i -= 1
         return self.lst1
     
-    def space_items(self, MultSpaces=False):
+    def space_items(self):
         # Add a space where necessary and convert to a string
-        text = ''
-        for i in range(len(self.lst1)):
-            if self.lst1[i] == '':
-                return text
-            if text == '':
-                text += self.lst1[i]
-            elif self.lst1[i] and self.lst1[i][0] in punc_array \
-            or self.lst1[i][0] in '”»])}':
-                text += self.lst1[i]
-            elif len(text) > 1 and text[-2].isspace() and text[-1] == '"':
-                ''' We do not know for sure where quotes should be placed, but
-                    we cannot leave out cases like ' " '
-                '''
-                text += self.lst1[i]
-            elif len(text) > 1 and text[-2].isspace() and text[-1] == "'":
-                text += self.lst1[i]
-            # Only after "text == ''"
-            elif text[-1] in '“«[{(':
-                text += self.lst1[i]
-            elif text[-1].isspace() and self.lst1[i] \
-            and self.lst1[i][0].isspace() and not MultSpaces:
-                tmp = self.lst1[i].lstrip()
-                if tmp:
-                    text += tmp
-            elif text[-1].isspace():
-                text += self.lst1[i]
-            elif i == len(self.lst1) - 1 and self.lst1[i] in punc_array:
-                text += self.lst1[i]
-            # Do not allow ' "' in the end
-            elif i == len(self.lst1) - 1 \
-            and self.lst1[i] in ('”', '»', ']', ')', '}', '"', "'"):
-                text += self.lst1[i]
-            else:
-                text += ' ' + self.lst1[i]
-        return text
+        lst1 = [str(item) for item in self.lst1]
+        lst2 = [str(item) for item in self.lst2]
+        lst = lst1 + lst2
+        if not lst:
+            return ''
+        itext = Text(lst[0])
+        i = 1
+        while i < len(lst):
+            itext.join(lst[i])
+            i += 1
+        return itext.text
 
     def equalize(self):
         # Adjust the lists at input to have the same length
