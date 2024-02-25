@@ -1062,6 +1062,9 @@ class Text:
         return self.text
     
     def shorten(self, max_len=10, FromEnd=False, ShowGap=True, encloser=''):
+        # Suppress excessive warnings, this function is used in Log
+        if not max_len:
+            return self.text
         # Shorten a string up to a max length
         if len(self.text) > max_len:
             if encloser:
