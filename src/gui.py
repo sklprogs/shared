@@ -146,6 +146,12 @@ class Entry:
         self.parent = None
         self.set_gui()
     
+    def disable(self):
+        self.widget.setEnabled(False)
+    
+    def enable(self):
+        self.widget.setEnabled(True)
+    
     def get_width(self):
         return self.widget.width()
     
