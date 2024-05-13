@@ -230,6 +230,18 @@ class Entry:
         self.gui = gi.Entry()
         self.widget = self.gui.widget
     
+    def change_font_size(self, delta=1):
+        f = '[SharedQt] shared.Entry.change_font_size'
+        size = self.gui.get_font_size()
+        if not size:
+            com.rep_empty(f)
+            return
+        if size + delta <= 0:
+            mes = f'{size} + {delta} > 0'
+            com.rep_condition(f, mes)
+            return
+        self.gui.set_font_size(size + delta)
+    
     def disable(self):
         self.gui.disable()
     
@@ -826,7 +838,7 @@ class Label:
             mes = f'{size} + {delta} > 0'
             com.rep_condition(f, mes)
             return
-        self.gui.set_font_size(size+delta)
+        self.gui.set_font_size(size + delta)
     
     def set_text(self, text):
         if not text:
