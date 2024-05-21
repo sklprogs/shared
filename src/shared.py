@@ -828,6 +828,9 @@ class Label:
         if font_family and font_size:
             self.gui.set_font(font_family, font_size)
     
+    def set_action(self, action=None):
+        self.gui.set_action(action)
+    
     def change_font_size(self, delta=1):
         f = '[SharedQt] shared.Label.change_font_size'
         size = self.gui.get_font_size()

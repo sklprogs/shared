@@ -471,6 +471,12 @@ class Label:
     def __init__(self):
         self.set_gui()
     
+    def set_action(self, action=None):
+        if action:
+            self.action = action
+        if self.action:
+            self.widget.mousePressEvent = self.action
+    
     def get_font_size(self):
         size = self.widget.font().pointSize()
         # We will get -1 if the font size was specified in pixels
