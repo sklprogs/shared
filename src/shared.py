@@ -230,6 +230,9 @@ class Entry:
         self.gui = gi.Entry()
         self.widget = self.gui.widget
     
+    def select_all(self):
+        self.gui.select_all()
+    
     def change_font_size(self, delta=1):
         f = '[SharedQt] shared.Entry.change_font_size'
         size = self.gui.get_font_size()

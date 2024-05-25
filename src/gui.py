@@ -146,6 +146,9 @@ class Entry:
         self.parent = None
         self.set_gui()
     
+    def select_all(self):
+        self.widget.selectAll()
+    
     def get_font_size(self):
         size = self.widget.font().pointSize()
         # We will get -1 if the font size was specified in pixels
