@@ -146,6 +146,9 @@ class Entry:
         self.parent = None
         self.set_gui()
     
+    def go_start(self):
+        self.widget.setCursorPosition(0)
+    
     def select_all(self):
         self.widget.selectAll()
     

@@ -278,8 +278,10 @@ class Entry:
     def get(self):
         return self.gui.get()
     
-    def insert(self, text):
+    def insert(self, text, GoStart=True):
         self.gui.insert(str(text))
+        if GoStart:
+            self.gui.go_start()
     
     def set_text(self, text):
         # Unlike with 'insert', no need to clear the entry first
