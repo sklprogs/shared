@@ -287,6 +287,9 @@ class Button:
         self.icon = self.inactive = inactive
         self.set_gui()
     
+    def set_default(self, Default=True):
+        self.widget.setAutoDefault(Default)
+    
     def activate(self):
         if self.icon == self.inactive:
             self.icon = self.active
