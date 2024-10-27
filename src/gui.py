@@ -287,6 +287,17 @@ class Button:
         self.icon = self.inactive = inactive
         self.set_gui()
     
+    def get_font_size(self):
+        size = self.widget.font().pointSize()
+        # We will get -1 if the font size was specified in pixels
+        if size > 0:
+            return size
+    
+    def set_font_size(self, size):
+        qfont = self.widget.font()
+        qfont.setPointSize(size)
+        self.widget.setFont(qfont)
+    
     def set_default(self, Default=True):
         self.widget.setAutoDefault(Default)
     
