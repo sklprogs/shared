@@ -30,11 +30,11 @@ class Enclose:
 
 class Shorten:
 
-    def __init__(self, text, limit=10, FromEnd=False, ShowGap=True, encloser=''):
+    def __init__(self, text, limit=10, CutStart=False, ShowGap=True, encloser=''):
         self.gap = ''
         self.text = str(text)
         self.limit = limit
-        self.FromEnd = FromEnd
+        self.CutStart = CutStart
         self.ShowGap = ShowGap
         self.encloser = str(encloser)
     
@@ -48,11 +48,12 @@ class Shorten:
     def set_gap(self):
         if not self.ShowGap or self.limit < 4:
             return
+        # I am aware of the ellipsis, but it reads poorly in terminal
         self.gap = '...'
         self.limit -= 3
     
     def add_gap(self):
-        if self.FromEnd:
+        if self.CutStart:
             self.text = self.gap + self.text[len(self.text) - self.limit:]
         else:
             self.text = self.text[0:self.limit] + self.gap
@@ -77,9 +78,9 @@ class Shorten:
 
 if __name__ == '__main__':
     text = 'hello there!'
-    limit = 0
-    FromEnd = False
+    limit = 10
+    CutStart = False
     ShowGap = True
-    encloser = ''
-    text = Shorten(text, limit, FromEnd, ShowGap, encloser).run()
-    print('[', text, ']')
+    encloser = '«'
+    text = Shorten(text, limit, CutStart, ShowGap, encloser).run()
+    print(f'[{text}]')
