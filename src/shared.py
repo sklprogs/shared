@@ -439,28 +439,6 @@ class Button(gi.Button):
 
 
 
-class DummyMessage:
-
-    def __init__(self, *args):
-        pass
-
-    def show_debug(self):
-        pass
-    
-    def show_error(self):
-        pass
-
-    def show_info(self):
-        pass
-                       
-    def show_warning(self):
-        pass
-
-    def show_question(self):
-        pass
-
-
-
 class Directory(lg.Directory):
     
     def __init__(self, *args, **kwargs):
@@ -518,13 +496,6 @@ class Launch(lg.Launch):
 
 
 class List(lg.List):
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-
-class Log(lg.Log):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -640,13 +611,6 @@ class Objects(lg.Objects):
         self.question = self.info = self.warning = self.debug = self.error \
                       = self.mes = self.waitbox = None
     
-    def get_mes(self, func='Logic error', message='Logic error', Silent=False):
-        if STOP_MES:
-            return DummyMessage()
-        if self.mes is None:
-            self.mes = Message
-        return self.mes(func, message, Silent)
-    
     def get_waitbox(self, icon=''):
         if self.waitbox is None:
             if not icon:
@@ -658,114 +622,6 @@ class Objects(lg.Objects):
     
     def get_root(self):
         return gi.objs.get_root()
-    
-    def get_error(self):
-        if self.error is None:
-            self.error = gi.Message().get_error()
-        return self.error
-    
-    def get_warning(self):
-        if self.warning is None:
-            self.warning = gi.Message().get_warning()
-        return self.warning
-    
-    def get_debug(self):
-        # Reusing the same 'info' object may result in GUI glitches
-        if self.debug is None:
-            self.debug = gi.Message().get_debug()
-        return self.debug
-    
-    def get_info(self):
-        if self.info is None:
-            self.info = gi.Message().get_info()
-        return self.info
-    
-    def get_question(self):
-        if self.question is None:
-            self.question = gi.Message().get_question()
-        return self.question
-
-
-
-class Message:
-
-    def __init__(self, func, message, Silent=False, Block=True):
-        self.func = func
-        self.message = str(message)
-        self.Silent = Silent
-        self.Block = Block
-        self.set_detailed()
-
-    def set_detailed(self):
-        sub = _('Code block: {}').format(self.func)
-        self.detailed = f'{self.message}\n\n{sub}'
-    
-    def show_debug(self):
-        if GUI_MES and not self.Silent:
-            objs.get_debug().set_text(self.detailed)
-            if self.Block:
-                objs.debug.exec()
-            else:
-                objs.debug.show()
-        # Duplicate the message to the console
-        lg.Message (func = self.func
-                   ,message = self.message
-                   ).show_debug()
-    
-    def show_error(self):
-        if GUI_MES and not self.Silent:
-            objs.get_error().set_text(self.detailed)
-            if self.Block:
-                objs.error.exec()
-            else:
-                objs.error.show()
-        # Duplicate the message to the console
-        lg.Message (func = self.func
-                   ,message = self.message
-                   ).show_error()
-
-    def show_info(self):
-        if GUI_MES and not self.Silent:
-            objs.get_info().set_text(self.detailed)
-            if self.Block:
-                objs.info.exec()
-            else:
-                objs.info.show()
-        # Duplicate the message to the console
-        lg.Message (func = self.func
-                   ,message = self.message
-                   ).show_info()
-                       
-    def show_warning(self):
-        if GUI_MES and not self.Silent:
-            objs.get_warning().set_text(self.detailed)
-            if self.Block:
-                objs.warning.exec()
-            else:
-                objs.warning.show()
-        # Duplicate the message to the console
-        lg.Message (func = self.func
-                   ,message = self.message
-                   ).show_warning()
-
-    def show_question(self):
-        if GUI_MES and not self.Silent:
-            objs.get_question().set_text(self.detailed)
-            # There is not reason in showing non-blocking question dialogs
-            objs.question.exec()
-            lg.log.append(self.func, 'question', self.message)
-            #cur
-            '''
-            answer = objs.question.ask()
-            lg.Message (func = self.func
-                       ,message = str(answer)
-                       ).show_debug()
-            return answer
-            '''
-        else:
-            return lg.Message (func = self.func
-                              ,message = self.message
-                              ).show_question()
 
 
 

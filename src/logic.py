@@ -234,41 +234,6 @@ class FastTable:
 
 
 
-class Message:
-
-    def __init__(self, func, message, Silent=True):
-        self.func = func
-        self.message = message
-
-    def show_error(self):
-        log.append(self.func, 'error', self.message)
-    
-    def show_warning(self):
-        log.append(self.func, 'warning', self.message)
-    
-    def show_info(self):
-        log.append(self.func, 'info', self.message)
-    
-    def show_debug(self):
-        log.append(self.func, 'debug', self.message)
-    
-    def show_question(self):
-        log.append(self.func, 'question', self.message)
-        try:
-            answer = input()
-        except (EOFError, KeyboardInterrupt):
-            # The user pressed 'Ctrl-c' or 'Ctrl-d'
-            answer = ''
-        answer = answer.lower().strip()
-        if answer in ('y', ''):
-            return True
-        elif answer == 'n':
-            return False
-        else:
-            self.show_question()
-
-
-
 class Font:
     
     def __init__(self, name, xborder=0, yborder=0):
@@ -559,66 +524,6 @@ class WriteTextFile:
                        ,Rewrite = self.Rewrite
                        ):
             return self._write('w')
-
-
-
-class Log:
-
-    def __init__(self, Use=True, Short=False, limit=200):
-        self.func = '[SharedQt] logic.Log.__init__'
-        self.Success = True
-        self.level = 'info'
-        self.message = 'Test'
-        self.count = 1
-        self.Short = Short
-        self.limit = limit
-        if not Use:
-            self.Success = False
-
-    def _warn(self, mes):
-        return termcolor.colored(mes, 'red')
-    
-    def _debug(self, mes):
-        return termcolor.colored(mes, 'yellow')
-    
-    def _generate(self):
-        return f'{self.count}:{self.func}:{self.level}:{self.message}'
-    
-    def print(self):
-        f = '[SharedQt] logic.Log.print'
-        if not self.Success:
-            return
-        try:
-            if self.level in ('warning', 'error'):
-                print(self._warn(self._generate()))
-            elif self.Short:
-                pass
-            elif self.level == 'debug':
-                print(self._debug(self._generate()))
-            else:
-                print(self._generate())
-        except Exception as e:
-            ''' Rarely somehing like "UnicodeEncodeError: 'utf-8' codec can't
-                encode character '\udce9' in position 175: surrogates not
-                allowed" occurs. Since there are to many Unicode exceptions to
-                except, we do not specify an exception type.
-            '''
-            sub = 'Cannot print the message! ({})'.format(e)
-            mes = '{}:{}:{}'.format(f, _('WARNING'), sub)
-            print(mes)
-
-    def append (self, func='[SharedQt] logic.Log.append', level='info'
-               ,message='Test'
-               ):
-        if not self.Success:
-            return
-        if func and level and message:
-            self.func = func
-            self.level = level
-            self.message = str(message)
-            self.message = Text(self.message).shorten(self.limit)
-            self.print()
-            self.count += 1
 
 
 
@@ -1046,47 +951,6 @@ class Text:
             if match:
                 return match.group(1)
 
-    def enclose(self, sym='"'):
-        open_sym = close_sym = sym
-        if sym == '(':
-            close_sym = ')'
-        elif sym == '[':
-            close_sym = ']'
-        elif sym == '{':
-            close_sym = '}'
-        elif sym == '“':
-            close_sym = '”'
-        elif sym == '«':
-            close_sym = '»'
-        self.text = open_sym + self.text + close_sym
-        return self.text
-    
-    def shorten(self, max_len=10, FromEnd=False, ShowGap=True, encloser=''):
-        # Suppress excessive warnings, this function is used in Log
-        if not max_len:
-            return self.text
-        # Shorten a string up to a max length
-        if len(self.text) > max_len:
-            if encloser:
-                enc_len = 2 * len(encloser)
-                if max_len > enc_len:
-                    max_len -= enc_len
-            if ShowGap:
-                if max_len > 3:
-                    gap = '...'
-                    max_len -= 3
-                else:
-                    gap = ''
-            else:
-                gap = ''
-            if FromEnd:
-                self.text = gap + self.text[len(self.text)-max_len:]
-            else:
-                self.text = self.text[0:max_len] + gap
-        if encloser:
-            self.enclose(encloser)
-        return self.text
-        
     def grow(self, max_len=20, FromEnd=False, sym=' '):
         delta = max_len - len(self.text)
         if delta > 0:
@@ -2944,9 +2808,6 @@ class Commands:
                 ).show_warning()
 
 
-log = Log (Use = True
-          ,Short = False
-          )
 objs = Objects()
 com = Commands()
 
