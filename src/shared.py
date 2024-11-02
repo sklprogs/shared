@@ -4,15 +4,14 @@
 from skl_shared_qt.localize import _
 import skl_shared_qt.logic as lg
 import skl_shared_qt.gui as gi
+import skl_shared_qt.message.controller as ms
 
-GUI_MES = True
-STOP_MES = False
 FONT1 = 'Serif 14'
 FONT2 = 'Sans 11'
 
 
 class Debug:
-    
+    #TODO: Remove when ready
     def __init__(self, func='__main__', mes=''):
         self.set_gui()
         if mes:
@@ -725,8 +724,6 @@ class Label:
 
 com = Commands()
 objs = Objects()
-# Use GUI dialogs for logic-only modules
-lg.objs.mes = Message
 
 
 if __name__ == '__main__':
@@ -734,7 +731,23 @@ if __name__ == '__main__':
     com.start()
     #lg.ReadTextFile('/tmp/aaa').get()
     #Geometry(Top()).activate()
-    idebug = Debug(f, 'Here should be some debug info')
+    #idebug = Debug(f, 'Here should be some debug info')
     # This MUST be on a separate line, the widget will not be shown otherwise
-    idebug.show()
+    #idebug.show()
+    mes = 'This is a standard message.'
+    ms.Message(f, mes, False).show_info()
+    mes = 'Here should be some debug info'
+    ms.Message(f, mes, False).show_debug()
+    mes = 'This is a warning'
+    ms.Message(f, mes, False).show_warning()
+    mes = 'And this is an error!'
+    ms.Message(f, mes, False).show_warning()
+    mes = 'Have you read this?'
+    answer = ms.Message(f, mes, False).show_question()
+    if answer:
+        answer = 'Yes'
+    else:
+        answer = 'No'
+    mes = f'Your answer is {answer}'
+    ms.Message(f, mes).show_debug()
     com.end()

@@ -12,9 +12,9 @@ class Question:
     
     def get(self):
         if self.Silent:
-            from question.logic import QUESTION
+            from message.question.logic import QUESTION
         else:
-            from question.gui import QUESTION
+            from message.question.gui import QUESTION
         return QUESTION
     
     def show(self):

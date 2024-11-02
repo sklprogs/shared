@@ -24,6 +24,7 @@ import webbrowser
 import urllib.request, urllib.parse
 import locale
 from skl_shared_qt.localize import _
+import skl_shared_qt.message.controller as ms
 
 
 gpl3_url_en = 'http://www.gnu.org/licenses/gpl.html'
@@ -2277,13 +2278,6 @@ class Objects:
                           = self.mes = None
         self.icon = ''
     
-    def get_mes (self, func=_('Logic error!'), message=_('Logic error!')
-                ,Silent=False
-                ):
-        if self.mes is None:
-            self.mes = Message
-        return self.mes(func, message, Silent)
-    
     def get_os(self):
         if self.os is None:
             self.os = OSSpecific()
@@ -2699,8 +2693,7 @@ class Commands:
                 self.lang = 'pl'
             elif 'zh' in result:
                 self.lang = 'zh'
-        mes = f'{result} -> {self.lang}'
-        objs.get_mes(f, mes, True).show_debug()
+        ms.Message(f, f'{result} -> {self.lang}').show_debug()
     
     def get_tmpfile(self, suffix='.htm', Delete=0):
         return tempfile.NamedTemporaryFile (mode = 'w'

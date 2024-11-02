@@ -3,11 +3,11 @@
 
 STOP_MES = False
 
-import info.controller
-import debug.controller
-import warning.controller
-import error.controller
-import question.controller
+import message.info.controller
+import message.debug.controller
+import message.warning.controller
+import message.error.controller
+import message.question.controller
 from skl_shared_qt.localize import _
 from skl_shared_qt.basic_text import Shorten
 
@@ -72,7 +72,7 @@ class Message:
         if STOP_MES:
             return
         self.type_ = _('DEBUG')
-        idebug = debug.controller.Debug(self.get_message(), self.Silent, self.Block)
+        idebug = message.debug.controller.Debug(self.get_message(), self.Silent, self.Block)
         idebug.show()
         self.duplicate(idebug)
     
@@ -80,7 +80,7 @@ class Message:
         if STOP_MES:
             return
         self.type_ = _('ERROR')
-        ierror = error.controller.Error(self.get_message(), self.Silent, self.Block)
+        ierror = message.error.controller.Error(self.get_message(), self.Silent, self.Block)
         ierror.show()
         self.duplicate(ierror)
 
@@ -88,7 +88,7 @@ class Message:
         if STOP_MES:
             return
         self.type_ = _('INFO')
-        iinfo = info.controller.Info(self.get_message(), self.Silent, self.Block)
+        iinfo = message.info.controller.Info(self.get_message(), self.Silent, self.Block)
         iinfo.show()
         self.duplicate(iinfo)
                        
@@ -96,7 +96,7 @@ class Message:
         if STOP_MES:
             return
         self.type_ = _('WARNING')
-        iwarn = warning.controller.Warning(self.get_message(), self.Silent, self.Block)
+        iwarn = message.warning.controller.Warning(self.get_message(), self.Silent, self.Block)
         iwarn.show()
         self.duplicate(iwarn)
 
@@ -104,7 +104,7 @@ class Message:
         if STOP_MES:
             return
         self.type_ = _('QUESTION')
-        iques = question.controller.Question(self.get_message(), self.Silent, self.Block)
+        iques = message.question.controller.Question(self.get_message(), self.Silent, self.Block)
         #TODO: Duplicate
         return iques.show()
 

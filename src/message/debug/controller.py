@@ -10,9 +10,9 @@ class Debug:
     
     def get(self):
         if self.Silent:
-            from debug.logic import DEBUG
+            from message.debug.logic import DEBUG
         else:
-            from debug.gui import DEBUG
+            from message.debug.gui import DEBUG
         return DEBUG
     
     def show(self):

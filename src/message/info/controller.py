@@ -10,9 +10,9 @@ class Info:
     
     def get(self):
         if self.Silent:
-            from info.logic import INFO
+            from message.info.logic import INFO
         else:
-            from info.gui import INFO
+            from message.info.gui import INFO
         return INFO
     
     def show(self):

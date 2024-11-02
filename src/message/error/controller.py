@@ -10,9 +10,9 @@ class Error:
     
     def get(self):
         if self.Silent:
-            from error.logic import ERROR
+            from message.error.logic import ERROR
         else:
-            from error.gui import ERROR
+            from message.error.gui import ERROR
         return ERROR
     
     def show(self):

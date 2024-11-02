@@ -10,9 +10,9 @@ class Warning:
     
     def get(self):
         if self.Silent:
-            from warning.logic import WARN
+            from message.warning.logic import WARN
         else:
-            from warning.gui import WARN
+            from message.warning.gui import WARN
         return WARN
     
     def show(self):
