@@ -124,22 +124,6 @@ class Clipboard:
 
 
 
-class Font:
-    
-    def get_font(self):
-        return PyQt6.QtGui.QFont()
-    
-    def set_parent(self, widget, ifont):
-        widget.setFont(ifont)
-    
-    def set_family(self, ifont, family):
-        ifont.setFamily(family)
-    
-    def set_size(self, ifont, size):
-        ifont.setPointSize(size)
-
-
-
 class Entry:
     
     def __init__(self, parent=None):

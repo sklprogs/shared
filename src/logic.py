@@ -237,70 +237,6 @@ class FastTable:
 
 
 
-class Font:
-    
-    def __init__(self, name, xborder=0, yborder=0):
-        self.set_values()
-        if name:
-            self.reset (name = name
-                       ,xborder = xborder
-                       ,yborder = yborder
-                       )
-    
-    def set_text(self, text):
-        f = '[SharedQt] logic.Font.set_text'
-        if not text:
-            com.rep_empty(f)
-            return
-        self.text = text
-    
-    def set_values(self):
-        self.font = None
-        self.family = ''
-        self.name = ''
-        self.text = ''
-        self.size = 0
-        self.height = 0
-        self.width = 0
-        self.xborder = 0
-        self.yborder = 0
-    
-    def set_width(self):
-        if self.width:
-            self.width += self.xborder
-    
-    def set_height(self):
-        f = '[SharedQt] logic.Font.set_height'
-        if not self.set_height:
-            com.rep_empty(f)
-            return
-        lines = len(self.text.splitlines())
-        if lines:
-            self.height = self.height * lines
-        self.height += self.yborder
-    
-    def reset(self, name, xborder=0, yborder=0):
-        self.set_values()
-        self.name = name
-        self.xborder = xborder
-        self.yborder = yborder
-        self.set_attr()
-    
-    def set_attr(self):
-        f = '[SharedQt] logic.Font.set_attr'
-        if not self.name:
-            com.rep_empty(f)
-            return
-        match = re.match('([aA-zZ].*) (\d+)', self.name)
-        if not match:
-            message = _('Wrong input data: "{}"!').format(self.name)
-            ms.Message(f, message, False).show_error()
-            return
-        self.family = match.group(1)
-        self.size = int(match.group(2))
-
-
-
 class OSSpecific:
 
     def __init__(self):
@@ -2731,39 +2667,6 @@ class Commands:
         if mes:
             result = ' '.join(mes)
         return result
-    
-    def cancel(self, func=_('Logic error!')):
-        ms.Message(func, _('Operation has been canceled.')).show_warning()
-    
-    def rep_input(self, func=_('Logic error!')):
-        ms.Message(func, _('Wrong input data!')).show_warning()
-    
-    def rep_empty(self, func=_('Logic error!')):
-        ms.Message(func, _('Empty input is not allowed!')).show_warning()
-    
-    def rep_not_ready(self, func=_('Logic error!')):
-        ms.Message(func, _('Not implemented yet!')).show_info()
-    
-    def rep_out(self, func=_('Logic error!')):
-        ms.Message(func, _('Empty output is not allowed!')).show_warning()
-    
-    def rep_deleted(self, func=_('Logic error!'), count=0):
-        if count:
-            message = _('{} blocks have been deleted').format(count)
-            ms.Message(func, message).show_debug()
-    
-    def rep_matches(self, func=_('Logic error!'), count=0):
-        if count:
-            message = _('{} matches').format(count)
-            ms.Message(func, message).show_debug()
-    
-    def rep_third_party(self, func=_('Logic error!'), message=_('Logic error!')):
-        mes = _('Third-party module has failed!\n\nDetails: {}').format(message)
-        ms.Message(func, mes, False).show_error()
-    
-    def rep_condition(self, func=_('Logic error!'), message=_('Logic error!')):
-        message = _('The condition "{}" is not observed!').format(message)
-        ms.Message(func, message, False).show_warning()
 
 
 objs = Objects()
