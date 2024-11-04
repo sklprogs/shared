@@ -410,39 +410,6 @@ class CheckBox:
 
 
 
-class Label:
-    
-    def __init__(self):
-        self.set_gui()
-    
-    def set_action(self, action=None):
-        if action:
-            self.action = action
-        if self.action:
-            self.widget.mousePressEvent = self.action
-    
-    def get_font_size(self):
-        size = self.widget.font().pointSize()
-        # We will get -1 if the font size was specified in pixels
-        if size > 0:
-            return size
-    
-    def set_font_size(self, size):
-        qfont = self.widget.font()
-        qfont.setPointSize(size)
-        self.widget.setFont(qfont)
-    
-    def set_gui(self):
-        self.widget = PyQt6.QtWidgets.QLabel()
-    
-    def set_text(self, text):
-        self.widget.setText(text)
-    
-    def set_font(self, family, size):
-        self.widget.setFont(PyQt6.QtGui.QFont(family, size))
-
-
-
 ''' If there are issues with import or tkinter's wait_variable, put this
     beneath 'if __name__'.
 '''
