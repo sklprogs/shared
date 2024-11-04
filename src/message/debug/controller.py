@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 class Debug:
-    
+    # To quit an app correctly, the last GUI message must be non-blocking
     def __init__(self, message, Silent=True, Block=False):
         self.message = str(message)
         self.Silent = Silent

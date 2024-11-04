@@ -4,6 +4,7 @@
 class Question:
     ''' message.controller.Message.__init__ sets Silent=True by default, so we
         have to reassign Silent anyway when calling Question from shared.
+        To quit an app correctly, the last GUI message must be non-blocking.
     '''
     def __init__(self, message, Silent=True, Block=False):
         self.message = str(message)
