@@ -11,7 +11,7 @@ FONT2 = 'Sans 11'
 
 
 class Debug:
-    #TODO: Remove when ready
+
     def __init__(self, func='__main__', mes=''):
         self.set_gui()
         if mes:
