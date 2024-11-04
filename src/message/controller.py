@@ -13,6 +13,43 @@ from skl_shared_qt.localize import _
 from skl_shared_qt.basic_text import Shorten
 
 
+class Report:
+    
+    def cancel(self, func=_('Logic error!')):
+        Message(func, _('Operation has been canceled.')).show_warning()
+    
+    def wrong_input(self, func=_('Logic error!')):
+        Message(func, _('Wrong input data!')).show_warning()
+    
+    def empty(self, func=_('Logic error!')):
+        Message(func, _('Empty input is not allowed!')).show_warning()
+    
+    def not_ready(self, func=_('Logic error!')):
+        Message(func, _('Not implemented yet!')).show_info()
+    
+    def empty_output(self, func=_('Logic error!')):
+        Message(func, _('Empty output is not allowed!')).show_warning()
+    
+    def deleted(self, func=_('Logic error!'), count=0):
+        if count:
+            message = _('{} blocks have been deleted').format(count)
+            Message(func, message).show_debug()
+    
+    def matches(self, func=_('Logic error!'), count=0):
+        if count:
+            message = _('{} matches').format(count)
+            Message(func, message).show_debug()
+    
+    def third_party(self, func=_('Logic error!'), message=_('Logic error!')):
+        mes = _('Third-party module has failed!\n\nDetails: {}').format(message)
+        Message(func, mes, True).show_error()
+    
+    def condition(self, func=_('Logic error!'), message=_('Logic error!')):
+        message = _('The condition "{}" is not observed!').format(message)
+        Message(func, message, True).show_warning()
+
+
+
 class Format:
     
     def __init__(self):
@@ -111,6 +148,7 @@ class Message:
 
 
 FORMAT = Format()
+rep = Report()
 
 
 if __name__ == '__main__':
