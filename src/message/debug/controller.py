@@ -3,16 +3,16 @@
 
 class Debug:
     # To quit an app correctly, the last GUI message must be non-blocking
-    def __init__(self, message, Silent=True, Block=False):
+    def __init__(self, message, Graphical=False, Block=False):
         self.message = str(message)
-        self.Silent = Silent
+        self.Graphical = Graphical
         self.Block = Block
     
     def get(self):
-        if self.Silent:
-            from message.debug.logic import DEBUG
-        else:
+        if self.Graphical:
             from message.debug.gui import DEBUG
+        else:
+            from message.debug.logic import DEBUG
         return DEBUG
     
     def show(self):

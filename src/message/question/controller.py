@@ -2,20 +2,20 @@
 # -*- coding: UTF-8 -*-
 
 class Question:
-    ''' message.controller.Message.__init__ sets Silent=True by default, so we
-        have to reassign Silent anyway when calling Question from shared.
+    ''' message.controller.Message.__init__ sets Graphical=False by default, so
+        we have to reassign Graphical anyway when calling Question from shared.
         To quit an app correctly, the last GUI message must be non-blocking.
     '''
-    def __init__(self, message, Silent=True, Block=False):
+    def __init__(self, message, Graphical=False, Block=False):
         self.message = str(message)
-        self.Silent = Silent
+        self.Graphical = Graphical
         self.Block = Block
     
     def get(self):
-        if self.Silent:
-            from message.question.logic import QUESTION
-        else:
+        if self.Graphical:
             from message.question.gui import QUESTION
+        else:
+            from message.question.logic import QUESTION
         return QUESTION
     
     def show(self):

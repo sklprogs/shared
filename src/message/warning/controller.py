@@ -3,16 +3,16 @@
 
 class Warning:
     # To quit an app correctly, the last GUI message must be non-blocking
-    def __init__(self, message, Silent=True, Block=False):
+    def __init__(self, message, Graphical=False, Block=False):
         self.message = str(message)
-        self.Silent = Silent
+        self.Graphical = Graphical
         self.Block = Block
     
     def get(self):
-        if self.Silent:
-            from message.warning.logic import WARN
-        else:
+        if self.Graphical:
             from message.warning.gui import WARN
+        else:
+            from message.warning.logic import WARN
         return WARN
     
     def show(self):

@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-STOP_MES = False
+STOP = False
+GRAPHICAL = True
 
 import message.info.controller
 import message.debug.controller
@@ -39,11 +40,11 @@ class Format:
 
 class Message:
     # To quit an app correctly, the last GUI message must be non-blocking
-    def __init__(self, func, message, Silent=True, Block=False, limit=200):
+    def __init__(self, func, message, Graphical=False, Block=False, limit=200):
         self.type_ = _('INFO')
         self.func = str(func)
         self.message = str(message)
-        self.Silent = Silent
+        self.Graphical = GRAPHICAL and Graphical
         self.Block = Block
         self.limit = limit
         self.shorten()
@@ -56,55 +57,55 @@ class Message:
         return FORMAT.run()
     
     def get_message(self):
-        if self.Silent:
+        if not self.Graphical:
             return self.get_silent()
         sub = _('Code block: {}').format(self.func)
         return f'{self.message}\n\n{sub}'
     
     def duplicate(self, inst):
         # Duplicate the message to the console, if necessary
-        if not self.Silent:
+        if self.Graphical:
             inst.message = self.get_silent()
-            inst.Silent = True
+            inst.Graphical = False
             inst.show()
     
     def show_debug(self):
-        if STOP_MES:
+        if STOP:
             return
         self.type_ = _('DEBUG')
-        idebug = message.debug.controller.Debug(self.get_message(), self.Silent, self.Block)
+        idebug = message.debug.controller.Debug(self.get_message(), self.Graphical, self.Block)
         idebug.show()
         self.duplicate(idebug)
     
     def show_error(self):
-        if STOP_MES:
+        if STOP:
             return
         self.type_ = _('ERROR')
-        ierror = message.error.controller.Error(self.get_message(), self.Silent, self.Block)
+        ierror = message.error.controller.Error(self.get_message(), self.Graphical, self.Block)
         ierror.show()
         self.duplicate(ierror)
 
     def show_info(self):
-        if STOP_MES:
+        if STOP:
             return
         self.type_ = _('INFO')
-        iinfo = message.info.controller.Info(self.get_message(), self.Silent, self.Block)
+        iinfo = message.info.controller.Info(self.get_message(), self.Graphical, self.Block)
         iinfo.show()
         self.duplicate(iinfo)
                        
     def show_warning(self):
-        if STOP_MES:
+        if STOP:
             return
         self.type_ = _('WARNING')
-        iwarn = message.warning.controller.Warning(self.get_message(), self.Silent, self.Block)
+        iwarn = message.warning.controller.Warning(self.get_message(), self.Graphical, self.Block)
         iwarn.show()
         self.duplicate(iwarn)
 
     def show_question(self):
-        if STOP_MES:
+        if STOP:
             return
         self.type_ = _('QUESTION')
-        iques = message.question.controller.Question(self.get_message(), self.Silent, self.Block)
+        iques = message.question.controller.Question(self.get_message(), self.Graphical, self.Block)
         #TODO: Duplicate
         return iques.show()
 
@@ -114,22 +115,22 @@ FORMAT = Format()
 
 if __name__ == '__main__':
     f = '[SharedQt] message.controller.__main__'
-    Silent = True
+    Graphical = True
     Block = False
     #mes = 'Please note this debug!'
     #import sys
     #from PyQt6.QtWidgets import QApplication
     #root = QApplication(sys.argv)
-    #Message(f, mes, Silent, Block).show_debug()
+    #Message(f, mes, Graphical, Block).show_debug()
     #Message(f, 'Tactical error.', True).show_error()
     #Message(f, 'Get ready to test', True).show_warning()
     #Message(f, 'Hello, everyone', True).show_info()
-    #, Silent=False
-    answer = Message(f, 'Have you read this?', Silent, Block).show_question()
+    #, Graphical=False
+    answer = Message(f, 'Have you read this?', Graphical, Block).show_question()
     if answer:
         answer = 'Yes'
     else:
         answer = 'No'
     mes = f'You have answered {answer}'
-    Message(f, mes, Silent, Block).show_info()
+    Message(f, mes, Graphical, Block).show_info()
     #sys.exit(root.exec())

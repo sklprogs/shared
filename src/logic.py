@@ -160,7 +160,7 @@ class FastTable:
                                     ,len(self.lst)
                                     )
             mes = _('The condition "{}" is not observed!').format(sub)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
     
     def report(self):
         f = '[SharedQt] logic.FastTable.report'
@@ -222,7 +222,7 @@ class FastTable:
         except TypeError:
             self.Success = False
             mes = _('Only iterable objects are supported!')
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
     
     def run(self):
         self.make_list()
@@ -294,9 +294,7 @@ class Font:
         match = re.match('([aA-zZ].*) (\d+)', self.name)
         if not match:
             message = _('Wrong input data: "{}"!').format(self.name)
-            Message (func = f
-                    ,message = message
-                    ).show_error()
+            ms.Message(f, message, False).show_error()
             return
         self.family = match.group(1)
         self.size = int(match.group(2))
@@ -351,7 +349,7 @@ class Launch:
         if GetOutput:
             if Block:
                 mes = _('Reading standard output is not supported in a blocking mode!')
-                ms.Message(f, mes, False).show_error()
+                ms.Message(f, mes, True).show_error()
             else:
                 self.stdout = subprocess.PIPE
 
@@ -393,7 +391,7 @@ class Launch:
             return True
         except:
             mes = _('Failed to run "{}"!').format(self.custom_args)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
 
     def _launch_lin(self):
         f = '[SharedQt] logic.Launch._launch_lin'
@@ -402,7 +400,7 @@ class Launch:
             return True
         except OSError:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
 
     def _launch_mac(self):
         f = '[SharedQt] logic.Launch._launch_mac'
@@ -411,7 +409,7 @@ class Launch:
             return True
         except:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
 
     def _launch_win(self):
         f = '[SharedQt] logic.Launch._launch_win'
@@ -420,7 +418,7 @@ class Launch:
             return True
         except:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
 
     def launch_app(self, custom_app='', custom_args=[]):
         self.custom_app = custom_app
@@ -477,14 +475,14 @@ class WriteTextFile:
         if not self.file:
             self.Success = False
             mes = _('Not enough input data!')
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
 
     def _write(self, mode='w'):
         f = '[SharedQt] logic.WriteTextFile._write'
         if mode != 'w' and mode != 'a':
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(mode, 'a, w')
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
             return
         mes = _('Write file "{}"').format(self.file)
         ms.Message(f, mes).show_info()
@@ -494,7 +492,7 @@ class WriteTextFile:
         except:
             self.Success = False
             mes = _('Unable to write file "{}"!').format(self.file)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
         return self.Success
 
     def append(self, text=''):
@@ -509,7 +507,7 @@ class WriteTextFile:
                 scratch?
             '''
             mes = _('Not enough input data!')
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
             return
         self._write('a')
 
@@ -521,7 +519,7 @@ class WriteTextFile:
         self.text = text
         if not self.text and not self.Empty:
             mes = _('Not enough input data!')
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
             return
         if com.rewrite (file = self.file
                        ,Rewrite = self.Rewrite
@@ -552,15 +550,15 @@ class ReadTextFile:
         elif not self.file:
             self.Success = False
             mes = _('Empty input is not allowed!')
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
         elif not os.path.exists(self.file):
             self.Success = False
             mes = _('File "{}" has not been found!').format(self.file)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
         else:
             self.Success = False
             mes = _('Wrong input data!')
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
 
     def _read(self, encoding):
         f = '[SharedQt] logic.ReadTextFile._read'
@@ -570,7 +568,7 @@ class ReadTextFile:
         except Exception as e:
             # Avoid UnicodeDecodeError, access errors, etc.
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
 
     def delete_bom(self):
         f = '[SharedQt] logic.ReadTextFile.delete_bom'
@@ -613,7 +611,7 @@ class ReadTextFile:
             com.cancel(f)
             return self.text
         mes = _('Load file "{}"').format(self.file)
-        Message(f, mes).show_info()
+        ms.Message(f, mes).show_info()
         ''' We can try to define an encoding automatically, however, this often
             spoils some symbols, so we just proceed with try-except and the
             most popular encodings.
@@ -630,7 +628,7 @@ class ReadTextFile:
             '''
             self.Success = False
             mes = _('Unable to read file "{}"!').format(self.file)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
             return self.text
         self.delete_bom()
         return self.text
@@ -849,7 +847,7 @@ class Text:
                              ,closing_sym
                              ,self.text.count(closing_sym)
                              )
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
             return self.text
         opening_parentheses = []
         closing_parentheses = []
@@ -981,7 +979,7 @@ class Text:
         f = '[SharedQt] logic.Text.split_by_comma'
         if (';' in self.text or ',' in self.text) and '\n' in self.text:
             mes = _('Commas and/or semicolons or line breaks can be used, but not altogether!')
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
         elif ';' in self.text or ',' in self.text:
             self.text = self.text.replace(',', '\n')
             self.text = self.text.replace(';', '\n')
@@ -1227,7 +1225,7 @@ class Time:
         self.Success = False
         mes = _('Set time parameters are incorrect or not supported.\n\nDetails: {}')
         mes = mes.format(e)
-        ms.Message(f, mes, False).show_error()
+        ms.Message(f, mes, True).show_error()
 
     def set_values(self):
         self.Success = True
@@ -1405,15 +1403,15 @@ class File:
         elif not self.file:
             self.Success = False
             mes = _('Empty input is not allowed!')
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
         elif not os.path.exists(self.file):
             self.Success = False
             mes = _('File "{}" has not been found!').format(self.file)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
         else:
             self.Success = False
             mes = _('The object "{}" is not a file!').format(self.file)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
 
     def get_size(self, Follow=True):
         f = '[SharedQt] logic.File.get_size'
@@ -1433,7 +1431,7 @@ class File:
                 be raised if Follow=False and this is a broken symbolic link.
             '''
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
         return result
     
     def _copy(self):
@@ -1447,7 +1445,7 @@ class File:
             Success = False
             mes = _('Failed to copy file "{}" to "{}"!')
             mes = mes.format(self.file, self.dest)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
         return Success
 
     def _move(self):
@@ -1461,7 +1459,7 @@ class File:
             Success = False
             mes = _('Failed to move "{}" to "{}"!\n\nDetails: {}')
             mes = mes.format(self.file, self.dest, e)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
         return Success
 
     def get_access_time(self):
@@ -1476,7 +1474,7 @@ class File:
         except:
             mes = _('Failed to get the date of the file "{}"!')
             mes = mes.format(self.file)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
 
     def copy(self):
         f = '[SharedQt] logic.File.copy'
@@ -1486,7 +1484,7 @@ class File:
             return
         if self.file.lower() == self.dest.lower():
             mes = _('Unable to copy the file "{}" to iself!').format(self.file)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
         elif com.rewrite (file = self.dest
                          ,Rewrite = self.Rewrite
                          ):
@@ -1508,7 +1506,7 @@ class File:
             return True
         except:
             mes = _('Failed to delete file "{}"!').format(self.file)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
 
     def get_modification_time(self):
         f = '[SharedQt] logic.File.get_modification_time'
@@ -1522,7 +1520,7 @@ class File:
         except:
             mes = _('Failed to get the date of the file "{}"!')
             mes = mes.format(self.file)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
 
     def move(self):
         f = '[SharedQt] logic.File.move'
@@ -1533,7 +1531,7 @@ class File:
         if self.file.lower() == self.dest.lower():
             mes = _('Moving is not necessary, because the source and destination are identical ({}).')
             mes = mes.format(self.file)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
         elif com.rewrite (file = self.dest
                          ,Rewrite = self.Rewrite
                          ):
@@ -1558,7 +1556,7 @@ class File:
         except:
             mes = _('Failed to change the time of the file "{}" to "{}"!')
             mes = mes.format(self.file, (self.atime, self.mtime))
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
 
 
 
@@ -1575,14 +1573,14 @@ class Path:
             return result
         if not os.path.exists(self.path):
             mes = _('Wrong input data: "{}"!').format(self.path)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
             return result
         try:
             istat = os.statvfs(self.path)
             result = istat.f_bavail * istat.f_bsize
         except Exception as e:
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
         return result
     
     def _split_path(self):
@@ -1614,7 +1612,7 @@ class Path:
             else:
                 Success = False
                 mes = _('The path "{}" is invalid!').format(self.path)
-                ms.Message(f, mes, False).show_warning()
+                ms.Message(f, mes, True).show_warning()
         else:
             mes = _('Create directory "{}"').format(self.path)
             ms.Message(f, mes).show_info()
@@ -1624,7 +1622,7 @@ class Path:
             except:
                 Success = False
                 mes = _('Failed to create directory "{}"!').format(self.path)
-                ms.Message(f, mes, False).show_error()
+                ms.Message(f, mes, True).show_error()
         return Success
 
     def delete_inappropriate_symbols(self):
@@ -1725,7 +1723,7 @@ class Directory:
         if not os.path.isdir(self.dir):
             self.Success = False
             mes = _('Wrong input data: "{}"!').format(self.dir)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
     
     def _move(self):
         f = '[SharedQt] logic.Directory._move'
@@ -1738,7 +1736,7 @@ class Directory:
             Success = False
             mes = _('Failed to move "{}" to "{}"!\n\nDetails: {}')
             mes = mes.format(self.dir, self.dest, e)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
         return Success
 
     def move(self):
@@ -1754,7 +1752,7 @@ class Directory:
         elif self.dir.lower() == self.dest.lower():
             mes = _('Moving is not necessary, because the source and destination are identical ({}).')
             mes = mes.format(self.dir)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
         else:
             Success = self._move()
         return self.Success and Success
@@ -1777,7 +1775,7 @@ class Directory:
             self.subfiles.sort(key=lambda x: x.lower())
         except Exception as e:
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
         return self.subfiles
     
     def get_size(self, Follow=True):
@@ -1800,7 +1798,7 @@ class Directory:
                 be raised if Follow=False and there are broken symbolic links.
             '''
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
         return result
     
     def set_values(self):
@@ -1859,7 +1857,7 @@ class Directory:
         except:
             mes = _('Failed to delete directory "{}"! Delete it manually.')
             mes = mes.format(self.dir)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
 
     def get_rel_list(self):
         # Create a list of objects with a relative path
@@ -1885,7 +1883,7 @@ class Directory:
             # We can encounter, e.g., PermissionError here
             self.Success = False
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
         self.lst.sort(key=lambda x: x.lower())
         self.rellist = list(self.lst)
         for i in range(len(self.lst)):
@@ -1945,10 +1943,10 @@ class Directory:
             return
         if self.dir.lower() == self.dest.lower():
             mes = _('Unable to copy "{}" to iself!').format(self.dir)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
         elif os.path.isdir(self.dest):
             mes = _('Directory "{}" already exists.').format(self.dest)
-            ms.Message(f, mes, False).show_info()
+            ms.Message(f, mes, True).show_info()
         else:
             self._copy()
 
@@ -1961,7 +1959,7 @@ class Directory:
         except:
             self.Success = False
             mes = _('Failed to copy "{}" to "{}"!').format(self.dir, self.dest)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
 
 
 
@@ -1991,7 +1989,7 @@ class Online:
         except Exception as e:
             mes = _('Failed to open URL "{}" in a default browser!\n\nDetails: {}')
             mes = mes.format(self.url, e)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
 
     # Create a correct online link (URI => URL)
     def get_url(self):
@@ -2084,7 +2082,7 @@ class Email:
                                 )
         except:
             mes = _('Failed to load an e-mail client.')
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
     
     def create(self):
         f = '[SharedQt] logic.Email.create'
@@ -2103,7 +2101,7 @@ class Email:
         f = '[SharedQt] logic.Email.run_outlook'
         if not objs.get_os().is_win():
             mes = _('This operation cannot be executed on your operating system.')
-            ms.Message(f, mes, False).show_info()
+            ms.Message(f, mes, True).show_info()
             return
         try:
             import win32com.client
@@ -2120,7 +2118,7 @@ class Email:
             return True
         except Exception as e:
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
     
     def run_thunderbird(self):
         f = '[SharedQt] logic.Email.run_thunderbird'
@@ -2147,7 +2145,7 @@ class Email:
             return True
         except:
             mes = _('Failed to run "{}"!').format(self.custom_args)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
     
     def run_evolution(self):
         f = '[SharedQt] logic.Email.run_evolution'
@@ -2174,7 +2172,7 @@ class Email:
             return True
         except:
             mes = _('Failed to run "{}"!').format(self.custom_args)
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
 
 
 
@@ -2409,7 +2407,7 @@ class Get:
         # Safely use URL as a string
         if not isinstance(self.url, str):
             mes = _('Wrong input data: {}!').format(self.url)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
             return
         if self.Verbose:
             timer = Timer(f)
@@ -2486,7 +2484,7 @@ class Commands:
         '''
         if not str(number).isdigit():
             mes = _('Wrong input data: "{}"!').format(number)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
             return []
         result = []
         i = 2
@@ -2517,9 +2515,9 @@ class Commands:
             figure = '-' + figure
         return figure
     
-    def rep_failed(self, f='Logic error', e='Logic error', Silent=False):
+    def rep_failed(self, f='Logic error', e='Logic error', Graphical=True):
         mes = _('Operation has failed!\n\nDetails: {}').format(e)
-        ms.Message(f, mes, Silent).show_error()
+        ms.Message(f, mes, Graphical).show_error()
     
     def rep_lazy(self, func=_('Logic error!')):
         ms.Message(func, _('Nothing to do!')).show_debug()
@@ -2606,7 +2604,7 @@ class Commands:
             itime.inst = datetime.datetime.strptime(date, pattern)
         except ValueError:
             mes = _('Wrong input data: "{}"!').format(date)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
         return itime.get_timestamp()
     
     def get_yt_length(self, length):
@@ -2620,7 +2618,7 @@ class Commands:
             return 0
         if not isinstance(length, str) or length[0] != 'P':
             mes = _('Wrong input data: "{}"!').format(length)
-            ms.Message(f, mes, False).show_warning()
+            ms.Message(f, mes, True).show_warning()
             return 0
         days = 0
         hours = 0
@@ -2655,7 +2653,7 @@ class Commands:
             '''
             mes = _('ATTENTION: Do yo really want to rewrite file "{}"?')
             mes = mes.format(file)
-            return ms.Message(f, mes, False).show_question()
+            return ms.Message(f, mes, True).show_question()
         else:
             ''' We return True so we may proceed with writing
                 if the file has not been found.
@@ -2698,9 +2696,7 @@ class Commands:
             return result
         if not isinstance(delta, int) and not isinstance(delta, float):
             mes = _('Wrong input data: "{}"!').format(delta)
-            Message (func = f
-                    ,message = mes
-                    ).show_warning()
+            ms.Message(f, mes).show_warning()
             return result
         # 'datetime' will output years even for small integers
         # https://kalkulator.pro/year-to-second.html
@@ -2737,55 +2733,37 @@ class Commands:
         return result
     
     def cancel(self, func=_('Logic error!')):
-        Message (func = func
-                ,message = _('Operation has been canceled.')
-                ).show_warning()
+        ms.Message(func, _('Operation has been canceled.')).show_warning()
     
     def rep_input(self, func=_('Logic error!')):
-        Message (func = func
-                ,message = _('Wrong input data!')
-                ).show_warning()
+        ms.Message(func, _('Wrong input data!')).show_warning()
     
     def rep_empty(self, func=_('Logic error!')):
-        Message (func = func
-                ,message = _('Empty input is not allowed!')
-                ).show_warning()
+        ms.Message(func, _('Empty input is not allowed!')).show_warning()
     
     def rep_not_ready(self, func=_('Logic error!')):
-        Message (func = func
-                ,message = _('Not implemented yet!')
-                ).show_info()
+        ms.Message(func, _('Not implemented yet!')).show_info()
     
     def rep_out(self, func=_('Logic error!')):
-        Message (func = func
-                ,message = _('Empty output is not allowed!')
-                ).show_warning()
+        ms.Message(func, _('Empty output is not allowed!')).show_warning()
     
     def rep_deleted(self, func=_('Logic error!'), count=0):
         if count:
             message = _('{} blocks have been deleted').format(count)
-            Message (func = func
-                    ,message = message
-                    ).show_debug()
+            ms.Message(func, message).show_debug()
     
     def rep_matches(self, func=_('Logic error!'), count=0):
         if count:
             message = _('{} matches').format(count)
-            Message (func = func
-                    ,message = message
-                    ).show_debug()
+            ms.Message(func, message).show_debug()
     
     def rep_third_party(self, func=_('Logic error!'), message=_('Logic error!')):
         mes = _('Third-party module has failed!\n\nDetails: {}').format(message)
-        Message (func = func
-                ,message = mes
-                ).show_error()
+        ms.Message(func, mes, False).show_error()
     
     def rep_condition(self, func=_('Logic error!'), message=_('Logic error!')):
         message = _('The condition "{}" is not observed!').format(message)
-        Message (func = func
-                ,message = message
-                ).show_warning()
+        ms.Message(func, message, False).show_warning()
 
 
 objs = Objects()

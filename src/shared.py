@@ -158,7 +158,7 @@ class Font:
     def fail(self, f, e):
         self.Success = False
         mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
-        ms.Message(f, mes, False).show_error()
+        ms.Message(f, mes, True).show_error()
     
     def set_parent(self):
         f = '[SharedQt] shared.Font.set_parent'
@@ -377,7 +377,7 @@ class OptionMenu:
         else:
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(item, '; '.join(self.items))
-            ms.Message(f, mes, False).show_error()
+            ms.Message(f, mes, True).show_error()
     
     def fill(self):
         self.gui.fill(self.items)
@@ -734,25 +734,25 @@ if __name__ == '__main__':
     #idebug = Debug(f, 'Here should be some debug info')
     # This MUST be on a separate line, the widget will not be shown otherwise
     #idebug.show()
-    Silent = False
+    Graphical = True
     Block = False
     '''
     mes = 'This is a standard message.'
-    ms.Message(f, mes, Silent).show_info()
+    ms.Message(f, mes, Graphical).show_info()
     mes = 'Here should be some debug info'
-    ms.Message(f, mes, Silent).show_debug()
+    ms.Message(f, mes, Graphical).show_debug()
     mes = 'This is a warning'
-    ms.Message(f, mes, Silent).show_warning()
+    ms.Message(f, mes, Graphical).show_warning()
     mes = 'And this is an error!'
-    ms.Message(f, mes, Silent).show_error()
+    ms.Message(f, mes, Graphical).show_error()
     '''
     mes = 'Have you read this?'
-    answer = ms.Message(f, mes, Silent, False).show_question()
+    answer = ms.Message(f, mes, Graphical, False).show_question()
     if answer:
         answer = 'Yes'
     else:
         answer = 'No'
     mes = f'Your answer is {answer}'
-    ms.Message(f, mes).show_debug()
+    ms.Message(f, mes, True).show_debug()
     # To quit correctly, the last GUI message must be non-blocking
     com.end()
