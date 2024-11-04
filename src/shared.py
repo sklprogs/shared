@@ -77,7 +77,7 @@ class Color:
             return(darker, lighter)
         mes = _('Color: {}, darker: {}, lighter: {}')
         mes = mes.format(self.color, darker, lighter)
-        objs.get_mes(f, mes, True).show_debug()
+        ms.Message(f, mes).show_debug()
         return(darker, lighter)
 
 
@@ -158,7 +158,7 @@ class Font:
     def fail(self, f, e):
         self.Success = False
         mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
-        objs.get_mes(f, mes).show_error()
+        ms.Message(f, mes, False).show_error()
     
     def set_parent(self):
         f = '[SharedQt] shared.Font.set_parent'
@@ -305,7 +305,7 @@ class Top:
             self.gui.add_widget(item.widget)
         else:
             mes = _('Wrong input data!')
-            objs.get_mes(f, mes, True).show_error()
+            ms.Message(f, mes).show_error()
     
     def show(self):
         self.gui.show()
@@ -377,7 +377,7 @@ class OptionMenu:
         else:
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(item, '; '.join(self.items))
-            objs.get_mes(f, mes).show_error()
+            ms.Message(f, mes, False).show_error()
     
     def fill(self):
         self.gui.fill(self.items)
@@ -638,7 +638,7 @@ class Commands(lg.Commands):
                                     )
         except Exception as e:
             mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
-            objs.get_mes(f, mes, True).show_warning()
+            ms.Message(f, mes).show_warning()
     
     def start(self):
         gi.objs.start()
@@ -734,20 +734,25 @@ if __name__ == '__main__':
     #idebug = Debug(f, 'Here should be some debug info')
     # This MUST be on a separate line, the widget will not be shown otherwise
     #idebug.show()
+    Silent = False
+    Block = False
+    '''
     mes = 'This is a standard message.'
-    ms.Message(f, mes, False).show_info()
+    ms.Message(f, mes, Silent).show_info()
     mes = 'Here should be some debug info'
-    ms.Message(f, mes, False).show_debug()
+    ms.Message(f, mes, Silent).show_debug()
     mes = 'This is a warning'
-    ms.Message(f, mes, False).show_warning()
+    ms.Message(f, mes, Silent).show_warning()
     mes = 'And this is an error!'
-    ms.Message(f, mes, False).show_warning()
+    ms.Message(f, mes, Silent).show_error()
+    '''
     mes = 'Have you read this?'
-    answer = ms.Message(f, mes, False).show_question()
+    answer = ms.Message(f, mes, Silent, False).show_question()
     if answer:
         answer = 'Yes'
     else:
         answer = 'No'
     mes = f'Your answer is {answer}'
     ms.Message(f, mes).show_debug()
+    # To quit correctly, the last GUI message must be non-blocking
     com.end()
