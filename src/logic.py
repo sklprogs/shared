@@ -2664,7 +2664,7 @@ class Commands:
     
     def set_lang(self):
         f = '[SharedQt] logic.Commands.set_lang'
-        result = locale.getdefaultlocale()
+        result = locale.getlocale()
         if result and result[0]:
             result = result[0]
             if 'ru' in result:
