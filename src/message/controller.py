@@ -38,8 +38,8 @@ class Format:
 
 
 class Message:
-
-    def __init__(self, func, message, Silent=True, Block=True, limit=200):
+    # To quit an app correctly, the last GUI message must be non-blocking
+    def __init__(self, func, message, Silent=True, Block=False, limit=200):
         self.type_ = _('INFO')
         self.func = str(func)
         self.message = str(message)
