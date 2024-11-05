@@ -93,19 +93,6 @@ class FileDialog:
 
 
 
-class Clipboard:
-    
-    def __init__(self):
-        self.clipboard = objs.get_root().clipboard()
-    
-    def copy(self, text):
-        self.clipboard.setText(text)
-    
-    def paste(self):
-        return self.clipboard.text()
-
-
-
 class Top(PyQt6.QtWidgets.QWidget):
 
     def __init__(self, *args, **kwargs):

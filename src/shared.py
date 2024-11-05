@@ -384,34 +384,6 @@ class WriteTextFile(lg.WriteTextFile):
 
 
 
-class Clipboard:
-
-    def __init__(self, Silent=False):
-        self.Silent = Silent
-        self.gui = gi.Clipboard()
-
-    def copy(self, text, CopyEmpty=True):
-        f = '[SharedQt] shared.Clipboard.copy'
-        if not (text or CopyEmpty):
-            com.rep_empty(f)
-            return
-        try:
-            self.gui.copy(text)
-        except Exception as e:
-            com.rep_failed(f, e, self.Silent)
-
-    def paste(self):
-        f = '[SharedQt] shared.Clipboard.paste'
-        try:
-            text = self.gui.paste()
-        except Exception as e:
-            text = ''
-            com.rep_failed(f, e, self.Silent)
-        # Further possible actions: strip, delete double line breaks
-        return text
-
-
-
 class Objects(lg.Objects):
     
     def __init__(self):
