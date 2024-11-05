@@ -2451,13 +2451,6 @@ class Commands:
             figure = '-' + figure
         return figure
     
-    def rep_failed(self, f='Logic error', e='Logic error', Graphical=True):
-        mes = _('Operation has failed!\n\nDetails: {}').format(e)
-        ms.Message(f, mes, Graphical).show_error()
-    
-    def rep_lazy(self, func=_('Logic error!')):
-        ms.Message(func, _('Nothing to do!')).show_debug()
-    
     def get_human_size(self, bsize, LargeOnly=False):
         # IEC standard
         result = '0 {}'.format(_('B'))
