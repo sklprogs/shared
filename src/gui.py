@@ -240,8 +240,7 @@ class Button:
 class Objects:
 
     def __init__(self):
-        self.root = self.warning = self.error = self.question \
-                  = self.info = self.entry = self.icon = self.screen = None
+        self.icon = self.screen = None
     
     def get_screen(self):
         if self.screen is None:
@@ -252,37 +251,6 @@ class Objects:
         if self.icon is None:
             self.icon = PyQt6.QtGui.QIcon(ICON)
         return self.icon
-    
-    def get_root(self):
-        if self.root is None:
-            self.root = PyQt6.QtWidgets.QApplication(sys.argv)
-        return self.root
-
-    def start(self):
-        self.get_root()
-
-    def end(self):
-        sys.exit(self.root.exec())
-
-    def get_warning(self):
-        if self.warning is None:
-            self.warning = Message().get_warning()
-        return self.warning
-
-    def get_error(self):
-        if self.error is None:
-            self.error = Message().get_error()
-        return self.error
-
-    def get_question(self):
-        if self.question is None:
-            self.question = Message().get_question()
-        return self.question
-
-    def get_info(self):
-        if self.info is None:
-            self.info = Message().get_info()
-        return self.info
 
 
 

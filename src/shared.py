@@ -403,11 +403,8 @@ class Objects(lg.Objects):
             self.waitbox = None
             #self.waitbox = WaitBox(icon)
         return self.waitbox
+
     
-    def get_root(self):
-        return gi.objs.get_root()
-
-
 
 class Commands(lg.Commands):
     
