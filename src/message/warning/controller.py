@@ -10,9 +10,9 @@ class Warning:
     
     def get(self):
         if self.Graphical:
-            from message.warning.gui import WARN
+            from skl_shared_qt.message.warning.gui import WARN
         else:
-            from message.warning.logic import WARN
+            from skl_shared_qt.message.warning.logic import WARN
         return WARN
     
     def show(self):

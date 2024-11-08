@@ -10,9 +10,9 @@ class Info:
     
     def get(self):
         if self.Graphical:
-            from message.info.gui import INFO
+            from skl_shared_qt.message.info.gui import INFO
         else:
-            from message.info.logic import INFO
+            from skl_shared_qt.message.info.logic import INFO
         return INFO
     
     def show(self):

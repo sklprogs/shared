@@ -10,9 +10,9 @@ class Error:
     
     def get(self):
         if self.Graphical:
-            from message.error.gui import ERROR
+            from skl_shared_qt.message.error.gui import ERROR
         else:
-            from message.error.logic import ERROR
+            from skl_shared_qt.message.error.logic import ERROR
         return ERROR
     
     def show(self):
