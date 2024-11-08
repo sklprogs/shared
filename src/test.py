@@ -5,6 +5,23 @@ import skl_shared_qt.message.controller as ms
 import skl_shared_qt.shared as sh
 
 
+class Root:
+    
+    def __init__(self):
+        from skl_shared_qt.graphics.root.controller import ROOT
+        self.root = ROOT
+    
+    def show(self):
+        from PyQt6.QtWidgets import QMainWindow
+        win = QMainWindow()
+        win.show()
+        self.root.end()
+    
+    def run(self):
+        self.show()
+
+
+
 class Messages:
     
     def console(self):
@@ -60,4 +77,5 @@ class Report:
 
 
 if __name__ == '__main__':
-    Report().test_all()
+    #Report().test_all()
+    Root().show()
