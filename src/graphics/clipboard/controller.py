@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import skl_shared_qt.message.controller as ms
-import skl_shared_qt.clipboard.gui as gi
+import skl_shared_qt.graphics.clipboard.gui as gi
 
 
 class Clipboard:
@@ -30,3 +30,6 @@ class Clipboard:
             ms.rep.failed(f, e, self.Silent)
         # Further possible actions: strip, delete double line breaks
         return text
+
+
+CLIPBOARD = Clipboard()

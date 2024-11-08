@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
+from skl_shared_qt.localize import _
 import skl_shared_qt.message.controller as ms
 import skl_shared_qt.shared as sh
 
@@ -20,6 +21,42 @@ class Root:
     
     def run(self):
         self.show()
+
+
+
+class Clipboard:
+    
+    def __init__(self):
+        from skl_shared_qt.graphics.root.controller import ROOT
+        from skl_shared_qt.graphics.clipboard.controller import CLIPBOARD
+        self.root = ROOT
+        self.clipboard = CLIPBOARD
+    
+    def copy_paste(self):
+        f = '[SharedQt] test.Clipboard.copy_paste'
+        mes = _('Start test')
+        ms.Message(f, mes).show_info()
+        text = 'икепцукапвр ваырвар'
+        mes = _('Copy "{}" to clipboard').format(text)
+        ms.Message(f, mes).show_debug()
+        self.clipboard.copy(text)
+        mes = _('Paste "{}" from clipboard').format(text)
+        ms.Message(f, mes).show_debug()
+        text = self.clipboard.paste()
+        mes = _('Pasted text: "{}"').format(text)
+        ms.Message(f, mes).show_debug()
+    
+    def set_gui(self):
+        from PyQt6.QtWidgets import QMainWindow
+        # Must be assigned to self, or will be destroyed by garbage collector
+        self.win = QMainWindow()
+        # Must be on a separate line
+        self.win.show()
+    
+    def run(self):
+        self.set_gui()
+        self.copy_paste()
+        self.root.end()
 
 
 
@@ -79,4 +116,5 @@ class Report:
 
 if __name__ == '__main__':
     #Report().test_all()
-    Root().show()
+    #Root().run()
+    Clipboard().run()
