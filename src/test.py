@@ -64,9 +64,16 @@ class Clipboard:
         self._copy('', True)
         self._paste()
     
+    def paste_empty_not_allowed(self):
+        f = '[SharedQt] test.Clipboard.paste_empty_not_allowed'
+        ms.Message(f, _('Start test')).show_info()
+        self._copy('', False)
+        self._paste()
+    
     def run_all(self):
         self.copy_paste()
         self.paste_empty_allowed()
+        self.paste_empty_not_allowed()
     
     def run(self):
         self.set_gui()
