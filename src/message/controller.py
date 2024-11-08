@@ -17,10 +17,10 @@ class Report:
     
     def failed(self, func='Logic error', output='Logic error', Graphical=True):
         mes = _('Operation has failed!\n\nDetails: {}').format(output)
-        ms.Message(func, mes, Graphical).show_error()
+        Message(func, mes, Graphical).show_error()
     
     def lazy(self, func=_('Logic error!')):
-        ms.Message(func, _('Nothing to do!')).show_debug()
+        Message(func, _('Nothing to do!')).show_debug()
     
     def cancel(self, func=_('Logic error!')):
         Message(func, _('Operation has been canceled.')).show_warning()
