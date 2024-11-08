@@ -70,10 +70,16 @@ class Clipboard:
         self._copy('', False)
         self._paste()
     
+    def paste_error_console(self):
+        f = '[SharedQt] test.Clipboard.paste_error_console'
+        ms.Message(f, _('Start test')).show_info()
+        self._copy(b'\x01')
+    
     def run_all(self):
         self.copy_paste()
         self.paste_empty_allowed()
         self.paste_empty_not_allowed()
+        self.paste_error_console()
     
     def run(self):
         self.set_gui()
