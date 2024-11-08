@@ -32,19 +32,26 @@ class Clipboard:
         self.root = ROOT
         self.clipboard = CLIPBOARD
     
-    def copy_paste(self):
-        f = '[SharedQt] test.Clipboard.copy_paste'
-        mes = _('Start test')
-        ms.Message(f, mes).show_info()
+    def _copy(self):
+        f = '[SharedQt] test.Clipboard._copy'
         text = 'икепцукапвр ваырвар'
         mes = _('Copy "{}" to clipboard').format(text)
         ms.Message(f, mes).show_debug()
         self.clipboard.copy(text)
-        mes = _('Paste "{}" from clipboard').format(text)
+    
+    def _paste(self):
+        f = '[SharedQt] test.Clipboard._paste'
+        mes = _('Paste from clipboard')
         ms.Message(f, mes).show_debug()
-        text = self.clipboard.paste()
-        mes = _('Pasted text: "{}"').format(text)
+        mes = _('Pasted text: "{}"').format(self.clipboard.paste())
         ms.Message(f, mes).show_debug()
+    
+    def copy_paste(self):
+        f = '[SharedQt] test.Clipboard.copy_paste'
+        mes = _('Start test')
+        ms.Message(f, mes).show_info()
+        self._copy()
+        self._paste()
     
     def set_gui(self):
         from PyQt6.QtWidgets import QMainWindow
