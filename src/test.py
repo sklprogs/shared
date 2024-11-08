@@ -32,12 +32,11 @@ class Clipboard:
         self.root = ROOT
         self.clipboard = CLIPBOARD
     
-    def _copy(self):
+    def _copy(self, text='икепцукапвр ваырвар', CopyEmpty=False):
         f = '[SharedQt] test.Clipboard._copy'
-        text = 'икепцукапвр ваырвар'
         mes = _('Copy "{}" to clipboard').format(text)
         ms.Message(f, mes).show_debug()
-        self.clipboard.copy(text)
+        self.clipboard.copy(text, CopyEmpty)
     
     def _paste(self):
         f = '[SharedQt] test.Clipboard._paste'
@@ -48,8 +47,7 @@ class Clipboard:
     
     def copy_paste(self):
         f = '[SharedQt] test.Clipboard.copy_paste'
-        mes = _('Start test')
-        ms.Message(f, mes).show_info()
+        ms.Message(f, _('Start test')).show_info()
         self._copy()
         self._paste()
     
@@ -60,9 +58,19 @@ class Clipboard:
         # Must be on a separate line
         self.win.show()
     
+    def paste_empty_allowed(self):
+        f = '[SharedQt] test.Clipboard.paste_empty_allowed'
+        ms.Message(f, _('Start test')).show_info()
+        self._copy('', True)
+        self._paste()
+    
+    def run_all(self):
+        self.copy_paste()
+        self.paste_empty_allowed()
+    
     def run(self):
         self.set_gui()
-        self.copy_paste()
+        self.run_all()
         self.root.end()
 
 
