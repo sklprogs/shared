@@ -14,6 +14,7 @@ class Root:
     def show(self):
         from PyQt6.QtWidgets import QMainWindow
         win = QMainWindow()
+        # Must be on a separate line
         win.show()
         self.root.end()
     
