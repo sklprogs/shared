@@ -28,15 +28,19 @@ class Clipboard:
     
     def __init__(self):
         from skl_shared_qt.graphics.root.controller import ROOT
-        from skl_shared_qt.graphics.clipboard.controller import CLIPBOARD
+        import skl_shared_qt.graphics.clipboard.controller as cl
         self.root = ROOT
-        self.clipboard = CLIPBOARD
+        self.clipboard = cl.Clipboard(False)
+        self.clipboard_gui = cl.Clipboard(True)
     
-    def _copy(self, text='икепцукапвр ваырвар', CopyEmpty=False):
+    def _copy(self, text='икепцукапвр ваырвар', CopyEmpty=False, Graphical=False):
         f = '[SharedQt] test.Clipboard._copy'
         mes = _('Copy "{}" to clipboard').format(text)
         ms.Message(f, mes).show_debug()
-        self.clipboard.copy(text, CopyEmpty)
+        if Graphical:
+            self.clipboard_gui.copy(text, CopyEmpty)
+        else:
+            self.clipboard.copy(text, CopyEmpty)
     
     def _paste(self):
         f = '[SharedQt] test.Clipboard._paste'
@@ -70,16 +74,29 @@ class Clipboard:
         self._copy('', False)
         self._paste()
     
-    def paste_error_console(self):
-        f = '[SharedQt] test.Clipboard.paste_error_console'
+    def paste_empty_not_allowed_gui(self):
+        f = '[SharedQt] test.Clipboard.paste_empty_not_allowed_gui'
+        ms.Message(f, _('Start test')).show_info()
+        self._copy('', False, True)
+        self._paste()
+    
+    def paste_error(self):
+        f = '[SharedQt] test.Clipboard.paste_error'
         ms.Message(f, _('Start test')).show_info()
         self._copy(b'\x01')
+    
+    def paste_error_gui(self):
+        f = '[SharedQt] test.Clipboard.paste_error_gui'
+        ms.Message(f, _('Start test')).show_info()
+        self._copy(b'\x01', Graphical=True)
     
     def run_all(self):
         self.copy_paste()
         self.paste_empty_allowed()
         self.paste_empty_not_allowed()
-        self.paste_error_console()
+        self.paste_empty_not_allowed_gui()
+        self.paste_error()
+        self.paste_error_gui()
     
     def run(self):
         self.set_gui()
