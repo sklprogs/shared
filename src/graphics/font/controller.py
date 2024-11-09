@@ -3,6 +3,7 @@
 
 from skl_shared_qt.localize import _
 import skl_shared_qt.message.controller as ms
+import skl_shared_qt.graphics.font.gui as gi
 
 
 class Font:

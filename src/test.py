@@ -18,12 +18,31 @@ class Label:
     
     def create_label(self):
         from skl_shared_qt.graphics.label.controller import Label
-        ilabel = Label(text='Hello there!', font_family='Mono', font_size=13)
-        self.win.setCentralWidget(ilabel.widget)
+        self.ilabel = Label(text='Hello there!', font_family='Mono', font_size=13)
+        self.win.setCentralWidget(self.ilabel.widget)
     
     def run(self):
         self.create_main()
         self.create_label()
+        self.win.show()
+        self.root.end()
+
+
+
+class Font(Label):
+    
+    def __init__(self):
+        super().__init__()
+    
+    def create_font(self):
+        from skl_shared_qt.graphics.font.controller import Font
+        self.ifont = Font(self.ilabel.widget, 'Mono', 14)
+        self.ifont.run()
+    
+    def run(self):
+        self.create_main()
+        self.create_label()
+        self.create_font()
         self.win.show()
         self.root.end()
 
@@ -211,4 +230,5 @@ if __name__ == '__main__':
     #Root().run()
     #Clipboard().run()
     #Label().run()
-    Entry().run()
+    #Entry().run()
+    Font().run()
