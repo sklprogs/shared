@@ -83,10 +83,57 @@ class Root:
         win = QMainWindow()
         # Must be on a separate line
         win.show()
-        self.root.end()
     
     def run(self):
         self.show()
+        self.root.end()
+
+
+
+class MainWindow:
+    
+    def __init__(self):
+        from skl_shared_qt.graphics.root.controller import ROOT
+        self.root = ROOT
+        self.create_main()
+    
+    def create_main(self):
+        from PyQt6.QtWidgets import QMainWindow
+        self.win = QMainWindow()
+    
+    def show(self):
+        self.win.show()
+    
+    def run(self):
+        self.show()
+        self.root.end()
+
+
+
+class Color(MainWindow):
+    
+    def __init__(self):
+        super().__init__()
+        self.color_name = 'cyan'
+    
+    def create_color(self):
+        from skl_shared_qt.graphics.color.controller import Color
+        self.icolor = Color(self.color_name)
+    
+    def get_hex(self):
+        f = '[SharedQt] test.Color.get_hex'
+        hex_ = self.icolor.get_hex()
+        mes = f'HEX value of color "{self.color_name}" is {hex_}'
+        ms.Message(f, mes).show_debug()
+    
+    def run_all(self):
+        self.get_hex()
+    
+    def run(self):
+        self.show()
+        self.create_color()
+        self.run_all()
+        self.root.end()
 
 
 
@@ -231,4 +278,5 @@ if __name__ == '__main__':
     #Clipboard().run()
     #Label().run()
     #Entry().run()
-    Font().run()
+    #Font().run()
+    Color().run()

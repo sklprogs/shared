@@ -1,5 +1,9 @@
+#!/usr/bin/python3
+# -*- coding: UTF-8 -*-
+
 from skl_shared_qt.localize import _
 import skl_shared_qt.message.controller as ms
+import skl_shared_qt.graphics.color.gui as gi
 
 
 class Color:

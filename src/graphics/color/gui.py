@@ -1,5 +1,7 @@
-from PyQt6.QtGui import QColor
+#!/usr/bin/python3
+# -*- coding: UTF-8 -*-
 
+from PyQt6.QtGui import QColor
 
 class Color:
     
