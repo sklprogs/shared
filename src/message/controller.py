@@ -28,8 +28,8 @@ class Report:
     def wrong_input(self, func=_('Logic error!')):
         Message(func, _('Wrong input data!')).show_warning()
     
-    def empty(self, func=_('Logic error!')):
-        Message(func, _('Empty input is not allowed!')).show_warning()
+    def empty(self, func=_('Logic error!'), Graphical=False):
+        Message(func, _('Empty input is not allowed!'), Graphical).show_warning()
     
     def not_ready(self, func=_('Logic error!')):
         Message(func, _('Not implemented yet!')).show_info()
