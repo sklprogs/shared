@@ -137,14 +137,13 @@ class Color(MainWindow):
 
 
 
-class Clipboard:
+class Clipboard(MainWindow):
     
     def __init__(self):
-        from skl_shared_qt.graphics.root.controller import ROOT
-        import skl_shared_qt.graphics.clipboard.controller as cl
-        self.root = ROOT
-        self.clipboard = cl.Clipboard(False)
-        self.clipboard_gui = cl.Clipboard(True)
+        super().__init__()
+        from skl_shared_qt.graphics.clipboard.controller import Clipboard
+        self.clipboard = Clipboard(False)
+        self.clipboard_gui = Clipboard(True)
     
     def _copy(self, text='икепцукапвр ваырвар', CopyEmpty=False, Graphical=False):
         f = '[SharedQt] test.Clipboard._copy'
@@ -167,13 +166,6 @@ class Clipboard:
         ms.Message(f, _('Start test')).show_info()
         self._copy()
         self._paste()
-    
-    def set_gui(self):
-        from PyQt6.QtWidgets import QMainWindow
-        # Must be assigned to self, or will be destroyed by garbage collector
-        self.win = QMainWindow()
-        # Must be on a separate line
-        self.win.show()
     
     def paste_empty_allowed(self):
         f = '[SharedQt] test.Clipboard.paste_empty_allowed'
@@ -212,7 +204,7 @@ class Clipboard:
         self.paste_error_gui()
     
     def run(self):
-        self.set_gui()
+        self.show()
         self.run_all()
         self.root.end()
 
@@ -275,8 +267,8 @@ class Report:
 if __name__ == '__main__':
     #Report().test_all()
     #Root().run()
-    #Clipboard().run()
+    Clipboard().run()
     #Label().run()
     #Entry().run()
     #Font().run()
-    Color().run()
+    #Color().run()
