@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import skl_shared_qt.message.controller as ms
+import skl_shared_qt.graphics.entry.gui as gi
 
 
 class Entry:
