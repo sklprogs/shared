@@ -6,6 +6,30 @@ import skl_shared_qt.message.controller as ms
 import skl_shared_qt.shared as sh
 
 
+class Label:
+    
+    def __init__(self):
+        from skl_shared_qt.graphics.root.controller import ROOT
+        self.root = ROOT
+    
+    def create_main(self):
+        from PyQt6.QtWidgets import QMainWindow
+        self.win = QMainWindow()
+    
+    def create_label(self):
+        from skl_shared_qt.graphics.label.controller import Label
+        ilabel = Label(text='Hello there!', font_family='Mono', font_size=13)
+        self.win.setCentralWidget(ilabel.widget)
+    
+    def run(self):
+        self.create_main()
+        self.create_label()
+        # Must be on a separate line
+        self.win.show()
+        self.root.end()
+
+
+
 class Root:
     
     def __init__(self):
@@ -162,4 +186,5 @@ class Report:
 if __name__ == '__main__':
     #Report().test_all()
     #Root().run()
-    Clipboard().run()
+    #Clipboard().run()
+    Label().run()
