@@ -47,7 +47,7 @@ class Label(Root):
     
     def create_label(self):
         from skl_shared_qt.graphics.label.controller import Label
-        self.ilabel = Label(text='This is a label', font_family='Mono', font_size=13)
+        self.ilabel = Label(text=_('Close this window to quit'), font_family='Mono', font_size=13)
         self.win.setCentralWidget(self.ilabel.widget)
 
 
@@ -65,7 +65,7 @@ class Font(Label):
 
 
 
-class Entry(Root):
+class Entry(Label):
     
     def __init__(self):
         super().__init__()
@@ -79,7 +79,7 @@ class Entry(Root):
 
 
 
-class Color(Root):
+class Color(Label):
     
     def __init__(self):
         super().__init__()
@@ -110,7 +110,7 @@ class Color(Root):
 
 
 
-class Clipboard(Root):
+class Clipboard(Label):
     
     def __init__(self):
         super().__init__()
@@ -180,7 +180,7 @@ class Clipboard(Root):
 
 
 
-class Message(Root):
+class Message(Label):
     
     def __init__(self):
         super().__init__()
@@ -282,7 +282,7 @@ class Message(Root):
 
 
 
-class Report(Root):
+class Report(Label):
     
     def __init__(self):
         super().__init__()
