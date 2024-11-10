@@ -160,36 +160,36 @@ class Clipboard(MainWindow):
     
     def copy_paste(self):
         f = '[SharedQt] test.Clipboard.copy_paste'
-        ms.Message(f, _('Start test')).show_info()
+        input(_('Start {}').format(f))
         self._copy()
         self._paste()
     
     def paste_empty_allowed(self):
         f = '[SharedQt] test.Clipboard.paste_empty_allowed'
-        ms.Message(f, _('Start test')).show_info()
+        input(_('Start {}').format(f))
         self._copy('', True)
         self._paste()
     
     def paste_empty_not_allowed(self):
         f = '[SharedQt] test.Clipboard.paste_empty_not_allowed'
-        ms.Message(f, _('Start test')).show_info()
+        input(_('Start {}').format(f))
         self._copy('', False)
         self._paste()
     
     def paste_empty_not_allowed_gui(self):
         f = '[SharedQt] test.Clipboard.paste_empty_not_allowed_gui'
-        ms.Message(f, _('Start test')).show_info()
+        input(_('Start {}').format(f))
         self._copy('', False, True)
         self._paste()
     
     def paste_error(self):
         f = '[SharedQt] test.Clipboard.paste_error'
-        ms.Message(f, _('Start test')).show_info()
+        input(_('Start {}').format(f))
         self._copy(b'\x01')
     
     def paste_error_gui(self):
         f = '[SharedQt] test.Clipboard.paste_error_gui'
-        ms.Message(f, _('Start test')).show_info()
+        input(_('Start {}').format(f))
         self._copy(b'\x01', Graphical=True)
     
     def run_all(self):
