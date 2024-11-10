@@ -210,13 +210,24 @@ class Clipboard(MainWindow):
 
 
 
-class Messages:
+class Messages(MainWindow):
+    
+    def __init__(self):
+        super().__init__()
     
     def console(self):
+        old = ms.GRAPHICAL
         ms.GRAPHICAL = False
-        #sh.com.start()
         sh.ReadTextFile('/tmp/aaa').get()
-        #sh.com.end()
+        ms.GRAPHICAL = old
+    
+    def run_all(self):
+        self.console()
+    
+    def run(self):
+        self.show()
+        self.run_all()
+        self.root.end()
 
 
 
@@ -267,7 +278,8 @@ class Report:
 if __name__ == '__main__':
     #Report().test_all()
     #Root().run()
-    Clipboard().run()
+    Messages().run()
+    #Clipboard().run()
     #Label().run()
     #Entry().run()
     #Font().run()
