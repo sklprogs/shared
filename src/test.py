@@ -121,8 +121,10 @@ class Color(MainWindow):
         darker, lighter = self.icolor.modify()
     
     def run_all(self):
+        f = '[SharedQt] test.Color.run_all'
         self.get_hex()
         self.modify()
+        ms.Message(f, _('Testing is complete')).show_info()
     
     def run(self):
         self.show()
@@ -191,12 +193,14 @@ class Clipboard(MainWindow):
         self._copy(b'\x01', Graphical=True)
     
     def run_all(self):
+        f = '[SharedQt] test.Clipboard.run_all'
         self.copy_paste()
         self.paste_empty_allowed()
         self.paste_empty_not_allowed()
         self.paste_empty_not_allowed_gui()
         self.paste_error()
         self.paste_error_gui()
+        ms.Message(f, _('Testing is complete')).show_info()
     
     def run(self):
         self.show()
@@ -287,10 +291,11 @@ class Message(MainWindow):
         mes = _('This is {}').format(_('QUESTION'))
         answer = ms.Message(f, mes).show_question()
         if answer:
-            answer = 'Yes'
+            answer = _('Yes')
         else:
-            answer = 'No'
-        ms.Message(f, f'You answer is {answer}').show_debug()
+            answer = _('No')
+        mes = _('Your answer is {}').format(answer)
+        ms.Message(f, mes).show_debug()
     
     def show_question_gui(self):
         f = '[SharedQt] test.Message.show_question_gui'
@@ -298,10 +303,11 @@ class Message(MainWindow):
         mes = _('This is {}').format(_('QUESTION'))
         answer = ms.Message(f, mes, True).show_question()
         if answer:
-            answer = 'Yes'
+            answer = _('Yes')
         else:
-            answer = 'No'
-        ms.Message(f, f'You answer is {answer}', True).show_debug()
+            answer = _('No')
+        mes = _('Your answer is {}').format(answer)
+        ms.Message(f, mes, True).show_debug()
     
     def run(self):
         self.show()
@@ -357,8 +363,8 @@ class Report:
 if __name__ == '__main__':
     #Report().test_all()
     #Root().run()
-    Message().run()
-    #Clipboard().run()
+    #Message().run()
+    Clipboard().run()
     #Label().run()
     #Entry().run()
     #Font().run()
