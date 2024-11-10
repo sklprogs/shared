@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sharedQt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-10 12:07+0300\n"
-"PO-Revision-Date: 2024-11-10 12:07+0300\n"
+"POT-Creation-Date: 2024-11-10 12:44+0300\n"
+"PO-Revision-Date: 2024-11-10 12:44+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -23,22 +23,22 @@ msgstr ""
 #: skl_shared/src/logic.py:490 skl_shared/src/logic.py:1028
 #: skl_shared/src/logic.py:4587 skl_shared/src/shared.py:3800
 #: skl_shared_qt/src/message/controller.py:143
-#: skl_shared_qt/src/message/logic.py:48 skl_shared_qt/src/test.py:267
-#: skl_shared_qt/src/test.py:273
+#: skl_shared_qt/src/message/logic.py:48 skl_shared_qt/src/test.py:238
+#: skl_shared_qt/src/test.py:244
 msgid "WARNING"
 msgstr "ПРЕДУПРЕЖДЕНИЕ"
 
 #: skl_shared/src/gui.py:1237 skl_shared/src/logic.py:484
 #: skl_shared/src/logic.py:1028 skl_shared/src/shared.py:3792
-#: skl_shared_qt/src/message/controller.py:127 skl_shared_qt/src/test.py:279
-#: skl_shared_qt/src/test.py:285
+#: skl_shared_qt/src/message/controller.py:127 skl_shared_qt/src/test.py:250
+#: skl_shared_qt/src/test.py:256
 msgid "ERROR"
 msgstr "ОШИБКА"
 
 #: skl_shared/src/gui.py:1244 skl_shared/src/logic.py:445
 #: skl_shared/src/logic.py:508 skl_shared/src/shared.py:3825
 #: skl_shared/src/shared.py:4030 skl_shared_qt/src/message/controller.py:151
-#: skl_shared_qt/src/test.py:291 skl_shared_qt/src/test.py:303
+#: skl_shared_qt/src/test.py:262 skl_shared_qt/src/test.py:274
 msgid "QUESTION"
 msgstr "ВОПРОС"
 
@@ -48,8 +48,8 @@ msgstr "ВОПРОС"
 #: skl_shared/src/logic.py:4595 skl_shared/src/shared.py:3809
 #: skl_shared/src/shared.py:3817 skl_shared_qt/src/message/controller.py:64
 #: skl_shared_qt/src/message/controller.py:88
-#: skl_shared_qt/src/message/controller.py:135 skl_shared_qt/src/test.py:255
-#: skl_shared_qt/src/test.py:261
+#: skl_shared_qt/src/message/controller.py:135 skl_shared_qt/src/test.py:226
+#: skl_shared_qt/src/test.py:232
 msgid "INFO"
 msgstr "ИНФОРМАЦИЯ"
 
@@ -136,7 +136,7 @@ msgstr "Поддерживаются только итерируемые объ�
 
 #: skl_shared/src/logic.py:441 skl_shared/src/logic.py:502
 #: skl_shared/src/logic.py:1032 skl_shared_qt/src/message/controller.py:119
-#: skl_shared_qt/src/test.py:243 skl_shared_qt/src/test.py:249
+#: skl_shared_qt/src/test.py:214 skl_shared_qt/src/test.py:220
 msgid "DEBUG"
 msgstr "ОТЛАДКА"
 
@@ -913,13 +913,13 @@ msgstr ""
 msgid "Test:"
 msgstr "Тест:"
 
-#: skl_shared/src/shared.py:3892 skl_shared_qt/src/test.py:294
-#: skl_shared_qt/src/test.py:306
+#: skl_shared/src/shared.py:3892 skl_shared_qt/src/test.py:265
+#: skl_shared_qt/src/test.py:277
 msgid "Yes"
 msgstr "Да"
 
-#: skl_shared/src/shared.py:3893 skl_shared_qt/src/test.py:296
-#: skl_shared_qt/src/test.py:308
+#: skl_shared/src/shared.py:3893 skl_shared_qt/src/test.py:267
+#: skl_shared_qt/src/test.py:279
 msgid "No"
 msgstr "Нет"
 
@@ -1271,50 +1271,58 @@ msgstr "Все файлы (*.*)"
 msgid "Save File As:"
 msgstr "Сохранить файл как:"
 
-#: skl_shared_qt/src/test.py:113 skl_shared_qt/src/test.py:120
-#: skl_shared_qt/src/test.py:163 skl_shared_qt/src/test.py:169
-#: skl_shared_qt/src/test.py:175 skl_shared_qt/src/test.py:181
-#: skl_shared_qt/src/test.py:187 skl_shared_qt/src/test.py:192
-#: skl_shared_qt/src/test.py:219
+#: skl_shared_qt/src/test.py:50
+msgid "Close this window to quit"
+msgstr "Чтобы выйти, закройте это окно"
+
+#: skl_shared_qt/src/test.py:95 skl_shared_qt/src/test.py:102
+#: skl_shared_qt/src/test.py:190
 msgid "Start test"
 msgstr "Запуск теста"
 
-#: skl_shared_qt/src/test.py:127 skl_shared_qt/src/test.py:203
-#: skl_shared_qt/src/test.py:238
+#: skl_shared_qt/src/test.py:109 skl_shared_qt/src/test.py:179
+#: skl_shared_qt/src/test.py:209
 msgid "Testing is complete"
 msgstr "Тесты завершены"
 
-#: skl_shared_qt/src/test.py:147
+#: skl_shared_qt/src/test.py:123
 msgid "Copy \"{}\" to clipboard"
 msgstr "Копирование \"{}\" в буфер обмена"
 
-#: skl_shared_qt/src/test.py:156
+#: skl_shared_qt/src/test.py:132
 msgid "Paste from clipboard"
 msgstr "Вставка из буфера обмена"
 
-#: skl_shared_qt/src/test.py:158
+#: skl_shared_qt/src/test.py:134
 msgid "Pasted text: \"{}\""
 msgstr "Вставленный текст: \"{}\""
 
-#: skl_shared_qt/src/test.py:242 skl_shared_qt/src/test.py:248
-#: skl_shared_qt/src/test.py:254 skl_shared_qt/src/test.py:260
-#: skl_shared_qt/src/test.py:266 skl_shared_qt/src/test.py:272
-#: skl_shared_qt/src/test.py:278 skl_shared_qt/src/test.py:284
-#: skl_shared_qt/src/test.py:290 skl_shared_qt/src/test.py:302
+#: skl_shared_qt/src/test.py:139 skl_shared_qt/src/test.py:145
+#: skl_shared_qt/src/test.py:151 skl_shared_qt/src/test.py:157
+#: skl_shared_qt/src/test.py:163 skl_shared_qt/src/test.py:168
+#: skl_shared_qt/src/test.py:213 skl_shared_qt/src/test.py:219
+#: skl_shared_qt/src/test.py:225 skl_shared_qt/src/test.py:231
+#: skl_shared_qt/src/test.py:237 skl_shared_qt/src/test.py:243
+#: skl_shared_qt/src/test.py:249 skl_shared_qt/src/test.py:255
+#: skl_shared_qt/src/test.py:261 skl_shared_qt/src/test.py:273
 msgid "Start {}"
 msgstr "Запуск {}"
 
-#: skl_shared_qt/src/test.py:243 skl_shared_qt/src/test.py:249
-#: skl_shared_qt/src/test.py:255 skl_shared_qt/src/test.py:261
-#: skl_shared_qt/src/test.py:267 skl_shared_qt/src/test.py:273
-#: skl_shared_qt/src/test.py:279 skl_shared_qt/src/test.py:285
-#: skl_shared_qt/src/test.py:291 skl_shared_qt/src/test.py:303
+#: skl_shared_qt/src/test.py:214 skl_shared_qt/src/test.py:220
+#: skl_shared_qt/src/test.py:226 skl_shared_qt/src/test.py:232
+#: skl_shared_qt/src/test.py:238 skl_shared_qt/src/test.py:244
+#: skl_shared_qt/src/test.py:250 skl_shared_qt/src/test.py:256
+#: skl_shared_qt/src/test.py:262 skl_shared_qt/src/test.py:274
 msgid "This is {}"
 msgstr "Это {}"
 
-#: skl_shared_qt/src/test.py:297 skl_shared_qt/src/test.py:309
+#: skl_shared_qt/src/test.py:268 skl_shared_qt/src/test.py:280
 msgid "Your answer is {}"
 msgstr "Вы ответили {}"
+
+#: skl_shared_qt/src/test.py:312
+msgid "Something went horribly wrong."
+msgstr "Что-то пошло совсем не так."
 
 #~ msgid "A save dialog with default settings:"
 #~ msgstr "Диалог сохранения с настройками по умолчанию:"
