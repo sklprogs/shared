@@ -233,6 +233,8 @@ class Message(MainWindow):
         self.show_warning_gui()
         self.show_error()
         self.show_error_gui()
+        self.show_question()
+        self.show_question_gui()
     
     def show_debug(self):
         f = '[SharedQt] test.Message.show_debug'
@@ -281,6 +283,28 @@ class Message(MainWindow):
         input(f'Start {f}')
         mes = 'This is Error'
         ms.Message(f, mes, True).show_error()
+    
+    def show_question(self):
+        f = '[SharedQt] test.Message.show_question'
+        input(f'Start {f}')
+        mes = 'This is Question'
+        answer = ms.Message(f, mes).show_question()
+        if answer:
+            answer = 'Yes'
+        else:
+            answer = 'No'
+        ms.Message(f, f'You answer is {answer}').show_debug()
+    
+    def show_question_gui(self):
+        f = '[SharedQt] test.Message.show_question_gui'
+        input(f'Start {f}')
+        mes = 'This is Question'
+        answer = ms.Message(f, mes, True).show_question()
+        if answer:
+            answer = 'Yes'
+        else:
+            answer = 'No'
+        ms.Message(f, f'You answer is {answer}', True).show_debug()
     
     def run(self):
         self.show()
