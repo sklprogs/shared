@@ -82,7 +82,7 @@ class FastTable:
     def set_max_rows(self):
         f = '[SharedQt] logic.FastTable.set_max_rows'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if self.maxrows <= 0:
             return
@@ -95,7 +95,7 @@ class FastTable:
     def set_max_width(self):
         f = '[SharedQt] logic.FastTable.set_max_width'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if self.maxrow <= 0:
             return
@@ -120,7 +120,7 @@ class FastTable:
         '''
         f = '[SharedQt] logic.FastTable.enclose'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if not self.enclose:
             return
@@ -133,7 +133,7 @@ class FastTable:
     def transpose(self):
         f = '[SharedQt] logic.FastTable.transpose'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if self.Transpose:
             self.lst = [*zip(*self.lst)]
@@ -143,10 +143,10 @@ class FastTable:
     def set_headers(self):
         f = '[SharedQt] logic.FastTable.set_headers'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if not self.headers:
-            com.rep_lazy(f)
+            ms.rep.lazy(f)
             return
         ''' If there is a condition mismatch when everything is seemingly
             correct, check that headers are provided in the form of
@@ -166,7 +166,7 @@ class FastTable:
         f = '[SharedQt] logic.FastTable.report'
         result = ''
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         iwrite = io.StringIO()
         for j in range(len(self.lst[0])):
@@ -184,12 +184,12 @@ class FastTable:
     def add_gap(self):
         f = '[SharedQt] logic.FastTable.add_gap'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         lst = [len(item) for item in self.lst]
         if not lst:
             self.Success = False
-            com.rep_empty(f)
+            ms.rep.empty(f)
             return
         maxl = max(lst)
         for i in range(len(self.lst)):
@@ -200,7 +200,7 @@ class FastTable:
     def get_lens(self):
         f = '[SharedQt] logic.FastTable.get_lens'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         for item in self.lst:
             tmp = sorted(item, key=len, reverse=True)
@@ -209,11 +209,11 @@ class FastTable:
     def make_list(self):
         f = '[SharedQt] logic.FastTable.make_list'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if not self.lst:
             self.Success = False
-            com.rep_empty(f)
+            ms.rep.empty(f)
             return
         try:
             self.lst = list(self.lst)
@@ -303,7 +303,7 @@ class Launch:
         '''
         f = '[SharedQt] logic.Launch.get_output'
         if not self.process or not self.process.stdout:
-            com.rep_empty(f)
+            ms.rep.empty(f)
             return ''
         result = self.process.stdout
         result = [str(item, 'utf-8') for item in result]
@@ -312,7 +312,7 @@ class Launch:
     def _launch(self):
         f = '[SharedQt] logic.Launch._launch'
         if not self.custom_args:
-            com.rep_empty(f)
+            ms.rep.empty(f)
             return
         mes = _('Custom arguments: "{}"').format(self.custom_args)
         ms.Message(f, mes).show_debug()
@@ -371,7 +371,7 @@ class Launch:
     def launch_custom(self):
         f = '[SharedQt] logic.Launch.launch_custom'
         if not self.TargetExists:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         self.custom_args = [self.custom_app, self.target]
         return self._launch()
@@ -379,7 +379,7 @@ class Launch:
     def launch_default(self):
         f = '[SharedQt] logic.Launch.launch_default'
         if not self.TargetExists:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if objs.get_os().is_lin():
             return self._launch_lin()
@@ -434,7 +434,7 @@ class WriteTextFile:
     def append(self, text=''):
         f = '[SharedQt] logic.WriteTextFile.append'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         self.text = text
         if not self.text:
@@ -450,7 +450,7 @@ class WriteTextFile:
     def write(self, text=''):
         f = '[SharedQt] logic.WriteTextFile.write'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         self.text = text
         if not self.text and not self.Empty:
@@ -509,7 +509,7 @@ class ReadTextFile:
     def delete_bom(self):
         f = '[SharedQt] logic.ReadTextFile.delete_bom'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         self.text = self.text.replace('\N{ZERO WIDTH NO-BREAK SPACE}', '')
 
@@ -517,7 +517,7 @@ class ReadTextFile:
         # Return the text from memory (or load the file first)
         f = '[SharedQt] logic.ReadTextFile.get'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return self.text
         if not self.text:
             self.load()
@@ -527,14 +527,14 @@ class ReadTextFile:
         # Return a number of lines in the file. Returns 0 for an empty file.
         f = '[SharedQt] logic.ReadTextFile.get_lines'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         return len(self.get_list())
 
     def get_list(self):
         f = '[SharedQt] logic.ReadTextFile.get_list'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return self.lst
         if not self.lst:
             self.lst = self.get().splitlines()
@@ -544,7 +544,7 @@ class ReadTextFile:
     def load(self):
         f = '[SharedQt] logic.ReadTextFile.load'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return self.text
         mes = _('Load file "{}"').format(self.file)
         ms.Message(f, mes).show_info()
@@ -676,7 +676,7 @@ class Text:
         delta = limit - len(self.text)
         if delta < 2:
             mes = f'{limit} - {len(self.text)} > 2'
-            com.rep_condition(f, mes)
+            ms.rep.condition(f, mes)
             return self.text
         delta = int(delta / 2)
         self.text = delta * ' ' + self.text + delta * ' '
@@ -841,7 +841,7 @@ class Text:
         '''
         f = '[SharedQt] logic.Text.delete_end_punc'
         if len(self.text) <= 0:
-            com.rep_empty(f)
+            ms.rep.empty(f)
             return self.text
         if Extended:
             while self.text[-1] == ' ' or self.text[-1] in punc_array \
@@ -1181,7 +1181,7 @@ class Time:
     def add_days(self, days_delta):
         f = '[SharedQt] logic.Time.add_days'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         try:
             self.inst = self.get_instance() \
@@ -1192,7 +1192,7 @@ class Time:
     def get_date(self):
         f = '[SharedQt] logic.Time.get_date'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         try:
             self.date = self.get_instance().strftime(self.pattern)
@@ -1203,7 +1203,7 @@ class Time:
     def get_instance(self):
         f = '[SharedQt] logic.Time.get_instance'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if self.inst is None:
             if self.tstamp is None:
@@ -1217,7 +1217,7 @@ class Time:
     def get_timestamp(self):
         f = '[SharedQt] logic.Time.get_timestamp'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if not self.date:
             self.get_date()
@@ -1230,7 +1230,7 @@ class Time:
     def is_monday(self):
         f = '[SharedQt] logic.Time.is_monday'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if not self.inst:
             self.get_instance()
@@ -1240,7 +1240,7 @@ class Time:
     def get_month_name(self):
         f = '[SharedQt] logic.Time.get_month_name'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if not self.inst:
             self.get_instance()
@@ -1285,7 +1285,7 @@ class Time:
     def get_month_abbr(self):
         f = '[SharedQt] logic.Time.get_month_abbr'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if not self.inst:
             self.get_instance()
@@ -1302,7 +1302,7 @@ class Time:
     def get_year(self):
         f = '[SharedQt] logic.Time.get_year'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if not self.inst:
             self.get_instance()
@@ -1353,7 +1353,7 @@ class File:
         f = '[SharedQt] logic.File.get_size'
         result = 0
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         try:
             if Follow:
@@ -1401,7 +1401,7 @@ class File:
     def get_access_time(self):
         f = '[SharedQt] logic.File.get_access_time'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         try:
             self.atime = os.path.getatime(self.file)
@@ -1416,7 +1416,7 @@ class File:
         f = '[SharedQt] logic.File.copy'
         Success = True
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if self.file.lower() == self.dest.lower():
             mes = _('Unable to copy the file "{}" to iself!').format(self.file)
@@ -1433,7 +1433,7 @@ class File:
     def delete(self):
         f = '[SharedQt] logic.File.delete'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         mes = _('Delete "{}"').format(self.file)
         ms.Message(f, mes).show_info()
@@ -1447,7 +1447,7 @@ class File:
     def get_modification_time(self):
         f = '[SharedQt] logic.File.get_modification_time'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         try:
             self.mtime = os.path.getmtime(self.file)
@@ -1462,7 +1462,7 @@ class File:
         f = '[SharedQt] logic.File.move'
         Success = True
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if self.file.lower() == self.dest.lower():
             mes = _('Moving is not necessary, because the source and destination are identical ({}).')
@@ -1480,7 +1480,7 @@ class File:
     def set_time(self):
         f = '[SharedQt] logic.File.set_time'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if not self.atime or not self.mtime:
             return
@@ -1505,7 +1505,7 @@ class Path:
         f = '[SharedQt] logic.Path.get_free_space'
         result = 0
         if not self.path:
-            com.rep_empty(f)
+            ms.rep.empty(f)
             return result
         if not os.path.exists(self.path):
             mes = _('Wrong input data: "{}"!').format(self.path)
@@ -1539,7 +1539,7 @@ class Path:
         Success = True
         if not self.path:
             Success = False
-            com.rep_empty(f)
+            ms.rep.empty(f)
             return Success
         if os.path.exists(self.path):
             if os.path.isdir(self.path):
@@ -1679,7 +1679,7 @@ class Directory:
         f = '[SharedQt] logic.Directory.move'
         Success = True
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if os.path.exists(self.dest):
             mes = _('Path "{}" already exists!').format(self.dest)
@@ -1697,7 +1697,7 @@ class Directory:
         # Include files in subfolders
         f = '[SharedQt] logic.Directory.get_subfiles'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return []
         if self.subfiles:
             return self.subfiles
@@ -1753,7 +1753,7 @@ class Directory:
     def get_ext(self): # with a dot
         f = '[SharedQt] logic.Directory.get_ext'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return self.exts
         if not self.exts:
             for file in self.get_rel_files():
@@ -1765,7 +1765,7 @@ class Directory:
     def get_ext_low(self): # with a dot
         f = '[SharedQt] logic.Directory.get_ext_low'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return self.extslow
         if not self.extslow:
             self.get_ext()
@@ -1774,7 +1774,7 @@ class Directory:
     def delete_empty(self):
         f = '[SharedQt] logic.Directory.delete_empty'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         # Do not delete nested folders
         if not os.listdir(self.dir):
@@ -1783,7 +1783,7 @@ class Directory:
     def delete(self):
         f = '[SharedQt] logic.Directory.delete'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         mes = _('Delete "{}"').format(self.dir)
         ms.Message(f, mes).show_info()
@@ -1799,7 +1799,7 @@ class Directory:
         # Create a list of objects with a relative path
         f = '[SharedQt] logic.Directory.get_rel_list'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if not self.rellist:
             self.get_list()
@@ -1809,7 +1809,7 @@ class Directory:
         # Create a list of objects with an absolute path
         f = '[SharedQt] logic.Directory.get_list'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return self.lst
         if self.lst:
             return self.lst
@@ -1829,7 +1829,7 @@ class Directory:
     def get_rel_dirs(self):
         f = '[SharedQt] logic.Directory.get_rel_dirs'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return self.reldirs
         if not self.reldirs:
             self.dirs()
@@ -1838,7 +1838,7 @@ class Directory:
     def get_rel_files(self):
         f = '[SharedQt] logic.Directory.get_rel_files'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return self.relfiles
         if not self.relfiles:
             self.get_files()
@@ -1848,7 +1848,7 @@ class Directory:
         # Needs absolute path
         f = '[SharedQt] logic.Directory.get_dirs'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return self.dirs
         if self.dirs:
             return self.dirs
@@ -1862,7 +1862,7 @@ class Directory:
         # Needs absolute path
         f = '[SharedQt] logic.Directory.get_files'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return self.files
         if self.files:
             return self.files
@@ -1875,7 +1875,7 @@ class Directory:
     def copy(self):
         f = '[SharedQt] logic.Directory.copy'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if self.dir.lower() == self.dest.lower():
             mes = _('Unable to copy "{}" to iself!').format(self.dir)
@@ -1979,24 +1979,24 @@ class Email:
         self.attach = attach
         if not self.email:
             self.Success = False
-            com.rep_empty(f)
+            ms.rep.empty(f)
         if self.attach:
-            self.Success = File(file=self.attach).Success
+            self.Success = File(self.attach).Success
             if not self.Success:
-                com.cancel(f)
+                ms.rep.cancel(f)
 
     def sanitize(self, value):
         # Escape symbols that may cause problems when composing 'mailto'
         f = '[SharedQt] logic.Email.sanitize'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         return str(Online(pattern=value).get_url())
     
     def browser(self):
         f = '[SharedQt] logic.Email.browser'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         try:
             if self.attach:
@@ -2023,7 +2023,7 @@ class Email:
     def create(self):
         f = '[SharedQt] logic.Email.create'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if not self.run_evolution() and not self.run_thunderbird() \
         and not self.run_outlook():
@@ -2059,7 +2059,7 @@ class Email:
     def run_thunderbird(self):
         f = '[SharedQt] logic.Email.run_thunderbird'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         app = '/usr/bin/thunderbird'
         if not os.path.isfile(app):
@@ -2086,7 +2086,7 @@ class Email:
     def run_evolution(self):
         f = '[SharedQt] logic.Email.run_evolution'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         app = '/usr/bin/evolution'
         if not os.path.isfile(app):
@@ -2140,7 +2140,7 @@ class Search:
     def add(self):
         f = '[SharedQt] logic.Search.add'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         if len(self.text) > self.i + len(self.pattern) - 1:
             self.i += len(self.pattern)
@@ -2148,7 +2148,7 @@ class Search:
     def get_next(self):
         f = '[SharedQt] logic.Search.get_next'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         result = self.text.find(self.pattern, self.i)
         if result != -1:
@@ -2160,7 +2160,7 @@ class Search:
     def get_prev(self):
         f = '[SharedQt] logic.Search.get_prev'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return
         ''' rfind, unlike find, does not include limits, so we can use it to
             search backwards.
@@ -2173,7 +2173,7 @@ class Search:
     def get_next_loop(self):
         f = '[SharedQt] logic.Search.get_next_loop'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return self.nextloop
         if self.nextloop:
             return self.nextloop
@@ -2189,7 +2189,7 @@ class Search:
     def get_prev_loop(self):
         f = '[SharedQt] logic.Search.get_prev_loop'
         if not self.Success:
-            com.cancel(f)
+            ms.rep.cancel(f)
             return self.prevloop
         if self.prevloop:
             return self.prevloop
@@ -2326,7 +2326,7 @@ class Get:
         if not self.coding:
             return self.html
         if not self.html:
-            com.rep_empty(f)
+            ms.rep.empty(f)
             return
         try:
             self.html = self.html.decode(encoding=self.coding)
@@ -2338,7 +2338,7 @@ class Get:
     def run(self):
         f = '[SharedQt] logic.Get.run'
         if not self.url:
-            com.rep_empty(f)
+            ms.rep.empty(f)
             return
         # Safely use URL as a string
         if not isinstance(self.url, str):
@@ -2492,7 +2492,7 @@ class Commands:
     def get_easy_time(self, length=0):
         f = '[SharedQt] logic.Commands.get_easy_time'
         if not length:
-            com.rep_empty(f)
+            ms.rep.empty(f)
             return '00:00:00'
         hours, minutes, seconds = self.split_time(length)
         mes = []
