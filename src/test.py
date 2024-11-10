@@ -6,40 +6,49 @@ import skl_shared_qt.message.controller as ms
 import skl_shared_qt.shared as sh
 
 
-class MainWindow:
+class Root:
     
     def __init__(self):
         from skl_shared_qt.graphics.root.controller import ROOT
-        self.root = ROOT
-        self.create_main()
-    
-    def create_main(self):
         from PyQt6.QtWidgets import QMainWindow
+        self.root = ROOT
         self.win = QMainWindow()
+        self.set_bindings()
+    
+    def bind(self, hotkeys, action):
+        from PyQt6.QtGui import QShortcut, QKeySequence
+        for hotkey in hotkeys:
+            QShortcut(QKeySequence(hotkey), self.win).activated.connect(action)
+    
+    def set_bindings(self):
+        self.bind(('Esc',), self.win.close)
     
     def show(self):
+        # Must be on a separate line
         self.win.show()
     
+    def run_all(self):
+        # Override this procedure in inherited classes
+        pass
+    
     def run(self):
+        self.run_all()
+        # Main window can be shown either before or after creating other widgets
         self.show()
         self.root.end()
 
 
 
-class Label(MainWindow):
+class Label(Root):
     
     def __init__(self):
         super().__init__()
+        self.create_label()
     
     def create_label(self):
         from skl_shared_qt.graphics.label.controller import Label
         self.ilabel = Label(text='This is a label', font_family='Mono', font_size=13)
         self.win.setCentralWidget(self.ilabel.widget)
-    
-    def run(self):
-        self.create_label()
-        self.show()
-        self.root.end()
 
 
 
@@ -47,62 +56,35 @@ class Font(Label):
     
     def __init__(self):
         super().__init__()
+        self.create_font()
     
     def create_font(self):
         from skl_shared_qt.graphics.font.controller import Font
         self.ifont = Font(self.ilabel.widget, 'Mono', 14)
         self.ifont.run()
-    
-    def run(self):
-        self.create_main()
-        self.create_label()
-        self.create_font()
-        self.win.show()
-        self.root.end()
 
 
 
-class Entry(MainWindow):
+class Entry(Root):
     
     def __init__(self):
         super().__init__()
+        self.create_entry()
     
     def create_entry(self):
         from skl_shared_qt.graphics.entry.controller import Entry
         ientry = Entry()
         ientry.set_text('This is an entry')
         self.win.setCentralWidget(ientry.widget)
-    
-    def run(self):
-        self.create_entry()
-        self.win.show()
-        self.root.end()
 
 
 
-class Root:
-    
-    def __init__(self):
-        from skl_shared_qt.graphics.root.controller import ROOT
-        self.root = ROOT
-    
-    def show(self):
-        from PyQt6.QtWidgets import QMainWindow
-        win = QMainWindow()
-        # Must be on a separate line
-        win.show()
-    
-    def run(self):
-        self.show()
-        self.root.end()
-
-
-
-class Color(MainWindow):
+class Color(Root):
     
     def __init__(self):
         super().__init__()
         self.color_name = 'cyan'
+        self.create_color()
     
     def create_color(self):
         from skl_shared_qt.graphics.color.controller import Color
@@ -125,16 +107,10 @@ class Color(MainWindow):
         self.get_hex()
         self.modify()
         ms.Message(f, _('Testing is complete')).show_info()
-    
-    def run(self):
-        self.show()
-        self.create_color()
-        self.run_all()
-        self.root.end()
 
 
 
-class Clipboard(MainWindow):
+class Clipboard(Root):
     
     def __init__(self):
         super().__init__()
@@ -201,15 +177,10 @@ class Clipboard(MainWindow):
         self.paste_error()
         self.paste_error_gui()
         ms.Message(f, _('Testing is complete')).show_info()
-    
-    def run(self):
-        self.show()
-        self.run_all()
-        self.root.end()
 
 
 
-class Message(MainWindow):
+class Message(Root):
     
     def __init__(self):
         super().__init__()
@@ -308,15 +279,13 @@ class Message(MainWindow):
             answer = _('No')
         mes = _('Your answer is {}').format(answer)
         ms.Message(f, mes, True).show_debug()
+
+
+
+class Report(Root):
     
-    def run(self):
-        self.show()
-        self.run_all()
-        self.root.end()
-
-
-
-class Report:
+    def __init__(self):
+        super().__init__()
     
     def cancel(self):
         ms.rep.cancel('[SharedQt] test.Report.cancel')
@@ -340,13 +309,13 @@ class Report:
         ms.rep.matches('[SharedQt] test.Report.matches', 50)
     
     def third_party(self):
-        mes = 'Something went horribly wrong'
+        mes = _('Something went horribly wrong.')
         ms.rep.third_party('[SharedQt] test.Report.third_party', mes)
     
     def condition(self):
         ms.rep.condition('[SharedQt] test.Report.condition', '2 + 2 = 4')
     
-    def test_all(self):
+    def run_all(self):
         self.cancel()
         self.wrong_input()
         self.empty()
@@ -354,18 +323,16 @@ class Report:
         self.empty_output()
         self.deleted()
         self.matches()
-        sh.com.start()
         self.third_party()
         self.condition()
-        sh.com.end()
 
 
 if __name__ == '__main__':
-    #Report().test_all()
+    #Report().run()
     #Root().run()
     #Message().run()
-    Clipboard().run()
+    #Clipboard().run()
     #Label().run()
     #Entry().run()
     #Font().run()
-    #Color().run()
+    Color().run()
