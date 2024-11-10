@@ -225,10 +225,20 @@ class Message(MainWindow):
     
     def run_all(self):
         self.console()
+        self.show_debug()
         self.show_debug_gui()
+        self.show_info()
         self.show_info_gui()
+        self.show_warning()
         self.show_warning_gui()
+        self.show_error()
         self.show_error_gui()
+    
+    def show_debug(self):
+        f = '[SharedQt] test.Message.show_debug'
+        input(f'Start {f}')
+        mes = 'This is Debug'
+        ms.Message(f, mes).show_debug()
     
     def show_debug_gui(self):
         f = '[SharedQt] test.Message.show_debug_gui'
@@ -236,17 +246,35 @@ class Message(MainWindow):
         mes = 'This is Debug'
         ms.Message(f, mes, True).show_debug()
     
+    def show_info(self):
+        f = '[SharedQt] test.Message.show_info'
+        input(f'Start {f}')
+        mes = 'This is Info'
+        ms.Message(f, mes).show_info()
+    
     def show_info_gui(self):
         f = '[SharedQt] test.Message.show_info_gui'
         input(f'Start {f}')
         mes = 'This is Info'
         ms.Message(f, mes, True).show_info()
     
+    def show_warning(self):
+        f = '[SharedQt] test.Message.show_warning'
+        input(f'Start {f}')
+        mes = 'This is Warning'
+        ms.Message(f, mes).show_warning()
+    
     def show_warning_gui(self):
         f = '[SharedQt] test.Message.show_warning_gui'
         input(f'Start {f}')
         mes = 'This is Warning'
         ms.Message(f, mes, True).show_warning()
+    
+    def show_error(self):
+        f = '[SharedQt] test.Message.show_error'
+        input(f'Start {f}')
+        mes = 'This is Error'
+        ms.Message(f, mes).show_error()
     
     def show_error_gui(self):
         f = '[SharedQt] test.Message.show_error_gui'
