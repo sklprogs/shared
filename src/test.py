@@ -210,12 +210,14 @@ class Clipboard(MainWindow):
 
 
 
-class Messages(MainWindow):
+class Message(MainWindow):
     
     def __init__(self):
         super().__init__()
     
     def console(self):
+        f = '[SharedQt] test.Message.console'
+        ms.Message(f, f'Start {f}').show_info()
         old = ms.GRAPHICAL
         ms.GRAPHICAL = False
         sh.ReadTextFile('/tmp/aaa').get()
@@ -223,6 +225,34 @@ class Messages(MainWindow):
     
     def run_all(self):
         self.console()
+        self.show_debug_gui()
+        self.show_info_gui()
+        self.show_warning_gui()
+        self.show_error_gui()
+    
+    def show_debug_gui(self):
+        f = '[SharedQt] test.Message.show_debug_gui'
+        input(f'Start {f}')
+        mes = 'This is Debug'
+        ms.Message(f, mes, True).show_debug()
+    
+    def show_info_gui(self):
+        f = '[SharedQt] test.Message.show_info_gui'
+        input(f'Start {f}')
+        mes = 'This is Info'
+        ms.Message(f, mes, True).show_info()
+    
+    def show_warning_gui(self):
+        f = '[SharedQt] test.Message.show_warning_gui'
+        input(f'Start {f}')
+        mes = 'This is Warning'
+        ms.Message(f, mes, True).show_warning()
+    
+    def show_error_gui(self):
+        f = '[SharedQt] test.Message.show_error_gui'
+        input(f'Start {f}')
+        mes = 'This is Error'
+        ms.Message(f, mes, True).show_error()
     
     def run(self):
         self.show()
@@ -278,7 +308,7 @@ class Report:
 if __name__ == '__main__':
     #Report().test_all()
     #Root().run()
-    Messages().run()
+    Message().run()
     #Clipboard().run()
     #Label().run()
     #Entry().run()
