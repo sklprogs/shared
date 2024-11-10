@@ -122,12 +122,19 @@ class Color(MainWindow):
     
     def get_hex(self):
         f = '[SharedQt] test.Color.get_hex'
+        ms.Message(f, _('Start test')).show_info()
         hex_ = self.icolor.get_hex()
         mes = f'HEX value of color "{self.color_name}" is {hex_}'
         ms.Message(f, mes).show_debug()
     
+    def modify(self):
+        f = '[SharedQt] test.Color.modify'
+        ms.Message(f, _('Start test')).show_info()
+        darker, lighter = self.icolor.modify()
+    
     def run_all(self):
         self.get_hex()
+        self.modify()
     
     def run(self):
         self.show()
@@ -360,9 +367,9 @@ class Report:
 if __name__ == '__main__':
     #Report().test_all()
     #Root().run()
-    Message().run()
+    #Message().run()
     #Clipboard().run()
     #Label().run()
     #Entry().run()
     #Font().run()
-    #Color().run()
+    Color().run()
