@@ -212,13 +212,14 @@ class Message(MainWindow):
     
     def console(self):
         f = '[SharedQt] test.Message.console'
-        ms.Message(f, f'Start {f}').show_info()
+        ms.Message(f, _('Start test')).show_info()
         old = ms.GRAPHICAL
         ms.GRAPHICAL = False
         sh.ReadTextFile('/tmp/aaa').get()
         ms.GRAPHICAL = old
     
     def run_all(self):
+        f = '[SharedQt] test.Message.run_all'
         self.console()
         self.show_debug()
         self.show_debug_gui()
@@ -230,59 +231,60 @@ class Message(MainWindow):
         self.show_error_gui()
         self.show_question()
         self.show_question_gui()
+        ms.Message(f, _('Testing is complete')).show_info()
     
     def show_debug(self):
         f = '[SharedQt] test.Message.show_debug'
-        input(f'Start {f}')
-        mes = 'This is Debug'
+        input(_('Start {}').format(f))
+        mes = _('This is {}').format(_('DEBUG'))
         ms.Message(f, mes).show_debug()
     
     def show_debug_gui(self):
         f = '[SharedQt] test.Message.show_debug_gui'
-        input(f'Start {f}')
-        mes = 'This is Debug'
+        input(_('Start {}').format(f))
+        mes = _('This is {}').format(_('DEBUG'))
         ms.Message(f, mes, True).show_debug()
     
     def show_info(self):
         f = '[SharedQt] test.Message.show_info'
-        input(f'Start {f}')
-        mes = 'This is Info'
+        input(_('Start {}').format(f))
+        mes = _('This is {}').format(_('INFO'))
         ms.Message(f, mes).show_info()
     
     def show_info_gui(self):
         f = '[SharedQt] test.Message.show_info_gui'
-        input(f'Start {f}')
-        mes = 'This is Info'
+        input(_('Start {}').format(f))
+        mes = _('This is {}').format(_('INFO'))
         ms.Message(f, mes, True).show_info()
     
     def show_warning(self):
         f = '[SharedQt] test.Message.show_warning'
-        input(f'Start {f}')
-        mes = 'This is Warning'
+        input(_('Start {}').format(f))
+        mes = _('This is {}').format(_('WARNING'))
         ms.Message(f, mes).show_warning()
     
     def show_warning_gui(self):
         f = '[SharedQt] test.Message.show_warning_gui'
-        input(f'Start {f}')
-        mes = 'This is Warning'
+        input(_('Start {}').format(f))
+        mes = _('This is {}').format(_('WARNING'))
         ms.Message(f, mes, True).show_warning()
     
     def show_error(self):
         f = '[SharedQt] test.Message.show_error'
-        input(f'Start {f}')
-        mes = 'This is Error'
+        input(_('Start {}').format(f))
+        mes = _('This is {}').format(_('ERROR'))
         ms.Message(f, mes).show_error()
     
     def show_error_gui(self):
         f = '[SharedQt] test.Message.show_error_gui'
-        input(f'Start {f}')
-        mes = 'This is Error'
+        input(_('Start {}').format(f))
+        mes = _('This is {}').format(_('ERROR'))
         ms.Message(f, mes, True).show_error()
     
     def show_question(self):
         f = '[SharedQt] test.Message.show_question'
-        input(f'Start {f}')
-        mes = 'This is Question'
+        input(_('Start {}').format(f))
+        mes = _('This is {}').format(_('QUESTION'))
         answer = ms.Message(f, mes).show_question()
         if answer:
             answer = 'Yes'
@@ -292,8 +294,8 @@ class Message(MainWindow):
     
     def show_question_gui(self):
         f = '[SharedQt] test.Message.show_question_gui'
-        input(f'Start {f}')
-        mes = 'This is Question'
+        input(_('Start {}').format(f))
+        mes = _('This is {}').format(_('QUESTION'))
         answer = ms.Message(f, mes, True).show_question()
         if answer:
             answer = 'Yes'
@@ -355,9 +357,9 @@ class Report:
 if __name__ == '__main__':
     #Report().test_all()
     #Root().run()
-    #Message().run()
+    Message().run()
     #Clipboard().run()
     #Label().run()
-    Entry().run()
+    #Entry().run()
     #Font().run()
     #Color().run()
