@@ -6,25 +6,39 @@ import skl_shared_qt.message.controller as ms
 import skl_shared_qt.shared as sh
 
 
-class Label:
+class MainWindow:
     
     def __init__(self):
         from skl_shared_qt.graphics.root.controller import ROOT
         self.root = ROOT
+        self.create_main()
     
     def create_main(self):
         from PyQt6.QtWidgets import QMainWindow
         self.win = QMainWindow()
     
+    def show(self):
+        self.win.show()
+    
+    def run(self):
+        self.show()
+        self.root.end()
+
+
+
+class Label(MainWindow):
+    
+    def __init__(self):
+        super().__init__()
+    
     def create_label(self):
         from skl_shared_qt.graphics.label.controller import Label
-        self.ilabel = Label(text='Hello there!', font_family='Mono', font_size=13)
+        self.ilabel = Label(text='This is a label', font_family='Mono', font_size=13)
         self.win.setCentralWidget(self.ilabel.widget)
     
     def run(self):
-        self.create_main()
         self.create_label()
-        self.win.show()
+        self.show()
         self.root.end()
 
 
@@ -83,26 +97,6 @@ class Root:
         win = QMainWindow()
         # Must be on a separate line
         win.show()
-    
-    def run(self):
-        self.show()
-        self.root.end()
-
-
-
-class MainWindow:
-    
-    def __init__(self):
-        from skl_shared_qt.graphics.root.controller import ROOT
-        self.root = ROOT
-        self.create_main()
-    
-    def create_main(self):
-        from PyQt6.QtWidgets import QMainWindow
-        self.win = QMainWindow()
-    
-    def show(self):
-        self.win.show()
     
     def run(self):
         self.show()
@@ -369,7 +363,7 @@ if __name__ == '__main__':
     #Root().run()
     #Message().run()
     #Clipboard().run()
-    #Label().run()
+    Label().run()
     #Entry().run()
     #Font().run()
-    Color().run()
+    #Color().run()
