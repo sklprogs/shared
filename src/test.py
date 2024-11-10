@@ -62,24 +62,18 @@ class Font(Label):
 
 
 
-class Entry:
+class Entry(MainWindow):
     
     def __init__(self):
-        from skl_shared_qt.graphics.root.controller import ROOT
-        self.root = ROOT
-    
-    def create_main(self):
-        from PyQt6.QtWidgets import QMainWindow
-        self.win = QMainWindow()
+        super().__init__()
     
     def create_entry(self):
         from skl_shared_qt.graphics.entry.controller import Entry
         ientry = Entry()
-        ientry.set_text('Hello there!')
+        ientry.set_text('This is an entry')
         self.win.setCentralWidget(ientry.widget)
     
     def run(self):
-        self.create_main()
         self.create_entry()
         self.win.show()
         self.root.end()
@@ -363,7 +357,7 @@ if __name__ == '__main__':
     #Root().run()
     #Message().run()
     #Clipboard().run()
-    Label().run()
-    #Entry().run()
+    #Label().run()
+    Entry().run()
     #Font().run()
     #Color().run()
