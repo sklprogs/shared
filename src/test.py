@@ -123,6 +123,7 @@ class Button(Root):
     def create_button(self):
         from skl_shared_qt.graphics.button.controller import Button
         from PyQt6.QtWidgets import QWidget, QVBoxLayout
+        # .gif images from skl_shared_qt/resources are not supported
         path = '/home/pete/bin/mclient/resources/buttons/go_search.png'
         panel = QWidget()
         layout = QVBoxLayout()
