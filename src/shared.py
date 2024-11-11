@@ -232,25 +232,6 @@ class OptionMenu:
 
 
 
-class Button(gi.Button):
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-    
-    def change_font_size(self, delta=1):
-        f = '[SharedQt] shared.Button.change_font_size'
-        size = self.get_font_size()
-        if not size:
-            com.rep_empty(f)
-            return
-        if size + delta <= 0:
-            mes = f'{size} + {delta} > 0'
-            com.rep_condition(f, mes)
-            return
-        self.set_font_size(size+delta)
-
-
-
 class Directory(lg.Directory):
     
     def __init__(self, *args, **kwargs):

@@ -41,8 +41,8 @@ class Root:
 
 class Label(Root):
     
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.create_label()
     
     def create_label(self):
@@ -54,8 +54,8 @@ class Label(Root):
 
 class Font(Label):
     
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.create_font()
     
     def create_font(self):
@@ -67,8 +67,8 @@ class Font(Label):
 
 class Entry(Label):
     
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.create_entry()
     
     def create_entry(self):
@@ -81,8 +81,8 @@ class Entry(Label):
 
 class Color(Label):
     
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.color_name = 'cyan'
         self.create_color()
     
@@ -110,10 +110,37 @@ class Color(Label):
 
 
 
+class Button(Root):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.create_button()
+    
+    def click(self, event=None):
+        f = '[SharedQt] test.Button.click'
+        ms.Message(f, _('Operation is complete.'), True).show_info()
+    
+    def create_button(self):
+        import skl_shared_qt.logic as lg
+        from skl_shared_qt.graphics.button.controller import Button
+        from PyQt6.QtWidgets import QWidget, QVBoxLayout
+        path = lg.objs.get_pdir().add('resources', 'info.gif')
+        panel = QWidget()
+        layout = QVBoxLayout()
+        panel.setLayout(layout)
+        ibutton = Button (text=_('Click me'), action=self.click
+                         ,hint=_('This is a button'), active=path
+                         ,inactive=path
+                         )
+        layout.addWidget(ibutton.widget)
+        self.win.setCentralWidget(panel)
+
+
+
 class Clipboard(Label):
     
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         from skl_shared_qt.graphics.clipboard.controller import Clipboard
         self.clipboard = Clipboard(False)
         self.clipboard_gui = Clipboard(True)
@@ -182,8 +209,8 @@ class Clipboard(Label):
 
 class Message(Label):
     
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
     
     def console(self):
         f = '[SharedQt] test.Message.console'
@@ -284,8 +311,8 @@ class Message(Label):
 
 class Report(Label):
     
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
     
     def cancel(self):
         ms.rep.cancel('[SharedQt] test.Report.cancel')
@@ -335,4 +362,5 @@ if __name__ == '__main__':
     #Label().run()
     #Entry().run()
     #Font().run()
-    Color().run()
+    #Color().run()
+    Button().run()
