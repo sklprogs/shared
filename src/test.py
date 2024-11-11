@@ -354,6 +354,40 @@ class Report(Label):
         self.condition()
 
 
+
+class Panel(Root):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.create_panel()
+    
+    def create_panel(self):
+        from PyQt6.QtWidgets import QWidget, QVBoxLayout
+        self.panel = QWidget()
+        self.layout = QVBoxLayout()
+        self.panel.setLayout(self.layout)
+        self.win.setCentralWidget(self.panel)
+
+
+
+class CheckBox(Panel):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.create_checkbox()
+    
+    def click(self, event=None):
+        f = '[SharedQt] test.CheckBox.click'
+        ms.Message(f, _('Operation is complete.'), True).show_info()
+    
+    def create_checkbox(self):
+        from skl_shared_qt.graphics.checkbox.controller import CheckBox
+        icheckbox = CheckBox (text=_('Select me'), font_family='Mono'
+                             ,font_size=12
+                             )
+        self.layout.addWidget(icheckbox.widget)
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -363,4 +397,5 @@ if __name__ == '__main__':
     #Entry().run()
     #Font().run()
     #Color().run()
-    Button().run()
+    #Button().run()
+    CheckBox().run()
