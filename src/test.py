@@ -121,10 +121,9 @@ class Button(Root):
         ms.Message(f, _('Operation is complete.'), True).show_info()
     
     def create_button(self):
-        import skl_shared_qt.logic as lg
         from skl_shared_qt.graphics.button.controller import Button
         from PyQt6.QtWidgets import QWidget, QVBoxLayout
-        path = lg.objs.get_pdir().add('resources', 'info.gif')
+        path = '/home/pete/bin/mclient/resources/buttons/go_search.png'
         panel = QWidget()
         layout = QVBoxLayout()
         panel.setLayout(layout)
