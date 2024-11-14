@@ -402,16 +402,23 @@ class Icon(Label):
     def run_root(self):
         self.root.get_root().setWindowIcon(self.icon)
     
+    def run_info(self):
+        f = '[SharedQt] test.Icon.run_info'
+        ms.Message(f, _('Operation is complete.'), True).show_info()
+    
     def run_all(self):
-        f = '[SharedQt] test.CheckBox.run_all'
+        f = '[SharedQt] test.Icon.run_all'
         if not self.icon:
             ms.rep.empty(f)
             return
-        ''' Setting an icon on QWidget (for example, when based on Panel) has
-            no effect because we need QMainWindow or QApplication.
+        ''' Setting an icon for QWidget (for example, when based on Panel) has
+            no effect because we need QMainWindow or QApplication. There is no
+            need to set the icon individually for QMessageBox if this icon is
+            already set for QApplication.
         '''
-        #self.run_root()
-        self.run_win()
+        self.run_root()
+        #self.run_win()
+        self.run_info()
     
     def set_icon(self):
         from skl_shared_qt.graphics.icon.controller import ICON
