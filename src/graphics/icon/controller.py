@@ -5,8 +5,6 @@ import os
 import skl_shared_qt.message.controller as ms
 import skl_shared_qt.graphics.icon.gui as gi
 
-PATH = ''
-
 
 class Icon:
     
@@ -14,16 +12,16 @@ class Icon:
         self.icon = None
         self.gui = gi.Icon()
     
-    def set(self):
+    def set(self, path):
         f = '[SharedQt] graphics.icon.controller.Icon.set'
-        if not PATH:
+        if not path:
             # This is called from a user app, so it's a warning, not 'rep.lazy'
             ms.rep.empty(f)
             return
-        if not os.path.exists(PATH):
+        if not os.path.exists(path):
             ms.rep.wrong_input(f)
             return
-        self.icon = self.gui.get(PATH)
+        self.icon = self.gui.get(path)
     
     def get(self):
         return self.icon

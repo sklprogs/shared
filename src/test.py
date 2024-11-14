@@ -388,6 +388,33 @@ class CheckBox(Panel):
         self.layout.addWidget(icheckbox.widget)
 
 
+
+class Icon(Label):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.icon = None
+        self.set_icon()
+    
+    def run_win(self):
+        ''' Setting an icon on QWidget (for example, when based on Panel) has
+            no effect because we need QMainWindow.
+        '''
+        f = '[SharedQt] test.CheckBox.run_win'
+        if not self.icon:
+            ms.rep.empty(f)
+            return
+        self.win.setWindowIcon(self.icon)
+    
+    def run_all(self):
+        self.run_win()
+    
+    def set_icon(self):
+        from skl_shared_qt.graphics.icon.controller import ICON
+        ICON.set('/home/pete/bin/mclient/resources/mclient.png')
+        self.icon = ICON.get()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -398,4 +425,5 @@ if __name__ == '__main__':
     #Font().run()
     #Color().run()
     #Button().run()
-    CheckBox().run()
+    #CheckBox().run()
+    Icon().run()
