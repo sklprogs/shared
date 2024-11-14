@@ -397,16 +397,20 @@ class Icon(Label):
         self.set_icon()
     
     def run_win(self):
-        ''' Setting an icon on QWidget (for example, when based on Panel) has
-            no effect because we need QMainWindow.
-        '''
-        f = '[SharedQt] test.CheckBox.run_win'
+        self.win.setWindowIcon(self.icon)
+    
+    def run_root(self):
+        self.root.get_root().setWindowIcon(self.icon)
+    
+    def run_all(self):
+        f = '[SharedQt] test.CheckBox.run_all'
         if not self.icon:
             ms.rep.empty(f)
             return
-        self.win.setWindowIcon(self.icon)
-    
-    def run_all(self):
+        ''' Setting an icon on QWidget (for example, when based on Panel) has
+            no effect because we need QMainWindow or QApplication.
+        '''
+        #self.run_root()
         self.run_win()
     
     def set_icon(self):
