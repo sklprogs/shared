@@ -440,6 +440,42 @@ class Debug(Label):
         self.win.setCentralWidget(DEBUG.gui)
 
 
+
+class FileDialog(Label):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    
+    def run_save_custom(self):
+        f = '[SharedQt] test.FileDialog.run_save_custom'
+        input(_('Start {}').format(f))
+        from skl_shared_qt.graphics.file_dialog.controller import FILE_DIALOG
+        filter_ = _('Web-pages (*.htm, *.html)')
+        FILE_DIALOG.reset('/tmp', filter_, f)
+        file = FILE_DIALOG.save()
+        ms.Message(f, f'"{file}"').show_debug()
+    
+    def run_save_default(self):
+        f = '[SharedQt] test.FileDialog.run_save_default'
+        input(_('Start {}').format(f))
+        from skl_shared_qt.graphics.file_dialog.controller import FILE_DIALOG
+        file = FILE_DIALOG.save()
+        ms.Message(f, f'"{file}"').show_debug()
+    
+    def run_save_invalid_dir(self):
+        f = '[SharedQt] test.FileDialog.run_save_invalid_dir'
+        input(_('Start {}').format(f))
+        from skl_shared_qt.graphics.file_dialog.controller import FILE_DIALOG
+        FILE_DIALOG.reset('/tmp/456345645645645')
+        file = FILE_DIALOG.save()
+        ms.Message(f, f'"{file}"').show_debug()
+    
+    def run_all(self):
+        self.run_save_default()
+        self.run_save_invalid_dir()
+        self.run_save_custom()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -452,4 +488,5 @@ if __name__ == '__main__':
     #Button().run()
     #CheckBox().run()
     #Icon().run()
-    Debug().run()
+    #Debug().run()
+    FileDialog().run()

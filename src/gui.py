@@ -7,45 +7,6 @@ import PyQt6.QtWidgets
 from skl_shared_qt.localize import _
 
 
-ICON = ''
-
-
-class Screen:
-    
-    def __init__(self):
-        self.screen = sh.objs.get_root().primaryScreen().size()
-    
-    def get_width(self):
-        return self.screen.width()
-    
-    def get_height(self):
-        return self.screen.height()
-
-
-
-class FileDialog:
-    
-    def __init__(self, parent=None):
-        #NOTE: A widget is required here, not a wrapper
-        self.parent = parent
-    
-    def set_icon(self):
-        self.parent.setWindowIcon(objs.get_icon())
-    
-    def set_parent(self):
-        if not self.parent:
-            self.parent = PyQt6.QtWidgets.QWidget()
-    
-    def save(self, caption, folder, filter_):
-        # Empty output is ('', '')
-        return PyQt6.QtWidgets.QFileDialog.getSaveFileName (parent = self.parent
-                                                           ,caption = caption
-                                                           ,directory = folder
-                                                           ,filter = filter_
-                                                           )[0]
-
-
-
 class Top(PyQt6.QtWidgets.QWidget):
 
     def __init__(self, *args, **kwargs):

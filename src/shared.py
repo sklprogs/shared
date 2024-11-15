@@ -10,41 +10,6 @@ FONT1 = 'Serif 14'
 FONT2 = 'Sans 11'
 
 
-class FileDialog:
-    
-    def __init__(self, parent=None, filter_='', folder='', caption=''):
-        self.parent = parent
-        self.filter = filter_
-        self.folder = folder
-        self.caption = caption
-        self.set_folder()
-        self.set_filter()
-        self.gui = gi.FileDialog(self.parent)
-        self.gui.set_parent()
-        self.gui.set_icon()
-    
-    def set_folder(self):
-        if not self.folder or not Directory(self.folder).Success:
-            self.folder = Home().get_home()
-    
-    def set_filter(self):
-        if not self.filter:
-            self.filter = _('All files (*.*)')
-    
-    def save(self):
-        if not self.caption:
-            self.caption = _('Save File As:')
-        try:
-            file = self.gui.save (caption = self.caption
-                                 ,folder = self.folder
-                                 ,filter_ = self.filter
-                                 )
-        except Exception as e:
-            com.rep_third_party(f, e)
-        return file
-
-
-
 class ProgressBar:
     
     def __init__(self, *args, **kwargs):

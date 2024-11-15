@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-import skl_shared_qt.message.controller as ms
-
 copyright = 'Copyright 2015-2024, Peter Sklyar'
 license = 'GPL v.3'
 email = 'skl.progs@gmail.com'
