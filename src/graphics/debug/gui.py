@@ -1,22 +1,19 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-from PyQt6.QtWidgets import QWidget, QTextEdit
+from PyQt6.QtWidgets import QWidget, QTextEdit, QVBoxLayout
 from PyQt6.QtGui import QTextDocument, QTextCursor, QFont, QShortcut, QKeySequence
+from skl_shared_qt.graphics.root.controller import ROOT
 
 
-class Debug(PyQt6.QtWidgets.QWidget):
+class Debug(QWidget):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.set_gui()
     
-    def set_icon(self):
-        # Does not accent None
-        self.setWindowIcon(objs.get_icon())
-    
     def centralize(self):
-        self.move(self.root.desktop().screen().rect().center() - self.rect().center())
+        self.move(ROOT.get_root().desktop().screen().rect().center() - self.rect().center())
     
     def fill(self, text):
         self.textbox.clear()
@@ -27,7 +24,7 @@ class Debug(PyQt6.QtWidgets.QWidget):
         self.setWindowTitle(title)
     
     def set_layout(self):
-        self.layout_ = PyQt6.QtWidgets.QVBoxLayout()
+        self.layout_ = QVBoxLayout()
         self.layout_.setContentsMargins(0, 0, 0, 0)
     
     def set_gui(self):

@@ -426,6 +426,20 @@ class Icon(Label):
         self.icon = ICON.get()
 
 
+
+class Debug(Label):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.create_debug()
+    
+    def create_debug(self):
+        f = '[SharedQt] test.Debug.create_debug'
+        from skl_shared_qt.graphics.debug.controller import DEBUG
+        DEBUG.reset(f, _('Operation is complete.'))
+        self.win.setCentralWidget(DEBUG.gui)
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -437,4 +451,5 @@ if __name__ == '__main__':
     #Color().run()
     #Button().run()
     #CheckBox().run()
-    Icon().run()
+    #Icon().run()
+    Debug().run()

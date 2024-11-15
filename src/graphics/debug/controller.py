@@ -17,7 +17,6 @@ class Debug:
     
     def set_gui(self):
         self.gui = gi.Debug()
-        self.gui.set_icon()
         self.set_bindings()
     
     def set_bindings(self):
@@ -34,3 +33,6 @@ class Debug:
     
     def close(self):
         self.gui.close()
+
+
+DEBUG = Debug()
