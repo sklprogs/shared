@@ -60,7 +60,7 @@ reserved_win = ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4'
 
 
 
-class FastTable:
+class Table:
     
     def __init__(self, iterable=[], headers=[], sep=' ', Transpose=False
                 ,maxrow=0, FromEnd=False, maxrows=0, encloser='', ShowGap=True):
@@ -78,7 +78,7 @@ class FastTable:
         self.ShowGap = ShowGap
     
     def set_max_rows(self):
-        f = '[SharedQt] logic.FastTable.set_max_rows'
+        f = '[SharedQt] logic.Table.set_max_rows'
         if not self.Success:
             ms.rep.cancel(f)
             return
@@ -91,7 +91,7 @@ class FastTable:
             self.lst[i] = self.lst[i][0:self.maxrows+1]
     
     def set_max_width(self):
-        f = '[SharedQt] logic.FastTable.set_max_width'
+        f = '[SharedQt] logic.Table.set_max_width'
         if not self.Success:
             ms.rep.cancel(f)
             return
@@ -116,7 +116,7 @@ class FastTable:
         ''' Passing 'encloser' in 'Text.shorten' is not enough since it
             does not enclose items shorter than 'max_len'.
         '''
-        f = '[SharedQt] logic.FastTable.enclose'
+        f = '[SharedQt] logic.Table.enclose'
         if not self.Success:
             ms.rep.cancel(f)
             return
@@ -129,7 +129,7 @@ class FastTable:
                 j += 1
     
     def transpose(self):
-        f = '[SharedQt] logic.FastTable.transpose'
+        f = '[SharedQt] logic.Table.transpose'
         if not self.Success:
             ms.rep.cancel(f)
             return
@@ -139,7 +139,7 @@ class FastTable:
             self.lst = [list(item) for item in self.lst]
     
     def set_headers(self):
-        f = '[SharedQt] logic.FastTable.set_headers'
+        f = '[SharedQt] logic.Table.set_headers'
         if not self.Success:
             ms.rep.cancel(f)
             return
@@ -161,7 +161,7 @@ class FastTable:
             ms.Message(f, mes, True).show_warning()
     
     def report(self):
-        f = '[SharedQt] logic.FastTable.report'
+        f = '[SharedQt] logic.Table.report'
         result = ''
         if not self.Success:
             ms.rep.cancel(f)
@@ -180,7 +180,7 @@ class FastTable:
         return result
     
     def add_gap(self):
-        f = '[SharedQt] logic.FastTable.add_gap'
+        f = '[SharedQt] logic.Table.add_gap'
         if not self.Success:
             ms.rep.cancel(f)
             return
@@ -196,7 +196,7 @@ class FastTable:
                 self.lst[i].append('')
     
     def get_lens(self):
-        f = '[SharedQt] logic.FastTable.get_lens'
+        f = '[SharedQt] logic.Table.get_lens'
         if not self.Success:
             ms.rep.cancel(f)
             return
@@ -205,7 +205,7 @@ class FastTable:
             self.lens.append(len(tmp[0]))
     
     def make_list(self):
-        f = '[SharedQt] logic.FastTable.make_list'
+        f = '[SharedQt] logic.Table.make_list'
         if not self.Success:
             ms.rep.cancel(f)
             return
@@ -2505,66 +2505,6 @@ class Commands:
             item = '0' + item
         mes.append(item)
         return ':'.join(mes)
-    
-    def get_yt_date(self, date):
-        # Convert a date provided by Youtube API to a timestamp
-        f = '[SharedQt] logic.Commands.get_yt_date'
-        if not date:
-            self.rep_empty(f)
-            return
-        pattern = '%Y-%m-%dT%H:%M:%S'
-        itime = Time(pattern=pattern)
-        # Prevent errors caused by 'datetime' parsing microseconds
-        tmp = date.split('.')
-        if date != tmp[0]:
-            index_ = date.index('.'+tmp[-1])
-            date = date[0:index_]
-        ''' Sometimes Youtube returns excessive data that are not converted
-            properly by 'datetime'.
-        '''
-        try:
-            index_ = date.index('Z')
-            date = date[:index_]
-        except ValueError:
-            pass
-        try:
-            itime.inst = datetime.datetime.strptime(date, pattern)
-        except ValueError:
-            mes = _('Wrong input data: "{}"!').format(date)
-            ms.Message(f, mes, True).show_warning()
-        return itime.get_timestamp()
-    
-    def get_yt_length(self, length):
-        ''' Convert a length of a video provided by Youtube API (string)
-            to seconds.
-            Possible variants: PT%dM%dS, PT%dH%dM%dS, P%dDT%dH%dM%dS.
-        '''
-        f = '[SharedQt] logic.Commands.get_yt_length'
-        if not length:
-            self.rep_empty(f)
-            return 0
-        if not isinstance(length, str) or length[0] != 'P':
-            mes = _('Wrong input data: "{}"!').format(length)
-            ms.Message(f, mes, True).show_warning()
-            return 0
-        days = 0
-        hours = 0
-        minutes = 0
-        seconds = 0
-        match = re.search(r'(\d+)D', length)
-        if match:
-            days = int(match.group(1))
-        match = re.search(r'(\d+)H', length)
-        if match:
-            hours = int(match.group(1))
-        match = re.search(r'(\d+)M', length)
-        if match:
-            minutes = int(match.group(1))
-        match = re.search(r'(\d+)S', length)
-        if match:
-            seconds = int(match.group(1))
-        result = days * 86400 + hours * 3600 + minutes * 60 + seconds
-        return result
     
     def rewrite(self, file, Rewrite=False):
         ''' - We do not put this into File class because we do not need

@@ -10,44 +10,6 @@ FONT1 = 'Serif 14'
 FONT2 = 'Sans 11'
 
 
-class ProgressBar:
-    
-    def __init__(self, *args, **kwargs):
-        pass
-    
-    def set_text(self, text=None):
-        pass
-    
-    def set_title(self, text=''):
-        pass
-    
-    def add(self):
-        pass
-    
-    def show(self):
-        pass
-    
-    def close(self):
-        pass
-    
-    def update(self, count, limit):
-        #f = '[SharedQt] shared.ProgressBar.update'
-        pass
-
-
-
-class TestTop(Top):
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.set_bindings()
-    
-    def set_bindings(self):
-        self.bind(('Ctrl+Q',), self.close)
-        self.bind(('Esc',), self.close)
-
-
-
 class Directory(lg.Directory):
     
     def __init__(self, *args, **kwargs):
@@ -62,7 +24,7 @@ class Email(lg.Email):
 
 
 
-class FastTable(lg.FastTable):
+class Table(lg.Table):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -189,41 +151,13 @@ class Objects(lg.Objects):
             'logic'. Use 'logic' methods to set attributes.
         '''
         super().__init__()
-        self.question = self.info = self.warning = self.debug = self.error \
-                      = self.mes = self.waitbox = None
-    
-    def get_waitbox(self, icon=''):
-        if self.waitbox is None:
-            if not icon:
-                icon = self.icon
-            #TODO: Implement
-            self.waitbox = None
-            #self.waitbox = WaitBox(icon)
-        return self.waitbox
 
-    
+
 
 class Commands(lg.Commands):
     
     def __init__(self):
         super().__init__()
-        
-    def get_image(self, path, width, height):
-        f = '[SharedQt] shared.Commands.get_image'
-        try:
-            return gi.com.get_image (path = path
-                                    ,width = width
-                                    ,height = height
-                                    )
-        except Exception as e:
-            mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
-            ms.Message(f, mes).show_warning()
-    
-    def start(self):
-        gi.objs.start()
-    
-    def end(self):
-        gi.objs.end()
 
 
 com = Commands()
