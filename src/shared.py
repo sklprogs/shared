@@ -36,33 +36,6 @@ class ProgressBar:
 
 
 
-class Top:
-
-    def __init__(self, title='', icon=''):
-        self.gui = gi.Top()
-        self.widget = self.gui.widget
-        self.title = title
-        self.icon = icon
-    
-    def add_widget(self, item):
-        f = '[SharedQt] shared.Top.add_widget'
-        if hasattr(item, 'widget'):
-            self.gui.add_widget(item.widget)
-        else:
-            mes = _('Wrong input data!')
-            ms.Message(f, mes).show_error()
-    
-    def show(self):
-        self.gui.show()
-    
-    def close(self):
-        self.gui.close()
-    
-    def bind(self, hotkeys, action):
-        self.gui.bind(hotkeys, action)
-
-
-
 class TestTop(Top):
     
     def __init__(self, *args, **kwargs):

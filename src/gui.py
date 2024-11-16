@@ -7,27 +7,6 @@ import PyQt6.QtWidgets
 from skl_shared_qt.localize import _
 
 
-class Top(PyQt6.QtWidgets.QWidget):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.set_gui()
-    
-    def add_widget(self, widget):
-        self.layout.addWidget(widget)
-    
-    def bind(self, hotkeys, action):
-        for hotkey in hotkeys:
-            PyQt6.QtGui.QShortcut(PyQt6.QtGui.QKeySequence(hotkey), self).activated.connect(action)
-    
-    def set_gui(self):
-        self.widget = self
-        self.layout = PyQt6.QtWidgets.QVBoxLayout()
-        self.layout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(self.layout)
-
-
-
 class Objects:
 
     def __init__(self):
