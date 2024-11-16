@@ -3,7 +3,6 @@
 
 from skl_shared_qt.localize import _
 import skl_shared_qt.message.controller as ms
-import skl_shared_qt.shared as sh
 
 
 class Root:
@@ -530,6 +529,30 @@ class OptionMenu(Label):
         self.run_digits()
 
 
+
+class TempFile:
+    
+    def __init__(self):
+        import temp_file as tf
+        self.tf = tf
+    
+    def create(self):
+        f = '[SharedQt] test.TempFile.create'
+        input(_('Start {}').format(f))
+        path = self.tf.get_file()
+        ms.Message(f, f'"{path}"').show_debug()
+    
+    def create_custom(self):
+        f = '[SharedQt] test.TempFile.create_custom'
+        input(_('Start {}').format(f))
+        path = self.tf.get_file('.dat', True)
+        ms.Message(f, f'"{path}"').show_debug()
+    
+    def run(self):
+        self.create()
+        self.create_custom()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -544,4 +567,5 @@ if __name__ == '__main__':
     #Icon().run()
     #Debug().run()
     #FileDialog().run()
-    OptionMenu().run()
+    #OptionMenu().run()
+    TempFile().run()
