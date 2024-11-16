@@ -476,6 +476,20 @@ class FileDialog(Label):
         self.run_save_custom()
 
 
+
+class OptionMenu(Label):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.create_menu()
+    
+    def create_menu(self):
+        from skl_shared_qt.graphics.option_menu.controller import OPTION_MENU
+        lst = ('China', 'Great Britain', 'Island', 'India')
+        OPTION_MENU.reset(lst, 'India')
+        self.win.setCentralWidget(OPTION_MENU.widget)
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -489,4 +503,5 @@ if __name__ == '__main__':
     #CheckBox().run()
     #Icon().run()
     #Debug().run()
-    FileDialog().run()
+    #FileDialog().run()
+    OptionMenu().run()
