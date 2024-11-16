@@ -517,10 +517,16 @@ class OptionMenu(Label):
         input(_('Start {}').format(f))
         self.menu.set('Great Britain')
     
+    def run_set_invalid(self):
+        f = '[SharedQt] test.OptionMenu.run_set_invalid'
+        input(_('Start {}').format(f))
+        self.menu.set('колбаса')
+    
     def run_all(self):
         self.run_common()
         self.run_get()
         self.run_set()
+        self.run_set_invalid()
         self.run_digits()
 
 
