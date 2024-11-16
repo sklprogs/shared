@@ -553,6 +553,63 @@ class TempFile:
         self.create_custom()
 
 
+
+class PrettyHtml(Label):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.code = ''
+        self.Success = True
+        self.file = '/home/pete/tmp/example.html'
+        # Almost all tested webpages were invalid
+        self.file_invalid = '/home/pete/docs/mclient_tests/multitrancom (saved in browser)/teeth in (2024-10-27).html'
+        self.create_debug()
+    
+    def create_debug(self):
+        f = '[SharedQt] test.PrettyHtml.create_debug'
+        from skl_shared_qt.graphics.debug.controller import DEBUG
+        self.debug = DEBUG
+        self.win.setCentralWidget(self.debug.gui)
+    
+    def load(self):
+        import skl_shared_qt.logic as lg
+        f = '[SharedQt] test.PrettyHtml.load'
+        if not self.Success:
+            ms.rep.cancel(f)
+            return
+        self.code = lg.ReadTextFile(self.file).get()
+        if not self.code:
+            self.Success = False
+    
+    def make_pretty(self):
+        import skl_shared_qt.pretty_html
+        f = '[SharedQt] test.PrettyHtml.make_pretty'
+        if not self.Success:
+            ms.rep.cancel(f)
+            return
+        return skl_shared_qt.pretty_html.make_pretty(self.code)
+    
+    def run_pretty(self):
+        f = '[SharedQt] test.PrettyHtml.run_pretty'
+        input(_('Start {}').format(f))
+        self.load()
+        self.debug.reset(f, self.make_pretty())
+        self.show()    
+    
+    def run_pretty_errors(self):
+        f = '[SharedQt] test.PrettyHtml.run_pretty_errors'
+        input(_('Start {}').format(f))
+        old = self.file
+        self.file = self.file_invalid
+        self.load()
+        self.debug.reset(f, self.make_pretty())
+        self.file = old
+    
+    def run_all(self):
+        self.run_pretty()
+        self.run_pretty_errors()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -568,4 +625,5 @@ if __name__ == '__main__':
     #Debug().run()
     #FileDialog().run()
     #OptionMenu().run()
-    TempFile().run()
+    #TempFile().run()
+    PrettyHtml().run()
