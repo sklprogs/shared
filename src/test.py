@@ -485,9 +485,30 @@ class OptionMenu(Label):
     
     def create_menu(self):
         from skl_shared_qt.graphics.option_menu.controller import OPTION_MENU
+        self.menu = OPTION_MENU
+        self.win.setCentralWidget(self.menu.widget)
+    
+    def run_common(self):
+        ''' Root.run_all is called before Root.show, so we need to show
+            the OptionMenu before each test of this class.
+        '''
+        f = '[SharedQt] test.OptionMenu.run_common'
+        input(_('Start {}').format(f))
         lst = ('China', 'Great Britain', 'Island', 'India')
-        OPTION_MENU.reset(lst, 'India')
-        self.win.setCentralWidget(OPTION_MENU.widget)
+        self.menu.reset(lst, 'India')
+        self.show()
+    
+    def run_digits(self):
+        # Non-string tuples and lists must be supported
+        f = '[SharedQt] test.OptionMenu.run_digits'
+        input(_('Start {}').format(f))
+        lst = [0, 1, 2.3, -3, 4, 5, None, __name__, self.__init__]
+        self.menu.reset(lst)
+        self.show()
+    
+    def run_all(self):
+        self.run_common()
+        self.run_digits()
 
 
 if __name__ == '__main__':
