@@ -506,8 +506,21 @@ class OptionMenu(Label):
         self.menu.reset(lst)
         self.show()
     
+    def run_get(self):
+        f = '[SharedQt] test.OptionMenu.run_get'
+        input(_('Start {}').format(f))
+        option = self.menu.get()
+        ms.Message(f, f'"{option}"').show_debug()
+    
+    def run_set(self):
+        f = '[SharedQt] test.OptionMenu.run_set'
+        input(_('Start {}').format(f))
+        self.menu.set('Great Britain')
+    
     def run_all(self):
         self.run_common()
+        self.run_get()
+        self.run_set()
         self.run_digits()
 
 
