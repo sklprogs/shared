@@ -535,6 +535,7 @@ class TempFile:
     def __init__(self):
         import temp_file as tf
         self.tf = tf
+        ms.GRAPHICAL = False
     
     def create(self):
         f = '[SharedQt] test.TempFile.create'
@@ -613,7 +614,7 @@ class PrettyHtml(Label):
 
 class Online:
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         from skl_shared_qt.browser import ONLINE
         ms.GRAPHICAL = False
         self.online = ONLINE
@@ -627,6 +628,41 @@ class Online:
     
     def run_all(self):
         self.browse_url()
+    
+    def run(self):
+        self.run_all()
+
+
+
+class Email:
+
+    def __init__(self):
+        import skl_shared_qt.logic as lg
+        from skl_shared_qt.browser import EMAIL
+        ms.GRAPHICAL = False
+        # Display the entire mailto
+        ms.MAX_LEN = 0
+        self.iemail = EMAIL
+        self.email = lg.email
+        self.subject = _('Message Subject')
+        self.message = _('Message Body')
+        self.file = '/tmp/attach.txt'
+    
+    def attach(self):
+        f = '[SharedQt] test.Email.attach'
+        input(_('Start {}').format(f))
+        self.iemail.reset(self.email, self.subject, self.message, self.file)
+        self.iemail.create()
+    
+    def create(self):
+        f = '[SharedQt] test.Email.create'
+        input(_('Start {}').format(f))
+        self.iemail.reset(self.email, self.subject, self.message)
+        self.iemail.create()
+    
+    def run_all(self):
+        self.create()
+        self.attach()
     
     def run(self):
         self.run_all()
@@ -649,4 +685,5 @@ if __name__ == '__main__':
     #OptionMenu().run()
     #TempFile().run()
     #PrettyHtml().run()
-    Online().run()
+    #Online().run()
+    Email().run()

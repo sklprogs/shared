@@ -49,7 +49,7 @@ class Online:
             ms.Message(f, mes).show_debug()
         return self.url
 
-    def reset(self, base='', pattern='', coding='UTF-8'):
+    def reset(self, base='%s', pattern='', coding='UTF-8'):
         self.bytes = None
         self.url = None
         self.base = base
@@ -104,31 +104,28 @@ class Email:
         if not self.Success:
             ms.rep.cancel(f)
             return
+        if not value:
+            return ''
         return str(Online(pattern=value).get_url())
     
-    def browser(self):
-        f = '[SharedQt] browser.Email.browser'
+    def call_browser(self):
+        f = '[SharedQt] browser.Email.call_browser'
         if not self.Success:
             ms.rep.cancel(f)
             return
+        ''' - This is the last resort. Attaching a file worked for me only with
+              CentOS6 + Palemoon + Thunderbird. Using another OS/browser/email
+              client will probably call a default email client without the
+              attachment.
+            - Quotes are necessary for attachments only, they will stay visible
+              otherwise.
+        '''
+        mailto = f'mailto:{self.email}?subject={self.subject}&body={self.message}'
+        if self.attach:
+            mailto += f'&attach="{self.attach}"'
+        ms.Message(f, f'"{mailto}"').show_debug()
         try:
-            if self.attach:
-                ''' - This is the last resort. Attaching a file worked for
-                      me only with CentOS6 + Palemoon + Thunderbird. Using
-                      another OS/browser/email client will probably call a
-                      default email client without the attachment.
-                    - Quotes are necessary for attachments only, they will
-                      stay visible otherwise.
-                '''
-                webbrowser.open ('mailto:%s?subject=%s&body=%s&attach="%s"'\
-                                % (self.email, self.subject, self.message
-                                  ,self.attach
-                                  )
-                                )
-            else:
-                webbrowser.open ('mailto:%s?subject=%s&body=%s' \
-                                % (self.email, self.subject, self.message)
-                                )
+            webbrowser.open(mailto)
         except:
             mes = _('Failed to load an e-mail client.')
             ms.Message(f, mes, True).show_error()
@@ -143,7 +140,7 @@ class Email:
             self.subject = self.sanitize(self.subject)
             self.message = self.sanitize(self.message)
             self.attach = self.sanitize(self.attach)
-            self.browser()
+            self.call_browser()
                        
     def run_outlook(self):
         #NOTE: this does not work in wine!
@@ -177,18 +174,11 @@ class Email:
         app = '/usr/bin/thunderbird'
         if not os.path.isfile(app):
             return
+        # Thunderbird requires single quotes and ignores body for some reason
+        args = f"to='{self.email}',subject='{self.subject}',body='{self.message}'"
         if self.attach:
-            self.custom_args = [app, '-compose', "to='%s',subject='%s',body='%s',attachment='%s'"\
-                               % (self.email, self.subject
-                                 ,self.message, self.attach
-                                 )
-                               ]
-        else:
-            self.custom_args = [app, '-compose', "to='%s',subject='%s',body='%s'"\
-                               % (self.email, self.subject
-                                 ,self.message
-                                 )
-                               ]
+            args += f",attachment='{self.attach}'"
+        self.custom_args = [app, '-compose', args]
         try:
             subprocess.Popen(self.custom_args)
             return True
@@ -204,18 +194,11 @@ class Email:
         app = '/usr/bin/evolution'
         if not os.path.isfile(app):
             return
+        email = self.email.replace(';', ',')
+        mailto = f'mailto:{email}?subject={self.subject}&body={self.message}'
         if self.attach:
-            self.custom_args = [app, 'mailto:%s?subject=%s&body=%s&attach=%s'\
-                               % (self.email.replace(';', ','), self.subject
-                                 ,self.message, self.attach
-                                 )
-                               ]
-        else:
-            self.custom_args = [app, 'mailto:%s?subject=%s&body=%s'\
-                               % (self.email.replace(';', ','), self.subject
-                                 ,self.message
-                                 )
-                               ]
+            mailto += f'&attach={self.attach}'
+        self.custom_args = [app, mailto]
         try:
             subprocess.Popen(self.custom_args)
             return True
@@ -225,3 +208,4 @@ class Email:
 
 
 ONLINE = Online()
+EMAIL = Email()
