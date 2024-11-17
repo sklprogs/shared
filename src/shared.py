@@ -139,17 +139,6 @@ class WriteTextFile(lg.WriteTextFile):
 
 
 
-class Objects(lg.Objects):
-    
-    def __init__(self):
-        ''' #NOTE: Since we use 'super' here, attributes of 'lg.Objects'
-            set directly in the controller will not be reflected in
-            'logic'. Use 'logic' methods to set attributes.
-        '''
-        super().__init__()
-
-
-
 class Commands(lg.Commands):
     
     def __init__(self):

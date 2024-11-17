@@ -145,7 +145,7 @@ class Email:
     def run_outlook(self):
         #NOTE: this does not work in wine!
         f = '[SharedQt] logic.Email.run_outlook'
-        if not lg.objs.get_os().is_win():
+        if not lg.OS.is_win():
             mes = _('This operation cannot be executed on your operating system.')
             ms.Message(f, mes, True).show_info()
             return

@@ -232,7 +232,7 @@ class Table:
 
 
 
-class OSSpecific:
+class GetOs:
 
     def __init__(self):
         self.name = ''
@@ -1986,39 +1986,6 @@ class Search:
 
 
 
-class Objects:
-    ''' Values here will be kept through different modules (but not through
-        different programs all of them using 'shared.py').
-    '''
-    def __init__(self):
-        self.pretty_table = self.pdir = self.online = self.tmpfile = self.os \
-                          = self.mes = None
-        self.icon = ''
-    
-    def get_os(self):
-        if self.os is None:
-            self.os = OSSpecific()
-        return self.os
-    
-    def get_tmpfile(self, suffix='.htm', Delete=0):
-        if self.tmpfile is None:
-            self.tmpfile = com.get_tmpfile (suffix = suffix
-                                           ,Delete = Delete
-                                           )
-        return self.tmpfile
-    
-    def get_online(self):
-        if self.online is None:
-            self.online = Online()
-        return self.online
-    
-    def get_pdir(self):
-        if not self.pdir:
-            self.pdir = ProgramDir()
-        return self.pdir
-
-
-
 class ProgramDir:
 
     def __init__(self):
@@ -2379,6 +2346,8 @@ class Commands:
 
 objs = Objects()
 com = Commands()
+OS = GetOs()
+PDIR = ProgramDir()
 
 
 if __name__ == '__main__':
