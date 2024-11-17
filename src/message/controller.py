@@ -3,6 +3,7 @@
 
 STOP = False
 GRAPHICAL = True
+MAX_LEN = 200
 
 import skl_shared_qt.message.info.controller
 import skl_shared_qt.message.debug.controller
@@ -94,7 +95,7 @@ class Message:
         self.shorten()
 
     def shorten(self):
-        self.message = Shorten(self.message, 200, ShowGap=True).run()
+        self.message = Shorten(self.message, MAX_LEN, ShowGap=True).run()
     
     def get_silent(self):
         FORMAT.reset(self.func, self.message, self.type_)
