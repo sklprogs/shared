@@ -1525,14 +1525,12 @@ class Home:
     
     def get_share_dir(self):
         if not self.sharedir:
-            if objs.get_os().is_win():
+            if OS.is_win():
                 os_folder = 'Application Data'
             else:
                 os_folder = os.path.join('.local', 'share')
-            self.sharedir = os.path.join (self.get_home()
-                                         ,os_folder
-                                         ,self.appname
-                                         )
+            self.sharedir = os.path.join(self.get_home(), os_folder
+                                        ,self.appname)
         return self.sharedir
     
     def create_conf(self):
@@ -1543,14 +1541,12 @@ class Home:
         
     def get_conf_dir(self):
         if not self.confdir:
-            if objs.get_os().is_win():
+            if OS.is_win():
                 os_folder = 'Application Data'
             else:
                 os_folder = '.config'
-            self.confdir = os.path.join (self.get_home()
-                                        ,os_folder
-                                        ,self.appname
-                                        )
+            self.confdir = os.path.join(self.get_home(), os_folder
+                                       ,self.appname)
         return self.confdir
     
     def add(self, *args):
