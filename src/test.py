@@ -610,6 +610,28 @@ class PrettyHtml(Label):
         self.run_pretty_errors()
 
 
+
+class Online:
+
+    def __init__(self, *args, **kwargs):
+        from skl_shared_qt.browser import ONLINE
+        ms.GRAPHICAL = False
+        self.online = ONLINE
+    
+    def browse_url(self):
+        self.base = 'https://ya.ru/search/?text=%s'
+        self.pattern = 'Как у нас сегодня дела?'
+        self.online.reset(self.base, self.pattern)
+        self.online.get_url()
+        self.online.browse()
+    
+    def run_all(self):
+        self.browse_url()
+    
+    def run(self):
+        self.run_all()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -626,4 +648,5 @@ if __name__ == '__main__':
     #FileDialog().run()
     #OptionMenu().run()
     #TempFile().run()
-    PrettyHtml().run()
+    #PrettyHtml().run()
+    Online().run()
