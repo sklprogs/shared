@@ -710,6 +710,42 @@ class Launch:
         self.run_all()
 
 
+
+class Time:
+
+    def __init__(self):
+        ms.GRAPHICAL = False
+        from skl_shared_qt.time import TIME
+        self.time = TIME
+    
+    def get_current_month(self):
+        f = '[SharedQt] test.Time.get_current_month'
+        month = _(self.time.get_month_name())
+        mes = _('Current month: {}').format(month)
+        ms.Message(f, mes).show_debug()
+    
+    def get_current_date(self):
+        f = '[SharedQt] test.Time.get_current_date'
+        self.time.get_todays_date()
+        mes = _('Current date: {}').format(self.time.get_date())
+        ms.Message(f, mes).show_debug()
+    
+    def get_tomorrow(self):
+        f = '[SharedQt] test.Time.get_tomorrow'
+        self.time.get_todays_date()
+        self.time.add_days(1)
+        mes = _('Tomorrow’s date: {}').format(self.time.get_date())
+        ms.Message(f, mes).show_debug()
+    
+    def run_all(self):
+        self.get_current_date()
+        self.get_tomorrow()
+        self.get_current_month()
+    
+    def run(self):
+        self.run_all()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -730,4 +766,5 @@ if __name__ == '__main__':
     #Online().run()
     #Email().run()
     #Get().run()
-    Launch().run()
+    #Launch().run()
+    Time().run()
