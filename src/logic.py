@@ -373,11 +373,11 @@ class Launch:
         if not self.TargetExists:
             ms.rep.cancel(f)
             return
-        if objs.get_os().is_lin():
+        if OS.is_lin():
             return self._launch_lin()
-        elif objs.os.is_mac():
+        elif OS.is_mac():
             return self._launch_mac()
-        elif objs.os.is_win():
+        elif OS.is_win():
             return self._launch_win()
 
 

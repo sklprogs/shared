@@ -693,6 +693,23 @@ class Get(Label):
         self.get()
 
 
+
+class Launch:
+
+    def __init__(self):
+        ms.GRAPHICAL = False
+    
+    def open_file_default(self):
+        import skl_shared_qt.logic as lg
+        lg.Launch('/home/pete/tmp/buffer').launch_default()
+    
+    def run_all(self):
+        self.open_file_default()
+    
+    def run(self):
+        self.run_all()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -712,4 +729,5 @@ if __name__ == '__main__':
     #PrettyHtml().run()
     #Online().run()
     #Email().run()
-    Get().run()
+    #Get().run()
+    Launch().run()
