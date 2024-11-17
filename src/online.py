@@ -29,7 +29,7 @@ class Online:
 
     def browse(self):
         # Open a URL in a default browser
-        f = '[SharedQt] browser.Online.browse'
+        f = '[SharedQt] online.Online.browse'
         try:
             webbrowser.open (url = self.get_url()
                             ,new = 2
@@ -42,7 +42,7 @@ class Online:
 
     def get_url(self):
         # Create a correct online link (URI => URL)
-        f = '[SharedQt] browser.Online.get_url'
+        f = '[SharedQt] online.Online.get_url'
         if not self.url:
             self.url = self.base % urllib.parse.quote(self.get_bytes())
             mes = str(self.url)
@@ -80,7 +80,7 @@ class Email:
                        )
     
     def reset(self, email, subject='', message='', attach=''):
-        f = '[SharedQt] browser.Email.reset'
+        f = '[SharedQt] online.Email.reset'
         self.Success = True
         ''' A single address or multiple comma-separated addresses (not all
             mail agents support ';'). #NOTE that, however, Outlook supports
@@ -100,7 +100,7 @@ class Email:
 
     def sanitize(self, value):
         # Escape symbols that may cause issues when composing 'mailto'
-        f = '[SharedQt] browser.Email.sanitize'
+        f = '[SharedQt] online.Email.sanitize'
         if not self.Success:
             ms.rep.cancel(f)
             return
@@ -109,7 +109,7 @@ class Email:
         return str(Online(pattern=value).get_url())
     
     def call_browser(self):
-        f = '[SharedQt] browser.Email.call_browser'
+        f = '[SharedQt] online.Email.call_browser'
         if not self.Success:
             ms.rep.cancel(f)
             return
@@ -131,7 +131,7 @@ class Email:
             ms.Message(f, mes, True).show_error()
     
     def create(self):
-        f = '[SharedQt] browser.Email.create'
+        f = '[SharedQt] online.Email.create'
         if not self.Success:
             ms.rep.cancel(f)
             return
@@ -187,7 +187,7 @@ class Email:
             ms.Message(f, mes, True).show_error()
     
     def run_evolution(self):
-        f = '[SharedQt] browser.Email.run_evolution'
+        f = '[SharedQt] online.Email.run_evolution'
         if not self.Success:
             ms.rep.cancel(f)
             return

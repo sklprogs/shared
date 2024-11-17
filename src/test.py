@@ -615,7 +615,7 @@ class PrettyHtml(Label):
 class Online:
 
     def __init__(self):
-        from skl_shared_qt.browser import ONLINE
+        from skl_shared_qt.online import ONLINE
         ms.GRAPHICAL = False
         self.online = ONLINE
     
@@ -638,7 +638,7 @@ class Email:
 
     def __init__(self):
         import skl_shared_qt.logic as lg
-        from skl_shared_qt.browser import EMAIL
+        from skl_shared_qt.online import EMAIL
         ms.GRAPHICAL = False
         # Display the entire mailto
         ms.MAX_LEN = 0
