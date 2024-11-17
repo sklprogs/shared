@@ -746,6 +746,33 @@ class Time:
         self.run_all()
 
 
+
+class Table:
+
+    def __init__(self):
+        ms.GRAPHICAL = False
+        
+    def run_table(self):
+        f = '[SharedQt] test.Table.run_table'
+        import skl_shared_qt.table as tb
+        import skl_shared_qt.logic as lg
+        files = lg.Directory('/home/pete/tmp').get_subfiles()
+        headers = (_('#'), _('FILE'))
+        nos = []
+        for i in range(len(files)):
+            nos.append(i + 1)
+        timer = lg.Timer(f)
+        timer.start()
+        print(tb.Table([nos, files], headers, maxrow=50, CutStart=True).run())
+        timer.end()
+    
+    def run_all(self):
+        self.run_table()
+    
+    def run(self):
+        self.run_all()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -767,4 +794,5 @@ if __name__ == '__main__':
     #Email().run()
     #Get().run()
     #Launch().run()
-    Time().run()
+    #Time().run()
+    Table().run()
