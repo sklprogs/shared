@@ -668,6 +668,31 @@ class Email:
         self.run_all()
 
 
+
+class Get(Label):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.code = ''
+        self.Success = True
+        self.create_debug()
+    
+    def create_debug(self):
+        f = '[SharedQt] test.Get.create_debug'
+        from skl_shared_qt.graphics.debug.controller import DEBUG
+        self.debug = DEBUG
+        self.win.setCentralWidget(self.debug.gui)
+    
+    def get(self):
+        f = '[SharedQt] test.Get.get'
+        import skl_shared_qt.get_url as gu
+        code = gu.Get('https://www.google.com').run()
+        self.debug.reset(f, code)
+    
+    def run_all(self):
+        self.get()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -686,4 +711,5 @@ if __name__ == '__main__':
     #TempFile().run()
     #PrettyHtml().run()
     #Online().run()
-    Email().run()
+    #Email().run()
+    Get().run()

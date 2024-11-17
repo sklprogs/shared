@@ -14,11 +14,8 @@ import datetime
 import difflib
 import shlex
 import shutil
-import ssl
 import subprocess
 import time
-# 'import urllib' does not work in Python 3, importing must be as follows:
-import urllib.request
 import locale
 from skl_shared_qt.localize import _
 import skl_shared_qt.message.controller as ms
@@ -2016,95 +2013,6 @@ class Timer:
 
 
 
-class Get:
-    
-    def __init__ (self, url, coding='UTF-8', Verbose=True, Verify=False
-                 ,timeout=6
-                 ):
-        self.html = ''
-        self.timeout = timeout
-        self.url = url
-        self.coding = coding
-        self.Verbose = Verbose
-        self.Verify = Verify
-        self.use_unverified()
-    
-    def read(self):
-        ''' This is a dummy function to return the final result. It is needed
-            merely to use 'json' which calls 'read' for input object.
-        '''
-        return self.html
-    
-    def use_unverified(self):
-        ''' On *some* systems we can get urllib.error.URLError: 
-            <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED].
-            To get rid of this error, we use this small workaround.
-        '''
-        f = '[SharedQt] logic.Get.unverified'
-        if not self.Verify:
-            if hasattr(ssl, '_create_unverified_context'):
-                ssl._create_default_https_context = ssl._create_unverified_context
-            else:
-                mes = _('Unable to use unverified certificates!')
-                ms.Message(f, mes).show_warning()
-        
-    def _get(self):
-        ''' Changing UA allows us to avoid a bot protection
-            ('Error 403: Forbidden').
-        '''
-        f = '[SharedQt] logic.Get._get'
-        try:
-            req = urllib.request.Request (url = self.url
-                                         ,data = None
-                                         ,headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'}
-                                         )
-            self.html = urllib.request.urlopen(req, timeout=self.timeout).read()
-            if self.Verbose:
-                mes = _('[OK]: "{}"').format(self.url)
-                ms.Message(f, mes).show_info()
-        # Too many possible exceptions
-        except Exception as e:
-            mes = _('[FAILED]: "{}". Details: {}').format(self.url, e)
-            ms.Message(f, mes).show_warning()
-    
-    def decode(self):
-        ''' Set 'coding' to None to cancel decoding. This is useful if we are
-            downloading a non-text content.
-        '''
-        f = '[SharedQt] logic.Get.decode'
-        if not self.coding:
-            return self.html
-        if not self.html:
-            ms.rep.empty(f)
-            return
-        try:
-            self.html = self.html.decode(encoding=self.coding)
-        except UnicodeDecodeError:
-            self.html = str(self.html)
-            mes = _('Unable to decode "{}"!').format(self.url)
-            ms.Message(f, mes).show_warning()
-    
-    def run(self):
-        f = '[SharedQt] logic.Get.run'
-        if not self.url:
-            ms.rep.empty(f)
-            return
-        # Safely use URL as a string
-        if not isinstance(self.url, str):
-            mes = _('Wrong input data: {}!').format(self.url)
-            ms.Message(f, mes, True).show_warning()
-            return
-        if self.Verbose:
-            timer = Timer(f)
-            timer.start()
-        self._get()
-        self.decode()
-        if self.Verbose:
-            timer.end()
-        return self.html
-
-
-
 class Home:
 
     def __init__(self, app_name='myapp'):
@@ -2344,7 +2252,6 @@ class Commands:
         return result
 
 
-objs = Objects()
 com = Commands()
 OS = GetOs()
 PDIR = ProgramDir()
