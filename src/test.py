@@ -773,6 +773,27 @@ class Table:
         self.run_all()
 
 
+
+class List:
+
+    def __init__(self):
+        ms.GRAPHICAL = False
+        
+    def get_diff(self):
+        f = '[SharedQt] test.List.get_diff'
+        import skl_shared_qt.list as ls
+        lst1 = [0, 8, 3, 2, 3, 5, 6, 7, 7, 8]
+        lst2 = [0, 9, 1, 2, 3, 4, 5, 6, 7, 8]
+        ilist = ls.List(lst1, lst2)
+        print(ilist.get_diff())
+    
+    def run_all(self):
+        self.get_diff()
+    
+    def run(self):
+        self.run_all()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -795,4 +816,5 @@ if __name__ == '__main__':
     #Get().run()
     #Launch().run()
     #Time().run()
-    Table().run()
+    #Table().run()
+    List().run()
