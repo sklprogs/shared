@@ -435,8 +435,8 @@ class Input:
             self.value = 0
         return self.value
 
-    # Insert '' instead of 'None' into text widgets
     def get_not_none(self):
+        # Insert '' instead of 'None' into text widgets
         if not self.value:
             self.value = ''
         return self.value
