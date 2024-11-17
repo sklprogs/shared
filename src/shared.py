@@ -3,11 +3,7 @@
 
 from skl_shared_qt.localize import _
 import skl_shared_qt.logic as lg
-import skl_shared_qt.gui as gi
 import skl_shared_qt.message.controller as ms
-
-FONT1 = 'Serif 14'
-FONT2 = 'Sans 11'
 
 
 class Directory(lg.Directory):
