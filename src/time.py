@@ -1,12 +1,30 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
+import time
 import calendar
 import datetime
 
 from skl_shared_qt.localize import _
 import skl_shared_qt.message.controller as ms
 import skl_shared_qt.logic as lg
+
+
+class Timer:
+
+    def __init__(self, func_title='__main__'):
+        self.startv = 0
+        self.func_title = func_title
+
+    def start(self):
+        self.startv = time.time()
+
+    def end(self):
+        delta = float(time.time() - self.startv)
+        mes = _('The operation has taken {} s.').format(delta)
+        ms.Message(self.func_title, mes).show_debug()
+        return delta
+
 
 
 class Time:

@@ -886,6 +886,30 @@ class Directory:
         self.run_all()
 
 
+
+class Timer:
+
+    def __init__(self):
+        ms.GRAPHICAL = False
+        from skl_shared_qt.time import Timer
+        self.timer = Timer
+        
+    def run_timer(self):
+        f = '[SharedQt] test.Timer.run_timer'
+        input(_('Start {}').format(f))
+        import time
+        timer = self.timer(f)
+        timer.start()
+        time.sleep(2.5)
+        timer.end()
+    
+    def run_all(self):
+        self.run_timer()
+    
+    def run(self):
+        self.run_all()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -911,4 +935,5 @@ if __name__ == '__main__':
     #Table().run()
     #List().run()
     #Paths().run()
-    Directory().run()
+    #Directory().run()
+    Timer().run()
