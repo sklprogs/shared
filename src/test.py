@@ -700,8 +700,8 @@ class Launch:
         ms.GRAPHICAL = False
     
     def open_file_default(self):
-        import skl_shared_qt.logic as lg
-        lg.Launch('/home/pete/tmp/buffer').launch_default()
+        from skl_shared_qt.launch import Launch
+        Launch('/home/pete/tmp/buffer').launch_default()
     
     def run_all(self):
         self.open_file_default()
@@ -814,7 +814,7 @@ if __name__ == '__main__':
     #Online().run()
     #Email().run()
     #Get().run()
-    #Launch().run()
+    Launch().run()
     #Time().run()
     #Table().run()
-    List().run()
+    #List().run()
