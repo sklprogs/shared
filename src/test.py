@@ -794,6 +794,67 @@ class List:
         self.run_all()
 
 
+
+class Paths:
+
+    def __init__(self):
+        ms.GRAPHICAL = False
+        import paths
+        self.paths = paths
+        
+    def get_resources(self):
+        f = '[SharedQt] test.Paths.get_resources'
+        # May be non-existent
+        path = self.paths.PDIR.add('..', 'resources')
+        path = self.paths.Path(path).get_absolute()
+        ms.Message(f, f'"{path}"').show_debug()
+    
+    def get_path_report(self):
+        f = '[SharedQt] test.Paths.get_path_report'
+        ipath = self.paths.Path('/home/pete/tmp/Смартфон (конвертировано)/2024-10-11/WP_20241011_09_41_41_Pro.jpg')
+        # Does not follow symbolic links
+        path = ipath.get_absolute()
+        mes = _('Full path: {}').format(f'"{path}"')
+        ms.Message(f, mes).show_debug()
+        dirname = ipath.get_dirname()
+        mes = _('Directory: {}').format(f'"{dirname}"')
+        ms.Message(f, mes).show_debug()
+        basename = ipath.get_basename()
+        mes = _('File name: {}').format(f'"{basename}"')
+        ms.Message(f, mes).show_debug()
+        filename = ipath.get_filename()
+        mes = _('File name without extension: {}').format(f'"{filename}"')
+        ms.Message(f, mes).show_debug()
+    
+    def create(self):
+        f = '[SharedQt] test.Paths.create'
+        input(_('Start {}').format(f))
+        # Recursive by design
+        self.paths.Path('/tmp/path0/1/2/3/4/5/6/7/8/9/0').create()
+    
+    def create_invalid(self):
+        f = '[SharedQt] test.Paths.create_invalid'
+        input(_('Start {}').format(f))
+        # Recursive by design
+        self.paths.Path('/tmp/hello/\0').create()
+    
+    def create_error(self):
+        f = '[SharedQt] test.Paths.create_error'
+        input(_('Start {}').format(f))
+        # Recursive by design
+        self.paths.Path('/root/test').create()
+    
+    def run_all(self):
+        self.get_resources()
+        self.get_path_report()
+        self.create()
+        self.create_invalid()
+        self.create_error()
+    
+    def run(self):
+        self.run_all()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -814,7 +875,8 @@ if __name__ == '__main__':
     #Online().run()
     #Email().run()
     #Get().run()
-    Launch().run()
+    #Launch().run()
     #Time().run()
     #Table().run()
     #List().run()
+    Paths().run()
