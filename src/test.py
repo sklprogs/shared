@@ -855,6 +855,37 @@ class Paths:
         self.run_all()
 
 
+
+class Directory:
+
+    def __init__(self):
+        ms.GRAPHICAL = False
+        import paths
+        self.paths = paths
+        
+    def delete_empty(self):
+        f = '[SharedQt] test.Directory.delete_empty'
+        input(_('Start {}').format(f))
+        # Recursive by design
+        path = '/tmp/path0/1/2/3/4/5/6/7/8/9/0'
+        self.paths.Path(path).create()
+        self.paths.Directory(path).delete_empty()
+    
+    def delete_empty_error(self):
+        f = '[SharedQt] test.Directory.delete_empty_error'
+        input(_('Start {}').format(f))
+        # Recursive by design
+        self.paths.Path('/tmp/path0/1/2/3/4/5/6/7/8/9/0').create()
+        self.paths.Directory('/tmp/path0').delete_empty()
+    
+    def run_all(self):
+        self.delete_empty()
+        self.delete_empty_error()
+    
+    def run(self):
+        self.run_all()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -879,4 +910,5 @@ if __name__ == '__main__':
     #Time().run()
     #Table().run()
     #List().run()
-    Paths().run()
+    #Paths().run()
+    Directory().run()

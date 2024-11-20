@@ -533,8 +533,11 @@ class Directory:
             ms.rep.cancel(f)
             return
         # Do not delete nested folders
-        if not os.listdir(self.dir):
-            self.delete()
+        if os.listdir(self.dir):
+            mes = _('Unable to delete: {} has nested objects').format(self.dir)
+            ms.Message(f, mes, True).show_warning()
+            return
+        self.delete()
     
     def delete(self):
         f = '[SharedQt] paths.Directory.delete'
