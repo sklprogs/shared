@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sharedQt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-17 16:04+0300\n"
-"PO-Revision-Date: 2024-11-17 16:05+0300\n"
+"POT-Creation-Date: 2024-11-20 23:21+0300\n"
+"PO-Revision-Date: 2024-11-20 23:21+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -70,7 +70,7 @@ msgstr ""
 
 #: skl_shared/src/image/controller.py:49 skl_shared/src/logic.py:2283
 #: skl_shared/src/logic.py:2330 skl_shared/src/logic.py:2550
-#: skl_shared_qt/src/logic.py:1255 skl_shared_qt/src/logic.py:1302
+#: skl_shared_qt/src/paths.py:327 skl_shared_qt/src/paths.py:374
 msgid "Operation has been canceled by the user."
 msgstr "Операция отменена пользователем."
 
@@ -98,7 +98,7 @@ msgstr "Строки"
 #: skl_shared/src/shared.py:3251 skl_shared/src/shared.py:3331
 #: skl_shared/src/tests.py:106
 #: skl_shared_qt/src/graphics/option_menu/controller.py:62
-#: skl_shared_qt/src/logic.py:409
+#: skl_shared_qt/src/logic.py:104
 msgid ""
 "An unknown mode \"{}\"!\n"
 "\n"
@@ -116,22 +116,22 @@ msgstr ""
 "# ВНИМАНИЕ: Данный файл был создан автоматически. Можно вручную менять "
 "значения ключей, однако, все остальное будет перезаписано."
 
-#: skl_shared/src/logic.py:275 skl_shared_qt/src/logic.py:79
+#: skl_shared/src/logic.py:275 skl_shared_qt/src/table.py:35
 msgid "Set the max number of rows to {}"
 msgstr "Задать максимальное число столбцов: {}"
 
-#: skl_shared/src/logic.py:288 skl_shared_qt/src/logic.py:92
+#: skl_shared/src/logic.py:288 skl_shared_qt/src/table.py:48
 msgid "Set the max column width to {} symbols"
 msgstr "Ограничить максимальную ширину столбца {} символами"
 
 #: skl_shared/src/logic.py:346 skl_shared/src/logic.py:1161
 #: skl_shared/src/logic.py:1180 skl_shared/src/logic.py:2670
 #: skl_shared/src/logic.py:2690 skl_shared/src/shared.py:4113
-#: skl_shared_qt/src/logic.py:152 skl_shared_qt/src/message/controller.py:56
+#: skl_shared_qt/src/message/controller.py:56 skl_shared_qt/src/table.py:104
 msgid "The condition \"{}\" is not observed!"
 msgstr "Условие \"{}\" не выполнено!"
 
-#: skl_shared/src/logic.py:410 skl_shared_qt/src/logic.py:214
+#: skl_shared/src/logic.py:410 skl_shared_qt/src/table.py:166
 msgid "Only iterable objects are supported!"
 msgstr "Поддерживаются только итерируемые объекты!"
 
@@ -150,9 +150,9 @@ msgstr "Файл \"{}\" не найден!"
 #: skl_shared/src/logic.py:4519 skl_shared/src/logic.py:4679
 #: skl_shared/src/logic.py:4713 skl_shared/src/logic.py:4798
 #: skl_shared/src/shared.py:2371 skl_shared/src/shared.py:5059
-#: skl_shared_qt/src/graphics/font/logic.py:65 skl_shared_qt/src/logic.py:1004
-#: skl_shared_qt/src/logic.py:1337 skl_shared_qt/src/logic.py:1487
-#: skl_shared_qt/src/logic.py:1913 skl_shared_qt/src/logic.py:2051
+#: skl_shared_qt/src/graphics/font/logic.py:65 skl_shared_qt/src/list.py:29
+#: skl_shared_qt/src/logic.py:802 skl_shared_qt/src/logic.py:940
+#: skl_shared_qt/src/paths.py:26 skl_shared_qt/src/paths.py:417
 msgid "Wrong input data: \"{}\"!"
 msgstr "Недопустимые входные данные: \"{}\"!"
 
@@ -172,23 +172,23 @@ msgstr "Правая кнопка мыши"
 msgid "Space"
 msgstr "Пробел"
 
-#: skl_shared/src/logic.py:819 skl_shared_qt/src/logic.py:277
+#: skl_shared/src/logic.py:819 skl_shared_qt/src/launch.py:29
 msgid "Reading standard output is not supported in a blocking mode!"
 msgstr "Чтение стандартного вывода не поддерживается в блокирующем режиме!"
 
-#: skl_shared/src/logic.py:848 skl_shared_qt/src/logic.py:307
+#: skl_shared/src/logic.py:848 skl_shared_qt/src/launch.py:59
 msgid "Custom arguments: \"{}\""
 msgstr "Дополнительные параметры: \"{}\""
 
 #: skl_shared/src/logic.py:860 skl_shared/src/logic.py:3674
-#: skl_shared/src/logic.py:3702 skl_shared_qt/src/logic.py:319
+#: skl_shared/src/logic.py:3702 skl_shared_qt/src/launch.py:70
 #: skl_shared_qt/src/online.py:186 skl_shared_qt/src/online.py:206
 msgid "Failed to run \"{}\"!"
 msgstr "Не удалось запустить \"{}\"!"
 
 #: skl_shared/src/logic.py:871 skl_shared/src/logic.py:880
-#: skl_shared/src/logic.py:889 skl_shared_qt/src/logic.py:328
-#: skl_shared_qt/src/logic.py:337 skl_shared_qt/src/logic.py:346
+#: skl_shared/src/logic.py:889 skl_shared_qt/src/launch.py:79
+#: skl_shared_qt/src/launch.py:88 skl_shared_qt/src/launch.py:97
 msgid ""
 "Unable to open the file in an external program. You should probably check "
 "the file associations."
@@ -198,17 +198,17 @@ msgstr ""
 
 #: skl_shared/src/logic.py:947 skl_shared/src/logic.py:979
 #: skl_shared/src/logic.py:994 skl_shared/src/regexp.py:45
-#: skl_shared/src/regexp.py:107 skl_shared_qt/src/logic.py:403
-#: skl_shared_qt/src/logic.py:435 skl_shared_qt/src/logic.py:447
+#: skl_shared/src/regexp.py:107 skl_shared_qt/src/logic.py:98
+#: skl_shared_qt/src/logic.py:130 skl_shared_qt/src/logic.py:142
 msgid "Not enough input data!"
 msgstr "Недостаточно входных данных!"
 
 #: skl_shared/src/logic.py:953 skl_shared/src/logic.py:2512
-#: skl_shared_qt/src/logic.py:413
+#: skl_shared_qt/src/logic.py:108
 msgid "Write file \"{}\""
 msgstr "Запись файла \"{}\""
 
-#: skl_shared/src/logic.py:960 skl_shared_qt/src/logic.py:420
+#: skl_shared/src/logic.py:960 skl_shared_qt/src/logic.py:115
 msgid "Unable to write file \"{}\"!"
 msgstr "Не удается записать файл \"{}\"!"
 
@@ -227,8 +227,8 @@ msgstr "Файл \"{}\" не подлежит сортировке!"
 #: skl_shared/src/logic.py:3808 skl_shared/src/logic.py:4369
 #: skl_shared/src/shared.py:2097 skl_shared/src/shared.py:2792
 #: skl_shared/src/shared.py:3244 skl_shared/src/shared.py:4161
-#: skl_shared/src/tests.py:84 skl_shared_qt/src/logic.py:486
-#: skl_shared_qt/src/logic.py:585 skl_shared_qt/src/logic.py:1750
+#: skl_shared/src/tests.py:84 skl_shared_qt/src/logic.py:181
+#: skl_shared_qt/src/logic.py:280 skl_shared_qt/src/logic.py:702
 #: skl_shared_qt/src/message/controller.py:30
 msgid "Wrong input data!"
 msgstr "Недопустимые входные данные!"
@@ -238,24 +238,24 @@ msgid "Dictionary \"{}\": Incorrect line #{}: \"{}\"!"
 msgstr "Словарь \"{}\": Неправильная строка №{}: \"{}\"!"
 
 #: skl_shared/src/logic.py:1283 skl_shared/src/logic.py:2195
-#: skl_shared/src/logic.py:4813 skl_shared_qt/src/logic.py:478
-#: skl_shared_qt/src/logic.py:1167 skl_shared_qt/src/message/controller.py:33
+#: skl_shared/src/logic.py:4813 skl_shared_qt/src/logic.py:173
+#: skl_shared_qt/src/message/controller.py:33 skl_shared_qt/src/paths.py:239
 msgid "Empty input is not allowed!"
 msgstr "Пустые входные данные не допускаются!"
 
 #: skl_shared/src/logic.py:1287 skl_shared/src/logic.py:2199
 #: skl_shared/src/shared.py:2975 skl_shared/src/shared.py:3705
-#: skl_shared_qt/src/logic.py:482 skl_shared_qt/src/logic.py:1171
+#: skl_shared_qt/src/logic.py:177 skl_shared_qt/src/paths.py:243
 msgid "File \"{}\" has not been found!"
 msgstr "Файл \"{}\" не найден!"
 
 #: skl_shared/src/logic.py:1301 skl_shared/src/logic.py:2222
 #: skl_shared/src/logic.py:2368 skl_shared/src/logic.py:2893
 #: skl_shared/src/logic.py:2919 skl_shared/src/logic.py:3003
-#: skl_shared/src/logic.py:3645 skl_shared_qt/src/logic.py:496
-#: skl_shared_qt/src/logic.py:1195 skl_shared_qt/src/logic.py:1344
-#: skl_shared_qt/src/logic.py:1539 skl_shared_qt/src/logic.py:1562
-#: skl_shared_qt/src/logic.py:1647 skl_shared_qt/src/online.py:166
+#: skl_shared/src/logic.py:3645 skl_shared_qt/src/logic.py:191
+#: skl_shared_qt/src/online.py:166 skl_shared_qt/src/paths.py:33
+#: skl_shared_qt/src/paths.py:267 skl_shared_qt/src/paths.py:469
+#: skl_shared_qt/src/paths.py:492 skl_shared_qt/src/paths.py:577
 msgid ""
 "Operation has failed!\n"
 "Details: {}"
@@ -264,45 +264,45 @@ msgstr ""
 "Подробности: {}"
 
 #: skl_shared/src/logic.py:1342 skl_shared/src/logic.py:2786
-#: skl_shared_qt/src/logic.py:539
+#: skl_shared_qt/src/logic.py:234
 msgid "Load file \"{}\""
 msgstr "Загрузка файла \"{}\""
 
-#: skl_shared/src/logic.py:1359 skl_shared_qt/src/logic.py:556
+#: skl_shared/src/logic.py:1359 skl_shared_qt/src/logic.py:251
 msgid "Unable to read file \"{}\"!"
 msgstr "Не удается прочитать файл \"{}\"!"
 
-#: skl_shared/src/logic.py:1378 skl_shared_qt/src/logic.py:577
+#: skl_shared/src/logic.py:1378 skl_shared_qt/src/logic.py:272
 msgid "Float is required at input, but found \"{}\"! Return 0.0"
 msgstr ""
 "На входе должно быть число с плавающей запятой, но получено \"{}\"! "
 "Возвращаю 0.0"
 
-#: skl_shared/src/logic.py:1410 skl_shared_qt/src/logic.py:607
+#: skl_shared/src/logic.py:1410 skl_shared_qt/src/logic.py:302
 msgid "Convert \"{}\" to an integer"
 msgstr "Конвертация \"{}\" в целое число"
 
-#: skl_shared/src/logic.py:1413 skl_shared_qt/src/logic.py:610
+#: skl_shared/src/logic.py:1413 skl_shared_qt/src/logic.py:305
 msgid "Integer is required at input, but found \"{}\"! Return 0"
 msgstr "На входе должно быть целое число, но получено \"{}\"! Возвращаю 0"
 
-#: skl_shared/src/logic.py:1584 skl_shared_qt/src/logic.py:770
+#: skl_shared/src/logic.py:1584 skl_shared_qt/src/logic.py:465
 msgid ""
 "Different number of opening and closing brackets: \"{}\": {}; \"{}\": {}!"
 msgstr "Разное число открывающих и закрывающих скобок: \"{}\": {}; \"{}\": {}!"
 
-#: skl_shared/src/logic.py:1734 skl_shared_qt/src/logic.py:907
+#: skl_shared/src/logic.py:1734 skl_shared_qt/src/logic.py:602
 msgid ""
 "Commas and/or semicolons or line breaks can be used, but not altogether!"
 msgstr ""
 "Можно использовать запятые и/или точки с запятой или переносы строк, но не "
 "все сразу!"
 
-#: skl_shared/src/logic.py:1758 skl_shared_qt/src/logic.py:931
+#: skl_shared/src/logic.py:1758 skl_shared_qt/src/logic.py:626
 msgid "Failed to convert \"{}\" to an integer!"
 msgstr "Не удалось конвертировать \"{}\" в целое число!"
 
-#: skl_shared/src/logic.py:1769 skl_shared_qt/src/logic.py:941
+#: skl_shared/src/logic.py:1769 skl_shared_qt/src/logic.py:636
 msgid "Failed to convert \"{}\" to a floating-point number!"
 msgstr "Не удалось конвертировать \"{}\" в число с плавающей точкой!"
 
@@ -364,26 +364,26 @@ msgstr "ноя"
 msgid "Dec"
 msgstr "дек"
 
-#: skl_shared/src/logic.py:2203 skl_shared_qt/src/logic.py:1175
+#: skl_shared/src/logic.py:2203 skl_shared_qt/src/paths.py:247
 msgid "The object \"{}\" is not a file!"
 msgstr "Объект \"{}\" не является файлом!"
 
 #: skl_shared/src/logic.py:2231 skl_shared/src/logic.py:3076
-#: skl_shared_qt/src/logic.py:1202 skl_shared_qt/src/logic.py:1717
+#: skl_shared_qt/src/paths.py:274 skl_shared_qt/src/paths.py:647
 msgid "Copy \"{}\" to \"{}\""
 msgstr "Нельзя скопировать \"{}\" сам в себя!"
 
-#: skl_shared/src/logic.py:2237 skl_shared_qt/src/logic.py:1208
+#: skl_shared/src/logic.py:2237 skl_shared_qt/src/paths.py:280
 msgid "Failed to copy file \"{}\" to \"{}\"!"
 msgstr "Не удалось скопировать файл \"{}\" в \"{}\"!"
 
 #: skl_shared/src/logic.py:2245 skl_shared/src/logic.py:2850
-#: skl_shared_qt/src/logic.py:1216 skl_shared_qt/src/logic.py:1493
+#: skl_shared_qt/src/paths.py:288 skl_shared_qt/src/paths.py:423
 msgid "Move \"{}\" to \"{}\""
 msgstr "Перемещение \"{}\" в \"{}\""
 
 #: skl_shared/src/logic.py:2251 skl_shared/src/logic.py:2856
-#: skl_shared_qt/src/logic.py:1222 skl_shared_qt/src/logic.py:1499
+#: skl_shared_qt/src/paths.py:294 skl_shared_qt/src/paths.py:429
 msgid ""
 "Failed to move \"{}\" to \"{}\"!\n"
 "\n"
@@ -394,25 +394,25 @@ msgstr ""
 "Подробности: {}"
 
 #: skl_shared/src/logic.py:2264 skl_shared/src/logic.py:2311
-#: skl_shared_qt/src/logic.py:1237 skl_shared_qt/src/logic.py:1283
+#: skl_shared_qt/src/paths.py:309 skl_shared_qt/src/paths.py:355
 msgid "Failed to get the date of the file \"{}\"!"
 msgstr "Не удалось определить дату файла \"{}\"!"
 
-#: skl_shared/src/logic.py:2275 skl_shared_qt/src/logic.py:1248
+#: skl_shared/src/logic.py:2275 skl_shared_qt/src/paths.py:320
 msgid "Unable to copy the file \"{}\" to iself!"
 msgstr "Нельзя скопировать файл \"{}\" сам в себя!"
 
 #: skl_shared/src/logic.py:2292 skl_shared/src/logic.py:2971
-#: skl_shared_qt/src/logic.py:1264 skl_shared_qt/src/logic.py:1614
+#: skl_shared_qt/src/paths.py:336 skl_shared_qt/src/paths.py:544
 msgid "Delete \"{}\""
 msgstr "Удаление \"{}\""
 
-#: skl_shared/src/logic.py:2298 skl_shared_qt/src/logic.py:1270
+#: skl_shared/src/logic.py:2298 skl_shared_qt/src/paths.py:342
 msgid "Failed to delete file \"{}\"!"
 msgstr "Не удается удалить файл \"{}\"!"
 
 #: skl_shared/src/logic.py:2322 skl_shared/src/logic.py:2870
-#: skl_shared_qt/src/logic.py:1294 skl_shared_qt/src/logic.py:1515
+#: skl_shared_qt/src/paths.py:366 skl_shared_qt/src/paths.py:445
 msgid ""
 "Moving is not necessary, because the source and destination are identical "
 "({})."
@@ -420,28 +420,28 @@ msgstr ""
 "Перемещение не требуется, поскольку на входе и выходе указан один и тот же "
 "объект ({})."
 
-#: skl_shared/src/logic.py:2340 skl_shared_qt/src/logic.py:1313
+#: skl_shared/src/logic.py:2340 skl_shared_qt/src/paths.py:385
 msgid "Change the time of the file \"{}\" to {}"
 msgstr "Изменение времени файла \"{}\" на {}"
 
-#: skl_shared/src/logic.py:2346 skl_shared_qt/src/logic.py:1319
+#: skl_shared/src/logic.py:2346 skl_shared_qt/src/paths.py:391
 msgid "Failed to change the time of the file \"{}\" to \"{}\"!"
 msgstr "Не удалось изменить время файла \"{}\" на \"{}\"!"
 
 #: skl_shared/src/logic.py:2399 skl_shared/src/logic.py:3066
-#: skl_shared_qt/src/logic.py:1372 skl_shared_qt/src/logic.py:1710
+#: skl_shared_qt/src/paths.py:61 skl_shared_qt/src/paths.py:640
 msgid "Directory \"{}\" already exists."
 msgstr "Каталог \"{}\" уже существует."
 
-#: skl_shared/src/logic.py:2404 skl_shared_qt/src/logic.py:1376
+#: skl_shared/src/logic.py:2404 skl_shared_qt/src/paths.py:65
 msgid "The path \"{}\" is invalid!"
 msgstr "Путь \"{}\" неверен!"
 
-#: skl_shared/src/logic.py:2408 skl_shared_qt/src/logic.py:1379
+#: skl_shared/src/logic.py:2408 skl_shared_qt/src/paths.py:68
 msgid "Create directory \"{}\""
 msgstr "Создание каталога \"{}\""
 
-#: skl_shared/src/logic.py:2415 skl_shared_qt/src/logic.py:1386
+#: skl_shared/src/logic.py:2415 skl_shared_qt/src/paths.py:75
 msgid "Failed to create directory \"{}\"!"
 msgstr "Не удается создать каталог \"{}\"!"
 
@@ -469,19 +469,19 @@ msgstr ""
 "\n"
 "Подробности: {}"
 
-#: skl_shared/src/logic.py:2866 skl_shared_qt/src/logic.py:1511
+#: skl_shared/src/logic.py:2866 skl_shared_qt/src/paths.py:441
 msgid "Path \"{}\" already exists!"
 msgstr "Путь \"{}\" уже существует!"
 
-#: skl_shared/src/logic.py:2977 skl_shared_qt/src/logic.py:1620
+#: skl_shared/src/logic.py:2977 skl_shared_qt/src/paths.py:550
 msgid "Failed to delete directory \"{}\"! Delete it manually."
 msgstr "Не удается удалить каталог \"{}\"! Удалите его вручную."
 
-#: skl_shared/src/logic.py:3062 skl_shared_qt/src/logic.py:1707
+#: skl_shared/src/logic.py:3062 skl_shared_qt/src/paths.py:637
 msgid "Unable to copy \"{}\" to iself!"
 msgstr "Нельзя скопировать \"{}\" сам в себя!"
 
-#: skl_shared/src/logic.py:3082 skl_shared_qt/src/logic.py:1723
+#: skl_shared/src/logic.py:3082 skl_shared_qt/src/paths.py:653
 msgid "Failed to copy \"{}\" to \"{}\"!"
 msgstr "Не удалось скопировать \"{}\" в \"{}\"!"
 
@@ -586,7 +586,7 @@ msgstr "Логическая ошибка!"
 msgid "The pool is empty!"
 msgstr "Пул пуст!"
 
-#: skl_shared/src/logic.py:4168 skl_shared_qt/src/logic.py:1844
+#: skl_shared/src/logic.py:4168 skl_shared_qt/src/logic.py:783
 msgid "The operation has taken {} s."
 msgstr "Операция завершена за {} с."
 
@@ -614,7 +614,7 @@ msgstr "Недопустимые входные данные: \"{}\"!"
 msgid "Unexpected end of text!"
 msgstr "Неожиданный конец текста!"
 
-#: skl_shared/src/logic.py:4537 skl_shared_qt/src/logic.py:1937
+#: skl_shared/src/logic.py:4537 skl_shared_qt/src/logic.py:826
 msgid ","
 msgstr "."
 
@@ -650,56 +650,56 @@ msgid "Nothing to do!"
 msgstr "Действие не требуется."
 
 #: skl_shared/src/logic.py:4601 skl_shared/src/logic.py:4623
-#: skl_shared_qt/src/logic.py:1947 skl_shared_qt/src/logic.py:1970
+#: skl_shared_qt/src/logic.py:836 skl_shared_qt/src/logic.py:859
 msgid "B"
 msgstr "Б"
 
-#: skl_shared/src/logic.py:4614 skl_shared_qt/src/logic.py:1961
+#: skl_shared/src/logic.py:4614 skl_shared_qt/src/logic.py:850
 msgid "TiB"
 msgstr "ТиБ"
 
-#: skl_shared/src/logic.py:4616 skl_shared_qt/src/logic.py:1963
+#: skl_shared/src/logic.py:4616 skl_shared_qt/src/logic.py:852
 msgid "GiB"
 msgstr "ГиБ"
 
-#: skl_shared/src/logic.py:4618 skl_shared_qt/src/logic.py:1965
+#: skl_shared/src/logic.py:4618 skl_shared_qt/src/logic.py:854
 msgid "MiB"
 msgstr "МиБ"
 
-#: skl_shared/src/logic.py:4621 skl_shared_qt/src/logic.py:1968
+#: skl_shared/src/logic.py:4621 skl_shared_qt/src/logic.py:857
 msgid "KiB"
 msgstr "КиБ"
 
-#: skl_shared/src/logic.py:4731 skl_shared_qt/src/logic.py:2014
+#: skl_shared/src/logic.py:4731 skl_shared_qt/src/logic.py:903
 msgid "ATTENTION: Do yo really want to rewrite file \"{}\"?"
 msgstr "ВНИМАНИЕ: Перезаписать файл \"{}\"?"
 
 #: skl_shared/src/logic.py:4761 skl_shared/src/logic.py:4794
-#: skl_shared_qt/src/logic.py:2045 skl_shared_qt/src/logic.py:2083
+#: skl_shared_qt/src/logic.py:934 skl_shared_qt/src/logic.py:972
 msgid "sec"
 msgstr "сек"
 
-#: skl_shared/src/logic.py:4782 skl_shared_qt/src/logic.py:2071
+#: skl_shared/src/logic.py:4782 skl_shared_qt/src/logic.py:960
 msgid "yrs"
 msgstr "лет"
 
-#: skl_shared/src/logic.py:4784 skl_shared_qt/src/logic.py:2073
+#: skl_shared/src/logic.py:4784 skl_shared_qt/src/logic.py:962
 msgid "mths"
 msgstr "мес"
 
-#: skl_shared/src/logic.py:4786 skl_shared_qt/src/logic.py:2075
+#: skl_shared/src/logic.py:4786 skl_shared_qt/src/logic.py:964
 msgid "wks"
 msgstr "нед"
 
-#: skl_shared/src/logic.py:4788 skl_shared_qt/src/logic.py:2077
+#: skl_shared/src/logic.py:4788 skl_shared_qt/src/logic.py:966
 msgid "days"
 msgstr "дн"
 
-#: skl_shared/src/logic.py:4790 skl_shared_qt/src/logic.py:2079
+#: skl_shared/src/logic.py:4790 skl_shared_qt/src/logic.py:968
 msgid "hrs"
 msgstr "ч"
 
-#: skl_shared/src/logic.py:4792 skl_shared_qt/src/logic.py:2081
+#: skl_shared/src/logic.py:4792 skl_shared_qt/src/logic.py:970
 msgid "min"
 msgstr "мин"
 
@@ -1370,6 +1370,8 @@ msgstr "Вставленный текст: \"{}\""
 #: skl_shared_qt/src/test.py:542 skl_shared_qt/src/test.py:548
 #: skl_shared_qt/src/test.py:595 skl_shared_qt/src/test.py:602
 #: skl_shared_qt/src/test.py:653 skl_shared_qt/src/test.py:659
+#: skl_shared_qt/src/test.py:831 skl_shared_qt/src/test.py:837
+#: skl_shared_qt/src/test.py:843
 msgid "Start {}"
 msgstr "Запуск {}"
 
@@ -1416,6 +1418,31 @@ msgstr "Текущая дата: {}"
 #: skl_shared_qt/src/test.py:737
 msgid "Tomorrow’s date: {}"
 msgstr "Завтрашняя дата: {}"
+
+#: skl_shared_qt/src/test.py:760
+msgid "#"
+msgstr "№"
+
+#: skl_shared_qt/src/test.py:760
+msgid "FILE"
+msgstr "ФАЙЛ"
+
+#: skl_shared_qt/src/test.py:817
+msgid "Full path: {}"
+msgstr "Полный путь: {}"
+
+#: skl_shared_qt/src/test.py:820
+#| msgid "Create directory \"{}\""
+msgid "Directory: {}"
+msgstr "Каталог: {}"
+
+#: skl_shared_qt/src/test.py:823
+msgid "File name: {}"
+msgstr "Имя файла: {}"
+
+#: skl_shared_qt/src/test.py:826
+msgid "File name without extension: {}"
+msgstr "Имя файла без расширения: {}"
 
 #~ msgid "A save dialog with default settings:"
 #~ msgstr "Диалог сохранения с настройками по умолчанию:"
