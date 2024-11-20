@@ -914,7 +914,9 @@ class TextFile(Label):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.code = ''
+        from skl_shared_qt.text_file import Read, Write
+        self.iread = Read
+        self.iwrite = Write
         self.create_debug()
     
     def create_debug(self):
@@ -923,14 +925,55 @@ class TextFile(Label):
         self.debug = DEBUG
         self.win.setCentralWidget(self.debug.gui)
     
-    def get(self):
-        f = '[SharedQt] test.TextFile.get'
-        import skl_shared_qt.get_url as gu
-        code = gu.Get('https://www.google.com').run()
-        self.debug.reset(f, code)
+    def load(self):
+        f = '[SharedQt] test.TextFile.load'
+        input(_('Start {}').format(f))
+        file = '/home/pete/tmp/buffer'
+        self.debug.reset(f, self.iread(file).get())
+        self.show()
+    
+    def load_non_existent(self):
+        f = '[SharedQt] test.TextFile.load_non_existent'
+        input(_('Start {}').format(f))
+        self.iread('/tmp/ZERO').get()
+    
+    def load_no_permissions(self):
+        f = '[SharedQt] test.TextFile.load_no_permissions'
+        input(_('Start {}').format(f))
+        self.iread('/etc/shadow').get()
+    
+    def write(self):
+        f = '[SharedQt] test.TextFile.write'
+        input(_('Start {}').format(f))
+        self.iwrite('/tmp/test').write('test')
+    
+    def force_rewrite(self):
+        f = '[SharedQt] test.TextFile.force_rewrite'
+        input(_('Start {}').format(f))
+        self.iwrite('/tmp/test', True).write('test')
+    
+    def rewrite_cancel(self):
+        f = '[SharedQt] test.TextFile.rewrite_cancel'
+        input(_('Start {}').format(f))
+        mes = _('Please answer No here.')
+        ms.Message(f, mes, True, True).show_info()
+        self.iwrite('/tmp/test').write('test')
+    
+    def rewrite(self):
+        f = '[SharedQt] test.TextFile.rewrite'
+        input(_('Start {}').format(f))
+        mes = _('Please answer Yes here.')
+        ms.Message(f, mes, True, True).show_info()
+        self.iwrite('/tmp/test').write('test')
     
     def run_all(self):
-        self.get()
+        self.load()
+        self.load_non_existent()
+        self.load_no_permissions()
+        self.write()
+        self.force_rewrite()
+        self.rewrite_cancel()
+        self.rewrite()
 
 
 if __name__ == '__main__':
@@ -952,7 +995,7 @@ if __name__ == '__main__':
     #PrettyHtml().run()
     #Online().run()
     #Email().run()
-    Get().run()
+    #Get().run()
     #Launch().run()
     #Time().run()
     #Table().run()
@@ -960,3 +1003,4 @@ if __name__ == '__main__':
     #Paths().run()
     #Directory().run()
     #Timer().run()
+    TextFile().run()
