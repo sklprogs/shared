@@ -6,7 +6,7 @@ import urllib.request
 
 from skl_shared_qt.localize import _
 import skl_shared_qt.message.controller as ms
-import skl_shared_qt.logic as lg
+from skl_shared_qt.time import Timer
 
 
 class Get:
@@ -87,7 +87,7 @@ class Get:
             ms.Message(f, mes, True).show_warning()
             return
         if self.Verbose:
-            timer = lg.Timer(f)
+            timer = Timer(f)
             timer.start()
         self._get()
         self.decode()
