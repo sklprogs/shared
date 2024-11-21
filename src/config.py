@@ -311,7 +311,7 @@ class Config:
     def update(self):
         f = '[SharedQt] config.Config.update'
         if not self.Success:
-            sh.com.cancel(f)
+            ms.rep.cancel(f)
             return
         if self.ilocal.Success:
             mes = _('Update default configuration')
@@ -324,7 +324,7 @@ class Config:
     def load(self):
         f = '[SharedQt] config.Config.load'
         if not self.Success:
-            sh.com.cancel(f)
+            ms.rep.cancel(f)
             return
         self.ischema = Schema(self.schema)
         self.ischema.run()
@@ -337,14 +337,14 @@ class Config:
     def get(self):
         f = '[SharedQt] config.Config.get'
         if not self.Success:
-            sh.com.cancel(f)
+            ms.rep.cancel(f)
             return {}
         return self.new
     
     def dump(self):
         f = '[SharedQt] config.Config.dump'
         if not self.Success:
-            sh.com.cancel(f)
+            ms.rep.cancel(f)
             return '{}'
         try:
             return json.dumps(self.new, ensure_ascii=False, indent=4)

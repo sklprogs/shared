@@ -1004,7 +1004,7 @@ class Config:
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
-    Message().run()
+    #Message().run()
     #Clipboard().run()
     #Label().run()
     #Entry().run()
@@ -1029,4 +1029,4 @@ if __name__ == '__main__':
     #Directory().run()
     #Timer().run()
     #TextFile().run()
-    #Config().run()
+    Config().run()
