@@ -20,4 +20,4 @@ class Button(gi.Button):
             mes = f'{size} + {delta} > 0'
             ms.rep.condition(f, mes)
             return
-        self.set_font_size(size+delta)
+        self.set_font_size(size + delta)
