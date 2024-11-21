@@ -976,6 +976,29 @@ class TextFile(Label):
         self.rewrite()
 
 
+
+class Config:
+
+    def __init__(self):
+        ms.GRAPHICAL = False
+        from skl_shared_qt.config import Config
+        self.config = Config
+        
+    def run_config(self):
+        f = '[SharedQt] test.Timer.run_config'
+        input(_('Start {}').format(f))
+        default = '/home/pete/bin/mclient/resources/config/default.json'
+        schema = '/home/pete/bin/mclient/resources/config/schema.json'
+        local = '/home/pete/.config/mclient/mclient.json'
+        self.config(default, schema, local).run()
+    
+    def run_all(self):
+        self.run_config()
+    
+    def run(self):
+        self.run_all()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -1003,4 +1026,5 @@ if __name__ == '__main__':
     #Paths().run()
     #Directory().run()
     #Timer().run()
-    TextFile().run()
+    #TextFile().run()
+    Config().run()
