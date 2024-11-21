@@ -213,10 +213,11 @@ class Message(Label):
     
     def console(self):
         f = '[SharedQt] test.Message.console'
+        from text_file import Read
         ms.Message(f, _('Start test')).show_info()
         old = ms.GRAPHICAL
         ms.GRAPHICAL = False
-        sh.ReadTextFile('/tmp/aaa').get()
+        Read('/tmp/aaa').get()
         ms.GRAPHICAL = old
     
     def run_all(self):
@@ -1003,7 +1004,7 @@ class Config:
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
-    #Message().run()
+    Message().run()
     #Clipboard().run()
     #Label().run()
     #Entry().run()
@@ -1022,7 +1023,7 @@ if __name__ == '__main__':
     #Get().run()
     #Launch().run()
     #Time().run()
-    Table().run()
+    #Table().run()
     #List().run()
     #Paths().run()
     #Directory().run()
