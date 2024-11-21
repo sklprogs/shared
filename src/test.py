@@ -753,16 +753,17 @@ class Table:
         
     def run_table(self):
         f = '[SharedQt] test.Table.run_table'
-        import skl_shared_qt.table as tb
-        import skl_shared_qt.logic as lg
-        files = lg.Directory('/home/pete/tmp').get_subfiles()
+        from skl_shared_qt.table import Table
+        from skl_shared_qt.paths import Directory
+        from skl_shared_qt.time import Timer
+        files = Directory('/home/pete/tmp').get_subfiles()
         headers = (_('#'), _('FILE'))
         nos = []
         for i in range(len(files)):
             nos.append(i + 1)
-        timer = lg.Timer(f)
+        timer = Timer(f)
         timer.start()
-        print(tb.Table([nos, files], headers, maxrow=50, CutStart=True).run())
+        print(Table([nos, files], headers, maxrow=50, CutStart=True).run())
         timer.end()
     
     def run_all(self):
@@ -1021,10 +1022,10 @@ if __name__ == '__main__':
     #Get().run()
     #Launch().run()
     #Time().run()
-    #Table().run()
+    Table().run()
     #List().run()
     #Paths().run()
     #Directory().run()
     #Timer().run()
     #TextFile().run()
-    Config().run()
+    #Config().run()
