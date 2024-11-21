@@ -756,8 +756,3 @@ class Commands:
 
 com = Commands()
 OS = GetOs()
-
-
-if __name__ == '__main__':
-    f = '[SharedQt] logic.__main__'
-    ReadTextFile('/tmp/aaa').get()
