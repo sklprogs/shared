@@ -9,6 +9,7 @@ import webbrowser
 from skl_shared_qt.localize import _
 import skl_shared_qt.message.controller as ms
 import skl_shared_qt.logic as lg
+from skl_shared_qt.paths import File
 
 
 class Online:
@@ -94,7 +95,7 @@ class Email:
             self.Success = False
             ms.rep.empty(f)
         if self.attach:
-            self.Success = lg.File(self.attach).Success
+            self.Success = File(self.attach).Success
             if not self.Success:
                 ms.rep.cancel(f)
 
