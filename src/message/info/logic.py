@@ -10,7 +10,7 @@ class Info:
         self.message = str(message)
     
     def show(self):
-        f = '[SharedQt] message.info.Info.logic'
+        f = '[SharedQt] message.info.logic.Info'
         if not self.message:
             print(f, 'Empty message!')
             return
@@ -22,9 +22,7 @@ class Info:
                 allowed" occurs. Since there are too many Unicode exceptions to
                 except, we do not specify an exception type.
             '''
-            sub = 'Cannot print the message! ({})'.format(e)
-            #message = '{}:{}:{}'.format(f, _('INFO'), sub)
-            #print(message)
+            sub = f'Cannot print the message! ({e})'
             print(f'{f}:INFO:{sub}')
     
     def show_blocked(self):

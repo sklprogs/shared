@@ -5,13 +5,13 @@ import html
 import lxml.etree
 
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
+from skl_shared_qt.message.controller import Message, rep
 
 
 def make_pretty(code):
     f = '[SharedQt] pretty_html.make_pretty'
     if not code:
-        ms.rep.empty(f)
+        rep.empty(f)
         return ''
     try:
         bytes_ = lxml.etree.tostring (lxml.etree.XML(code)
@@ -22,6 +22,6 @@ def make_pretty(code):
     except Exception as e:
         mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
         # Almost all tested webpages were invalid, so this should be silent
-        ms.Message(f, mes).show_error()
+        Message(f, mes).show_error()
         return code
     return ''

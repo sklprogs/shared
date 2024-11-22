@@ -7,7 +7,7 @@ import shlex
 import shutil
 
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
+from skl_shared_qt.message.controller import Message, rep
 from skl_shared_qt.logic import OS
 
 
@@ -20,18 +20,18 @@ class Path:
         f = '[SharedQt] paths.Path.get_free_space'
         result = 0
         if not self.path:
-            ms.rep.empty(f)
+            rep.empty(f)
             return result
         if not os.path.exists(self.path):
             mes = _('Wrong input data: "{}"!').format(self.path)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
             return result
         try:
             istat = os.statvfs(self.path)
             result = istat.f_bavail * istat.f_bsize
         except Exception as e:
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
         return result
     
     def _split_path(self):
@@ -54,26 +54,26 @@ class Path:
         Success = True
         if not self.path:
             Success = False
-            ms.rep.empty(f)
+            rep.empty(f)
             return Success
         if os.path.exists(self.path):
             if os.path.isdir(self.path):
                 mes = _('Directory "{}" already exists.').format(self.path)
-                ms.Message(f, mes).show_info()
+                Message(f, mes).show_info()
             else:
                 Success = False
                 mes = _('The path "{}" is invalid!').format(self.path)
-                ms.Message(f, mes, True).show_warning()
+                Message(f, mes, True).show_warning()
         else:
             mes = _('Create directory "{}"').format(self.path)
-            ms.Message(f, mes).show_info()
+            Message(f, mes).show_info()
             try:
                 #TODO: consider os.mkdir
                 os.makedirs(self.path)
             except:
                 Success = False
                 mes = _('Failed to create directory "{}"!').format(self.path)
-                ms.Message(f, mes, True).show_error()
+                Message(f, mes, True).show_error()
         return Success
 
     def delete_inappropriate_symbols(self):
@@ -237,21 +237,21 @@ class File:
         elif not self.file:
             self.Success = False
             mes = _('Empty input is not allowed!')
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
         elif not os.path.exists(self.file):
             self.Success = False
             mes = _('File "{}" has not been found!').format(self.file)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
         else:
             self.Success = False
             mes = _('The object "{}" is not a file!').format(self.file)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
 
     def get_size(self, Follow=True):
         f = '[SharedQt] paths.File.get_size'
         result = 0
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         try:
             if Follow:
@@ -265,41 +265,41 @@ class File:
                 be raised if Follow=False and this is a broken symbolic link.
             '''
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
         return result
     
     def _copy(self):
         f = '[SharedQt] paths.File._copy'
         Success = True
         mes = _('Copy "{}" to "{}"').format(self.file, self.dest)
-        ms.Message(f, mes).show_info()
+        Message(f, mes).show_info()
         try:
             shutil.copyfile(self.file, self.dest)
         except:
             Success = False
             mes = _('Failed to copy file "{}" to "{}"!')
             mes = mes.format(self.file, self.dest)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
         return Success
 
     def _move(self):
         f = '[SharedQt] paths.File._move'
         Success = True
         mes = _('Move "{}" to "{}"').format(self.file, self.dest)
-        ms.Message(f, mes).show_info()
+        Message(f, mes).show_info()
         try:
             shutil.move(self.file, self.dest)
         except Exception as e:
             Success = False
             mes = _('Failed to move "{}" to "{}"!\n\nDetails: {}')
             mes = mes.format(self.file, self.dest, e)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
         return Success
 
     def get_access_time(self):
         f = '[SharedQt] paths.File.get_access_time'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         try:
             self.atime = os.path.getatime(self.file)
@@ -308,44 +308,44 @@ class File:
         except:
             mes = _('Failed to get the date of the file "{}"!')
             mes = mes.format(self.file)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
 
     def copy(self):
         f = '[SharedQt] paths.File.copy'
         Success = True
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if self.file.lower() == self.dest.lower():
             mes = _('Unable to copy the file "{}" to iself!').format(self.file)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
         elif com.rewrite (file = self.dest
                          ,Rewrite = self.Rewrite
                          ):
             Success = self._copy()
         else:
             mes = _('Operation has been canceled by the user.')
-            ms.Message(f, mes).show_info()
+            Message(f, mes).show_info()
         return Success
 
     def delete(self):
         f = '[SharedQt] paths.File.delete'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         mes = _('Delete "{}"').format(self.file)
-        ms.Message(f, mes).show_info()
+        Message(f, mes).show_info()
         try:
             os.remove(self.file)
             return True
         except:
             mes = _('Failed to delete file "{}"!').format(self.file)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
 
     def get_modification_time(self):
         f = '[SharedQt] paths.File.get_modification_time'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         try:
             self.mtime = os.path.getmtime(self.file)
@@ -354,43 +354,43 @@ class File:
         except:
             mes = _('Failed to get the date of the file "{}"!')
             mes = mes.format(self.file)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
 
     def move(self):
         f = '[SharedQt] paths.File.move'
         Success = True
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if self.file.lower() == self.dest.lower():
             mes = _('Moving is not necessary, because the source and destination are identical ({}).')
             mes = mes.format(self.file)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
         elif com.rewrite (file = self.dest
                          ,Rewrite = self.Rewrite
                          ):
             Success = self._move()
         else:
             mes = _('Operation has been canceled by the user.')
-            ms.Message(f, mes).show_info()
+            Message(f, mes).show_info()
         return self.Success and Success
 
     def set_time(self):
         f = '[SharedQt] paths.File.set_time'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if not self.atime or not self.mtime:
             return
         mes = _('Change the time of the file "{}" to {}')
         mes = mes.format(self.file, (self.atime, self.mtime))
-        ms.Message(f, mes).show_info()
+        Message(f, mes).show_info()
         try:
             os.utime(self.file, (self.atime, self.mtime))
         except:
             mes = _('Failed to change the time of the file "{}" to "{}"!')
             mes = mes.format(self.file, (self.atime, self.mtime))
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
 
 
 
@@ -415,36 +415,36 @@ class Directory:
         if not os.path.isdir(self.dir):
             self.Success = False
             mes = _('Wrong input data: "{}"!').format(self.dir)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
     
     def _move(self):
         f = '[SharedQt] paths.Directory._move'
         Success = True
         mes = _('Move "{}" to "{}"').format(self.dir, self.dest)
-        ms.Message(f, mes).show_info()
+        Message(f, mes).show_info()
         try:
             shutil.move(self.dir, self.dest)
         except Exception as e:
             Success = False
             mes = _('Failed to move "{}" to "{}"!\n\nDetails: {}')
             mes = mes.format(self.dir, self.dest, e)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
         return Success
 
     def move(self):
         f = '[SharedQt] paths.Directory.move'
         Success = True
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if os.path.exists(self.dest):
             mes = _('Path "{}" already exists!').format(self.dest)
-            ms.Message(f, mes).show_warning()
+            Message(f, mes).show_warning()
             Success = False
         elif self.dir.lower() == self.dest.lower():
             mes = _('Moving is not necessary, because the source and destination are identical ({}).')
             mes = mes.format(self.dir)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
         else:
             Success = self._move()
         return self.Success and Success
@@ -453,7 +453,7 @@ class Directory:
         # Include files in subfolders
         f = '[SharedQt] paths.Directory.get_subfiles'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return []
         if self.subfiles:
             return self.subfiles
@@ -467,7 +467,7 @@ class Directory:
             self.subfiles.sort(key=lambda x: x.lower())
         except Exception as e:
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
         return self.subfiles
     
     def get_size(self, Follow=True):
@@ -490,7 +490,7 @@ class Directory:
                 be raised if Follow=False and there are broken symbolic links.
             '''
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
         return result
     
     def set_values(self):
@@ -509,7 +509,7 @@ class Directory:
     def get_ext(self): # with a dot
         f = '[SharedQt] paths.Directory.get_ext'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return self.exts
         if not self.exts:
             for file in self.get_rel_files():
@@ -521,7 +521,7 @@ class Directory:
     def get_ext_low(self): # with a dot
         f = '[SharedQt] paths.Directory.get_ext_low'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return self.extslow
         if not self.extslow:
             self.get_ext()
@@ -530,36 +530,36 @@ class Directory:
     def delete_empty(self):
         f = '[SharedQt] paths.Directory.delete_empty'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         # Do not delete nested folders
         if os.listdir(self.dir):
             mes = _('Unable to delete {}, because it has nested objects!')
             mes = mes.format(self.dir)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
             return
         self.delete()
     
     def delete(self):
         f = '[SharedQt] paths.Directory.delete'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         mes = _('Delete "{}"').format(self.dir)
-        ms.Message(f, mes).show_info()
+        Message(f, mes).show_info()
         try:
             shutil.rmtree(self.dir)
             return True
         except:
             mes = _('Failed to delete directory "{}"! Delete it manually.')
             mes = mes.format(self.dir)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
 
     def get_rel_list(self):
         # Create a list of objects with a relative path
         f = '[SharedQt] paths.Directory.get_rel_list'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if not self.rellist:
             self.get_list()
@@ -569,7 +569,7 @@ class Directory:
         # Create a list of objects with an absolute path
         f = '[SharedQt] paths.Directory.get_list'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return self.lst
         if self.lst:
             return self.lst
@@ -579,7 +579,7 @@ class Directory:
             # We can encounter, e.g., PermissionError here
             self.Success = False
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
         self.lst.sort(key=lambda x: x.lower())
         self.rellist = list(self.lst)
         for i in range(len(self.lst)):
@@ -589,7 +589,7 @@ class Directory:
     def get_rel_dirs(self):
         f = '[SharedQt] paths.Directory.get_rel_dirs'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return self.reldirs
         if not self.reldirs:
             self.dirs()
@@ -598,7 +598,7 @@ class Directory:
     def get_rel_files(self):
         f = '[SharedQt] paths.Directory.get_rel_files'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return self.relfiles
         if not self.relfiles:
             self.get_files()
@@ -608,7 +608,7 @@ class Directory:
         # Needs absolute path
         f = '[SharedQt] paths.Directory.get_dirs'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return self.dirs
         if self.dirs:
             return self.dirs
@@ -622,7 +622,7 @@ class Directory:
         # Needs absolute path
         f = '[SharedQt] paths.Directory.get_files'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return self.files
         if self.files:
             return self.files
@@ -635,27 +635,27 @@ class Directory:
     def copy(self):
         f = '[SharedQt] paths.Directory.copy'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if self.dir.lower() == self.dest.lower():
             mes = _('Unable to copy "{}" to iself!').format(self.dir)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
         elif os.path.isdir(self.dest):
             mes = _('Directory "{}" already exists.').format(self.dest)
-            ms.Message(f, mes, True).show_info()
+            Message(f, mes, True).show_info()
         else:
             self._copy()
 
     def _copy(self):
         f = '[SharedQt] paths.Directory._copy'
         mes = _('Copy "{}" to "{}"').format(self.dir, self.dest)
-        ms.Message(f, mes).show_info()
+        Message(f, mes).show_info()
         try:
             shutil.copytree(self.dir, self.dest)
         except:
             self.Success = False
             mes = _('Failed to copy "{}" to "{}"!').format(self.dir, self.dest)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
 
 
 PDIR = ProgramDir()

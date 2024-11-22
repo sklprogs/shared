@@ -3,7 +3,7 @@
 
 import re
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
+from skl_shared_qt.message.controller import Message, rep
 
 
 class Font:
@@ -11,15 +11,12 @@ class Font:
     def __init__(self, name, xborder=0, yborder=0):
         self.set_values()
         if name:
-            self.reset (name = name
-                       ,xborder = xborder
-                       ,yborder = yborder
-                       )
+            self.reset(name = name, xborder = xborder, yborder = yborder)
     
     def set_text(self, text):
         f = '[SharedQt] graphics.font.logic.Font.set_text'
         if not text:
-            ms.rep.empty(f)
+            rep.empty(f)
             return
         self.text = text
     
@@ -41,7 +38,7 @@ class Font:
     def set_height(self):
         f = '[SharedQt] graphics.font.logic.Font.set_height'
         if not self.set_height:
-            ms.rep.empty(f)
+            rep.empty(f)
             return
         lines = len(self.text.splitlines())
         if lines:
@@ -58,12 +55,12 @@ class Font:
     def set_attr(self):
         f = '[SharedQt] graphics.font.logic.Font.set_attr'
         if not self.name:
-            ms.rep.empty(f)
+            rep.empty(f)
             return
         match = re.match('([aA-zZ].*) (\d+)', self.name)
         if not match:
             message = _('Wrong input data: "{}"!').format(self.name)
-            ms.Message(f, message, False).show_error()
+            Message(f, message, False).show_error()
             return
         self.family = match.group(1)
         self.size = int(match.group(2))

@@ -91,21 +91,21 @@ class Color(Label):
     
     def get_hex(self):
         f = '[SharedQt] test.Color.get_hex'
-        ms.Message(f, _('Start test')).show_info()
+        Message(f, _('Start test')).show_info()
         hex_ = self.icolor.get_hex()
         mes = f'HEX value of color "{self.color_name}" is {hex_}'
-        ms.Message(f, mes).show_debug()
+        Message(f, mes).show_debug()
     
     def modify(self):
         f = '[SharedQt] test.Color.modify'
-        ms.Message(f, _('Start test')).show_info()
+        Message(f, _('Start test')).show_info()
         darker, lighter = self.icolor.modify()
     
     def run_all(self):
         f = '[SharedQt] test.Color.run_all'
         self.get_hex()
         self.modify()
-        ms.Message(f, _('Testing is complete')).show_info()
+        Message(f, _('Testing is complete')).show_info()
 
 
 
@@ -117,7 +117,7 @@ class Button(Root):
     
     def click(self, event=None):
         f = '[SharedQt] test.Button.click'
-        ms.Message(f, _('Operation is complete.'), True).show_info()
+        Message(f, _('Operation is complete.'), True).show_info()
     
     def create_button(self):
         from skl_shared_qt.graphics.button.controller import Button
@@ -127,10 +127,9 @@ class Button(Root):
         panel = QWidget()
         layout = QVBoxLayout()
         panel.setLayout(layout)
-        ibutton = Button (text=_('Click me'), action=self.click
-                         ,hint=_('This is a button'), active=path
-                         ,inactive=path
-                         )
+        ibutton = Button(text=_('Click me'), action=self.click
+                        ,hint=_('This is a button'), active=path
+                        ,inactive=path)
         layout.addWidget(ibutton.widget)
         self.win.setCentralWidget(panel)
 
@@ -382,9 +381,8 @@ class CheckBox(Panel):
     
     def create_checkbox(self):
         from skl_shared_qt.graphics.checkbox.controller import CheckBox
-        icheckbox = CheckBox (text=_('Select me'), font_family='Mono'
-                             ,font_size=12
-                             )
+        icheckbox = CheckBox(text=_('Select me'), font_family='Mono'
+                            ,font_size=12)
         self.layout.addWidget(icheckbox.widget)
 
 
@@ -574,22 +572,22 @@ class PrettyHtml(Label):
         self.win.setCentralWidget(self.debug.gui)
     
     def load(self):
-        import skl_shared_qt.logic as lg
+        from skl_shared_qt.text_file import Read
         f = '[SharedQt] test.PrettyHtml.load'
         if not self.Success:
             ms.rep.cancel(f)
             return
-        self.code = lg.ReadTextFile(self.file).get()
+        self.code = Read(self.file).get()
         if not self.code:
             self.Success = False
     
     def make_pretty(self):
-        import skl_shared_qt.pretty_html
+        from skl_shared_qt.pretty_html import make_pretty
         f = '[SharedQt] test.PrettyHtml.make_pretty'
         if not self.Success:
             ms.rep.cancel(f)
             return
-        return skl_shared_qt.pretty_html.make_pretty(self.code)
+        return make_pretty(self.code)
     
     def run_pretty(self):
         f = '[SharedQt] test.PrettyHtml.run_pretty'
@@ -808,7 +806,7 @@ class Paths:
         # May be non-existent
         path = self.paths.PDIR.add('..', 'resources')
         path = self.paths.Path(path).get_absolute()
-        ms.Message(f, f'"{path}"').show_debug()
+        Message(f, f'"{path}"').show_debug()
     
     def get_path_report(self):
         f = '[SharedQt] test.Paths.get_path_report'
@@ -816,16 +814,16 @@ class Paths:
         # Does not follow symbolic links
         path = ipath.get_absolute()
         mes = _('Full path: {}').format(f'"{path}"')
-        ms.Message(f, mes).show_debug()
+        Message(f, mes).show_debug()
         dirname = ipath.get_dirname()
         mes = _('Directory: {}').format(f'"{dirname}"')
-        ms.Message(f, mes).show_debug()
+        Message(f, mes).show_debug()
         basename = ipath.get_basename()
         mes = _('File name: {}').format(f'"{basename}"')
-        ms.Message(f, mes).show_debug()
+        Message(f, mes).show_debug()
         filename = ipath.get_filename()
         mes = _('File name without extension: {}').format(f'"{filename}"')
-        ms.Message(f, mes).show_debug()
+        Message(f, mes).show_debug()
     
     def create(self):
         f = '[SharedQt] test.Paths.create'
@@ -958,14 +956,14 @@ class TextFile(Label):
         f = '[SharedQt] test.TextFile.rewrite_cancel'
         input(_('Start {}').format(f))
         mes = _('Please answer No here.')
-        ms.Message(f, mes, True, True).show_info()
+        Message(f, mes, True, True).show_info()
         self.iwrite('/tmp/test').write('test')
     
     def rewrite(self):
         f = '[SharedQt] test.TextFile.rewrite'
         input(_('Start {}').format(f))
         mes = _('Please answer Yes here.')
-        ms.Message(f, mes, True, True).show_info()
+        Message(f, mes, True, True).show_info()
         self.iwrite('/tmp/test').write('test')
     
     def run_all(self):

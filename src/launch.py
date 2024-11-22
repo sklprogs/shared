@@ -5,7 +5,7 @@ import os
 import subprocess
 
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
+from skl_shared_qt.message.controller import Message, rep
 from skl_shared_qt.logic import OS
 from skl_shared_qt.paths import Path
 
@@ -27,7 +27,7 @@ class Launch:
         if GetOutput:
             if Block:
                 mes = _('Reading standard output is not supported in a blocking mode!')
-                ms.Message(f, mes, True).show_error()
+                Message(f, mes, True).show_error()
             else:
                 self.stdout = subprocess.PIPE
 
@@ -45,7 +45,7 @@ class Launch:
         '''
         f = '[SharedQt] launch.Launch.get_output'
         if not self.process or not self.process.stdout:
-            ms.rep.empty(f)
+            rep.empty(f)
             return ''
         result = self.process.stdout
         result = [str(item, 'utf-8') for item in result]
@@ -54,10 +54,10 @@ class Launch:
     def _launch(self):
         f = '[SharedQt] launch.Launch._launch'
         if not self.custom_args:
-            ms.rep.empty(f)
+            rep.empty(f)
             return
         mes = _('Custom arguments: "{}"').format(self.custom_args)
-        ms.Message(f, mes).show_debug()
+        Message(f, mes).show_debug()
         try:
             # Block the script till the called program is closed
             if self.Block:
@@ -68,7 +68,7 @@ class Launch:
             return True
         except:
             mes = _('Failed to run "{}"!').format(self.custom_args)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
 
     def _launch_lin(self):
         f = '[SharedQt] launch.Launch._launch_lin'
@@ -77,7 +77,7 @@ class Launch:
             return True
         except OSError:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
 
     def _launch_mac(self):
         f = '[SharedQt] launch.Launch._launch_mac'
@@ -86,7 +86,7 @@ class Launch:
             return True
         except:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
 
     def _launch_win(self):
         f = '[SharedQt] launch.Launch._launch_win'
@@ -95,7 +95,7 @@ class Launch:
             return True
         except:
             mes = _('Unable to open the file in an external program. You should probably check the file associations.')
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
 
     def launch_app(self, custom_app='', custom_args=[]):
         self.custom_app = custom_app
@@ -112,7 +112,7 @@ class Launch:
     def launch_custom(self):
         f = '[SharedQt] launch.Launch.launch_custom'
         if not self.TargetExists:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         self.custom_args = [self.custom_app, self.target]
         return self._launch()
@@ -120,7 +120,7 @@ class Launch:
     def launch_default(self):
         f = '[SharedQt] launch.Launch.launch_default'
         if not self.TargetExists:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if OS.is_lin():
             return self._launch_lin()

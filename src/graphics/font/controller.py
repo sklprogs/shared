@@ -2,8 +2,8 @@
 # -*- coding: UTF-8 -*-
 
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
-import skl_shared_qt.graphics.font.gui as gi
+from skl_shared_qt.message.controller import Message, rep
+from skl_shared_qt.graphics.font.gui import Font as guiFont
 
 
 class Font:
@@ -12,7 +12,7 @@ class Font:
         self.Success = True
         self.font = None
         self.family = ''
-        self.gui = gi.Font()
+        self.gui = guiFont()
         self.widget = widget
         self.family = family
         self.size = size
@@ -21,12 +21,12 @@ class Font:
     def fail(self, f, e):
         self.Success = False
         mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
-        ms.Message(f, mes, True).show_error()
+        Message(f, mes, True).show_error()
     
     def set_parent(self):
         f = '[SharedQt] graphics.font.controller.Font.set_parent'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         try:
             self.gui.set_parent(self.widget, self.font)
@@ -36,7 +36,7 @@ class Font:
     def set_family(self):
         f = '[SharedQt] graphics.font.controller.Font.set_family'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         try:
             self.gui.set_family(self.font, self.family)
@@ -46,7 +46,7 @@ class Font:
     def set_size(self):
         f = '[SharedQt] graphics.font.controller.Font.set_size'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         try:
             self.gui.set_size(self.font, self.size)
@@ -56,7 +56,7 @@ class Font:
     def set_font(self):
         f = '[SharedQt] graphics.font.controller.Font.set_font'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         try:
             self.font = self.gui.get_font()
@@ -66,15 +66,15 @@ class Font:
     def check(self):
         f = '[SharedQt] graphics.font.controller.Font.check'
         if not self.widget:
-            ms.rep.empty(f)
+            rep.empty(f)
             self.Success = False
             return
         if not self.family:
-            ms.rep.empty(f)
+            rep.empty(f)
             self.Success = False
             return
         if not self.size:
-            ms.rep.empty(f)
+            rep.empty(f)
             self.Success = False
             return
     

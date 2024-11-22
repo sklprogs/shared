@@ -6,8 +6,8 @@ import calendar
 import datetime
 
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
-import skl_shared_qt.logic as lg
+from skl_shared_qt.message.controller import Message, rep
+from skl_shared_qt.logic import Text
 
 
 class Timer:
@@ -22,7 +22,7 @@ class Timer:
     def end(self):
         delta = float(time.time() - self.startv)
         mes = _('The operation has taken {} s.').format(delta)
-        ms.Message(self.func_title, mes).show_debug()
+        Message(self.func_title, mes).show_debug()
         return delta
 
 
@@ -36,7 +36,7 @@ class Time:
         self.Success = False
         mes = _('Set time parameters are incorrect or not supported.\n\nDetails: {}')
         mes = mes.format(e)
-        ms.Message(f, mes, True).show_error()
+        Message(f, mes, True).show_error()
 
     def set_values(self):
         self.Success = True
@@ -56,7 +56,7 @@ class Time:
     def add_days(self, days_delta):
         f = '[SharedQt] time.Time.add_days'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         try:
             self.inst = self.get_instance() \
@@ -67,7 +67,7 @@ class Time:
     def get_date(self):
         f = '[SharedQt] time.Time.get_date'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         try:
             self.date = self.get_instance().strftime(self.pattern)
@@ -78,7 +78,7 @@ class Time:
     def get_instance(self):
         f = '[SharedQt] time.Time.get_instance'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if self.inst is None:
             if self.tstamp is None:
@@ -92,7 +92,7 @@ class Time:
     def get_timestamp(self):
         f = '[SharedQt] time.Time.get_timestamp'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if not self.date:
             self.get_date()
@@ -105,7 +105,7 @@ class Time:
     def is_monday(self):
         f = '[SharedQt] time.Time.is_monday'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if not self.inst:
             self.get_instance()
@@ -116,22 +116,22 @@ class Time:
         # Month name in English
         f = '[SharedQt] time.Time.get_month_name'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if not self.inst:
             self.get_instance()
-        month_int = lg.Text(self.inst.strftime("%m")).str2int()
+        month_int = Text(self.inst.strftime("%m")).str2int()
         self.month_name = calendar.month_name[month_int]
         return self.month_name
     
     def get_month_abbr(self):
         f = '[SharedQt] time.Time.get_month_abbr'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if not self.inst:
             self.get_instance()
-        month_int = lg.Text(self.inst.strftime("%m")).str2int()
+        month_int = Text(self.inst.strftime("%m")).str2int()
         self.month_abbr = calendar.month_abbr[month_int]
         return self.month_abbr
 
@@ -141,7 +141,7 @@ class Time:
     def get_year(self):
         f = '[SharedQt] time.Time.get_year'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if not self.inst:
             self.get_instance()

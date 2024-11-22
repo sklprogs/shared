@@ -5,11 +5,11 @@ STOP = False
 GRAPHICAL = True
 MAX_LEN = 200
 
-import skl_shared_qt.message.info.controller
-import skl_shared_qt.message.debug.controller
-import skl_shared_qt.message.warning.controller
-import skl_shared_qt.message.error.controller
-import skl_shared_qt.message.question.controller
+from skl_shared_qt.message.info.controller import Info
+from skl_shared_qt.message.debug.controller import Debug
+from skl_shared_qt.message.warning.controller import Warning
+from skl_shared_qt.message.error.controller import Error
+from skl_shared_qt.message.question.controller import Question
 from skl_shared_qt.localize import _
 from skl_shared_qt.basic_text import Shorten
 
@@ -118,7 +118,7 @@ class Message:
         if STOP:
             return
         self.type_ = _('DEBUG')
-        idebug = skl_shared_qt.message.debug.controller.Debug(self.get_message(), self.Graphical, self.Block)
+        idebug = Debug(self.get_message(), self.Graphical, self.Block)
         idebug.show()
         self.duplicate(idebug)
     
@@ -126,7 +126,7 @@ class Message:
         if STOP:
             return
         self.type_ = _('ERROR')
-        ierror = skl_shared_qt.message.error.controller.Error(self.get_message(), self.Graphical, self.Block)
+        ierror = Error(self.get_message(), self.Graphical, self.Block)
         ierror.show()
         self.duplicate(ierror)
 
@@ -134,7 +134,7 @@ class Message:
         if STOP:
             return
         self.type_ = _('INFO')
-        iinfo = skl_shared_qt.message.info.controller.Info(self.get_message(), self.Graphical, self.Block)
+        iinfo = Info(self.get_message(), self.Graphical, self.Block)
         iinfo.show()
         self.duplicate(iinfo)
                        
@@ -142,7 +142,7 @@ class Message:
         if STOP:
             return
         self.type_ = _('WARNING')
-        iwarn = skl_shared_qt.message.warning.controller.Warning(self.get_message(), self.Graphical, self.Block)
+        iwarn = Warning(self.get_message(), self.Graphical, self.Block)
         iwarn.show()
         self.duplicate(iwarn)
 
@@ -150,7 +150,7 @@ class Message:
         if STOP:
             return
         self.type_ = _('QUESTION')
-        iques = skl_shared_qt.message.question.controller.Question(self.get_message(), self.Graphical, self.Block)
+        iques = Question(self.get_message(), self.Graphical, self.Block)
         #TODO: Duplicate
         return iques.show()
 

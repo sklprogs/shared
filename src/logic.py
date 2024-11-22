@@ -9,7 +9,7 @@ import re
 import sys
 import locale
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
+from skl_shared_qt.message.controller import Message, rep
 
 
 gpl3_url_en = 'http://www.gnu.org/licenses/gpl.html'
@@ -88,14 +88,14 @@ class Input:
         except ValueError:
             mes = _('Float is required at input, but found "{}"! Return 0.0')
             mes = mes.format(self.value)
-            ms.Message(self.title, mes, False).show_warning()
+            Message(self.title, mes, False).show_warning()
             self.value = 0.0
         return self.value
     
     def get_list(self):
         if not isinstance(self.value, list):
             mes = _('Wrong input data!')
-            ms.Message(self.title, mes).show_warning()
+            Message(self.title, mes).show_warning()
             return []
         return self.value
     
@@ -108,7 +108,7 @@ class Input:
             self.value = int(self.value)
             # Too frequent, almost useless
             #mes = _('Convert "{}" to an integer').format(self.value)
-            #ms.Message(self.title, mes).show_debug()
+            #Message(self.title, mes).show_debug()
         elif Negative and re.match('-\d+$', self.value):
             ''' 'isinstance' will detect negative integers too, however, we can
                 also have a string at input.
@@ -117,11 +117,11 @@ class Input:
             self.value = int(self.value.replace('-', '', 1))
             self.value -= self.value * 2
             mes = _('Convert "{}" to an integer').format(old)
-            ms.Message(self.title, mes).show_debug()
+            Message(self.title, mes).show_debug()
         else:
             mes = _('Integer is required at input, but found "{}"! Return 0')
             mes = mes.format(self.value)
-            ms.Message(self.title, mes).show_warning()
+            Message(self.title, mes).show_warning()
             self.value = 0
         return self.value
 
@@ -178,7 +178,7 @@ class Text:
         delta = limit - len(self.text)
         if delta < 2:
             mes = f'{limit} - {len(self.text)} > 2'
-            ms.rep.condition(f, mes)
+            rep.condition(f, mes)
             return self.text
         delta = int(delta / 2)
         self.text = delta * ' ' + self.text + delta * ' '
@@ -280,12 +280,9 @@ class Text:
         f = '[SharedQt] logic.Text.delete_embraced_text'
         if self.text.count(opening_sym) != self.text.count(closing_sym):
             mes = _('Different number of opening and closing brackets: "{}": {}; "{}": {}!')
-            mes = mes.format (opening_sym
-                             ,self.text.count(opening_sym)
-                             ,closing_sym
-                             ,self.text.count(closing_sym)
-                             )
-            ms.Message(f, mes, True).show_warning()
+            mes = mes.format(opening_sym, self.text.count(opening_sym)
+                            ,closing_sym, self.text.count(closing_sym))
+            Message(f, mes, True).show_warning()
             return self.text
         opening_parentheses = []
         closing_parentheses = []
@@ -343,7 +340,7 @@ class Text:
         '''
         f = '[SharedQt] logic.Text.delete_end_punc'
         if len(self.text) <= 0:
-            ms.rep.empty(f)
+            rep.empty(f)
             return self.text
         if Extended:
             while self.text[-1] == ' ' or self.text[-1] in punc_array \
@@ -417,7 +414,7 @@ class Text:
         f = '[SharedQt] logic.Text.split_by_comma'
         if (';' in self.text or ',' in self.text) and '\n' in self.text:
             mes = _('Commas and/or semicolons or line breaks can be used, but not altogether!')
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
         elif ';' in self.text or ',' in self.text:
             self.text = self.text.replace(',', '\n')
             self.text = self.text.replace(';', '\n')
@@ -441,7 +438,7 @@ class Text:
             par = int(self.text)
         except(ValueError, TypeError):
             mes = _('Failed to convert "{}" to an integer!').format(self.text)
-            ms.Message(f, mes).show_warning()
+            Message(f, mes).show_warning()
         return par
 
     def str2float(self):
@@ -452,7 +449,7 @@ class Text:
         except(ValueError, TypeError):
             mes = _('Failed to convert "{}" to a floating-point number!')
             mes = mes.format(self.text)
-            ms.Message(f, mes).show_warning()
+            Message(f, mes).show_warning()
         return par
 
     def strip_lines(self):
@@ -517,12 +514,12 @@ class Search:
         if not self.pattern or not self.text:
             self.Success = False
             mes = _('Wrong input data!')
-            ms.Message(f, mes).show_warning()
+            Message(f, mes).show_warning()
 
     def add(self):
         f = '[SharedQt] logic.Search.add'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if len(self.text) > self.i + len(self.pattern) - 1:
             self.i += len(self.pattern)
@@ -530,7 +527,7 @@ class Search:
     def get_next(self):
         f = '[SharedQt] logic.Search.get_next'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         result = self.text.find(self.pattern, self.i)
         if result != -1:
@@ -542,7 +539,7 @@ class Search:
     def get_prev(self):
         f = '[SharedQt] logic.Search.get_prev'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         ''' rfind, unlike find, does not include limits, so we can use it to
             search backwards.
@@ -555,7 +552,7 @@ class Search:
     def get_next_loop(self):
         f = '[SharedQt] logic.Search.get_next_loop'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return self.nextloop
         if self.nextloop:
             return self.nextloop
@@ -571,7 +568,7 @@ class Search:
     def get_prev_loop(self):
         f = '[SharedQt] logic.Search.get_prev_loop'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return self.prevloop
         if self.prevloop:
             return self.prevloop
@@ -600,7 +597,7 @@ class Commands:
         '''
         if not str(number).isdigit():
             mes = _('Wrong input data: "{}"!').format(number)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
             return []
         result = []
         i = 2
@@ -672,7 +669,7 @@ class Commands:
     def get_easy_time(self, length=0):
         f = '[SharedQt] logic.Commands.get_easy_time'
         if not length:
-            ms.rep.empty(f)
+            rep.empty(f)
             return '00:00:00'
         hours, minutes, seconds = self.split_time(length)
         mes = []
@@ -706,7 +703,7 @@ class Commands:
                 self.lang = 'pl'
             elif 'zh' in result:
                 self.lang = 'zh'
-        ms.Message(f, f'{result} -> {self.lang}').show_debug()
+        Message(f, f'{result} -> {self.lang}').show_debug()
     
     def get_human_time(self, delta):
         f = '[SharedQt] logic.Commands.get_human_time'
@@ -717,7 +714,7 @@ class Commands:
             return result
         if not isinstance(delta, int) and not isinstance(delta, float):
             mes = _('Wrong input data: "{}"!').format(delta)
-            ms.Message(f, mes).show_warning()
+            Message(f, mes).show_warning()
             return result
         # 'datetime' will output years even for small integers
         # https://kalkulator.pro/year-to-second.html

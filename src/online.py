@@ -7,8 +7,8 @@ import urllib.parse
 import webbrowser
 
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
-import skl_shared_qt.logic as lg
+from skl_shared_qt.message.controller import Message, rep
+from skl_shared_qt.logic import OS, Input
 from skl_shared_qt.paths import File
 
 
@@ -39,7 +39,7 @@ class Online:
         except Exception as e:
             mes = _('Failed to open URL "{}" in a default browser!\n\nDetails: {}')
             mes = mes.format(self.url, e)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
 
     def get_url(self):
         # Create a correct online link (URI => URL)
@@ -47,7 +47,7 @@ class Online:
         if not self.url:
             self.url = self.base % urllib.parse.quote(self.get_bytes())
             mes = str(self.url)
-            ms.Message(f, mes).show_debug()
+            Message(f, mes).show_debug()
         return self.url
 
     def reset(self, base='%s', pattern='', coding='UTF-8'):
@@ -88,22 +88,22 @@ class Email:
             ONLY ';' and Evolution - only ','!
         '''
         self.email = email
-        self.subject = lg.Input(f, subject).get_not_none()
-        self.message = lg.Input(f, message).get_not_none()
+        self.subject = Input(f, subject).get_not_none()
+        self.message = Input(f, message).get_not_none()
         self.attach = attach
         if not self.email:
             self.Success = False
-            ms.rep.empty(f)
+            rep.empty(f)
         if self.attach:
             self.Success = File(self.attach).Success
             if not self.Success:
-                ms.rep.cancel(f)
+                rep.cancel(f)
 
     def sanitize(self, value):
         # Escape symbols that may cause issues when composing 'mailto'
         f = '[SharedQt] online.Email.sanitize'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if not value:
             return ''
@@ -112,7 +112,7 @@ class Email:
     def call_browser(self):
         f = '[SharedQt] online.Email.call_browser'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         ''' - This is the last resort. Attaching a file worked for me only with
               CentOS6 + Palemoon + Thunderbird. Using another OS/browser/email
@@ -124,17 +124,17 @@ class Email:
         mailto = f'mailto:{self.email}?subject={self.subject}&body={self.message}'
         if self.attach:
             mailto += f'&attach="{self.attach}"'
-        ms.Message(f, f'"{mailto}"').show_debug()
+        Message(f, f'"{mailto}"').show_debug()
         try:
             webbrowser.open(mailto)
         except:
             mes = _('Failed to load an e-mail client.')
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
     
     def create(self):
         f = '[SharedQt] online.Email.create'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if not self.run_evolution() and not self.run_thunderbird() \
         and not self.run_outlook():
@@ -146,9 +146,9 @@ class Email:
     def run_outlook(self):
         #NOTE: this does not work in wine!
         f = '[SharedQt] logic.Email.run_outlook'
-        if not lg.OS.is_win():
+        if not OS.is_win():
             mes = _('This operation cannot be executed on your operating system.')
-            ms.Message(f, mes, True).show_info()
+            Message(f, mes, True).show_info()
             return
         try:
             import win32com.client
@@ -165,12 +165,12 @@ class Email:
             return True
         except Exception as e:
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
     
     def run_thunderbird(self):
         f = '[SharedQt] logic.Email.run_thunderbird'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         app = '/usr/bin/thunderbird'
         if not os.path.isfile(app):
@@ -185,12 +185,12 @@ class Email:
             return True
         except:
             mes = _('Failed to run "{}"!').format(self.custom_args)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
     
     def run_evolution(self):
         f = '[SharedQt] online.Email.run_evolution'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         app = '/usr/bin/evolution'
         if not os.path.isfile(app):
@@ -205,7 +205,7 @@ class Email:
             return True
         except:
             mes = _('Failed to run "{}"!').format(self.custom_args)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
 
 
 ONLINE = Online()

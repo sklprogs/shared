@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
+
 class Question:
     
     def __init__(self):
@@ -10,7 +11,7 @@ class Question:
         self.message = str(message)
     
     def show(self):
-        f = '[SharedQt] message.question.Question.logic'
+        f = '[SharedQt] message.question.logic.Question'
         if not self.message:
             print(f, 'Empty message!')
             return
@@ -29,9 +30,7 @@ class Question:
                 allowed" occurs. Since there are too many Unicode exceptions to
                 except, we do not specify an exception type.
             '''
-            sub = 'Cannot print the message! ({})'.format(e)
-            #message = '{}:{}:{}'.format(f, _('QUESTION'), sub)
-            #print(message)
+            sub = f'Cannot print the message! ({e})'
             print(f'{f}:QUESTION:{sub}')
     
     def show_blocked(self):

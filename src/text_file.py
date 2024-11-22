@@ -4,7 +4,7 @@
 import os
 
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
+from skl_shared_qt.message.controller import Message, rep
 
 
 def rewrite(file):
@@ -22,8 +22,8 @@ def rewrite(file):
     # We don't actually need to rewrite or delete the file before rewriting
     mes = _('ATTENTION: Do yo really want to rewrite file "{}"?')
     mes = mes.format(file)
-    answer = ms.Message(f, mes, True).show_question()
-    ms.Message(f, answer).show_debug()
+    answer = Message(f, mes, True).show_question()
+    Message(f, answer).show_debug()
     return answer
 
 
@@ -48,17 +48,17 @@ class Read:
         if not self.file:
             self.Success = False
             mes = _('Empty input is not allowed!')
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
             return
         if not os.path.exists(self.file):
             self.Success = False
             mes = _('File "{}" has not been found!').format(self.file)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
             return
         if not os.path.isfile(self.file):
             self.Success = False
             mes = _('The object "{}" is not a file!').format(self.file)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
         return True
 
     def _read(self, encoding):
@@ -69,12 +69,12 @@ class Read:
         except Exception as e:
             # Avoid UnicodeDecodeError, access errors, etc.
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
 
     def delete_bom(self):
         f = '[SharedQt] text_file.Read.delete_bom'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         self.text = self.text.replace('\N{ZERO WIDTH NO-BREAK SPACE}', '')
 
@@ -82,7 +82,7 @@ class Read:
         # Return the text from memory (or load the file first)
         f = '[SharedQt] text_file.Read.get'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return self.text
         if not self.text:
             self.load()
@@ -92,14 +92,14 @@ class Read:
         # Return a number of lines in the file. Returns 0 for an empty file.
         f = '[SharedQt] text_file.Read.get_lines'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         return len(self.get_list())
 
     def get_list(self):
         f = '[SharedQt] text_file.Read.get_list'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return self.lst
         if not self.lst:
             self.lst = self.get().splitlines()
@@ -109,10 +109,10 @@ class Read:
     def load(self):
         f = '[SharedQt] text_file.Read.load'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return self.text
         mes = _('Load file "{}"').format(self.file)
-        ms.Message(f, mes).show_info()
+        Message(f, mes).show_info()
         ''' We can try to define an encoding automatically, however, this often
             spoils some symbols, so we just proceed with try-except and the
             most popular encodings.
@@ -129,7 +129,7 @@ class Read:
             '''
             self.Success = False
             mes = _('Unable to read file "{}"!').format(self.file)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
             return self.text
         self.delete_bom()
         return self.text
@@ -157,30 +157,30 @@ class Write:
         if not self.file:
             self.Success = False
             mes = _('Not enough input data!')
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
 
     def _write(self, mode='w'):
         f = '[SharedQt] text_file.Write._write'
         if mode != 'w' and mode != 'a':
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(mode, 'a, w')
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
             return
         mes = _('Write file "{}"').format(self.file)
-        ms.Message(f, mes).show_info()
+        Message(f, mes).show_info()
         try:
             with open(self.file, mode, encoding='UTF-8') as fl:
                 fl.write(self.text)
         except:
             self.Success = False
             mes = _('Unable to write file "{}"!').format(self.file)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
         return self.Success
 
     def append(self, text=''):
         f = '[SharedQt] text_file.Write.append'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         self.text = text
         if not self.text:
@@ -189,24 +189,24 @@ class Write:
                 scratch?
             '''
             mes = _('Not enough input data!')
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
             return
         self._write('a')
 
     def write(self, text=''):
         f = '[SharedQt] text_file.Write.write'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         self.text = text
         if not self.text and not self.Empty:
             mes = _('Not enough input data!')
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
             return
         if self.Rewrite:
             return self._write('w')
         if not rewrite(self.file):
             mes = _('Operation has been canceled by the user.')
-            ms.Message(f, mes).show_info()
+            Message(f, mes).show_info()
             return
         return self._write('w')

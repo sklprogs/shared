@@ -5,7 +5,7 @@ import ssl
 import urllib.request
 
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
+from skl_shared_qt.message.controller import Message, rep
 from skl_shared_qt.time import Timer
 
 
@@ -37,7 +37,7 @@ class Get:
             return
         if not hasattr(ssl, '_create_unverified_context'):
             mes = _('Unable to use unverified certificates!')
-            ms.Message(f, mes).show_warning()
+            Message(f, mes).show_warning()
             return
         ssl._create_default_https_context = ssl._create_unverified_context
         
@@ -47,17 +47,16 @@ class Get:
         '''
         f = '[SharedQt] get_url.Get._get'
         try:
-            req = urllib.request.Request(url = self.url
-                                        ,data = None
+            req = urllib.request.Request(url = self.url, data = None
                                         ,headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'})
             self.html = urllib.request.urlopen(req, timeout=self.timeout).read()
             if self.Verbose:
                 mes = _('[OK]: "{}"').format(self.url)
-                ms.Message(f, mes).show_info()
+                Message(f, mes).show_info()
         # Too many possible exceptions
         except Exception as e:
             mes = _('[FAILED]: "{}". Details: {}').format(self.url, e)
-            ms.Message(f, mes).show_warning()
+            Message(f, mes).show_warning()
     
     def decode(self):
         ''' Set 'coding' to None to cancel decoding. This is useful if we are
@@ -67,24 +66,24 @@ class Get:
         if not self.coding:
             return self.html
         if not self.html:
-            ms.rep.empty(f)
+            rep.empty(f)
             return
         try:
             self.html = self.html.decode(encoding=self.coding)
         except UnicodeDecodeError:
             self.html = str(self.html)
             mes = _('Unable to decode "{}"!').format(self.url)
-            ms.Message(f, mes).show_warning()
+            Message(f, mes).show_warning()
     
     def run(self):
         f = '[SharedQt] get_url.Get.run'
         if not self.url:
-            ms.rep.empty(f)
+            rep.empty(f)
             return
         # Safely use URL as a string
         if not isinstance(self.url, str):
             mes = _('Wrong input data: {}!').format(self.url)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
             return
         if self.Verbose:
             timer = Timer(f)

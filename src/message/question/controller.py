@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
+
 class Question:
     ''' message.controller.Message.__init__ sets Graphical=False by default, so
         we have to reassign Graphical anyway when calling Question from shared.

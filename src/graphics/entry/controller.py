@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-import skl_shared_qt.message.controller as ms
-import skl_shared_qt.graphics.entry.gui as gi
+from skl_shared_qt.message.controller import rep
+from skl_shared_qt.graphics.entry.gui import Entry as guiEntry
 
 
 class Entry:
     
     def __init__(self):
-        self.gui = gi.Entry()
+        self.gui = guiEntry()
         self.widget = self.gui.widget
     
     def select_all(self):
@@ -18,10 +18,10 @@ class Entry:
         f = '[SharedQt] graphics.entry.controller.Entry.change_font_size'
         size = self.gui.get_font_size()
         if not size:
-            ms.rep.empty(f)
+            rep.empty(f)
             return
         if size + delta <= 0:
-            ms.rep.condition(f, f'{size} + {delta} > 0')
+            rep.condition(f, f'{size} + {delta} > 0')
             return
         self.gui.set_font_size(size + delta)
     

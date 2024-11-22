@@ -4,7 +4,7 @@
 import difflib
 
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
+from skl_shared_qt.message.controller import Message
 
 
 class List:
@@ -27,7 +27,7 @@ class List:
             self.lst1 = self.lst1[:index_]
         except ValueError:
             mes = _('Wrong input data: "{}"!').format(item)
-            ms.Message(f, mes).show_warning()
+            Message(f, mes).show_warning()
         return(self.lst1, self.lst2)
     
     def split_by_len(self, len_):

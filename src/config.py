@@ -7,9 +7,9 @@ import json
 import jsonschema
 
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
-import skl_shared_qt.paths as pt
-import skl_shared_qt.text_file as tf
+from skl_shared_qt.message.controller import Message, rep
+from skl_shared_qt.paths import Path
+from skl_shared_qt.text_file import Read, Write
 
 
 ''' We need to load the default config anyway since the local config can be
@@ -37,7 +37,7 @@ class Json:
     def validate(self, schema):
         f = '[SharedQt] config.Json.validate'
         if not self.json or not schema:
-            ms.rep.empty(f)
+            rep.empty(f)
             return
         # Setting empty schema passes validation
         try:
@@ -46,50 +46,50 @@ class Json:
         except jsonschema.exceptions.ValidationError as e:
             mes = _('Configuration file "{}" is invalid!\n\nDetails:\n{}')
             mes = mes.format(self.file, e)
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
     
     def load(self):
         f = '[SharedQt] config.Json.load'
         if not self.file:
-            ms.rep.empty(f)
+            rep.empty(f)
             return
         if not os.path.exists(self.file):
-            ms.rep.lazy(f)
+            rep.lazy(f)
             return
         ''' Show the full path in case of not finding the file to make
             debugging easier.
         '''
-        self.file = pt.Path(self.file).get_absolute()
-        code = tf.Read(self.file).get()
+        self.file = Path(self.file).get_absolute()
+        code = Read(self.file).get()
         if not code:
-            ms.rep.empty_output(f)
+            rep.empty_output(f)
             return
         try:
             self.json = json.loads(code)
         except Exception as e:
             self.Success = False
-            ms.rep.third_party(f, e)
+            rep.third_party(f, e)
             return
         return True
     
     def dump(self):
         f = '[SharedQt] config.Json.dump'
         if not self.json:
-            ms.rep.empty(f)
+            rep.empty(f)
             return
         try:
             return json.dumps(self.json, ensure_ascii=False, indent=4)
         except Exception as e:
-            ms.rep.third_party(f, e)
+            rep.third_party(f, e)
     
     def save(self, obj):
         f = '[SharedQt] config.Json.save'
         self.json = obj
         code = self.dump()
         if not code:
-            ms.rep.empty(f)
+            rep.empty(f)
             return
-        return tf.Write(self.file, True).write(code)
+        return Write(self.file, True).write(code)
 
 
 
@@ -103,25 +103,25 @@ class Schema:
     def get(self):
         f = '[SharedQt] config.Schema.get'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return {}
         return self.iconfig.json
     
     def dump(self):
         f = '[SharedQt] config.Schema.dump'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return ''
         code = self.iconfig.dump()
         if not code:
-            ms.rep.empty(f)
+            rep.empty(f)
             return ''
         return code
     
     def load(self):
         f = '[SharedQt] config.Schema.load'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return {}
         self.Success = self.iconfig.load()
     
@@ -141,32 +141,32 @@ class Default:
     def get(self):
         f = '[SharedQt] config.Default.get'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return {}
         return self.iconfig.json
     
     def dump(self):
         f = '[SharedQt] config.Default.dump'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return ''
         code = self.iconfig.dump()
         if not code:
-            ms.rep.empty(f)
+            rep.empty(f)
             return ''
         return code
     
     def load(self):
         f = '[SharedQt] config.Default.load'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         self.Success = self.iconfig.load()
     
     def get_version(self):
         f = '[SharedQt] config.Default.get_version'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return 0
         try:
             return self.iconfig.json['config']['min_version']
@@ -177,7 +177,7 @@ class Default:
     def validate(self):
         f = '[SharedQt] config.Default.validate'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         self.Success = self.iconfig.validate(self.schema)
     
@@ -199,25 +199,25 @@ class Local:
     def get(self):
         f = '[SharedQt] config.Local.get'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return {}
         return self.iconfig.json
     
     def dump(self):
         f = '[SharedQt] config.Local.dump'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return '{}'
         code = self.iconfig.dump()
         if not code:
-            ms.rep.empty(f)
+            rep.empty(f)
             return '{}'
         return code
     
     def load(self):
         f = '[SharedQt] config.Local.load'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         self.iconfig.load()
         # Absent file is allowed, but not JSON exceptions
@@ -233,7 +233,7 @@ class Local:
     def check_version(self):
         f = '[SharedQt] config.Local.check_version'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         ''' We need to check the existence and validity of the config version
             key. This can also be done by duplicating a schema for the local
@@ -244,25 +244,25 @@ class Local:
             self.Success = False
             mes = _('Configuration file "{}" does not have key "{}"!')
             mes = mes.format(self.iconfig.file, 'config')
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
             return
         if not isinstance(self.iconfig.json['config'], dict):
             self.Success = False
             mes = _('Configuration file "{}": key "{}" has a wrong type!')
             mes = mes.format(self.iconfig.file)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
             return
         if not 'min_version' in self.iconfig.json['config']:
             self.Success = False
             mes = _('Configuration file "{}" does not have key "{}"!')
             mes = mes.format(self.iconfig.file, "['config']['min_version']")
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
             return
         if not isinstance(self.iconfig.json['config']['min_version'], int):
             self.Success = False
             mes = _('Configuration file "{}": key "{}" has a wrong type!')
             mes = mes.format(self.iconfig.file, "['config']['min_version']")
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
             return
         if self.iconfig.json['config']['min_version'] != self.min_version:
             self.Success = False
@@ -270,7 +270,7 @@ class Local:
             mes = mes.format (self.iconfig.json['config']['min_version']
                              ,self.min_version
                              )
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
     
     def save(self, obj):
         # Should run even if Success == False
@@ -301,7 +301,7 @@ class Config:
     def set_local_dump(self):
         f = '[SharedQt] config.Config.set_local_dump'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         self.local_dump = copy.deepcopy(self.ilocal.dump())
     
@@ -311,7 +311,7 @@ class Config:
     def update(self):
         f = '[SharedQt] config.Config.update'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if self.ilocal.Success:
             mes = _('Update default configuration')
@@ -319,12 +319,12 @@ class Config:
         else:
             mes = _('Use default configuration')
             self._copy()
-        ms.Message(f, mes).show_info()
+        Message(f, mes).show_info()
     
     def load(self):
         f = '[SharedQt] config.Config.load'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         self.ischema = Schema(self.schema)
         self.ischema.run()
@@ -337,19 +337,19 @@ class Config:
     def get(self):
         f = '[SharedQt] config.Config.get'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return {}
         return self.new
     
     def dump(self):
         f = '[SharedQt] config.Config.dump'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return '{}'
         try:
             return json.dumps(self.new, ensure_ascii=False, indent=4)
         except Exception as e:
-            ms.rep.third_party(f, e)
+            rep.third_party(f, e)
         return '{}'
     
     def quit(self):
@@ -359,11 +359,11 @@ class Config:
     def save(self):
         f = '[SharedQt] config.Config.save'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         # Do not forget to revert unsupported types back to strings first
         if self.local_dump == self.dump():
-            ms.rep.lazy(f)
+            rep.lazy(f)
             return
         self.Success = self.ilocal.save(self.new)
     
@@ -394,16 +394,16 @@ class Update:
     def report(self):
         f = '[SharedQt] config.Update.report'
         mes = _('Modified keys: {}').format(self.mod_keys)
-        ms.Message(f, mes).show_info()
+        Message(f, mes).show_info()
         mes = _('New keys: {}').format(self.new_keys)
-        ms.Message(f, mes).show_info()
+        Message(f, mes).show_info()
     
     def debug(self):
         f = '[SharedQt] config.Update.debug'
         try:
             return json.dumps(self.new, ensure_ascii=False, indent=4)
         except Exception as e:
-            ms.rep.third_party(f, e)
+            rep.third_party(f, e)
         return self.new
     
     def iterate(self, section1, section2):
@@ -415,7 +415,7 @@ class Update:
                 else:
                     mes = _('New value: "{}"').format(key2)
                 self.new_keys += 1
-                ms.Message(f, mes).show_debug()
+                Message(f, mes).show_debug()
                 section1[key2] = section2[key2]
         for key1 in section1:
             if not key1 in section2:
@@ -427,7 +427,7 @@ class Update:
                     self.mod_keys += 1
                     mes = _('Overwrite empty "{}" branch with "{}"')
                     mes = mes.format(key1, section2[key1])
-                    ms.Message(f, mes).show_debug()
+                    Message(f, mes).show_debug()
                     section1[key1] = section2[key1]
                     continue
                 self.iterate(section1[key1], section2[key1])
@@ -435,7 +435,7 @@ class Update:
                 self.mod_keys += 1
                 mes = _('Update "{}" branch value: {} -> {}')
                 mes = mes.format(key1, section1[key1], section2[key1])
-                ms.Message(f, mes).show_debug()
+                Message(f, mes).show_debug()
                 section1[key1] = section2[key1]
     
     def run(self):

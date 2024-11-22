@@ -2,8 +2,8 @@
 # -*- coding: UTF-8 -*-
 
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
-import skl_shared_qt.graphics.option_menu.gui as gi
+from skl_shared_qt.message.controller import Message, rep
+from skl_shared_qt.graphics.option_menu.gui import OptionMenu as guiOptionMenu
 
 
 class OptionMenu:
@@ -12,7 +12,7 @@ class OptionMenu:
         self.items = []
         self.default = None
         self.action = action
-        self.gui = gi.OptionMenu()
+        self.gui = guiOptionMenu()
         self.widget = self.gui.widget
         # Qt changes default font family upon receiving None
         if font_family and font_size:
@@ -39,11 +39,11 @@ class OptionMenu:
         f = '[SharedQt] graphics.option_menu.controller.OptionMenu.change_font_size'
         size = self.gui.get_font_size()
         if not size:
-            ms.rep.empty(f)
+            rep.empty(f)
             return
         if size + delta <= 0:
             mes = f'{size} + {delta} > 0'
-            ms.rep.condition(f, mes)
+            rep.condition(f, mes)
             return
         self.gui.set_font_size(size + delta)
     
@@ -61,7 +61,7 @@ class OptionMenu:
         else:
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(item, '; '.join(self.items))
-            ms.Message(f, mes, True).show_error()
+            Message(f, mes, True).show_error()
     
     def fill(self):
         self.gui.fill(self.items)

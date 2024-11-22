@@ -13,7 +13,7 @@ class Warning:
         self.message = termcolor.colored(str(message), 'red')
     
     def show(self):
-        f = '[SharedQt] message.warning.Warning.logic'
+        f = '[SharedQt] message.warning.logic.Warning'
         if not self.message:
             print(f, 'Empty message!')
             return
@@ -25,9 +25,7 @@ class Warning:
                 allowed" occurs. Since there are too many Unicode exceptions to
                 except, we do not specify an exception type.
             '''
-            sub = 'Cannot print the message! ({})'.format(e)
-            #message = '{}:{}:{}'.format(f, _('WARNING'), sub)
-            #print(message)
+            sub = f'Cannot print the message! ({e})'
             print(f'{f}:WARNING:{sub}')
     
     def show_blocked(self):

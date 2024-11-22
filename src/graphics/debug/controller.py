@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-import skl_shared_qt.graphics.debug.gui as gi
+from skl_shared_qt.graphics.debug.gui import Debug as guiDebug
 
 
 class Debug:
@@ -16,7 +16,7 @@ class Debug:
         self.fill(mes)
     
     def set_gui(self):
-        self.gui = gi.Debug()
+        self.gui = guiDebug()
         self.set_bindings()
     
     def set_bindings(self):

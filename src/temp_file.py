@@ -4,7 +4,7 @@
 import tempfile
 
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
+from skl_shared_qt.message.controller import Message
 
 
 def get_file(suffix='.htm', Delete=False):
@@ -16,4 +16,4 @@ def get_file(suffix='.htm', Delete=False):
                                            ,delete = Delete).name
     except Exception as e:
         mes = _('Third-party module has failed!\n\nDetails: {}').format(e)
-        ms.Message(f, mes).show_error()
+        Message(f, mes).show_error()

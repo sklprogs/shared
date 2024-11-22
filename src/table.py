@@ -4,7 +4,7 @@
 import io
 
 from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
+from skl_shared_qt.message.controller import Message, rep
 from skl_shared_qt.basic_text import Shorten, Enclose
 
 
@@ -28,12 +28,12 @@ class Table:
     def set_max_rows(self):
         f = '[SharedQt] table.Table.set_max_rows'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if self.maxrows <= 0:
             return
         mes = _('Set the max number of rows to {}').format(self.maxrows)
-        ms.Message(f, mes).show_debug()
+        Message(f, mes).show_debug()
         for i in range(len(self.lst)):
             # +1 for a header
             self.lst[i] = self.lst[i][0:self.maxrows+1]
@@ -41,12 +41,12 @@ class Table:
     def set_max_width(self):
         f = '[SharedQt] table.Table.set_max_width'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if self.maxrow <= 0:
             return
         mes = _('Set the max column width to {} symbols').format(self.maxrow)
-        ms.Message(f, mes).show_debug()
+        Message(f, mes).show_debug()
         if self.encloser:
             max_len = self.maxrow - len(self.encloser)
             if max_len < 0:
@@ -64,7 +64,7 @@ class Table:
         '''
         f = '[SharedQt] table.Table.enclose'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if not self.enclose:
             return
@@ -77,7 +77,7 @@ class Table:
     def transpose(self):
         f = '[SharedQt] table.Table.transpose'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if self.Transpose:
             self.lst = [*zip(*self.lst)]
@@ -87,10 +87,10 @@ class Table:
     def set_headers(self):
         f = '[SharedQt] table.Table.set_headers'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if not self.headers:
-            ms.rep.lazy(f)
+            rep.lazy(f)
             return
         ''' If there is a condition mismatch when everything is seemingly
             correct, check that headers are provided in the form of
@@ -102,13 +102,13 @@ class Table:
         else:
             sub = f'{len(self.headers)} == {len(self.lst)}'
             mes = _('The condition "{}" is not observed!').format(sub)
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
     
     def report(self):
         f = '[SharedQt] table.Table.report'
         result = ''
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         iwrite = io.StringIO()
         for j in range(len(self.lst[0])):
@@ -126,12 +126,12 @@ class Table:
     def add_gap(self):
         f = '[SharedQt] table.Table.add_gap'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         lst = [len(item) for item in self.lst]
         if not lst:
             self.Success = False
-            ms.rep.empty(f)
+            rep.empty(f)
             return
         maxl = max(lst)
         for i in range(len(self.lst)):
@@ -142,7 +142,7 @@ class Table:
     def get_lens(self):
         f = '[SharedQt] table.Table.get_lens'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         for item in self.lst:
             tmp = sorted(item, key=len, reverse=True)
@@ -151,11 +151,11 @@ class Table:
     def make_list(self):
         f = '[SharedQt] table.Table.make_list'
         if not self.Success:
-            ms.rep.cancel(f)
+            rep.cancel(f)
             return
         if not self.lst:
             self.Success = False
-            ms.rep.empty(f)
+            rep.empty(f)
             return
         try:
             self.lst = list(self.lst)
@@ -164,7 +164,7 @@ class Table:
         except TypeError:
             self.Success = False
             mes = _('Only iterable objects are supported!')
-            ms.Message(f, mes, True).show_warning()
+            Message(f, mes, True).show_warning()
     
     def run(self):
         self.make_list()

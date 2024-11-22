@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-import skl_shared_qt.message.controller as ms
-import skl_shared_qt.graphics.label.gui as gi
+from skl_shared_qt.message.controller import rep
+from skl_shared_qt.graphics.label.gui import Label as guiLabel
 
 
 class Label:
     
     def __init__(self, text='', font_family=None, font_size=None):
-        self.gui = gi.Label()
+        self.gui = guiLabel()
         self.widget = self.gui.widget
         self.set_text(text)
         # Qt changes default font family upon receiving None
@@ -22,11 +22,11 @@ class Label:
         f = '[SharedQt] graphics.label.controller.Label.change_font_size'
         size = self.gui.get_font_size()
         if not size:
-            ms.rep.empty(f)
+            rep.empty(f)
             return
         if size + delta <= 0:
             mes = f'{size} + {delta} > 0'
-            ms.rep.condition(f, mes)
+            rep.condition(f, mes)
             return
         self.gui.set_font_size(size + delta)
     

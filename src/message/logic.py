@@ -3,10 +3,11 @@
 
 import termcolor
 
+
 class Log:
 
     def __init__(self, Use=True, Short=False, limit=200):
-        self.func = '[SharedQt] logic.Log.__init__'
+        self.func = '[SharedQt] message.logic.Log.__init__'
         self.Success = True
         self.level = 'info'
         self.message = 'Test'
@@ -26,7 +27,7 @@ class Log:
         return f'{self.count}:{self.func}:{self.level}:{self.message}'
     
     def print(self):
-        f = '[SharedQt] logic.Log.print'
+        f = '[SharedQt] message.logic.Log.print'
         if not self.Success:
             return
         try:
@@ -44,11 +45,10 @@ class Log:
                 allowed" occurs. Since there are too many Unicode exceptions to
                 except, we do not specify an exception type.
             '''
-            sub = 'Cannot print the message! ({})'.format(e)
-            mes = '{}:{}:{}'.format(f, _('WARNING'), sub)
-            print(mes)
+            sub = f'Cannot print the message! ({e})'
+            print(f'{f}:WARNING:{sub}')
 
-    def append (self, func='[SharedQt] logic.Log.append', level='info'
+    def append (self, func='[SharedQt] message.logic.Log.append', level='info'
                ,message='Test'
                ):
         if not self.Success:
@@ -89,7 +89,7 @@ class Message:
             # The user pressed 'Ctrl-c' or 'Ctrl-d'
             answer = ''
         answer = answer.lower().strip()
-        if answer in ('y', ''):
+        if answer in ('y', 'yes'):
             return True
         elif answer == 'n':
             return False

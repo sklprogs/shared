@@ -13,7 +13,7 @@ class Debug:
         self.message = termcolor.colored(str(message), 'yellow')
     
     def show(self):
-        f = '[SharedQt] message.debug.Debug.logic'
+        f = '[SharedQt] message.debug.logic.Debug'
         if not self.message:
             print(f, 'Empty message!')
             return
@@ -25,9 +25,7 @@ class Debug:
                 allowed" occurs. Since there are too many Unicode exceptions to
                 except, we do not specify an exception type.
             '''
-            sub = 'Cannot print the message! ({})'.format(e)
-            #message = '{}:{}:{}'.format(f, _('DEBUG'), sub)
-            #print(message)
+            sub = f'Cannot print the message! ({e})'
             print(f'{f}:DEBUG:{sub}')
     
     def show_blocked(self):
