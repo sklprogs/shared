@@ -32,16 +32,14 @@ punc_array = ['.', ',', '!', '?', ':', ';']
 #TODO: why there were no opening brackets?
 #punc_ext_array = ['"', '”', '»', ']', '}', ')']
 punc_ext_array = ['"', '“', '”', '', '«', '»', '[', ']', '{', '}', '(', ')'
-                 ,'’', "'", '*'
-                 ]
+                 ,'’', "'", '*']
 
 forbidden_win = '/\?%*:|"<>'
 forbidden_lin = '/'
 forbidden_mac = '/\?*:|"<>'
 reserved_win = ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4'
                ,'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3'
-               ,'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9'
-               ]
+               ,'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
 
 
 class GetOs:
@@ -94,8 +92,7 @@ class Input:
     
     def get_list(self):
         if not isinstance(self.value, list):
-            mes = _('Wrong input data!')
-            Message(self.title, mes).show_warning()
+            rep.wrong_input(self.title)
             return []
         return self.value
     
@@ -488,98 +485,6 @@ class Text:
         for sym in self.text:
             if sym in ru_alphabet:
                 return True
-
-
-
-class Search:
-
-    def __init__(self, text=None, pattern=None):
-        self.Success = False
-        self.i = 0
-        self.nextloop = []
-        self.prevloop = []
-        if text and pattern:
-            self.reset (text = text
-                       ,pattern = pattern
-                       )
-
-    def reset(self, text, pattern):
-        f = '[SharedQt] logic.Search.reset'
-        self.Success = True
-        self.i = 0
-        self.nextloop = []
-        self.prevloop = []
-        self.text = text
-        self.pattern = pattern
-        if not self.pattern or not self.text:
-            self.Success = False
-            mes = _('Wrong input data!')
-            Message(f, mes).show_warning()
-
-    def add(self):
-        f = '[SharedQt] logic.Search.add'
-        if not self.Success:
-            rep.cancel(f)
-            return
-        if len(self.text) > self.i + len(self.pattern) - 1:
-            self.i += len(self.pattern)
-
-    def get_next(self):
-        f = '[SharedQt] logic.Search.get_next'
-        if not self.Success:
-            rep.cancel(f)
-            return
-        result = self.text.find(self.pattern, self.i)
-        if result != -1:
-            self.i = result
-            self.add()
-            # Do not allow -1 as output
-            return result
-
-    def get_prev(self):
-        f = '[SharedQt] logic.Search.get_prev'
-        if not self.Success:
-            rep.cancel(f)
-            return
-        ''' rfind, unlike find, does not include limits, so we can use it to
-            search backwards.
-        '''
-        result = self.text.rfind(self.pattern, 0, self.i)
-        if result != -1:
-            self.i = result
-        return result
-
-    def get_next_loop(self):
-        f = '[SharedQt] logic.Search.get_next_loop'
-        if not self.Success:
-            rep.cancel(f)
-            return self.nextloop
-        if self.nextloop:
-            return self.nextloop
-        self.i = 0
-        while True:
-            result = self.get_next()
-            if result is None:
-                break
-            else:
-                self.nextloop.append(result)
-        return self.nextloop
-
-    def get_prev_loop(self):
-        f = '[SharedQt] logic.Search.get_prev_loop'
-        if not self.Success:
-            rep.cancel(f)
-            return self.prevloop
-        if self.prevloop:
-            return self.prevloop
-        self.i = len(self.text)
-        while True:
-            result = self.get_prev()
-            if result is None:
-                break
-            else:
-                self.prevloop.append(result)
-        return self.prevloop
 
 
 
