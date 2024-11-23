@@ -14,9 +14,8 @@ def make_pretty(code):
         rep.empty(f)
         return ''
     try:
-        bytes_ = lxml.etree.tostring (lxml.etree.XML(code)
-                                     ,pretty_print = True
-                                     )
+        bytes_ = lxml.etree.tostring(lxml.etree.XML(code)
+                                    ,pretty_print = True)
         result = bytes_.decode('utf-8')
         return html.unescape(result)
     except Exception as e:

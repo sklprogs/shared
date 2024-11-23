@@ -74,11 +74,10 @@ class Email:
     '''
     def __init__(self, email='', subject='', message='', attach=''):
         if email:
-            self.reset (email = email
-                       ,subject = subject
-                       ,message = message
-                       ,attach = attach
-                       )
+            self.reset(email = email
+                      ,subject = subject
+                      ,message = message
+                      ,attach = attach)
     
     def reset(self, email, subject='', message='', attach=''):
         f = '[SharedQt] online.Email.reset'
