@@ -26,8 +26,12 @@ class Report:
     def cancel(self, func=_('Logic error!')):
         Message(func, _('Operation has been canceled.')).show_warning()
     
-    def wrong_input(self, func=_('Logic error!')):
-        Message(func, _('Wrong input data!')).show_warning()
+    def wrong_input(self, func=_('Logic error!'), data=None):
+        if data:
+            mes = _('Wrong input data: "{}"!').format(data)
+        else:
+            mes = _('Wrong input data!')
+        Message(func, mes, True).show_warning()
     
     def empty(self, func=_('Logic error!'), Graphical=False):
         Message(func, _('Empty input is not allowed!'), Graphical).show_warning()
