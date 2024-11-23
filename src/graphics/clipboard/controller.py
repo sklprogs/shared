@@ -30,3 +30,6 @@ class Clipboard:
             rep.failed(f, e, self.Graphical)
         # Further possible actions: strip, delete double line breaks
         return text
+
+
+CLIPBOARD = Clipboard()
