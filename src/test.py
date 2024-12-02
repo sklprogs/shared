@@ -481,10 +481,15 @@ class OptionMenu(Label):
         super().__init__(*args, **kwargs)
         self.create_menu()
     
+    def get_current(self):
+        f = '[SharedQt] test.OptionMenu.get_current'
+        ms.Message(f, f'"{self.menu.get()}"').show_debug()
+    
     def create_menu(self):
-        from skl_shared_qt.graphics.option_menu.controller import OPTION_MENU
-        self.menu = OPTION_MENU
+        from skl_shared_qt.graphics.option_menu.controller import OptionMenu
+        self.menu = OptionMenu([0, 1, 2, 3, 4], 4, self.get_current)
         self.win.setCentralWidget(self.menu.widget)
+        self.show()
     
     def run_common(self):
         ''' Root.run_all is called before Root.show, so we need to show
@@ -1013,7 +1018,7 @@ if __name__ == '__main__':
     #Icon().run()
     #Debug().run()
     #FileDialog().run()
-    #OptionMenu().run()
+    OptionMenu().run()
     #TempFile().run()
     #PrettyHtml().run()
     #Online().run()
@@ -1027,4 +1032,4 @@ if __name__ == '__main__':
     #Directory().run()
     #Timer().run()
     #TextFile().run()
-    Config().run()
+    #Config().run()

@@ -8,7 +8,7 @@ from skl_shared_qt.graphics.option_menu.gui import OptionMenu as guiOptionMenu
 
 class OptionMenu:
     
-    def __init__(self, font_family=None, font_size=None, action=None):
+    def __init__(self, items=[], default=None, action=None, font_family=None, font_size=None):
         self.items = []
         self.default = None
         self.action = action
@@ -17,9 +17,11 @@ class OptionMenu:
         # Qt changes default font family upon receiving None
         if font_family and font_size:
             self.gui.set_font(font_family, font_size)
+        if items:
+            self.reset(items, default)
         self.set_action()
         
-    def reset(self, items=[], default=None):
+    def reset(self, items=[], default=None, action=None):
         self.items = [str(item) for item in items]
         self.fill()
         if default is not None:
@@ -28,6 +30,7 @@ class OptionMenu:
             self.disable()
         else:
             self.enable()
+        self.set_action(action)
 
     def set_action(self, action=None):
         if not action:
@@ -90,6 +93,3 @@ class OptionMenu:
         else:
             index_ += 1
         self.set_index(index_)
-
-
-OPTION_MENU = OptionMenu()
