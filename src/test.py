@@ -1004,6 +1004,42 @@ class Config:
         self.run_all()
 
 
+
+class ProgressBar:
+    
+    def __init__(self):
+        from skl_shared_qt.graphics.root.controller import ROOT
+        from skl_shared_qt.graphics.progress_bar.controller import ProgressBar
+        ROOT.get_root()
+        self.root = ROOT
+        self.bar = ProgressBar()
+    
+    def run_basic(self):
+        f = '[SharedQt] test.ProgressBar.run_basic'
+        input(_('Start {}').format(f))
+        self.bar.set_info('Copying files, please wait...')
+        self.bar.show()
+    
+    def run_long_text(self):
+        f = '[SharedQt] test.ProgressBar.run_long_text'
+        input(_('Start {}').format(f))
+        mes = ''
+        for i in range(1000):
+            mes += str(i)
+        self.bar.set_info(mes)
+        mes = 'Title ' * 50
+        self.bar.set_title(mes)
+        self.bar.show()
+    
+    def run_all(self):
+        self.run_basic()
+        self.run_long_text()
+    
+    def run(self):
+        self.run_all()
+        self.root.end()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -1018,7 +1054,7 @@ if __name__ == '__main__':
     #Icon().run()
     #Debug().run()
     #FileDialog().run()
-    OptionMenu().run()
+    #OptionMenu().run()
     #TempFile().run()
     #PrettyHtml().run()
     #Online().run()
@@ -1033,3 +1069,4 @@ if __name__ == '__main__':
     #Timer().run()
     #TextFile().run()
     #Config().run()
+    ProgressBar().run()
