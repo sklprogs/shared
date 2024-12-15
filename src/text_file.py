@@ -5,27 +5,7 @@ import os
 
 from skl_shared_qt.localize import _
 from skl_shared_qt.message.controller import Message, rep
-
-
-def rewrite(file):
-    ''' - We do not put this into File class because we do not need to check
-          existence.
-        - We use 'Rewrite' just to shorten other procedures (to be able to use
-          'self.rewrite' silently in the code without ifs).
-    '''
-    f = '[SharedQt] text_file.rewrite'
-    if not os.path.isfile(file):
-        ''' We return True so we may proceed with writing
-            if the file has not been found.
-        '''
-        return True
-    # We don't actually need to rewrite or delete the file before rewriting
-    mes = _('ATTENTION: Do yo really want to rewrite file "{}"?')
-    mes = mes.format(file)
-    answer = Message(f, mes, True).show_question()
-    Message(f, answer).show_debug()
-    return answer
-
+from skl_shared_qt.rewrite import rewrite
 
 
 class Read:

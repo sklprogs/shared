@@ -9,6 +9,7 @@ import shutil
 from skl_shared_qt.localize import _
 from skl_shared_qt.message.controller import Message, rep
 from skl_shared_qt.logic import OS
+from skl_shared_qt.rewrite import rewrite
 
 
 class Path:
@@ -317,11 +318,9 @@ class File:
             rep.cancel(f)
             return
         if self.file.lower() == self.dest.lower():
-            mes = _('Unable to copy the file "{}" to iself!').format(self.file)
+            mes = _('Unable to copy the file "{}" to itself!').format(self.file)
             Message(f, mes, True).show_error()
-        elif com.rewrite (file = self.dest
-                         ,Rewrite = self.Rewrite
-                         ):
+        elif self.Rewrite or rewrite(self.dest):
             Success = self._copy()
         else:
             mes = _('Operation has been canceled by the user.')
@@ -638,7 +637,7 @@ class Directory:
             rep.cancel(f)
             return
         if self.dir.lower() == self.dest.lower():
-            mes = _('Unable to copy "{}" to iself!').format(self.dir)
+            mes = _('Unable to copy "{}" to itself!').format(self.dir)
             Message(f, mes, True).show_error()
         elif os.path.isdir(self.dest):
             mes = _('Directory "{}" already exists.').format(self.dest)

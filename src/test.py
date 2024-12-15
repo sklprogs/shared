@@ -1034,20 +1034,23 @@ class ProgressBar:
     def run_progress(self):
         f = '[SharedQt] test.ProgressBar.run_progress'
         input(_('Start {}').format(f))
-        import time
-        from skl_shared_qt.paths import Directory
+        # time.sleep() will freeze GUI
+        from skl_shared_qt.paths import Path, Directory, File
         #path = '/home/pete/tmp'
-        path = '/tmp'
+        path = '/home/pete/.local/share/unmusic/локальная коллекция/10000'
         files = Directory(path).get_subfiles()
-        files = files[:10]
+        #files = files[:10]
         self.bar.set_max(len(files))
+        self.bar.show()
+        Path('/tmp/10000').create()
         for file in files:
             mes = _('Copy {}').format(file)
             self.bar.set_info(mes)
+            basename = Path(file).get_basename()
+            dest = f'/tmp/10000/{basename}'
+            File(file, dest).copy()
             self.bar.inc()
             #time.sleep(1)
-            input()
-        self.bar.show()
     
     def run_all(self):
         self.run_basic()
