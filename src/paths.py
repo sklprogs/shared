@@ -365,9 +365,7 @@ class File:
             mes = _('Moving is not necessary, because the source and destination are identical ({}).')
             mes = mes.format(self.file)
             Message(f, mes, True).show_warning()
-        elif com.rewrite (file = self.dest
-                         ,Rewrite = self.Rewrite
-                         ):
+        elif self.Rewrite or rewrite(self.dest):
             Success = self._move()
         else:
             mes = _('Operation has been canceled by the user.')
