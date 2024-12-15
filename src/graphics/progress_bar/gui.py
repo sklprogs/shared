@@ -44,3 +44,15 @@ class ProgressBar:
     
     def close(self):
         self.window.close()
+    
+    def set_value(self, value):
+        self.widget.setValue(value)
+    
+    def get_value(self):
+        return self.widget.value()
+    
+    def get_max(self):
+        return self.widget.maximum()
+    
+    def set_max(self, value):
+        self.widget.setMaximum(value)

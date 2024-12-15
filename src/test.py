@@ -1031,9 +1031,28 @@ class ProgressBar:
         self.bar.set_title(mes)
         self.bar.show()
     
+    def run_progress(self):
+        f = '[SharedQt] test.ProgressBar.run_progress'
+        input(_('Start {}').format(f))
+        import time
+        from skl_shared_qt.paths import Directory
+        #path = '/home/pete/tmp'
+        path = '/tmp'
+        files = Directory(path).get_subfiles()
+        files = files[:10]
+        self.bar.set_max(len(files))
+        for file in files:
+            mes = _('Copy {}').format(file)
+            self.bar.set_info(mes)
+            self.bar.inc()
+            #time.sleep(1)
+            input()
+        self.bar.show()
+    
     def run_all(self):
         self.run_basic()
         self.run_long_text()
+        self.run_progress()
     
     def run(self):
         self.run_all()
