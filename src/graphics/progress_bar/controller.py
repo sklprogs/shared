@@ -38,3 +38,6 @@ class ProgressBar:
     
     def close(self):
         self.gui.close()
+
+    def update(self):
+        self.gui.update()

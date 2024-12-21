@@ -15,3 +15,6 @@ class Root:
     
     def end(self):
         sys.exit(self.widget.exec())
+    
+    def process_events(self):
+        self.widget.processEvents()

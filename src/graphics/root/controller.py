@@ -17,6 +17,9 @@ class Root:
     
     def end(self):
         self.gui.end()
+    
+    def process_events(self):
+        self.gui.process_events()
 
 
 ROOT = Root()

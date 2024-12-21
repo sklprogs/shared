@@ -1044,13 +1044,15 @@ class ProgressBar:
         self.bar.show()
         Path('/tmp/10000').create()
         for file in files:
+            # Must be put within the loop
+            self.bar.update()
             mes = _('Copy {}').format(file)
             self.bar.set_info(mes)
             basename = Path(file).get_basename()
             dest = f'/tmp/10000/{basename}'
             File(file, dest).copy()
             self.bar.inc()
-            #time.sleep(1)
+        #self.bar.close()
     
     def run_all(self):
         self.run_basic()
