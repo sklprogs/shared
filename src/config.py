@@ -244,7 +244,7 @@ class Local:
             self.Success = False
             mes = _('Configuration file "{}" does not have key "{}"!')
             mes = mes.format(self.iconfig.file, 'config')
-            Message(f, mes, True).show_warning()
+            Message(f, mes).show_warning()
             return
         if not isinstance(self.iconfig.json['config'], dict):
             self.Success = False

@@ -1052,7 +1052,9 @@ class ProgressBar:
             dest = f'/tmp/10000/{basename}'
             File(file, dest).copy()
             self.bar.inc()
-        #self.bar.close()
+        self.bar.close()
+        from skl_shared_qt.message.controller import Message
+        Message(f, 'Goodbye!', 1).show_debug()
     
     def run_all(self):
         self.run_basic()
