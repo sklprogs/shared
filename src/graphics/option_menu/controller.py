@@ -19,7 +19,7 @@ class OptionMenu:
             self.gui.set_font(font_family, font_size)
         if items:
             self.reset(items, default)
-        self.set_action()
+        self.set_action(self.action)
         
     def reset(self, items=[], default=None, action=None):
         self.items = [str(item) for item in items]
