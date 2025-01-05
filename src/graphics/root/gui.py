@@ -18,3 +18,7 @@ class Root:
     
     def process_events(self):
         self.widget.processEvents()
+    
+    def set_icon(self, qicon):
+        # None is not allowed
+        self.widget.setWindowIcon(qicon)
