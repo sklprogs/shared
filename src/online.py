@@ -18,10 +18,9 @@ class Online:
     '''
     def __init__(self, base='%s', pattern='', coding='UTF-8'):
         if pattern:
-            self.reset (base = base
-                       ,pattern = pattern
-                       ,coding = coding
-                       )
+            self.reset(base = base
+                      ,pattern = pattern
+                      ,coding = coding)
 
     def get_bytes(self):
         if not self.bytes:
@@ -32,10 +31,9 @@ class Online:
         # Open a URL in a default browser
         f = '[SharedQt] online.Online.browse'
         try:
-            webbrowser.open (url = self.get_url()
-                            ,new = 2
-                            ,autoraise = True
-                            )
+            webbrowser.open(url = self.get_url()
+                           ,new = 2
+                           ,autoraise = True)
         except Exception as e:
             mes = _('Failed to open URL "{}" in a default browser!\n\nDetails: {}')
             mes = mes.format(self.url, e)
@@ -144,10 +142,10 @@ class Email:
                        
     def run_outlook(self):
         #NOTE: this does not work in wine!
-        f = '[SharedQt] logic.Email.run_outlook'
+        f = '[SharedQt] online.Email.run_outlook'
         if not OS.is_win():
             mes = _('This operation cannot be executed on your operating system.')
-            Message(f, mes, True).show_info()
+            Message(f, mes).show_info()
             return
         try:
             import win32com.client
@@ -167,7 +165,7 @@ class Email:
             Message(f, mes, True).show_error()
     
     def run_thunderbird(self):
-        f = '[SharedQt] logic.Email.run_thunderbird'
+        f = '[SharedQt] online.Email.run_thunderbird'
         if not self.Success:
             rep.cancel(f)
             return
