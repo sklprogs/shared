@@ -34,6 +34,12 @@ class ProgressBar:
         self.add_widgets()
         self.configure()
     
+    def centralize(self):
+        ''' Do this only after showing the widget; otherwise, it will have
+            bogus dimensions of 640×480.
+        '''
+        self.window.move(ROOT.get_root().primaryScreen().geometry().center() - self.window.rect().center())
+    
     def set_title(self, title):
         self.window.setWindowTitle(title)
     
@@ -42,6 +48,7 @@ class ProgressBar:
     
     def show(self):
         self.window.show()
+        self.centralize()
     
     def close(self):
         self.window.close()
