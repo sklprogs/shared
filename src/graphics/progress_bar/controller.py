@@ -9,10 +9,10 @@ from skl_shared_qt.logic import Input
 
 class ProgressBar:
     
-    def __init__(self, title=_('Progress:')):
+    def __init__(self):
         self.gui = guiProgressBar()
     
-    def set_title(self, title):
+    def set_title(self, title=_('Progress:')):
         self.gui.set_title(title)
     
     def set_info(self, info):
