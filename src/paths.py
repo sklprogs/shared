@@ -533,7 +533,7 @@ class Directory:
         if os.listdir(self.dir):
             mes = _('Unable to delete {}, because it has nested objects!')
             mes = mes.format(self.dir)
-            Message(f, mes, True).show_warning()
+            Message(f, mes).show_warning()
             return
         self.delete()
     
