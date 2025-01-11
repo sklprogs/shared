@@ -594,17 +594,18 @@ class Commands:
         f = '[SharedQt] logic.Commands.set_lang'
         result = locale.getlocale()
         if result and result[0]:
-            result = result[0]
+            result = result[0].lower()
+            # Possible input: None, ru_RU, Russian_Russia
             if 'ru' in result:
                 self.lang = 'ru'
                 self.license_url = gpl3_url_ru
-            elif 'de' in result:
+            elif 'de' in result or 'ger' in result:
                 self.lang = 'de'
             elif 'es' in result:
                 self.lang = 'es'
             elif 'uk' in result:
                 self.lang = 'uk'
-            elif 'pl' in result:
+            elif 'pl' in result or 'pol' in result:
                 self.lang = 'pl'
             elif 'zh' in result:
                 self.lang = 'zh'
