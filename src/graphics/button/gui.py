@@ -8,9 +8,8 @@ from PyQt6.QtGui import QIcon
 
 class Button:
     
-    def __init__ (self, text='', action=None, parent=None, width=36, height=36
-                 ,hint='' ,active='', inactive=''
-                 ):
+    def __init__(self, text='', action=None, parent=None, width=36, height=36
+                ,hint='' ,active='', inactive=''):
         self.parent = parent
         self.text = text
         self.action = action
