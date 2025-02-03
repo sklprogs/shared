@@ -7,9 +7,15 @@ from skl_shared_qt.graphics.entry.gui import Entry as guiEntry
 
 class Entry:
     
-    def __init__(self):
+    def __init__(self, action=None):
         self.gui = guiEntry()
         self.widget = self.gui.widget
+        self.set_action(action)
+    
+    def set_action(self, action):
+        if action is None:
+            return
+        self.bind(('Return', 'Enter'), action)
     
     def select_all(self):
         self.gui.select_all()
