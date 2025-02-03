@@ -8,9 +8,10 @@ from skl_shared_qt.graphics.checkbox.gui import CheckBox as guiCheckBox
 class CheckBox:
     
     def __init__(self, text='', font_family=None, font_size=None):
+        self.text = text
         self.gui = guiCheckBox()
         self.widget = self.gui.widget
-        self.gui.set_text(text)
+        self.gui.set_text(self.text)
         # Qt changes default font family upon receiving None
         if font_family and font_size:
             self.gui.set_font(font_family, font_size)
