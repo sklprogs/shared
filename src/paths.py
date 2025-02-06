@@ -642,6 +642,7 @@ class Directory:
             Message(f, mes, True).show_info()
         else:
             self._copy()
+        return self.Success
 
     def _copy(self):
         f = '[SharedQt] paths.Directory._copy'
