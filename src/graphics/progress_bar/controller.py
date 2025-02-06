@@ -41,3 +41,6 @@ class ProgressBar:
 
     def update(self):
         self.gui.update()
+
+
+PROGRESS = ProgressBar()
