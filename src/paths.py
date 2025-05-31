@@ -531,7 +531,7 @@ class Directory:
             return
         # Do not delete nested folders
         if os.listdir(self.dir):
-            mes = _('Unable to delete {}, because it has nested objects!')
+            mes = _('{} has nested objects and will not be deleted')
             mes = mes.format(self.dir)
             Message(f, mes).show_warning()
             return
@@ -589,7 +589,7 @@ class Directory:
             rep.cancel(f)
             return self.reldirs
         if not self.reldirs:
-            self.dirs()
+            self.get_dirs()
         return self.reldirs
 
     def get_rel_files(self):

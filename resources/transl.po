@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sharedQt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-15 22:26+0300\n"
-"PO-Revision-Date: 2024-12-15 22:28+0300\n"
+"POT-Creation-Date: 2025-05-31 14:16+0300\n"
+"PO-Revision-Date: 2025-05-31 14:17+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -69,7 +69,7 @@ msgstr ""
 
 #: skl_shared/src/image/controller.py:49 skl_shared/src/logic.py:2283
 #: skl_shared/src/logic.py:2330 skl_shared/src/logic.py:2550
-#: skl_shared_qt/src/paths.py:326 skl_shared_qt/src/paths.py:373
+#: skl_shared_qt/src/paths.py:326 skl_shared_qt/src/paths.py:371
 #: skl_shared_qt/src/text_file.py:189
 msgid "Operation has been canceled by the user."
 msgstr "Операция отменена пользователем."
@@ -151,9 +151,9 @@ msgstr "Файл \"{}\" не найден!"
 #: skl_shared/src/logic.py:4713 skl_shared/src/logic.py:4798
 #: skl_shared/src/shared.py:2371 skl_shared/src/shared.py:5059
 #: skl_shared_qt/src/graphics/font/logic.py:62 skl_shared_qt/src/list.py:30
-#: skl_shared_qt/src/logic.py:504 skl_shared_qt/src/logic.py:621
+#: skl_shared_qt/src/logic.py:504 skl_shared_qt/src/logic.py:622
 #: skl_shared_qt/src/message/controller.py:31 skl_shared_qt/src/paths.py:27
-#: skl_shared_qt/src/paths.py:416
+#: skl_shared_qt/src/paths.py:414
 msgid "Wrong input data: \"{}\"!"
 msgstr "Недопустимые входные данные: \"{}\"!"
 
@@ -183,7 +183,7 @@ msgstr "Дополнительные параметры: \"{}\""
 
 #: skl_shared/src/logic.py:860 skl_shared/src/logic.py:3674
 #: skl_shared/src/logic.py:3702 skl_shared_qt/src/launch.py:70
-#: skl_shared_qt/src/online.py:186 skl_shared_qt/src/online.py:206
+#: skl_shared_qt/src/online.py:184 skl_shared_qt/src/online.py:204
 msgid "Failed to run \"{}\"!"
 msgstr "Не удалось запустить \"{}\"!"
 
@@ -251,10 +251,10 @@ msgstr "Файл \"{}\" не найден!"
 #: skl_shared/src/logic.py:1301 skl_shared/src/logic.py:2222
 #: skl_shared/src/logic.py:2368 skl_shared/src/logic.py:2893
 #: skl_shared/src/logic.py:2919 skl_shared/src/logic.py:3003
-#: skl_shared/src/logic.py:3645 skl_shared_qt/src/online.py:166
+#: skl_shared/src/logic.py:3645 skl_shared_qt/src/online.py:164
 #: skl_shared_qt/src/paths.py:34 skl_shared_qt/src/paths.py:268
-#: skl_shared_qt/src/paths.py:468 skl_shared_qt/src/paths.py:491
-#: skl_shared_qt/src/paths.py:580 skl_shared_qt/src/text_file.py:51
+#: skl_shared_qt/src/paths.py:466 skl_shared_qt/src/paths.py:489
+#: skl_shared_qt/src/paths.py:578 skl_shared_qt/src/text_file.py:51
 msgid ""
 "Operation has failed!\n"
 "Details: {}"
@@ -369,7 +369,7 @@ msgid "The object \"{}\" is not a file!"
 msgstr "Объект \"{}\" не является файлом!"
 
 #: skl_shared/src/logic.py:2231 skl_shared/src/logic.py:3076
-#: skl_shared_qt/src/paths.py:275 skl_shared_qt/src/paths.py:650
+#: skl_shared_qt/src/paths.py:275 skl_shared_qt/src/paths.py:649
 msgid "Copy \"{}\" to \"{}\""
 msgstr "Копирование \"{}\" в \"{}\""
 
@@ -378,12 +378,12 @@ msgid "Failed to copy file \"{}\" to \"{}\"!"
 msgstr "Не удалось скопировать файл \"{}\" в \"{}\"!"
 
 #: skl_shared/src/logic.py:2245 skl_shared/src/logic.py:2850
-#: skl_shared_qt/src/paths.py:289 skl_shared_qt/src/paths.py:422
+#: skl_shared_qt/src/paths.py:289 skl_shared_qt/src/paths.py:420
 msgid "Move \"{}\" to \"{}\""
 msgstr "Перемещение \"{}\" в \"{}\""
 
 #: skl_shared/src/logic.py:2251 skl_shared/src/logic.py:2856
-#: skl_shared_qt/src/paths.py:295 skl_shared_qt/src/paths.py:428
+#: skl_shared_qt/src/paths.py:295 skl_shared_qt/src/paths.py:426
 msgid ""
 "Failed to move \"{}\" to \"{}\"!\n"
 "\n"
@@ -403,7 +403,7 @@ msgid "Unable to copy the file \"{}\" to iself!"
 msgstr "Нельзя скопировать файл \"{}\" сам в себя!"
 
 #: skl_shared/src/logic.py:2292 skl_shared/src/logic.py:2971
-#: skl_shared_qt/src/paths.py:335 skl_shared_qt/src/paths.py:547
+#: skl_shared_qt/src/paths.py:335 skl_shared_qt/src/paths.py:545
 msgid "Delete \"{}\""
 msgstr "Удаление \"{}\""
 
@@ -412,7 +412,7 @@ msgid "Failed to delete file \"{}\"!"
 msgstr "Не удается удалить файл \"{}\"!"
 
 #: skl_shared/src/logic.py:2322 skl_shared/src/logic.py:2870
-#: skl_shared_qt/src/paths.py:365 skl_shared_qt/src/paths.py:444
+#: skl_shared_qt/src/paths.py:365 skl_shared_qt/src/paths.py:442
 msgid ""
 "Moving is not necessary, because the source and destination are identical "
 "({})."
@@ -420,16 +420,16 @@ msgstr ""
 "Перемещение не требуется, поскольку на входе и выходе указан один и тот же "
 "объект ({})."
 
-#: skl_shared/src/logic.py:2340 skl_shared_qt/src/paths.py:384
+#: skl_shared/src/logic.py:2340 skl_shared_qt/src/paths.py:382
 msgid "Change the time of the file \"{}\" to {}"
 msgstr "Изменение времени файла \"{}\" на {}"
 
-#: skl_shared/src/logic.py:2346 skl_shared_qt/src/paths.py:390
+#: skl_shared/src/logic.py:2346 skl_shared_qt/src/paths.py:388
 msgid "Failed to change the time of the file \"{}\" to \"{}\"!"
 msgstr "Не удалось изменить время файла \"{}\" на \"{}\"!"
 
 #: skl_shared/src/logic.py:2399 skl_shared/src/logic.py:3066
-#: skl_shared_qt/src/paths.py:62 skl_shared_qt/src/paths.py:643
+#: skl_shared_qt/src/paths.py:62 skl_shared_qt/src/paths.py:641
 msgid "Directory \"{}\" already exists."
 msgstr "Каталог \"{}\" уже существует."
 
@@ -469,11 +469,11 @@ msgstr ""
 "\n"
 "Подробности: {}"
 
-#: skl_shared/src/logic.py:2866 skl_shared_qt/src/paths.py:440
+#: skl_shared/src/logic.py:2866 skl_shared_qt/src/paths.py:438
 msgid "Path \"{}\" already exists!"
 msgstr "Путь \"{}\" уже существует!"
 
-#: skl_shared/src/logic.py:2977 skl_shared_qt/src/paths.py:553
+#: skl_shared/src/logic.py:2977 skl_shared_qt/src/paths.py:551
 msgid "Failed to delete directory \"{}\"! Delete it manually."
 msgstr "Не удается удалить каталог \"{}\"! Удалите его вручную."
 
@@ -481,7 +481,7 @@ msgstr "Не удается удалить каталог \"{}\"! Удалите
 msgid "Unable to copy \"{}\" to iself!"
 msgstr "Нельзя скопировать \"{}\" сам в себя!"
 
-#: skl_shared/src/logic.py:3082 skl_shared_qt/src/paths.py:656
+#: skl_shared/src/logic.py:3082 skl_shared_qt/src/paths.py:655
 msgid "Failed to copy \"{}\" to \"{}\"!"
 msgstr "Не удалось скопировать \"{}\" в \"{}\"!"
 
@@ -517,7 +517,7 @@ msgstr "Отсутствующие ключи:"
 msgid "Modified keys:"
 msgstr "Измененные ключи:"
 
-#: skl_shared/src/logic.py:3287 skl_shared_qt/src/online.py:40
+#: skl_shared/src/logic.py:3287 skl_shared_qt/src/online.py:38
 msgid ""
 "Failed to open URL \"{}\" in a default browser!\n"
 "\n"
@@ -555,11 +555,11 @@ msgstr "Создание ярлыка \"{}\""
 msgid "Failed to create shortcut \"{}\". Create it manually and press OK."
 msgstr "Не удается создать ярлык \"{}\". Создайте его вручную и нажмите OK."
 
-#: skl_shared/src/logic.py:3610 skl_shared_qt/src/online.py:130
+#: skl_shared/src/logic.py:3610 skl_shared_qt/src/online.py:128
 msgid "Failed to load an e-mail client."
 msgstr "Не удалось загрузить почтовый клиент."
 
-#: skl_shared/src/logic.py:3648 skl_shared_qt/src/online.py:149
+#: skl_shared/src/logic.py:3648 skl_shared_qt/src/online.py:147
 msgid "This operation cannot be executed on your operating system."
 msgstr "Эта операция не может быть выполнена на вашей операционной системе."
 
@@ -675,31 +675,31 @@ msgid "ATTENTION: Do yo really want to rewrite file \"{}\"?"
 msgstr "ВНИМАНИЕ: Перезаписать файл \"{}\"?"
 
 #: skl_shared/src/logic.py:4761 skl_shared/src/logic.py:4794
-#: skl_shared_qt/src/logic.py:615 skl_shared_qt/src/logic.py:653
+#: skl_shared_qt/src/logic.py:616 skl_shared_qt/src/logic.py:654
 msgid "sec"
 msgstr "сек"
 
-#: skl_shared/src/logic.py:4782 skl_shared_qt/src/logic.py:641
+#: skl_shared/src/logic.py:4782 skl_shared_qt/src/logic.py:642
 msgid "yrs"
 msgstr "лет"
 
-#: skl_shared/src/logic.py:4784 skl_shared_qt/src/logic.py:643
+#: skl_shared/src/logic.py:4784 skl_shared_qt/src/logic.py:644
 msgid "mths"
 msgstr "мес"
 
-#: skl_shared/src/logic.py:4786 skl_shared_qt/src/logic.py:645
+#: skl_shared/src/logic.py:4786 skl_shared_qt/src/logic.py:646
 msgid "wks"
 msgstr "нед"
 
-#: skl_shared/src/logic.py:4788 skl_shared_qt/src/logic.py:647
+#: skl_shared/src/logic.py:4788 skl_shared_qt/src/logic.py:648
 msgid "days"
 msgstr "дн"
 
-#: skl_shared/src/logic.py:4790 skl_shared_qt/src/logic.py:649
+#: skl_shared/src/logic.py:4790 skl_shared_qt/src/logic.py:650
 msgid "hrs"
 msgstr "ч"
 
-#: skl_shared/src/logic.py:4792 skl_shared_qt/src/logic.py:651
+#: skl_shared/src/logic.py:4792 skl_shared_qt/src/logic.py:652
 msgid "min"
 msgstr "мин"
 
@@ -1284,11 +1284,11 @@ msgstr "Все файлы (*.*)"
 msgid "Save File As:"
 msgstr "Сохранить файл как:"
 
-#: skl_shared_qt/src/graphics/progress_bar/controller.py:12
+#: skl_shared_qt/src/graphics/progress_bar/controller.py:15
 msgid "Progress:"
 msgstr "Прогресс:"
 
-#: skl_shared_qt/src/graphics/progress_bar/gui.py:19
+#: skl_shared_qt/src/graphics/progress_bar/gui.py:20
 msgid "Details"
 msgstr "Подробности"
 
@@ -1324,11 +1324,11 @@ msgstr "Предупреждение"
 msgid "Unable to copy the file \"{}\" to itself!"
 msgstr "Нельзя скопировать файл \"{}\" сам в себя!"
 
-#: skl_shared_qt/src/paths.py:536
-msgid "Unable to delete {}, because it has nested objects!"
-msgstr "Невозможно удалить {}, поскольку присутствуют вложенные объекты!"
+#: skl_shared_qt/src/paths.py:534
+msgid "{} has nested objects and will not be deleted"
+msgstr "{} содержит вложенные объекты и не будет удален"
 
-#: skl_shared_qt/src/paths.py:640
+#: skl_shared_qt/src/paths.py:638
 msgid "Unable to copy \"{}\" to itself!"
 msgstr "Нельзя скопировать \"{}\" сам в себя!"
 
@@ -1474,9 +1474,12 @@ msgstr "Пожалуйста, ответьте тут Нет."
 msgid "Please answer Yes here."
 msgstr "Пожалуйста, ответьте тут Да."
 
-#: skl_shared_qt/src/test.py:1047
+#: skl_shared_qt/src/test.py:1049
 msgid "Copy {}"
 msgstr "Копирование {}"
+
+#~ msgid "Unable to delete {}, because it has nested objects!"
+#~ msgstr "Невозможно удалить {}, поскольку присутствуют вложенные объекты!"
 
 #~ msgid "{} is not a file!"
 #~ msgstr "{} не является файлом!"
