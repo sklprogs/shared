@@ -531,9 +531,7 @@ class Directory:
             return
         # Do not delete nested folders
         if os.listdir(self.dir):
-            mes = _('{} has nested objects and will not be deleted')
-            mes = mes.format(self.dir)
-            Message(f, mes).show_warning()
+            rep.lazy(f)
             return
         self.delete()
     
