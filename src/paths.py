@@ -108,6 +108,9 @@ class Path:
             if len(self._split_path()) >= 1:
                 self.basename = self._split_path()[0]
         return self.basename
+    
+    def get_basename_low(self):
+        return self.get_basename().lower()
 
     def reset(self, path):
         # Prevent 'NoneType'
