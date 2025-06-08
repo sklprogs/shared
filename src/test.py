@@ -823,11 +823,11 @@ class Paths:
         dirname = ipath.get_dirname()
         mes = _('Directory: {}').format(f'"{dirname}"')
         Message(f, mes).show_debug()
-        basename = ipath.get_basename()
-        mes = _('File name: {}').format(f'"{basename}"')
-        Message(f, mes).show_debug()
         filename = ipath.get_filename()
-        mes = _('File name without extension: {}').format(f'"{filename}"')
+        mes = _('File name: {}').format(f'"{filename}"')
+        Message(f, mes).show_debug()
+        basename = ipath.get_basename()
+        mes = _('File name without extension: {}').format(f'"{basename}"')
         Message(f, mes).show_debug()
     
     def create(self):
@@ -1048,8 +1048,8 @@ class ProgressBar:
             self.bar.update()
             mes = _('Copy {}').format(file)
             self.bar.set_info(mes)
-            basename = Path(file).get_basename()
-            dest = f'/tmp/10000/{basename}'
+            filename = Path(file).get_filename()
+            dest = f'/tmp/10000/{filename}'
             File(file, dest).copy()
             self.bar.inc()
         self.bar.close()

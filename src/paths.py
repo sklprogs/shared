@@ -37,16 +37,16 @@ class Path:
     
     def _split_path(self):
         if not self.split:
-            self.split = os.path.splitext(self.get_basename())
+            self.split = os.path.splitext(self.get_filename())
         return self.split
 
-    def get_basename(self):
-        if not self.basename:
-            self.basename = os.path.basename(self.path)
-        return self.basename
+    def get_filename(self):
+        if not self.filename:
+            self.filename = os.path.basename(self.path)
+        return self.filename
     
-    def get_basename_low(self):
-        return self.get_basename().lower()
+    def get_filename_low(self):
+        return self.get_filename().lower()
 
     def create(self):
         # This will recursively (by design) create self.path
@@ -81,7 +81,7 @@ class Path:
         ''' These symbols may pose a problem while opening files
             #TODO: check whether this is really necessary
         '''
-        return self.get_filename().replace("'", '').replace("&", '')
+        return self.get_basename().replace("'", '').replace("&", '')
 
     def get_dirname(self):
         if not self.dirname:
@@ -103,11 +103,11 @@ class Path:
     def get_ext_low(self):
         return self.get_ext().lower()
 
-    def get_filename(self):
-        if not self.filename:
+    def get_basename(self):
+        if not self.basename:
             if len(self._split_path()) >= 1:
-                self.filename = self._split_path()[0]
-        return self.filename
+                self.basename = self._split_path()[0]
+        return self.basename
 
     def reset(self, path):
         # Prevent 'NoneType'
@@ -121,7 +121,7 @@ class Path:
               instead of os.path.sep
             - As an alternative, import ntpath, posixpath
         '''
-        ''' We remove a separator from the end, because basename and dirname
+        ''' We remove a separator from the end, because filename and dirname
             work differently in this case ('' and the last directory,
             correspondingly).
         '''
@@ -232,9 +232,8 @@ class File:
                 caught in try-except while copying/moving.
             '''
             if os.path.isdir(self.dest):
-                self.dest = os.path.join (self.dest
-                                         ,Path(self.file).basename()
-                                         )
+                self.dest = os.path.join(self.dest
+                                        ,Path(self.file).filename())
         elif not self.file:
             self.Success = False
             mes = _('Empty input is not allowed!')
