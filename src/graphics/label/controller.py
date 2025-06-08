@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-from skl_shared_qt.message.controller import rep
-from skl_shared_qt.graphics.label.gui import Label as guiLabel
+from skl_shared.message.controller import rep
+from skl_shared.graphics.label.gui import Label as guiLabel
 
 
 class Label:

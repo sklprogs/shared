@@ -6,10 +6,10 @@ import subprocess
 import urllib.parse
 import webbrowser
 
-from skl_shared_qt.localize import _
-from skl_shared_qt.message.controller import Message, rep
-from skl_shared_qt.logic import OS, Input
-from skl_shared_qt.paths import File
+from skl_shared.localize import _
+from skl_shared.message.controller import Message, rep
+from skl_shared.logic import OS, Input
+from skl_shared.paths import File
 
 
 class Online:

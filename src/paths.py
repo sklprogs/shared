@@ -6,10 +6,10 @@ import sys
 import shlex
 import shutil
 
-from skl_shared_qt.localize import _
-from skl_shared_qt.message.controller import Message, rep
-from skl_shared_qt.logic import OS
-from skl_shared_qt.rewrite import rewrite
+from skl_shared.localize import _
+from skl_shared.message.controller import Message, rep
+from skl_shared.logic import OS
+from skl_shared.rewrite import rewrite
 
 
 class Path:

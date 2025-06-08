@@ -6,10 +6,10 @@ import copy
 import json
 import jsonschema
 
-from skl_shared_qt.localize import _
-from skl_shared_qt.message.controller import Message, rep
-from skl_shared_qt.paths import Path
-from skl_shared_qt.text_file import Read, Write
+from skl_shared.localize import _
+from skl_shared.message.controller import Message, rep
+from skl_shared.paths import Path
+from skl_shared.text_file import Read, Write
 
 
 ''' We need to load the default config anyway since the local config can be

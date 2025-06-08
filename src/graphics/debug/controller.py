@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-from skl_shared_qt.graphics.debug.gui import Debug as guiDebug
+from skl_shared.graphics.debug.gui import Debug as guiDebug
 
 
 class Debug:

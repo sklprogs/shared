@@ -14,9 +14,9 @@ class Question:
     
     def get(self):
         if self.Graphical:
-            from skl_shared_qt.message.question.gui import QUESTION
+            from skl_shared.message.question.gui import QUESTION
         else:
-            from skl_shared_qt.message.question.logic import QUESTION
+            from skl_shared.message.question.logic import QUESTION
         return QUESTION
     
     def show(self):

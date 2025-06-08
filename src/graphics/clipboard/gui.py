@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-from skl_shared_qt.graphics.root.controller import ROOT
+from skl_shared.graphics.root.controller import ROOT
 
 
 class Clipboard:

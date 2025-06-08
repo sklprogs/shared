@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-from skl_shared_qt.localize import _
-from skl_shared_qt.basic_text import Shorten
-from skl_shared_qt.graphics.progress_bar.gui import ProgressBar as guiProgressBar
-from skl_shared_qt.logic import Input
+from skl_shared.localize import _
+from skl_shared.basic_text import Shorten
+from skl_shared.graphics.progress_bar.gui import ProgressBar as guiProgressBar
+from skl_shared.logic import Input
 
 
 class ProgressBar:

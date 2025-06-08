@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-from skl_shared_qt.message.controller import rep
-from skl_shared_qt.graphics.button.gui import Button as guiButton
+from skl_shared.message.controller import rep
+from skl_shared.graphics.button.gui import Button as guiButton
 
 
 class Button(guiButton):

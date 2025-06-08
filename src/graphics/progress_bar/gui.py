@@ -3,9 +3,9 @@
 
 from PyQt6.QtWidgets import QWidget, QProgressBar, QVBoxLayout
 
-from skl_shared_qt.localize import _
-from skl_shared_qt.graphics.root.controller import ROOT
-from skl_shared_qt.graphics.label.controller import Label
+from skl_shared.localize import _
+from skl_shared.graphics.root.controller import ROOT
+from skl_shared.graphics.label.controller import Label
 
 
 class ProgressBar:

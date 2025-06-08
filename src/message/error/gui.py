@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 from PyQt6.QtWidgets import QMessageBox
-from skl_shared_qt.localize import _
+from skl_shared.localize import _
 
 
 class Message(QMessageBox):

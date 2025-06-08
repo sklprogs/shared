@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-from skl_shared_qt.graphics.root.gui import Root as guiRoot
-from skl_shared_qt.graphics.icon.controller import ICON
-from skl_shared_qt.message.controller import rep
+from skl_shared.graphics.root.gui import Root as guiRoot
+from skl_shared.graphics.icon.controller import ICON
+from skl_shared.message.controller import rep
 
 
 class Root:

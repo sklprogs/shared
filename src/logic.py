@@ -8,8 +8,8 @@ email = 'skl.progs@gmail.com'
 import re
 import sys
 import locale
-from skl_shared_qt.localize import _
-from skl_shared_qt.message.controller import Message, rep
+from skl_shared.localize import _
+from skl_shared.message.controller import Message, rep
 
 
 gpl3_url_en = 'http://www.gnu.org/licenses/gpl.html'

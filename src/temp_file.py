@@ -3,8 +3,8 @@
 
 import tempfile
 
-from skl_shared_qt.localize import _
-from skl_shared_qt.message.controller import Message
+from skl_shared.localize import _
+from skl_shared.message.controller import Message
 
 
 def get_file(suffix='.htm', Delete=False):

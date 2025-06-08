@@ -3,9 +3,9 @@
 
 import difflib
 
-from skl_shared_qt.localize import _
-from skl_shared_qt.message.controller import Message
-from skl_shared_qt.logic import Text
+from skl_shared.localize import _
+from skl_shared.message.controller import Message
+from skl_shared.logic import Text
 
 
 class List:

@@ -2,8 +2,8 @@
 # -*- coding: UTF-8 -*-
 
 import os
-from skl_shared_qt.message.controller import rep
-from skl_shared_qt.graphics.icon.gui import Icon as guiIcon
+from skl_shared.message.controller import rep
+from skl_shared.graphics.icon.gui import Icon as guiIcon
 
 
 class Icon:

@@ -5,9 +5,9 @@ import time
 import calendar
 import datetime
 
-from skl_shared_qt.localize import _
-from skl_shared_qt.message.controller import Message, rep
-from skl_shared_qt.logic import Text
+from skl_shared.localize import _
+from skl_shared.message.controller import Message, rep
+from skl_shared.logic import Text
 
 
 class Timer:

@@ -4,10 +4,10 @@
 import os
 import subprocess
 
-from skl_shared_qt.localize import _
-from skl_shared_qt.message.controller import Message, rep
-from skl_shared_qt.logic import OS
-from skl_shared_qt.paths import Path
+from skl_shared.localize import _
+from skl_shared.message.controller import Message, rep
+from skl_shared.logic import OS
+from skl_shared.paths import Path
 
 
 class Launch:

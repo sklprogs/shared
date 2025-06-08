@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-from skl_shared_qt.message.controller import Message, rep
-from skl_shared_qt.graphics.checkbox.gui import CheckBox as guiCheckBox
+from skl_shared.message.controller import Message, rep
+from skl_shared.graphics.checkbox.gui import CheckBox as guiCheckBox
 
 
 class CheckBox:

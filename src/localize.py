@@ -5,8 +5,8 @@ import os
 import sys
 import gettext
 
-import skl_shared_qt.gettext_windows
-skl_shared_qt.gettext_windows.setup_env()
+import skl_shared.gettext_windows
+skl_shared.gettext_windows.setup_env()
 
 
 class Localization:

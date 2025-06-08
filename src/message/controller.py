@@ -5,13 +5,13 @@ STOP = False
 GRAPHICAL = True
 MAX_LEN = 200
 
-from skl_shared_qt.message.info.controller import Info
-from skl_shared_qt.message.debug.controller import Debug
-from skl_shared_qt.message.warning.controller import Warning
-from skl_shared_qt.message.error.controller import Error
-from skl_shared_qt.message.question.controller import Question
-from skl_shared_qt.localize import _
-from skl_shared_qt.basic_text import Shorten
+from skl_shared.message.info.controller import Info
+from skl_shared.message.debug.controller import Debug
+from skl_shared.message.warning.controller import Warning
+from skl_shared.message.error.controller import Error
+from skl_shared.message.question.controller import Question
+from skl_shared.localize import _
+from skl_shared.basic_text import Shorten
 
 
 class Report:

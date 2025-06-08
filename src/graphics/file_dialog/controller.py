@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-from skl_shared_qt.localize import _
-from skl_shared_qt.message.controller import rep
-from skl_shared_qt.paths import Directory, Home
-from skl_shared_qt.graphics.file_dialog.gui import save as guiSave
+from skl_shared.localize import _
+from skl_shared.message.controller import rep
+from skl_shared.paths import Directory, Home
+from skl_shared.graphics.file_dialog.gui import save as guiSave
 
 
 class FileDialog:

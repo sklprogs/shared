@@ -3,9 +3,9 @@
 
 import io
 
-from skl_shared_qt.localize import _
-from skl_shared_qt.message.controller import Message, rep
-from skl_shared_qt.basic_text import Shorten, Enclose
+from skl_shared.localize import _
+from skl_shared.message.controller import Message, rep
+from skl_shared.basic_text import Shorten, Enclose
 
 
 class Table:

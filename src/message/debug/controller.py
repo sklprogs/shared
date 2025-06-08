@@ -10,9 +10,9 @@ class Debug:
     
     def get(self):
         if self.Graphical:
-            from skl_shared_qt.message.debug.gui import DEBUG
+            from skl_shared.message.debug.gui import DEBUG
         else:
-            from skl_shared_qt.message.debug.logic import DEBUG
+            from skl_shared.message.debug.logic import DEBUG
         return DEBUG
     
     def show(self):

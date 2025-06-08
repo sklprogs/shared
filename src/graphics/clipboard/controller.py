@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-from skl_shared_qt.message.controller import rep
-from skl_shared_qt.graphics.clipboard.gui import Clipboard as guiClipboard
+from skl_shared.message.controller import rep
+from skl_shared.graphics.clipboard.gui import Clipboard as guiClipboard
 
 
 class Clipboard:

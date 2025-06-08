@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-from skl_shared_qt.localize import _
-import skl_shared_qt.message.controller as ms
+from skl_shared.localize import _
+import skl_shared.message.controller as ms
 
 
 class Root:
     
     def __init__(self):
-        from skl_shared_qt.graphics.root.controller import ROOT
+        from skl_shared.graphics.root.controller import ROOT
         from PyQt6.QtWidgets import QMainWindow
         self.root = ROOT
         self.win = QMainWindow()
@@ -45,7 +45,7 @@ class Label(Root):
         self.create_label()
     
     def create_label(self):
-        from skl_shared_qt.graphics.label.controller import Label
+        from skl_shared.graphics.label.controller import Label
         self.ilabel = Label(text=_('Close this window to quit'), font_family='Mono', font_size=13)
         self.win.setCentralWidget(self.ilabel.widget)
 
@@ -58,7 +58,7 @@ class Font(Label):
         self.create_font()
     
     def create_font(self):
-        from skl_shared_qt.graphics.font.controller import Font
+        from skl_shared.graphics.font.controller import Font
         self.ifont = Font(self.ilabel.widget, 'Mono', 14)
         self.ifont.run()
 
@@ -71,7 +71,7 @@ class Entry(Label):
         self.create_entry()
     
     def create_entry(self):
-        from skl_shared_qt.graphics.entry.controller import Entry
+        from skl_shared.graphics.entry.controller import Entry
         ientry = Entry()
         ientry.set_text('This is an entry')
         self.win.setCentralWidget(ientry.widget)
@@ -86,7 +86,7 @@ class Color(Label):
         self.create_color()
     
     def create_color(self):
-        from skl_shared_qt.graphics.color.controller import Color
+        from skl_shared.graphics.color.controller import Color
         self.icolor = Color(self.color_name)
     
     def get_hex(self):
@@ -120,9 +120,9 @@ class Button(Root):
         Message(f, _('Operation is complete.'), True).show_info()
     
     def create_button(self):
-        from skl_shared_qt.graphics.button.controller import Button
+        from skl_shared.graphics.button.controller import Button
         from PyQt6.QtWidgets import QWidget, QVBoxLayout
-        # .gif images from skl_shared_qt/resources are not supported
+        # .gif images from skl_shared/resources are not supported
         path = '/home/pete/bin/mclient/resources/buttons/go_search.png'
         panel = QWidget()
         layout = QVBoxLayout()
@@ -139,7 +139,7 @@ class Clipboard(Label):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        from skl_shared_qt.graphics.clipboard.controller import Clipboard
+        from skl_shared.graphics.clipboard.controller import Clipboard
         self.clipboard = Clipboard(False)
         self.clipboard_gui = Clipboard(True)
     
@@ -380,7 +380,7 @@ class CheckBox(Panel):
         ms.Message(f, _('Operation is complete.'), True).show_info()
     
     def create_checkbox(self):
-        from skl_shared_qt.graphics.checkbox.controller import CheckBox
+        from skl_shared.graphics.checkbox.controller import CheckBox
         icheckbox = CheckBox(text=_('Select me'), font_family='Mono'
                             ,font_size=12)
         self.layout.addWidget(icheckbox.widget)
@@ -419,7 +419,7 @@ class Icon(Label):
         self.run_info()
     
     def set_icon(self):
-        from skl_shared_qt.graphics.icon.controller import ICON
+        from skl_shared.graphics.icon.controller import ICON
         ICON.set('/home/pete/bin/mclient/resources/mclient.png')
         self.icon = ICON.get()
 
@@ -433,7 +433,7 @@ class Debug(Label):
     
     def create_debug(self):
         f = '[SharedQt] test.Debug.create_debug'
-        from skl_shared_qt.graphics.debug.controller import DEBUG
+        from skl_shared.graphics.debug.controller import DEBUG
         DEBUG.reset(f, _('Operation is complete.'))
         self.win.setCentralWidget(DEBUG.gui)
 
@@ -447,7 +447,7 @@ class FileDialog(Label):
     def run_save_custom(self):
         f = '[SharedQt] test.FileDialog.run_save_custom'
         input(_('Start {}').format(f))
-        from skl_shared_qt.graphics.file_dialog.controller import FILE_DIALOG
+        from skl_shared.graphics.file_dialog.controller import FILE_DIALOG
         filter_ = _('Web-pages (*.htm, *.html)')
         FILE_DIALOG.reset('/tmp', filter_, f)
         file = FILE_DIALOG.save()
@@ -456,14 +456,14 @@ class FileDialog(Label):
     def run_save_default(self):
         f = '[SharedQt] test.FileDialog.run_save_default'
         input(_('Start {}').format(f))
-        from skl_shared_qt.graphics.file_dialog.controller import FILE_DIALOG
+        from skl_shared.graphics.file_dialog.controller import FILE_DIALOG
         file = FILE_DIALOG.save()
         ms.Message(f, f'"{file}"').show_debug()
     
     def run_save_invalid_dir(self):
         f = '[SharedQt] test.FileDialog.run_save_invalid_dir'
         input(_('Start {}').format(f))
-        from skl_shared_qt.graphics.file_dialog.controller import FILE_DIALOG
+        from skl_shared.graphics.file_dialog.controller import FILE_DIALOG
         FILE_DIALOG.reset('/tmp/456345645645645')
         file = FILE_DIALOG.save()
         ms.Message(f, f'"{file}"').show_debug()
@@ -486,7 +486,7 @@ class OptionMenu(Label):
         ms.Message(f, f'"{self.menu.get()}"').show_debug()
     
     def create_menu(self):
-        from skl_shared_qt.graphics.option_menu.controller import OptionMenu
+        from skl_shared.graphics.option_menu.controller import OptionMenu
         self.menu = OptionMenu([0, 1, 2, 3, 4], 4, self.get_current)
         self.win.setCentralWidget(self.menu.widget)
         self.show()
@@ -572,12 +572,12 @@ class PrettyHtml(Label):
     
     def create_debug(self):
         f = '[SharedQt] test.PrettyHtml.create_debug'
-        from skl_shared_qt.graphics.debug.controller import DEBUG
+        from skl_shared.graphics.debug.controller import DEBUG
         self.debug = DEBUG
         self.win.setCentralWidget(self.debug.gui)
     
     def load(self):
-        from skl_shared_qt.text_file import Read
+        from skl_shared.text_file import Read
         f = '[SharedQt] test.PrettyHtml.load'
         if not self.Success:
             ms.rep.cancel(f)
@@ -587,7 +587,7 @@ class PrettyHtml(Label):
             self.Success = False
     
     def make_pretty(self):
-        from skl_shared_qt.pretty_html import make_pretty
+        from skl_shared.pretty_html import make_pretty
         f = '[SharedQt] test.PrettyHtml.make_pretty'
         if not self.Success:
             ms.rep.cancel(f)
@@ -619,7 +619,7 @@ class PrettyHtml(Label):
 class Online:
 
     def __init__(self):
-        from skl_shared_qt.online import ONLINE
+        from skl_shared.online import ONLINE
         ms.GRAPHICAL = False
         self.online = ONLINE
     
@@ -641,8 +641,8 @@ class Online:
 class Email:
 
     def __init__(self):
-        import skl_shared_qt.logic as lg
-        from skl_shared_qt.online import EMAIL
+        import skl_shared.logic as lg
+        from skl_shared.online import EMAIL
         ms.GRAPHICAL = False
         # Display the entire mailto
         ms.MAX_LEN = 0
@@ -682,13 +682,13 @@ class Get(Label):
     
     def create_debug(self):
         f = '[SharedQt] test.Get.create_debug'
-        from skl_shared_qt.graphics.debug.controller import DEBUG
+        from skl_shared.graphics.debug.controller import DEBUG
         self.debug = DEBUG
         self.win.setCentralWidget(self.debug.gui)
     
     def get(self):
         f = '[SharedQt] test.Get.get'
-        import skl_shared_qt.get_url as gu
+        import skl_shared.get_url as gu
         code = gu.Get('https://www.google.com').run()
         self.debug.reset(f, code)
     
@@ -703,7 +703,7 @@ class Launch:
         ms.GRAPHICAL = False
     
     def open_file_default(self):
-        from skl_shared_qt.launch import Launch
+        from skl_shared.launch import Launch
         Launch('/home/pete/tmp/buffer').launch_default()
     
     def run_all(self):
@@ -718,7 +718,7 @@ class Time:
 
     def __init__(self):
         ms.GRAPHICAL = False
-        from skl_shared_qt.time import TIME
+        from skl_shared.time import TIME
         self.time = TIME
     
     def get_current_month(self):
@@ -757,9 +757,9 @@ class Table:
         
     def run_table(self):
         f = '[SharedQt] test.Table.run_table'
-        from skl_shared_qt.table import Table
-        from skl_shared_qt.paths import Directory
-        from skl_shared_qt.time import Timer
+        from skl_shared.table import Table
+        from skl_shared.paths import Directory
+        from skl_shared.time import Timer
         files = Directory('/home/pete/tmp').get_subfiles()
         headers = (_('#'), _('FILE'))
         nos = []
@@ -785,7 +785,7 @@ class List:
         
     def get_diff(self):
         f = '[SharedQt] test.List.get_diff'
-        import skl_shared_qt.list as ls
+        import skl_shared.list as ls
         lst1 = [0, 8, 3, 2, 3, 5, 6, 7, 7, 8]
         lst2 = [0, 9, 1, 2, 3, 4, 5, 6, 7, 8]
         ilist = ls.List(lst1, lst2)
@@ -895,7 +895,7 @@ class Timer:
 
     def __init__(self):
         ms.GRAPHICAL = False
-        from skl_shared_qt.time import Timer
+        from skl_shared.time import Timer
         self.timer = Timer
         
     def run_timer(self):
@@ -919,14 +919,14 @@ class TextFile(Label):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        from skl_shared_qt.text_file import Read, Write
+        from skl_shared.text_file import Read, Write
         self.iread = Read
         self.iwrite = Write
         self.create_debug()
     
     def create_debug(self):
         f = '[SharedQt] test.TextFile.create_debug'
-        from skl_shared_qt.graphics.debug.controller import DEBUG
+        from skl_shared.graphics.debug.controller import DEBUG
         self.debug = DEBUG
         self.win.setCentralWidget(self.debug.gui)
     
@@ -986,7 +986,7 @@ class Config:
 
     def __init__(self):
         ms.GRAPHICAL = False
-        from skl_shared_qt.config import Config
+        from skl_shared.config import Config
         self.config = Config
         
     def run_config(self):
@@ -1008,8 +1008,8 @@ class Config:
 class ProgressBar:
     
     def __init__(self):
-        from skl_shared_qt.graphics.root.controller import ROOT
-        from skl_shared_qt.graphics.progress_bar.controller import ProgressBar
+        from skl_shared.graphics.root.controller import ROOT
+        from skl_shared.graphics.progress_bar.controller import ProgressBar
         ROOT.get_root()
         self.root = ROOT
         self.bar = ProgressBar()
@@ -1035,7 +1035,7 @@ class ProgressBar:
         f = '[SharedQt] test.ProgressBar.run_progress'
         input(_('Start {}').format(f))
         # time.sleep() will freeze GUI
-        from skl_shared_qt.paths import Path, Directory, File
+        from skl_shared.paths import Path, Directory, File
         #path = '/home/pete/tmp'
         path = '/home/pete/.local/share/unmusic/локальная коллекция/10000'
         files = Directory(path).get_subfiles()
@@ -1053,7 +1053,7 @@ class ProgressBar:
             File(file, dest).copy()
             self.bar.inc()
         self.bar.close()
-        from skl_shared_qt.message.controller import Message
+        from skl_shared.message.controller import Message
         Message(f, 'Goodbye!', 1).show_debug()
     
     def run_all(self):
