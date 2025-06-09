@@ -13,7 +13,7 @@ class Color:
         self.gui = guiColor(color)
     
     def get_hex(self):
-        f = '[SharedQt] graphics.color.controller.Color.get_hex'
+        f = '[shared] graphics.color.controller.Color.get_hex'
         # Both None and '' are accepted by Qt, but we need transparency here
         if not self.color:
             rep.empty(f)
@@ -23,7 +23,7 @@ class Color:
         ''' Make a color (a color name (/usr/share/X11/rgb.txt) or a hex value)
             brighter and darker.
         '''
-        f = '[SharedQt] graphics.color.controller.Color.modify'
+        f = '[shared] graphics.color.controller.Color.modify'
         # Qt does not throw errors on empty input
         darker = lighter = ''
         if not self.color:

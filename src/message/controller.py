@@ -164,7 +164,7 @@ rep = Report()
 
 
 if __name__ == '__main__':
-    f = '[SharedQt] message.controller.__main__'
+    f = '[shared] message.controller.__main__'
     Graphical = True
     Block = False
     #mes = 'Please note this debug!'

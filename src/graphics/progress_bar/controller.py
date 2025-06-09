@@ -29,7 +29,7 @@ class ProgressBar:
         self.set_value(value)
     
     def set_max(self, value):
-        f = '[SharedQt] graphics.progress_bar.controller.ProgressBar.set_max'
+        f = '[shared] graphics.progress_bar.controller.ProgressBar.set_max'
         value = Input(f, value).get_integer()
         self.gui.set_max(value)
     

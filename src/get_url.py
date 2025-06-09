@@ -32,7 +32,7 @@ class Get:
             <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED].
             To get rid of this error, we use this small workaround.
         '''
-        f = '[SharedQt] get_url.Get.unverified'
+        f = '[shared] get_url.Get.unverified'
         if self.Verify:
             return
         if not hasattr(ssl, '_create_unverified_context'):
@@ -45,7 +45,7 @@ class Get:
         ''' Changing UA allows us to avoid a bot protection
             ('Error 403: Forbidden').
         '''
-        f = '[SharedQt] get_url.Get._get'
+        f = '[shared] get_url.Get._get'
         try:
             req = urllib.request.Request(url = self.url, data = None
                                         ,headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'})
@@ -62,7 +62,7 @@ class Get:
         ''' Set 'coding' to None to cancel decoding. This is useful if we are
             downloading a non-text content.
         '''
-        f = '[SharedQt] get_url.Get.decode'
+        f = '[shared] get_url.Get.decode'
         if not self.coding:
             return self.html
         if not self.html:
@@ -76,7 +76,7 @@ class Get:
             Message(f, mes).show_warning()
     
     def run(self):
-        f = '[SharedQt] get_url.Get.run'
+        f = '[shared] get_url.Get.run'
         if not self.url:
             rep.empty(f)
             return

@@ -25,7 +25,7 @@ class Root:
     
     def set_icon(self):
         # Set the same icon for all windows
-        f = '[SharedQt] graphics.root.controller.Root.set_icon'
+        f = '[shared] graphics.root.controller.Root.set_icon'
         if not ICON.get():
             # None is not allowed
             rep.empty(f)

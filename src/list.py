@@ -21,7 +21,7 @@ class List:
             self.lst2 = list(lst2)
     
     def split_by_item(self, item):
-        f = '[SharedQt] list.List.split_by_item'
+        f = '[shared] list.List.split_by_item'
         try:
             index_ = self.lst1.index(item)
             self.lst2 = self.lst1[index_:]

@@ -10,7 +10,7 @@ class Info:
         self.message = str(message)
     
     def show(self):
-        f = '[SharedQt] message.info.logic.Info'
+        f = '[shared] message.info.logic.Info'
         if not self.message:
             print(f, 'Empty message!')
             return

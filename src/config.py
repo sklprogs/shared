@@ -35,7 +35,7 @@ class Json:
         self.Success = True
     
     def validate(self, schema):
-        f = '[SharedQt] config.Json.validate'
+        f = '[shared] config.Json.validate'
         if not self.json or not schema:
             rep.empty(f)
             return
@@ -49,7 +49,7 @@ class Json:
             Message(f, mes, True).show_error()
     
     def load(self):
-        f = '[SharedQt] config.Json.load'
+        f = '[shared] config.Json.load'
         if not self.file:
             rep.empty(f)
             return
@@ -73,7 +73,7 @@ class Json:
         return True
     
     def dump(self):
-        f = '[SharedQt] config.Json.dump'
+        f = '[shared] config.Json.dump'
         if not self.json:
             rep.empty(f)
             return
@@ -83,7 +83,7 @@ class Json:
             rep.third_party(f, e)
     
     def save(self, obj):
-        f = '[SharedQt] config.Json.save'
+        f = '[shared] config.Json.save'
         self.json = obj
         code = self.dump()
         if not code:
@@ -101,14 +101,14 @@ class Schema:
         self.iconfig = Json(self.file)
     
     def get(self):
-        f = '[SharedQt] config.Schema.get'
+        f = '[shared] config.Schema.get'
         if not self.Success:
             rep.cancel(f)
             return {}
         return self.iconfig.json
     
     def dump(self):
-        f = '[SharedQt] config.Schema.dump'
+        f = '[shared] config.Schema.dump'
         if not self.Success:
             rep.cancel(f)
             return ''
@@ -119,7 +119,7 @@ class Schema:
         return code
     
     def load(self):
-        f = '[SharedQt] config.Schema.load'
+        f = '[shared] config.Schema.load'
         if not self.Success:
             rep.cancel(f)
             return {}
@@ -139,14 +139,14 @@ class Default:
         self.schema = schema
     
     def get(self):
-        f = '[SharedQt] config.Default.get'
+        f = '[shared] config.Default.get'
         if not self.Success:
             rep.cancel(f)
             return {}
         return self.iconfig.json
     
     def dump(self):
-        f = '[SharedQt] config.Default.dump'
+        f = '[shared] config.Default.dump'
         if not self.Success:
             rep.cancel(f)
             return ''
@@ -157,14 +157,14 @@ class Default:
         return code
     
     def load(self):
-        f = '[SharedQt] config.Default.load'
+        f = '[shared] config.Default.load'
         if not self.Success:
             rep.cancel(f)
             return
         self.Success = self.iconfig.load()
     
     def get_version(self):
-        f = '[SharedQt] config.Default.get_version'
+        f = '[shared] config.Default.get_version'
         if not self.Success:
             rep.cancel(f)
             return 0
@@ -175,7 +175,7 @@ class Default:
             return 0
     
     def validate(self):
-        f = '[SharedQt] config.Default.validate'
+        f = '[shared] config.Default.validate'
         if not self.Success:
             rep.cancel(f)
             return
@@ -197,14 +197,14 @@ class Local:
         self.min_version = min_version
     
     def get(self):
-        f = '[SharedQt] config.Local.get'
+        f = '[shared] config.Local.get'
         if not self.Success:
             rep.cancel(f)
             return {}
         return self.iconfig.json
     
     def dump(self):
-        f = '[SharedQt] config.Local.dump'
+        f = '[shared] config.Local.dump'
         if not self.Success:
             rep.cancel(f)
             return '{}'
@@ -215,7 +215,7 @@ class Local:
         return code
     
     def load(self):
-        f = '[SharedQt] config.Local.load'
+        f = '[shared] config.Local.load'
         if not self.Success:
             rep.cancel(f)
             return
@@ -231,7 +231,7 @@ class Local:
             return 0
     
     def check_version(self):
-        f = '[SharedQt] config.Local.check_version'
+        f = '[shared] config.Local.check_version'
         if not self.Success:
             rep.cancel(f)
             return
@@ -299,7 +299,7 @@ class Config:
         self.local_dump = ''
     
     def set_local_dump(self):
-        f = '[SharedQt] config.Config.set_local_dump'
+        f = '[shared] config.Config.set_local_dump'
         if not self.Success:
             rep.cancel(f)
             return
@@ -309,7 +309,7 @@ class Config:
         self.new = copy.deepcopy(self.idefault.get())
     
     def update(self):
-        f = '[SharedQt] config.Config.update'
+        f = '[shared] config.Config.update'
         if not self.Success:
             rep.cancel(f)
             return
@@ -322,7 +322,7 @@ class Config:
         Message(f, mes).show_info()
     
     def load(self):
-        f = '[SharedQt] config.Config.load'
+        f = '[shared] config.Config.load'
         if not self.Success:
             rep.cancel(f)
             return
@@ -335,14 +335,14 @@ class Config:
         self.Success = self.ischema.Success and self.idefault.Success
     
     def get(self):
-        f = '[SharedQt] config.Config.get'
+        f = '[shared] config.Config.get'
         if not self.Success:
             rep.cancel(f)
             return {}
         return self.new
     
     def dump(self):
-        f = '[SharedQt] config.Config.dump'
+        f = '[shared] config.Config.dump'
         if not self.Success:
             rep.cancel(f)
             return '{}'
@@ -357,7 +357,7 @@ class Config:
         self.save()
     
     def save(self):
-        f = '[SharedQt] config.Config.save'
+        f = '[shared] config.Config.save'
         if not self.Success:
             rep.cancel(f)
             return
@@ -392,14 +392,14 @@ class Update:
         self.new = copy.deepcopy(self.d1)
 
     def report(self):
-        f = '[SharedQt] config.Update.report'
+        f = '[shared] config.Update.report'
         mes = _('Modified keys: {}').format(self.mod_keys)
         Message(f, mes).show_info()
         mes = _('New keys: {}').format(self.new_keys)
         Message(f, mes).show_info()
     
     def debug(self):
-        f = '[SharedQt] config.Update.debug'
+        f = '[shared] config.Update.debug'
         try:
             return json.dumps(self.new, ensure_ascii=False, indent=4)
         except Exception as e:
@@ -407,7 +407,7 @@ class Update:
         return self.new
     
     def iterate(self, section1, section2):
-        f = '[SharedQt] config.Update.iterate'
+        f = '[shared] config.Update.iterate'
         for key2 in section2:
             if not key2 in section1:
                 if isinstance(section2[key2], dict):

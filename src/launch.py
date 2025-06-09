@@ -43,7 +43,7 @@ class Launch:
             terminal in which it is running. You may need to close the program
             first for this code to work. 
         '''
-        f = '[SharedQt] launch.Launch.get_output'
+        f = '[shared] launch.Launch.get_output'
         if not self.process or not self.process.stdout:
             rep.empty(f)
             return ''
@@ -52,7 +52,7 @@ class Launch:
         return ''.join(result)
     
     def _launch(self):
-        f = '[SharedQt] launch.Launch._launch'
+        f = '[shared] launch.Launch._launch'
         if not self.custom_args:
             rep.empty(f)
             return
@@ -71,7 +71,7 @@ class Launch:
             Message(f, mes, True).show_error()
 
     def _launch_lin(self):
-        f = '[SharedQt] launch.Launch._launch_lin'
+        f = '[shared] launch.Launch._launch_lin'
         try:
             os.system("xdg-open " + self.ipath.escape() + "&")
             return True
@@ -80,7 +80,7 @@ class Launch:
             Message(f, mes, True).show_error()
 
     def _launch_mac(self):
-        f = '[SharedQt] launch.Launch._launch_mac'
+        f = '[shared] launch.Launch._launch_mac'
         try:
             os.system("open " + self.target)
             return True
@@ -89,7 +89,7 @@ class Launch:
             Message(f, mes, True).show_error()
 
     def _launch_win(self):
-        f = '[SharedQt] launch.Launch._launch_win'
+        f = '[shared] launch.Launch._launch_win'
         try:
             os.startfile(self.target)
             return True
@@ -110,7 +110,7 @@ class Launch:
         return self._launch()
 
     def launch_custom(self):
-        f = '[SharedQt] launch.Launch.launch_custom'
+        f = '[shared] launch.Launch.launch_custom'
         if not self.TargetExists:
             rep.cancel(f)
             return
@@ -118,7 +118,7 @@ class Launch:
         return self._launch()
 
     def launch_default(self):
-        f = '[SharedQt] launch.Launch.launch_default'
+        f = '[shared] launch.Launch.launch_default'
         if not self.TargetExists:
             rep.cancel(f)
             return

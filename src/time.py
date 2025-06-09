@@ -54,7 +54,7 @@ class Time:
             self.get_instance()
 
     def add_days(self, days_delta):
-        f = '[SharedQt] time.Time.add_days'
+        f = '[shared] time.Time.add_days'
         if not self.Success:
             rep.cancel(f)
             return
@@ -65,7 +65,7 @@ class Time:
             self.fail(f, e)
 
     def get_date(self):
-        f = '[SharedQt] time.Time.get_date'
+        f = '[shared] time.Time.get_date'
         if not self.Success:
             rep.cancel(f)
             return
@@ -76,7 +76,7 @@ class Time:
         return self.date
 
     def get_instance(self):
-        f = '[SharedQt] time.Time.get_instance'
+        f = '[shared] time.Time.get_instance'
         if not self.Success:
             rep.cancel(f)
             return
@@ -90,7 +90,7 @@ class Time:
         return self.inst
 
     def get_timestamp(self):
-        f = '[SharedQt] time.Time.get_timestamp'
+        f = '[shared] time.Time.get_timestamp'
         if not self.Success:
             rep.cancel(f)
             return
@@ -103,7 +103,7 @@ class Time:
         return self.tstamp
 
     def is_monday(self):
-        f = '[SharedQt] time.Time.is_monday'
+        f = '[shared] time.Time.is_monday'
         if not self.Success:
             rep.cancel(f)
             return
@@ -114,7 +114,7 @@ class Time:
 
     def get_month_name(self):
         # Month name in English
-        f = '[SharedQt] time.Time.get_month_name'
+        f = '[shared] time.Time.get_month_name'
         if not self.Success:
             rep.cancel(f)
             return
@@ -125,7 +125,7 @@ class Time:
         return self.month_name
     
     def get_month_abbr(self):
-        f = '[SharedQt] time.Time.get_month_abbr'
+        f = '[shared] time.Time.get_month_abbr'
         if not self.Success:
             rep.cancel(f)
             return
@@ -139,7 +139,7 @@ class Time:
         self.inst = datetime.datetime.today()
 
     def get_year(self):
-        f = '[SharedQt] time.Time.get_year'
+        f = '[shared] time.Time.get_year'
         if not self.Success:
             rep.cancel(f)
             return

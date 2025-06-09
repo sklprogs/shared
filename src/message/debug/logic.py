@@ -13,7 +13,7 @@ class Debug:
         self.message = termcolor.colored(str(message), 'yellow')
     
     def show(self):
-        f = '[SharedQt] message.debug.logic.Debug'
+        f = '[shared] message.debug.logic.Debug'
         if not self.message:
             print(f, 'Empty message!')
             return

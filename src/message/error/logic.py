@@ -13,7 +13,7 @@ class Error:
         self.message = termcolor.colored(str(message), 'red')
     
     def show(self):
-        f = '[SharedQt] message.error.logic.Error.show'
+        f = '[shared] message.error.logic.Error.show'
         if not self.message:
             print(f, 'Empty message!')
             return

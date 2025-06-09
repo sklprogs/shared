@@ -19,7 +19,7 @@ class Label:
         self.gui.set_action(action)
     
     def change_font_size(self, delta=1):
-        f = '[SharedQt] graphics.label.controller.Label.change_font_size'
+        f = '[shared] graphics.label.controller.Label.change_font_size'
         size = self.gui.get_font_size()
         if not size:
             rep.empty(f)
@@ -32,5 +32,5 @@ class Label:
     
     def set_text(self, text):
         if not text:
-            text = '[SharedQt] graphics.label.controller.Label.set_text'
+            text = '[shared] graphics.label.controller.Label.set_text'
         self.gui.set_text(text)

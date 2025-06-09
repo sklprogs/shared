@@ -25,7 +25,7 @@ class FileDialog:
             self.folder = Home().get_home()
     
     def save(self):
-        f = '[SharedQt] graphics.file_dialog.controller.FileDialog.save'
+        f = '[shared] graphics.file_dialog.controller.FileDialog.save'
         try:
             file = guiSave(caption = self.caption, folder = self.folder
                           ,filter_ = self.filter)

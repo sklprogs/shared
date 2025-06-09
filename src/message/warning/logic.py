@@ -13,7 +13,7 @@ class Warning:
         self.message = termcolor.colored(str(message), 'red')
     
     def show(self):
-        f = '[SharedQt] message.warning.logic.Warning'
+        f = '[shared] message.warning.logic.Warning'
         if not self.message:
             print(f, 'Empty message!')
             return

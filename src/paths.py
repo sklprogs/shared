@@ -18,7 +18,7 @@ class Path:
         self.reset(path)
 
     def get_free_space(self):
-        f = '[SharedQt] paths.Path.get_free_space'
+        f = '[shared] paths.Path.get_free_space'
         result = 0
         if not self.path:
             rep.empty(f)
@@ -51,7 +51,7 @@ class Path:
     def create(self):
         # This will recursively (by design) create self.path
         # We actually don't need to fail the class globally
-        f = '[SharedQt] paths.Path.create'
+        f = '[shared] paths.Path.create'
         Success = True
         if not self.path:
             Success = False
@@ -219,7 +219,7 @@ class Home:
 class File:
 
     def __init__(self, file, dest=None, Rewrite=False):
-        f = '[SharedQt] paths.File.__init__'
+        f = '[shared] paths.File.__init__'
         self.Success = True
         self.Rewrite = Rewrite
         self.file = file
@@ -251,7 +251,7 @@ class File:
             Message(f, mes, True).show_warning()
 
     def get_size(self, Follow=True):
-        f = '[SharedQt] paths.File.get_size'
+        f = '[shared] paths.File.get_size'
         result = 0
         if not self.Success:
             rep.cancel(f)
@@ -272,7 +272,7 @@ class File:
         return result
     
     def _copy(self):
-        f = '[SharedQt] paths.File._copy'
+        f = '[shared] paths.File._copy'
         Success = True
         mes = _('Copy "{}" to "{}"').format(self.file, self.dest)
         Message(f, mes).show_info()
@@ -286,7 +286,7 @@ class File:
         return Success
 
     def _move(self):
-        f = '[SharedQt] paths.File._move'
+        f = '[shared] paths.File._move'
         Success = True
         mes = _('Move "{}" to "{}"').format(self.file, self.dest)
         Message(f, mes).show_info()
@@ -300,7 +300,7 @@ class File:
         return Success
 
     def get_access_time(self):
-        f = '[SharedQt] paths.File.get_access_time'
+        f = '[shared] paths.File.get_access_time'
         if not self.Success:
             rep.cancel(f)
             return
@@ -314,7 +314,7 @@ class File:
             Message(f, mes, True).show_error()
 
     def copy(self):
-        f = '[SharedQt] paths.File.copy'
+        f = '[shared] paths.File.copy'
         Success = True
         if not self.Success:
             rep.cancel(f)
@@ -330,7 +330,7 @@ class File:
         return Success
 
     def delete(self):
-        f = '[SharedQt] paths.File.delete'
+        f = '[shared] paths.File.delete'
         if not self.Success:
             rep.cancel(f)
             return
@@ -344,7 +344,7 @@ class File:
             Message(f, mes, True).show_error()
 
     def get_modification_time(self):
-        f = '[SharedQt] paths.File.get_modification_time'
+        f = '[shared] paths.File.get_modification_time'
         if not self.Success:
             rep.cancel(f)
             return
@@ -358,7 +358,7 @@ class File:
             Message(f, mes, True).show_error()
 
     def move(self):
-        f = '[SharedQt] paths.File.move'
+        f = '[shared] paths.File.move'
         Success = True
         if not self.Success:
             rep.cancel(f)
@@ -375,7 +375,7 @@ class File:
         return self.Success and Success
 
     def set_time(self):
-        f = '[SharedQt] paths.File.set_time'
+        f = '[shared] paths.File.set_time'
         if not self.Success:
             rep.cancel(f)
             return
@@ -396,7 +396,7 @@ class File:
 class Directory:
     #TODO: fix: does not work with a root dir ('/')
     def __init__(self, path, dest=''):
-        f = '[SharedQt] paths.Directory.__init__'
+        f = '[shared] paths.Directory.__init__'
         self.set_values()
         if path:
             ''' Remove trailing slashes and follow symlinks. No error is thrown
@@ -417,7 +417,7 @@ class Directory:
             Message(f, mes, True).show_warning()
     
     def _move(self):
-        f = '[SharedQt] paths.Directory._move'
+        f = '[shared] paths.Directory._move'
         Success = True
         mes = _('Move "{}" to "{}"').format(self.dir, self.dest)
         Message(f, mes).show_info()
@@ -431,7 +431,7 @@ class Directory:
         return Success
 
     def move(self):
-        f = '[SharedQt] paths.Directory.move'
+        f = '[shared] paths.Directory.move'
         Success = True
         if not self.Success:
             rep.cancel(f)
@@ -450,7 +450,7 @@ class Directory:
     
     def get_subfiles(self, Follow=True):
         # Include files in subfolders
-        f = '[SharedQt] paths.Directory.get_subfiles'
+        f = '[shared] paths.Directory.get_subfiles'
         if not self.Success:
             rep.cancel(f)
             return []
@@ -470,7 +470,7 @@ class Directory:
         return self.subfiles
     
     def get_size(self, Follow=True):
-        f = '[SharedQt] paths.Directory.get_size'
+        f = '[shared] paths.Directory.get_size'
         result = 0
         if not self.Success:
             return result
@@ -506,7 +506,7 @@ class Directory:
         self.subfiles = []
     
     def get_ext(self): # with a dot
-        f = '[SharedQt] paths.Directory.get_ext'
+        f = '[shared] paths.Directory.get_ext'
         if not self.Success:
             rep.cancel(f)
             return self.exts
@@ -518,7 +518,7 @@ class Directory:
         return self.exts
 
     def get_ext_low(self): # with a dot
-        f = '[SharedQt] paths.Directory.get_ext_low'
+        f = '[shared] paths.Directory.get_ext_low'
         if not self.Success:
             rep.cancel(f)
             return self.extslow
@@ -527,7 +527,7 @@ class Directory:
         return self.extslow
 
     def delete_empty(self):
-        f = '[SharedQt] paths.Directory.delete_empty'
+        f = '[shared] paths.Directory.delete_empty'
         if not self.Success:
             rep.cancel(f)
             return
@@ -538,7 +538,7 @@ class Directory:
         self.delete()
     
     def delete(self):
-        f = '[SharedQt] paths.Directory.delete'
+        f = '[shared] paths.Directory.delete'
         if not self.Success:
             rep.cancel(f)
             return
@@ -554,7 +554,7 @@ class Directory:
 
     def get_rel_list(self):
         # Create a list of objects with a relative path
-        f = '[SharedQt] paths.Directory.get_rel_list'
+        f = '[shared] paths.Directory.get_rel_list'
         if not self.Success:
             rep.cancel(f)
             return
@@ -564,7 +564,7 @@ class Directory:
 
     def get_list(self):
         # Create a list of objects with an absolute path
-        f = '[SharedQt] paths.Directory.get_list'
+        f = '[shared] paths.Directory.get_list'
         if not self.Success:
             rep.cancel(f)
             return self.lst
@@ -584,7 +584,7 @@ class Directory:
         return self.lst
 
     def get_rel_dirs(self):
-        f = '[SharedQt] paths.Directory.get_rel_dirs'
+        f = '[shared] paths.Directory.get_rel_dirs'
         if not self.Success:
             rep.cancel(f)
             return self.reldirs
@@ -593,7 +593,7 @@ class Directory:
         return self.reldirs
 
     def get_rel_files(self):
-        f = '[SharedQt] paths.Directory.get_rel_files'
+        f = '[shared] paths.Directory.get_rel_files'
         if not self.Success:
             rep.cancel(f)
             return self.relfiles
@@ -603,7 +603,7 @@ class Directory:
 
     def get_dirs(self):
         # Needs absolute path
-        f = '[SharedQt] paths.Directory.get_dirs'
+        f = '[shared] paths.Directory.get_dirs'
         if not self.Success:
             rep.cancel(f)
             return self.dirs
@@ -617,7 +617,7 @@ class Directory:
 
     def get_files(self):
         # Needs absolute path
-        f = '[SharedQt] paths.Directory.get_files'
+        f = '[shared] paths.Directory.get_files'
         if not self.Success:
             rep.cancel(f)
             return self.files
@@ -630,7 +630,7 @@ class Directory:
         return self.files
 
     def copy(self):
-        f = '[SharedQt] paths.Directory.copy'
+        f = '[shared] paths.Directory.copy'
         if not self.Success:
             rep.cancel(f)
             return
@@ -645,7 +645,7 @@ class Directory:
         return self.Success
 
     def _copy(self):
-        f = '[SharedQt] paths.Directory._copy'
+        f = '[shared] paths.Directory._copy'
         mes = _('Copy "{}" to "{}"').format(self.dir, self.dest)
         Message(f, mes).show_info()
         try:

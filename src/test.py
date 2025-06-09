@@ -90,19 +90,19 @@ class Color(Label):
         self.icolor = Color(self.color_name)
     
     def get_hex(self):
-        f = '[SharedQt] test.Color.get_hex'
+        f = '[shared] test.Color.get_hex'
         Message(f, _('Start test')).show_info()
         hex_ = self.icolor.get_hex()
         mes = f'HEX value of color "{self.color_name}" is {hex_}'
         Message(f, mes).show_debug()
     
     def modify(self):
-        f = '[SharedQt] test.Color.modify'
+        f = '[shared] test.Color.modify'
         Message(f, _('Start test')).show_info()
         darker, lighter = self.icolor.modify()
     
     def run_all(self):
-        f = '[SharedQt] test.Color.run_all'
+        f = '[shared] test.Color.run_all'
         self.get_hex()
         self.modify()
         Message(f, _('Testing is complete')).show_info()
@@ -116,7 +116,7 @@ class Button(Root):
         self.create_button()
     
     def click(self, event=None):
-        f = '[SharedQt] test.Button.click'
+        f = '[shared] test.Button.click'
         Message(f, _('Operation is complete.'), True).show_info()
     
     def create_button(self):
@@ -144,7 +144,7 @@ class Clipboard(Label):
         self.clipboard_gui = Clipboard(True)
     
     def _copy(self, text='икепцукапвр ваырвар', CopyEmpty=False, Graphical=False):
-        f = '[SharedQt] test.Clipboard._copy'
+        f = '[shared] test.Clipboard._copy'
         mes = _('Copy "{}" to clipboard').format(text)
         ms.Message(f, mes).show_debug()
         if Graphical:
@@ -153,48 +153,48 @@ class Clipboard(Label):
             self.clipboard.copy(text, CopyEmpty)
     
     def _paste(self):
-        f = '[SharedQt] test.Clipboard._paste'
+        f = '[shared] test.Clipboard._paste'
         mes = _('Paste from clipboard')
         ms.Message(f, mes).show_debug()
         mes = _('Pasted text: "{}"').format(self.clipboard.paste())
         ms.Message(f, mes).show_debug()
     
     def copy_paste(self):
-        f = '[SharedQt] test.Clipboard.copy_paste'
+        f = '[shared] test.Clipboard.copy_paste'
         input(_('Start {}').format(f))
         self._copy()
         self._paste()
     
     def paste_empty_allowed(self):
-        f = '[SharedQt] test.Clipboard.paste_empty_allowed'
+        f = '[shared] test.Clipboard.paste_empty_allowed'
         input(_('Start {}').format(f))
         self._copy('', True)
         self._paste()
     
     def paste_empty_not_allowed(self):
-        f = '[SharedQt] test.Clipboard.paste_empty_not_allowed'
+        f = '[shared] test.Clipboard.paste_empty_not_allowed'
         input(_('Start {}').format(f))
         self._copy('', False)
         self._paste()
     
     def paste_empty_not_allowed_gui(self):
-        f = '[SharedQt] test.Clipboard.paste_empty_not_allowed_gui'
+        f = '[shared] test.Clipboard.paste_empty_not_allowed_gui'
         input(_('Start {}').format(f))
         self._copy('', False, True)
         self._paste()
     
     def paste_error(self):
-        f = '[SharedQt] test.Clipboard.paste_error'
+        f = '[shared] test.Clipboard.paste_error'
         input(_('Start {}').format(f))
         self._copy(b'\x01')
     
     def paste_error_gui(self):
-        f = '[SharedQt] test.Clipboard.paste_error_gui'
+        f = '[shared] test.Clipboard.paste_error_gui'
         input(_('Start {}').format(f))
         self._copy(b'\x01', Graphical=True)
     
     def run_all(self):
-        f = '[SharedQt] test.Clipboard.run_all'
+        f = '[shared] test.Clipboard.run_all'
         self.copy_paste()
         self.paste_empty_allowed()
         self.paste_empty_not_allowed()
@@ -211,7 +211,7 @@ class Message(Label):
         super().__init__(*args, **kwargs)
     
     def console(self):
-        f = '[SharedQt] test.Message.console'
+        f = '[shared] test.Message.console'
         from text_file import Read
         ms.Message(f, _('Start test')).show_info()
         old = ms.GRAPHICAL
@@ -220,7 +220,7 @@ class Message(Label):
         ms.GRAPHICAL = old
     
     def run_all(self):
-        f = '[SharedQt] test.Message.run_all'
+        f = '[shared] test.Message.run_all'
         self.console()
         self.show_debug()
         self.show_debug_gui()
@@ -235,55 +235,55 @@ class Message(Label):
         ms.Message(f, _('Testing is complete')).show_info()
     
     def show_debug(self):
-        f = '[SharedQt] test.Message.show_debug'
+        f = '[shared] test.Message.show_debug'
         input(_('Start {}').format(f))
         mes = _('This is {}').format(_('DEBUG'))
         ms.Message(f, mes).show_debug()
     
     def show_debug_gui(self):
-        f = '[SharedQt] test.Message.show_debug_gui'
+        f = '[shared] test.Message.show_debug_gui'
         input(_('Start {}').format(f))
         mes = _('This is {}').format(_('DEBUG'))
         ms.Message(f, mes, True).show_debug()
     
     def show_info(self):
-        f = '[SharedQt] test.Message.show_info'
+        f = '[shared] test.Message.show_info'
         input(_('Start {}').format(f))
         mes = _('This is {}').format(_('INFO'))
         ms.Message(f, mes).show_info()
     
     def show_info_gui(self):
-        f = '[SharedQt] test.Message.show_info_gui'
+        f = '[shared] test.Message.show_info_gui'
         input(_('Start {}').format(f))
         mes = _('This is {}').format(_('INFO'))
         ms.Message(f, mes, True).show_info()
     
     def show_warning(self):
-        f = '[SharedQt] test.Message.show_warning'
+        f = '[shared] test.Message.show_warning'
         input(_('Start {}').format(f))
         mes = _('This is {}').format(_('WARNING'))
         ms.Message(f, mes).show_warning()
     
     def show_warning_gui(self):
-        f = '[SharedQt] test.Message.show_warning_gui'
+        f = '[shared] test.Message.show_warning_gui'
         input(_('Start {}').format(f))
         mes = _('This is {}').format(_('WARNING'))
         ms.Message(f, mes, True).show_warning()
     
     def show_error(self):
-        f = '[SharedQt] test.Message.show_error'
+        f = '[shared] test.Message.show_error'
         input(_('Start {}').format(f))
         mes = _('This is {}').format(_('ERROR'))
         ms.Message(f, mes).show_error()
     
     def show_error_gui(self):
-        f = '[SharedQt] test.Message.show_error_gui'
+        f = '[shared] test.Message.show_error_gui'
         input(_('Start {}').format(f))
         mes = _('This is {}').format(_('ERROR'))
         ms.Message(f, mes, True).show_error()
     
     def show_question(self):
-        f = '[SharedQt] test.Message.show_question'
+        f = '[shared] test.Message.show_question'
         input(_('Start {}').format(f))
         mes = _('This is {}').format(_('QUESTION'))
         answer = ms.Message(f, mes).show_question()
@@ -295,7 +295,7 @@ class Message(Label):
         ms.Message(f, mes).show_debug()
     
     def show_question_gui(self):
-        f = '[SharedQt] test.Message.show_question_gui'
+        f = '[shared] test.Message.show_question_gui'
         input(_('Start {}').format(f))
         mes = _('This is {}').format(_('QUESTION'))
         answer = ms.Message(f, mes, True).show_question()
@@ -314,32 +314,32 @@ class Report(Label):
         super().__init__(*args, **kwargs)
     
     def cancel(self):
-        ms.rep.cancel('[SharedQt] test.Report.cancel')
+        ms.rep.cancel('[shared] test.Report.cancel')
     
     def wrong_input(self):
-        ms.rep.wrong_input('[SharedQt] test.Report.wrong_input')
+        ms.rep.wrong_input('[shared] test.Report.wrong_input')
     
     def empty(self):
-        ms.rep.empty('[SharedQt] test.Report.empty')
+        ms.rep.empty('[shared] test.Report.empty')
     
     def not_ready(self):
-        ms.rep.not_ready('[SharedQt] test.Report.not_ready')
+        ms.rep.not_ready('[shared] test.Report.not_ready')
     
     def empty_output(self):
-        ms.rep.empty_output('[SharedQt] test.Report.empty_output')
+        ms.rep.empty_output('[shared] test.Report.empty_output')
     
     def deleted(self):
-        ms.rep.deleted('[SharedQt] test.Report.deleted', 50)
+        ms.rep.deleted('[shared] test.Report.deleted', 50)
     
     def matches(self):
-        ms.rep.matches('[SharedQt] test.Report.matches', 50)
+        ms.rep.matches('[shared] test.Report.matches', 50)
     
     def third_party(self):
         mes = _('Something went horribly wrong.')
-        ms.rep.third_party('[SharedQt] test.Report.third_party', mes)
+        ms.rep.third_party('[shared] test.Report.third_party', mes)
     
     def condition(self):
-        ms.rep.condition('[SharedQt] test.Report.condition', '2 + 2 = 4')
+        ms.rep.condition('[shared] test.Report.condition', '2 + 2 = 4')
     
     def run_all(self):
         self.cancel()
@@ -376,7 +376,7 @@ class CheckBox(Panel):
         self.create_checkbox()
     
     def click(self, event=None):
-        f = '[SharedQt] test.CheckBox.click'
+        f = '[shared] test.CheckBox.click'
         ms.Message(f, _('Operation is complete.'), True).show_info()
     
     def create_checkbox(self):
@@ -401,11 +401,11 @@ class Icon(Label):
         self.root.get_root().setWindowIcon(self.icon)
     
     def run_info(self):
-        f = '[SharedQt] test.Icon.run_info'
+        f = '[shared] test.Icon.run_info'
         ms.Message(f, _('Operation is complete.'), True).show_info()
     
     def run_all(self):
-        f = '[SharedQt] test.Icon.run_all'
+        f = '[shared] test.Icon.run_all'
         if not self.icon:
             ms.rep.empty(f)
             return
@@ -432,7 +432,7 @@ class Debug(Label):
         self.create_debug()
     
     def create_debug(self):
-        f = '[SharedQt] test.Debug.create_debug'
+        f = '[shared] test.Debug.create_debug'
         from skl_shared.graphics.debug.controller import DEBUG
         DEBUG.reset(f, _('Operation is complete.'))
         self.win.setCentralWidget(DEBUG.gui)
@@ -445,7 +445,7 @@ class FileDialog(Label):
         super().__init__(*args, **kwargs)
     
     def run_save_custom(self):
-        f = '[SharedQt] test.FileDialog.run_save_custom'
+        f = '[shared] test.FileDialog.run_save_custom'
         input(_('Start {}').format(f))
         from skl_shared.graphics.file_dialog.controller import FILE_DIALOG
         filter_ = _('Web-pages (*.htm, *.html)')
@@ -454,14 +454,14 @@ class FileDialog(Label):
         ms.Message(f, f'"{file}"').show_debug()
     
     def run_save_default(self):
-        f = '[SharedQt] test.FileDialog.run_save_default'
+        f = '[shared] test.FileDialog.run_save_default'
         input(_('Start {}').format(f))
         from skl_shared.graphics.file_dialog.controller import FILE_DIALOG
         file = FILE_DIALOG.save()
         ms.Message(f, f'"{file}"').show_debug()
     
     def run_save_invalid_dir(self):
-        f = '[SharedQt] test.FileDialog.run_save_invalid_dir'
+        f = '[shared] test.FileDialog.run_save_invalid_dir'
         input(_('Start {}').format(f))
         from skl_shared.graphics.file_dialog.controller import FILE_DIALOG
         FILE_DIALOG.reset('/tmp/456345645645645')
@@ -482,7 +482,7 @@ class OptionMenu(Label):
         self.create_menu()
     
     def get_current(self):
-        f = '[SharedQt] test.OptionMenu.get_current'
+        f = '[shared] test.OptionMenu.get_current'
         ms.Message(f, f'"{self.menu.get()}"').show_debug()
     
     def create_menu(self):
@@ -495,7 +495,7 @@ class OptionMenu(Label):
         ''' Root.run_all is called before Root.show, so we need to show
             the OptionMenu before each test of this class.
         '''
-        f = '[SharedQt] test.OptionMenu.run_common'
+        f = '[shared] test.OptionMenu.run_common'
         input(_('Start {}').format(f))
         lst = ('China', 'Great Britain', 'Island', 'India')
         self.menu.reset(lst, 'India')
@@ -503,25 +503,25 @@ class OptionMenu(Label):
     
     def run_digits(self):
         # Non-string tuples and lists must be supported
-        f = '[SharedQt] test.OptionMenu.run_digits'
+        f = '[shared] test.OptionMenu.run_digits'
         input(_('Start {}').format(f))
         lst = [0, 1, 2.3, -3, 4, 5, None, __name__, self.__init__]
         self.menu.reset(lst)
         self.show()
     
     def run_get(self):
-        f = '[SharedQt] test.OptionMenu.run_get'
+        f = '[shared] test.OptionMenu.run_get'
         input(_('Start {}').format(f))
         option = self.menu.get()
         ms.Message(f, f'"{option}"').show_debug()
     
     def run_set(self):
-        f = '[SharedQt] test.OptionMenu.run_set'
+        f = '[shared] test.OptionMenu.run_set'
         input(_('Start {}').format(f))
         self.menu.set('Great Britain')
     
     def run_set_invalid(self):
-        f = '[SharedQt] test.OptionMenu.run_set_invalid'
+        f = '[shared] test.OptionMenu.run_set_invalid'
         input(_('Start {}').format(f))
         self.menu.set('колбаса')
     
@@ -542,13 +542,13 @@ class TempFile:
         ms.GRAPHICAL = False
     
     def create(self):
-        f = '[SharedQt] test.TempFile.create'
+        f = '[shared] test.TempFile.create'
         input(_('Start {}').format(f))
         path = self.tf.get_file()
         ms.Message(f, f'"{path}"').show_debug()
     
     def create_custom(self):
-        f = '[SharedQt] test.TempFile.create_custom'
+        f = '[shared] test.TempFile.create_custom'
         input(_('Start {}').format(f))
         path = self.tf.get_file('.dat', True)
         ms.Message(f, f'"{path}"').show_debug()
@@ -571,14 +571,14 @@ class PrettyHtml(Label):
         self.create_debug()
     
     def create_debug(self):
-        f = '[SharedQt] test.PrettyHtml.create_debug'
+        f = '[shared] test.PrettyHtml.create_debug'
         from skl_shared.graphics.debug.controller import DEBUG
         self.debug = DEBUG
         self.win.setCentralWidget(self.debug.gui)
     
     def load(self):
         from skl_shared.text_file import Read
-        f = '[SharedQt] test.PrettyHtml.load'
+        f = '[shared] test.PrettyHtml.load'
         if not self.Success:
             ms.rep.cancel(f)
             return
@@ -588,21 +588,21 @@ class PrettyHtml(Label):
     
     def make_pretty(self):
         from skl_shared.pretty_html import make_pretty
-        f = '[SharedQt] test.PrettyHtml.make_pretty'
+        f = '[shared] test.PrettyHtml.make_pretty'
         if not self.Success:
             ms.rep.cancel(f)
             return
         return make_pretty(self.code)
     
     def run_pretty(self):
-        f = '[SharedQt] test.PrettyHtml.run_pretty'
+        f = '[shared] test.PrettyHtml.run_pretty'
         input(_('Start {}').format(f))
         self.load()
         self.debug.reset(f, self.make_pretty())
         self.show()    
     
     def run_pretty_errors(self):
-        f = '[SharedQt] test.PrettyHtml.run_pretty_errors'
+        f = '[shared] test.PrettyHtml.run_pretty_errors'
         input(_('Start {}').format(f))
         old = self.file
         self.file = self.file_invalid
@@ -653,13 +653,13 @@ class Email:
         self.file = '/tmp/attach.txt'
     
     def attach(self):
-        f = '[SharedQt] test.Email.attach'
+        f = '[shared] test.Email.attach'
         input(_('Start {}').format(f))
         self.iemail.reset(self.email, self.subject, self.message, self.file)
         self.iemail.create()
     
     def create(self):
-        f = '[SharedQt] test.Email.create'
+        f = '[shared] test.Email.create'
         input(_('Start {}').format(f))
         self.iemail.reset(self.email, self.subject, self.message)
         self.iemail.create()
@@ -681,13 +681,13 @@ class Get(Label):
         self.create_debug()
     
     def create_debug(self):
-        f = '[SharedQt] test.Get.create_debug'
+        f = '[shared] test.Get.create_debug'
         from skl_shared.graphics.debug.controller import DEBUG
         self.debug = DEBUG
         self.win.setCentralWidget(self.debug.gui)
     
     def get(self):
-        f = '[SharedQt] test.Get.get'
+        f = '[shared] test.Get.get'
         import skl_shared.get_url as gu
         code = gu.Get('https://www.google.com').run()
         self.debug.reset(f, code)
@@ -722,19 +722,19 @@ class Time:
         self.time = TIME
     
     def get_current_month(self):
-        f = '[SharedQt] test.Time.get_current_month'
+        f = '[shared] test.Time.get_current_month'
         month = _(self.time.get_month_name())
         mes = _('Current month: {}').format(month)
         ms.Message(f, mes).show_debug()
     
     def get_current_date(self):
-        f = '[SharedQt] test.Time.get_current_date'
+        f = '[shared] test.Time.get_current_date'
         self.time.get_todays_date()
         mes = _('Current date: {}').format(self.time.get_date())
         ms.Message(f, mes).show_debug()
     
     def get_tomorrow(self):
-        f = '[SharedQt] test.Time.get_tomorrow'
+        f = '[shared] test.Time.get_tomorrow'
         self.time.get_todays_date()
         self.time.add_days(1)
         mes = _('Tomorrow’s date: {}').format(self.time.get_date())
@@ -756,7 +756,7 @@ class Table:
         ms.GRAPHICAL = False
         
     def run_table(self):
-        f = '[SharedQt] test.Table.run_table'
+        f = '[shared] test.Table.run_table'
         from skl_shared.table import Table
         from skl_shared.paths import Directory
         from skl_shared.time import Timer
@@ -784,7 +784,7 @@ class List:
         ms.GRAPHICAL = False
         
     def get_diff(self):
-        f = '[SharedQt] test.List.get_diff'
+        f = '[shared] test.List.get_diff'
         import skl_shared.list as ls
         lst1 = [0, 8, 3, 2, 3, 5, 6, 7, 7, 8]
         lst2 = [0, 9, 1, 2, 3, 4, 5, 6, 7, 8]
@@ -807,14 +807,14 @@ class Paths:
         self.paths = paths
         
     def get_resources(self):
-        f = '[SharedQt] test.Paths.get_resources'
+        f = '[shared] test.Paths.get_resources'
         # May be non-existent
         path = self.paths.PDIR.add('..', 'resources')
         path = self.paths.Path(path).get_absolute()
         Message(f, f'"{path}"').show_debug()
     
     def get_path_report(self):
-        f = '[SharedQt] test.Paths.get_path_report'
+        f = '[shared] test.Paths.get_path_report'
         ipath = self.paths.Path('/home/pete/tmp/Смартфон (конвертировано)/2024-10-11/WP_20241011_09_41_41_Pro.jpg')
         # Does not follow symbolic links
         path = ipath.get_absolute()
@@ -831,19 +831,19 @@ class Paths:
         Message(f, mes).show_debug()
     
     def create(self):
-        f = '[SharedQt] test.Paths.create'
+        f = '[shared] test.Paths.create'
         input(_('Start {}').format(f))
         # Recursive by design
         self.paths.Path('/tmp/path0/1/2/3/4/5/6/7/8/9/0').create()
     
     def create_invalid(self):
-        f = '[SharedQt] test.Paths.create_invalid'
+        f = '[shared] test.Paths.create_invalid'
         input(_('Start {}').format(f))
         # Recursive by design
         self.paths.Path('/tmp/hello/\0').create()
     
     def create_error(self):
-        f = '[SharedQt] test.Paths.create_error'
+        f = '[shared] test.Paths.create_error'
         input(_('Start {}').format(f))
         # Recursive by design
         self.paths.Path('/root/test').create()
@@ -868,7 +868,7 @@ class Directory:
         self.paths = paths
         
     def delete_empty(self):
-        f = '[SharedQt] test.Directory.delete_empty'
+        f = '[shared] test.Directory.delete_empty'
         input(_('Start {}').format(f))
         # Recursive by design
         path = '/tmp/path0/1/2/3/4/5/6/7/8/9/0'
@@ -876,7 +876,7 @@ class Directory:
         self.paths.Directory(path).delete_empty()
     
     def delete_empty_error(self):
-        f = '[SharedQt] test.Directory.delete_empty_error'
+        f = '[shared] test.Directory.delete_empty_error'
         input(_('Start {}').format(f))
         # Recursive by design
         self.paths.Path('/tmp/path0/1/2/3/4/5/6/7/8/9/0').create()
@@ -899,7 +899,7 @@ class Timer:
         self.timer = Timer
         
     def run_timer(self):
-        f = '[SharedQt] test.Timer.run_timer'
+        f = '[shared] test.Timer.run_timer'
         input(_('Start {}').format(f))
         import time
         timer = self.timer(f)
@@ -925,47 +925,47 @@ class TextFile(Label):
         self.create_debug()
     
     def create_debug(self):
-        f = '[SharedQt] test.TextFile.create_debug'
+        f = '[shared] test.TextFile.create_debug'
         from skl_shared.graphics.debug.controller import DEBUG
         self.debug = DEBUG
         self.win.setCentralWidget(self.debug.gui)
     
     def load(self):
-        f = '[SharedQt] test.TextFile.load'
+        f = '[shared] test.TextFile.load'
         input(_('Start {}').format(f))
         file = '/home/pete/tmp/buffer'
         self.debug.reset(f, self.iread(file).get())
         self.show()
     
     def load_non_existent(self):
-        f = '[SharedQt] test.TextFile.load_non_existent'
+        f = '[shared] test.TextFile.load_non_existent'
         input(_('Start {}').format(f))
         self.iread('/tmp/ZERO').get()
     
     def load_no_permissions(self):
-        f = '[SharedQt] test.TextFile.load_no_permissions'
+        f = '[shared] test.TextFile.load_no_permissions'
         input(_('Start {}').format(f))
         self.iread('/etc/shadow').get()
     
     def write(self):
-        f = '[SharedQt] test.TextFile.write'
+        f = '[shared] test.TextFile.write'
         input(_('Start {}').format(f))
         self.iwrite('/tmp/test').write('test')
     
     def force_rewrite(self):
-        f = '[SharedQt] test.TextFile.force_rewrite'
+        f = '[shared] test.TextFile.force_rewrite'
         input(_('Start {}').format(f))
         self.iwrite('/tmp/test', True).write('test')
     
     def rewrite_cancel(self):
-        f = '[SharedQt] test.TextFile.rewrite_cancel'
+        f = '[shared] test.TextFile.rewrite_cancel'
         input(_('Start {}').format(f))
         mes = _('Please answer No here.')
         Message(f, mes, True, True).show_info()
         self.iwrite('/tmp/test').write('test')
     
     def rewrite(self):
-        f = '[SharedQt] test.TextFile.rewrite'
+        f = '[shared] test.TextFile.rewrite'
         input(_('Start {}').format(f))
         mes = _('Please answer Yes here.')
         Message(f, mes, True, True).show_info()
@@ -990,7 +990,7 @@ class Config:
         self.config = Config
         
     def run_config(self):
-        f = '[SharedQt] test.Timer.run_config'
+        f = '[shared] test.Timer.run_config'
         input(_('Start {}').format(f))
         default = '/home/pete/bin/mclient/resources/config/default.json'
         schema = '/home/pete/bin/mclient/resources/config/schema.json'
@@ -1015,13 +1015,13 @@ class ProgressBar:
         self.bar = ProgressBar()
     
     def run_basic(self):
-        f = '[SharedQt] test.ProgressBar.run_basic'
+        f = '[shared] test.ProgressBar.run_basic'
         input(_('Start {}').format(f))
         self.bar.set_info('Copying files, please wait...')
         self.bar.show()
     
     def run_long_text(self):
-        f = '[SharedQt] test.ProgressBar.run_long_text'
+        f = '[shared] test.ProgressBar.run_long_text'
         input(_('Start {}').format(f))
         mes = ''
         for i in range(1000):
@@ -1032,7 +1032,7 @@ class ProgressBar:
         self.bar.show()
     
     def run_progress(self):
-        f = '[SharedQt] test.ProgressBar.run_progress'
+        f = '[shared] test.ProgressBar.run_progress'
         input(_('Start {}').format(f))
         # time.sleep() will freeze GUI
         from skl_shared.paths import Path, Directory, File

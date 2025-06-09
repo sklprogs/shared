@@ -7,7 +7,7 @@ import termcolor
 class Log:
 
     def __init__(self, Use=True, Short=False, limit=200):
-        self.func = '[SharedQt] message.logic.Log.__init__'
+        self.func = '[shared] message.logic.Log.__init__'
         self.Success = True
         self.level = 'info'
         self.message = 'Test'
@@ -27,7 +27,7 @@ class Log:
         return f'{self.count}:{self.func}:{self.level}:{self.message}'
     
     def print(self):
-        f = '[SharedQt] message.logic.Log.print'
+        f = '[shared] message.logic.Log.print'
         if not self.Success:
             return
         try:
@@ -48,7 +48,7 @@ class Log:
             sub = f'Cannot print the message! ({e})'
             print(f'{f}:WARNING:{sub}')
 
-    def append (self, func='[SharedQt] message.logic.Log.append', level='info'
+    def append (self, func='[shared] message.logic.Log.append', level='info'
                ,message='Test'
                ):
         if not self.Success:

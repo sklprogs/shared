@@ -24,7 +24,7 @@ class Font:
         Message(f, mes, True).show_error()
     
     def set_parent(self):
-        f = '[SharedQt] graphics.font.controller.Font.set_parent'
+        f = '[shared] graphics.font.controller.Font.set_parent'
         if not self.Success:
             rep.cancel(f)
             return
@@ -34,7 +34,7 @@ class Font:
             self.fail(f, e)
     
     def set_family(self):
-        f = '[SharedQt] graphics.font.controller.Font.set_family'
+        f = '[shared] graphics.font.controller.Font.set_family'
         if not self.Success:
             rep.cancel(f)
             return
@@ -44,7 +44,7 @@ class Font:
             self.fail(f, e)
     
     def set_size(self):
-        f = '[SharedQt] graphics.font.controller.Font.set_size'
+        f = '[shared] graphics.font.controller.Font.set_size'
         if not self.Success:
             rep.cancel(f)
             return
@@ -54,7 +54,7 @@ class Font:
             self.fail(f, e)
     
     def set_font(self):
-        f = '[SharedQt] graphics.font.controller.Font.set_font'
+        f = '[shared] graphics.font.controller.Font.set_font'
         if not self.Success:
             rep.cancel(f)
             return
@@ -64,7 +64,7 @@ class Font:
             self.fail(f, e)
         
     def check(self):
-        f = '[SharedQt] graphics.font.controller.Font.check'
+        f = '[shared] graphics.font.controller.Font.check'
         if not self.widget:
             rep.empty(f)
             self.Success = False

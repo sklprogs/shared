@@ -8,7 +8,7 @@ from skl_shared.message.controller import Message
 
 
 def rewrite(file):
-    f = '[SharedQt] rewrite.rewrite'
+    f = '[shared] rewrite.rewrite'
     if not os.path.isfile(file):
         # Return True to proceed with writing if the file has not been found
         return True

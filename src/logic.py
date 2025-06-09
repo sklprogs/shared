@@ -171,7 +171,7 @@ class Text:
         return self.text
     
     def center(self, limit):
-        f = '[SharedQt] logic.Text.center'
+        f = '[shared] logic.Text.center'
         delta = limit - len(self.text)
         if delta < 2:
             mes = f'{limit} - {len(self.text)} > 2'
@@ -274,7 +274,7 @@ class Text:
             ensure that all of them are in the right place (even when the
             number of opening and closing brackets is the same).
         '''
-        f = '[SharedQt] logic.Text.delete_embraced_text'
+        f = '[shared] logic.Text.delete_embraced_text'
         if self.text.count(opening_sym) != self.text.count(closing_sym):
             mes = _('Different number of opening and closing brackets: "{}": {}; "{}": {}!')
             mes = mes.format(opening_sym, self.text.count(opening_sym)
@@ -335,7 +335,7 @@ class Text:
         ''' Delete a space and punctuation marks in the end of a line
             (useful when extracting features with CompareField).
         '''
-        f = '[SharedQt] logic.Text.delete_end_punc'
+        f = '[shared] logic.Text.delete_end_punc'
         if len(self.text) <= 0:
             rep.empty(f)
             return self.text
@@ -408,7 +408,7 @@ class Text:
         ''' Replace commas or semicolons with line breaks or line breaks
             with commas.
         '''
-        f = '[SharedQt] logic.Text.split_by_comma'
+        f = '[shared] logic.Text.split_by_comma'
         if (';' in self.text or ',' in self.text) and '\n' in self.text:
             mes = _('Commas and/or semicolons or line breaks can be used, but not altogether!')
             Message(f, mes, True).show_warning()
@@ -429,7 +429,7 @@ class Text:
         return self.text
 
     def str2int(self):
-        f = '[SharedQt] logic.Text.str2int'
+        f = '[shared] logic.Text.str2int'
         par = 0
         try:
             par = int(self.text)
@@ -439,7 +439,7 @@ class Text:
         return par
 
     def str2float(self):
-        f = '[SharedQt] logic.Text.str2float'
+        f = '[shared] logic.Text.str2float'
         par = 0.0
         try:
             par = float(self.text)
@@ -496,7 +496,7 @@ class Commands:
         self.set_lang()
     
     def get_additives(self, number):
-        f = '[SharedQt] logic.Commands.get_additives'
+        f = '[shared] logic.Commands.get_additives'
         ''' Return integers by which a set integer is divisible (except for 1
             and itself).
         '''
@@ -572,7 +572,7 @@ class Commands:
         return(hours, minutes, seconds)
     
     def get_easy_time(self, length=0):
-        f = '[SharedQt] logic.Commands.get_easy_time'
+        f = '[shared] logic.Commands.get_easy_time'
         if not length:
             rep.empty(f)
             return '00:00:00'
@@ -591,7 +591,7 @@ class Commands:
         return ':'.join(mes)
     
     def set_lang(self):
-        f = '[SharedQt] logic.Commands.set_lang'
+        f = '[shared] logic.Commands.set_lang'
         result = locale.getlocale()
         if result and result[0]:
             result = result[0].lower()
@@ -612,7 +612,7 @@ class Commands:
         Message(f, f'{result} -> {self.lang}').show_debug()
     
     def get_human_time(self, delta):
-        f = '[SharedQt] logic.Commands.get_human_time'
+        f = '[shared] logic.Commands.get_human_time'
         result = '%d %s' % (0, _('sec'))
         # Allows to use 'None'
         if not delta:
@@ -669,7 +669,7 @@ class Search:
             self.reset(text, pattern)
 
     def reset(self, text, pattern):
-        f = '[SharedQt] logic.Search.reset'
+        f = '[shared] logic.Search.reset'
         self.Success = True
         self.i = 0
         self.nextloop = []
@@ -681,7 +681,7 @@ class Search:
             rep.wrong_input(f)
 
     def add(self):
-        f = '[SharedQt] logic.Search.add'
+        f = '[shared] logic.Search.add'
         if not self.Success:
             rep.cancel(f)
             return
@@ -689,7 +689,7 @@ class Search:
             self.i += len(self.pattern)
 
     def get_next(self):
-        f = '[SharedQt] logic.Search.get_next'
+        f = '[shared] logic.Search.get_next'
         if not self.Success:
             rep.cancel(f)
             return
@@ -701,7 +701,7 @@ class Search:
             return result
 
     def get_prev(self):
-        f = '[SharedQt] logic.Search.get_prev'
+        f = '[shared] logic.Search.get_prev'
         if not self.Success:
             rep.cancel(f)
             return
@@ -714,7 +714,7 @@ class Search:
         return result
 
     def get_next_loop(self):
-        f = '[SharedQt] logic.Search.get_next_loop'
+        f = '[shared] logic.Search.get_next_loop'
         if not self.Success:
             rep.cancel(f)
             return self.nextloop
@@ -730,7 +730,7 @@ class Search:
         return self.nextloop
 
     def get_prev_loop(self):
-        f = '[SharedQt] logic.Search.get_prev_loop'
+        f = '[shared] logic.Search.get_prev_loop'
         if not self.Success:
             rep.cancel(f)
             return self.prevloop

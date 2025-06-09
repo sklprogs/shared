@@ -12,7 +12,7 @@ class Clipboard:
         self.gui = guiClipboard()
 
     def copy(self, text, CopyEmpty=True):
-        f = '[SharedQt] graphics.clipboard.controller.Clipboard.copy'
+        f = '[shared] graphics.clipboard.controller.Clipboard.copy'
         if not (text or CopyEmpty):
             rep.empty(f, self.Graphical)
             return
@@ -22,7 +22,7 @@ class Clipboard:
             rep.failed(f, e, self.Graphical)
 
     def paste(self):
-        f = '[SharedQt] graphics.clipboard.controller.Clipboard.paste'
+        f = '[shared] graphics.clipboard.controller.Clipboard.paste'
         try:
             text = self.gui.paste()
         except Exception as e:

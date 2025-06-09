@@ -11,7 +11,7 @@ class Question:
         self.message = str(message)
     
     def show(self):
-        f = '[SharedQt] message.question.logic.Question'
+        f = '[shared] message.question.logic.Question'
         if not self.message:
             print(f, 'Empty message!')
             return

@@ -11,7 +11,7 @@ class Button(guiButton):
         super().__init__(*args, **kwargs)
     
     def change_font_size(self, delta=1):
-        f = '[SharedQt] graphics.button.controller.Button.change_font_size'
+        f = '[shared] graphics.button.controller.Button.change_font_size'
         size = self.get_font_size()
         if not size:
             rep.empty(f)

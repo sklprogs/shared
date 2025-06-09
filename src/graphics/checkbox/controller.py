@@ -17,7 +17,7 @@ class CheckBox:
             self.gui.set_font(font_family, font_size)
     
     def change_font_size(self, delta=1):
-        f = '[SharedQt] graphics.checkbox.controller.CheckBox.change_font_size'
+        f = '[shared] graphics.checkbox.controller.CheckBox.change_font_size'
         size = self.gui.get_font_size()
         if not size:
             rep.empty(f)

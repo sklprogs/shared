@@ -29,7 +29,7 @@ class Online:
 
     def browse(self):
         # Open a URL in a default browser
-        f = '[SharedQt] online.Online.browse'
+        f = '[shared] online.Online.browse'
         try:
             webbrowser.open(url = self.get_url()
                            ,new = 2
@@ -41,7 +41,7 @@ class Online:
 
     def get_url(self):
         # Create a correct online link (URI => URL)
-        f = '[SharedQt] online.Online.get_url'
+        f = '[shared] online.Online.get_url'
         if not self.url:
             self.url = self.base % urllib.parse.quote(self.get_bytes())
             mes = str(self.url)
@@ -78,7 +78,7 @@ class Email:
                       ,attach = attach)
     
     def reset(self, email, subject='', message='', attach=''):
-        f = '[SharedQt] online.Email.reset'
+        f = '[shared] online.Email.reset'
         self.Success = True
         ''' A single address or multiple comma-separated addresses (not all
             mail agents support ';'). #NOTE that, however, Outlook supports
@@ -98,7 +98,7 @@ class Email:
 
     def sanitize(self, value):
         # Escape symbols that may cause issues when composing 'mailto'
-        f = '[SharedQt] online.Email.sanitize'
+        f = '[shared] online.Email.sanitize'
         if not self.Success:
             rep.cancel(f)
             return
@@ -107,7 +107,7 @@ class Email:
         return str(Online(pattern=value).get_url())
     
     def call_browser(self):
-        f = '[SharedQt] online.Email.call_browser'
+        f = '[shared] online.Email.call_browser'
         if not self.Success:
             rep.cancel(f)
             return
@@ -129,7 +129,7 @@ class Email:
             Message(f, mes, True).show_error()
     
     def create(self):
-        f = '[SharedQt] online.Email.create'
+        f = '[shared] online.Email.create'
         if not self.Success:
             rep.cancel(f)
             return
@@ -142,7 +142,7 @@ class Email:
                        
     def run_outlook(self):
         #NOTE: this does not work in wine!
-        f = '[SharedQt] online.Email.run_outlook'
+        f = '[shared] online.Email.run_outlook'
         if not OS.is_win():
             mes = _('This operation cannot be executed on your operating system.')
             Message(f, mes).show_info()
@@ -165,7 +165,7 @@ class Email:
             Message(f, mes, True).show_error()
     
     def run_thunderbird(self):
-        f = '[SharedQt] online.Email.run_thunderbird'
+        f = '[shared] online.Email.run_thunderbird'
         if not self.Success:
             rep.cancel(f)
             return
@@ -185,7 +185,7 @@ class Email:
             Message(f, mes, True).show_error()
     
     def run_evolution(self):
-        f = '[SharedQt] online.Email.run_evolution'
+        f = '[shared] online.Email.run_evolution'
         if not self.Success:
             rep.cancel(f)
             return

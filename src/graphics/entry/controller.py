@@ -21,7 +21,7 @@ class Entry:
         self.gui.select_all()
     
     def change_font_size(self, delta=1):
-        f = '[SharedQt] graphics.entry.controller.Entry.change_font_size'
+        f = '[shared] graphics.entry.controller.Entry.change_font_size'
         size = self.gui.get_font_size()
         if not size:
             rep.empty(f)

@@ -14,7 +14,7 @@ class Font:
             self.reset(name = name, xborder = xborder, yborder = yborder)
     
     def set_text(self, text):
-        f = '[SharedQt] graphics.font.logic.Font.set_text'
+        f = '[shared] graphics.font.logic.Font.set_text'
         if not text:
             rep.empty(f)
             return
@@ -36,7 +36,7 @@ class Font:
             self.width += self.xborder
     
     def set_height(self):
-        f = '[SharedQt] graphics.font.logic.Font.set_height'
+        f = '[shared] graphics.font.logic.Font.set_height'
         if not self.set_height:
             rep.empty(f)
             return
@@ -53,7 +53,7 @@ class Font:
         self.set_attr()
     
     def set_attr(self):
-        f = '[SharedQt] graphics.font.logic.Font.set_attr'
+        f = '[shared] graphics.font.logic.Font.set_attr'
         if not self.name:
             rep.empty(f)
             return

@@ -26,7 +26,7 @@ class Table:
         self.ShowGap = ShowGap
     
     def set_max_rows(self):
-        f = '[SharedQt] table.Table.set_max_rows'
+        f = '[shared] table.Table.set_max_rows'
         if not self.Success:
             rep.cancel(f)
             return
@@ -39,7 +39,7 @@ class Table:
             self.lst[i] = self.lst[i][0:self.maxrows+1]
     
     def set_max_width(self):
-        f = '[SharedQt] table.Table.set_max_width'
+        f = '[shared] table.Table.set_max_width'
         if not self.Success:
             rep.cancel(f)
             return
@@ -62,7 +62,7 @@ class Table:
         ''' Passing 'encloser' in 'Text.shorten' is not enough since it
             does not enclose items shorter than 'max_len'.
         '''
-        f = '[SharedQt] table.Table.enclose'
+        f = '[shared] table.Table.enclose'
         if not self.Success:
             rep.cancel(f)
             return
@@ -75,7 +75,7 @@ class Table:
                 j += 1
     
     def transpose(self):
-        f = '[SharedQt] table.Table.transpose'
+        f = '[shared] table.Table.transpose'
         if not self.Success:
             rep.cancel(f)
             return
@@ -85,7 +85,7 @@ class Table:
             self.lst = [list(item) for item in self.lst]
     
     def set_headers(self):
-        f = '[SharedQt] table.Table.set_headers'
+        f = '[shared] table.Table.set_headers'
         if not self.Success:
             rep.cancel(f)
             return
@@ -105,7 +105,7 @@ class Table:
             Message(f, mes, True).show_warning()
     
     def report(self):
-        f = '[SharedQt] table.Table.report'
+        f = '[shared] table.Table.report'
         result = ''
         if not self.Success:
             rep.cancel(f)
@@ -124,7 +124,7 @@ class Table:
         return result
     
     def add_gap(self):
-        f = '[SharedQt] table.Table.add_gap'
+        f = '[shared] table.Table.add_gap'
         if not self.Success:
             rep.cancel(f)
             return
@@ -140,7 +140,7 @@ class Table:
                 self.lst[i].append('')
     
     def get_lens(self):
-        f = '[SharedQt] table.Table.get_lens'
+        f = '[shared] table.Table.get_lens'
         if not self.Success:
             rep.cancel(f)
             return
@@ -149,7 +149,7 @@ class Table:
             self.lens.append(len(tmp[0]))
     
     def make_list(self):
-        f = '[SharedQt] table.Table.make_list'
+        f = '[shared] table.Table.make_list'
         if not self.Success:
             rep.cancel(f)
             return

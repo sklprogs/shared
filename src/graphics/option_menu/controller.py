@@ -39,7 +39,7 @@ class OptionMenu:
         self.widget.activated.connect(self.action)
     
     def change_font_size(self, delta=1):
-        f = '[SharedQt] graphics.option_menu.controller.OptionMenu.change_font_size'
+        f = '[shared] graphics.option_menu.controller.OptionMenu.change_font_size'
         size = self.gui.get_font_size()
         if not size:
             rep.empty(f)
@@ -57,7 +57,7 @@ class OptionMenu:
         self.gui.disable()
         
     def set(self, item):
-        f = '[SharedQt] graphics.option_menu.controller.OptionMenu.set'
+        f = '[shared] graphics.option_menu.controller.OptionMenu.set'
         item = str(item)
         if item in self.items:
             self.gui.set(item)

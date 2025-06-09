@@ -8,7 +8,7 @@ from skl_shared.message.controller import Message
 
 
 def get_file(suffix='.htm', Delete=False):
-    f = '[SharedQt] temp_file.get_file'
+    f = '[shared] temp_file.get_file'
     try:
         # Delete=True deletes the file as soon as it is closed
         return tempfile.NamedTemporaryFile (mode = 'w', encoding = 'UTF-8'

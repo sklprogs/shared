@@ -24,7 +24,7 @@ class Read:
         self.lst = []
     
     def check(self):
-        f = '[SharedQt] text_file.Read.check'
+        f = '[shared] text_file.Read.check'
         if not self.file:
             self.Success = False
             mes = _('Empty input is not allowed!')
@@ -42,7 +42,7 @@ class Read:
         return True
 
     def _read(self, encoding):
-        f = '[SharedQt] text_file.Read._read'
+        f = '[shared] text_file.Read._read'
         try:
             with open(self.file, 'r', encoding=encoding) as fl:
                 self.text = fl.read()
@@ -52,7 +52,7 @@ class Read:
             Message(f, mes, True).show_warning()
 
     def delete_bom(self):
-        f = '[SharedQt] text_file.Read.delete_bom'
+        f = '[shared] text_file.Read.delete_bom'
         if not self.Success:
             rep.cancel(f)
             return
@@ -60,7 +60,7 @@ class Read:
 
     def get(self):
         # Return the text from memory (or load the file first)
-        f = '[SharedQt] text_file.Read.get'
+        f = '[shared] text_file.Read.get'
         if not self.Success:
             rep.cancel(f)
             return self.text
@@ -70,14 +70,14 @@ class Read:
 
     def get_lines(self):
         # Return a number of lines in the file. Returns 0 for an empty file.
-        f = '[SharedQt] text_file.Read.get_lines'
+        f = '[shared] text_file.Read.get_lines'
         if not self.Success:
             rep.cancel(f)
             return
         return len(self.get_list())
 
     def get_list(self):
-        f = '[SharedQt] text_file.Read.get_list'
+        f = '[shared] text_file.Read.get_list'
         if not self.Success:
             rep.cancel(f)
             return self.lst
@@ -87,7 +87,7 @@ class Read:
         return self.lst
 
     def load(self):
-        f = '[SharedQt] text_file.Read.load'
+        f = '[shared] text_file.Read.load'
         if not self.Success:
             rep.cancel(f)
             return self.text
@@ -133,14 +133,14 @@ class Write:
         self.Empty = False
     
     def check(self):
-        f = '[SharedQt] text_file.Write.check'
+        f = '[shared] text_file.Write.check'
         if not self.file:
             self.Success = False
             mes = _('Not enough input data!')
             Message(f, mes, True).show_warning()
 
     def _write(self, mode='w'):
-        f = '[SharedQt] text_file.Write._write'
+        f = '[shared] text_file.Write._write'
         if mode != 'w' and mode != 'a':
             mes = _('An unknown mode "{}"!\n\nThe following modes are supported: "{}".')
             mes = mes.format(mode, 'a, w')
@@ -158,7 +158,7 @@ class Write:
         return self.Success
 
     def append(self, text=''):
-        f = '[SharedQt] text_file.Write.append'
+        f = '[shared] text_file.Write.append'
         if not self.Success:
             rep.cancel(f)
             return
@@ -174,7 +174,7 @@ class Write:
         self._write('a')
 
     def write(self, text=''):
-        f = '[SharedQt] text_file.Write.write'
+        f = '[shared] text_file.Write.write'
         if not self.Success:
             rep.cancel(f)
             return

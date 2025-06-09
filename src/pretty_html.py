@@ -9,7 +9,7 @@ from skl_shared.message.controller import Message, rep
 
 
 def make_pretty(code):
-    f = '[SharedQt] pretty_html.make_pretty'
+    f = '[shared] pretty_html.make_pretty'
     if not code:
         rep.empty(f)
         return ''

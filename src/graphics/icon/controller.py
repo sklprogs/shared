@@ -13,7 +13,7 @@ class Icon:
         self.gui = guiIcon()
     
     def set(self, path):
-        f = '[SharedQt] graphics.icon.controller.Icon.set'
+        f = '[shared] graphics.icon.controller.Icon.set'
         if not path:
             # This is called from a user app, so it's a warning, not 'rep.lazy'
             rep.empty(f)
