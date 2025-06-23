@@ -714,42 +714,6 @@ class Launch:
 
 
 
-class Time:
-
-    def __init__(self):
-        ms.GRAPHICAL = False
-        from skl_shared.time import TIME
-        self.time = TIME
-    
-    def get_current_month(self):
-        f = '[shared] test.Time.get_current_month'
-        month = _(self.time.get_month_name())
-        mes = _('Current month: {}').format(month)
-        ms.Message(f, mes).show_debug()
-    
-    def get_current_date(self):
-        f = '[shared] test.Time.get_current_date'
-        self.time.get_todays_date()
-        mes = _('Current date: {}').format(self.time.get_date())
-        ms.Message(f, mes).show_debug()
-    
-    def get_tomorrow(self):
-        f = '[shared] test.Time.get_tomorrow'
-        self.time.get_todays_date()
-        self.time.add_days(1)
-        mes = _('Tomorrow’s date: {}').format(self.time.get_date())
-        ms.Message(f, mes).show_debug()
-    
-    def run_all(self):
-        self.get_current_date()
-        self.get_tomorrow()
-        self.get_current_month()
-    
-    def run(self):
-        self.run_all()
-
-
-
 class Table:
 
     def __init__(self):
@@ -1066,6 +1030,49 @@ class ProgressBar:
         self.root.end()
 
 
+
+class Time:
+    
+    def __init__(self):
+        ms.GRAPHICAL = False
+        from skl_shared.time import Time as shTime
+        self.itime = shTime()
+    
+    def debug(self):
+        f = '[shared] test.Time.debug'
+        mes = _('Pattern: {}').format(self.itime.pattern)
+        ms.Message(f, mes).show_debug()
+        mes = _('Timestamp: {}').format(self.itime.tstamp)
+        ms.Message(f, mes).show_debug()
+        mes = _('Date: {}').format(self.itime.get_date())
+        ms.Message(f, mes).show_debug()
+        mes = _('Year: {}').format(self.itime.get_year())
+        ms.Message(f, mes).show_debug()
+        mes = _('Month name: {}').format(self.itime.get_month_name())
+        ms.Message(f, mes).show_debug()
+        mes = _('Month abbreviation: {}').format(self.itime.get_month_abbr())
+        ms.Message(f, mes).show_debug()
+    
+    def add_days(self):
+        f = '[shared] test.Time.add_days'
+        mes = _('Set days delta to {}').format(-1)
+        ms.Message(f, mes).show_info()
+        self.itime.add_days(-1)
+        self.debug()
+        mes = _('Set days delta to {}').format(1)
+        ms.Message(f, mes).show_info()
+        # 2 because of the previous delta
+        self.itime.add_days(2)
+        self.debug()
+    
+    def run_all(self):
+        self.debug()
+        self.add_days()
+    
+    def run(self):
+        self.run_all()
+
+
 if __name__ == '__main__':
     #Report().run()
     #Root().run()
@@ -1095,4 +1102,5 @@ if __name__ == '__main__':
     #Timer().run()
     #TextFile().run()
     #Config().run()
-    ProgressBar().run()
+    #ProgressBar().run()
+    Time().run()

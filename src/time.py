@@ -28,9 +28,13 @@ class Timer:
 
 
 class Time:
-    # We constantly recalculate each value because they depend on each other
-    def __init__(self, tstamp=None, pattern='%Y-%m-%d'):
-        self.reset(tstamp, pattern)
+    # Values depend on each other and should be recalculated
+    def __init__(self, pattern='%Y-%m-%d', tstamp=None):
+        self.Success = True
+        self.inst = None
+        self.pattern = pattern
+        self.tstamp = tstamp
+        self.set_instance()
     
     def fail(self, f, e):
         self.Success = False
@@ -38,29 +42,13 @@ class Time:
         mes = mes.format(e)
         Message(f, mes, True).show_error()
 
-    def set_values(self):
-        self.Success = True
-        self.date = self.year = self.month_abbr = self.month_name = ''
-        self.inst = None
-    
-    def reset(self, tstamp=None, pattern='%Y-%m-%d'):
-        self.set_values()
-        self.pattern = pattern
-        self.tstamp = tstamp
-        # Prevent recursion
-        if self.tstamp is None:
-            self.get_todays_date()
-        else:
-            self.get_instance()
-
     def add_days(self, days_delta):
         f = '[shared] time.Time.add_days'
         if not self.Success:
             rep.cancel(f)
             return
         try:
-            self.inst = self.get_instance() \
-                      + datetime.timedelta(days=days_delta)
+            self.inst += datetime.timedelta(days_delta)
         except Exception as e:
             self.fail(f, e)
 
@@ -70,47 +58,23 @@ class Time:
             rep.cancel(f)
             return
         try:
-            self.date = self.get_instance().strftime(self.pattern)
+            return self.inst.strftime(self.pattern)
         except Exception as e:
             self.fail(f, e)
-        return self.date
 
-    def get_instance(self):
-        f = '[shared] time.Time.get_instance'
+    def set_instance(self):
+        f = '[shared] time.Time.set_instance'
+        if self.tstamp is None:
+            self.set_todays_date()
         if not self.Success:
             rep.cancel(f)
             return
-        if self.inst is None:
-            if self.tstamp is None:
-                self.get_timestamp()
-            try:
-                self.inst = datetime.datetime.fromtimestamp(self.tstamp)
-            except Exception as e:
-                self.fail(f, e)
-        return self.inst
-
-    def get_timestamp(self):
-        f = '[shared] time.Time.get_timestamp'
-        if not self.Success:
-            rep.cancel(f)
+        if self.inst is not None:
             return
-        if not self.date:
-            self.get_date()
         try:
-            self.tstamp = time.mktime(datetime.datetime.strptime(self.date, self.pattern).timetuple())
+            self.inst = datetime.datetime.fromtimestamp(self.tstamp)
         except Exception as e:
             self.fail(f, e)
-        return self.tstamp
-
-    def is_monday(self):
-        f = '[shared] time.Time.is_monday'
-        if not self.Success:
-            rep.cancel(f)
-            return
-        if not self.inst:
-            self.get_instance()
-        if datetime.datetime.weekday(self.inst) == 0:
-            return True
 
     def get_month_name(self):
         # Month name in English
@@ -118,38 +82,35 @@ class Time:
         if not self.Success:
             rep.cancel(f)
             return
-        if not self.inst:
-            self.get_instance()
         month_int = Text(self.inst.strftime("%m")).str2int()
-        self.month_name = calendar.month_name[month_int]
-        return self.month_name
+        return calendar.month_name[month_int]
     
     def get_month_abbr(self):
         f = '[shared] time.Time.get_month_abbr'
         if not self.Success:
             rep.cancel(f)
             return
-        if not self.inst:
-            self.get_instance()
         month_int = Text(self.inst.strftime("%m")).str2int()
-        self.month_abbr = calendar.month_abbr[month_int]
-        return self.month_abbr
+        return calendar.month_abbr[month_int]
 
-    def get_todays_date(self):
+    def set_todays_date(self):
+        f = '[shared] time.Time.set_todays_date'
         self.inst = datetime.datetime.today()
+        date = self.get_date()
+        if not self.Success:
+            rep.cancel(f)
+            return
+        try:
+            self.tstamp = time.mktime(datetime.datetime.strptime(date, self.pattern).timetuple())
+        except Exception as e:
+            self.fail(f, e)
 
     def get_year(self):
         f = '[shared] time.Time.get_year'
         if not self.Success:
             rep.cancel(f)
             return
-        if not self.inst:
-            self.get_instance()
         try:
-            self.year = self.inst.strftime("%Y")
+            return self.inst.strftime("%Y")
         except Exception as e:
             self.fail(f, e)
-        return self.year
-
-
-TIME = Time()
