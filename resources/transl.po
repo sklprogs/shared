@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-23 03:42+0300\n"
-"PO-Revision-Date: 2025-06-23 03:43+0300\n"
+"POT-Creation-Date: 2025-06-23 03:55+0300\n"
+"PO-Revision-Date: 2025-06-23 03:56+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -109,6 +109,34 @@ msgstr "дек"
 #: _translations.py:28
 msgid "December"
 msgstr "Декабрь"
+
+#: _translations.py:29
+msgid "Monday"
+msgstr "Понедельник"
+
+#: _translations.py:30
+msgid "Tuesday"
+msgstr "Вторник"
+
+#: _translations.py:31
+msgid "Wednesday"
+msgstr "Среда"
+
+#: _translations.py:32
+msgid "Thursday"
+msgstr "Четверг"
+
+#: _translations.py:33
+msgid "Friday"
+msgstr "Пятница"
+
+#: _translations.py:34
+msgid "Saturday"
+msgstr "Суббота"
+
+#: _translations.py:35
+msgid "Sunday"
+msgstr "Воскресенье"
 
 #: config.py:47
 msgid ""
@@ -702,12 +730,10 @@ msgid "Copy {}"
 msgstr "Копирование {}"
 
 #: test.py:1043
-#| msgid "Patterns: %s"
 msgid "Pattern: {}"
 msgstr "Образец: {}"
 
 #: test.py:1045
-#| msgid "File name: {}"
 msgid "Timestamp: {}"
 msgstr "Метка времени: {}"
 
@@ -727,7 +753,17 @@ msgstr "Название месяца: {}"
 msgid "Month abbreviation: {}"
 msgstr "Аббревиатура месяца: {}"
 
-#: test.py:1058 test.py:1062
+#: test.py:1055
+#| msgid "Date: {}"
+msgid "Day number: {}"
+msgstr "Номер дня: {}"
+
+#: test.py:1057
+#| msgid "File name: {}"
+msgid "Day name: {}"
+msgstr "Название дня: {}"
+
+#: test.py:1062 test.py:1066
 msgid "Set days delta to {}"
 msgstr "Установка разницы в днях в {}"
 
