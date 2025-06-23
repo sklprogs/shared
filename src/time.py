@@ -139,6 +139,40 @@ class Time:
             return
         month_int = Text(self.inst.strftime("%m")).str2int()
         return _(calendar.month_abbr[month_int])
+    
+    def get_month_gen(self):
+        f = '[shared] time.Time.get_month_gen'
+        month = self.get_month_name()
+        if not self.Success:
+            rep.cancel(f)
+            return
+        match month:
+            case 'Январь':
+                return 'января'
+            case 'Февраль':
+                return 'февраля'
+            case 'Март':
+                return 'марта'
+            case 'Апрель':
+                return 'апреля'
+            case 'Май':
+                return 'мая'
+            case 'Июнь':
+                return 'июня'
+            case 'Июль':
+                return 'июля'
+            case 'Август':
+                return 'августа'
+            case 'Сентябрь':
+                return 'сентября'
+            case 'Октябрь':
+                return 'октября'
+            case 'Ноябрь':
+                return 'ноября'
+            case 'Декабрь':
+                return 'декабря'
+            case other:
+                return other
 
     def set_todays_date(self):
         f = '[shared] time.Time.set_todays_date'
