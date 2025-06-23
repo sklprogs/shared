@@ -1062,6 +1062,8 @@ class Time:
         ms.Message(f, mes).show_debug()
         mes = _('Localized two-letter day abbreviation: {}').format(self.itime.get_day_abbr2())
         ms.Message(f, mes).show_debug()
+        mes = _('Long date (genitive): {}').format(self.itime.get_date_gen())
+        ms.Message(f, mes).show_debug()
     
     def add_days(self):
         f = '[shared] test.Time.add_days'

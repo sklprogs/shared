@@ -36,6 +36,16 @@ class Time:
         self.tstamp = tstamp
         self.set_instance()
     
+    def get_date_gen(self):
+        f = '[shared] time.Time.get_date_gen'
+        day = self.get_day()
+        month = self.get_month_gen()
+        year = self.get_year()
+        if not self.Success:
+            rep.cancel(f)
+            return
+        return f'{day} {month} {year}'
+    
     def fail(self, f, e):
         self.Success = False
         mes = _('Set time parameters are incorrect or not supported.\n\nDetails: {}')
