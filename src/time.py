@@ -85,6 +85,23 @@ class Time:
         month_int = Text(self.inst.strftime("%m")).str2int()
         return calendar.month_name[month_int]
     
+    def get_day(self):
+        f = '[shared] time.Time.get_day'
+        if not self.Success:
+            rep.cancel(f)
+            return
+        return Text(self.inst.strftime("%d")).str2int()
+    
+    def get_day_name(self):
+        f = '[shared] time.Time.get_day_name'
+        if not self.Success:
+            rep.cancel(f)
+            return
+        try:
+            return _(self.inst.strftime('%A'))
+        except Exception as e:
+            self.fail(f, e)
+    
     def get_month_abbr(self):
         f = '[shared] time.Time.get_month_abbr'
         if not self.Success:

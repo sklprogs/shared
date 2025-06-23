@@ -1052,6 +1052,10 @@ class Time:
         ms.Message(f, mes).show_debug()
         mes = _('Month abbreviation: {}').format(self.itime.get_month_abbr())
         ms.Message(f, mes).show_debug()
+        mes = _('Day number: {}').format(self.itime.get_day())
+        ms.Message(f, mes).show_debug()
+        mes = _('Day name: {}').format(self.itime.get_day_name())
+        ms.Message(f, mes).show_debug()
     
     def add_days(self):
         f = '[shared] test.Time.add_days'
