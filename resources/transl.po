@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-23 04:02+0300\n"
-"PO-Revision-Date: 2025-06-23 04:05+0300\n"
+"POT-Creation-Date: 2025-06-23 04:27+0300\n"
+"PO-Revision-Date: 2025-06-23 04:29+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -138,11 +138,11 @@ msgstr "Суббота"
 msgid "Sunday"
 msgstr "Воскресенье"
 
-#: _translations.py:36
+#: _translations.py:36 time.py:122
 msgid "Mon"
 msgstr "Пон"
 
-#: _translations.py:37
+#: _translations.py:37 time.py:124
 msgid "Tue"
 msgstr "Втр"
 
@@ -150,21 +150,49 @@ msgstr "Втр"
 msgid "Wed"
 msgstr "Срд"
 
-#: _translations.py:39
+#: _translations.py:39 time.py:126
 msgid "Thu"
 msgstr "Чтв"
 
-#: _translations.py:40
+#: _translations.py:40 time.py:128
 msgid "Fri"
 msgstr "Птн"
 
-#: _translations.py:41
+#: _translations.py:41 time.py:130
 msgid "Sat"
 msgstr "Сбт"
 
-#: _translations.py:42
+#: _translations.py:42 time.py:132
 msgid "Sun"
 msgstr "Вск"
+
+#: _translations.py:43 time.py:123
+msgid "Mo"
+msgstr "Пн"
+
+#: _translations.py:44 time.py:125
+msgid "Tu"
+msgstr "Вт"
+
+#: _translations.py:45
+msgid "We"
+msgstr "Ср"
+
+#: _translations.py:46 time.py:127
+msgid "Th"
+msgstr "Чт"
+
+#: _translations.py:47 time.py:129
+msgid "Fr"
+msgstr "Пт"
+
+#: _translations.py:48 time.py:131
+msgid "Sa"
+msgstr "Сб"
+
+#: _translations.py:49 time.py:133
+msgid "Su"
+msgstr "Вс"
 
 #: config.py:47
 msgid ""
@@ -774,26 +802,30 @@ msgid "Year: {}"
 msgstr "Год: {}"
 
 #: test.py:1051
-msgid "Month name: {}"
-msgstr "Название месяца: {}"
+msgid "Localized month name: {}"
+msgstr "Локализованное название месяца: {}"
 
 #: test.py:1053
-msgid "Month abbreviation: {}"
-msgstr "Аббревиатура месяца: {}"
+msgid "Localized month abbreviation: {}"
+msgstr "Локализованная аббревиатура месяца: {}"
 
 #: test.py:1055
 msgid "Day number: {}"
 msgstr "Номер дня: {}"
 
 #: test.py:1057
-msgid "Day name: {}"
-msgstr "Название дня: {}"
+msgid "Localized day name: {}"
+msgstr "Локализованное название дня: {}"
 
 #: test.py:1059
-msgid "Day abbreviation: {}"
-msgstr "Аббревиатура дня: {}"
+msgid "Localized three-letter day abbreviation: {}"
+msgstr "Локализованная 3х-буквенная аббревиатура дня: {}"
 
-#: test.py:1064 test.py:1068
+#: test.py:1061
+msgid "Localized two-letter day abbreviation: {}"
+msgstr "Локализованная 2х-буквенная аббревиатура дня: {}"
+
+#: test.py:1066 test.py:1070
 msgid "Set days delta to {}"
 msgstr "Установка разницы в днях в {}"
 
