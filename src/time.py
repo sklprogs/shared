@@ -102,6 +102,7 @@ class Time:
             self.fail(f, e)
     
     def get_day_abbr(self):
+        # Get localized three-letter day abbreviation
         f = '[shared] time.Time.get_day_abbr'
         if not self.Success:
             rep.cancel(f)
@@ -110,6 +111,26 @@ class Time:
             return _(self.inst.strftime('%a'))
         except Exception as e:
             self.fail(f, e)
+    
+    def get_day_abbr2(self):
+        # Get localized two-letter day abbreviation
+        f = '[shared] time.Time.get_day_abbr2'
+        day = self.get_day_abbr()
+        if not self.Success:
+            rep.cancel(f)
+            return
+        if day == _('Mon'):
+            return _('Mo')
+        if day == _('Tue'):
+            return _('Tu')
+        if day == _('Thu'):
+            return _('Th')
+        if day == _('Fri'):
+            return _('Fr')
+        if day == _('Sat'):
+            return _('Sa')
+        if day == _('Sun'):
+            return _('Su')
     
     def get_month_abbr(self):
         f = '[shared] time.Time.get_month_abbr'
