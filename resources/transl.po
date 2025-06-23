@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-23 04:27+0300\n"
-"PO-Revision-Date: 2025-06-23 04:29+0300\n"
+"POT-Creation-Date: 2025-06-24 00:28+0300\n"
+"PO-Revision-Date: 2025-06-24 00:28+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -806,26 +806,30 @@ msgid "Localized month name: {}"
 msgstr "Локализованное название месяца: {}"
 
 #: test.py:1053
+msgid "Month name (genitive): {}"
+msgstr "Название месяца (родительный падеж): {}"
+
+#: test.py:1055
 msgid "Localized month abbreviation: {}"
 msgstr "Локализованная аббревиатура месяца: {}"
 
-#: test.py:1055
+#: test.py:1057
 msgid "Day number: {}"
 msgstr "Номер дня: {}"
 
-#: test.py:1057
+#: test.py:1059
 msgid "Localized day name: {}"
 msgstr "Локализованное название дня: {}"
 
-#: test.py:1059
+#: test.py:1061
 msgid "Localized three-letter day abbreviation: {}"
 msgstr "Локализованная 3х-буквенная аббревиатура дня: {}"
 
-#: test.py:1061
+#: test.py:1063
 msgid "Localized two-letter day abbreviation: {}"
 msgstr "Локализованная 2х-буквенная аббревиатура дня: {}"
 
-#: test.py:1066 test.py:1070
+#: test.py:1068 test.py:1072
 msgid "Set days delta to {}"
 msgstr "Установка разницы в днях в {}"
 

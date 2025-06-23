@@ -1050,7 +1050,7 @@ class Time:
         ms.Message(f, mes).show_debug()
         mes = _('Localized month name: {}').format(self.itime.get_month_name())
         ms.Message(f, mes).show_debug()
-        mes = _('Month name (genetive): {}').format(self.itime.get_month_gen())
+        mes = _('Month name (genitive): {}').format(self.itime.get_month_gen())
         ms.Message(f, mes).show_debug()
         mes = _('Localized month abbreviation: {}').format(self.itime.get_month_abbr())
         ms.Message(f, mes).show_debug()
