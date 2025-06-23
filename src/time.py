@@ -66,11 +66,12 @@ class Time:
         f = '[shared] time.Time.get_date'
         if not self.Success:
             rep.cancel(f)
-            return
+            return ''
         try:
             return self.inst.strftime(self.pattern)
         except Exception as e:
             self.fail(f, e)
+        return ''
 
     def set_instance(self):
         f = '[shared] time.Time.set_instance'
@@ -78,8 +79,6 @@ class Time:
             self.set_todays_date()
         if not self.Success:
             rep.cancel(f)
-            return
-        if self.inst is not None:
             return
         try:
             self.inst = datetime.datetime.fromtimestamp(self.tstamp)
@@ -90,7 +89,7 @@ class Time:
         f = '[shared] time.Time.get_month_name'
         if not self.Success:
             rep.cancel(f)
-            return
+            return ''
         month_int = Text(self.inst.strftime("%m")).str2int()
         return _(calendar.month_name[month_int])
     
@@ -98,29 +97,31 @@ class Time:
         f = '[shared] time.Time.get_day'
         if not self.Success:
             rep.cancel(f)
-            return
+            return 0
         return Text(self.inst.strftime("%d")).str2int()
     
     def get_day_name(self):
         f = '[shared] time.Time.get_day_name'
         if not self.Success:
             rep.cancel(f)
-            return
+            return ''
         try:
             return _(self.inst.strftime('%A'))
         except Exception as e:
             self.fail(f, e)
+        return ''
     
     def get_day_abbr(self):
         # Get localized three-letter day abbreviation
         f = '[shared] time.Time.get_day_abbr'
         if not self.Success:
             rep.cancel(f)
-            return
+            return ''
         try:
             return _(self.inst.strftime('%a'))
         except Exception as e:
             self.fail(f, e)
+        return ''
     
     def get_day_abbr2(self):
         # Get localized two-letter day abbreviation
@@ -128,7 +129,7 @@ class Time:
         day = self.get_day_abbr()
         if not self.Success:
             rep.cancel(f)
-            return
+            return ''
         if day == _('Mon'):
             return _('Mo')
         if day == _('Tue'):
@@ -141,12 +142,13 @@ class Time:
             return _('Sa')
         if day == _('Sun'):
             return _('Su')
+        return ''
     
     def get_month_abbr(self):
         f = '[shared] time.Time.get_month_abbr'
         if not self.Success:
             rep.cancel(f)
-            return
+            return ''
         month_int = Text(self.inst.strftime("%m")).str2int()
         return _(calendar.month_abbr[month_int])
     
@@ -155,7 +157,7 @@ class Time:
         month = self.get_month_name()
         if not self.Success:
             rep.cancel(f)
-            return
+            return ''
         match month:
             case 'Январь':
                 return 'января'
@@ -195,6 +197,17 @@ class Time:
             self.tstamp = time.mktime(datetime.datetime.strptime(date, self.pattern).timetuple())
         except Exception as e:
             self.fail(f, e)
+    
+    def set_date(self, date):
+        f = '[shared] time.Time.set_date'
+        if not self.Success:
+            rep.cancel(f)
+            return
+        try:
+            self.tstamp = time.mktime(datetime.datetime.strptime(date, self.pattern).timetuple())
+        except Exception as e:
+            self.fail(f, e)
+        self.set_instance()
 
     def get_year(self):
         f = '[shared] time.Time.get_year'
