@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-24 00:28+0300\n"
-"PO-Revision-Date: 2025-06-24 00:28+0300\n"
+"POT-Creation-Date: 2025-06-24 00:37+0300\n"
+"PO-Revision-Date: 2025-06-24 00:38+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -138,11 +138,11 @@ msgstr "Суббота"
 msgid "Sunday"
 msgstr "Воскресенье"
 
-#: _translations.py:36 time.py:122
+#: _translations.py:36 time.py:132
 msgid "Mon"
 msgstr "Пон"
 
-#: _translations.py:37 time.py:124
+#: _translations.py:37 time.py:134
 msgid "Tue"
 msgstr "Втр"
 
@@ -150,27 +150,27 @@ msgstr "Втр"
 msgid "Wed"
 msgstr "Срд"
 
-#: _translations.py:39 time.py:126
+#: _translations.py:39 time.py:136
 msgid "Thu"
 msgstr "Чтв"
 
-#: _translations.py:40 time.py:128
+#: _translations.py:40 time.py:138
 msgid "Fri"
 msgstr "Птн"
 
-#: _translations.py:41 time.py:130
+#: _translations.py:41 time.py:140
 msgid "Sat"
 msgstr "Сбт"
 
-#: _translations.py:42 time.py:132
+#: _translations.py:42 time.py:142
 msgid "Sun"
 msgstr "Вск"
 
-#: _translations.py:43 time.py:123
+#: _translations.py:43 time.py:133
 msgid "Mo"
 msgstr "Пн"
 
-#: _translations.py:44 time.py:125
+#: _translations.py:44 time.py:135
 msgid "Tu"
 msgstr "Вт"
 
@@ -178,19 +178,19 @@ msgstr "Вт"
 msgid "We"
 msgstr "Ср"
 
-#: _translations.py:46 time.py:127
+#: _translations.py:46 time.py:137
 msgid "Th"
 msgstr "Чт"
 
-#: _translations.py:47 time.py:129
+#: _translations.py:47 time.py:139
 msgid "Fr"
 msgstr "Пт"
 
-#: _translations.py:48 time.py:131
+#: _translations.py:48 time.py:141
 msgid "Sa"
 msgstr "Сб"
 
-#: _translations.py:49 time.py:133
+#: _translations.py:49 time.py:143
 msgid "Su"
 msgstr "Вс"
 
@@ -829,7 +829,11 @@ msgstr "Локализованная 3х-буквенная аббревиату
 msgid "Localized two-letter day abbreviation: {}"
 msgstr "Локализованная 2х-буквенная аббревиатура дня: {}"
 
-#: test.py:1068 test.py:1072
+#: test.py:1065
+msgid "Long date (genitive): {}"
+msgstr "Полная дата (родительный падеж): {}"
+
+#: test.py:1070 test.py:1074
 msgid "Set days delta to {}"
 msgstr "Установка разницы в днях в {}"
 
@@ -857,7 +861,7 @@ msgstr "Не удается записать файл \"{}\"!"
 msgid "The operation has taken {} s."
 msgstr "Операция завершена за {} с."
 
-#: time.py:41
+#: time.py:51
 msgid ""
 "Set time parameters are incorrect or not supported.\n"
 "\n"
