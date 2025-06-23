@@ -77,13 +77,12 @@ class Time:
             self.fail(f, e)
 
     def get_month_name(self):
-        # Month name in English
         f = '[shared] time.Time.get_month_name'
         if not self.Success:
             rep.cancel(f)
             return
         month_int = Text(self.inst.strftime("%m")).str2int()
-        return calendar.month_name[month_int]
+        return _(calendar.month_name[month_int])
     
     def get_day(self):
         f = '[shared] time.Time.get_day'
@@ -102,13 +101,23 @@ class Time:
         except Exception as e:
             self.fail(f, e)
     
+    def get_day_abbr(self):
+        f = '[shared] time.Time.get_day_abbr'
+        if not self.Success:
+            rep.cancel(f)
+            return
+        try:
+            return _(self.inst.strftime('%a'))
+        except Exception as e:
+            self.fail(f, e)
+    
     def get_month_abbr(self):
         f = '[shared] time.Time.get_month_abbr'
         if not self.Success:
             rep.cancel(f)
             return
         month_int = Text(self.inst.strftime("%m")).str2int()
-        return calendar.month_abbr[month_int]
+        return _(calendar.month_abbr[month_int])
 
     def set_todays_date(self):
         f = '[shared] time.Time.set_todays_date'
