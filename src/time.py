@@ -43,7 +43,7 @@ class Time:
         year = self.get_year()
         if not self.Success:
             rep.cancel(f)
-            return
+            return ''
         return f'{day} {month} {year}'
     
     def fail(self, f, e):
