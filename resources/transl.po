@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: shared\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-09 00:09+0300\n"
-"PO-Revision-Date: 2025-06-09 00:09+0300\n"
+"POT-Creation-Date: 2025-06-23 03:42+0300\n"
+"PO-Revision-Date: 2025-06-23 03:43+0300\n"
 "Last-Translator: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language-Team: Peter Sklyar <skl.progs@gmail.com>\n"
 "Language: ru_RU\n"
@@ -210,7 +210,7 @@ msgstr ""
 "Детали: {}"
 
 #: graphics/font/logic.py:62 list.py:30 logic.py:504 logic.py:622
-#: message/controller.py:31 paths.py:27 paths.py:413
+#: message/controller.py:31 paths.py:27 paths.py:416
 msgid "Wrong input data: \"{}\"!"
 msgstr "Недопустимые входные данные: \"{}\"!"
 
@@ -367,7 +367,7 @@ msgstr "Операция отменена."
 msgid "Wrong input data!"
 msgstr "Недопустимые входные данные!"
 
-#: message/controller.py:37 paths.py:239 text_file.py:30
+#: message/controller.py:37 paths.py:242 text_file.py:30
 msgid "Empty input is not allowed!"
 msgstr "Пустые входные данные не допускаются!"
 
@@ -458,8 +458,8 @@ msgstr "Не удалось загрузить почтовый клиент."
 msgid "This operation cannot be executed on your operating system."
 msgstr "Эта операция не может быть выполнена на вашей операционной системе."
 
-#: online.py:164 paths.py:34 paths.py:267 paths.py:465 paths.py:488
-#: paths.py:575 text_file.py:51
+#: online.py:164 paths.py:34 paths.py:270 paths.py:468 paths.py:491
+#: paths.py:578 text_file.py:51
 msgid ""
 "Operation has failed!\n"
 "Details: {}"
@@ -467,7 +467,7 @@ msgstr ""
 "Операция завершилась с ошибкой!\n"
 "Подробности: {}"
 
-#: paths.py:62 paths.py:638
+#: paths.py:62 paths.py:641
 msgid "Directory \"{}\" already exists."
 msgstr "Каталог \"{}\" уже существует."
 
@@ -483,27 +483,27 @@ msgstr "Создание каталога \"{}\""
 msgid "Failed to create directory \"{}\"!"
 msgstr "Не удается создать каталог \"{}\"!"
 
-#: paths.py:243 text_file.py:35
+#: paths.py:246 text_file.py:35
 msgid "File \"{}\" has not been found!"
 msgstr "Файл \"{}\" не найден!"
 
-#: paths.py:247 text_file.py:40
+#: paths.py:250 text_file.py:40
 msgid "The object \"{}\" is not a file!"
 msgstr "Объект \"{}\" не является файлом!"
 
-#: paths.py:274 paths.py:646
+#: paths.py:277 paths.py:649
 msgid "Copy \"{}\" to \"{}\""
 msgstr "Копирование \"{}\" в \"{}\""
 
-#: paths.py:280
+#: paths.py:283
 msgid "Failed to copy file \"{}\" to \"{}\"!"
 msgstr "Не удалось скопировать файл \"{}\" в \"{}\"!"
 
-#: paths.py:288 paths.py:419
+#: paths.py:291 paths.py:422
 msgid "Move \"{}\" to \"{}\""
 msgstr "Перемещение \"{}\" в \"{}\""
 
-#: paths.py:294 paths.py:425
+#: paths.py:297 paths.py:428
 msgid ""
 "Failed to move \"{}\" to \"{}\"!\n"
 "\n"
@@ -513,27 +513,27 @@ msgstr ""
 "\n"
 "Подробности: {}"
 
-#: paths.py:309 paths.py:353
+#: paths.py:312 paths.py:356
 msgid "Failed to get the date of the file \"{}\"!"
 msgstr "Не удалось определить дату файла \"{}\"!"
 
-#: paths.py:320
+#: paths.py:323
 msgid "Unable to copy the file \"{}\" to itself!"
 msgstr "Нельзя скопировать файл \"{}\" сам в себя!"
 
-#: paths.py:325 paths.py:370 text_file.py:189
+#: paths.py:328 paths.py:373 text_file.py:189
 msgid "Operation has been canceled by the user."
 msgstr "Операция отменена пользователем."
 
-#: paths.py:334 paths.py:542
+#: paths.py:337 paths.py:545
 msgid "Delete \"{}\""
 msgstr "Удаление \"{}\""
 
-#: paths.py:340
+#: paths.py:343
 msgid "Failed to delete file \"{}\"!"
 msgstr "Не удается удалить файл \"{}\"!"
 
-#: paths.py:364 paths.py:441
+#: paths.py:367 paths.py:444
 msgid ""
 "Moving is not necessary, because the source and destination are identical "
 "({})."
@@ -541,27 +541,27 @@ msgstr ""
 "Перемещение не требуется, поскольку на входе и выходе указан один и тот же "
 "объект ({})."
 
-#: paths.py:381
+#: paths.py:384
 msgid "Change the time of the file \"{}\" to {}"
 msgstr "Изменение времени файла \"{}\" на {}"
 
-#: paths.py:387
+#: paths.py:390
 msgid "Failed to change the time of the file \"{}\" to \"{}\"!"
 msgstr "Не удалось изменить время файла \"{}\" на \"{}\"!"
 
-#: paths.py:437
+#: paths.py:440
 msgid "Path \"{}\" already exists!"
 msgstr "Путь \"{}\" уже существует!"
 
-#: paths.py:548
+#: paths.py:551
 msgid "Failed to delete directory \"{}\"! Delete it manually."
 msgstr "Не удается удалить каталог \"{}\"! Удалите его вручную."
 
-#: paths.py:635
+#: paths.py:638
 msgid "Unable to copy \"{}\" to itself!"
 msgstr "Нельзя скопировать \"{}\" сам в себя!"
 
-#: paths.py:652
+#: paths.py:655
 msgid "Failed to copy \"{}\" to \"{}\"!"
 msgstr "Не удалось скопировать \"{}\" в \"{}\"!"
 
@@ -622,9 +622,9 @@ msgstr "Вставленный текст: \"{}\""
 #: test.py:275 test.py:281 test.py:287 test.py:299 test.py:449 test.py:458
 #: test.py:465 test.py:499 test.py:507 test.py:514 test.py:520 test.py:525
 #: test.py:546 test.py:552 test.py:599 test.py:606 test.py:657 test.py:663
-#: test.py:835 test.py:841 test.py:847 test.py:872 test.py:880 test.py:903
-#: test.py:935 test.py:942 test.py:947 test.py:952 test.py:957 test.py:962
-#: test.py:969 test.py:994 test.py:1019 test.py:1025 test.py:1036
+#: test.py:799 test.py:805 test.py:811 test.py:836 test.py:844 test.py:867
+#: test.py:899 test.py:906 test.py:911 test.py:916 test.py:921 test.py:926
+#: test.py:933 test.py:958 test.py:983 test.py:989 test.py:1000
 msgid "Start {}"
 msgstr "Запуск {}"
 
@@ -665,53 +665,71 @@ msgstr "Тема сообщения"
 msgid "Message Body"
 msgstr "Тело сообщения"
 
-#: test.py:727
-msgid "Current month: {}"
-msgstr "Текущий месяц: {}"
-
-#: test.py:733
-msgid "Current date: {}"
-msgstr "Текущая дата: {}"
-
-#: test.py:740
-msgid "Tomorrow’s date: {}"
-msgstr "Завтрашняя дата: {}"
-
-#: test.py:764
+#: test.py:728
 msgid "#"
 msgstr "№"
 
-#: test.py:764
+#: test.py:728
 msgid "FILE"
 msgstr "ФАЙЛ"
 
-#: test.py:821
+#: test.py:785
 msgid "Full path: {}"
 msgstr "Полный путь: {}"
 
-#: test.py:824
+#: test.py:788
 msgid "Directory: {}"
 msgstr "Каталог: {}"
 
-#: test.py:827
+#: test.py:791
 msgid "File name: {}"
 msgstr "Имя файла: {}"
 
-#: test.py:830
+#: test.py:794
 msgid "File name without extension: {}"
 msgstr "Имя файла без расширения: {}"
 
-#: test.py:963
+#: test.py:927
 msgid "Please answer No here."
 msgstr "Пожалуйста, ответьте тут Нет."
 
-#: test.py:970
+#: test.py:934
 msgid "Please answer Yes here."
 msgstr "Пожалуйста, ответьте тут Да."
 
-#: test.py:1049
+#: test.py:1013
 msgid "Copy {}"
 msgstr "Копирование {}"
+
+#: test.py:1043
+#| msgid "Patterns: %s"
+msgid "Pattern: {}"
+msgstr "Образец: {}"
+
+#: test.py:1045
+#| msgid "File name: {}"
+msgid "Timestamp: {}"
+msgstr "Метка времени: {}"
+
+#: test.py:1047
+msgid "Date: {}"
+msgstr "Дата: {}"
+
+#: test.py:1049
+msgid "Year: {}"
+msgstr "Год: {}"
+
+#: test.py:1051
+msgid "Month name: {}"
+msgstr "Название месяца: {}"
+
+#: test.py:1053
+msgid "Month abbreviation: {}"
+msgstr "Аббревиатура месяца: {}"
+
+#: test.py:1058 test.py:1062
+msgid "Set days delta to {}"
+msgstr "Установка разницы в днях в {}"
 
 #: text_file.py:94
 msgid "Load file \"{}\""
@@ -737,7 +755,7 @@ msgstr "Не удается записать файл \"{}\"!"
 msgid "The operation has taken {} s."
 msgstr "Операция завершена за {} с."
 
-#: time.py:37
+#: time.py:41
 msgid ""
 "Set time parameters are incorrect or not supported.\n"
 "\n"
@@ -746,6 +764,15 @@ msgstr ""
 "Заданные параметры времени неверны или не поддерживаются.\n"
 "\n"
 "Подробности: {}"
+
+#~ msgid "Current month: {}"
+#~ msgstr "Текущий месяц: {}"
+
+#~ msgid "Current date: {}"
+#~ msgstr "Текущая дата: {}"
+
+#~ msgid "Tomorrow’s date: {}"
+#~ msgstr "Завтрашняя дата: {}"
 
 #~ msgid "Booleans"
 #~ msgstr "Булевы переменные"
@@ -1402,9 +1429,6 @@ msgstr ""
 
 #~ msgid "Enter a channel URL, one URL per a line:"
 #~ msgstr "Введите адрес канала, по одному URL на строку:"
-
-#~ msgid "Patterns: %s"
-#~ msgstr "Примеры: %s"
 
 #~ msgid "Manage blacklist"
 #~ msgstr "Управление черным списком"
