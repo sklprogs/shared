@@ -61,6 +61,7 @@ class Time:
             self.inst += datetime.timedelta(days_delta)
         except Exception as e:
             self.fail(f, e)
+        self.update_stamp()
 
     def get_date(self):
         f = '[shared] time.Time.get_date'
@@ -186,9 +187,9 @@ class Time:
             case other:
                 return other
 
-    def set_todays_date(self):
-        f = '[shared] time.Time.set_todays_date'
-        self.inst = datetime.datetime.today()
+    def update_stamp(self):
+        # Update timestamp after changing self.inst
+        f = '[shared] time.Time.update_stamp'
         date = self.get_date()
         if not self.Success:
             rep.cancel(f)
@@ -197,6 +198,10 @@ class Time:
             self.tstamp = time.mktime(datetime.datetime.strptime(date, self.pattern).timetuple())
         except Exception as e:
             self.fail(f, e)
+    
+    def set_todays_date(self):
+        self.inst = datetime.datetime.today()
+        self.update_stamp()
     
     def set_date(self, date):
         f = '[shared] time.Time.set_date'
