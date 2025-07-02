@@ -19,6 +19,9 @@ class ProgressBar:
         info = Shorten(info, 34).run()
         self.gui.set_info(info)
     
+    def get_value(self):
+        return self.gui.get_value()
+    
     def set_value(self, value):
         if value > self.gui.get_max():
             value = self.gui.get_max()
@@ -27,6 +30,9 @@ class ProgressBar:
     def inc(self):
         value = self.gui.get_value() + 1
         self.set_value(value)
+    
+    def get_max(self):
+        return self.gui.get_max()
     
     def set_max(self, value):
         f = '[shared] graphics.progress_bar.controller.ProgressBar.set_max'
