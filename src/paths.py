@@ -218,7 +218,7 @@ class Home:
 
 class File:
 
-    def __init__(self, file, dest=None, Rewrite=False):
+    def __init__(self, file, dest=None, Rewrite=False, Graphical=True):
         f = '[shared] paths.File.__init__'
         self.Success = True
         self.Rewrite = Rewrite
@@ -240,15 +240,15 @@ class File:
         elif not self.file:
             self.Success = False
             mes = _('Empty input is not allowed!')
-            Message(f, mes, True).show_warning()
+            Message(f, mes, Graphical).show_warning()
         elif not os.path.exists(self.file):
             self.Success = False
             mes = _('File "{}" has not been found!').format(self.file)
-            Message(f, mes, True).show_warning()
+            Message(f, mes, Graphical).show_warning()
         else:
             self.Success = False
             mes = _('The object "{}" is not a file!').format(self.file)
-            Message(f, mes, True).show_warning()
+            Message(f, mes, Graphical).show_warning()
 
     def get_size(self, Follow=True):
         f = '[shared] paths.File.get_size'
