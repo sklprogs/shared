@@ -56,9 +56,9 @@ class Report:
         mes = _('Third-party module has failed!\n\nDetails: {}').format(message)
         Message(func, mes, True).show_error()
     
-    def condition(self, func=_('Logic error!'), message=_('Logic error!')):
+    def condition(self, func=_('Logic error!'), message=_('Logic error!'), Graphical=True):
         message = _('The condition "{}" is not observed!').format(message)
-        Message(func, message, True).show_warning()
+        Message(func, message, Graphical).show_warning()
 
 
 
