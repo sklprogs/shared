@@ -106,7 +106,7 @@ class Input:
             # Too frequent, almost useless
             #mes = _('Convert "{}" to an integer').format(self.value)
             #Message(self.title, mes).show_debug()
-        elif Negative and re.match('-\d+$', self.value):
+        elif Negative and re.match(r'-\d+$', self.value):
             ''' 'isinstance' will detect negative integers too, however, we can
                 also have a string at input.
             '''
