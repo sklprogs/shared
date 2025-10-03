@@ -15,8 +15,8 @@ class ProgressBar:
     def set_title(self, title=_('Progress:')):
         self.gui.set_title(title)
     
-    def set_info(self, info):
-        info = Shorten(info, 34).run()
+    def set_info(self, info, limit=34):
+        info = Shorten(info, limit).run()
         self.gui.set_info(info)
     
     def get_value(self):
