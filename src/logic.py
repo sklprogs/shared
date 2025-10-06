@@ -10,6 +10,7 @@ import sys
 import locale
 from skl_shared.localize import _
 from skl_shared.message.controller import Message, rep
+from skl_shared.basic_text import Shorten
 
 
 gpl3_url_en = 'http://www.gnu.org/licenses/gpl.html'
@@ -34,9 +35,9 @@ punc_array = ['.', ',', '!', '?', ':', ';']
 punc_ext_array = ['"', '“', '”', '', '«', '»', '[', ']', '{', '}', '(', ')'
                  ,'’', "'", '*']
 
-forbidden_win = '/\?%*:|"<>'
-forbidden_lin = '/'
-forbidden_mac = '/\?*:|"<>'
+forbidden_win = r'/\?%*:|"<>'
+forbidden_lin = r'/'
+forbidden_mac = r'/\?*:|"<>'
 reserved_win = ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4'
                ,'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3'
                ,'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
@@ -185,9 +186,9 @@ class Text:
         return [self.text[i:i+len_] for i in range(0, len(self.text), len_)]
     
     def delete_embraced_figs(self):
-        self.text = re.sub('\s\(\d+\)', '', self.text)
-        self.text = re.sub('\s\[\d+\]', '', self.text)
-        self.text = re.sub('\s\{\d+\}', '', self.text)
+        self.text = re.sub(r'\s\(\d+\)', '', self.text)
+        self.text = re.sub(r'\s\[\d+\]', '', self.text)
+        self.text = re.sub(r'\s\{\d+\}', '', self.text)
         return self.text
     
     def replace_sim_syms(self):
@@ -195,11 +196,9 @@ class Text:
             useful for English words in mostly Russian text.
         '''
         sim_cyr = ('А', 'В', 'Е', 'К', 'Н', 'О', 'Р', 'С', 'Т', 'Х', 'а', 'е'
-                  ,'о', 'р', 'с', 'у', 'х'
-                  )
+                  ,'о', 'р', 'с', 'у', 'х')
         sim_lat = ('A', 'B', 'E', 'K', 'H', 'O', 'P', 'C', 'T', 'X', 'a', 'e'
-                  ,'o', 'p', 'c', 'y', 'x'
-                  )
+                  ,'o', 'p', 'c', 'y', 'x')
         for i in range(len(sim_cyr)):
             self.text = self.text.replace(sim_cyr[i], sim_lat[i])
         return self.text
@@ -211,9 +210,7 @@ class Text:
     
     def delete_comments(self):
         self.text = self.text.splitlines()
-        self.text = [line for line in self.text \
-                     if not line.startswith('#')
-                    ]
+        self.text = [line for line in self.text if not line.startswith('#')]
         self.text = '\n'.join(self.text)
         return self.text
     
@@ -236,7 +233,7 @@ class Text:
         return self.text
 
     def delete_space_with_figure(self):
-        expr = '[-\s]\d+'
+        expr = r'[-\s]\d+'
         match = re.search(expr, self.text)
         while match:
             old = self.text
@@ -262,7 +259,7 @@ class Text:
 
     def delete_alphabetic_numeration(self):
         #TODO: check
-        my_expr = ' [\(,\[]{0,1}[aA-zZ,аА-яЯ][\.,\),\]]( \D)'
+        my_expr = r' [\(,\[]{0,1}[aA-zZ,аА-яЯ][\.,\),\]]( \D)'
         match = re.search(my_expr, self.text)
         while match:
             self.text = self.text.replace(match.group(0), match.group(1))
@@ -349,14 +346,12 @@ class Text:
         return self.text
 
     def delete_figures(self):
-        self.text = re.sub('\d+', '', self.text)
+        self.text = re.sub(r'\d+', '', self.text)
         return self.text
 
     def delete_cyrillic(self):
-        self.text = ''.join ([sym for sym in self.text if sym not \
-                              in ru_alphabet
-                             ]
-                            )
+        self.text = ''.join([sym for sym in self.text \
+                           if sym not in ru_alphabet])
         return self.text
 
     def delete_punctuation(self):
@@ -378,7 +373,7 @@ class Text:
 
     def extract_date(self):
         # Only for pattern '(YYYY-MM-DD)'
-        expr = '\((\d\d\d\d-\d\d-\d\d)\)'
+        expr = r'\((\d\d\d\d-\d\d-\d\d)\)'
         if self.text:
             match = re.search(expr, self.text)
             if match:
@@ -394,14 +389,8 @@ class Text:
         return self.text
         
     def fit(self, max_len=20, FromEnd=False, sym=' '):
-        self.shorten (max_len = max_len
-                     ,FromEnd = FromEnd
-                     ,ShowGap = False
-                     )
-        self.grow (max_len = max_len
-                  ,FromEnd = FromEnd
-                  ,sym = sym
-                  )
+        self.text = Shorten(self.text, max_len, FromEnd).run()
+        self.grow(max_len, FromEnd, sym)
         return self.text
 
     def split_by_comma(self):
