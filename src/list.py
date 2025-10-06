@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import difflib
+import itertools
 
 from skl_shared.localize import _
 from skl_shared.message.controller import Message
@@ -19,6 +20,9 @@ class List:
             self.lst2 = []
         else:
             self.lst2 = list(lst2)
+    
+    def join_sublists(self):
+        return list(itertools.chain(*self.lst1))
     
     def split_by_item(self, item):
         f = '[shared] list.List.split_by_item'
