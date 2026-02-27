@@ -106,10 +106,9 @@ class Table:
     
     def report(self):
         f = '[shared] table.Table.report'
-        result = ''
         if not self.Success:
             rep.cancel(f)
-            return
+            return ''
         iwrite = io.StringIO()
         for j in range(len(self.lst[0])):
             for i in range(len(self.lst)):
