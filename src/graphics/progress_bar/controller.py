@@ -15,9 +15,22 @@ class ProgressBar:
     def set_title(self, title=_('Progress:')):
         self.gui.set_title(title)
     
+    def _set_info_mult(self, info, limit):
+        info = info.splitlines()
+        info = [item.strip() for item in info if item.strip()]
+        if len(info) < 2:
+            return
+        limit = int(limit / len(info))
+        if limit < 5:
+            return
+        info = [Shorten(item, limit).run() for item in info]
+        return '\n'.join(info)
+    
+    def _set_info_auto(self, info, limit):
+        return self._set_info_mult(info, limit) or Shorten(info, limit).run()
+    
     def set_info(self, info, limit=34):
-        info = Shorten(info, limit).run()
-        self.gui.set_info(info)
+        self.gui.set_info(self._set_info_auto(info, limit))
     
     def get_value(self):
         return self.gui.get_value()

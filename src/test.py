@@ -995,6 +995,32 @@ class ProgressBar:
         self.bar.set_title(mes)
         self.bar.show()
     
+    def run_mult_lines(self):
+        # Shortening should work for multiple lines
+        f = '[shared] test.ProgressBar.run_mult_lines'
+        input(_('Start {}').format(f))
+        mes1 = ''
+        for i in range(1000):
+            mes1 += str(i)
+        mes2 = mes3 = mes1
+        self.bar.set_info(f'{mes1}\n{mes2}\n{mes3}')
+        self.bar.set_title('Title ' * 50)
+        self.bar.show()
+    
+    def run_mult2single(self):
+        # Too many lines, shortening reverts to single line
+        f = '[shared] test.ProgressBar.run_mult2single'
+        input(_('Start {}').format(f))
+        mes = []
+        sub = ''
+        for i in range(1000):
+            sub += str(i)
+        for i in range(100):
+            mes.append(sub)
+        self.bar.set_info('\n'.join(mes))
+        self.bar.set_title('Title ' * 50)
+        self.bar.show()
+    
     def run_progress(self):
         f = '[shared] test.ProgressBar.run_progress'
         input(_('Start {}').format(f))
@@ -1024,6 +1050,8 @@ class ProgressBar:
         self.run_basic()
         self.run_long_text()
         self.run_progress()
+        self.run_mult_lines()
+        self.run_mult2single()
     
     def run(self):
         self.run_all()
@@ -1114,5 +1142,5 @@ if __name__ == '__main__':
     #Timer().run()
     #TextFile().run()
     #Config().run()
-    #ProgressBar().run()
-    Time().run()
+    ProgressBar().run()
+    #Time().run()
