@@ -255,7 +255,7 @@ class File:
         result = 0
         if not self.Success:
             rep.cancel(f)
-            return
+            return 0
         try:
             if Follow:
                 cond = not os.path.islink(self.file)
