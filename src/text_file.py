@@ -10,10 +10,11 @@ from skl_shared.rewrite import rewrite
 
 class Read:
 
-    def __init__(self, file, Empty=False):
+    def __init__(self, file, Empty=False, Graphical=True):
         self.set_values()
         self.file = file
         self.Empty = Empty
+        self.Graphical = Graphical
         self.check()
     
     def set_values(self):
@@ -49,7 +50,7 @@ class Read:
         except Exception as e:
             # Avoid UnicodeDecodeError, access errors, etc.
             mes = _('Operation has failed!\nDetails: {}').format(e)
-            Message(f, mes, True).show_warning()
+            Message(f, mes, self.Graphical).show_warning()
 
     def delete_bom(self):
         f = '[shared] text_file.Read.delete_bom'
@@ -109,7 +110,7 @@ class Read:
             '''
             self.Success = False
             mes = _('Unable to read file "{}"!').format(self.file)
-            Message(f, mes, True).show_warning()
+            Message(f, mes, self.Graphical).show_warning()
             return self.text
         self.delete_bom()
         return self.text
