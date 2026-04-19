@@ -3,7 +3,7 @@
 
 copyright = 'Copyright 2015-2026, Peter Sklyar'
 license = 'GPL v.3'
-email = 'skl.progs@gmail.com'
+email = 'petersklyar@gmail.com'
 
 import re
 import sys
