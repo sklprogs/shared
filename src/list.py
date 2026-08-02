@@ -5,8 +5,8 @@ import difflib
 import itertools
 
 from skl_shared.localize import _
-from skl_shared.message.controller import Message
-from skl_shared.logic import Text
+from skl_shared.message.controller import Message, rep
+from skl_shared.logic import Text, Input
 
 
 class List:
@@ -167,3 +167,24 @@ class List:
             if opcode != 'equal':
                 output += seqm.a[a0:a1]
         return output
+
+
+def get_text_table(rownum, colnum):
+    f = '[shared] list.List.get_text_table'
+    rownum = Input(f, rownum).get_integer()
+    colnum = Input(f, colnum).get_integer()
+    if rownum <= 0:
+        mes = f'{rownum} > 0'
+        rep.condition(f, mes)
+        return []
+    if colnum <= 0:
+        mes = f'{colnum} > 0'
+        rep.condition(f, mes)
+        return []
+    table = []
+    for i in range(rownum):
+        row = []
+        for j in range(colnum):
+            row.append('')
+        table.append(row)
+    return table
