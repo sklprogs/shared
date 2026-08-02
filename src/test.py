@@ -747,6 +747,16 @@ class List:
     def __init__(self):
         ms.GRAPHICAL = False
         
+    def get_text_table(self):
+        f = '[shared] test.List.get_text_table'
+        import skl_shared.list as ls
+        input('Test wrong rownum')
+        print(ls.get_text_table(0, 45))
+        input('Test wrong colnum')
+        print(ls.get_text_table(2, -1))
+        input('Test table 11x6')
+        print(ls.get_text_table(11, 6))
+    
     def get_diff(self):
         f = '[shared] test.List.get_diff'
         import skl_shared.list as ls
@@ -757,6 +767,7 @@ class List:
     
     def run_all(self):
         self.get_diff()
+        self.get_text_table()
     
     def run(self):
         self.run_all()
@@ -1136,11 +1147,11 @@ if __name__ == '__main__':
     #Launch().run()
     #Time().run()
     #Table().run()
-    #List().run()
+    List().run()
     #Paths().run()
     #Directory().run()
     #Timer().run()
     #TextFile().run()
     #Config().run()
-    ProgressBar().run()
+    #ProgressBar().run()
     #Time().run()
