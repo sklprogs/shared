@@ -20,6 +20,9 @@ class Button:
         self.icon = self.inactive = inactive
         self.set_gui()
     
+    def has_focus(self):
+        return self.widget.hasFocus()
+    
     def get_font_size(self):
         size = self.widget.font().pointSize()
         # We will get -1 if the font size was specified in pixels
